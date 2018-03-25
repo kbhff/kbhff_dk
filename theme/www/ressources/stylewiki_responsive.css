@@ -1,0 +1,163 @@
+/*
+Theme Name:     Kbhff theme 2017
+Description:    Child theme of twenty eleven 
+Author:         Jonas Dreves Glass
+Inspired by:    Sofie Hauge Katan's original design
+Template:       TwentyEleven
+*/
+
+
+/*-------------------------------------------------------------- */
+/* F*** UP FIXES */
+
+img { border: 0!important; padding: 0!important;}
+*:focus { outline: none; }
+.gridcontainer { padding: 1%; }
+.commentSubject { margin-right: 0px !important; }
+#map { padding: 0; margin: 0; height: 400px; width: 100%; }
+
+/* ****************************************************** */
+/* RESPONSIVE ELEMENTS */
+
+.menuitem { 
+  font-size: 0.8em; 
+  font-family: 'Lucida Grande',Arial,Helvetica,sans-serif;
+  background-color: #F3F3F3;
+  margin-right: 4%;
+  padding: 4%;
+  overflow: hidden;
+}
+.menuitem .wiki {font-family: 'Lucida Grande',Arial,Helvetica,sans-serif !important;}
+.main { padding: 8px; border: 1px solid black; }
+.footer { 
+  font-size: 0.8em; 
+  font-family: 'Lucida Grande',Arial,Helvetica,sans-serif;
+  padding: 10px 0; 
+  text-align: center; 
+}
+.gridcontainer { width: 100%; }
+.gridwrapper { overflow: hidden; }
+.gridbox { float: left; }
+.gridheader { width: 100%; }
+.gridmenu { width: 20%; }
+.gridmain { width: 78%; }
+.gridfooter { width: 100%; margin-bottom: 0; }
+
+
+/* ****************************************************** */
+/* HEADER */
+
+.header a, .header a:visited {
+  font-size: 33px;
+  line-height: 40px;
+  font-family: sans-serif;
+  font-weight: 300;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #000;
+}
+.header a:hover, .headerText span { color: #3E8E17; }
+.headerWrapper { width: 100%; overflow: hidden;}
+.headerImg { float: left; }
+.headerText { margin-top: 50px; margin-left: 2%; overflow: hidden; float: left; }
+
+
+/* ****************************************************** */
+/* LEFT MENU */  
+.menuitem a:hover { cursor: pointer; text-decoration: underline; }
+.menuitem a, .menuitem a:visited { color: #000; font-weight: normal; text-decoration: none; }
+.menuitem h3 a, .menuitem h3 a:visited { font-weight: bold; }
+.menuButton { font-size: 1.6em; display: none; } 
+.menuButton img { margin-right: 8px; }
+.hidden { display: none; }
+
+
+/* LEFT MENU - WIKI SEARCH */ 
+.WikiSearchInput { width: 100%!important; box-sizing: border-box; }
+
+
+/* LEFT MENU - WIKI ACTIONS */
+.WikiActions { list-style-type: none; margin: 0; padding: 0; }
+.WikiActions li { line-height: 150%; white-space: nowrap; }
+.WikiActions img { padding-right: 0.5em; }
+
+
+/* LEFT MENU - WIKI CUSTOM NAVIGATION */
+.WikiCustomNav { list-style-type: none; margin: 0; padding: 0; }
+.WikiCustomNav li { line-height: 150%; white-space: nowrap; }
+
+
+/* ****************************************************** */
+/* WIKI BODY */
+/* wiki base style font is
+line-height: 1.5; font-family: arial, helvetica, sans-serif; font-size: 13px; */
+.main .wiki {
+  font-family: sans-serif !important; 
+  font-size: 0.875em !important;
+  line-height: 1.6em !important;
+  color: #000;
+  font-weight: normal;
+}
+.main .wiki a, a:visited { color: #3e8e17; text-decoration: none; font-weight: bold; }
+.main .wiki a:hover { color: #000; text-decoration: none; }
+
+/* wiki tables */
+.wiki th { background-color: #4CAF50; color: white }
+.wiki td, .wiki th {
+                border-color: lightgrey;
+                font-size: 95%;
+                padding: 5px 
+}
+.wiki tr:nth-child(even) { background-color: #f2f2f2 }
+
+
+/* ****************************************************** */
+/* FOOTER */
+.footer a { text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+.WikiFooterNav { padding-bottom: 5px; }
+.WikiFooterNav a { font-size: 1em; padding: 0 8px; }
+.WikiLicense img { vertical-align: text-bottom; }
+.WikiFooterNav, .WikiFooterNav a, .WikiLicense, .WikiLicense a { color: #999; }
+
+
+/* ****************************************************** */
+/* TABLE OF CONTENTS (widget) */  
+
+#toc a {
+  color: #000;
+  font-weight: 300;
+  text-decoration: none;
+}
+#toc a:hover {
+  color: #000;
+  text-decoration: underline;
+}
+.wiki #toc h1 {
+  font-size: 16px !important;
+  text-transform: uppercase;
+  color: #666;
+  font-weight: 300;
+  line-height: 2.3em;
+  margin-left: 10px;
+  letter-spacing: 0.1em;
+}
+
+/* .WikiLogoName a { color: #FFF; } */
+
+
+/* ****************************************************** */
+/* SMARTPHONE AND TABLET STYLE */  
+@media only screen and (max-width: 768px) {
+  .gridcontainer { padding: 0px; }
+  .gridbox { margin-right: 0; float: left; }
+  .header a { font-size: 22px; line-height: 30px; }
+  .headerImg img { display: none; }
+  .headerText { margin-top: 5px; }
+  .gridmenu { width: 100%; }
+  .menuitem { margin: 1%; padding: 1%; }
+  .menuButton { display: block; }
+  .gridmain { width: 100%; }
+  .main { border-style: none; }
+  .footer { border-top: 1px solid black; }
+}

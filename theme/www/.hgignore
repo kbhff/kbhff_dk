@@ -1,0 +1,17 @@
+syntax: glob
+*~
+.htaccess
+.sendmail
+.hgignore
+
+syntax: regexp
+CodeIgniter_2.0.2/system/\\*
+CodeIgniter_2.0.2/application/logs/\\*
+CodeIgniter_2.0.2/application/cache/\\*
+ressources/.*php
+ressources/jquery/.*
+ressources/jquery.*
+ressources/moo.*
+ressources/.htm
+ressources/MD.*
+administrator\\*
