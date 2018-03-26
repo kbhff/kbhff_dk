@@ -1,0 +1,10 @@
+config/connect_*.php
+config/config.php
+
+library/log/*
+library/public/*
+library/private/*
+!library/private/0
+!library/private/0/*
+
+.DS_Store

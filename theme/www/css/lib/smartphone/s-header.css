@@ -1,0 +1,34 @@
+/* HEADER */
+#header {z-index: 100; position: fixed; height: 60px; width: 100%; top: 0; left: 0; background: #ffffff; overflow: hidden;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+#header .logo {z-index: 10; font-size: 30px; padding: 10px 20px; color: #888888; cursor: pointer; display: inline-block; position: relative;
+	font-family: "PT Serif", Times, serif;
+}
+#header .logo:active {text-decoration: none;}
+
+#header .servicenavigation {position: absolute; top: 0; left: 0; z-index: 9; width: 100%; height: 60px; background: #ffffff; opacity: 0;}
+#header .servicenavigation li.navigation {position: absolute; right: 0; top: 0; width: 30px; height: 39px; padding: 21px 15px 0;}
+#header .servicenavigation li.navigation div {border-radius: 1px; height: 3px; margin: 0 0 5px; background: #888888;}
+#header .servicenavigation li.navigation.open div {background: #cccccc;}
+#header .servicenavigation li.navigation a {display: none;}
+
+/*
+#header .servicenavigation li.user,
+#header .servicenavigation li.admin {display: none;}
+*/
+
+/* NAViGATION */
+#navigation {position: absolute; width: 100%; top: 75px; display: none;}
+#navigation ul {}
+#navigation ul li {padding: 10px 20px 10px 20px; font-size: 20px; color: #888888; display: block; text-align: center;
+	font-family: "PT Serif", Times, serif;
+}
+#navigation ul li.admin,
+#navigation ul li.user {border-top: 1px solid #888888; margin-top: 10px;}
+#navigation ul li.admin+li.user {border: none; margin: 0;}
+
+#navigation ul li:active {text-decoration: none;}

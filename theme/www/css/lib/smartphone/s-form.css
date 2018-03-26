@@ -1,0 +1,400 @@
+#content {}
+
+/* BASE FORM ELEMENTS */
+#content form {
+	/*background: transparent url(http://parentnode.local/img/temp-input.png) repeat-y top left;*/
+}
+#content fieldset {border: none; display: block;}
+#content .field {padding: 0 18px 10px; position: relative; font-size: 0; z-index: 1;}
+
+
+/* INLINE LABELS */
+#content label {display: block; padding: 0 0 0 4px; font-size: 10px;}
+
+
+/* BASIC FORM INPUTS */
+#content .field input,
+#content .field select,
+#content .field textarea {box-shadow: inset 0 1px 2px #dedede; background: #ffffff; border: 1px solid #dcdcdc; display: inline-block; vertical-align: top; border-radius: 3px; margin: 2px; outline: none; position: relative; z-index: 1;}
+
+#content .field input {width: calc(100% - 18px); height: 24px; padding: 2px 6px;
+/*	margin-left: -16px;*/
+}
+#content .field input::-ms-clear, #content .field textarea::-ms-clear {
+	display: none;
+}
+
+#content .field select {width: calc(100% - 2px); height: 30px; color: #333333; padding: 2px 3px 2px 2px;}
+#content .field select option {padding: 2px 3px 2px 6px;}
+/* SET BACKGROUND IMAGE FOR WEBKIT SELECTS */
+@media all and (-webkit-min-device-pixel-ratio:0) {
+	#content .field select {width: 100%; height: 31px; padding: 2px 3px 2px 7px; 
+		background: #ffffff url(/janitor/admin/img/bg_icons.png) no-repeat 360px -977px;
+		-webkit-appearance: none;
+	}
+}
+
+#content .field textarea {width: calc(100% - 18px); height: 100px; overflow: auto; padding: 6px 6px 2px 6px;}
+#content .field.short textarea {height: 40px;}
+#content .field textarea.autoexpand {width: calc(100% - 24px); padding: 6px 6px 2px; overflow: hidden;}
+
+/* PSEUDO LABEL - FAKE PLACEHOLDER FOR INTERGER AND NUMBER INPUTS */
+#content .field .pseudolabel {position: absolute; font-size: 14px; display: inline-block; padding: 5px 6px; z-index: 2;}
+
+
+/* BOOLEAN + CHECKBOX */
+#content .field.checkbox,
+#content .field.boolean {}
+#content .field.checkbox input,
+#content .field.boolean input {display: inline-block; vertical-align: top; width: auto; height: auto; padding: 0; margin: 1px 10px 0 3px; border: 0;}
+#content .field.checkbox label,
+#content .field.boolean label {width: auto; display: inline-block; vertical-align: top; font-size: 14px; line-height: 1em;}
+
+
+/* RADIO */
+#content .field.radiobuttons {}
+#content .field.radiobuttons > label {display: block; font-size: 14px; line-height: 1em; padding: 0 0 0 3px;}
+#content .field.radiobuttons > label:after {content: ":";}
+#content .field.radiobuttons div.item {padding: 10px 0 0;}
+#content .field.radiobuttons div.item input {width: auto; height: auto; padding: 0; margin: 1px 10px 0 3px; border: 0;}
+#content .field.radiobuttons div.item label {font-size: 14px; line-height: 1em; display: inline-block; vertical-align: top; text-align: left; width: auto;}
+
+
+/* REMOVE SPINNER FROM NUMBER */
+#content .field input[type="integer"],
+#content .field input[type="number"] {
+	-moz-appearance: textfield;
+}
+
+#content .field input[type="integer"]::-webkit-inner-spin-button,
+#content .field input[type="integer"]::-webkit-outer-spin-button,
+#content .field input[type="number"]::-webkit-inner-spin-button,
+#content .field input[type="number"]::-webkit-outer-spin-button {margin: 0;
+	-webkit-appearance: none;
+}
+
+
+/* FILES */
+#content .field.files {border: 3px dashed #dedede; display: block; width: 378px; border-radius: 5px; position: relative; margin: 2px 18px 17px; padding: 0;}
+#content .field.files input[type=file] {opacity: 0; width: 360px; height: 49px; margin: 0; border: 0;}
+#content .field.files label {color: #333333; font-size: 14px; display: block; position: absolute; width: 120px; left: 50%; padding: 1px 4px 3px; margin: 16px 0 0 -60px; text-align: center; border-radius: 6px; background: #dedede;}
+#content .field.files.loading label {display: none;}
+#content .field.files.loading {background: transparent url(/janitor/admin/img/gx_loader.gif) no-repeat center center;}
+
+
+/* LOCATION */
+#content .field.location {}
+#content .field.location div.location {padding-bottom: 2px;}
+#content .field.location div.latitude {padding-right: 2px;}
+#content .field.location div.latitude,
+#content .field.location div.longitude {display: inline-block; vertical-align: top;}
+#content .field.location div.latitude input,
+#content .field.location div.longitude input {width: 173px;}
+
+/* WITH GEOLOCATION BUTTON */
+#content .field.location.geolocation div.geolocation {width: 30px; height: 30px; display: inline-block; vertical-align: top; cursor: pointer;
+	background: transparent url(/janitor/admin/img/gx_geolocation.png) no-repeat 5px 8px;
+}
+#content .field.location.geolocation div.latitude input,
+#content .field.location.geolocation div.longitude input {width: 158px;}
+iframe#geolocationmap {width: 300px; height: 300px; position: absolute; top: 0; left: 0; z-index: 100; border: 1px solid #666666; background-color: #ffffff;}
+
+
+
+
+/* FOCUS */
+#content .field.focus input,
+#content .field.focus textarea {}
+#content .field.focus select {padding: 2px 3px 2px 2px; height: 34px;
+	width: calc(100% - 0px);
+}
+@media all and (-webkit-min-device-pixel-ratio:0) {
+	#content .field.focus select {padding: 2px 3px 3px 5px;
+		background-position: 358px -979px;
+	}
+}
+#content .field.focus input,
+#content .field.focus select,
+#content .field.focus textarea {border: 3px solid #5c5c5c; margin: 0;}
+
+/* RADIOBUTTONS + CHECKBOX */
+#content .field.radiobuttons.focus input,
+#content .field.checkbox.focus input,
+#content .field.boolean.focus input {margin: 1px 10px 0 3px; border: none;}
+
+/* FOCUS - LOCATION */
+#content .field.location.focus input {margin: 2px; border: 1px solid #dcdcdc;}
+#content .field.location.focus input.focus {margin: 0; border: 3px solid #5c5c5c;}
+
+/* FOCUS - FILES */
+#content .field.files.focus {border-color: #c8e183;}
+#content .field.files.focus input[type=file] {margin: 0; border: none;}
+#content .field.files.focus label {background-color: #c8e183;}
+
+
+/* DEFAULT STATE - BEFORE TEXT IS MODIFIED */
+#content .field input.default,
+#content .field select.default,
+#content .field textarea.default,
+#content .field .pseudolabel {color: #aaaaaa;}
+
+
+
+/* VALIDATION */
+#content .field .indicator {width: 20px; height: 15px; display: inline-block; margin-bottom: -2px; margin-top: -2px;}
+#content .field.required .indicator { 
+	background: transparent url(/janitor/admin/img/bg_icons.png) no-repeat 3px -295px;
+}
+/*#content .field.text.required .indicator {background-position: 0 -296px;}*/
+
+/* RADIOBUTTONS + CHECKBOX */
+/*
+#content .field.radiobuttons .indicator,
+#content .field.checkbox .indicator,
+#content .field.boolean .indicator {top: -5px;}
+*/
+/* FILES */
+/*
+#content .field.files .indicator {left: 384px; top: -1px;}
+*/
+
+/* CORRECT */
+#content .field.correct .indicator {background-position: 3px -324px;}
+
+
+/* ERROR */
+#content .field.error {
+	
+/*	margin-left: 18px;*/
+}
+
+#content .field.error input,
+#content .field.error textarea {}
+#content .field.error select {padding: 3px 3px 2px 0px;}
+#content .field.error input,
+#content .field.error select,
+#content .field.error textarea {border: 3px solid #a62300; margin: 0;}
+@media all and (-webkit-min-device-pixel-ratio:0) {
+	#content .field.error select {padding: 2px 3px 3px 5px;
+		background-position: 358px -979px;
+	}
+}
+/* ERROR - RADIOBUTTONS + CHECKBOX */
+#content .field.radiobuttons.error input,
+#content .field.checkbox.error input,
+#content .field.boolean.error input {margin: 1px 10px 0 3px; border: none;}
+
+/* ERROR - LOCATION */
+#content .field.location.error input {margin: 2px; border: 1px solid #dcdcdc;}
+#content .field.location.error input.error {margin: 0; border: 3px solid #a62300;}
+
+/* ERROR - FILES */
+#content .field.files.error {border-color: #a62300;}
+
+
+
+/* BUTTONS */
+#content ul.actions {}
+#content ul.actions li {display: inline-block; padding: 0 10px 10px 0; vertical-align: top;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+#content ul.actions input.button {width: auto; height: 32px; padding: 2px 12px 4px; display: inline-block; vertical-align: top; outline: none; border-radius: 0; border: 0;
+	-webkit-appearance: none;
+}
+@media all and (-webkit-min-device-pixel-ratio:0) {
+	#content ul.actions input.button {padding-bottom: 5px;}
+}
+#content ul.actions a.button {display: block; text-decoration: none; height: 18px; padding: 8px 12px 6px;}
+
+
+/* DEFAULT BUTTON */
+#content ul.actions input.button,
+#content ul.actions a.button {font-size: 16px; background-color: #dedede; color: #333333; border: none; cursor: pointer; border-radius: 3px;}
+
+#content ul.actions input.button:active,
+#content ul.actions a.button:active {background-color: #bebebe;}
+
+
+/* PRIMARY BUTTON */
+#content ul.actions input.button.primary,
+#content ul.actions a.button.primary {background-color: #8c9399; color: #ffffff;}
+
+#content ul.actions input.button.primary:active,
+#content ul.actions a.button.primary:active {background-color: #313942;}
+
+
+/* SECONDARY BUTTON */
+#content ul.actions input.button.secondary,
+#content ul.actions a.button.secondary {background-color: #8c9399; color: #ffffff;}
+#content ul.actions input.button.secondary:active,
+#content ul.actions a.button.secondary:active {background-color: #313942;}
+
+
+
+/* HELP - HINT AND ERROR MESSAGES */
+#content .field div.help {width: 100%;}
+#content .field.files div.help {left: 404px;}
+
+#content .field div.error,
+#content .field div.hint {display: none; box-sizing: border-box; padding: 5px; border-radius: 3px; font-size: 12px; margin: 1px 0 0;}
+
+
+/* HELP - ERRORS */
+#content .field div.error {border: 1px solid #a62300; color: #a62300; background: #ffddd5;}
+#content .field.error div.error {display: block;}
+
+/* HELP - HINTS */
+#content .field div.hint {border: 1px solid #007633; color: #007633; background: #d0f4e0;}
+#content .field.focus div.hint {display: block;}
+
+#content .field.error div.hint {display: none;}
+#content .field.correct div.hint,
+#content .field.correct div.error {display: none;}
+
+
+/* HTML EDITOR */
+#content .field.html {z-index: 3;}
+#content .field.html.optionsshown {z-index: 60 !important;}
+
+/* USE HELP */
+#content .field.html div.html_editor_hint {width: 383px;}
+#content .field.html div.html_editor_hint_content {display: none;}
+#content .field.html div.html_editor_hint h3,
+#content .field.html div.html_editor_hint h4,
+#content .field.html div.html_editor_hint p {padding: 0 0 5px;}
+#content .field.html div.html_editor_hint p+h3,
+#content .field.html div.html_editor_hint p+h4 {padding: 10px 0 5px;}
+#content .field.html div.html_editor_hint .open,
+#content .field.html div.html_editor_hint .close {font-size: 13px; line-height: 1em; cursor: pointer; vertical-align: top; margin: 3px 3px 0; border-radius: 13px; background-color: #313942; padding: 6px 10px 7px; color: #ffffff; margin: 10px 0 20px; text-align: center;}
+
+/* RAW HTML INPUT */
+#content .field.html > textarea {display: none;}
+#content .field.html > textarea.show {display: block; height: 200px;}
+
+#content .field.html > label {display: block; width: 377px;}
+#content .field.html > label span {font-size: 0.723em; float: right; padding: 3px 0 0; cursor: pointer;}
+#content .field.html > .indicator {top: 33px;}
+
+/* HTML VIEWER AND EDITOR */
+#content .field.html .viewer {display: none;}
+#content .field.html .editor {width: 385px; position: relative; z-index: 3;}
+
+/* EDITOR OPTIONS */
+#content .field.html ul.options {height: 40px; display: block; vertical-align: top; width: 30px; position: relative; z-index: 10; padding: 0;}
+#content .field.html ul.options li {font-size: 13px; line-height: 1em; cursor: pointer; vertical-align: top; margin: 3px 3px 0; border-radius: 13px; background-color: #313942; padding: 6px 10px 7px; color: #ffffff; width: 330px; display: none;}
+#content .field.html ul.options li:active {background-color: #64ad8e;}
+#content .field.html ul.options li.add {display: inline-block; font-size: 16px; line-height: 1em; padding: 2px 4px 4px; width: 14px; text-align: center;}
+#content .field.html ul.options.show li.add {top: 0; left: 0; background-color: #df0000;}
+#content .field.html ul.options.show li {display: inline-block; position: relative; top: -26px; left: 26px;}
+
+
+/* EDITOR TAGS */
+#content .field.html .editor div.tag {margin: 0 0 1px; padding: 0 0 0 30px; background-color: #dcdcdc; position: relative; border-radius: 3px; border: 2px solid #f5f7f8;}
+#content .field.html .editor div.dragged {z-index: 15;}
+#content .field.html .editor div.tag .drag {display: none; position: absolute; top: 0px; left: -20px; border-top-left-radius: 15px; border-bottom-left-radius: 15px; background: #dedede; width: 30px; height: 30px; cursor: move;}
+#content .field.html .editor div.tag:active .drag {display: block;}
+#content .field.html .editor div.tag .remove {display: none; position: absolute; top: 0px; right: -10px; border-radius: 15px; background: #dedede; width: 30px; height: 30px; cursor: pointer;
+	background: #dedede url(/janitor/admin/img/bg_icons.png) no-repeat 8px -42px;
+}
+#content .field.html .editor div.tag:active .remove {display: block;}
+
+/* TAG TYPE SELECTOR */
+#content .field.html .editor div.tag ul.type {display: block; z-index: 5; position: absolute; width: 30px; top: 0px; left: 0px; padding: 0;}
+#content .field.html .editor div.tag ul.type li {display: none; text-transform: uppercase; padding: 9px 4px; text-align: center; font-size: 11px; cursor: default;}
+#content .field.html .editor div.tag ul.type.clickable li {cursor: pointer;}
+#content .field.html .editor div.tag ul.type li.selected {display: block;}
+#content .field.html .editor div.tag ul.type.open {z-index: 10; border: 2px solid #5c5c5c; margin: -2px; background-color: #F5F7F8;}
+#content .field.html .editor div.tag ul.type.open li {display: block; color: #5c5c5c !important;}
+#content .field.html .editor div.tag ul.type.open li:active {background-color: #dedede;}
+#content .field.html .editor div.tag ul.type.open li.selected {background-color: #5c5c5c !important; color: #ffffff !important;}
+/* CUSTOM FONT SIZES FOR SOME TYPES */
+#content .field.html .editor div.tag ul.type li.code {font-size: 8px; padding-top: 11px;}
+#content .field.html .editor div.tag ul.type li.media {font-size: 8px; padding-top: 11px;}
+#content .field.html .editor div.tag ul.type li.youtube {font-size: 8px; padding: 7px 5px; max-width: 4.4ch; word-wrap: break-word;}
+#content .field.html .editor div.tag ul.type li.vimeo {font-size: 8px; padding-top: 11px;}
+
+/* TAG EDITABLE CONTENT */
+#content .field.html .editor div.tag div.text {display: inline-block; vertical-align: top; width: 337px; height: auto; padding: 4px 6px; line-height: 1.375em; border-radius: 3px; background-color: #F5F7F8; color: #333333; box-shadow: inset 0 1px 2px #dedede; background: #ffffff; border: 1px solid #dcdcdc; min-height: 20px;}
+#content .field.html .editor div.tag div.text em,
+#content .field.html .editor div.tag div.text strong,
+#content .field.html .editor div.tag div.text a {background-color: rgba(255, 0, 0, 0.3); cursor: default; font-size: inherit;}
+
+/* TAG FOCUS */
+#content .field.html .editor div.tag.focus {background-color: #5c5c5c; padding: 0 0 0 30px; border: 2px solid #5c5c5c;}
+#content .field.html .editor div.tag.focus div.text {border-color: #5c5c5c;}
+#content .field.html .editor div.tag.focus .drag {background-color: #5c5c5c; top: -2px;}
+#content .field.html .editor div.tag.focus ul.type li {color: #ffffff;}
+
+/* DEFAULT TEXT TAG STYLING */
+#content .field.html .editor div.tag.h1 div.text {font-size: 36px;}
+#content .field.html .editor div.tag.h2 div.text {font-size: 30px;}
+#content .field.html .editor div.tag.h3 div.text {font-size: 30px;}
+#content .field.html .editor div.tag.h4 div.text {font-size: 16px;}
+#content .field.html .editor div.tag.h5 div.text {font-size: 14px;}
+#content .field.html .editor div.tag.p div.text {font-size: 14px;}
+
+/* DEFAULT LIST TAG STYLING */
+#content .field.html .editor div.tag.ul {padding-left: 50px;}
+#content .field.html .editor div.tag.ol {padding-left: 50px;}
+#content .field.html .editor div.tag div.li {font-size: 14px;}
+#content .field.html .editor div.tag div.li div.text {width: 317px;}
+
+/* DEFAULT FILE TAG STYLING */
+#content .field.html .editor div.tag.file .text {padding: 0 6px; height: 28px;}
+#content .field.html .editor div.tag.file.done .text {color: #aaaaaa; font-size: 13px; padding: 4px 6px; line-height: 20px; height: auto; text-decoration: underline;}
+#content .field.html .editor div.tag.file.done.focus .text {color: #333333;}
+#content .field.html .editor div.tag.file .text label {padding: 5px 0 0; display: block; text-align: center; font-size: 13px; line-height: 20px; position: absolute; z-index: 1; width: 332px; color: #aaaaaa;}
+#content .field.html .editor div.tag.file input {width: 319px; opacity: 0; height: 18px; position: relative; z-index: 2;}
+
+/* DEFAULT MEDIA TAG STYLING */
+#content .field.html .editor div.tag.media .text {padding: 0 6px; height: 28px;}
+#content .field.html .editor div.tag.media.done .text {color: #aaaaaa; font-size: 13px; padding: 4px 6px; line-height: 20px; height: auto;}
+#content .field.html .editor div.tag.media.done.focus .text {color: #333333;}
+#content .field.html .editor div.tag.media .text label {padding: 5px 0 0; display: block; text-align: center; font-size: 13px; line-height: 20px; position: absolute; z-index: 1; width: 332px; color: #aaaaaa;}
+#content .field.html .editor div.tag.media input {width: 319px; opacity: 0; height: 18px; position: relative; z-index: 2;}
+#content .field.html .editor div.tag.media img {width: 347px; margin: 2px;}
+
+/* DEFAULT EXTERNAL VIDEO TAG STYLING */
+#content .field.html .editor div.tag.vimeo .text,
+#content .field.html .editor div.tag.youtube .text {padding: 0 6px; height: 28px; color: #aaaaaa; font-size: 13px; padding: 4px 6px; line-height: 20px; height: auto;}
+#content .field.html .editor div.tag.vimeo.focus .text,
+#content .field.html .editor div.tag.youtube.focus .text {color: #333333;}
+
+
+/* SELECTION OPTIONS PANE */
+body #selection_options {z-index: 1100; position: absolute; background-color: #F5F7F8; border: 3px solid #5c5c5c; margin: 0px 0 0 10px; padding: 15px; border-radius: 5px;}
+body #selection_options h3 {padding: 10px 0 10px; text-align: left; font-size: 13px; margin-top: 10px; border-top: 1px solid #5c5c5c;}
+body #selection_options li {display: block; font-size: 13px; padding: 5px 0; cursor: pointer;}
+body #selection_options li.link {text-decoration: underline;}
+body #selection_options li.em {font-style: italic;}
+body #selection_options li.strong {font-weight: 700;}
+
+body #selection_options .field {margin-left: -2px;}
+body #selection_options .field label {display: none;}
+body #selection_options .field input {color: #333333; box-shadow: inset 0 1px 2px #dedede; background: #ffffff; border: 1px solid #dcdcdc; display: inline-block; vertical-align: top; border-radius: 3px; margin: 2px; outline: none; position: relative; z-index: 10; width: 150px; height: 24px; padding: 2px 6px;}
+body #selection_options .field.checkbox input {width: auto;}
+body #selection_options .field.checkbox label {display: inline-block; vertical-align: top; padding: 4px 0 0 3px;}
+
+body #selection_options .field input.default {color: #cccccc;}
+body #selection_options .field input.focus {}
+
+body #selection_options ul.actions {padding: 10px 0 0;}
+body #selection_options ul.actions li {width: auto; height: auto; display: inline-block; padding: 0 5px 0 0; vertical-align: top;}
+
+body #selection_options ul.actions input.button {width: auto; height: 26px; padding: 3px 12px;}
+@media all and (-webkit-min-device-pixel-ratio:0) {
+	body #selection_options ul.actions input.button {padding-bottom: 5px;}
+}
+body #selection_options ul.actions a.button {display: block; text-decoration: none; height: 14px; padding: 5px 12px 7px;}
+body #selection_options ul.actions input.button,
+body #selection_options ul.actions a.button {background-color: #8c9399; color: #ffffff; border: none; cursor: pointer; border-radius: 3px;}
+body #selection_options ul.actions input.button:active,
+body #selection_options ul.actions a.button:active {background-color: #313942;}
+
+/* DELETE SELECTION ICON */
+.delete_selection {position: absolute; z-index: 1150; top: 0; left: 0; border-radius: 8px; width: 14px; height: 14px; font-size: 10px; line-height: 14px; text-align: center; background: #ffffff; border: 1px solid #000000; cursor: pointer;}
+
+
