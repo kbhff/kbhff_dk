@@ -1,0 +1,9 @@
+[submodule "submodules/janitor"]
+	path = submodules/janitor
+	url = https://github.com/parentnode/janitor
+[submodule "submodules/js-merger"]
+	path = submodules/js-merger
+	url = https://github.com/parentnode/js-merger
+[submodule "submodules/css-merger"]
+	path = submodules/css-merger
+	url = https://github.com/parentnode/css-merger
