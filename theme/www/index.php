@@ -1,4 +1,3 @@
-main controller
 <?php
 
 /*
@@ -19,7 +18,8 @@ main controller
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
-	define('ENVIRONMENT', 'production');
+#	define('ENVIRONMENT', 'production');
+	define('ENVIRONMENT', 'development');
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
@@ -199,7 +199,6 @@ if (defined('ENVIRONMENT'))
  * And away we go...
  *
  */
-	print "bla";
 require_once BASEPATH.'core/CodeIgniter'.EXT;
 
 /* End of file index.php */

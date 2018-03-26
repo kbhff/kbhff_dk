@@ -13,6 +13,9 @@ class Login extends CI_Controller {
     }
 
     function index() {
+		// Redirect to Janitor login
+		redirect("login");
+
         $data = array();
 
         $this->jquery->script('/ressources/jquery-1.6.2.min.js', TRUE);
