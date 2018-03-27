@@ -1,4 +1,9 @@
 <?php
+$access_item = false;
+if(isset($read_access) && $read_access) {
+	return;
+}
+
 	unset($_GET["_"]);
 	require_once("class.inputfilter_clean.php");
 

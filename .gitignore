@@ -17,4 +17,4 @@ theme/library/debug
 src/config/connect_*.php
 theme/config/connect_*.php
 
-theme/www/CodeIgniter_2.0.2/application/logs/*
+ci/CodeIgniter_2.0.2/application/logs/*

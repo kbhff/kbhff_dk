@@ -1,5 +1,6 @@
 <?
-require("PHPMailerAutoload.php");
+//require("PHPMailerAutoload.php");
+require_once($_SERVER["FRAMEWORK_PATH"]."/includes/PHPMailer-5.2.16/PHPMailerAutoload.php");
 
 function sendenkeltmail ($subject,$text,$email, $from = 'robot@medlem.kbhff.dk', $recipientname = '', $html = '', $file = '')
 {

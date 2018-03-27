@@ -1,4 +1,9 @@
 <?
+$access_item = false;
+if(isset($read_access) && $read_access) {
+	return;
+}
+
 	include("/srv/sites/kbhff/kbhff_dk/theme/www/ressources/.mysql_common.php");
 	require_once("class.inputfilter_clean.php");
 ?>

@@ -1,12 +1,15 @@
 <?
 setlocale(LC_CTYPE, 'da_DK');
 
-if (!$db_conn = @mysql_connect("localhost", "kbhff", "Gran/fgVbr0"))
+// enable reusable db vars (MAK)
+include($_SERVER["LOCAL_PATH"]."/../ci/CodeIgniter_2.0.2/application/config/database.php");
+
+if (!$db_conn = @mysql_connect($db['default']['hostname'], $db['default']['username'], $db['default']['password']))
 {
 	echo "Kunne ikke tilsluttes databasen<br>";
 	exit;
 };
-@mysql_select_db("kbhff");
+@mysql_select_db($db['default']['database']);
 
 
 // error_reporting  (E_ERROR | E_WARNING | E_PARSE);

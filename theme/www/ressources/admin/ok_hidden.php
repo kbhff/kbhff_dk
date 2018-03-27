@@ -1,4 +1,9 @@
-
+<?php
+$access_item = false;
+if(isset($read_access) && $read_access) {
+	return;
+}
+?>
 <?php require_once("global_variables.php"); ?>
 <?
 // Date in the past

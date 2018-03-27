@@ -1,5 +1,8 @@
 <?php
-
+$access_item = false;
+if(isset($read_access) && $read_access) {
+	return;
+}
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
@@ -57,7 +60,7 @@ if (defined('ENVIRONMENT'))
  * as this file.
  *
  */
-	$system_path = '/srv/sites/kbhff/kbhff_dk/theme/www/CodeIgniter_2.0.2/system';
+	$system_path = '/srv/sites/kbhff/kbhff_dk/ci/CodeIgniter_2.0.2/system';
 
 /*
  *---------------------------------------------------------------
@@ -73,7 +76,7 @@ if (defined('ENVIRONMENT'))
  * NO TRAILING SLASH!
  *
  */
-	$application_folder = '/srv/sites/kbhff/kbhff_dk/theme/www/CodeIgniter_2.0.2/application';
+	$application_folder = '/srv/sites/kbhff/kbhff_dk/ci/CodeIgniter_2.0.2/application';
 
 /*
  * --------------------------------------------------------------------
