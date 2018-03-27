@@ -63,17 +63,50 @@ if(is_array($action) && count($action)) {
 			
 			$_POST["username"] = "martin@think.dk";
 
-			// Perform Janitor login
-			session()->value("login_forward", "/minside");
+			// Perform Janitor login and redirect to this controller
+			// because Janitor does not have access the CI pages and we want to end up on "/minside"
+			// This controller will then redirect if login was successful
+			session()->value("login_forward", "/login");
 			$page->login();
 
 		}
 
-
-
-		print "check";
 		exit();
 
+	}
+
+	// Manual dual logoff
+	// login/forgot
+	else if(count($action) == 1 && $action[0] == "logoff") {
+
+		// CI logoff
+		include_once("classes/curl.class.php");
+		$curl = new CurlRequest();
+		$params = array(
+			"useragent" => $_SERVER["HTTP_USER_AGENT"],
+			"method" => "GET",
+			"cookie" => $_COOKIE["kbhff_session"]
+		);
+		$curl->init($params);
+		$result = $curl->exec(SITE_URL."/logud");
+
+		// Logoff seems to be successful
+		if($result["http_code"] == 200) {
+
+			// clear CI session cookie
+			setcookie(
+				"kbhff_session",
+				"",
+				time()-3600,
+				"/"
+			);
+
+			// Janitor logoff
+			$page->logoff();
+
+		}
+
+		exit();
 	}
 
 	// login/forgot
@@ -110,9 +143,21 @@ if(is_array($action) && count($action)) {
 	}
 }
 
-// plain login
-$page->page(array(
-	"templates" => "pages/login.php"
-));
+// Login will redirect here (due to dual login)
+// If Janitor login was successful, redirect til CI page, "/minside"
+if(session()->value("user_group_id") > 1) {
+
+	header("Location: /minside");
+	
+}
+// User not logged in
+else {
+
+	// plain login
+	$page->page(array(
+		"templates" => "pages/login.php"
+	));
+	
+}
 
 ?>

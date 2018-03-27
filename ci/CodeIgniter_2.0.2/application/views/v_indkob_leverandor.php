@@ -76,7 +76,7 @@ F&Oslash;DEVAREF&AElig;LLESSKAB <span id="green">/ LEVERAND&Oslash;RSYSTEM</span
 <div id="menu">
   <ul>
    <li>
-    <a href="https://medlem.kbhff.dk/logud">Log ud</a> 
+    <a href="/login/logoff">Log ud</a> 
    </li>
    <li>
     <a href="#">Tilbud</a> 

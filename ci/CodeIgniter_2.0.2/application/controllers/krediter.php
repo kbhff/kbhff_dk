@@ -21,7 +21,7 @@ class Krediter extends CI_Controller {
 		$permissions = $this->session->userdata('permissions');
 
 		if (!isset($permissions['credit']) || $permissions['credit'] < 2)
-			redirect(base_url().'index.php/logud');
+			redirect("/login/logoff");
 	}
 	
 	function index()

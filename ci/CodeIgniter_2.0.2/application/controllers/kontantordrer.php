@@ -36,7 +36,7 @@ class kontantordrer extends CI_Controller {
 		$p_infovagt   	= $this->Memberinfo->checkpermission($permissions, 'Info + lukkevagt', $division);
 
 		if (!(($p_administrator) || ($p_kassemester)|| ($p_infovagt)))
-			redirect(base_url().'index.php/logud');
+			redirect("/login/logoff");
 		if ($this->input->post('items')> 0)
 		{
 				if ($this->input->post('mobilepay'))

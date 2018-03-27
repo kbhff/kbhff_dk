@@ -71,11 +71,12 @@ if ($kasse)
 $extra_menu .= '<li class="extra"><a href="'.$siteURL.'kassemester">Kassemester</a></li>';
 }
 
+// <li><a href="'.$siteURL.'logud">Log ud</a></li><li><a href="'.$siteURL.'minside">Min side</a></li><li><a href="'.$siteURL.'minside/mine_ordrer/">Mine ordrer</a></li><li><a href="'.$siteURL.'kontaktinfo/uid/'.$uid.'/">Min kontaktinfo</a></li><li><a href="http://kbhff.wikispaces.com/Vagtplan" target="_blank">Mine vagter</a></li>   
 
  return '
  <div id="menu">
   <ul>
-   <li><a href="'.$siteURL.'logud">Log ud</a></li><li><a href="'.$siteURL.'minside">Min side</a></li><li><a href="'.$siteURL.'minside/mine_ordrer/">Mine ordrer</a></li><li><a href="'.$siteURL.'kontaktinfo/uid/'.$uid.'/">Min kontaktinfo</a></li><li><a href="http://kbhff.wikispaces.com/Vagtplan" target="_blank">Mine vagter</a></li>   
+   <li><a href="/login/logoff">Log ud</a></li><li><a href="'.$siteURL.'minside">Min side</a></li><li><a href="'.$siteURL.'minside/mine_ordrer/">Mine ordrer</a></li><li><a href="'.$siteURL.'kontaktinfo/uid/'.$uid.'/">Min kontaktinfo</a></li><li><a href="http://kbhff.wikispaces.com/Vagtplan" target="_blank">Mine vagter</a></li>   
   </ul>
   <ul>
      '.$extra_menu.'

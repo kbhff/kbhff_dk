@@ -697,7 +697,7 @@ function _update_transactions($orderno, $puid, $amount, $status1, $status2, $cc_
 		$p_administrator = $this->Memberinfo->checkpermission($permissions, 'Administrator', $division);
 
 		if (! ($p_administrator))
-			redirect(base_url().'index.php/logud');
+			redirect("/login/logoff");
 
 		$this->viewdata['name'] = $this->input->post('name');
 
@@ -736,7 +736,7 @@ function _update_transactions($orderno, $puid, $amount, $status1, $status2, $cc_
 		$p_administrator = $this->Memberinfo->checkpermission($permissions, 'Administrator', $division);
 
 		if (! ($p_administrator))
-			redirect(base_url().'index.php/logud');
+			redirect("/login/logoff");
 
 		if ($this->input->post('status') == 'update')
 		{

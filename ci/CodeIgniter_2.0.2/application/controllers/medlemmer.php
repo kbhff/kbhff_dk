@@ -35,14 +35,14 @@ class medlemmer extends CI_Controller {
 
 
 		if (! (($p_administrator) || ($p_kassemester)))
-			redirect(base_url().'index.php/logud');
+			redirect("/login/logoff");
 
 		if ($this->input->post('credit'))
 		{
 			if (($p_administrator) || ($p_kassemester))
 				$this->_credit_to_members();
 			else
-				redirect(base_url().'index.php/logud');
+				redirect("/login/logoff");
 		}
 
 		if ($this->input->post('debit'))
@@ -50,7 +50,7 @@ class medlemmer extends CI_Controller {
 			if (($p_administrator) || ($p_kassemester))
 				$this->_debit_to_members($division);
 			else
-				redirect(base_url().'index.php/logud');
+				redirect("/login/logoff");
 		}
 $this->viewdata['division'] = $division;
 $this->viewdata['title'] = 'Medlemsh&aring;ndtering';
@@ -264,7 +264,7 @@ $this->javascript->compile();
 		$p_kassemester   = $this->Memberinfo->checkpermission($permissions, 'Kassemester', $division);
 		
 		if (! (($p_administrator) || ($p_kassemester)))
-			redirect(base_url().'index.php/logud');
+			redirect("/login/logoff");
 /*
 		echo 'debit';
 		print_r ($_POST);

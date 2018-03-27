@@ -40,7 +40,7 @@ class Kontaktinfo extends CI_Controller {
 			}
 			if (!$admin)
 			{
-				redirect(base_url().'index.php/logud');
+				redirect("/login/logoff");
 				exit();
 			}
 			$pw_edit = FALSE;
