@@ -16,12 +16,12 @@ class Login extends CI_Controller {
 		// Redirect to Janitor login
 		redirect("login");
 
-        $data = array();
-
-        $this->jquery->script('/ressources/jquery-1.6.2.min.js', TRUE);
-//        $this->javascript->compile();
-
-		$this->load->view('v_login', $data);
+//         $data = array();
+//
+//         $this->jquery->script('/ressources/jquery-1.6.2.min.js', TRUE);
+// //        $this->javascript->compile();
+//
+// 		$this->load->view('v_login', $data);
 	
     }
 

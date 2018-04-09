@@ -37,7 +37,7 @@ define('FF_ANNUALFEE', 77);
 if(ENVIRONMENT == "production") {
 	$config['base_url']	= 'http://medlem.kbhff.dk';
 }
-else if(ENVIRONMENT == "staging") {
+else if(ENVIRONMENT == "testing") {
 	$config['base_url']	= 'http://test-medlem.kbhff.dk';
 }
 else {
@@ -276,7 +276,7 @@ $config['encryption_key'] = "Såerdethøjsommer! Grøntsagerne-";
 $config['sess_cookie_name']		= 'kbhff_session';
 $config['sess_expiration']		= 7200;
 $config['sess_expire_on_close']	= TRUE;
-$config['sess_encrypt_cookie']	= TRUE;
+$config['sess_encrypt_cookie']	= FALSE;
 $config['sess_use_database']	= TRUE;
 $config['sess_table_name']		= 'ff_sessions';
 $config['sess_match_ip']		= TRUE;
