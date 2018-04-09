@@ -1,8 +1,5 @@
 <?php
-$access_item = false;
-if(isset($read_access) && $read_access) {
-	return;
-}
+
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
@@ -21,8 +18,7 @@ if(isset($read_access) && $read_access) {
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
-#	define('ENVIRONMENT', 'production');
-	define('ENVIRONMENT', 'development');
+	define('ENVIRONMENT', $_SERVER["CI_ENV"]);
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
@@ -39,7 +35,7 @@ if (defined('ENVIRONMENT'))
 		case 'development':
 			error_reporting(E_ALL);
 		break;
-	
+
 		case 'testing':
 		case 'production':
 			error_reporting(0);
@@ -60,7 +56,8 @@ if (defined('ENVIRONMENT'))
  * as this file.
  *
  */
-	$system_path = '/srv/sites/kbhff/kbhff_dk/ci/CodeIgniter_2.0.2/system';
+//	$system_path = 'system';
+	$system_path = '/srv/sites/kbhff/kbhff_dk/ci/CodeIgniter-2.2.6/system';
 
 /*
  *---------------------------------------------------------------
@@ -76,7 +73,8 @@ if (defined('ENVIRONMENT'))
  * NO TRAILING SLASH!
  *
  */
-	$application_folder = '/srv/sites/kbhff/kbhff_dk/ci/CodeIgniter_2.0.2/application';
+//	$application_folder = 'application';
+	$application_folder = '/srv/sites/kbhff/kbhff_dk/ci/CodeIgniter-2.2.6/application';
 
 /*
  * --------------------------------------------------------------------
@@ -102,7 +100,7 @@ if (defined('ENVIRONMENT'))
 	// if your controller is not in a sub-folder within the "controllers" folder
 	// $routing['directory'] = '';
 
-	// The controller class file name.  Example:  Mycontroller.php
+	// The controller class file name.  Example:  Mycontroller
 	// $routing['controller'] = '';
 
 	// The controller function you wish to be called.
@@ -167,6 +165,7 @@ if (defined('ENVIRONMENT'))
 	define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 
 	// The PHP file extension
+	// this global constant is deprecated.
 	define('EXT', '.php');
 
 	// Path to the system folder
@@ -202,7 +201,7 @@ if (defined('ENVIRONMENT'))
  * And away we go...
  *
  */
-require_once BASEPATH.'core/CodeIgniter'.EXT;
+require_once BASEPATH.'core/CodeIgniter.php';
 
 /* End of file index.php */
 /* Location: ./index.php */
