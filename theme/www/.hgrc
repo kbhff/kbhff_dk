@@ -1,9 +1,0 @@
-[ui]
-username = Torsten Arendrup <torsten@arendrup.dk>
-
-[paths]
-Medlemssystem = /www/medlem.kbhff.dk
-
-[web] 
-allow_push = *
-
