@@ -1,4 +1,4 @@
-﻿/* http://keith-wood.name/calendars.html
+/* http://keith-wood.name/calendars.html
    English/UK localisation for Gregorian/Julian calendars for jQuery.
    Stuart. */
 (function($) {

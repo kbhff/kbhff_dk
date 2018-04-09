@@ -1,4 +1,4 @@
-﻿/* http://keith-wood.name/calendars.html
+/* http://keith-wood.name/calendars.html
    Afrikaans localisation for calendars datepicker for jQuery.
    Written by Renier Pretorius. */
 (function($) {

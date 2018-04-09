@@ -1,4 +1,4 @@
-﻿/* http://keith-wood.name/calendars.html
+/* http://keith-wood.name/calendars.html
    Afrikaans localisation for Gregorian/Julian calendars for jQuery.
    Written by Renier Pretorius. */
 (function($) {

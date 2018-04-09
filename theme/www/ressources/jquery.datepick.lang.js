@@ -1,4 +1,4 @@
-﻿/* http://keith-wood.name/datepick.html
+/* http://keith-wood.name/datepick.html
    Datepicker localisations for jQuery 4.0.5. */
 /* http://keith-wood.name/datepick.html
    Afrikaans localisation for jQuery Datepicker.

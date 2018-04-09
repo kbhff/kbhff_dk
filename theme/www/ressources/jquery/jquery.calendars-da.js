@@ -1,4 +1,4 @@
-﻿/* http://keith-wood.name/calendars.html
+/* http://keith-wood.name/calendars.html
    Danish localisation for Gregorian/Julian calendars for jQuery.
    Written by Jan Christensen ( deletestuff@gmail.com). */
 (function($) {
