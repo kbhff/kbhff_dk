@@ -7,8 +7,10 @@ $admin = $info = $butik = $indkob = $kasse = $finance = false;
 
 if (is_array($permissions))
 {
-	while (list($division, $values) = each($permissions)) { 
-		while (list($role, $level) = each($values)) { 
+	foreach($permissions as $division => $values) {
+//	while (list($division, $values) = each($permissions)) { 
+		foreach($values as $role => $level) {
+//		while (list($role, $level) = each($values)) { 
 			if (is_numeric($level))
 			{
 				if ($role == 'Administrator') {

@@ -42,11 +42,13 @@ print_r($permissions);
 echo("-->\n");
 */
 // Udskriv tildelte roller
-while (list($division, $values) = each($permissions)) { 
+foreach($permissions as $division => $values) {
+//while (list($division, $values) = each($permissions)) { 
 	if (array_key_exists('afdelingsnavn', $permissions[$division]))
 	{
 		echo ("<strong>" . $permissions[$division]['afdelingsnavn'] . ":</strong><br>\n");
-		while (list($role, $level) = each($values)) { 
+		foreach ($values as $role => $level) { 
+//		while (list($role, $level) = each($values)) { 
 			if (is_numeric($level))
 			{
 				echo ("$role  <!-- level $level --><br>\n");
@@ -57,11 +59,13 @@ while (list($division, $values) = each($permissions)) {
 echo ("<h3>Mine arbejdsgrupper:</h3>\n");
 // Udskriv tildelte roller
 reset($permissions);
-while (list($division, $values) = each($permissions)) { 
+//while (list($division, $values) = each($permissions)) { 
+foreach ($permissions as $division => $values) { 
 	if (array_key_exists('afdelingsnavn', $permissions[$division]))
 	{
 		echo ("<strong>" . $permissions[$division]['afdelingsnavn'] . ":</strong><br>\n");
-		while (list($role, $level) = each($values)) { 
+		foreach ($values as $role => $level) { 
+//		while (list($role, $level) = each($values)) { 
 			if ($level == 'Y')
 			{
 				echo ("$role  <!-- level $level --><br>\n");
