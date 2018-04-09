@@ -41,6 +41,8 @@ if(is_array($action) && count($action)) {
 		);
 		$curl->init($params);
 		$result = $curl->exec(SITE_URL."/minside/login");
+
+
 		// Did login result in session cookie
 		if($result["cookies"] && preg_match("/kbhff_session/", $result["cookies"][0])) {
 			// get cookie details
@@ -53,7 +55,6 @@ if(is_array($action) && count($action)) {
 				false,
 				"/"
 			);
-
 
 
 			// Requires existing data to be moved to Janitor
@@ -91,7 +92,7 @@ if(is_array($action) && count($action)) {
 		$result = $curl->exec(SITE_URL."/logud");
 
 		// Logoff seems to be successful
-		if($result["http_code"] == 200) {
+//		if($result["http_code"] == 200) {
 
 			// clear CI session cookie
 			setcookie(
@@ -101,10 +102,10 @@ if(is_array($action) && count($action)) {
 				"/"
 			);
 
-			// Janitor logoff
-			$page->logoff();
+//		}
 
-		}
+		// Janitor logoff
+		$page->logoff();
 
 		exit();
 	}
@@ -148,14 +149,14 @@ if(is_array($action) && count($action)) {
 if(session()->value("user_group_id") > 1) {
 
 	header("Location: /minside");
-	
+
 }
 // User not logged in
 else {
 
 	// plain login
 	$page->page(array(
-		"templates" => "pages/login.php"
+		"templates" => "pages/kbhff-login.php"
 	));
 	
 }
