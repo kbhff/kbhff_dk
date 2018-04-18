@@ -1,4 +1,8 @@
 <?php
+$access_item = false;
+if(isset($read_access) && $read_access) {
+	return;
+}
 
 /*
  *---------------------------------------------------------------
@@ -34,6 +38,7 @@ if (defined('ENVIRONMENT'))
 	{
 		case 'development':
 			error_reporting(E_ALL);
+//			error_reporting(0);
 		break;
 
 		case 'testing':
