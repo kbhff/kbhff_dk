@@ -7,7 +7,7 @@
 echo  link_tag('img/favicon.ico', 'shortcut icon', 'image/ico');  
 // http://www.jankoatwarpspeed.com/post/2008/07/27/Enhance-your-input-fields-with-simple-CSS-tricks.aspx
 ?>
-<link rel="stylesheet" href="<?php echo base_url(); ?>ressources/kbhff_2012.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo base_url(); ?>ressources/kbhff_2012.css" type="text/css" media="all" />
 <?php echo isset($library_src) ? $library_src : ''; ?>
 <script type="text/javascript" charset="utf-8" src="/ressources/jquery.form.js"></script>
 <script type="text/javascript">

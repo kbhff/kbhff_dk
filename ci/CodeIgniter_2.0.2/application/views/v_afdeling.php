@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title><?php echo $title;?></title>
 
-<link rel="stylesheet" href="<?php echo base_url(); ?>ressources/kbhff_2012.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo base_url(); ?>ressources/kbhff_2012.css" type="text/css" media="all" />
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" ></script>
 <script type="text/javascript" src="/ressources/jquery.qtip.js"></script>
 <link type="text/css" rel="stylesheet" href="/ressources/jquery.qtip.css" />
