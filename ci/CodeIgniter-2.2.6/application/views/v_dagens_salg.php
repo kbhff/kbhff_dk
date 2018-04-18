@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title><?php echo $title;?></title>
 
-<link rel="stylesheet" href="<?php echo base_url(); ?>ressources/kbhff_2012.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo base_url(); ?>ressources/kbhff_2012.css" type="text/css" media="all" />
 <?php echo isset($library_src) ? $library_src : ''; ?>
 <script type="text/javascript" charset="utf-8" src="/ressources/jquery.form.js"></script>
 <script type="text/javascript" src="/ressources/jquery/jquery.datepick.js"></script>
@@ -33,12 +33,12 @@ F&Oslash;DEVAREF&AElig;LLESSKAB <span id="green">/ MEDLEMSSYSTEM</span></span>
 <table>
 <tr class="theader"><td>Ydelse</td><td align="right">Kontant</td><td  align="right" class="grey">Mobilepay</td></tr>
 <?php 
-echo ('<tr><td>Grøntposer</td><td align="right">' . $kontant_groent . '</td><td class="grey" align="right">' . $mobilepay_groent . "</td></tr>\n");
-echo ('<tr><td>Frugtposer</td><td align="right">' . $kontant_frugt . '</td><td  class="grey" align="right">' . $mobilepay_frugt . "</td></tr>\n");
-echo ('<tr><td>Aspargesposer</td><td align="right">' . $kontant_asparges . '</td><td  class="grey" align="right">' . $mobilepay_asparges . "</td></tr>\n");
-echo ('<tr><td>Stofposeandele</td><td align="right">' . $kontant_stofpose . '</td><td  class="grey" align="right">' . $mobilepay_stofpose . "</td></tr>\n");
-echo ('<tr><td>Indmeldelser</td><td align="right">' . $kontant_indmeldelse . '</td><td  class="grey" align="right">' . $mobilepay_indmeldelse . "</td></tr>\n");
-echo ('<tr><td>Kontingenter</td><td align="right">' . $kontant_kontingent . '</td><td  class="grey" align="right">' . $mobilepay_kontingent . "</td></tr>\n");
+echo ('<tr><td>Grøntposer</td><td align="right">' . (isset($kontant_groent) ? $kontant_groent : "") . '</td><td class="grey" align="right">' . (isset($mobilepay_groent) ? $mobilepay_groent : "") . "</td></tr>\n");
+echo ('<tr><td>Frugtposer</td><td align="right">' . (isset($kontant_frugt) ? $kontant_frugt : "") . '</td><td  class="grey" align="right">' . (isset($mobilepay_frugt) ? $mobilepay_frugt : "") . "</td></tr>\n");
+echo ('<tr><td>Aspargesposer</td><td align="right">' . (isset($kontant_asparges) ? $kontant_asparges : "") . '</td><td  class="grey" align="right">' . (isset($mobilepay_asparges) ? $mobilepay_asparges : "") . "</td></tr>\n");
+echo ('<tr><td>Stofposeandele</td><td align="right">' . (isset($kontant_stofpose) ? $kontant_stofpose : "") . '</td><td  class="grey" align="right">' . (isset($mobilepay_stofpose) ? $mobilepay_stofpose : "") . "</td></tr>\n");
+echo ('<tr><td>Indmeldelser</td><td align="right">' . (isset($kontant_indmeldelse) ? $kontant_indmeldelse : "") . '</td><td  class="grey" align="right">' . (isset($mobilepay_indmeldelse) ? $mobilepay_indmeldelse : "") . "</td></tr>\n");
+echo ('<tr><td>Kontingenter</td><td align="right">' . (isset($kontant_kontingent) ? $kontant_kontingent : "") . '</td><td  class="grey" align="right">' . (isset($mobilepay_kontingent) ? $mobilepay_kontingent : "") . "</td></tr>\n");
 ?>
 </table>
 <br>

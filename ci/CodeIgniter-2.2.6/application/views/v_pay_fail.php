@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title><?php echo $title;?></title>
 
-<link rel="stylesheet" href="<?php echo base_url(); ?>ressources/kbhff_2012.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo base_url(); ?>ressources/kbhff_2012.css" type="text/css" media="all" />
 </head>
 <body>
 <span id="tt">

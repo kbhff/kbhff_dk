@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>KBHFF Betaling</title>
-<link rel="stylesheet" href="<?php echo base_url(); ?>ressources/kbhff_2012.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo base_url(); ?>ressources/kbhff_2012.css" type="text/css" media="all" />
 <?php // echo isset($library_src) ? $library_src : ''; ?>
 <script type="text/javascript" charset="utf-8" src="/ressources/jquery.form.js"></script>
 </head>

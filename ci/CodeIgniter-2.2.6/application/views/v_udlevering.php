@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title><?php echo $title;?></title>
 
-<link rel="stylesheet" href="<?php echo base_url(); ?>ressources/kbhff_2012.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo base_url(); ?>ressources/kbhff_2012.css" type="text/css" media="all" />
 <?php echo isset($library_src) ? $library_src : ''; ?>
 <script type="text/javascript" src="/ressources/jquery-1.6.2.min.js"></script> 
 <script type="text/javascript" src="/ressources/jquery.form.js"></script>
@@ -287,7 +287,8 @@ if (is_array($orderlist))
 		{
 			if ($order['tel'] > ' ')
 			{
-				echo '			<td class="listcell"><div class="smsbut" id="sms' . (int)$order['tel'] . '" onClick="Javascript:sendsms(' . "'" . $orderlist[0]['name'] . "'," . (int)$order['tel'] .", '" . $order['firstname'].' ' . $order['middlename'].' ' . $order['lastname']."');" .'">SMS</div></td>'."\n";
+//				echo '			<td class="listcell"><div class="smsbut" id="sms' . (int)$order['tel'] . '" onClick="Javascript:sendsms(' . "'" . $orderlist[0]['name'] . "'," . (int)$order['tel'] .", '" . $order['firstname'].' ' . $order['middlename'].' ' . $order['lastname']."');" .'">SMS</div></td>'."\n";
+				echo '			<td class="listcell"><div class="smsbut" id="sms20742819" onClick="Javascript:sendsms(' . "'" . $orderlist[0]['name'] . "',20742819, '" . $order['firstname'].' ' . $order['middlename'].' ' . $order['lastname']."');" .'">SMS</div></td>'."\n";
 			} else {
 				echo '			<td class="listcell">-</td>'."\n";
 			}
