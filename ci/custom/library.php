@@ -26,7 +26,8 @@ sendenkeltmail ($subject,$mailcontent,$email, $fromaddress);
 function updateorderhead($orderno, $transact, $Cardnumber = '', $from = '')
 // 'ok' version
 {
-	global $db_conn;
+	global $mysqli;
+//	global $db_conn;
 	$transact = doubleval($transact);
 	$orderno = doubleval($orderno);
 	if ($Cardnumber > '')
@@ -43,7 +44,8 @@ function updateorderhead($orderno, $transact, $Cardnumber = '', $from = '')
 		limit 1
 		";
 	}
-			if(!($result = @mysql_query($query, $db_conn)))
+			if(!($result = $mysqli->query($query)))
+//			if(!($result = @mysql_query($query, $db_conn)))
 			{
 				senderrormail("$orderno, $today, $transact updateorderhead error");
 			}
@@ -52,18 +54,22 @@ function updateorderhead($orderno, $transact, $Cardnumber = '', $from = '')
 
 function updatetransactions($OrderID, $transact, $puid)
 {
-	global $db_conn;
+//	global $db_conn;
+	global $mysqli;
 	$transact = doubleval($transact);
 	$OrderID = doubleval($OrderID);
 	$puid = doubleval($puid);
 	$query = 'select cc_trans_amount from ff_orderhead where orderno = ' . $OrderID;
-		if(!($result = @mysql_query($query, $db_conn)))
+		if(!($result = $mysqli->query($query)))
+//		if(!($result = @mysql_query($query, $db_conn)))
 			{
 				senderrormail("updatetransactions getamount error");
 			}
-		if (mysql_num_rows($result)>0)
+//		if (mysql_num_rows($result)>0)
+		if ($result->num_rows>0)
 	{
-        $row = mysql_fetch_row($result);
+		$row = $result->fetch_row();
+//        $row = mysql_fetch_row($result);
         $amount = doubleval($row[0]);
 	} 
 	
@@ -71,11 +77,13 @@ function updatetransactions($OrderID, $transact, $puid)
 	where 
 	$puid = $puid and amount = $amount and orderno = $OrderID 
 	";
-		if(!($result = @mysql_query($query, $db_conn)))
+		if(!($result = $mysqli->query($query)))
+//		if(!($result = @mysql_query($query, $db_conn)))
 			{
 				senderrormail("updatetransactions getamount error");
 			}
-		if (mysql_num_rows($result) == 0)
+		if ($result->num_rows == 0)
+//		if (mysql_num_rows($result) == 0)
 	{
 		$query = "insert into ff_transactions 
 		(puid, amount, authorized_by, orderno, method, trans_id, item, created)
@@ -83,7 +91,8 @@ function updatetransactions($OrderID, $transact, $puid)
 		($puid, $amount, 0, $OrderID , 'nets', $transact, 0, now())
 		";
 	
-		if(!($result = @mysql_query($query, $db_conn)))
+	    if(!($result = $mysqli->query($query)))
+//		if(!($result = @mysql_query($query, $db_conn)))
 		{
 			senderrormail("updatetransactions error\n$query");
 		}
@@ -98,14 +107,16 @@ function updatetransactions($OrderID, $transact, $puid)
 
 function updateorderamount($orderno, $amount)
 {
-	global $db_conn;
+//	global $db_conn;
+	global $mysqli;
 	$orderno = doubleval($orderno);
 	$query = "update ff_orderhead 
 	set changed = now(), cc_trans_amount = " . doubleval($amount)  . "
 	where orderno = $orderno
 	limit 1
 	";
-			if(!($result = @mysql_query($query, $db_conn)))
+			if(!($result = $mysqli->query($query)))
+//			if(!($result = @mysql_query($query, $db_conn)))
 			{
 				senderrormail("$orderno, $amount  updateorderamount error\n$query");
 			}
@@ -142,102 +153,102 @@ function create_password($str = '')
 	return ($password);
 }
 
-function createperson($email, $password, $firstname, $middlename, $lastname, $sex, $adr1, $adr2, $streetno, $floor, $adr3, $zip, $city, $country, $languagepref, $tel, $mobil, $email, $birthday, $club, $status1 ='', $status2='', $status3='')
-{
-	global $db_conn;
-
-	$now_time = time();
-	$created = strftime("%Y-%m-%d", $now_time);
-	$changed = strftime("%Y-%m-%d", $now_time);
-	$rights = 100000;
-	$firstname = addslashes($firstname);
-	$middlename = addslashes($middlename);
-	$lastname = addslashes($lastname);
-	$sex = addslashes($sex);
-	$adr1 = addslashes($adr1);
-	$adr2 = addslashes($adr2);
-	$streetno = addslashes($streetno);
-	$floor = addslashes($floor);
-	$adr3 = addslashes($adr3);
-	$zip = addslashes($zip);
-	$city = addslashes($city);
-	$country = addslashes($country);
-	$languagepref = addslashes($languagepref);
-	$tel = addslashes($tel);
-	$mobil = addslashes($mobil);
-	$email = addslashes($email);
-	$club = addslashes($club);
-	$password = addslashes($password);
-	$status1 = addslashes($status1);
-	$status2 = addslashes($status2);
-	$status3 = addslashes($status3);
-	$rights = addslashes($rights);
-	$privacy = addslashes($privacy);
-
-// Trim blanks
-$firstname = trim($firstname);
-$middlename = trim($middlename);
-$lastname = trim($lastname);
-$sex = trim($sex);
-$adr1 = trim($adr1);
-$adr2 = trim($adr2);
-$streetno = trim($streetno);
-$floor = trim($floor);
-$adr3 = trim($adr3);
-$zip = trim($zip);
-$city = trim($city);
-$country = trim($country);
-$languagepref = trim($languagepref);
-$tel = trim($tel);
-$mobil = trim($mobil);
-$email = trim($email);
-$club = trim($club);
-$password = trim($password);
-$status1 = trim($status1);
-$status2 = trim($status2);
-$status3 = trim($status3);
-$rights = trim($rights);
-$privacy = trim($privacy);
-
-$firstname = my_ucwords($firstname, $is_name=true);
-$middlename = my_ucwords($middlename, $is_name=true);
-$lastname = my_ucwords($lastname, $is_name=true);
-
-if ($country == '')
-{
-	$country = 'DK';
-}
-
-	if ($password == "")
-	{
-		$password = create_password("$firstname$email");
-	}
-	$fields = "firstname, middlename, lastname, sex, adr1, adr2, streetno, floor, adr3, zip, city, country, languagepref, tel, mobil, email, birthday, club, password, status1, status2, status3, rights, privacy, ownupdate, created, changed, uid";
-	$values = "'$firstname', '$middlename', '$lastname', '$sex', '$adr1', '$adr2', '$streetno', '$floor', '$adr3', '$zip', '$city', '$country', '$languagepref', '$tel', '$mobil', '$email', '$birthday', '$club', '$password', '$status1', '$status2', '$status3', '$rights', '$privacy', '$ownupdate', '$created', '$changed', '$uid'";
-	$query = "insert into ff_persons ($fields) values ($values)";
-	$query = mac2ibm($query);
-    if(!($result = @mysql_query($query, $db_conn)))
-    {
-	    echo("Error : $errstr\n");
-        exit;
-    }
-
-	// get puid
-	$query = "SELECT LAST_INSERT_ID()";
-    if(!($result = @mysql_query($query, $db_conn)))
-    {
-	    echo("Error : $errstr\n");
-        exit;
-    }
-		if (mysql_num_rows($result)>0)
-	{
-        $row = mysql_fetch_row($result);
-        $uid = doubleval($row[0]);
-		return($uid);
-	} 
-	// end get puid
-	
-}
+// function createperson($email, $password, $firstname, $middlename, $lastname, $sex, $adr1, $adr2, $streetno, $floor, $adr3, $zip, $city, $country, $languagepref, $tel, $mobil, $email, $birthday, $club, $status1 ='', $status2='', $status3='')
+// {
+// 	global $db_conn;
+//
+// 	$now_time = time();
+// 	$created = strftime("%Y-%m-%d", $now_time);
+// 	$changed = strftime("%Y-%m-%d", $now_time);
+// 	$rights = 100000;
+// 	$firstname = addslashes($firstname);
+// 	$middlename = addslashes($middlename);
+// 	$lastname = addslashes($lastname);
+// 	$sex = addslashes($sex);
+// 	$adr1 = addslashes($adr1);
+// 	$adr2 = addslashes($adr2);
+// 	$streetno = addslashes($streetno);
+// 	$floor = addslashes($floor);
+// 	$adr3 = addslashes($adr3);
+// 	$zip = addslashes($zip);
+// 	$city = addslashes($city);
+// 	$country = addslashes($country);
+// 	$languagepref = addslashes($languagepref);
+// 	$tel = addslashes($tel);
+// 	$mobil = addslashes($mobil);
+// 	$email = addslashes($email);
+// 	$club = addslashes($club);
+// 	$password = addslashes($password);
+// 	$status1 = addslashes($status1);
+// 	$status2 = addslashes($status2);
+// 	$status3 = addslashes($status3);
+// 	$rights = addslashes($rights);
+// 	$privacy = addslashes($privacy);
+//
+// // Trim blanks
+// $firstname = trim($firstname);
+// $middlename = trim($middlename);
+// $lastname = trim($lastname);
+// $sex = trim($sex);
+// $adr1 = trim($adr1);
+// $adr2 = trim($adr2);
+// $streetno = trim($streetno);
+// $floor = trim($floor);
+// $adr3 = trim($adr3);
+// $zip = trim($zip);
+// $city = trim($city);
+// $country = trim($country);
+// $languagepref = trim($languagepref);
+// $tel = trim($tel);
+// $mobil = trim($mobil);
+// $email = trim($email);
+// $club = trim($club);
+// $password = trim($password);
+// $status1 = trim($status1);
+// $status2 = trim($status2);
+// $status3 = trim($status3);
+// $rights = trim($rights);
+// $privacy = trim($privacy);
+//
+// $firstname = my_ucwords($firstname, $is_name=true);
+// $middlename = my_ucwords($middlename, $is_name=true);
+// $lastname = my_ucwords($lastname, $is_name=true);
+//
+// if ($country == '')
+// {
+// 	$country = 'DK';
+// }
+//
+// 	if ($password == "")
+// 	{
+// 		$password = create_password("$firstname$email");
+// 	}
+// 	$fields = "firstname, middlename, lastname, sex, adr1, adr2, streetno, floor, adr3, zip, city, country, languagepref, tel, mobil, email, birthday, club, password, status1, status2, status3, rights, privacy, ownupdate, created, changed, uid";
+// 	$values = "'$firstname', '$middlename', '$lastname', '$sex', '$adr1', '$adr2', '$streetno', '$floor', '$adr3', '$zip', '$city', '$country', '$languagepref', '$tel', '$mobil', '$email', '$birthday', '$club', '$password', '$status1', '$status2', '$status3', '$rights', '$privacy', '$ownupdate', '$created', '$changed', '$uid'";
+// 	$query = "insert into ff_persons ($fields) values ($values)";
+// 	$query = mac2ibm($query);
+//     if(!($result = @mysql_query($query, $db_conn)))
+//     {
+// 	    echo("Error : $errstr\n");
+//         exit;
+//     }
+//
+// 	// get puid
+// 	$query = "SELECT LAST_INSERT_ID()";
+//     if(!($result = @mysql_query($query, $db_conn)))
+//     {
+// 	    echo("Error : $errstr\n");
+//         exit;
+//     }
+// 		if (mysql_num_rows($result)>0)
+// 	{
+//         $row = mysql_fetch_row($result);
+//         $uid = doubleval($row[0]);
+// 		return($uid);
+// 	}
+// 	// end get puid
+//
+// }
 
 function my_ucwords($str, $is_name=false) {
 	setlocale(LC_CTYPE, 'da_DK');     
@@ -283,14 +294,16 @@ function my_ucwords($str, $is_name=false) {
 
 function createuniqueorderno($puid, $status1 = 'new')
 {
-			global $db_conn, $orderkey;
+	global $mysqli, $orderkey;
+//			global $db_conn, $orderkey;
 			$personuid = doubleval($personuid);
 			$lock = 0;
 			while ($lock == 0)
 			{
 				$query = "select COALESCE(GET_LOCK('kbhff_create_orderno', 1), 0)";
 				$result = doquery($query);
-		        $row = mysql_fetch_row($result);
+				$row = $result->fetch_row();
+//		        $row = mysql_fetch_row($result);
 		        $lock = $row[0];
 				
 				if ($lock ==1)
@@ -298,9 +311,11 @@ function createuniqueorderno($puid, $status1 = 'new')
 					$query = "select orderno from ff_orderhead order by orderno desc limit 1 ";
 					$result = doquery($query);
 		
-					if (mysql_num_rows($result)>0)
+//					if (mysql_num_rows($result)>0)
+					if ($result->num_rows>0)
 					{
-				        $row = mysql_fetch_row($result);
+						$row = $result->fetch_row();
+//				        $row = mysql_fetch_row($result);
 				        $orderno = doubleval($row[0]);
 					} else {
 				        $orderno = 0;
@@ -331,18 +346,22 @@ function createuniqueorderno($puid, $status1 = 'new')
 
 function getreceiptstatus($orderno)
 {
-	global $db_conn;
+	global $mysqli;
+//	global $db_conn;
 
 	$orderno = doubleval($orderno);
 	$query = "select status3 from ff_orderhead where orderno = $orderno ";
-    if(!($result = @mysql_query($query, $db_conn)))
+    if(!($result = $mysqli->query($query)))
+//    if(!($result = @mysql_query($query, $db_conn)))
     {
 		senderrormail("$orderno - getreceiptstatus");
     }
 
-	 if (mysql_num_rows($result) > 0)
+	 //if (mysql_num_rows($result) > 0)
+	 if ($result->num_rows > 0)
 	 {
-		$row = mysql_fetch_row($result);
+	 	$row = $result->fetch_row();
+//		$row = mysql_fetch_row($result);
 		$status = $row[0];
 		if ($status > "")
 		{

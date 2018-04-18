@@ -20,10 +20,10 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 ?>
 <?
-	include("../../ressources/.mysql_common.php");
-	include("../../ressources/.library.php");
-	include("../../ressources/.kvittering.php");
-	include("../../ressources/.sendmail.php");
+	include($_SERVER["CI_PATH"]."/custom/mysql_common.php");
+	include($_SERVER["CI_PATH"]."/custom/library.php");
+	include($_SERVER["CI_PATH"]."/custom/kvittering.php");
+	include($_SERVER["CI_PATH"]."/custom/sendmail.php");
 
 ?>
 
@@ -70,7 +70,8 @@ setpaid($OrderID);
 
 function setpaid($orderno)
 {
-	global $db_conn;
+//	global $db_conn;
+	global $mysqli;
 
 	$orderno = doubleval($orderno);
 	$query = "update ff_orderhead 
@@ -86,7 +87,8 @@ function setpaid($orderno)
 
 function capturedandomain($orderno,$amount)
 {
-	global $db_conn;
+	global $mysqli;
+//	global $db_conn;
 	$orderno = doubleval($orderno);
 	$amount = doubleval($amount);
 	$amountstr = str_replace('.',',',$amount);

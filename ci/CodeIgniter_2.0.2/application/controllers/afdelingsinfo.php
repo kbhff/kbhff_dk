@@ -204,7 +204,7 @@ class Afdelingsinfo extends CI_Controller {
 	
 } // class Afdelingsinfo 
 
-	include("ressources/.sendmail.php");
+	include($_SERVER["CI_PATH"]."/custom/sendmail.php");
 
 /* End of file afdelingsinfo.php */
 /* Location: ./application/controllers/afdelingsinfo.php */

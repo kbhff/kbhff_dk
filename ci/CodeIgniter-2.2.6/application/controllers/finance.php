@@ -23,7 +23,7 @@ class Finance extends CI_Controller {
 		if (! $this->Memberinfo->checkgrouppermission($permissions, utf8_encode('Fælles økonomigruppe')))
 		redirect('/minside');		
 
-		$dagenssalg .= '<a href="/finance/dagens_salg/0">Alle' . "</a><br>\n";
+		$dagenssalg = '<a href="/finance/dagens_salg/0">Alle' . "</a><br>\n";
 		$finansrapport = '';
 		$this->db->select('divisions.uid as uid,divisions.name, pickupdates.pickupdate, pickupdates.uid as pickupdateuid');
 		$this->db->from('divisions');

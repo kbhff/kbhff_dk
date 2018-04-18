@@ -4,7 +4,7 @@ if(isset($read_access) && $read_access) {
 	return;
 }
 
-	include("../ressources/.mysql_common.php");
+	include($_SERVER["CI_PATH"]."/custom/mysql_common.php");
 //	require_once("class.inputfilter_clean.php");
 ?>
 <?php 
@@ -43,16 +43,18 @@ $query = 'SELECT
 		ORDER BY ff_pickupdates.pickupdate, ff_producttypes.explained ';
 		
 $result = doquery($query);
-	$num = mysql_num_rows($result);
+//	$num = mysql_num_rows($result);
+	$num = $result->num_rows;
      if ($num>0) {
-		$row = mysql_fetch_row($result);
+	 	$row = $result->fetch_row();
+//		$row = mysql_fetch_row($result);
 		$medlemsnummer = $row[12];
 		$return['uid'] = $orderline_uid;
 		if ($row[13] == 'udleveret')
 		{
 			$return['error'] = true;
 			$return['msg'] = 'Pose allerede udleveret til medlem #' . $medlemsnummer . utf8_encode(",\n $row[7] $row[8] $row[9]");
-			$return['receipt'] = utf8_encode("Medlem $row[12], $row[7] $row[8] $row[9], afhentet $row[6] $row[4] $row[5]<br>\n");
+			$return['receipt'] = utf8_encode("Medlem $row[12], $row[7] $row[8] $row[9], afhentet $row[6] $row[4] ".htmlentities($row[5])."<br>\n");
 		} else {
 			$return['error'] = false;
 			if ($row[6] == 1)
@@ -61,7 +63,7 @@ $result = doquery($query);
 			} else {
 				$return['msg'] = $row[6] . ' poser udleveret til medlem #' . $medlemsnummer . utf8_encode(" $row[7] $row[8] $row[9]") ;
 			}
-			$return['receipt'] = "<a href=\"/udlevering/annuller/$divisionday/$orderline_uid\"" . ' class="but"><img src="/img/del_but2.png" title="Annuller denne udlevering" alt="Annuller denne udlevering" width="15" height="15" border="0"></a> ' . utf8_encode("Medlem $row[12], $row[7] $row[8] $row[9], afhentet $row[6] $row[4] $row[5] <br>\n");
+			$return['receipt'] = "<a href=\"/udlevering/annuller/$divisionday/$orderline_uid\"" . ' class="but"><img src="/img/del_but2.png" title="Annuller denne udlevering" alt="Annuller denne udlevering" width="15" height="15" border="0"></a> ' . utf8_encode("Medlem $row[12], $row[7] $row[8] $row[9], afhentet $row[6] $row[4] ".htmlentities($row[5])." <br>\n");
 			setpicked($row[14]);
 		}
 	} else {
@@ -71,7 +73,8 @@ $result = doquery($query);
 
 	$query = 'select id, explained from ff_producttypes where bag = "Y" order by sortkey';
 	$result = doquery($query);
-	while($row=mysql_fetch_array($result)) {
+	while($row=$result->fetch_array()) {
+//	while($row=mysql_fetch_array($result)) {
        $return['numudlev' . $row[0]] = getcount($divisionday, 'udleveret', $row[0]);;
        $return['total' . $row[0]] = getcount($divisionday, '', $row[0]);;
    }
@@ -81,9 +84,13 @@ echo json_encode($return);
 
 function setpicked($uid)
 {
+	global $mysqli;
 	$query = 'update ff_orderlines set status2 = "udleveret" where uid = ' . (int)$uid . ' limit 1';
 	$result = doquery($query);
-	$num = mysql_affected_rows();
+	$num = $mysqli->affected_rows;
+//	print "NUM:" . $num;
+	
+//	$num = mysql_affected_rows();
 	if ($num <> 1) echo ("<p>Fejl - allerede udleveret</p>");
 	
 }
@@ -140,9 +147,11 @@ ORDER BY ff_orderlines.item';
 	}
 	$result = doquery($query);
 
-	if (mysql_num_rows($result) > 0)
+//	if (mysql_num_rows($result) > 0)
+	if ($result->num_rows > 0)
 	{
-		$row = mysql_fetch_row($result);
+		$row = $result->fetch_row();
+//		$row = mysql_fetch_row($result);
 		$num = $row[0];
 	}
 	return $num;

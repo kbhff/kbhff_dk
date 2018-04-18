@@ -2,10 +2,10 @@
 
 <html>
 <?
-	include("/srv/sites/kbhff/kbhff_dk/theme/www/ressources/.mysql_common.php");
-	include("/srv/sites/kbhff/kbhff_dk/theme/www/ressources/.library.php");
-	include("/srv/sites/kbhff/kbhff_dk/theme/www/ressources/.kvittering.php");
-	include("/srv/sites/kbhff/kbhff_dk/theme/www/ressources/.sendmail.php");
+	include($_SERVER["CI_PATH"]."/custom/mysql_common.php");
+	include($_SERVER["CI_PATH"]."/custom/library.php");
+	include($_SERVER["CI_PATH"]."/custom/kvittering.php");
+	include($_SERVER["CI_PATH"]."/custom/sendmail.php");
 ?>
 <head>
 		<meta http-equiv="content-type" content="text/html;charset=iso-8859-1">

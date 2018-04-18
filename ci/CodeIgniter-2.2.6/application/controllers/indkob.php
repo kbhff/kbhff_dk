@@ -126,8 +126,8 @@ class Indkob extends CI_Controller {
 			$this->db->order_by('divisions.name'); 
 			$query = $this->db->get();
 			$divisions = $query->result_array();
-			
-			$divisiondata = '';
+
+			$divisiondata = [];
 			foreach ($divisions as $division)
 			{
 				foreach ($bagdays as $bagday)

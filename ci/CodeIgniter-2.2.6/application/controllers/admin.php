@@ -1306,7 +1306,7 @@ ORDER BY ff_producttypes.explained');
 } // class Admin
 
 
-	include("ressources/.sendmail.php");
+	include($_SERVER["CI_PATH"]."/custom/sendmail.php");
 
 /* End of file admin.php */
 /* Location: ./application/controllers/admin.php */

@@ -75,10 +75,10 @@ class OK extends CI_Controller {
 
 /// NON-CODEIGNITER EXTERNAL FUNCTIONS FOLLOWS
 
-	include("/srv/sites/kbhff/kbhff_dk/theme/www/ressources/.mysql_common.php");
-	include("/srv/sites/kbhff/kbhff_dk/theme/www/ressources/.library.php");
-	include("/srv/sites/kbhff/kbhff_dk/theme/www/ressources/.kvittering.php");
-	include("/srv/sites/kbhff/kbhff_dk/theme/www/ressources/.sendmail.php");
+	include($_SERVER["CI_PATH"]."/custom/mysql_common.php");
+	include($_SERVER["CI_PATH"]."/custom/library.php");
+	include($_SERVER["CI_PATH"]."/custom/kvittering.php");
+	include($_SERVER["CI_PATH"]."/custom/sendmail.php");
 
 
 

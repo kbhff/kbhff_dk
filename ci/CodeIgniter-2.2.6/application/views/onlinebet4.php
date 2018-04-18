@@ -224,7 +224,11 @@ Din browser skal vise en h&aelig;ngel&aring;s som bevis p&aring; SSL-kryptering:
 
 function getorderkey($orderno)
 {
-	global $db_conn;
+//	global $db_conn;
+	global $mysqli;
+
+		if(!($result = $mysqli->query($query)))
+
 	$orderno = doubleval($orderno);
 
 
@@ -233,17 +237,22 @@ function getorderkey($orderno)
 	from ff_orderhead
 	where orderno = $orderno
 	";
-    if(!($result = @mysql_query($query, $db_conn)))
+//    if(!($result = @mysql_query($query, $db_conn)))
+    if(!($result = $mysqli->query($query)))
     {
 		echo "<strong>Error:</strong> ";
-		echo mysql_errno($db_conn);
+		echo $mysqli->connect_errno;
+//		echo mysql_errno($db_conn);
 		echo " -  ";
-		echo mysql_error($db_conn);
+		echo $mysqli->connect_errno;
 		exit;
     }
 
-     if (mysql_num_rows($result)>0) {
-		$row = mysql_fetch_row($result);
+
+	if ($result->num_rows > 0) {
+//     if (mysql_num_rows($result)>0) {
+		$row = $result->fetch_row();
+//		$row = mysql_fetch_row($result);
 		}
 
 return $row[0];

@@ -4,7 +4,7 @@ if(isset($read_access) && $read_access) {
 	return;
 }
 
-	include("/srv/sites/kbhff/kbhff_dk/theme/www/ressources/.mysql_common.php");
+	include($_SERVER["CI_PATH"]."/custom/mysql_common.php");
 	require_once("class.inputfilter_clean.php");
 ?>
 <?php 
@@ -28,7 +28,8 @@ function checklogin($user, $pw)
 {
 	$query = 'select firstname from ff_persons where uid = ' . doubleval($user) . ' and password = "' . addslashes($pw) . '"';
 	$res = doquery($query);
-	if (mysql_num_rows($res) == 0)
+//	if (mysql_num_rows($res) == 0)
+	if ($res->num_rows == 0)
 	{
 		return '?? fejl i medlemsnummer eller password';
 	} else {

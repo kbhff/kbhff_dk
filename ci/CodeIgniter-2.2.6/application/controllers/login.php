@@ -37,7 +37,7 @@ class Login extends CI_Controller {
 	
     function resendpassword() {
 		$email = $this->input->post('email');
-		include_once("ressources/.sendmail.php");
+		include_once($_SERVER["CI_PATH"]."/custom/sendmail.php");
 		$msg = '';
 		$email = trim($email);
 		if (strlen($email) <4)

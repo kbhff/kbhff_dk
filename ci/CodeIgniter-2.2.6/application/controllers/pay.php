@@ -38,7 +38,9 @@ class Pay extends CI_Controller {
 			$vat_amount = 0;
 	if (is_array($item)) // meaning, more than table-line
 	{
-		while (list($key,$value)=each($item))
+
+		foreach($item as $key => $value)
+//		while (list($key,$value)=each($item))
 		{
 			$amount = $quant[$key] * $itemamount[$key];
 			$temp_total += $amount;
@@ -355,10 +357,10 @@ class Pay extends CI_Controller {
 
 /// NON-CODEIGNITER EXTERNAL FUNCTIONS FOLLOWS
 
-	include("ressources/.mysql_common.php");
-	include("ressources/.library.php");
-	include("ressources/.kvittering.php");
-	include("ressources/.sendmail.php");
+	include($_SERVER["CI_PATH"]."/custom/mysql_common.php");
+	include($_SERVER["CI_PATH"]."/custom/library.php");
+	include($_SERVER["CI_PATH"]."/custom/kvittering.php");
+	include($_SERVER["CI_PATH"]."/custom/sendmail.php");
 
 
 

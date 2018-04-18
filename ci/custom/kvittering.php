@@ -2,19 +2,22 @@
 
 function kvitgetorderhead($OrderID, $orderkeycheck, $transact, $Cardnumber = '')
 {
-	global $db_conn;
+	global $mysqli;
 	$orderno = doubleval($OrderID);
 	$orderkey = addslashes($orderkey);
 			$query = "select ff_persons.firstname, ff_persons.middlename, ff_persons.lastname, ff_persons.sex, ff_persons.adr1, ff_persons.adr2, ff_persons.streetno, ff_persons.floor, ff_persons.adr3, ff_persons.zip, ff_persons.city, ff_persons.country, ff_persons.languagepref, ff_persons.tel, ff_persons.tel, ff_persons.email, ff_persons.birthday, ff_persons.password, ff_persons.status1, ff_persons.status2, ff_persons.status3, ff_persons.rights, ff_persons.privacy, ff_persons.ownupdate, ff_persons.created, ff_persons.changed, ff_persons.uid , ff_orderhead.orderno, ff_orderhead.puid, ff_orderhead.status1, ff_orderhead.cc_trans_no, ff_orderhead.cc_trans_amount, ff_orderhead.changed   from ff_orderhead, ff_persons where ff_orderhead.orderno = $orderno and ff_orderhead.orderkey = '$orderkey' and ff_orderhead.puid = ff_persons.uid ";
 			$query = "select ff_persons.firstname, ff_persons.middlename, ff_persons.lastname, ff_persons.sex, ff_persons.adr1, ff_persons.adr2, ff_persons.streetno, ff_persons.floor, ff_persons.adr3, ff_persons.zip, ff_persons.city, ff_persons.country, ff_persons.languagepref, ff_persons.tel, ff_persons.tel, ff_persons.email, ff_persons.birthday, ff_persons.password, ff_persons.status1, ff_persons.status2, ff_persons.status3, ff_persons.rights, ff_persons.privacy, ff_persons.ownupdate, ff_persons.created, ff_persons.changed, ff_persons.uid , ff_orderhead.orderno, ff_orderhead.puid, ff_orderhead.status1, ff_orderhead.status2, ff_orderhead.cc_trans_no, ff_orderhead.cc_trans_amount, date_format(ff_orderhead.changed, '%e-%c-%Y') , orderkey  from ff_orderhead, ff_persons where ff_orderhead.orderno = $orderno  and ff_orderhead.puid = ff_persons.uid ";
-			if(!($result = @mysql_query($query, $db_conn)))
+		    if(!($result = $mysqli->query($query)))
+//			if(!($result = @mysql_query($query, $db_conn)))
 			{
 				senderrormail("Order-lookup error! '$OrderID', '$orderkey', '$cc_trans_amount', '$transact', '$Cardnumber'");
 			}
 
-			if (mysql_num_rows($result)>0)
+			if ($result->num_rows>0)
+//			if (mysql_num_rows($result)>0)
 			{
-		        $row = mysql_fetch_row($result);
+				$row = $result->fetch_row();
+//		        $row = mysql_fetch_row($result);
 				$firstname = $row[0];
 				$middlename = $row[1];
 				$lastname = $row[2];
@@ -127,7 +130,8 @@ return $return;
 
 function kvitgetorderlines($orderno, $orderkey, $emailkvittering)
 {
-	global $db_conn;
+//	global $db_conn;
+	global $mysqli;
 
 	$emailkvittering .= "\nOrdredetaljer:\n";
 	
@@ -150,12 +154,15 @@ ORDER BY puid, ff_pickupdates.pickupdate, ff_producttypes.explained ";
 
 // DEBUG
 // echo ("<!--\n$query\n -->");
-    if(!($result = @mysql_query($query, $db_conn)))
+	if(!($result = $mysqli->query($query)))
+//    if(!($result = @mysql_query($query, $db_conn)))
     {
 		echo("Fejl: $orderno - getorderlines");
     }
-	 $no = mysql_num_rows($result);
-       while ($row = mysql_fetch_row($result))
+	 //$no = mysql_num_rows($result);
+	 $no = $result->num_rows;
+//		while ($row = mysql_fetch_row($result))
+       while ($row = $result->fetch_row())
 		{
 			$orderno = $row[0];
 			$orderkey = $row[1];

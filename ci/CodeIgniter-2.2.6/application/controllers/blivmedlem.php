@@ -380,9 +380,9 @@ class Blivmedlem extends CI_Controller {
 	}
 	
 }
-	include("ressources/.sendmail.php");
-	include("ressources/.mysql_common.php");
-	include("ressources/.library.php");
+	include($_SERVER["CI_PATH"]."/custom/sendmail.php");
+	include($_SERVER["CI_PATH"]."/custom/mysql_common.php");
+	include($_SERVER["CI_PATH"]."/custom/library.php");
 
 /* End of file blivmedlem.php */
 /* Location: ./controllers/blivmedlem.php */

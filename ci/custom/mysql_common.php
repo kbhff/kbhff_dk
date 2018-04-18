@@ -2,14 +2,24 @@
 setlocale(LC_CTYPE, 'da_DK');
 
 // enable reusable db vars (MAK)
-include($_SERVER["LOCAL_PATH"]."/../ci/CodeIgniter_2.0.2/application/config/database.php");
+define('BASEPATH', true);
+//include($_SERVER["LOCAL_PATH"]."/www/index.php");
+include($_SERVER["CI_PATH"]."/CodeIgniter-2.2.6/application/config/database.php");
 
-if (!$db_conn = @mysql_connect($db['default']['hostname'], $db['default']['username'], $db['default']['password']))
-{
+$mysqli = new mysqli("".$db['default']['hostname'], $db['default']['username'], $db['default']['password']);
+if($mysqli->connect_errno) {
 	echo "Kunne ikke tilsluttes databasen<br>";
 	exit;
-};
-@mysql_select_db($db['default']['database']);
+}
+$mysqli->select_db($db['default']['database']);
+
+
+// if (!$db_conn = @mysql_connect($db['default']['hostname'], $db['default']['username'], $db['default']['password']))
+// {
+// 	echo "Kunne ikke tilsluttes databasen<br>";
+// 	exit;
+// };
+// @mysql_select_db($db['default']['database']);
 
 
 // error_reporting  (E_ERROR | E_WARNING | E_PARSE);
@@ -17,23 +27,25 @@ error_reporting  (E_ALL & ~E_NOTICE);
 
 function error_handler ($level, $message, $file, $line, $context) {
 
-if (!($level & error_reporting())) return;
+	if (!($level & error_reporting())) 
+		return;
 
-$file = str_replace ("/srv/www/htdocs/events4u/","",$file);
-$advarsel = "Error";
-if ($level == 1) { $advarsel = "Fejl"; }
-if ($level == 2) { $advarsel = "Advarsel"; }
-if ($level == 4) { $advarsel = "Syntaksfejl"; }
-if ($level == 8) { $advarsel = "Mulig fejl"; }
+	$file = str_replace ("/srv/www/htdocs/events4u/","",$file);
+	$advarsel = "Error";
 
-if ($level == 16) { $advarsel = "CORE_ERROR"; }
-if ($level == 32) { $advarsel = "CORE_WARNING"; }
-if ($level == 64) { $advarsel = "COMPILE_ERROR"; }
-if ($level == 128) { $advarsel = "COMPILE_WARNING"; }
-if ($level == 256) { $advarsel = "USER_ERROR"; }
-if ($level == 512) { $advarsel = "USER_WARNING"; }
-if ($level == 1024) { $advarsel = "USER_NOTICE"; }
-if ($level == 2047) { $advarsel = "ERROR"; }
+	if ($level == 1) { $advarsel = "Fejl"; }
+	if ($level == 2) { $advarsel = "Advarsel"; }
+	if ($level == 4) { $advarsel = "Syntaksfejl"; }
+	if ($level == 8) { $advarsel = "Mulig fejl"; }
+
+	if ($level == 16) { $advarsel = "CORE_ERROR"; }
+	if ($level == 32) { $advarsel = "CORE_WARNING"; }
+	if ($level == 64) { $advarsel = "COMPILE_ERROR"; }
+	if ($level == 128) { $advarsel = "COMPILE_WARNING"; }
+	if ($level == 256) { $advarsel = "USER_ERROR"; }
+	if ($level == 512) { $advarsel = "USER_WARNING"; }
+	if ($level == 1024) { $advarsel = "USER_NOTICE"; }
+	if ($level == 2047) { $advarsel = "ERROR"; }
 
 echo <<<_END_
 
@@ -94,13 +106,12 @@ function dooption($opt, $leg, $d_leg = '', $class = '')
 
 function doquery($query)
 {
-global $db_conn;
-    if(!($result = @mysql_query($query, $db_conn)))
+global $mysqli;
+	if(!($result = $mysqli->query($query)))
+//    if(!($result = @mysql_query($query, $db_conn)))
     {
 		echo "<strong>Error:</strong> ";
-		echo mysql_errno($db_conn);
-		echo " -  ";
-		echo mysql_error($db_conn);
+		echo $mysqli->connect_errno;
 		exit;
     }
     return $result;

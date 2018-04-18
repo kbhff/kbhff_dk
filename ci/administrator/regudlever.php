@@ -1,5 +1,5 @@
 <?
-	include("../ressources/.mysql_common.php");
+	include($_SERVER["CI_PATH"]."/custom/mysql_common.php");
 //	require_once("class.inputfilter_clean.php");
 ?>
 <?php 
@@ -39,9 +39,11 @@ $query = 'SELECT
 		ORDER BY ff_pickupdates.pickupdate, ff_producttypes.explained ';
 		
 $result = doquery($query);
-	$num = mysql_num_rows($result);
+	$num = $result->num_rows;
+	//$num = mysql_num_rows($result);
      if ($num>0) {
-		$row = mysql_fetch_row($result);
+ 		$row = $result->fetch_row();
+//		$row = mysql_fetch_row($result);
 		if ($row[13] == 'udleveret')
 		{
 			$return['error'] = true;
@@ -66,9 +68,11 @@ echo json_encode($return);
 
 function setpicked($uid)
 {
+	global $mysqli;
 	$query = 'update ff_orderlines set status2 = "udleveret" where uid = ' . (int)$uid . ' limit 1';
 	$result = doquery($query);
-	$num = mysql_affected_rows();
+	$num = $mysqli->affected_rows;
+//	$num = mysql_affected_rows();
 	if ($num <> 1) echo ("<p>Fejl - allerede udleveret / findes ikke</p>");
 	
 }
@@ -123,9 +127,11 @@ ORDER BY ff_orderlines.item';
 	}
 	$result = doquery($query);
 
-	if (mysql_num_rows($result) > 0)
+	if ($result->num_rows > 0)
+//	if (mysql_num_rows($result) > 0)
 	{
-		$row = mysql_fetch_row($result);
+		$row = $result->fetch_row();
+//		$row = mysql_fetch_row($result);
 		$num = $row[0];
 	}
 	return $num;

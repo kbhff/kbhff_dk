@@ -1,6 +1,6 @@
 <?
-	include("../ressources/.mysql_common.php");
-	include("../ressources/.sendmail.php");
+	include($_SERVER["CI_PATH"]."/custom/mysql_common.php");
+	include($_SERVER["CI_PATH"]."/custom/sendmail.php");
 	require_once($_SERVER["FRAMEWORK_PATH"]."/includes/PHPMailer-5.2.16/PHPMailerAutoload.php");
 //        require_once("PHPMailerAutoload.php");
 
@@ -128,9 +128,11 @@ $query = 'SELECT  ff_persons.firstname as forn, ff_persons.middlename, ff_person
 		AND ff_orderhead.orderno = ' . (int)$orderno . ';';
 		
 $result = doquery($query);
-	$num = mysql_num_rows($result);
+	//$num = mysql_num_rows($result);
+	$num = $result->num_rows;
      if ($num>0) {
-		$row = mysql_fetch_row($result);
+ 		$row = $result->fetch_row();
+//		$row = mysql_fetch_row($result);
 $content = 'Kære ' . $row[0] . "\n\nVedrørende din ordre #" . $orderno . ', 1. oktober' . "\n\n" .
 		'Da der var en fejl i IT-systemet, kom der ingen kvittering, og systemet stoppede med en blank skærm.' . "\n\n" .
 		'Da du derfor ikke har set din ordre blive registreret, har vi for en sikkerheds skyld annulleret den, ' .

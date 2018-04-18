@@ -329,7 +329,8 @@ group by year, month
 	
 	private function _savehistory($ary)
 	{
-			$this->db->query('replace ff_statistics_log (ary, date) values ("' . mysql_real_escape_string(serialize($ary)) . '", curdate())');
+		global $mysqli;
+			$this->db->query('replace ff_statistics_log (ary, date) values ("' . $mysqli->escape_string(serialize($ary)) . '", curdate())');
 	}
 	
 	private function _getno($type,$division, $sex = '', $activated = '', $lastlogin = '', $privacy = '', $email = '')
