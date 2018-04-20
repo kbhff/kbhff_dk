@@ -1,7 +1,7 @@
 <?
 	include($_SERVER["CI_PATH"]."/custom/mysql_common.php");
 	include($_SERVER["CI_PATH"]."/custom/sendmail.php");
-	require_once($_SERVER["FRAMEWORK_PATH"]."/includes/PHPMailer-5.2.16/PHPMailerAutoload.php");
+	require_once($_SERVER["FRAMEWORK_PATH"]."/includes/PHPMailer-5.2.26/PHPMailerAutoload.php");
 //        require_once("PHPMailerAutoload.php");
 
 senderrmail(40988);
