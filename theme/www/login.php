@@ -32,7 +32,7 @@ if(is_array($action) && count($action)) {
 
 
 		// Do CI login
-		include_once("classes/curl.class.php");
+		include_once("classes/helpers/curl.class.php");
 		$curl = new CurlRequest();
 		$params = array(
 			"useragent" => $_SERVER["HTTP_USER_AGENT"],

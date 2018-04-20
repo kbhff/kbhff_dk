@@ -44,12 +44,30 @@ class CurlRequest {
 
 	}
 
-	public function exec($url) {
+	public function exec($url, $_options = false) {
+
+		$debug = false;
+
+		// overwrite model/defaults
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+
+					case "debug"           : $debug            = $_value; break;
+
+				}
+			}
+		}
+
 
 		@curl_setopt($this->ch, CURLOPT_URL, $url);
 
 		$response = curl_exec($this->ch);
 		$error = curl_error($this->ch);
+
+		if($debug) {
+			print_r($response);
+		}
 
 		$result = array(
 			'header' => '',
@@ -64,7 +82,6 @@ class CurlRequest {
 			return $result;
 		}
 
-//		print_r($response);
 		$header_size = curl_getinfo($this->ch, CURLINFO_HEADER_SIZE);
 		$result['header'] = substr($response, 0, $header_size);
 		$result['body'] = substr($response, $header_size);
