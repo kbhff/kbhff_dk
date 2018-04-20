@@ -38,7 +38,7 @@ if(ENVIRONMENT == "production") {
 	$config['base_url']	= 'http://medlem.kbhff.dk';
 }
 else if(ENVIRONMENT == "testing") {
-	$config['base_url']	= 'http://test-medlem.kbhff.dk';
+	$config['base_url']	= 'http://kbhff.think.dk';
 }
 else {
 	$config['base_url']	= 'http://kbhff.local';
