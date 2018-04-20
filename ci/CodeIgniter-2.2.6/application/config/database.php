@@ -43,8 +43,14 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = '127.0.0.1';
-$db['default']['username'] = 'kbhffdk';
-$db['default']['password'] = 'localpass';
+if(ENVIRONMENT == "development") {
+	$db['default']['username'] = 'kbhffdk';
+	$db['default']['password'] = 'localpass';
+}
+else {
+	$db['default']['username'] = $_SERVER["DB_USERNAME"];
+	$db['default']['password'] = $_SERVER["DB_PASSWORD"];
+}
 $db['default']['database'] = 'kbhff_dk';
 $db['default']['dbdriver'] = 'mysqli';
 $db['default']['dbprefix'] = 'ff_';
