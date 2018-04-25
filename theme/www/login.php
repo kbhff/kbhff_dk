@@ -70,7 +70,7 @@ if(is_array($action) && count($action)) {
 			$query = new Query();
 
 			$sql = "SELECT user_id FROM ".SITE_DB.".user_usernames as usernames WHERE usernames.username='$username' AND user_id IN (SELECT user_id FROM ".SITE_DB.".user_passwords)";
-			print $sql."<br>\n";
+//			print $sql."<br>\n";
 			// No password stored - first login
 			if(!$query->sql($sql)) {
 
@@ -79,7 +79,7 @@ if(is_array($action) && count($action)) {
 	
 				// Let's try to get the user_id
 				$sql = "SELECT usernames.user_id as user_id FROM ".SITE_DB.".user_usernames as usernames WHERE usernames.username='$username'";
-				print $sql."<br>\n";
+//				print $sql."<br>\n";
 				if($query->sql($sql)) {
 
 					$user_id = $query->result(0,"user_id");
@@ -89,7 +89,7 @@ if(is_array($action) && count($action)) {
 				}
 				
 			}
-			
+
 			// Perform Janitor login and redirect to this controller
 			// because Janitor does not have access the CI pages and we want to end up on "/minside"
 			// This controller will then redirect if login was successful

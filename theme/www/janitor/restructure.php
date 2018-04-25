@@ -1629,7 +1629,7 @@ if(is_array($action) && count($action)) {
 	
 								// MEMBERSHIP
 								$sql = "INSERT INTO ".SITE_DB.".user_members SET id = $member_no, user_id = $user_id";
-								output($sql);
+//								output($sql);
 								$query->sql($sql);
 
 								$sql = "INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '$member_no', type = 'memberno', verified=1, verification_code = '".randomKey(8)."'";
