@@ -34,7 +34,7 @@ $username = stringOr(getPost("username"));
 		<? endif; ?>
 
 		<fieldset>
-			<?= $model->input("username", array("required" => true, "value" => $username)); ?>
+			<?= $model->input("username", array("required" => true, "value" => $username, "pattern" => "")); ?>
 			<?= $model->input("password", array("required" => true)); ?>
 		</fieldset>
 
