@@ -2,7 +2,10 @@
 setlocale(LC_CTYPE, 'da_DK');
 
 // enable reusable db vars (MAK)
-define('BASEPATH', true);
+if(!defined('BASEPATH')) {
+	define('BASEPATH', true);
+}
+
 //include($_SERVER["LOCAL_PATH"]."/www/index.php");
 include($_SERVER["CI_PATH"]."/CodeIgniter-2.2.6/application/config/database.php");
 

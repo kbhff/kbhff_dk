@@ -117,7 +117,9 @@ class kontantordrer extends CI_Controller {
 	{
 
 		$qsum = 0;
-		while (list($key, $q) = each($quant)) 
+
+		foreach($quant as $key => $q)
+//		while (list($key, $q) = each($quant)) 
 		{
 			$qsum += $q;
 		}
@@ -146,7 +148,10 @@ class kontantordrer extends CI_Controller {
 		$orderkey = $neworder['orderkey'];
 		$counter = 0;
 		$amount = 0;
-		while (list($key, $date) = each($pickupday)) 
+
+
+		foreach($pickupday as $key => $date)
+//		while (list($key, $date) = each($pickupday)) 
 		{
 		    $price = $this->_getitemprice($this->input->post('division'), $item[$counter]) ;
 			if ($price['error'] == '')
@@ -202,6 +207,7 @@ class kontantordrer extends CI_Controller {
 		$this->db->set('amount', $amount);
 		$this->db->set('vat_amount', $vat_amount);
 		$this->db->set('status1', $created_by);
+		$this->db->set('status2', '');
 		$this->db->set('status3', $status3 .'');
 		$this->db->insert('orderlines');
 	}
@@ -218,6 +224,7 @@ function _update_kontant_transactions($orderno, $puid, $amount, $method = 'ukend
 		$this->db->set('orderno', $orderno);
 		$this->db->set('method', $method);
 		$this->db->set('trans_id', '0');
+		$this->db->set('comment', '');
 		$this->db->set('item', 0);
 		$this->db->set('created', 'now()', FALSE);
 		$this->db->insert('transactions');
