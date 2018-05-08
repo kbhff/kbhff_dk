@@ -13,10 +13,11 @@
 
 	<div id="footer">
 		<ul class="servicenavigation">
-			<li class="terms"><a href="/terms">Terms</a></li>
+			<li class="copyright">KBHFF, 2018</li>
+			<li class="terms"><a href="/terms">Betingelser</a></li>
+			<li class="contact"><a href="/kontakt">Kontakt</a></li>
+			<li><a href="http://kbhff.dk">kbhff.dk</a></li>
 		</ul>
-
-		<p><a href="http://parentnode.dk">&lt;aliens&gt;we are all&lt;/aliens&gt;</a></p>
 	</div>
 
 </div>

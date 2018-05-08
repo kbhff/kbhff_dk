@@ -1,4 +1,4 @@
-Util.Objects["demo"] = new function() {
+Util.Objects["accept_terms"] = new function() {
 	this.init = function(scene) {
 
 		scene.resized = function() {
@@ -10,7 +10,11 @@ Util.Objects["demo"] = new function() {
 		}
 
 		scene.ready = function() {
-//			u.bug("scene.ready:" + u.nodeId(this));
+			u.bug("scene.ready:" + u.nodeId(this));
+
+			var form_accept = u.qs("form.accept", this);
+			u.f.init(form_accept);
+
 		}
 
 		// scene is ready

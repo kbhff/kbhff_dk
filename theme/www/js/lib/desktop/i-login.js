@@ -10,10 +10,10 @@ Util.Objects["login"] = new function() {
 		}
 
 		scene.ready = function() {
-//			u.bug("scene.ready:" + u.nodeId(this));
+			u.bug("scene.ready:" + u.nodeId(this));
 
-			this._form = u.qs("form", this);
-			u.f.init(this._form);
+			var form_login = u.qs("form.login", this);
+			u.f.init(form_login);
 		}
 
 		// scene is ready

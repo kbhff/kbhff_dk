@@ -25,9 +25,9 @@ if(is_array($action) && count($action)) {
 
 		// Requires existing data to be moved to Janitor
 
+		// TODO
 		// Detect username (member id / email / phone number)
-		// if member id, then look up email
-		// If email, then look up member id
+		// If email, then look up member id for CI login
 
 
 
@@ -87,18 +87,18 @@ if(is_array($action) && count($action)) {
 					$query->sql($sql);
 
 				}
-				
+
 			}
 
-			// Perform Janitor login and redirect to this controller
-			// because Janitor does not have access the CI pages and we want to end up on "/minside"
-			// This controller will then redirect if login was successful
-			session()->value("login_forward", "/login");
-			$page->login();
 
+			session()->value("kbhff_session", true);
 		}
 
-		exit();
+		// Perform Janitor login and redirect to this controller
+		// because Janitor does not have access the CI pages and we want to end up on "/minside"
+		// This controller will then redirect if login was successful
+		session()->value("login_forward", "/login");
+		$page->login();
 
 	}
 
@@ -174,7 +174,7 @@ if(is_array($action) && count($action)) {
 // If Janitor login was successful, redirect til CI page, "/minside"
 if(session()->value("user_group_id") > 1) {
 
-	header("Location: /minside");
+	header("Location: /profil");
 
 }
 // User not logged in

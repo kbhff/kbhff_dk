@@ -14,10 +14,6 @@ $username = stringOr(getPost("username"));
 <div class="scene login i:login">
 	<h1>KBHFF Login</h1>
 
-<?	if(defined("SITE_SIGNUP") && SITE_SIGNUP): ?>
-	<p>Not registered yet? <a href="<?= SITE_SIGNUP ?>">Create your account now</a>.</p>
-<?	endif; ?>
-
 	<?= $model->formStart("dual", array("class" => "login")) ?>
 
 		<? if(message()->hasMessages()): ?>
@@ -53,5 +49,11 @@ $username = stringOr(getPost("username"));
 			<li class="forgot">Did you <a href="/login/forgot">forget your password</a>?</li>
 		</ul>
 	<?= $model->formEnd() ?>
+
+<?	if(defined("SITE_SIGNUP") && SITE_SIGNUP): ?>
+	<div class="signup">
+		<p>Not registered yet? <a href="<?= SITE_SIGNUP ?>">Create your account now</a>.</p>
+	</div>
+<?	endif; ?>
 
 </div>

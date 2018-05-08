@@ -27,7 +27,7 @@ define("DEFAULT_COUNTRY_ISO", "DK");
 // ENABLE ITEMS MODEL
 define("SITE_ITEMS", true);
 
-//define("SITE_SIGNUP", "/signup");
+define("SITE_SIGNUP", "/bliv-medlem");
 define("SITE_SUBSCRIPTIONS", true);
 define("SITE_MEMBERS", true);
 

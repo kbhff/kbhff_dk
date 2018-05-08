@@ -3,36 +3,52 @@ Util.Objects["page"] = new function() {
 
 		// header reference
 		page.hN = u.qs("#header");
-		page.hN.service = u.qs("ul.servicenavigation", page.hN);
+		page.hN.ul_service = u.qs("ul.servicenavigation", page.hN);
 
 		// content reference
 		page.cN = u.qs("#content", page);
 
 		// navigation reference
 		page.nN = u.qs("#navigation", page);
-		page.nN = u.ie(page.hN, page.nN);
+		page.nN = page.insertBefore(page.nN, page.cN);
 
 		// footer reference
 		page.fN = u.qs("#footer");
-		page.fN.service = u.qs("ul.servicenavigation", page.fN);
+		page.fN.ul_service = u.qs("ul.servicenavigation", page.fN);
 
 
 		// global resize handler 
 		page.resized = function() {
-//			u.bug("page.resized:" + u.nodeId(this));
+			// u.bug("page.resized:" + u.nodeId(this));
+
+			this.browser_h = u.browserH();
+			this.browser_w = u.browserW();
+
+			// adjust content height
+			this.available_height = this.browser_h - this.hN.offsetHeight - this.nN.offsetHeight - this.fN.offsetHeight;
+
+//			u.bug("page.cN.offsetHeight:" + page.cN.offsetHeight)
+
+			u.as(this.cN, "min-height", "auto");
+			if(this.available_height >= this.cN.offsetHeight) {
+				u.as(this.cN, "min-height", this.available_height+"px", false);
+			}
+
 
 			// forward scroll event to current scene
-			if(page.cN && page.cN.scene && typeof(page.cN.scene.resized) == "function") {
+			if(page.cN.scene && typeof(page.cN.scene.resized) == "function") {
 				page.cN.scene.resized();
 			}
 		}
 
 		// global scroll handler 
 		page.scrolled = function() {
-//			u.bug("page.scrolled:" + u.nodeId(this))
+			// u.bug("page.scrolled:" + u.nodeId(this));
+
+			page.scrolled_y = u.scrollY();
 
 			// forward scroll event to current scene
-			if(page.cN && page.cN.scene && typeof(page.cN.scene.scrolled) == "function") {
+			if(page.cN.scene && typeof(page.cN.scene.scrolled) == "function") {
 				page.cN.scene.scrolled();
 			}
 		}
@@ -48,11 +64,15 @@ Util.Objects["page"] = new function() {
 				this.is_ready = true;
 
 				// set resize handler
-				u.e.addEvent(window, "resize", page.resized);
+				u.e.addWindowEvent(this, "resize", this.resized);
 				// set scroll handler
-				u.e.addEvent(window, "scroll", page.scrolled);
+				u.e.addWindowEvent(this, "scroll", this.scrolled);
 
+				// Initialize header
 				this.initHeader();
+
+				// Initial size adjustment
+				this.resized();
 			}
 
 		}
@@ -61,19 +81,11 @@ Util.Objects["page"] = new function() {
 		page.initHeader = function() {
 			var frontpage_link = u.qs("li.front a", this.nN);
 			if(frontpage_link) {
-				var logo = u.ae(this.hN, "a", {"class":"logo", "href":frontpage_link.href, "html":frontpage_link.innerHTML});
+				var logo = u.ie(this.hN, "a", {"class":"logo", "href":frontpage_link.href, "html": 'KBHFF <span class="highlight">' + document.title + '</span>'});
 				u.ce(logo, {"type":"link"});
+				frontpage_link.parentNode.remove();
 			}
 
-			// insert footer servicenavigation into header servicenavigation
-			if(this.fN.service) {
-				var node, i;
-				var nodes = u.qsa("li", this.fN.service);
-				for(i = 0; node = nodes[i]; i++) {
-					u.ie(this.hN.service, node);
-				}
-				this.fN.removeChild(this.fN.service);
-			}
 		}
 
 		// ready to start page builing process

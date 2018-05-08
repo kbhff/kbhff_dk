@@ -8,7 +8,15 @@ Util.Objects["restructure"] = new function() {
 
 		li_restructure.confirmedError = function(response) {
 
-			this.result_code.innerHTML = response;
+			if(obj(response) && response.isHTML) {
+				this.result_code.innerHTML = response.innerHTML;
+			}
+			else if(obj(response) && response.isJSON) {
+				this.result_code.innerHTML = JSON.stingify(response);
+			}
+			else if(response) {
+				this.result_code.innerHTML = response;
+			}
 			console.log(response);
 			
 		}
