@@ -838,36 +838,183 @@ if(is_array($action) && count($action)) {
 		}
 
 
+		function getAllOrders() {
+			$orders = [];
+
+			$query = new Query();
+			$sql = "SELECT uid, orderkey, orderno, puid FROM kbhff_dk.ff_orderhead LIMIT 81380,850000";
+			if($query->sql($sql)) {
+
+				$orders = $query->results();
+
+			}
+			return $orders;
+		}
+
+		function getAllOrdersLines() {
+			$orders = [];
+
+			$query = new Query();
+			$sql = "SELECT uid, orderkey, orderno, puid FROM kbhff_dk.ff_orderlines";
+			if($query->sql($sql)) {
+
+				$orders = $query->results();
+
+			}
+			return $orders;
+		}
+
+		function getAllTransactions() {
+			$transactions = [];
+
+			$query = new Query();
+			$sql = "SELECT uid, orderno, puid FROM kbhff_dk.ff_transactions";
+			if($query->sql($sql)) {
+
+				$transactions = $query->results();
+
+			}
+			return $transactions;
+		}
+
+		function getExpiredOrders() {
+			
+			$orders = [];
+
+			$query = new Query();
+
+			$sql = "SELECT uid FROM kbhff_dk.ff_orderhead WHERE created < '".date("Y-m-d H:i:s", time() - (60 * 60 * 24 * 365 * 5))."'";
+			if($query->sql($sql)) {
+
+				$orders = $query->results();
+
+
+			}
+
+			return $orders;
+		}
+
+
+		function getAllCompleteOrders() {
+
+			$orders = [];
+
+			$query = new Query();
+
+
+			// DELETE 
+
+
+			// FIRST CHECK ORDERS FOR USER 11762 (Martin) TO IDENTIFY OVERALL ORDER RELATION
+			
+			
+			// CHECK IF THERE IS ORDERS WITHOUT LINES OR TRANSACTIONS
+			// CHECK IF THERE IS LINES OR TRANSACTIONS WITHOUT ORDERS
+
+			$sql = "SELECT orderno FROM kbhff_dk.ff_orderhead WHERE orderno NOT IN(SELECT orderno FROM kbhff_dk.ff_orderlines) OR orderno NOT IN(SELECT orderno FROM kbhff_dk.ff_transactions)";
+			if($query->sql($sql)) {
+
+				$orders = $query->results();
+				foreach($orders as $key => $order) {
+				}
+			}
+
+			$sql = "SELECT * FROM kbhff_dk.ff_orderhead WHERE puid = 11762";
+			if($query->sql($sql)) {
+
+				$orders = $query->results();
+				foreach($orders as $key => $order) {
+					$puid = $order["puid"];
+					$orderno = $order["orderno"];
+					$orderkey = $order["orderkey"];
+
+					print "<p>";
+
+					print $puid.", $orderno, $orderkey<br>";
+
+					$sql = "SELECT * FROM kbhff_dk.ff_orderlines WHERE puid = $puid AND (orderno = '$orderno' OR orderkey = '$orderkey')";
+					if($query->sql($sql)) {
+
+						$orders[$key]["lines"] = $query->results();
+
+					}
+					$sql = "SELECT * FROM kbhff_dk.ff_transactions WHERE puid = $puid OR orderno = '$orderno'";
+					if($query->sql($sql)) {
+
+						$orders[$key]["transactions"] = $query->results();
+
+					}
+
+					print "</p>";
+				}
+			}
+
+			// print "<pre>";
+			// print_r($orders);
+			// print "</pre>";
+			exit();
+
+			// FIND ANY DUPLET ORDERHEADS
+			$sql = "SELECT  FROM kbhff_dk.ff_orderhead";
+
+
+			$sql = "SELECT * FROM kbhff_dk.ff_orderhead";
+			if($query->sql($sql)) {
+			
+				$orders = $query->results();
+				foreach($orders as $key => $order) {
+					$puid = $order["puid"];
+					$orderno = $order["orderno"];
+					$orderkey = $order["orderkey"];
+
+					$sql = "SELECT * FROM kbhff_dk.ff_orderlines WHERE puid = $puid OR orderno = '$orderno' OR orderkey = '$orderkey'";
+					if($query->sql($sql)) {
+
+						$orders[$key]["lines"] = $query->results();
+
+					}
+				}
+
+			}
+//			return $should_be_deleted;
+			
+		}
+
 
 		// FIND AND DELETE READYLY "DELETABLE" USERS 
-		$operations_1 = true;
+		$user_operations_1 = false;
 
 		// FIND AND DELETE USERS THAT LOOK LIKE THEY ARE VERY LIKELY "DELETABLE" USERS 
-		$operations_2 = true;
+		$user_operations_2 = false;
 
 		// FIND AND MERGE USERS THAT ARE MARKED FOR DELETION BUT HAS DOUBLE ENTRIES 
-		$operations_3 = true;
+		$user_operations_3 = false;
 
 		// FIND AND ANONYMIZE ALL (REMAINING) DELETED MEMBERS
-		$operations_4 = true;
+		$user_operations_4 = false;
 
 		// FIND AND MERGE PASSIVE MEMBERS WITH DOUBLE ENTRIES
-		$operations_5 = true;
+		$user_operations_5 = false;
 
 		// FIX BROKEN DATASETS
-		$operations_6 = true;
+		$user_operations_6 = false;
 
 		// FIND AND FIX/MERGE/DELETE "DELETABLE" USERS WITH WRONG ACTIVE STATE
-		$operations_7 = true;
+		$user_operations_7 = false;
 
 		// FIND AND MERGE MEMBERS WITH DOUBLE ENTRIES
-		$operations_8 = true;
+		$user_operations_8 = false;
 
 
 
 		// TRANSFER ACCOUNTS TO NEW SYSTEM
-		$operations_transfer = true;
+		$user_operations_transfer = false;
 
+
+		// FIND AND INVESTIGATE ALL EXISTING ORDERS 
+		$order_operations_1 = false;
+
+		$order_operations_2 = false;
 
 
 
@@ -885,7 +1032,7 @@ if(is_array($action) && count($action)) {
 			// DOUBLE ENTRY MATCH NOT IMPORTANT, NO RELEVANT INFORMATION TO MERGE FROM THIS USER
 
 		// DELETE ANY MATCHES 
-		if($operations_1) {
+		if($user_operations_1) {
 
 			$members = getDeletableMembers();
 			output("DELETABLE MEMBERS: " . count($members));
@@ -906,7 +1053,7 @@ if(is_array($action) && count($action)) {
 			// INVALID EMAIL, PHONE, FIRSTNAME, LASTNAME
 
 		// DELETE ANY MATCHES 
-		if($operations_2) {
+		if($user_operations_2) {
 
 			$members = getProbablyDeletableMembers();
 			output("OTHER DELETABLE MEMBERS: " . count($members));
@@ -926,7 +1073,7 @@ if(is_array($action) && count($action)) {
 			// DOUBLE ENTRIES
 
 		// MERGE WITH ACTIVE OR LATEST ENTRY PASSIVE OR LATEST ENTRY (IN THAT ORDER)
-		if($operations_3) {
+		if($user_operations_3) {
 
 			$members = getAnonymizableMembersWithDoubleEntries();
 			output("ANONYMIZABLE MEMBERS WITH DOUBLE ENTRIES - MERGE WITH VALID PROFILES: " . count($members) . " possibilities");
@@ -1012,7 +1159,7 @@ if(is_array($action) && count($action)) {
 			// ORDERS, ORDERLINES OR TRANSACTIONS
 
 		// ANONYMIZE ALL MATCHING
-		if($operations_4) {
+		if($user_operations_4) {
 
 			$members = getAnonymizableMembers();
 			output("ANONYMIZABLE MEMBERS: " . count($members));
@@ -1035,7 +1182,7 @@ if(is_array($action) && count($action)) {
 			// DOUBLE ENTRIES
 
 		// MERGE WITH ACTIVE OR LATEST ENTRY PASSIVE (IN THAT ORDER)
-		if($operations_5) {
+		if($user_operations_5) {
 
 			$members = getPassiveMembersWithDoubleEntries();
 			$merged = [];
@@ -1096,7 +1243,7 @@ if(is_array($action) && count($action)) {
 
 		// FIX BROKEN DATASETS
 		// Two numbers in tel
-		if($operations_6) {
+		if($user_operations_6) {
 
 			// Split phonenumber og phonenumber entries
 			$sql = "SELECT * FROM kbhff_dk.ff_persons WHERE tel LIKE '% og %'";
@@ -1173,7 +1320,7 @@ if(is_array($action) && count($action)) {
 		// TREAT ACCORDINGLY
 			// INVALID FIRSTNAME OR LASTNAME - DELETE OR ANONYMIZE
 			// INVALID EMAIL OR PHONE - FIX
-		if($operations_7) {
+		if($user_operations_7) {
 
 			$members = getInvalidUsers();
 			output("INVALID USERS: " . count($members));
@@ -1245,7 +1392,7 @@ if(is_array($action) && count($action)) {
 			// DOUBLE ENTRIES
 
 		// MERGE WITH APPROPRIATE MATCHES
-		if($operations_8) {
+		if($user_operations_8) {
 
 			$members = getMembersWithDoubleEntries();
 			$merged = [];
@@ -1571,7 +1718,7 @@ if(is_array($action) && count($action)) {
 
 
 
-		if($operations_transfer) {
+		if($user_operations_transfer) {
 
 
 			$query->checkDbExistence(SITE_DB.".user_item_subscriptions");
@@ -1632,7 +1779,8 @@ if(is_array($action) && count($action)) {
 //								output($sql);
 								$query->sql($sql);
 
-								$sql = "INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '$member_no', type = 'memberno', verified=1, verification_code = '".randomKey(8)."'";
+								// Add member number as username
+								$sql = "INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '$member_no', type = 'member_no', verified=1, verification_code = '".randomKey(8)."'";
 								$query->sql($sql);
 
 								// USERNAMES
@@ -1687,11 +1835,81 @@ if(is_array($action) && count($action)) {
 
 		}
 
-		// Create newsletter
+
+
+		// TODO's
+		// Create maillist
 		// Create simple membership model
 		// Create two memberships
+		// Create departments and affiliation
+		// - check if department has members
+		// - check if a department has orders (via ff_order_lines.item -> items.devision)
 
 
+
+		// Transfer orders
+		if($order_operations_1) {
+
+			$orders = getAllOrders();
+			output("TOTAL ORDERS: " . count($orders));
+			foreach($orders as $order) {
+
+				// Is orderno used in other orders
+				
+				$sql = "SELECT uid FROM kbhff_dk.ff_orderhead WHERE orderno = '".$order["orderno"]."' AND uid != '".$order["uid"]."'";
+				print $sql;
+				if($query->sql($sql)) {
+					output("DUPLET ORDERNO: " . $order["orderno"] .", " . $order["uid"]." = ");
+
+					$matches = $query->results();
+					foreach($matches as $match) {
+						output("DUPLET ORDERNO: " . $order["orderno"] .", " . $order["uid"]." = ". implode($match, ","));
+					}
+				}
+				// Is orderkey used in other orders
+				$sql = "SELECT uid FROM kbhff_dk.ff_orderhead WHERE orderkey = '".$order["orderkey"]."' AND  uid != '".$order["uid"]."'";
+				if($query->sql($sql)) {
+
+					$matches = $query->results();
+					foreach($matches as $match) {
+						output("DUPLET ORDERKEY: " . $order["orderkey"] . ", " . $order["uid"]." = ". implode($match, ","));
+					}
+				}
+
+//				deleteOrder($uid);
+
+			}
+
+		}
+
+
+		$sql = "SELECT uid, orderkey, orderno, puid FROM kbhff_dk.ff_orderlines WHERE orderno NOT IN(SELECT orderno FROM kbhff_dk.ff_orderhead)";
+
+
+		$orders = [];
+
+		$query = new Query();
+		$sql = "SELECT uid, orderkey, orderno, puid FROM kbhff_dk.ff_orderlines WHERE puid NOT IN(SELECT uid as puid FROM kbhff_dk.ff_persons)";
+		if($query->sql($sql)) {
+
+			$orders = $query->results();
+
+		}
+		print "COUNT:" . count($orders);
+
+
+		// Expired orders (more than 5 years, maybe delete)
+		if($order_operations_2) {
+
+			$orders = getExpiredOrders();
+			output("EXPIRED ORDERS: " . count($orders));
+			// foreach($orders as $uid) {
+			//
+			// 	deleteOrder($uid);
+			//
+			// }
+
+		}
 
 		exit();
 
