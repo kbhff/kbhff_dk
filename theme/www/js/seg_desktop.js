@@ -5754,6 +5754,7 @@ Util.Objects["page"] = new function() {
 			if(frontpage_link) {
 				var logo = u.ie(this.hN, "a", {"class":"logo", "href":frontpage_link.href, "html": 'KBHFF <span class="highlight">' + document.title + '</span>'});
 				u.ce(logo, {"type":"link"});
+				frontpage_link.parentNode.remove();
 			}
 		}
 		page.ready();
@@ -5779,20 +5780,6 @@ Util.Objects["login"] = new function() {
 }
 
 
-/*i-profile.js*/
-Util.Objects["front"] = new function() {
-	this.init = function(scene) {
-		scene.resized = function() {
-		}
-		scene.scrolled = function() {
-		}
-		scene.ready = function() {
-		}
-		scene.ready();
-	}
-}
-
-
 /*i-accept_terms.js*/
 Util.Objects["accept_terms"] = new function() {
 	this.init = function(scene) {
@@ -5804,6 +5791,20 @@ Util.Objects["accept_terms"] = new function() {
 			u.bug("scene.ready:" + u.nodeId(this));
 			var form_accept = u.qs("form.accept", this);
 			u.f.init(form_accept);
+		}
+		scene.ready();
+	}
+}
+
+
+/*i-profile.js*/
+Util.Objects["front"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
 		}
 		scene.ready();
 	}
