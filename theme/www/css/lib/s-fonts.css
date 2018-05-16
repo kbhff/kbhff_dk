@@ -2,8 +2,9 @@
 	font-family: 'voresfont';
 	src: url('/css/fonts/voresfont.eot');
 	src: url('/css/fonts/voresfont.eot?#iefix') format('embedded-opentype'),
+		 url('/css/fonts/voresfont.woff2') format('woff2'),
 		 url('/css/fonts/voresfont.woff') format('woff'),
-		 url('/css/fonts/voresfont.svg#voresfont') format('svg'),
+		 url('/css/fonts/voresfont.svg#alte_din_1451_mittelschriftRg') format('svg'),
 		 url('/css/fonts/voresfont.ttf') format('truetype');
 	font-weight: 400;
 	font-style: normal;
