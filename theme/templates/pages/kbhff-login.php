@@ -12,7 +12,8 @@ if($forward_url) {
 $username = stringOr(getPost("username"));
 ?>
 <div class="scene login i:login">
-	<h1>KBHFF Login</h1>
+	<h1>Log ind</h1>
+	<p>I medlemssystemet kan du bl.a. bestille varer og booke vagter. <span class="green">Velkommen indenfor!</span></p>
 
 	<?= $model->formStart("dual", array("class" => "login")) ?>
 
@@ -40,19 +41,21 @@ $username = stringOr(getPost("username"));
 			)); ?>
 			<?= $model->input("password", array(
 				"required" => true,
-				"min" => 1
+				"min" => 1,
+				"hint_message" => "Skriv dit password (8-20 tegn)",
+				"error_message" => "Ugyldigt password",
 			)); ?>
 		</fieldset>
 
 		<ul class="actions">
-			<?= $model->submit("Log in", array("class" => "primary", "wrapper" => "li.login")) ?>
-			<li class="forgot">Did you <a href="/login/forgot">forget your password</a>?</li>
+			<?= $model->submit("Log ind", array("class" => "primary", "wrapper" => "li.login")) ?>
+			<li class="forgot">Har du brug for <a href="/login/forgot">hjælp til at logge ind</a>?</li>
 		</ul>
 	<?= $model->formEnd() ?>
 
 <?	if(defined("SITE_SIGNUP") && SITE_SIGNUP): ?>
 	<div class="signup">
-		<p>Not registered yet? <a href="<?= SITE_SIGNUP ?>">Create your account now</a>.</p>
+		<p>Endnu ikke medlem? <a href="<?= SITE_SIGNUP ?>">Indmeld dig her</a>.</p>
 	</div>
 <?	endif; ?>
 

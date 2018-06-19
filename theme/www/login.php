@@ -43,7 +43,7 @@ if(is_array($action) && count($action)) {
 		$result = $curl->exec(SITE_URL."/minside/login");
 
 
-		// Did login result in session cookie
+		// Did login result in session cookie?
 		if($result["cookies"] && preg_match("/kbhff_session/", $result["cookies"][0])) {
 			// get cookie details
 			list($hostname, $subdomain, $path, $secure, $expiry, $name, $value) = explode("\t", $result["cookies"][0]);
@@ -163,7 +163,7 @@ if(is_array($action) && count($action)) {
 
 		// could not create reset request
 		else {
-			message()->addMessage("Sorry, you cannot reset the password for the specified user!", array("type" => "error"));
+			message()->addMessage("Beklager, du kan ikke nulstille password for den givne bruger!", array("type" => "error"));
 			header("Location: glemt");
 			exit();
 		}

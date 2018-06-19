@@ -43,8 +43,6 @@ class Page extends PageCore {
 		parent::__construct();
 	}
 
-
-
 	/**
 	* Get/set current user country
 	*
@@ -114,11 +112,7 @@ class Page extends PageCore {
 		else {
 			return cache()->value("departments");
 		}
-
 	}
-
-
-
 }
 
 ?>
