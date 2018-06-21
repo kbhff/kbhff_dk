@@ -98,7 +98,18 @@ if(is_array($action) && count($action)) {
 		// because Janitor does not have access the CI pages and we want to end up on "/minside"
 		// This controller will then redirect if login was successful
 		session()->value("login_forward", "/login");
-		$page->login();
+		$login_status = $page->login();
+		
+		message()->resetMessages();
+
+		if ($login_status && isset($login_status["status"]) && $login_status == "USER_NOT_VERIFIED") {
+			message()->addMessage("Brugernavnet er endnu ikke bekræftet – har du glemt at aktivere din konto?", ["type" => "error"]);		
+		}
+		else {
+			message()->addMessage("Du har indtastet et forkert brugernavn eller password.", ["type"=>"error"]);
+		}
+
+
 
 	}
 
