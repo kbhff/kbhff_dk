@@ -43,7 +43,7 @@ if(is_array($action) && count($action)) {
 		$result = $curl->exec(SITE_URL."/minside/login");
 
 
-		// Did login result in session cookie
+		// Did login result in session cookie?
 		if($result["cookies"] && preg_match("/kbhff_session/", $result["cookies"][0])) {
 			// get cookie details
 			list($hostname, $subdomain, $path, $secure, $expiry, $name, $value) = explode("\t", $result["cookies"][0]);
@@ -98,7 +98,18 @@ if(is_array($action) && count($action)) {
 		// because Janitor does not have access the CI pages and we want to end up on "/minside"
 		// This controller will then redirect if login was successful
 		session()->value("login_forward", "/login");
-		$page->login();
+		$login_status = $page->login();
+		
+		message()->resetMessages();
+
+		if ($login_status && isset($login_status["status"]) && $login_status == "USER_NOT_VERIFIED") {
+			message()->addMessage("Brugernavnet er endnu ikke bekræftet – har du glemt at aktivere din konto?", ["type" => "error"]);		
+		}
+		else {
+			message()->addMessage("Du har indtastet et forkert brugernavn eller password.", ["type"=>"error"]);
+		}
+
+
 
 	}
 
@@ -163,7 +174,7 @@ if(is_array($action) && count($action)) {
 
 		// could not create reset request
 		else {
-			message()->addMessage("Sorry, you cannot reset the password for the specified user!", array("type" => "error"));
+			message()->addMessage("Beklager, du kan ikke nulstille password for den givne bruger!", array("type" => "error"));
 			header("Location: glemt");
 			exit();
 		}
