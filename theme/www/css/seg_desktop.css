@@ -6,8 +6,9 @@
 	font-family: 'voresfont';
 	src: url('/css/fonts/voresfont.eot');
 	src: url('/css/fonts/voresfont.eot?#iefix') format('embedded-opentype'),
+		 url('/css/fonts/voresfont.woff2') format('woff2'),
 		 url('/css/fonts/voresfont.woff') format('woff'),
-		 url('/css/fonts/voresfont.svg#voresfont') format('svg'),
+		 url('/css/fonts/voresfont.svg#alte_din_1451_mittelschriftRg') format('svg'),
 		 url('/css/fonts/voresfont.ttf') format('truetype');
 	font-weight: 400;
 	font-style: normal;
@@ -39,9 +40,6 @@ input, select, textarea {font-size: 20px; color: #333333; outline: none;}
 a, span {font-size: inherit; font-family: inherit; font-style: inherit; font-weight: inherit; line-height: inherit; color: inherit; text-transform: inherit;}
 em, strong {font-size: inherit; font-family: inherit; line-height: inherit; color: inherit; text-transform: inherit;}
 sup {line-height: 1em; font-family: inherit; color: inherit;}
-.highlight {
-	color: #3e8e17;
-}
 
 
 /*s-header.css*/
@@ -192,6 +190,10 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 #content h1 + p {
 	padding-top: 18px;
 }
+#content h4 + ul, 
+#content h4 + ol {
+	padding-top: 18px;
+}
 #content a {
 	text-decoration: none;
 	color: #3e8e17;
@@ -242,6 +244,60 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 #content dl {
 	padding-bottom: 12px;
 }
+#content code {
+	display: block;
+	padding: 24px;
+	margin-bottom: 24px;
+	white-space: pre-wrap;
+	font-family: monospace;
+	background-color: #DDDDDD;
+}
+#content span.path {
+	font-family: monospace;
+	background-color: #DDDDDD;
+	padding: 0 6px;
+}
+#content span.green {
+	color: #3e8e17;
+	font-weight: 700;
+}
+#content ul.color-list {
+	list-style: none;
+	margin: 0;
+}
+#content ul.color-list li {
+	display: inline-block;
+	box-sizing: border-box;
+	margin-right: 8px;
+	padding: 0;
+	width: 200px;
+	vertical-align: top;
+}
+span.colortest {
+	display: block;
+	width: 200px;
+	height: 200px;
+}
+#content ul.button-list {
+	list-style: none;
+	margin: 0;
+}
+#content ul.button-list li {
+	box-sizing: border-box;
+	padding: 0 0 25px 0;
+	vertical-align: top;
+}
+#content img.big-logo {
+	width: 200px;
+	height: 200px;
+	padding-bottom: 15px;
+}    
+#content img.small-logo {
+	display: inline-block;
+	padding-right: 15px;
+	width: 50px;
+	height: 50px;
+}
 
 
 /*s-form.css*/
@@ -255,7 +311,7 @@ div.field textarea {box-shadow: inset 0 1px 2px #dedede; box-sizing: border-box;
 div.field input {width: calc(100% - 4px); padding: 3px 5px 3px 6px;}
 div.field select {width: calc(100% - 4px); padding: 2px 3px 2px 2px;
 	background: #ffffff url(/img/gx_select.svg) no-repeat right 7px;
-	background-size: 20px auto;
+	background-size: 20px 20px;
 	-webkit-appearance: none;
 	-moz-appearance: none;
 }
@@ -268,7 +324,7 @@ div.field textarea.autoexpand {width: calc(100% - 4px); padding: 3px 6px 2px; ov
 div.field.checkbox {}
 div.field.checkbox label {display: inline-block; vertical-align: top; text-transform: none; font-size: 14px; line-height: 24px; padding: 0 0 0 28px;
 	background: transparent url(/img/gx_checkbox_unchecked.svg) no-repeat left center;
-	background-size: 20px auto;
+	background-size: 20px 20px;
 }
 div.field.checkbox input:checked + label {
 	background-image: url(/img/gx_checkbox_checked.svg);
@@ -277,7 +333,7 @@ div.field.checkbox input {z-index: 2; position: absolute; top: 0; left: 0; width
 div.field.radiobuttons .item {padding: 3px 0 0; position: relative;}
 div.field.radiobuttons .item label {display: block; text-transform: none; font-size: 14px; line-height: 24px;  padding: 0 0 0 28px;
 	background: transparent url(/img/gx_radiobutton_unchecked.svg) no-repeat left center;
-	background-size: 20px auto;
+	background-size: 20px 20px;
 }
 div.field.radiobuttons .item input:checked + label {
 	background-image: url(/img/gx_radiobutton_checked.svg);
@@ -306,13 +362,13 @@ div.field.error textarea:not(.autoexpand) {height: 104px;}
 div.field .indicator {display: inline-block; vertical-align: top; width: 12px; height: 12px; margin-left: 4px;}
 div.field.required .indicator {
 	background: transparent url(/img/gx_required.svg) no-repeat center 1px;
-	background-size: 9px auto;
+	background-size: 9px 9px;
 }
 div.field.checkbox .indicator {margin-top: 7px;}
 div.field.correct .indicator {
 	background-image: url(/img/gx_correct.svg);
 	background-position: center -2px;
-	background-size: 14px auto;
+	background-size: 14px 14px;
 }
 div.field div.help {position: relative;}
 div.field div.error,
@@ -365,6 +421,13 @@ ul.actions a.button.disabled,
 ul.actions input.button.disabled:hover
 ul.actions a.button.disabled:hover,
 #content ul.actions a.button.disabled:hover {cursor: default !important; color: #aaaaaa !important; background-color: #eeeeee !important;}
+textarea,
+input[type="text"],
+input[type="button"],
+input[type="submit"] {
+	-webkit-appearance: none;
+	-webkit-border-radius: 0;
+}
 
 
 /*s-login.css*/
@@ -378,3 +441,6 @@ ul.actions a.button.disabled:hover,
 #content .scene.accept_terms form {padding-top: 50px; width: 300px; margin: 0 auto; text-align: center;}
 #content .scene.accept_terms form fieldset {width: auto;}
 
+
+/*s-profile.css*/
+#content .scene.profile p {padding: 0;}
