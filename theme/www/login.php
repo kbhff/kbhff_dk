@@ -102,7 +102,7 @@ if(is_array($action) && count($action)) {
 		
 		message()->resetMessages();
 
-		if ($login_status && isset($login_status["status"]) && $login_status == "USER_NOT_VERIFIED") {
+		if ($login_status && isset($login_status["status"]) && $login_status["status"] == "USER_NOT_VERIFIED") {
 			message()->addMessage("Brugernavnet er endnu ikke bekræftet – har du glemt at aktivere din konto?", ["type" => "error"]);		
 		}
 		else {
