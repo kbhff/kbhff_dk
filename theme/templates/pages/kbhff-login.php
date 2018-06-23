@@ -13,7 +13,7 @@ $username = stringOr(getPost("username"));
 ?>
 <div class="scene login i:login">
 	<h1>Log ind</h1>
-	<p>I medlemssystemet kan du bl.a. bestille varer og booke vagter. <span class="green">Velkommen indenfor!</span></p>
+	<p>I medlemssystemet kan du bl.a. bestille varer og booke vagter. <strong>Velkommen indenfor!</strong></p>
 
 	<?= $model->formStart("dual", array("class" => "login")) ?>
 

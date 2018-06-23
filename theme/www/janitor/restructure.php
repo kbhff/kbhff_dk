@@ -1724,9 +1724,11 @@ if(is_array($action) && count($action)) {
 			$query->checkDbExistence(SITE_DB.".user_item_subscriptions");
 			$query->checkDbExistence(SITE_DB.".user_members");
 
-
 			// Get all paid users
-			$sql = "SELECT * FROM ".SITE_DB.".ff_persons WHERE active = 'paid'";
+			// $sql = "SELECT * FROM ".SITE_DB.".ff_persons WHERE active = 'paid'";
+
+			// Get all remaining users
+			$sql = "SELECT * FROM ".SITE_DB.".ff_persons WHERE";
 			if($query->sql($sql)) {
 				$results = $query->results();
 

@@ -10,17 +10,16 @@ include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 $action = $page->actions();
 
 
-$page->bodyClass("terms");
-$page->pageTitle("Terms");
+$page->bodyClass("persondata");
+$page->pageTitle("Persondata");
 
 
 
 $page->page(array(
-	"templates" => "pages/terms.php"
+	"templates" => "pages/personal_data.php"
 	)
 );
 exit();
 
 
 ?>
- 
