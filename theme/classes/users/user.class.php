@@ -57,6 +57,10 @@ class User extends UserCore {
 		
 	}
 
+	function validateCode($action) {
+		return true;
+	}
+
 }
 
 ?>
