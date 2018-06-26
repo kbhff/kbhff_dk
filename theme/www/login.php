@@ -147,19 +147,27 @@ if(is_array($action) && count($action)) {
 		exit();
 	}
 
-	// login/forgot
-	if(count($action) == 1 && $action[0] == "forgot") {
+	// login/glemt
+	else if(count($action) == 1 && $action[0] == "glemt") {
 
 		$page->page(array(
 			"templates" => "pages/forgot_password.php"
 		));
 		exit();
 	}
-	// login/forgot/receipt
-	else if(count($action) == 2 && $action[0] == "forgot" && $action[1] == "receipt") {
+	// login/glemt/nulstilling
+	else if(count($action) == 2 && $action[0] == "glemt" && $action[1] == "nulstilling") {
 
 		$page->page(array(
-			"templates" => "pages/forgot_password_receipt.php"
+			"templates" => "pages/forgot_password_code.php"
+		));
+		exit();
+	}
+	// login/glemt/nyt-password
+	else if(count($action) == 2 && $action[0] == "glemt" && $action[1] == "nyt-password") {
+
+		$page->page(array(
+			"templates" => "pages/forgot_password_set_new_password.php"
 		));
 		exit();
 	}
@@ -168,7 +176,7 @@ if(is_array($action) && count($action)) {
 
 		// request password reset
 		if($model->requestPasswordReset($action)) {
-			header("Location: forgot/receipt");
+			header("Location: glemt/nulstilling");
 			exit();
 		}
 
@@ -176,6 +184,40 @@ if(is_array($action) && count($action)) {
 		else {
 			message()->addMessage("Beklager, du kan ikke nulstille password for den givne bruger!", array("type" => "error"));
 			header("Location: glemt");
+			exit();
+		}
+	}
+
+	// login/validateCode
+	else if(count($action) == 1 && $action[0] == "validateCode" && $page->validateCsrfToken()) {
+
+		// code is valid
+		if($model->validateCode($action)) {
+			header("Location: glemt/nyt-password");
+			exit();
+		}
+
+		// code is not valid
+		else {
+			message()->addMessage("Beklager, din nulstillingskode er forkert!", array("type" => "error"));
+			header("Location: glemt/nulstilling");
+			exit();
+		}
+	}
+
+	// login/resetPassword
+	else if(count($action) == 1 && $action[0] == "resetPassword" && $page->validateCsrfToken()) {
+
+		// creating new password
+		if($model->resetPassword($action)) {
+			header("Location: /login");
+			exit();
+		}
+
+		// could not create new password
+		else {
+			message()->addMessage("Du kan ikke bruge dette password!", array("type" => "error"));
+			header("Location: glemt/nyt-password");
 			exit();
 		}
 	}

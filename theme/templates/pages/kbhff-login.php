@@ -49,7 +49,7 @@ $username = stringOr(getPost("username"));
 
 		<ul class="actions">
 			<?= $model->submit("Log ind", array("class" => "primary", "wrapper" => "li.login")) ?>
-			<li class="forgot">Har du brug for <a href="/login/forgot">hjælp til at logge ind</a>?</li>
+			<li class="forgot">Har du brug for <a href="/login/glemt">hjælp til at logge ind</a>?</li>
 		</ul>
 	<?= $model->formEnd() ?>
 

@@ -2,13 +2,17 @@
 	
 $model = new Model();
 
-$this->pageTitle("Forgot password?");
+$this->pageTitle("Glemt password");
 ?>
-<div class="scene login i:login">
+<div class="scene login i:forgot">
 	<h1>Har du glemt din kode?</h1>
-	<p>Type your email, and we'll send you a mail with information about how to reset your password.</p>
+	<h2>Du kan logge ind med medlemsnummer, email eller telefonnummer.</h2>
+	<p>
+		Ønsker du at nulstille dit password, så indtast dit medlemsnummer, mail eller telefonnummer nedfor. 
+		Vi sender dig en mail med dine login-oplysninger og kode til at nulstille dit password.
+	</p>
 
-	<?= $model->formStart("requestReset", array("class" => "labelstyle:inject")) ?>
+	<?= $model->formStart("requestReset", ["class" => "request_password"]) ?>
 
 <?	if(message()->hasMessages(array("type" => "error"))): ?>
 		<p class="errormessage">
@@ -21,11 +25,19 @@ $this->pageTitle("Forgot password?");
 <?	endif; ?>
 
 		<fieldset>
-			<?= $model->input("username", array("type" => "string", "label" => "Email", "required" => true, "pattern" => "[\w\.\-_]+@[\w\-\.]+\.\w{2,10}", "hint_message" => "Type your email.", "error_message" => "Invalid email.")); ?>
+			<?= $model->input("username", array(
+					"type" => "string", 
+					"label" => "Bruger login", 
+					"required" => true, 
+					"pattern" => "^(1|[0-9]{4,5}|[\+0-9\-\.\s\(\)]{5,18}|[\w\.\-_]+@[\w\-\.]+\.\w{2,10})$", 
+					"hint_message" => "email, medlemsnummer eller telefonnummer", 
+					"error_message" => "ugyldig bruger"
+				));
+			?>
 		</fieldset>
 
 		<ul class="actions">
-			<?= $model->submit("Request password reset", array("class" => "primary", "wrapper" => "li.reset")) ?>
+			<?= $model->submit("Send mig en mail", array("class" => "primary", "wrapper" => "li.reset")) ?>
 		</ul>
 	<?= $model->formEnd() ?>
 
