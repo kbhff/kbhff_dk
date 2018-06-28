@@ -1,16 +1,16 @@
 <?php
 	
-$model = new Model();
+$model = new User();
 
 $this->pageTitle("Verificering");
 ?>
 <div class="scene login i:forgot">
 	<h1>Nulstil password</h1>
 	<h2>Verficer at du vil nulstille dit password</h2>
-	<p><span class='highlight'>TAK.</span> Vi har nu sendt dig en mail, i mailen er der en kode som du kan indtaste her og lave et nyt password.</p>
+	<p class="validateParagraph"><span class='highlight'>TAK.</span> Vi har nu sendt dig en mail, i mailen er der en kode som du kan indtaste her og lave et nyt password.</p>
 
 
-	<?= $model->formStart("validateCode", ["class" => "verify"]) ?>
+	<?= $model->formStart("validateCode", ["class" => "verify_code"]) ?>
 
 <?	if(message()->hasMessages(array("type" => "error"))): ?>
 		<p class="errormessage">
@@ -23,15 +23,7 @@ $this->pageTitle("Verificering");
 <?	endif; ?>
 
 		<fieldset>
-			<?= $model->input("code", array(
-					"type" => "string", 
-					"label" => "Kode", 
-					"required" => true, 
-					"pattern" => "^(1|[0-9]{4,5}|[\+0-9\-\.\s\(\)]{5,18}|[\w\.\-_]+@[\w\-\.]+\.\w{2,10})$", 
-					"hint_message" => "Din verificerings kode", 
-					"error_message" => "Check at du har indtastet den samme kode fra e-mailen"
-				));
-			?>
+			<?= $model->input("reset-token"); ?>
 		</fieldset>
 
 		<ul class="actions">

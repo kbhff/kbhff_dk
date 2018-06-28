@@ -49,6 +49,14 @@ class User extends UserCore {
 
 		parent::__construct(get_class());
 
+		$this->addToModel("reset-token", array(
+			"type" => "string", 
+			"label" => "Kode", 
+			"required" => true, 
+			"pattern" => "^[0-9A-Za-z]{24}$", 
+			"hint_message" => "Din verificerings kode", 
+			"error_message" => "Invalid kode, check at du har indtastet den samme kode fra e-mailen"
+		));
 
 	}
 
@@ -58,7 +66,15 @@ class User extends UserCore {
 	}
 
 	function validateCode($action) {
-		return true;
+		// get posted variables
+		$this->getPostedEntities();
+		$token = $this->getProperty("reset-token", "value");
+
+		// correct information available
+		if(count($action) == 1 && $this->checkResetToken($token)) {
+			return $token;
+		}
+		return false;
 	}
 
 }
