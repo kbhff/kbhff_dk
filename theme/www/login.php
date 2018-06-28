@@ -294,7 +294,9 @@ if(is_array($action) && count($action)) {
 	else if(count($action) == 1 && $action[0] == "validateCode" && $page->validateCsrfToken()) {
 
 		// code is valid
-		if($model->validateCode($action)) {
+		$token = $model->validateCode($action);
+		if($token) {
+			session()->value("temp-reset-token", $token);
 			header("Location: glemt/nyt-password");
 			exit();
 		}
