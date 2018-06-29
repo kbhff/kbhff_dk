@@ -57,7 +57,7 @@ class Minside extends CI_Controller {
 	{
 		$this->load->model('Memberinfo');
 		$user = $this->input->post('user');
-//		print "USER:" . $user . "<br>\n";
+		// print "USER:" . $user . "<br>\n";
 
 		$pw = $this->input->post('pw');
 		$phash = $this->input->post('phash');
@@ -76,14 +76,21 @@ class Minside extends CI_Controller {
 				// print "USER LOGGED IN:<br>\n";
 				// print_r($temp);
 				// print "###<br>\n";
-				
+
+				setCookie(
+					"kbhff_login",
+					"1",
+					false,
+					"/"
+				);
+
 		} 
 		
 		// echo $return_code;
 		// redirect('/minside', 'location');
 		//$this->load->view('v_minside', $data);
 
-//		print "DONE";
+		// print "DONE";
 		
 // 		redirect('minside');
     }
