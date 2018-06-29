@@ -9,7 +9,8 @@ if($forward_url) {
 }
 
 
-$username = stringOr(getPost("username"));
+$username = stringOr(getPost("username"), session()->value("temp-username"));
+session()->reset("temp-username");
 ?>
 <div class="scene login i:login">
 	<h1>Log ind</h1>

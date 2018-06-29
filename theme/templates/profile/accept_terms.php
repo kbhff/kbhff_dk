@@ -13,7 +13,7 @@ global $UC;
 	<p>Vælger du at afvise samtykke vil det medføre ophør af dit medlemskab og
 		dine personlige data slettes i overensstemmelse med vore retningslinjer.</p>
 
-	<p>Læs vore retningslinjer for behandling og opbevaring af persondata <a href="/persondata">her</a>
+	<p>Læs vores <a href="/persondata">retningslinjer for behandling og opbevaring af persondata</a></p>
 
 
 

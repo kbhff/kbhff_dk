@@ -17,6 +17,11 @@ $page->pageTitle("Login");
 
 if(is_array($action) && count($action)) {
 
+
+
+	// LOGIN
+
+	// Custom DUAL CodeIgniter/Janitor login
 	if(count($action) == 1 && $action[0] == "dual" && $page->validateCsrfToken()) {
 
 
@@ -42,9 +47,9 @@ if(is_array($action) && count($action)) {
 		$curl->init($params);
 		$result = $curl->exec(SITE_URL."/minside/login");
 
+		// Did login result in session cookie? And was login successful
+		if($result["cookies"] && count($result["cookies"]) > 1 && preg_match("/kbhff_session/", $result["cookies"][0]) && preg_match("/kbhff_login\t1/", $result["cookies"][1])) {
 
-		// Did login result in session cookie?
-		if($result["cookies"] && preg_match("/kbhff_session/", $result["cookies"][0])) {
 			// get cookie details
 			list($hostname, $subdomain, $path, $secure, $expiry, $name, $value) = explode("\t", $result["cookies"][0]);
 
@@ -59,16 +64,14 @@ if(is_array($action) && count($action)) {
 
 			// Requires existing data to be moved to Janitor
 
+
 			// Check if user has valid Janitor password yet
 			// If not, then set user password, based on current successful CI login
-			
-//			$_POST["username"] = "martin@think.dk";
-
 
 			// check if user has Janitor password
-			// otherwise we must create a new password since we have the password at hand
 			$query = new Query();
 
+			// otherwise we must create a new password since we have the password at hand
 			$sql = "SELECT user_id FROM ".SITE_DB.".user_usernames as usernames WHERE usernames.username='$username' AND user_id IN (SELECT user_id FROM ".SITE_DB.".user_passwords)";
 //			print $sql."<br>\n";
 			// No password stored - first login
@@ -90,31 +93,50 @@ if(is_array($action) && count($action)) {
 
 			}
 
-
 			session()->value("kbhff_session", true);
 		}
 
-		// Perform Janitor login and redirect to this controller
-		// because Janitor does not have access the CI pages and we want to end up on "/minside"
-		// This controller will then redirect if login was successful
-		session()->value("login_forward", "/login");
+		// Perform Janitor login and redirect to /profil
+		session()->value("login_forward", "/profil");
 		$login_status = $page->login();
-		
+
+		// remove any English messages added by Janitor backend
 		message()->resetMessages();
 
-		if ($login_status && isset($login_status["status"]) && $login_status["status"] == "USER_NOT_VERIFIED") {
-			message()->addMessage("Brugernavnet er endnu ikke bekræftet – har du glemt at aktivere din konto?", ["type" => "error"]);		
+
+		// User could not log in because user is not verified
+		if ($login_status && isset($login_status["status"]) && $login_status["status"] == "NOT_VERIFIED") {
+
+			session()->value("temp-username", $login_status["email"]);
+			header("Location: /login/bekraeft-konto");
+			exit();
+
 		}
+		// User could not log in because user is not verified
+		else if ($login_status && isset($login_status["status"]) && $login_status["status"] == "NO_PASSWORD") {
+
+			session()->value("temp-username", $login_status["email"]);
+			header("Location: /login/bekraeft-konto");
+			exit();
+
+		}
+		// User could not be logged in – save username temporarily and redirect back to login to leave POST state
 		else {
+
+			session()->value("temp-username", getPost("username"));
 			message()->addMessage("Du har indtastet et forkert brugernavn eller password.", ["type"=>"error"]);
+			header("Location: /login");
+			exit();
+
 		}
-
-
 
 	}
 
+
+	// LOGOFF
+
 	// Manual dual logoff
-	// login/forgot
+	// login/logoff
 	else if(count($action) == 1 && $action[0] == "logoff") {
 
 		// CI logoff
@@ -146,6 +168,94 @@ if(is_array($action) && count($action)) {
 
 		exit();
 	}
+
+
+
+	// CONFIRM ACCOUNT
+
+	// Confirm account / code form
+	else if(count($action) == 1 && $action[0] == "bekraeft-konto") {
+
+		// No confirm without a username
+		if(session()->value("temp-username")) {
+
+			$page->page(array(
+				"templates" => "profile/confirm_account.php"
+			));
+			exit();
+		}
+		// return to login page
+		else {
+
+			message()->addMessage("Der skete en ukendt fejl. Prøv igen.");
+			header("Location: /login");
+			exit();
+		}
+
+	}
+	// Create password
+	else if(count($action) == 1 && $action[0] == "opret-password") {
+
+		$page->page(array(
+			"templates" => "profile/create_password.php"
+		));
+		exit();
+	}
+	// login/confirmAccount
+	else if(count($action) == 1 && $action[0] == "confirmAccount" && $page->validateCsrfToken()) {
+
+		// request password reset
+		$user_id = $model->confirmAccount($action);
+		if($user_id) {
+
+			// if user has password, forward to login page
+			if($model->hasPassword()) {
+
+				message()->addMessage("Din konto er nu aktiveret og du kan logge ind.");
+				header("Location: /login");
+				exit();
+			}
+			// if user does not have password, forward to password creation page
+			else {
+
+				session()->value("user_id", $user_id);
+				header("Location: /login/opret-password");
+				exit();
+			}
+
+		}
+
+		// could not create reset request
+		else {
+			message()->addMessage("Beklager, du kan ikke aktivere den givne konto!", array("type" => "error"));
+			header("Location: /login");
+			exit();
+		}
+
+	}
+	// login/setPassword
+	else if(count($action) == 1 && $action[0] == "setPassword" && $page->validateCsrfToken()) {
+
+		if($model->setPassword($action)) {
+
+			message()->addMessage("Din konto er nu aktiveret og du kan logge ind.");
+			header("Location: /login");
+			exit();
+
+		}
+		else {
+
+			message()->addMessage("Koden kunne ikke gemmes", array("type" => "error"));
+			header("Location: /login/opret-password");
+			exit();
+
+		}
+
+	}
+
+
+
+	// RESET PASSWORD
 
 	// login/glemt
 	else if(count($action) == 1 && $action[0] == "glemt") {
@@ -192,7 +302,9 @@ if(is_array($action) && count($action)) {
 	else if(count($action) == 1 && $action[0] == "validateCode" && $page->validateCsrfToken()) {
 
 		// code is valid
-		if($model->validateCode($action)) {
+		$token = $model->validateCode($action);
+		if($token) {
+			session()->value("temp-reset-token", $token);
 			header("Location: glemt/nyt-password");
 			exit();
 		}
@@ -223,21 +335,12 @@ if(is_array($action) && count($action)) {
 	}
 }
 
-// Login will redirect here (due to dual login)
-// If Janitor login was successful, redirect til CI page, "/minside"
-if(session()->value("user_group_id") > 1) {
 
-	header("Location: /profil");
 
-}
-// User not logged in
-else {
+// plain login
+$page->page(array(
+	"templates" => "pages/kbhff-login.php"
+));
 
-	// plain login
-	$page->page(array(
-		"templates" => "pages/kbhff-login.php"
-	));
-	
-}
 
 ?>
