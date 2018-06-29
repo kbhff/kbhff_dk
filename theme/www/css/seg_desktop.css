@@ -61,6 +61,9 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
     max-width: 50%;
 	text-transform: uppercase;
 }
+#header .highlight {
+	color: #3e8e17;
+}
 #header ul.servicenavigation {
 	position: absolute;
 	line-height: 14px;
@@ -202,6 +205,9 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 #content a:hover {
 	color: black;
 }
+#content .highlight {
+	color: #3e8e17;
+}
 #content blockquote {
 	font-style: italic;
 	margin: 0px;
@@ -212,11 +218,11 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 }
 #content ol {
 	list-style-type: decimal;
-	padding-left: 0px;
+	padding-left: 16px;
 }
 #content ul {
 	list-style: disc;
-	margin-left: 28px;
+	margin-left: 15px;
 }
 #content li {
 	line-height: 24px;
@@ -429,6 +435,10 @@ input[type="submit"] {
 	-webkit-border-radius: 0;
 }
 
+
+/*s-pages.css*/
+#content ol ol {padding-left: 30px;}
+#content div.messages p.error {color: #C22414;}
 
 /*s-login.css*/
 #content .scene.login form {padding-top: 50px; width: 400px; margin: 0 auto;}
