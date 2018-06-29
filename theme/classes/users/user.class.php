@@ -55,7 +55,7 @@ class User extends UserCore {
 			"required" => true, 
 			"pattern" => "^[0-9A-Za-z]{24}$", 
 			"hint_message" => "Din verificerings kode", 
-			"error_message" => "Invalid kode, check at du har indtastet den samme kode fra e-mailen"
+			"error_message" => "Invalid kode, check på mellemrum i enden af din indtastede kode"
 		));
 
 	}
