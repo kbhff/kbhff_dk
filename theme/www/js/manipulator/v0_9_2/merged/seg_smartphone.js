@@ -1,6 +1,6 @@
 /*
 Manipulator v0.9.2-full Copyright 2017 http://manipulator.parentnode.dk
-js-merged @ 2017-01-11 05:29:39
+js-merged @ 2018-06-29 04:40:04
 */
 
 /*seg_smartphone_include.js*/
@@ -12,7 +12,9 @@ if(!u || !Util) {
 	u.bug = u.nodeId = u.exception = function() {};
 	u.stats = new function() {this.pageView = function(){};this.event = function(){};}
 }
-
+function fun(v) {return (typeof(v) === "function")}
+function obj(v) {return (typeof(v) === "object")}
+function str(v) {return (typeof(v) === "string")}
 
 /*u-debug.js*/
 u.bug_console_only = true;
@@ -23,6 +25,8 @@ Util.debugURL = function(url) {
 	return document.domain.match(/(\.local|\.proxy)$/);
 }
 Util.nodeId = function(node, include_path) {
+	console.log("Util.nodeId IS DEPRECATED. Use commas in u.bug in stead.");
+	console.log(arguments.callee.caller);
 	try {
 		if(!include_path) {
 			return node.id ? node.nodeName+"#"+node.id : (node.className ? node.nodeName+"."+node.className : (node.name ? node.nodeName + "["+node.name+"]" : node.nodeName));
@@ -43,19 +47,18 @@ Util.nodeId = function(node, include_path) {
 }
 Util.exception = function(name, _arguments, _exception) {
 	u.bug("Exception in: " + name + " (" + _exception + ")");
+	console.error(_exception);
 	u.bug("Invoked with arguments:");
-	u.xInObject(_arguments);
-	u.bug("Called from:");
-	if(_arguments.callee.caller.name) {
-		u.bug("arguments.callee.caller.name:" + _arguments.callee.caller.name)
-	}
-	else {
-		u.bug("arguments.callee.caller:" + _arguments.callee.caller.toString().substring(0, 250));
-	}
+	console.log(_arguments);
+	// 
+	// 
 }
-Util.bug = function(message, corner, color) {
+Util.bug = function() {
 	if(u.debugURL()) {
 		if(!u.bug_console_only) {
+			if(typeof(console) == "object") {
+				console.log(message);
+			}
 			var option, options = new Array([0, "auto", "auto", 0], [0, 0, "auto", "auto"], ["auto", 0, 0, "auto"], ["auto", "auto", 0, 0]);
 			if(isNaN(corner)) {
 				color = corner;
@@ -75,11 +78,13 @@ Util.bug = function(message, corner, color) {
 				d_target.style.left = option[3];
 				d_target.style.backgroundColor = u.bug_bg ? u.bug_bg : "#ffffff";
 				d_target.style.color = "#000000";
+				d_target.style.fontSize = "11px";
+				d_target.style.lineHeight = "11px";
 				d_target.style.textAlign = "left";
 				if(d_target.style.maxWidth) {
 					d_target.style.maxWidth = u.bug_max_width ? u.bug_max_width+"px" : "auto";
 				}
-				d_target.style.padding = "3px";
+				d_target.style.padding = "2px 3px";
 			}
 			if(typeof(message) != "string") {
 				message = message.toString();
@@ -88,8 +93,11 @@ Util.bug = function(message, corner, color) {
 			message = message ? message.replace(/\>/g, "&gt;").replace(/\</g, "&lt;").replace(/&lt;br&gt;/g, "<br>") : "Util.bug with no message?";
 			u.ae(debug_div, "div", {"style":"color: " + color, "html": message});
 		}
-		if(typeof(console) == "object") {
-			console.log(message);
+		else if(typeof(console) == "object") {
+			var i;
+			for(i = 0; i < arguments.length; i++) {
+				console.log(arguments[i]);
+			}
 		}
 	}
 }
@@ -168,7 +176,7 @@ Util.Animation = u.a = new function() {
 							if(typeof(callback) == "function") {
 								var key = u.randomString(4);
 								node[key] = callback;
-								node[key].callback(event);
+								node[key](event);
 								node[key] = null;
 								callback = null;
 							}
@@ -300,7 +308,9 @@ Util.Animation = u.a = new function() {
 					if(!animation["__animation_frame_start_"+id]) {
 						animation["__animation_frame_start_"+id] = timestamp;
 					}
-					animation.node[animation.callback]((timestamp-animation["__animation_frame_start_"+id]) / animation.duration);
+					if(fun(animation.node[animation.callback])) {
+						animation.node[animation.callback]((timestamp-animation["__animation_frame_start_"+id]) / animation.duration);
+					}
 				}
 				if(Object.keys(u.a._animationqueue).length) {
 					u.a._requestAnimationId = window._requestAnimationFrame(u.a._animationframe);
@@ -315,7 +325,9 @@ Util.Animation = u.a = new function() {
 	this.finalAnimationFrame = function(id) {
 		var animation = u.a._animationqueue[id];
 		animation["__animation_frame_start_"+id] = false;
-		animation.node[animation.callback](1);
+		if(fun(animation.node[animation.callback])) {
+			animation.node[animation.callback](1);
+		}
 		if(typeof(animation.node.transitioned) == "function") {
 			animation.node.transitioned({});
 		}
@@ -341,14 +353,25 @@ Util.Animation = u.a = new function() {
 Util.saveCookie = function(name, value, _options) {
 	var expires = true;
 	var path = false;
+	var force = false;
 	if(typeof(_options) == "object") {
 		var _argument;
 		for(_argument in _options) {
 			switch(_argument) {
 				case "expires"	: expires	= _options[_argument]; break;
 				case "path"		: path		= _options[_argument]; break;
+				case "force"	: force		= _options[_argument]; break;
 			}
 		}
+	}
+	if(!force && typeof(window.localStorage) == "object" && typeof(window.sessionStorage) == "object") {
+		if(expires === true) {
+			window.sessionStorage.setItem(name, value);
+		}
+		else {
+			window.localStorage.setItem(name, value);
+		}
+		return;
 	}
 	if(expires === false) {
 		expires = ";expires=Mon, 04-Apr-2020 05:00:00 GMT";
@@ -369,6 +392,12 @@ Util.saveCookie = function(name, value, _options) {
 }
 Util.getCookie = function(name) {
 	var matches;
+	if(typeof(window.sessionStorage) == "object" && window.sessionStorage.getItem(name)) {
+		return window.sessionStorage.getItem(name)
+	}
+	else if(typeof(window.localStorage) == "object" && window.localStorage.getItem(name)) {
+		return window.localStorage.getItem(name)
+	}
 	return (matches = document.cookie.match(encodeURIComponent(name) + "=([^;]+)")) ? decodeURIComponent(matches[1]) : false;
 }
 Util.deleteCookie = function(name, _options) {
@@ -380,6 +409,12 @@ Util.deleteCookie = function(name, _options) {
 				case "path"	: path	= _options[_argument]; break;
 			}
 		}
+	}
+	if(typeof(window.sessionStorage) == "object") {
+		window.sessionStorage.removeItem(name);
+	}
+	if(typeof(window.localStorage) == "object") {
+		window.localStorage.removeItem(name);
 	}
 	if(typeof(path) === "string") {
 		path = ";path="+path;
@@ -740,9 +775,10 @@ Util.clickableElement = u.ce = function(node, _options) {
 }
 Util.classVar = u.cv = function(node, var_name) {
 	try {
-		var regexp = new RegExp(var_name + ":[?=\\w/\\#~:.,?+=?&%@!\\-]*");
-		if(node.className.match(regexp)) {
-			return node.className.match(regexp)[0].replace(var_name + ":", "");
+		var regexp = new RegExp("(\^| )" + var_name + ":[?=\\w/\\#~:.,?+=?&%@!\\-]*");
+		var match = node.className.match(regexp);
+		if(match) {
+			return match[0].replace(var_name + ":", "").trim();
 		}
 	}
 	catch(exception) {
@@ -779,10 +815,16 @@ Util.hasClass = u.hc = function(node, classname) {
 Util.addClass = u.ac = function(node, classname, dom_update) {
 	try {
 		if(classname) {
-			var regexp = new RegExp("(^|\\s)" + classname + "(\\s|$)");
-			if(!regexp.test(node.className)) {
-				node.className += node.className ? " " + classname : classname;
+			if(node.classList){
+				node.classList.add(classname);
 				dom_update === false ? false : node.offsetTop;
+			}
+			else {
+				var regexp = new RegExp("(^|\\s)" + classname + "(\\s|$)");
+				if(!regexp.test(node.className)) {
+					node.className += node.className ? " " + classname : classname;
+					dom_update === false ? false : node.offsetTop;
+				}
 			}
 			return node.className;
 		}
@@ -795,10 +837,15 @@ Util.addClass = u.ac = function(node, classname, dom_update) {
 Util.removeClass = u.rc = function(node, classname, dom_update) {
 	try {
 		if(classname) {
-			var regexp = new RegExp("(\\b)" + classname + "(\\s|$)", "g");
-			node.className = node.className.replace(regexp, " ").trim().replace(/[\s]{2}/g, " ");
-			dom_update === false ? false : node.offsetTop;
-			return node.className;
+			if(node.classList.contains(classname)) {
+				node.classList.remove(classname);
+			}
+			else {
+				var regexp = new RegExp("(\\b)" + classname + "(\\s|$)", "g");
+				node.className = node.className.replace(regexp, " ").trim().replace(/[\s]{2}/g, " ");
+				dom_update === false ? false : node.offsetTop;
+				return node.className;
+			}
 		}
 	}
 	catch(exception) {
@@ -808,21 +855,37 @@ Util.removeClass = u.rc = function(node, classname, dom_update) {
 }
 Util.toggleClass = u.tc = function(node, classname, _classname, dom_update) {
 	try {
-		var regexp = new RegExp("(^|\\s)" + classname + "(\\s|$|\:)");
-		if(regexp.test(node.className)) {
-			u.rc(node, classname, false);
-			if(_classname) {
-				u.ac(node, _classname, false);
+		if(node.classList) {
+			if(node.classList.contains(classname)) {
+				node.classList.remove(classname);
+				if(_classname) {
+					node.classList.add(_classname);
+				}
+			}
+			else {
+				node.classList.add(classname);
+				if(_classname) {
+					node.classList.remove(_classname);
+				}
 			}
 		}
 		else {
-			u.ac(node, classname, false);
-			if(_classname) {
-				u.rc(node, _classname, false);
+			var regexp = new RegExp("(^|\\s)" + classname + "(\\s|$|\:)");
+			if(regexp.test(node.className)) {
+				u.rc(node, classname, false);
+				if(_classname) {
+					u.ac(node, _classname, false);
+				}
 			}
+			else {
+				u.ac(node, classname, false);
+				if(_classname) {
+					u.rc(node, _classname, false);
+				}
+			}
+			dom_update === false ? false : node.offsetTop;
+			return node.className;
 		}
-		dom_update === false ? false : node.offsetTop;
-		return node.className;
 	}
 	catch(exception) {
 		u.exception("u.tc", arguments, exception);
@@ -884,41 +947,58 @@ Util.inNodeList = function(node, list) {
 	}
 	return false;
 }
-Util.nodeWithin = u.nw = function(node, scope) {
-	var node_key = u.randomString(8);
-	var scope_key = u.randomString(8);
-	u.ac(node, node_key);
-	u.ac(scope, scope_key);
-	if(u.qs("."+scope_key+" ."+node_key)) {
-		u.rc(node, node_key);
-		u.rc(scope, scope_key);
-		return true;
+u.contains = Util.nodeWithin = u.nw = function(node, scope) {
+	if(scope != node) {
+		if(scope.contains(node)) {
+			return true
+		}
 	}
-	u.rc(node, node_key);
-	u.rc(scope, scope_key);
 	return false;
 }
-
+u.containsOrIs = function(node, scope) {
+	if(scope == node || u.contains(node, scope)) {
+		return true
+	}
+	return false;
+}
 
 /*u-easings.js*/
 u.easings = new function() {
 	this["ease-in"] = function(progress) {
-		return Math.pow((progress*this.duration) / this.duration, 3);
+		return Math.pow((progress), 3);
 	}
 	this["linear"] = function(progress) {
 		return progress;
 	}
 	this["ease-out"] = function(progress) {
-		return 1 - Math.pow(1 - ((progress*this.duration) / this.duration), 3);
+		return 1 - Math.pow(1 - ((progress)), 3);
 	}
 	this["linear"] = function(progress) {
-		return (progress*this.duration) / this.duration;
+		return (progress);
+	}
+	this["ease-in-out-veryslow"] = function(progress) {
+		if(progress > 0.5) {
+			return 4*Math.pow((progress-1),3)+1;
+		}
+		return 4*Math.pow(progress,3);  
 	}
 	this["ease-in-out"] = function(progress) {
-		if((progress*this.duration) > (this.duration / 2)) {
-			return 1 - Math.pow(1 - ((progress*this.duration) / this.duration), 3);
+		if(progress > 0.5) {
+			return 1 - Math.pow(1 - ((progress)), 2);
 		}
-		return Math.pow((progress*this.duration) / this.duration, 3);
+		return Math.pow((progress), 2);
+	}
+	this["ease-out-slow"] = function(progress) {
+		return 1 - Math.pow(1 - ((progress)), 2);
+	}
+	this["ease-in-slow"] = function(progress) {
+		return Math.pow((progress), 2);
+	}
+	this["ease-in-veryslow"] = function(progress) {
+		return Math.pow((progress), 1.5);
+	}
+	this["ease-in-fast"] = function(progress) {
+		return Math.pow((progress), 4);
 	}
 }
 
@@ -926,7 +1006,7 @@ u.easings = new function() {
 Util.Events = u.e = new function() {
 	this.event_pref = typeof(document.ontouchmove) == "undefined" || (navigator.maxTouchPoints > 1 && navigator.userAgent.match(/Windows/i)) ? "mouse" : "touch";
 	if(navigator.maxTouchPoints > 1) {
-		if(typeof(document.ontouchmove) == "undefined" && typeof(document.onmousemove) == "undefined") {
+		if((typeof(document.ontouchmove) == "undefined" && typeof(document.onmousemove) == "undefined") || (document.ontouchmove === null && document.onmousemove === null)) {
 			this.event_support = "multi";
 		}
 	}
@@ -1099,7 +1179,6 @@ Util.Events = u.e = new function() {
 		this.move_timestamp = event.timeStamp;
 		this.move_last_x = 0;
 		this.move_last_y = 0;
-		this._moves_cancel = 0;
 		this.swiped = false;
 		if(this.e_click || this.e_dblclick || this.e_hold) {
 			if(event.type.match(/mouse/)) {
@@ -1126,7 +1205,6 @@ Util.Events = u.e = new function() {
 		}
 		if(this.e_drag || this.e_swipe) {
 			u.e.addMoveEvent(this, u.e._pick);
-			u.e.addEndEvent(this, u.e._drop);
 		}
 		if(this.e_scroll) {
 			u.e.addMoveEvent(this, u.e._scrollStart);
@@ -1139,14 +1217,11 @@ Util.Events = u.e = new function() {
 	this._cancelClick = function(event) {
 		var offset_x = u.eventX(event) - this.start_event_x;
 		var offset_y = u.eventY(event) - this.start_event_y;
-		if(event.type.match(/mouseout/) || this._moves_cancel > 1 || (event.type.match(/move/) && (Math.abs(offset_x) > 15 || Math.abs(offset_y) > 15))) {
+		if(event.type.match(/mouseout/) || (event.type.match(/move/) && (Math.abs(offset_x) > 15 || Math.abs(offset_y) > 15))) {
 			u.e.resetClickEvents(this);
 			if(typeof(this.clickCancelled) == "function") {
 				this.clickCancelled(event);
 			}
-		}
-		else if(event.type.match(/move/)) {
-			this._moves_cancel++;
 		}
 	}
 	this._move = function(event) {
@@ -1222,6 +1297,7 @@ Util.Events = u.e = new function() {
 	}
 	this.hover = function(node, _options) {
 		node._hover_out_delay = 100;
+		node._hover_over_delay = 0;
 		node._callback_out = "out";
 		node._callback_over = "over";
 		if(typeof(_options) == "object") {
@@ -1230,6 +1306,7 @@ Util.Events = u.e = new function() {
 				switch(argument) {
 					case "over"				: node._callback_over		= _options[argument]; break;
 					case "out"				: node._callback_out		= _options[argument]; break;
+					case "delay_over"		: node._hover_over_delay	= _options[argument]; break;
 					case "delay"			: node._hover_out_delay		= _options[argument]; break;
 				}
 			}
@@ -1240,16 +1317,33 @@ Util.Events = u.e = new function() {
 	}
 	this._over = function(event) {
 		u.t.resetTimer(this.t_out);
-		if(typeof(this[this._callback_over]) == "function" && !this.is_hovered) {
-			this[this._callback_over](event);
+		if(!this._hover_over_delay) {
+			u.e.__over.call(this, event);
 		}
-		this.is_hovered = true;
+		else if(!u.t.valid(this.t_over)) {
+			this.t_over = u.t.setTimer(this, u.e.__over, this._hover_over_delay, event);
+		}
+	}
+	this.__over = function(event) {
+		u.t.resetTimer(this.t_out);
+		if(!this.is_hovered) {
+			this.is_hovered = true;
+			u.e.removeOverEvent(this, u.e._over);
+			u.e.addOverEvent(this, u.e.__over);
+			if(typeof(this[this._callback_over]) == "function") {
+				this[this._callback_over](event);
+			}
+		}
 	}
 	this._out = function(event) {
+		u.t.resetTimer(this.t_over);
+		u.t.resetTimer(this.t_out);
 		this.t_out = u.t.setTimer(this, u.e.__out, this._hover_out_delay, event);
 	}
 	this.__out = function(event) {
 		this.is_hovered = false;
+		u.e.removeOverEvent(this, u.e.__over);
+		u.e.addOverEvent(this, u.e._over);
 		if(typeof(this[this._callback_out]) == "function") {
 			this[this._callback_out](event);
 		}
@@ -1356,42 +1450,6 @@ u.e.removeWindowEndEvent = function(node, id) {
 	window["_Onend_node_"+ id] = null;
 	window["_Onend_callback_"+ id] = null;
 }
-u.e.addWindowResizeEvent = function(node, action) {
-	var id = u.randomString();
-	window["_Onresize_node_"+ id] = node;
-	if(typeof(action) == "function") {
-		eval('window["_Onresize_callback_' + id + '"] = function(event) {window["_Onresize_node_'+ id + '"]._Onresize_callback_'+id+' = '+action+'; window["_Onresize_node_'+ id + '"]._Onresize_callback_'+id+'(event);};');
-	} 
-	else {
-		eval('window["_Onresize_callback_' + id + '"] = function(event) {if(typeof(window["_Onresize_node_'+ id + '"]["'+action+'"]) == "function") {window["_Onresize_node_'+id+'"]["'+action+'"](event);}};');
-	}
-	u.e.addEvent(window, "resize", window["_Onresize_callback_" + id]);
-	return id;
-}
-u.e.removeWindowResizeEvent = function(node, id) {
-	u.e.removeEvent(window, "resize", window["_Onresize_callback_"+id]);
-	window["_Onresize_node_"+id]["_Onresize_callback_"+id] = null;
-	window["_Onresize_node_"+id] = null;
-	window["_Onresize_callback_"+id] = null;
-}
-u.e.addWindowScrollEvent = function(node, action) {
-	var id = u.randomString();
-	window["_Onscroll_node_"+ id] = node;
-	if(typeof(action) == "function") {
-		eval('window["_Onscroll_callback_' + id + '"] = function(event) {window["_Onscroll_node_'+ id + '"]._Onscroll_callback_'+id+' = '+action+'; window["_Onscroll_node_'+ id + '"]._Onscroll_callback_'+id+'(event);};');
-	} 
-	else {
-		eval('window["_Onscroll_callback_' + id + '"] = function(event) {if(typeof(window["_Onscroll_node_'+ id + '"]["'+action+'"]) == "function") {window["_Onscroll_node_'+id+'"]["'+action+'"](event);}};');
-	}
-	u.e.addEvent(window, "scroll", window["_Onscroll_callback_" + id]);
-	return id;
-}
-u.e.removeWindowScrollEvent = function(node, id) {
-	u.e.removeEvent(window, "scroll", window["_Onscroll_callback_"+id]);
-	window["_Onscroll_node_"+id]["_Onscroll_callback_"+id] = null;
-	window["_Onscroll_node_"+id] = null;
-	window["_Onscroll_callback_"+id] = null;
-}
 
 
 /*u-events-movements.js*/
@@ -1445,11 +1503,10 @@ u.e.overlap = function(node, boundaries, strict) {
 u.e.drag = function(node, boundaries, _options) {
 	node.e_drag_options = _options ? _options : {};
 	node.e_drag = true;
-	node._moves_counted = 0;
-	node._moves_required = (u.system("android, winphone")) ? 2 : 0;
 	if(node.childNodes.length < 2 && node.innerHTML.trim() == "") {
 		node.innerHTML = "&nbsp;";
 	}
+	node.distance_to_pick = 2;
 	node.drag_strict = true;
 	node.drag_elastica = 0;
 	node.drag_dropout = true;
@@ -1523,8 +1580,7 @@ u.e._pick = function(event) {
 		(init_speed_x > init_speed_y && this.only_horizontal) || 
 		(init_speed_x < init_speed_y && this.only_vertical) ||
 		(!this.only_vertical && !this.only_horizontal)) {
-		if(this._moves_counted >= this._moves_required) {
-			this._moves_counted = 0;
+		if((init_speed_x > this.distance_to_pick || init_speed_y > this.distance_to_pick)) {
 			u.e.resetNestedEvents(this);
 			u.e.kill(event);
 			if(u.hasFixedParent(this)) {
@@ -1566,9 +1622,6 @@ u.e._pick = function(event) {
 				u.e.addOutEvent(this, u.e._drop_out);
 			}
 		}
-		else {
-			this._moves_counted++;
-		}
 	}
 }
 u.e._drag = function(event) {
@@ -1595,7 +1648,6 @@ u.e._drag = function(event) {
 		this._x = this.current_x;
 		this._y = this.current_y;
 	}
-	u.bug("locked:" + this.locked);
 	if(this.e_swipe) {
 		if(this.only_horizontal) {
 			if(this.current_xps < 0) {
@@ -2021,6 +2073,7 @@ Util.Form = u.f = new function() {
 		for(i = 0; hidden_field = hidden_fields[i]; i++) {
 			if(!_form.fields[hidden_field.name]) {
 				_form.fields[hidden_field.name] = hidden_field;
+				hidden_field._form = _form;
 				hidden_field.val = this._value;
 			}
 		}
@@ -2052,6 +2105,9 @@ Util.Form = u.f = new function() {
 			}
 		}
 		if(!Object.keys(this.error_fields).length) {
+			if(typeof(this.preSubmitted) == "function") {
+				this.preSubmitted(iN);
+			}
 			if(typeof(this.submitted) == "function") {
 				this.submitted(iN);
 			}
@@ -2495,10 +2551,10 @@ Util.Form = u.f = new function() {
 		}
 	}
 	this.validate = function(iN) {
-		if(!iN._form._validation) {
+		if(!iN._form._validation || !iN.field) {
 			return true;
 		}
-		var min, max, pattern;
+		var min, max, pattern, compare_to;
 		var validated = false;
 		if(!u.hc(iN.field, "required") && iN.val() === "") {
 			this.fieldCorrect(iN);
@@ -2522,10 +2578,12 @@ Util.Form = u.f = new function() {
 				min = min ? min : 8;
 				max = max ? max : 20;
 				pattern = iN.getAttribute("pattern");
+				compare_to = iN.getAttribute("data-compare-to");
 				if(
 					iN.val().length >= min && 
 					iN.val().length <= max && 
-					(!pattern || iN.val().match("^"+pattern+"$"))
+					(!pattern || iN.val().match("^"+pattern+"$")) &&
+					(!compare_to || iN.val() == iN._form.fields[compare_to].val())
 				) {
 					this.fieldCorrect(iN);
 				}
@@ -3530,11 +3588,11 @@ u.preloader = function(node, files, _options) {
 	if(!u._preloader_queue) {
 		u._preloader_queue = document.createElement("div");
 		u._preloader_processes = 0;
-		if(u.e && u.e.event_pref == "touch") {
+		if(u.e && u.e.event_support == "touch") {
 			u._preloader_max_processes = 1;
 		}
 		else {
-			u._preloader_max_processes = 4;
+			u._preloader_max_processes = 2;
 		}
 	}
 	if(node && files) {
@@ -3576,23 +3634,50 @@ u._queueLoader = function() {
 				u._preloader_processes++;
 				u.rc(next, "waiting");
 				u.ac(next, "loading");
-				next.loaded = function(event) {
-					this.image = event.target;
-					this._image = this.image;
-					this._queue.nodes[this.i] = this;
-					u.rc(this, "loading");
-					u.ac(this, "loaded");
-					u._preloader_processes--;
-					if(!u.qs("li.waiting,li.loading", this._queue)) {
-						u.rc(this._queue._node, "loading");
-						if(typeof(this._queue._node[this._queue._callback_loaded]) == "function") {
-							this._queue._node[this._queue._callback_loaded](this._queue.nodes);
+				if(next._file.match(/png|jpg|gif|svg/)) {
+					next.loaded = function(event) {
+						this.image = event.target;
+						this._image = this.image;
+						this._queue.nodes[this.i] = this;
+						u.rc(this, "loading");
+						u.ac(this, "loaded");
+						u._preloader_processes--;
+						if(!u.qs("li.waiting,li.loading", this._queue)) {
+							u.rc(this._queue._node, "loading");
+							if(typeof(this._queue._node[this._queue._callback_loaded]) == "function") {
+								this._queue._node[this._queue._callback_loaded](this._queue.nodes);
+							}
+							// 
 						}
-						// 
+						u._queueLoader();
 					}
-					u._queueLoader();
+					u.loadImage(next, next._file);
 				}
-				u.loadImage(next, next._file);
+				else if(next._file.match(/mp3|aac|wav|ogg/)) {
+					next.loaded = function(event) {
+						console.log(event);
+						this._queue.nodes[this.i] = this;
+						u.rc(this, "loading");
+						u.ac(this, "loaded");
+						u._preloader_processes--;
+						if(!u.qs("li.waiting,li.loading", this._queue)) {
+							u.rc(this._queue._node, "loading");
+							if(typeof(this._queue._node[this._queue._callback_loaded]) == "function") {
+								this._queue._node[this._queue._callback_loaded](this._queue.nodes);
+							}
+						}
+						u._queueLoader();
+					}
+					if(typeof(u.audioPlayer) == "function") {
+						next.audioPlayer = u.audioPlayer();
+						next.load(next._file);
+					}
+					else {
+						u.bug("You need u.audioPlayer to preload MP3s");
+					}
+				}
+				else {
+				}
 			}
 			else {
 				break
@@ -3648,21 +3733,27 @@ Util.request = function(node, url, _options) {
 	node[request_id].request_async = true;
 	node[request_id].request_data = "";
 	node[request_id].request_headers = false;
+	node[request_id].request_credentials = false;
+	node[request_id].response_type = false;
 	node[request_id].callback_response = "response";
 	node[request_id].callback_error = "responseError";
 	node[request_id].jsonp_callback = "callback";
+	node[request_id].request_timeout = false;
 	if(typeof(_options) == "object") {
 		var argument;
 		for(argument in _options) {
 			switch(argument) {
-				case "method"				: node[request_id].request_method		= _options[argument]; break;
-				case "params"				: node[request_id].request_data			= _options[argument]; break;
-				case "data"					: node[request_id].request_data			= _options[argument]; break;
-				case "async"				: node[request_id].request_async		= _options[argument]; break;
-				case "headers"				: node[request_id].request_headers		= _options[argument]; break;
-				case "callback"				: node[request_id].callback_response	= _options[argument]; break;
-				case "error_callback"		: node[request_id].callback_error		= _options[argument]; break;
-				case "jsonp_callback"		: node[request_id].jsonp_callback		= _options[argument]; break;
+				case "method"				: node[request_id].request_method			= _options[argument]; break;
+				case "params"				: node[request_id].request_data				= _options[argument]; break;
+				case "data"					: node[request_id].request_data				= _options[argument]; break;
+				case "async"				: node[request_id].request_async			= _options[argument]; break;
+				case "headers"				: node[request_id].request_headers			= _options[argument]; break;
+				case "credentials"			: node[request_id].request_credentials		= _options[argument]; break;
+				case "responseType"			: node[request_id].response_type			= _options[argument]; break;
+				case "callback"				: node[request_id].callback_response		= _options[argument]; break;
+				case "error_callback"		: node[request_id].callback_error			= _options[argument]; break;
+				case "jsonp_callback"		: node[request_id].jsonp_callback			= _options[argument]; break;
+				case "timeout"				: node[request_id].request_timeout			= _options[argument]; break;
 			}
 		}
 	}
@@ -3670,6 +3761,9 @@ Util.request = function(node, url, _options) {
 		node[request_id].HTTPRequest = this.createRequestObject();
 		node[request_id].HTTPRequest.node = node;
 		node[request_id].HTTPRequest.request_id = request_id;
+		if(node[request_id].response_type) {
+			node[request_id].HTTPRequest.responseType = node[request_id].response_type;
+		}
 		if(node[request_id].request_async) {
 			node[request_id].HTTPRequest.statechanged = function() {
 				if(this.readyState == 4 || this.IEreadyState) {
@@ -3685,10 +3779,14 @@ Util.request = function(node, url, _options) {
 				var params = u.JSONtoParams(node[request_id].request_data);
 				node[request_id].request_url += params ? ((!node[request_id].request_url.match(/\?/g) ? "?" : "&") + params) : "";
 				node[request_id].HTTPRequest.open(node[request_id].request_method, node[request_id].request_url, node[request_id].request_async);
-				node[request_id].HTTPRequest.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-				var csfr_field = u.qs('meta[name="csrf-token"]');
-				if(csfr_field && csfr_field.content) {
-					node[request_id].HTTPRequest.setRequestHeader("X-CSRF-Token", csfr_field.content);
+				if(node[request_id].request_timeout) {
+					node[request_id].HTTPRequest.timeout = node[request_id].request_timeout;
+				}
+				if(node[request_id].request_credentials) {
+					node[request_id].HTTPRequest.withCredentials = true;
+				}
+				if(typeof(node[request_id].request_headers) != "object" || (!node[request_id].request_headers["Content-Type"] && !node[request_id].request_headers["content-type"])) {
+					node[request_id].HTTPRequest.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
 				}
 				if(typeof(node[request_id].request_headers) == "object") {
 					var header;
@@ -3707,12 +3805,14 @@ Util.request = function(node, url, _options) {
 					params = node[request_id].request_data;
 				}
 				node[request_id].HTTPRequest.open(node[request_id].request_method, node[request_id].request_url, node[request_id].request_async);
-				if(!params.constructor.toString().match(/FormData/i)) {
-					node[request_id].HTTPRequest.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+				if(node[request_id].request_timeout) {
+					node[request_id].HTTPRequest.timeout = node[request_id].request_timeout;
 				}
-				var csfr_field = u.qs('meta[name="csrf-token"]');
-				if(csfr_field && csfr_field.content) {
-					node[request_id].HTTPRequest.setRequestHeader("X-CSRF-Token", csfr_field.content);
+				if(node[request_id].request_credentials) {
+					node[request_id].HTTPRequest.withCredentials = true;
+				}
+				if(!params.constructor.toString().match(/FormData/i) && (typeof(node[request_id].request_headers) != "object" || (!node[request_id].request_headers["Content-Type"] && !node[request_id].request_headers["content-type"]))) {
+					node[request_id].HTTPRequest.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
 				}
 				if(typeof(node[request_id].request_headers) == "object") {
 					var header;
@@ -3733,8 +3833,18 @@ Util.request = function(node, url, _options) {
 		}
 	}
 	else if(node[request_id].request_method.match(/SCRIPT/i)) {
+		if(node[request_id].request_timeout) {
+			node[request_id].timedOut = function(requestee) {
+				this.status = 0;
+				delete this.timedOut;
+				delete this.t_timeout;
+				Util.validateResponse({node: requestee.node, request_id: requestee.request_id});
+			}
+			node[request_id].t_timeout = u.t.setTimer(node[request_id], "timedOut", node[request_id].request_timeout, {node: node, request_id: request_id});
+		}
 		var key = u.randomString();
 		document[key] = new Object();
+		document[key].key = key;
 		document[key].node = node;
 		document[key].request_id = request_id;
 		document[key].responder = function(response) {
@@ -3742,12 +3852,18 @@ Util.request = function(node, url, _options) {
 			response_object.node = this.node;
 			response_object.request_id = this.request_id;
 			response_object.responseText = response;
+			u.t.resetTimer(this.node[this.request_id].t_timeout);
+			delete this.node[this.request_id].timedOut;
+			delete this.node[this.request_id].t_timeout;
+			u.qs("head").removeChild(this.node[this.request_id].script_tag);
+			delete this.node[this.request_id].script_tag;
+			delete document[this.key];
 			u.validateResponse(response_object);
 		}
 		var params = u.JSONtoParams(node[request_id].request_data);
 		node[request_id].request_url += params ? ((!node[request_id].request_url.match(/\?/g) ? "?" : "&") + params) : "";
 		node[request_id].request_url += (!node[request_id].request_url.match(/\?/g) ? "?" : "&") + node[request_id].jsonp_callback + "=document."+key+".responder";
-		u.ae(u.qs("head"), "script", ({"type":"text/javascript", "src":node[request_id].request_url}));
+		node[request_id].script_tag = u.ae(u.qs("head"), "script", ({"type":"text/javascript", "src":node[request_id].request_url}));
 	}
 	return request_id;
 }
@@ -3764,37 +3880,6 @@ Util.JSONtoParams = function(json) {
 		return u.JSONtoParams(object);
 	}
 	return json;
-}
-Util.isStringJSON = function(string) {
-	if(string.trim().substr(0, 1).match(/[\{\[]/i) && string.trim().substr(-1, 1).match(/[\}\]]/i)) {
-		try {
-			var test = JSON.parse(string);
-			if(typeof(test) == "object") {
-				test.isJSON = true;
-				return test;
-			}
-		}
-		catch(exception) {}
-	}
-	return false;
-}
-Util.isStringHTML = function(string) {
-	if(string.trim().substr(0, 1).match(/[\<]/i) && string.trim().substr(-1, 1).match(/[\>]/i)) {
-		try {
-			var test = document.createElement("div");
-			test.innerHTML = string;
-			if(test.childNodes.length) {
-				var body_class = string.match(/<body class="([a-z0-9A-Z_: ]+)"/);
-				test.body_class = body_class ? body_class[1] : "";
-				var head_title = string.match(/<title>([^$]+)<\/title>/);
-				test.head_title = head_title ? head_title[1] : "";
-				test.isHTML = true;
-				return test;
-			}
-		}
-		catch(exception) {}
-	}
-	return false;
 }
 Util.evaluateResponseText = function(responseText) {
 	var object;
@@ -3821,41 +3906,59 @@ Util.evaluateResponseText = function(responseText) {
 		return responseText;
 	}
 }
-Util.validateResponse = function(response){
+Util.validateResponse = function(HTTPRequest){
 	var object = false;
-	if(response) {
+	if(HTTPRequest) {
+		var node = HTTPRequest.node;
+		var request_id = HTTPRequest.request_id;
+		var request = node[request_id];
+		delete request.HTTPRequest;
+		if(request.finished) {
+			return;
+		}
+		request.finished = true;
 		try {
-			if(response.status && !response.status.toString().match(/403|404|500/)) {
-				object = u.evaluateResponseText(response.responseText);
+			request.status = HTTPRequest.status;
+			if(HTTPRequest.status && !HTTPRequest.status.toString().match(/[45][\d]{2}/)) {
+				if(HTTPRequest.responseType && HTTPRequest.response) {
+					object = HTTPRequest.response;
+				}
+				else if(HTTPRequest.responseText) {
+					object = u.evaluateResponseText(HTTPRequest.responseText);
+				}
 			}
-			else if(response.responseText) {
-				object = u.evaluateResponseText(response.responseText);
+			else if(HTTPRequest.responseText && typeof(HTTPRequest.status) == "undefined") {
+				object = u.evaluateResponseText(HTTPRequest.responseText);
 			}
 		}
 		catch(exception) {
-			response.exception = exception;
-		}
-	}
-	if(object) {
-		if(typeof(response.node[response.request_id].callback_response) == "function") {
-			response.node[response.request_id].callback_response(object, response.request_id);
-		}
-		else if(typeof(response.node[response.node[response.request_id].callback_response]) == "function") {
-			response.node[response.node[response.request_id].callback_response](object, response.request_id);
+			request.exception = exception;
 		}
 	}
 	else {
-		if(typeof(response.node[response.request_id].callback_error) == "function") {
-			response.node[response.request_id].callback_error(response, response.request_id);
+		console.log("Lost track of this request. There is no way of routing it back to requestee.")
+		return;
+	}
+	if(object !== false) {
+		if(typeof(request.callback_response) == "function") {
+			request.callback_response(object, request_id);
 		}
-		else if(typeof(response.node[response.node[response.request_id].callback_error]) == "function") {
-			response.node[response.node[response.request_id].callback_error](response, response.request_id);
+		else if(typeof(node[request.callback_response]) == "function") {
+			node[request.callback_response](object, request_id);
 		}
-		else if(typeof(response.node[response.request_id].callback_response) == "function") {
-			response.node[response.request_id].callback_response(response, response.request_id);
+	}
+	else {
+		if(typeof(request.callback_error) == "function") {
+			request.callback_error({error:true,status:request.status}, request_id);
 		}
-		else if(typeof(response.node[response.node[response.request_id].callback_response]) == "function") {
-			response.node[response.node[response.request_id].callback_response](response, response.request_id);
+		else if(typeof(node[request.callback_error]) == "function") {
+			node[request.callback_error]({error:true,status:request.status}, request_id);
+		}
+		else if(typeof(request.callback_response) == "function") {
+			request.callback_response({error:true,status:request.status}, request_id);
+		}
+		else if(typeof(node[request.callback_response]) == "function") {
+			node[request.callback_response]({error:true,status:request.status}, request_id);
 		}
 	}
 }
@@ -3870,18 +3973,20 @@ u.scrollTo = function(node, _options) {
 	var scroll_to_x = 0;
 	var scroll_to_y = 0;
 	var to_node = false;
+	node._force_scroll_to = false;
 	if(typeof(_options) == "object") {
 		var _argument;
 		for(_argument in _options) {
 			switch(_argument) {
-				case "callback"             : node.callback_scroll_to           = _options[_argument]; break;
-				case "callback_cancelled"   : node.callback_scroll_cancelled    = _options[_argument]; break;
+				case "callback"             : node.callback_scroll_to            = _options[_argument]; break;
+				case "callback_cancelled"   : node.callback_scroll_cancelled     = _options[_argument]; break;
 				case "offset_y"             : offset_y                           = _options[_argument]; break;
 				case "offset_x"             : offset_x                           = _options[_argument]; break;
-				case "node"              : to_node                               = _options[_argument]; break;
+				case "node"                 : to_node                            = _options[_argument]; break;
 				case "x"                    : scroll_to_x                        = _options[_argument]; break;
 				case "y"                    : scroll_to_y                        = _options[_argument]; break;
 				case "scrollIn"             : scrollIn                           = _options[_argument]; break;
+				case "force"                : node._force_scroll_to              = _options[_argument]; break;
 			}
 		}
 	}
@@ -3907,14 +4012,28 @@ u.scrollTo = function(node, _options) {
 	node._y_scroll_direction = node._to_y - u.scrollY();
 	node._scroll_to_x = u.scrollX();
 	node._scroll_to_y = u.scrollY();
+	node.ignoreWheel = function(event) {
+		u.e.kill(event);
+	}
+	if(node._force_scroll_to) {
+		u.e.addEvent(node, "wheel", node.ignoreWheel);
+	}
 	node.scrollToHandler = function(event) {
 		u.t.resetTimer(this.t_scroll);
 		this.t_scroll = u.t.setTimer(this, this._scrollTo, 50);
 	}
 	u.e.addEvent(node, "scroll", node.scrollToHandler);
 	node.cancelScrollTo = function() {
+		if(!this._force_scroll_to) {
+			u.t.resetTimer(this.t_scroll);
+			u.e.removeEvent(this, "scroll", this.scrollToHandler);
+			this._scrollTo = null;
+		}
+	}
+	node.scrollToFinished = function() {
 		u.t.resetTimer(this.t_scroll);
 		u.e.removeEvent(this, "scroll", this.scrollToHandler);
+		u.e.removeEvent(this, "wheel", this.ignoreWheel);
 		this._scrollTo = null;
 	}
 	node.IEScrollFix = function(s_x, s_y) {
@@ -3948,7 +4067,7 @@ u.scrollTo = function(node, _options) {
 				this._scroll_to_y = this._to_y;
 			}
 			if(this._scroll_to_x == this._to_x && this._scroll_to_y == this._to_y) {
-				this.cancelScrollTo();
+				this.scrollToFinished();
 				this.scrollTo(this._to_x, this._to_y);
 				if(typeof(this[this.callback_scroll_to]) == "function") {
 					this[this.callback_scroll_to]();
@@ -4044,6 +4163,46 @@ Util.normalize = function(string) {
 	string = string.replace(/^-|-$/g, '');
 	return string;
 }
+Util.pluralize = function(count, singular, plural) {
+	if(count != 1) {
+		return count + " " + plural;
+	}
+	return count + " " + singular;
+}
+Util.isStringJSON = function(string) {
+	if(string.trim().substr(0, 1).match(/[\{\[]/i) && string.trim().substr(-1, 1).match(/[\}\]]/i)) {
+		try {
+			var test = JSON.parse(string);
+			if(typeof(test) == "object") {
+				test.isJSON = true;
+				return test;
+			}
+		}
+		catch(exception) {
+			console.log(exception)
+		}
+	}
+	return false;
+}
+Util.isStringHTML = function(string) {
+	if(string.trim().substr(0, 1).match(/[\<]/i) && string.trim().substr(-1, 1).match(/[\>]/i)) {
+		try {
+			var test = document.createElement("div");
+			test.innerHTML = string;
+			if(test.childNodes.length) {
+				var body_class = string.match(/<body class="([a-z0-9A-Z_: ]+)"/);
+				test.body_class = body_class ? body_class[1] : "";
+				var head_title = string.match(/<title>([^$]+)<\/title>/);
+				test.head_title = head_title ? head_title[1] : "";
+				test.isHTML = true;
+				return test;
+			}
+		}
+		catch(exception) {}
+	}
+	return false;
+}
+
 
 /*u-svg.js*/
 Util.svg = function(svg_object) {
@@ -4364,6 +4523,8 @@ u.textscaler = function(node, _settings) {
 		window._man_text._width = u.browserW();
 		window._man_text._height = u.browserH();
 		window._man_text.scale = function() {
+			var _width = u.browserW();
+			var _height = u.browserH();
 			window._man_text._width = u.browserW();
 			window._man_text._height = u.browserH();
 			var i, node;
@@ -4422,7 +4583,7 @@ u.textscaler = function(node, _settings) {
 	var tag;
 	node._man_text = {};
 	for(tag in node.text_settings) {
-		if(tag == "min_height" || tag == "max_height" || tag == "min_width" || tag == "max_width" || tag == "unit") {
+		if(tag == "min_height" || tag == "max_height" || tag == "min_width" || tag == "max_width" || tag == "unit" || tag == "ref") {
 			node._man_text[tag] = node.text_settings[tag];
 			node.text_settings[tag] = null;
 			delete node.text_settings[tag];
