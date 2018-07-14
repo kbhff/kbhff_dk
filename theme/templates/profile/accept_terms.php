@@ -25,7 +25,7 @@ global $UC;
 
 		<ul class="actions">
 			<?= $UC->submit("Fortsæt", array("class" => "primary", "wrapper" => "li.accept")) ?>
-			<?= $UC->button("Afvis", array("wrapper" => "li.accept")) ?>
+			<?= $UC->button("Afvis", array("wrapper" => "li.reject")) ?>
 		</ul>
 
 	<?= $UC->formEnd() ?>

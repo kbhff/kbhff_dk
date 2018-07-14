@@ -15,6 +15,11 @@ Util.Objects["accept_terms"] = new function() {
 			var form_accept = u.qs("form.accept", this);
 			u.f.init(form_accept);
 
+			form_accept.actions["reject"].clicked = function() {
+				alert("hej")
+				// var overlay = u.overlay({title:"warning", height:200,width:200});
+				// u.ae(overlay.div_content, "p",{html:"hej"});
+			}
 		}
 
 		// scene is ready
