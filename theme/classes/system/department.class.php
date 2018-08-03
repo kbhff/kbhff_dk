@@ -8,7 +8,7 @@
 class Department extends Model {
 
 	/**
-	* Inititialization: set variable names and validation rules.
+	* Initialization: set variable names and validation rules for Department model.
 	*/
 	function __construct() {
 
@@ -16,7 +16,7 @@ class Department extends Model {
 		parent::__construct(get_class());
 
 
-		// Add departments table to database
+		// Define the name of departments table in database
 		$this->db = SITE_DB.".system_departments";
 
 
@@ -77,7 +77,7 @@ class Department extends Model {
 			"error_message" => "Invalid email address"
 		));
 
-		//Opening hours
+		// Opening hours
 		$this->addToModel("opening_hours", array(
 			"type" => "text",
 			"label" => "Opening hours",
@@ -90,7 +90,7 @@ class Department extends Model {
 	/**
 	 * Saves the department to the database.
 	 * 
-	 * @param array $action Contains the REST parameters that are sent to the controller.
+	 * @param array $action REST parameters of current request
 	 * @return void
 	 */
 
@@ -136,15 +136,18 @@ class Department extends Model {
 
 
 	/**
-	 * Get department from database
+	 * Get list of departments from database.
 	 *
-	 * @param mixed $_options
+	 * @param array|boolean $_options Array containing unsorted function parameters
 	 * @return void
 	 */
 	function getDepartments($_options = false) {
 
+		// Define default values
 		// $id = false;
-
+		
+		
+		// Search through $_options to find recognized parameters
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
@@ -153,9 +156,9 @@ class Department extends Model {
 			}
 		}
 
+		// Query database for all departments.  
 		$query = new Query();
-		$sql = "SELECT * FROM ".$this->db;
-		
+		$sql = "SELECT * FROM ".$this->db;		
 		if($query->sql($sql)) {
 			return $query->results();
 		}
@@ -163,10 +166,19 @@ class Department extends Model {
 		return false;
 	}
 
+	/**
+	 * Get a single department from database.
+	 *
+	 * @param array|boolean $_options Associative array containing unsorted function parameters. Findes der et tag for at angive de mulige parametre?
+	 * @return void
+	 */
 	function getDepartment($_options = false) {
 
+		// Define default values
 		$id = false;
-
+		
+		
+		// Search through $_options to find recognized parameters
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
@@ -175,6 +187,8 @@ class Department extends Model {
 			}
 		}
 
+
+		// Query database for department with specific id.
 		if($id) {
 			$query = new Query();
 			$sql = "SELECT * FROM ".$this->db." WHERE id = '$id'";
@@ -185,13 +199,25 @@ class Department extends Model {
 		return false;
 	}
 
-	function updateDepartment($action) {
-		$this->getPostedEntities();
 
+	/**
+	 * Update a single department.
+	 *
+	 * @param array $action REST parameters of current request
+	 * @return void
+	 */
+	function updateDepartment($action) {
+		
+		// Get content of $_POST array that have been "quality-assured" by Janitor 
+		$this->getPostedEntities();
+		
+
+		// Check that the number of REST parameters is as expected and that the listed entries are valid.
 		if(count($action) == 2 && $this->validateList(array("name", "address1", "address2", "city", "postal", "email", "opening_hours"))) {
 
+			// Ask the database to update the row with the id that came from $action. Update with the values that were received from getPostedEntities(). 
 			$query = new Query();
-
+			
 			$id = $action[1];
 			$name = $this->getProperty("name", "value");
 			$address1 = $this->getProperty("address1", "value");
@@ -212,12 +238,19 @@ class Department extends Model {
 		return false;
 	}
 
+	/**
+	 * Delete a single department.
+	 *
+	 * @param array $action REST parameters
+	 * @return void
+	 */
 	function deleteDepartment($action) {
 
+		// Checks for unexpected number of parameters
 		if(count($action) == 2) {
 			
+			// Ask the database to delete the row with the id that came from $action. 
 			$id = $action[1];
-
 			$query = new Query();
 			$sql = "DELETE FROM ".$this->db." WHERE id = '$id'";
 			if($query->sql($sql)) {
