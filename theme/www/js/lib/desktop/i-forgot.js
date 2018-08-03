@@ -31,7 +31,8 @@ Util.Objects["forgot"] = new function() {
 					}
 				}
 
-				u.request(this, this.action, {"data":data, "method":"POST"}); // Get this templates "action" (requestReset), and send "data" (users input) to it
+				// Get this templates "action" (requestReset), and send "data" (users input) to it
+				u.request(this, this.action, {"data":data, "method":"POST"});
 			}
 		}
 

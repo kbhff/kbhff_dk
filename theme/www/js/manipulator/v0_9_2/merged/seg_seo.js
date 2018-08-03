@@ -1,6 +1,6 @@
 /*
 Manipulator v0.9.2-full Copyright 2017 http://manipulator.parentnode.dk
-js-merged @ 2017-01-11 05:29:39
+js-merged @ 2018-06-29 04:40:05
 */
 
 /*seg_seo_include.js*/
@@ -12,4 +12,6 @@ if(!u || !Util) {
 	u.bug = u.nodeId = u.exception = function() {};
 	u.stats = new function() {this.pageView = function(){};this.event = function(){};}
 }
-
+function fun(v) {return (typeof(v) === "function")}
+function obj(v) {return (typeof(v) === "object")}
+function str(v) {return (typeof(v) === "string")}

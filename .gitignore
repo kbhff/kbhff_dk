@@ -11,10 +11,15 @@ theme/library/debug
 !theme/library/private/0
 !theme/library/private/0/*
 
-.DS_Store
-.vscode
-
 src/config/connect_*.php
 theme/config/connect_*.php
 
+.DS_Store
+
+.vscode
+*.sublime-project
+*.sublime-workspace
+nbproject/*
+
 ci/CodeIgniter_2.0.2/application/logs/*
+ci/CodeIgniter-2.2.6/application/logs/*
