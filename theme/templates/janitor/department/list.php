@@ -30,7 +30,7 @@ $departments = $model->getDepartments();
 <?			endforeach; ?>
 		</ul>
 <?		else: ?>
-		<p>No posts.</p>
+		<p>No departments.</p>
 <?		endif; ?>
 	</div>
 

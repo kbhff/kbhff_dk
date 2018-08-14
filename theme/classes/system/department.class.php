@@ -29,6 +29,15 @@ class Department extends Model {
 			"hint_message" => "Name of the department", 
 			"error_message" => "A department must have a name."
 		));
+		
+		// Abbreviation
+		$this->addToModel("abbreviation", array(
+			"max" => "3",
+			"type" => "string",
+			"label" => "Abbreviation",
+			"hint_message" => "Shorthand for the department. Maximum 3 characters.", 
+			"error_message" => "Invalid abbreviation."
+		));
 
 		// Address 1
 		$this->addToModel("address1", array(
@@ -55,7 +64,7 @@ class Department extends Model {
 			"label" => "City",
 			"required" => true,
 			"hint_message" => "In which city is the department located?",
-			"error_message" => "Invalid city"
+			"error_message" => "You must enter a city."
 		));
 
 		// Postal code
@@ -65,7 +74,7 @@ class Department extends Model {
 			"label" => "Postal code",
 			"required" => true,
 			"hint_message" => "Postal code",
-			"error_message" => "Invalid postal code"
+			"error_message" => "You must enter a valid postal code."
 		));
 
 		// Contact email
@@ -97,13 +106,14 @@ class Department extends Model {
 	function saveDepartment($action) {
 		$this->getPostedEntities();
 
-		if(count($action) == 1 && $this->validateList(array("name", "address1", "address2", "city", "postal", "email", "opening_hours"))) {
+		if(count($action) == 1 && $this->validateList(array("name", "abbreviation", "address1", "address2", "city", "postal", "email", "opening_hours"))) {
 
 			$query = new Query();
 
 			$query->checkDbExistence($this->db);
 
 			$name = $this->getProperty("name", "value");
+			$abbreviation = $this->getProperty("abbreviation", "value");
 			$address1 = $this->getProperty("address1", "value");
 			$address2 = $this->getProperty("address2", "value");
 			$postal = $this->getProperty("postal", "value");
@@ -116,7 +126,7 @@ class Department extends Model {
 			// Check if the department is already created (to avoid faulty double entries)
 			$sql = "SELECT * FROM ".$this->db." WHERE name = '$name'";
 			if(!$query->sql($sql)) {
-				$sql = "INSERT INTO ".$this->db." SET name='$name',address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours',email='$email'";
+				$sql = "INSERT INTO ".$this->db." SET name='$name', abbreviation='$abbreviation', address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours',email='$email'";
 				if($query->sql($sql)) {
 					message()->addMessage("Department created");
 					return array("item_id" => $query->lastInsertId());		
@@ -213,13 +223,14 @@ class Department extends Model {
 		
 
 		// Check that the number of REST parameters is as expected and that the listed entries are valid.
-		if(count($action) == 2 && $this->validateList(array("name", "address1", "address2", "city", "postal", "email", "opening_hours"))) {
+		if(count($action) == 2 && $this->validateList(array("name", "abbreviation", "address1", "address2", "city", "postal", "email", "opening_hours"))) {
 
 			// Ask the database to update the row with the id that came from $action. Update with the values that were received from getPostedEntities(). 
 			$query = new Query();
 			
 			$id = $action[1];
 			$name = $this->getProperty("name", "value");
+			$abbreviation = $this->getProperty("abbreviation", "value");
 			$address1 = $this->getProperty("address1", "value");
 			$address2 = $this->getProperty("address2", "value");
 			$postal = $this->getProperty("postal", "value");
@@ -227,7 +238,7 @@ class Department extends Model {
 			$email = $this->getProperty("email", "value");
 			$opening_hours = $this->getProperty("opening_hours", "value");
 
-			$sql = "UPDATE ".$this->db." SET name='$name',address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours',email='$email' WHERE id = '$id'";
+			$sql = "UPDATE ".$this->db." SET name='$name', abbreviation='$abbreviation',address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours',email='$email' WHERE id = '$id'";
 				if($query->sql($sql)) {
 					message()->addMessage("Department updated");
 					return $this->getDepartment(["id"=>$id]);		

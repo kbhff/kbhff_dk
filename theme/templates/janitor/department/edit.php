@@ -20,10 +20,12 @@ $department = $model->getDepartment(array("id" => $department_id));
 		
 			<fieldset>
 				<?= $model->input("name", array("value" => $department["name"])) ?>
+				<?= $model->input("abbreviation", array("value" => $department["abbreviation"])) ?>
 				<?= $model->input("address1", array("value" => $department["address1"])) ?>
 				<?= $model->input("address2", array("class" => "autoexpand short", "value" => $department["address2"])) ?>
 				<?= $model->input("postal", array("value" => $department["postal"])) ?>
 				<?= $model->input("city", array("value" => $department["city"])) ?>
+				<?= $model->input("email", array("value" => $department["email"])) ?>
 				<?= $model->input("opening_hours", array("class" => "autoexpand short", "value" => $department["opening_hours"])) ?>
 			</fieldset>
 
