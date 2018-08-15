@@ -31,10 +31,11 @@ Util.Objects["forgot"] = new function() {
 					}
 				}
 
-				// Get this templates "action" (requestReset), and send "data" (users input) to it
+				// Get this template's "action" (requestReset), and send "data" (user's input) to it
 				u.request(this, this.action, {"data":data, "method":"POST"});
 			}
-		}
+		}'
+		'
 
 		scene.verifyForm = function(response) {
 			// Getting form from "nulstilling" page
