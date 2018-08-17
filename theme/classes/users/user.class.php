@@ -86,11 +86,26 @@ class User extends UserCore {
 	}
 
 	function getUserDepartment($user_id){
-		//query current user ID i user_departments. Se getUser. Returnerer department ID
-		//brug getDepartment fra department.class til at spørge 
-		include_once("classes/system/department.class.php");
-		$department = new Department();
-		// $department->getDepartment()
+		
+		//Query current user ID i user_departments and get the associated department ID 
+		$query = new Query();
+		$sql = "SELECT department_id FROM ".SITE_DB.".user_department WHERE user_id = $user_id";
+		print $sql;
+
+		if($query->sql($sql)) {
+			$department_id = $query->result(0,"department_id");
+			print_r ($department_id);
+			
+			//Use getDepartment to find the department with the specified department ID.
+			include_once("classes/system/department.class.php");
+			
+			$DC = new Department();
+			$department = $DC->getDepartment(["id"=>$department_id]);
+			
+			return $department;
+		}
+
+		return false;
 
 	}
 }
