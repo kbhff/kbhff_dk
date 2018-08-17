@@ -57,6 +57,13 @@ class User extends UserCore {
 			"hint_message" => "Din verificerings kode", 
 			"error_message" => "Invalid kode, check på mellemrum i enden af din indtastede kode"
 		));
+		$this->addToModel("department_id", array(
+			"type" => "string", 
+			"label" => "Afdeling", 
+			"required" => true, 
+			"hint_message" => "Vælg en afdeling", 
+			"error_message" => "Du skal vælge en afdeling."
+		));
 
 	}
 
@@ -76,21 +83,31 @@ class User extends UserCore {
 		}
 		return false;
 	}
-
-	function getKbhffUser(){
+	/**
+	 * Get the current user, including her associated department.
+	 * 
+	 * @return array The user object, with the department object appended as a new property.  
+	 */
+	
+	 function getKbhffUser(){
 		$user = $this->getUser();
 		$user["department"] = $this->getUserDepartment($user["id"]);
 		print_r($user);
-		
 
+		return $user;
 	}
 
+	/**
+	 * Get the current user's associated department.
+	 *
+	 * @param int $user_id
+	 * @return array|false The department object, or false if the current user isn't associated with a department. 
+	 */
 	function getUserDepartment($user_id){
 		
 		//Query current user ID i user_departments and get the associated department ID 
 		$query = new Query();
 		$sql = "SELECT department_id FROM ".SITE_DB.".user_department WHERE user_id = $user_id";
-		print $sql;
 
 		if($query->sql($sql)) {
 			$department_id = $query->result(0,"department_id");
@@ -106,6 +123,10 @@ class User extends UserCore {
 		}
 
 		return false;
+
+	}
+
+	function updateUserDepartment($action){
 
 	}
 }
