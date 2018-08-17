@@ -1,1 +1,119 @@
+/*
 #content .scene.profile p {padding: 0;}
+*/
+#content .section > h2 {
+	padding: 0;
+
+	margin-left: 12px;
+	margin-right: 12px;
+	margin-top: 20px;
+	margin-bottom: 22px;
+
+	border-bottom: 2px solid #808080;
+}
+
+
+#content .c-box > h3 {
+	padding-left: 0;
+	padding-right: 0;
+	padding-bottom: 0;
+
+	margin-left: 12px;
+	margin-right: 12px;
+	margin-bottom: 12px;
+	border-bottom: 1px solid #000000;
+}
+
+.orders,
+.order-headings,
+.order {
+	font-size: 12px;
+	font-size: 0;
+}
+
+.orders {
+	margin-left: 12px;
+	margin-right: 12px;
+}
+
+.opening-times,
+.membership-info {
+	display: inline-block;
+	vertical-align: top;
+	width: 50%;
+}
+
+.pickup-date,
+.order-place,
+.order-products,
+.change-untill {
+	display: inline-block;
+	vertical-align: top;
+	box-sizing: border-box;
+	width: 25%;
+}
+
+.department-info,
+.membership-info,
+.user-info {
+	padding-bottom: 20px;
+}
+
+#content p.over {
+	font-size: 12px;
+	padding-bottom: 0;
+	text-transform: uppercase;
+}
+
+#content p.under {
+	font-size: 18px;
+	padding-bottom: 0;
+}
+
+p.change-untill {
+	width: 17%;
+}
+#content ul.actions.change {
+	padding: 0;
+	margin: 0;
+	width: 8%	;
+}
+
+#content ul.actions.change > li {
+	padding: 0;
+	margin: 0;
+}
+
+#content ul.actions.change > li > a {
+	padding: 0;
+	margin: 0;
+
+	padding-left: 8px;
+	padding-right: 8px;
+	font-size: 12px;
+}
+
+
+#content ul.actions {
+	width: 100%;
+	box-sizing: border-box;
+	padding-right: 14px;
+	padding-top: 20px;
+}
+
+#content ul.actions li {
+	box-sizing: border-box;
+}
+
+#content ul.actions .full-width {
+	width: 100%;
+	text-align: center;
+}
+#content ul.actions .half-width {
+	width: 50%;
+	text-align: center;
+}
+#content ul.actions .third-width {
+	width: 33.3333%;
+	text-align: center;
+}

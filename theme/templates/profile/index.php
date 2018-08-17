@@ -1,122 +1,180 @@
-<?
-global $UC;
-$SC = new Shop();
-
-$user = $UC->getUser();
-$orders = $SC->getOrders();	
-
-// check for unpaid orders
-$unpaid_orders = false;
-if(defined("SITE_SHOP") && SITE_SHOP) {
-	include_once("classes/shop/shop.core.class.php");
-	$SC = new Shop();
-	$unpaid_orders = $SC->getUnpaidOrders();
-
-}
-
-?>
 <div class="scene profile i:profile">
+	<img src="/img/deprecated/banner.jpg"></img>
 
-	<div class="item shop">
+	<div class="c-wrapper">
 
-		<h2>Hej <?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?></h2>
-		<h3>Bestil nu:</h3>
-		<p>Liste over åbningsdage / steder / på sigt varer</p>
+		<div class="c-two-thirds">
 
-	</div>
+			<div class="section intro">
+				<h2>Velkommen Peter kai Møller Pedersen</h2>
+				<p>
+					På min side kan du se og rette oplysninger om dig og dit medlemsskab. 
+					Du kan også se og rette dine eksisterende bestillinger og lave en ny bestilling (åbner GrøntShoppen). 
+					På sigt er det desuden meningen at du her skal kunne book frivillig-vagter og se nyheder og beskeder fra din lokalafdeling.
+				</p>
+				<div class="c-box">
+					<p>
+						<span class="highlight">OBS!</span> Østerbro lokalafdeling mangler en ny team-koordinator. 
+						Kunne du have lyst til at hjælpe KBHFF med at blive endnu bedre federe at være frivillig i og være med på et helt vildt sjovt 
+						og sejt hold, så skynd dig at skriv til anders@kbhff.dk eller mød op til mødet d. 8 august kl. 2017
+					</p>
+				</div>
+			</div>
 
-	<div class="item i:editProfile">
-		<h2>Bruger</h2>
-		<?= $UC->formStart("update", array("class" => "labelstyle:inject")) ?>
-			<fieldset>
-				<?= $UC->input("nickname", array("value" => $user["nickname"])) ?>
-				<?= $UC->input("firstname", array("value" => $user["firstname"])) ?>
-				<?= $UC->input("lastname", array("value" => $user["lastname"])) ?>
-				<?= $UC->input("email", array("value" => $user["email"])) ?>
-				<?= $UC->input("mobile", array("value" => $user["mobile"])) ?>
-			</fieldset>
+			<div class="section orders">
+				<h2>Eksisterende bestillinger</h2>
 
-			<ul class="actions">
-				<?= $UC->submit("Update", array("class" => "primary key:s", "wrapper" => "li.save")) ?>
-			</ul>
-		<?= $UC->formEnd() ?>
+				<div class="order-headings">
+					<h4 class="pickup-date">AFH.DATO</h4>
+					<h4 class="order-place">STED</h4>
+					<h4 class="order-products">VARE(R)</h4>
+					<h4 class="change-untill">RET INDTIL</h4>
+				</div>
 
-		<h2>Konto</h2>
-		member_no:<br />
-		<?= $user["member_no"] ?><br />
-		<br />
-		Membership:<br />
-		<? if($user["membership"]): ?>
-		<? print_r($user["membership"]) ?><br />
-		<? else: ?>
-		Intet medlemskab
-		<? endif; ?>
-	</div>
+				<div class="order">
+					<p class="pickup-date">23.05.2018</p>
+					<p class="order-place">Vesterbro</p>
+					<p class="order-products">
+						2x Ugens pose
+						Aspargespose
+						Frugtpose
+					</p>
+					<p class="change-untill">20/5 kl. 23.59</p>
+					<ul class="actions change"><li class="change"><a href="#" class="button disabled">ret</a></li></ul>
+				</div>
+				
+				<div class="order">
+					<p class="pickup-date">30.05.2018</p>
+					<p class="order-place">Vesterbro</p>
+					<p class="order-products">Ugens pose</p>
+					<p class="change-untill">23/5 kl. 23.59</p>
+					<ul class="actions change"><li class="change"><a href="#" class="button disabled">ret</a></li></ul>
+				</div>
 
-	<div class="items orders i:itemList">
-		<h2>Ordre</h2>
-<?		if($orders): ?>
-		<ul class="items">
-<?			foreach($orders as $order): ?>
-			<li class="item">
-				<h3><?= $order["order_no"] ?> (<?= pluralize(count($order["items"]), "item", "items" ) ?>)</h3>
+				<div class="order">
+					<p class="pickup-date">06.06.2018</p>
+					<p class="order-place">Vesterbro</p>
+					<p class="order-products">Ugens pose</p>
+					<p class="change-untill">30/5 kl. 23.59</p>
+					<ul class="actions change"><li class="change"><a href="#" class="button disabled">ret</a></li></ul>
+				</div>
 
-				<dl class="info">
-					<dt class="created_at">Created at</dt>
-					<dd class="created_at"><?= $order["created_at"] ?></dd>
-					<dt class="status">Status</dt>
-					<dd class="status <?= superNormalize($SC->order_statuses[$order["status"]]) ?>"><?= $SC->order_statuses[$order["status"]] ?></dd>
-<?					if($order["status"] < 2): ?>
-					<dt class="payment_status">Payment status</dt>
-					<dd class="payment_status <?= ["unpaid", "partial", "paid"][$order["payment_status"]] ?>"><?= $SC->payment_statuses[$order["payment_status"]] ?></dd>
-<?					endif; ?>
-					<dt class="price">Total price</dt>
-					<dd class="price"><?= formatPrice($SC->getTotalOrderPrice($order["id"])) ?></dd>
-				</dl>
+				<div class="order">
+					<p class="pickup-date">13.06.2018</p>
+					<p class="order-place">Vesterbro</p>
+					<p class="order-products">
+						2x Ugens pose
+						Aspargespose
+						Frugtpose
+					</p>
+					<p class="change-untill">6/6 kl. 23.59</p>
+					<ul class="actions change"><li class="change"><a href="#" class="button">ret</a></li></ul>
+				</div>
 
 				<ul class="actions">
-					<?= $HTML->link("View", "/janitor/admin/shop/order/edit/".$order["id"], array("class" => "button", "wrapper" => "li.edit")) ?>
+					<li class="new-order"><a href="#" class="button primary">Ny bestilling</a></li>
+					<li class="view-orders"><a href="#" class="button">Se gamle bestillinger</a></li>
 				</ul>
-			 </li>
-<?			endforeach; ?>
-		</ul>
-<?		else: ?>
-		<p>No orders.</p>
-<?		endif; ?>
-	</div>
+			</div>
 
-	<div class="cancellation i:profileCancellation">
-		<h2>Udmelding</h2>
-		<p>
-			If you cancel your account, we'll delete your personal information and your 
-			membership and subscriptions from our system.
-		</p>
+		</div>
 
-<? if($unpaid_orders): ?>
-		<p class="note system_error">
-			You have <?= pluralize(count($unpaid_orders), "unpaid order", "unpaid orders")?>. 
-			Settle <?= pluralize(count($unpaid_orders), "it", "them") ?> before you
-			cancel your account.
-		</p>
-
-		<ul class="actions">
-			<?= $HTML->link("Orders", "/profile/orders/list", array("class" => "button primary", "wrapper" => "li.orders")) ?>
-		</ul>
-<? else: ?>
-		<?= $UC->formStart("cancel", array("class" => "cancelaccount")) ?>
-
-			<fieldset>
-				<?= $UC->input("password", array("label" => "Please type your password to confirm cancellation", "required" => true)) ?>
-			</fieldset>
+		<div class="c-one-third">
 
 			<ul class="actions">
-				<?= $UC->submit("Cancel account", array("class" => "secondary", "wrapper" => "li.cancelaccount")) ?>
+				<li class="new-order full-width"><a href="#" class="button primary">Ny bestilling</a></li>
+				<li class="book-shift full-width"><a href="#" class="button primary">Book en vagt</a></li>
 			</ul>
 
-		<?= $UC->formEnd() ?>
-<? endif; ?>
+			<div class="section department">
+				<div class="c-box">
+					<h3>Vesterbro lokalafdeling</h3>
+
+					<div class="department-info">
+						<p class="over">Adresse:</p>
+						<p class="under">Oehlenschlægersgade 57 (Skolen) 1663 København</p>
+					</div>
+
+					<div class="department-info">
+						<p class="over">Åbningtider:</p>
+						<p class="under">Onsdag: 16.30 - 19.00</p>
+					</div>
+
+					<div class="department-info">
+						<p class="over">Kontakt:</p>
+						<p class="under">Mail: vesterbro@kbhff.dk</p>
+					</div>
+
+				</div>
+			</div>
+
+
+			<div class="section membership">
+				<div class="c-box">
+					<h3>Dit medlemsskab</h3>
+					
+					<div class="membership-info">
+						<p class="over">Medlemsnummer:</p>
+						<p class="under">54321</p>
+					</div>
+
+					<div class="membership-info">
+						<p class="over">Status:</p>
+						<p class="under system-warning">Ikke betalt</p>
+					</div>
+
+					<div class="membership-info">
+						<p class="over">Medlemstype:</p>
+						<p class="under">Frivillig</p>
+					</div>
+
+					<div class="membership-info">
+						<p class="over">Lokalafdeling:</p>
+						<p class="under">Vesterbro</p>
+					</div>
+
+					<ul class="actions">
+						<li class="change-info third-width"><a href="#" class="button">Ret</a></li>
+						<li class="cancel-membership third-width"><a href="#" class="button warning">Opsig</a></li>
+						<li class="cancel-membership third-width"><a href="#" class="button primary">Betal</a></li>
+					</ul>
+
+				</div>
+			</div>
+
+			<div class="section user">
+				<div class="c-box">
+					<h3>Dine brugeroplysninger</h3>
+					
+					<div class="user-info">
+						<p class="over">Navn:</p>
+						<p class="under">Peter Kai Møller Pedersen</p>
+					</div>
+
+					<div class="user-info">
+						<p class="over">Email:</p>
+						<p class="under">peter@parentnode.dk</p>
+					</div>
+
+					<div class="user-info">
+						<p class="over">Mobil:</p>
+						<p class="under">12 34 56 78</p>
+					</div>
+
+					<div class="user-info">
+						<p class="over">Password:</p>
+						<p class="under"># # # # # # # #</p>
+					</div>
+
+					<ul class="actions">
+						<li class="change-info half-width"><a href="#" class="button">Ret</a></li>
+					</ul>
+					
+				</div>
+			</div>
+
+		</div>
 
 
 	</div>
-
 </div>
