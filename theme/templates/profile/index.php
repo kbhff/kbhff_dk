@@ -1,3 +1,8 @@
+<?php 
+$UC = new User();
+$user = $UC->getKbhffUser();
+?>
+
 <div class="scene profile i:profile">
 	<img src="/img/deprecated/banner.jpg"></img>
 

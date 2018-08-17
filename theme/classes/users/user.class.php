@@ -77,6 +77,22 @@ class User extends UserCore {
 		return false;
 	}
 
+	function getKbhffUser(){
+		$user = $this->getUser();
+		$user["department"] = $this->getUserDepartment($user["id"]);
+		print_r($user);
+		
+
+	}
+
+	function getUserDepartment($user_id){
+		//query current user ID i user_departments. Se getUser. Returnerer department ID
+		//brug getDepartment fra department.class til at spørge 
+		include_once("classes/system/department.class.php");
+		$department = new Department();
+		// $department->getDepartment()
+
+	}
 }
 
 ?>
