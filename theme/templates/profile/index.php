@@ -95,27 +95,27 @@ print_r($department)
 
 			<div class="section department">
 				<div class="c-box">
-					<h3><?= $user["department"]["name"] ?> lokalafdeling</h3>
+					<h3><?=$department["name"] ?> lokalafdeling</h3>
 
 					<div class="department-info">
 						<p class="over">Adresse:</p>
 						<p class="under">
 							<?= 
-								 $user["department"]["address2"] 
-								 ? $user["department"]["address1"] . " (" . $user["department"]["address2"] . "), " . $user["department"]["postal"] . " " . $user["department"]["city"]
-								 : $user["department"]["address1"] . ", " . $user["department"]["postal"] . " " . $user["department"]["city"]
+								 $department["address2"] 
+								 ? $department["address1"] . " (" . $department["address2"] . "), " . $department["postal"] . " " . $department["city"]
+								 : $department["address1"] . ", " . $department["postal"] . " " . $department["city"]
 							?>
 						</p>
 					</div>
 
 					<div class="department-info">
 						<p class="over">Åbningtider:</p>
-						<p class="under"><?= $user["department"]["opening_hours"] ?></p>
+						<p class="under"><?= $department["opening_hours"] ?></p>
 					</div>
 
 					<div class="department-info">
 						<p class="over">Kontakt:</p>
-						<p class="under">Mail: <?= $user["department"]["email"] ?></p>
+						<p class="under">Mail: <?= $department["email"] ?></p>
 					</div>
 
 				</div>
@@ -143,7 +143,7 @@ print_r($department)
 
 					<div class="membership-info">
 						<p class="over">Lokalafdeling:</p>
-						<p class="under"><?= $user["department"]["name"] ?></p>
+						<p class="under"><?= $department["name"] ?></p>
 					</div>
 
 					<ul class="actions">
@@ -176,7 +176,7 @@ print_r($department)
 
 					<div class="user-info">
 						<p class="over">Password:</p>
-						<p class="under"># # # # # # # #</p>
+						<p class="under">#</p>
 					</div>
 
 					<ul class="actions">
