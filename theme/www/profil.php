@@ -40,14 +40,14 @@ if(is_array($action) && count($action)) {
 		$UC->update();
 	}
 
-	else if($action[0] == "department") {
+	else if($action[0] == "afdeling") {
 		$page->page(array(
 			"templates" => "pages/update_user_department.php"
 		));
 		exit();
 	}
 
-	else if($action[0] == "user") {
+	else if($action[0] == "bruger") {
 		$page->page(array(
 			"templates" => "pages/update_user_information.php"
 		));

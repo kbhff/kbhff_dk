@@ -1,6 +1,8 @@
 <?php 
 $UC = new User();
 $user = $UC->getKbhffUser();
+$department = $UC->getUserDepartment();
+print_r($department)
 ?>
 
 <div class="scene profile i:profile">
@@ -93,21 +95,27 @@ $user = $UC->getKbhffUser();
 
 			<div class="section department">
 				<div class="c-box">
-					<h3>Vesterbro lokalafdeling</h3>
+					<h3><?= $user["department"]["name"] ?> lokalafdeling</h3>
 
 					<div class="department-info">
 						<p class="over">Adresse:</p>
-						<p class="under">Oehlenschlægersgade 57 (Skolen) 1663 København</p>
+						<p class="under">
+							<?= 
+								 $user["department"]["address2"] 
+								 ? $user["department"]["address1"] . " (" . $user["department"]["address2"] . "), " . $user["department"]["postal"] . " " . $user["department"]["city"]
+								 : $user["department"]["address1"] . ", " . $user["department"]["postal"] . " " . $user["department"]["city"]
+							?>
+						</p>
 					</div>
 
 					<div class="department-info">
 						<p class="over">Åbningtider:</p>
-						<p class="under">Onsdag: 16.30 - 19.00</p>
+						<p class="under"><?= $user["department"]["opening_hours"] ?></p>
 					</div>
 
 					<div class="department-info">
 						<p class="over">Kontakt:</p>
-						<p class="under">Mail: vesterbro@kbhff.dk</p>
+						<p class="under">Mail: <?= $user["department"]["email"] ?></p>
 					</div>
 
 				</div>
@@ -135,7 +143,7 @@ $user = $UC->getKbhffUser();
 
 					<div class="membership-info">
 						<p class="over">Lokalafdeling:</p>
-						<p class="under">Vesterbro</p>
+						<p class="under"><?= $user["department"]["name"] ?></p>
 					</div>
 
 					<ul class="actions">
@@ -172,7 +180,7 @@ $user = $UC->getKbhffUser();
 					</div>
 
 					<ul class="actions">
-						<li class="change-info half-width"><a href="/profil/user" class="button">Ret</a></li>
+						<li class="change-info half-width"><a href="/profil/bruger" class="button">Ret</a></li>
 					</ul>
 					
 				</div>
