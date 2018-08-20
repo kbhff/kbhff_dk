@@ -55,7 +55,7 @@ class User extends UserCore {
 			"required" => true, 
 			"pattern" => "^[0-9A-Za-z]{24}$", 
 			"hint_message" => "Din verificerings kode", 
-			"error_message" => "Invalid kode, check på mellemrum i enden af din indtastede kode"
+			"error_message" => "Ugyldig kode. Kunne der være mellemrum i enden af din indtastede kode?"
 		));
 		$this->addToModel("department_id", array(
 			"type" => "string", 
@@ -126,7 +126,48 @@ class User extends UserCore {
 
 	}
 
+	/**
+	 * Update or set the current user's associated department.
+	 *
+	 * @param array $action REST parameters of current request
+	 * @return boolean
+	 */
 	function updateUserDepartment($action){
+		// Get content of $_POST array that have been "quality-assured" by Janitor 
+		$this->getPostedEntities();
+
+		// Check that the number of REST parameters is as expected and that the listed entries are valid.
+		if(count($action) == 1 && $this->validateList(array("department_id"))) {
+
+			$user = $this->getKbhffUser();
+			$user_id = $user["id"];
+			$department_id = $this->getProperty("department_id", "value");
+			
+			$query = new Query();
+			
+			//Check if the user is associated with a department and adjust query accordingly
+			if ($user["department"]) {
+				//Update department
+				$sql = "UPDATE ".SITE_DB.".user_department SET department_id = $department_id WHERE user_id = $user_id";
+
+				if($query->sql($sql)) {
+					message()->addMessage("Department updated");
+					return true;
+				} 
+			}
+			else {
+				// Set department
+				$sql = "INSERT INTO ".SITE_DB.".user_department SET department_id = $department_id WHERE user_id = $user_id";
+				
+				if($query->sql($sql)) {
+					message()->addMessage("Department assigned");
+					return true;
+				} 
+			}	
+
+		}
+
+		return false;
 
 	}
 }
