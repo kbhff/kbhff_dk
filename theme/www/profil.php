@@ -26,7 +26,8 @@ if(is_array($action) && count($action) == 1 && $action[0] == "accept" && $page->
 else if(!$UC->hasAcceptedTerms()) {
 
 	$page->page(array(
-		"templates" => "profile/accept_terms.php"
+		"templates" => "profile/accept_terms.php",
+		"type" => "terms"
 	));
 	exit();
 
