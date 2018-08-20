@@ -56,13 +56,11 @@ if(is_array($action) && count($action)) {
 
 	else if($action[0] == "updateUserDepartment" && $page->validateCsrfToken()) {
 
-		// creating new password
 		if($UC->updateUserDepartment($action)) {
 			header("Location: /profil");
 			exit();
 		}
 
-		// could not create new password
 		else {
 			message()->addMessage("Fejl!", array("type" => "error"));
 			$page->page(array(

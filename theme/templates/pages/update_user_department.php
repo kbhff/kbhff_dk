@@ -3,7 +3,7 @@ include_once("classes/system/department.class.php");
 $DC = new Department();
 $UC = new User();
 $departments = $DC->getDepartments();
-print_r($departments);
+$user_department = $UC->getUserDepartment();
 
 $this->pageTitle("Afdelinger");
 ?>
@@ -28,7 +28,7 @@ $this->pageTitle("Afdelinger");
 			<?= $UC->input("department_id", [
 				"type" => "select", 
 				"options" => $DC->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),
-				// "value" => 2
+				"value" => $user_department["id"]
 				]); 
 			?>
 		</fieldset>
