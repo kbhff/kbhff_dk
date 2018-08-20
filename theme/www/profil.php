@@ -71,6 +71,14 @@ if(is_array($action) && count($action)) {
 		}
 	}
 
+	else if($action[0] == "unaccept") {
+		$UC->unacceptTerms();
+		$page->page(array(
+			"templates" => "pages/unaccept_terms.php"
+		));
+		exit();
+	}	
+
 }
 
 

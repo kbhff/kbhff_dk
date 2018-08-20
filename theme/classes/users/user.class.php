@@ -177,6 +177,29 @@ class User extends UserCore {
 		return false;
 
 	}
+
+	/**
+	 * Remove accept of terms – for testing purposes
+	 *
+	 * @return boolean
+	 */
+	function unacceptTerms() {
+
+		$user_id = session()->value("user_id");
+
+		$query = new Query();
+
+		$sql = "DELETE FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id";
+
+		if($query->sql($sql)) {	
+			return true;
+		}
+
+		return false;
+
+
+		
+	}
 }
 
 ?>
