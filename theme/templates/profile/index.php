@@ -2,7 +2,6 @@
 $UC = new User();
 $user = $UC->getKbhffUser();
 $department = $UC->getUserDepartment();
-print_r($department)
 ?>
 
 <div class="scene profile i:profile">
@@ -101,9 +100,9 @@ print_r($department)
 						<p class="over">Adresse:</p>
 						<p class="under">
 							<?= 
-								 $department["address2"] 
-								 ? $department["address1"] . " (" . $department["address2"] . "), " . $department["postal"] . " " . $department["city"]
-								 : $department["address1"] . ", " . $department["postal"] . " " . $department["city"]
+								$department["address2"] 
+								? $department["address1"] . " (" . $department["address2"] . "), " . $department["postal"] . " " . $department["city"]
+								: $department["address1"] . ", " . $department["postal"] . " " . $department["city"]
 							?>
 						</p>
 					</div>
@@ -147,7 +146,7 @@ print_r($department)
 					</div>
 
 					<ul class="actions">
-						<li class="change-info third-width"><a href="#" class="button">Ret</a></li>
+						<li class="change-info third-width"><a href="/profil/afdeling" class="button">Ret</a></li>
 						<li class="cancel-membership third-width"><a href="#" class="button warning">Opsig</a></li>
 						<li class="cancel-membership third-width"><a href="#" class="button primary">Betal</a></li>
 					</ul>
@@ -176,7 +175,7 @@ print_r($department)
 
 					<div class="user-info">
 						<p class="over">Password:</p>
-						<p class="under">#</p>
+						<p class="under">.........</p>
 					</div>
 
 					<ul class="actions">
