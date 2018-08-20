@@ -4,14 +4,14 @@ $user = $UC->getKbhffUser();
 ?>
 
 <div class="scene profile i:profile">
-	<img src="/img/deprecated/banner.jpg"></img>
+	<img src="/img/deprecated/banner.jpg"	/>
 
 	<div class="c-wrapper">
 
 		<div class="c-two-thirds">
 
 			<div class="section intro">
-				<h2>Velkommen Peter kai Møller Pedersen</h2>
+				<h2>Velkommen <?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?></h2>
 				<p>
 					På min side kan du se og rette oplysninger om dig og dit medlemsskab. 
 					Du kan også se og rette dine eksisterende bestillinger og lave en ny bestilling (åbner GrøntShoppen). 
@@ -153,17 +153,17 @@ $user = $UC->getKbhffUser();
 					
 					<div class="user-info">
 						<p class="over">Navn:</p>
-						<p class="under">Peter Kai Møller Pedersen</p>
+						<p class="under"><?= $user["nickname"] ?></p>
 					</div>
 
 					<div class="user-info">
 						<p class="over">Email:</p>
-						<p class="under">peter@parentnode.dk</p>
+						<p class="under"><?= $user["email"] ?></p>
 					</div>
 
 					<div class="user-info">
 						<p class="over">Mobil:</p>
-						<p class="under">12 34 56 78</p>
+						<p class="under"><?= $user["mobile"] ?></p>
 					</div>
 
 					<div class="user-info">
@@ -172,7 +172,7 @@ $user = $UC->getKbhffUser();
 					</div>
 
 					<ul class="actions">
-						<li class="change-info half-width"><a href="#" class="button">Ret</a></li>
+						<li class="change-info half-width"><a href="/profil/user" class="button">Ret</a></li>
 					</ul>
 					
 				</div>

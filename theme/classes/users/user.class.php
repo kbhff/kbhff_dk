@@ -127,7 +127,7 @@ class User extends UserCore {
 	}
 
 	function updateUserDepartment($action){
-
+		return true;
 	}
 }
 

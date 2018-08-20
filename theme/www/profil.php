@@ -40,6 +40,38 @@ if(is_array($action) && count($action)) {
 		$UC->update();
 	}
 
+	else if($action[0] == "department") {
+		$page->page(array(
+			"templates" => "pages/update_user_department.php"
+		));
+		exit();
+	}
+
+	else if($action[0] == "user") {
+		$page->page(array(
+			"templates" => "pages/update_user_information.php"
+		));
+		exit();
+	}
+
+	else if($action[0] == "updateUserDepartment" && $page->validateCsrfToken()) {
+
+		// creating new password
+		if($UC->updateUserDepartment($action)) {
+			header("Location: /profil");
+			exit();
+		}
+
+		// could not create new password
+		else {
+			message()->addMessage("Fejl!", array("type" => "error"));
+			$page->page(array(
+				"templates" => "pages/update_user_department.php"
+			));
+			exit();
+		}
+	}
+
 }
 
 

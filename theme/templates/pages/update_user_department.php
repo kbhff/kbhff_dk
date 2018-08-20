@@ -1,16 +1,18 @@
 <?php
-	
-$model = new User();
+include_once("classes/system/department.class.php");
+$DC = new Department();
+$UC = new User();
+$departments = $DC->getDepartments();
+print_r($departments);
 
-$this->pageTitle("Verificering");
+$this->pageTitle("Afdelinger");
 ?>
-<div class="scene login i:forgot">
-	<h1>Nulstil password</h1>
-	<h2>Verficer at du vil nulstille dit password</h2>
-	<p class="validateParagraph"><span class='highlight'>TAK.</span> Vi har nu sendt dig en mail, i mailen er der en kode som du kan indtaste her og lave et nyt password.</p>
 
+<div class="scene update_department i:update_department">
+	<h1>Afdelinger</h1>
+	<h2>Her kan du skifte din lokale afdeling.</h2>
 
-	<?= $model->formStart("validateCode", ["class" => "verify_code"]) ?>
+	<?= $UC->formStart("updateUserDepartment", ["class" => "form_department"]) ?> 
 
 <?	if(message()->hasMessages(array("type" => "error"))): ?>
 		<p class="errormessage">
@@ -23,12 +25,17 @@ $this->pageTitle("Verificering");
 <?	endif; ?>
 
 		<fieldset>
-			<?= $model->input("reset-token"); ?>
+			<?= $UC->input("department_id", [
+				"type" => "select", 
+				"options" => $DC->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),
+				// "value" => 2
+				]); 
+			?>
 		</fieldset>
 
 		<ul class="actions">
-			<?= $model->submit("Lav nyt password", array("class" => "primary", "wrapper" => "li.reset")) ?>
+			<?= $UC->submit("Opdater", array("class" => "primary", "wrapper" => "li.save")) ?>
 		</ul>
-	<?= $model->formEnd() ?>
+	<?= $UC->formEnd() ?>
 
 </div>
