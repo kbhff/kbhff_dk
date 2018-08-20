@@ -8,7 +8,7 @@ $this->pageTitle("Glemt password");
 	<h1>Har du glemt din kode?</h1>
 	<h2>Du kan logge ind med din email-adresse.</h2>
 	<p>
-		Ønsker du at nulstille dit password, så indtast dit medlemsnummer, mail eller telefonnummer nedenfor. 
+		Ønsker du at nulstille dit password, så indtast din e-mail nedenfor. 
 		Vi sender dig en mail med dine login-oplysninger og kode til at nulstille dit password.
 	</p>
 
