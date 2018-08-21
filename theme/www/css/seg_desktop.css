@@ -450,7 +450,206 @@ input[type="submit"] {
 /*s-accept_terms.css*/
 #content .scene.accept_terms form {padding-top: 50px; width: 300px; margin: 0 auto; text-align: center;}
 #content .scene.accept_terms form fieldset {width: auto;}
+body > div.overlay_protection {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.4);
+	z-index: 101; }
+body > div.overlay {
+	position: fixed;
+	z-index: 102;
+	background: #DDDDDD;
+	padding-top: 5px;
+	border: 1px solid #BBBBBB;
+	margin: 0 auto;
+	text-align: center;
+}
+body > div.overlay p {
+	line-height: 24px;
+	font-family: 'Arial';
+	font-size: 14px;
+	color: #000000;
+	padding-bottom: 24px;
+	text-align: left;
+}
+body > div.overlay h2 {
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	font-size: 28px;
+	line-height: 30px;
+	padding-bottom: 22px;
+	padding-top: 20px;
+	text-align: center;
+}
+.close {
+	position: absolute;
+	right: 12px;
+	top: 12px;
+	width: 32px;
+	height: 32px;
+	opacity: 0.3;
+}
+.close:hover {
+	opacity: 1;
+}
+.close:before, .close:after {
+	position: absolute;
+	left: 15px;
+	content: ' ';
+	height: 33px;
+	width: 2px;
+	background-color: #333;
+}
+.close:before {
+	transform: rotate(45deg);
+}
+.close:after {
+	transform: rotate(-45deg);
+}
+input.action {
+	background-color: #000000;
+	font-family: 'voresfont';
+	text-transform: uppercase;
+	font-size: 14px;
+	line-height: 22px;
+	padding: 7px 14px;
+	display: block;
+	color: #ffffff;
+	width: auto;
+	height: auto;
+	display: block;
+	border: none;
+	cursor: pointer;
+	font-weight: 400;
+}
+li.regret input.action {
+	background-color: #3e8e17;
+	color: #ffffff;
+}
+li.regret input.action:hover {
+	background-color: #357914;
+	color: #ffffff;
+}
+li.delete_me input.action {
+	background-color: #BBBBBB;
+}
+li.delete_me input.action:hover {
+	background-color: #999999;
+}
+ul.actions li {
+	width: auto;
+	height: auto;
+	padding: 0 5px 10px 0;
+	vertical-align: top;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+ul.actions {
+	list-style: none;
+	margin: 0 0 0 2px;
+	font-size: 0;
+	display: inline-block;
+}
 
 
 /*s-profile.css*/
-#content .scene.profile p {padding: 0;}
+#content .section > h2 {
+	padding: 0;
+	margin-left: 12px;
+	margin-right: 12px;
+	margin-top: 20px;
+	margin-bottom: 22px;
+	border-bottom: 2px solid #808080;
+}
+#content .c-box > h3 {
+	padding-left: 0;
+	padding-right: 0;
+	padding-bottom: 0;
+	margin-left: 12px;
+	margin-right: 12px;
+	margin-bottom: 12px;
+	border-bottom: 1px solid #000000;
+}
+.orders,
+.order-headings,
+.order {
+	font-size: 12px;
+	font-size: 0;
+}
+.orders {
+	margin-left: 12px;
+	margin-right: 12px;
+}
+.opening-times,
+.membership-info {
+	display: inline-block;
+	vertical-align: top;
+	width: 50%;
+}
+.pickup-date,
+.order-place,
+.order-products,
+.change-untill {
+	display: inline-block;
+	vertical-align: top;
+	box-sizing: border-box;
+	width: 25%;
+}
+.department-info,
+.membership-info,
+.user-info {
+	padding-bottom: 20px;
+}
+#content p.over {
+	font-size: 12px;
+	padding-bottom: 0;
+	text-transform: uppercase;
+}
+#content p.under {
+	font-size: 18px;
+	padding-bottom: 0;
+}
+p.change-untill {
+	width: 17%;
+}
+#content ul.actions.change {
+	padding: 0;
+	margin: 0;
+	width: 8%	;
+}
+#content ul.actions.change > li {
+	padding: 0;
+	margin: 0;
+}
+#content ul.actions.change > li > a {
+	padding: 0;
+	margin: 0;
+	padding-left: 8px;
+	padding-right: 8px;
+	font-size: 12px;
+}
+#content ul.actions {
+	width: 100%;
+	box-sizing: border-box;
+	padding-right: 14px;
+	padding-top: 20px;
+}
+#content ul.actions li {
+	box-sizing: border-box;
+}
+#content ul.actions .full-width {
+	width: 100%;
+	text-align: center;
+}
+#content ul.actions .half-width {
+	width: 50%;
+	text-align: center;
+}
+#content ul.actions .third-width {
+	width: 33.3333%;
+	text-align: center;
+}
