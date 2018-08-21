@@ -45,7 +45,7 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 /*s-header.css*/
 #header {
     position: relative;
-    width: 960px;
+    width: 936px;
     margin: 0 auto;
 	padding: 16px 0 10px;
 }
@@ -91,7 +91,7 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 /*s-navigation.css*/
 #navigation {
     position: relative;
-    width: 960px;
+    width: 936px;
     margin: 0 auto;
 }
 #navigation ul.navigation {
@@ -124,7 +124,7 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 #footer ul.servicenavigation {
 	margin: 0 auto;
 	position: relative;
-    width: 960px;
+    width: 936px;
 	text-align: right;
 }
 #footer ul.servicenavigation li {
@@ -142,7 +142,7 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 #content {
 	margin: 0 auto;
 	position: relative;
-    width: 960px;
+	width: 960px;
 }
 #content p,
 #content ul,
@@ -215,10 +215,13 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 #content img {
 	width: 100%;
 	display: block;
+	box-sizing: border-box;
+	padding-left: 12px;
+	padding-right: 12px;
 }
 #content ol {
 	list-style-type: decimal;
-	padding-left: 16px;
+	margin-left: 16px;
 }
 #content ul {
 	list-style: disc;
@@ -267,49 +270,95 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 	color: #3e8e17;
 	font-weight: 700;
 }
-#content ul.color-list {
-	list-style: none;
-	margin: 0;
-}
-#content ul.color-list li {
-	display: inline-block;
-	box-sizing: border-box;
-	margin-right: 8px;
-	padding: 0;
-	width: 200px;
-	vertical-align: top;
-}
-span.colortest {
+div.c300 {
 	display: block;
-	width: 200px;
-	height: 200px;
+	font-size: 0;
 }
-#content ul.button-list {
-	list-style: none;
-	margin: 0;
+div.c75,
+div.c100,
+div.c150,
+div.c200 {
+	display: inline-block;
+	vertical-align: top;
+	font-size: 0;
 }
-#content ul.button-list li {
-	box-sizing: border-box;
-	padding: 0 0 25px 0;
+div.c200 {
+	width: 66.6666%;
 	vertical-align: top;
 }
-#content img.big-logo {
-	width: 200px;
-	height: 200px;
-	padding-bottom: 15px;
-}    
-#content img.small-logo {
-	display: inline-block;
-	padding-right: 15px;
-	width: 50px;
-	height: 50px;
+div.c150 {
+	width: 50%;
+}
+div.c100 {
+	width: 33.3333%;
+}
+div.c75 {
+	width: 25%;
+}
+div.box {
+	box-sizing: border-box;
+	margin-left: 12px;
+	margin-right: 12px;
+	background: #3e8e17;
+}
+div.box h1,
+div.box h2,
+div.box h3,
+div.box h4,
+div.box p,
+div.box ol,
+div.box ul,
+div.box dl {
+	color: white;
+}
+div.box.c75 {
+	width: calc(25% - 24px);
+}
+div.box.c100 {
+	width: calc(33.3333% - 24px);
+}
+div.box.c150 {
+	width: calc(50% - 24px);
+}
+div.box.c200 {
+	width: calc(66.6666% - 24px);
+}
+div.c200 > div.c100 {
+	width: 50%;
+}
+div.c150 > div.c75 {
+	width: 50%;
+}
+div.c200 > div.box.c100 {
+	width: calc(50% - 24px);
+}
+div.c150 > div.box.c75 {
+	width: calc(50% - 24px);
+}
+#content h1 {
+	margin-left: 12px;
+	margin-right: 12px;
+}
+#content h2,
+#content h3,
+#content h4,
+#content p,
+#content ol,
+#content ul,
+#content dl {
+	padding-left: 12px;
+	padding-right: 12px;
 }
 
 
 /*s-form.css*/
 form {}
 fieldset {width: 50%;}
-div.field {padding: 0 0 25px; position: relative; font-size: 0; z-index: 1;}
+div.field {
+	padding: 0 0 25px; position: relative; font-size: 0; z-index: 1;
+	padding-left: 10px;
+	padding-right: 10px;
+}
 div.field label {display: block; margin: 0 0 0 3px; line-height: 12px; font-size: 11px; text-transform: uppercase;}
 div.field input,
 div.field select,
@@ -565,6 +614,12 @@ ul.actions {
 	margin-bottom: 22px;
 	border-bottom: 2px solid #808080;
 }
+<<<<<<< HEAD
+=======
+#content .c-box {
+	font-size: 0;
+}
+>>>>>>> 21375b0caf99111b4d6424b88fb513994ec11f10
 #content .c-box > h3 {
 	padding-left: 0;
 	padding-right: 0;

@@ -6,9 +6,9 @@ $this->pageTitle("Glemt password");
 ?>
 <div class="scene login i:forgot">
 	<h1>Har du glemt din kode?</h1>
-	<h2>Du kan logge ind med medlemsnummer, email eller telefonnummer.</h2>
+	<h2>Du kan logge ind med din email-adresse.</h2>
 	<p>
-		Ønsker du at nulstille dit password, så indtast dit medlemsnummer, mail eller telefonnummer nedfor. 
+		Ønsker du at nulstille dit password, så indtast din e-mail nedenfor. 
 		Vi sender dig en mail med dine login-oplysninger og kode til at nulstille dit password.
 	</p>
 
@@ -30,8 +30,8 @@ $this->pageTitle("Glemt password");
 					"label" => "Bruger login", 
 					"required" => true, 
 					"pattern" => "^(1|[0-9]{4,5}|[\+0-9\-\.\s\(\)]{5,18}|[\w\.\-_]+@[\w\-\.]+\.\w{2,10})$", 
-					"hint_message" => "email, medlemsnummer eller telefonnummer", 
-					"error_message" => "ugyldig bruger"
+					"hint_message" => "Email, medlemsnummer eller telefonnummer", 
+					"error_message" => "Ugyldig bruger"
 				));
 			?>
 		</fieldset>

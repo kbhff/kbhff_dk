@@ -1,17 +1,18 @@
 <?php 
 $UC = new User();
 $user = $UC->getKbhffUser();
+$department = $UC->getUserDepartment();
 ?>
 
 <div class="scene profile i:profile">
-	<img src="/img/deprecated/banner.jpg"></img>
+	<img src="/img/deprecated/banner.jpg"	/>
 
 	<div class="c-wrapper">
 
 		<div class="c-two-thirds">
 
 			<div class="section intro">
-				<h2>Velkommen Peter kai Møller Pedersen</h2>
+				<h2>Velkommen <?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?></h2>
 				<p>
 					På min side kan du se og rette oplysninger om dig og dit medlemsskab. 
 					Du kan også se og rette dine eksisterende bestillinger og lave en ny bestilling (åbner GrøntShoppen). 
@@ -93,21 +94,27 @@ $user = $UC->getKbhffUser();
 
 			<div class="section department">
 				<div class="c-box">
-					<h3>Vesterbro lokalafdeling</h3>
+					<h3><?=$department["name"] ?> lokalafdeling</h3>
 
 					<div class="department-info">
 						<p class="over">Adresse:</p>
-						<p class="under">Oehlenschlægersgade 57 (Skolen) 1663 København</p>
+						<p class="under">
+							<?= 
+								$department["address2"] 
+								? $department["address1"] . " (" . $department["address2"] . "), " . $department["postal"] . " " . $department["city"]
+								: $department["address1"] . ", " . $department["postal"] . " " . $department["city"]
+							?>
+						</p>
 					</div>
 
 					<div class="department-info">
 						<p class="over">Åbningtider:</p>
-						<p class="under">Onsdag: 16.30 - 19.00</p>
+						<p class="under"><?= $department["opening_hours"] ?></p>
 					</div>
 
 					<div class="department-info">
 						<p class="over">Kontakt:</p>
-						<p class="under">Mail: vesterbro@kbhff.dk</p>
+						<p class="under">Mail: <?= $department["email"] ?></p>
 					</div>
 
 				</div>
@@ -135,11 +142,11 @@ $user = $UC->getKbhffUser();
 
 					<div class="membership-info">
 						<p class="over">Lokalafdeling:</p>
-						<p class="under">Vesterbro</p>
+						<p class="under"><?= $department["name"] ?></p>
 					</div>
 
 					<ul class="actions">
-						<li class="change-info third-width"><a href="#" class="button">Ret</a></li>
+						<li class="change-info third-width"><a href="/profil/afdeling" class="button">Ret</a></li>
 						<li class="cancel-membership third-width"><a href="#" class="button warning">Opsig</a></li>
 						<li class="cancel-membership third-width"><a href="#" class="button primary">Betal</a></li>
 					</ul>
@@ -153,26 +160,26 @@ $user = $UC->getKbhffUser();
 					
 					<div class="user-info">
 						<p class="over">Navn:</p>
-						<p class="under">Peter Kai Møller Pedersen</p>
+						<p class="under"><?= $user["nickname"] ?></p>
 					</div>
 
 					<div class="user-info">
 						<p class="over">Email:</p>
-						<p class="under">peter@parentnode.dk</p>
+						<p class="under"><?= $user["email"] ?></p>
 					</div>
 
 					<div class="user-info">
 						<p class="over">Mobil:</p>
-						<p class="under">12 34 56 78</p>
+						<p class="under"><?= $user["mobile"] ?></p>
 					</div>
 
 					<div class="user-info">
 						<p class="over">Password:</p>
-						<p class="under"># # # # # # # #</p>
+						<p class="under">.........</p>
 					</div>
 
 					<ul class="actions">
-						<li class="change-info half-width"><a href="#" class="button">Ret</a></li>
+						<li class="change-info half-width"><a href="/profil/bruger" class="button">Ret</a></li>
 					</ul>
 					
 				</div>

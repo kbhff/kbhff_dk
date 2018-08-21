@@ -26,7 +26,8 @@ if(is_array($action) && count($action) == 1 && $action[0] == "accept" && $page->
 else if(!$UC->hasAcceptedTerms()) {
 
 	$page->page(array(
-		"templates" => "profile/accept_terms.php"
+		"templates" => "profile/accept_terms.php",
+		"type" => "terms"
 	));
 	exit();
 
@@ -39,6 +40,44 @@ if(is_array($action) && count($action)) {
 	if($action[0] == "update" && $page->validateCsrfToken()) {
 		$UC->update();
 	}
+
+	else if($action[0] == "afdeling") {
+		$page->page(array(
+			"templates" => "pages/update_user_department.php"
+		));
+		exit();
+	}
+
+	else if($action[0] == "bruger") {
+		$page->page(array(
+			"templates" => "pages/update_user_information.php"
+		));
+		exit();
+	}
+
+	else if($action[0] == "updateUserDepartment" && $page->validateCsrfToken()) {
+
+		if($UC->updateUserDepartment($action)) {
+			header("Location: /profil");
+			exit();
+		}
+
+		else {
+			message()->addMessage("Fejl!", array("type" => "error"));
+			$page->page(array(
+				"templates" => "pages/update_user_department.php"
+			));
+			exit();
+		}
+	}
+
+	else if($action[0] == "unaccept") {
+		$UC->unacceptTerms();
+		$page->page(array(
+			"templates" => "pages/unaccept_terms.php"
+		));
+		exit();
+	}	
 
 }
 

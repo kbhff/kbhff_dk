@@ -4835,6 +4835,38 @@ Util.Objects["create_password"] = new function() {
 }
 
 
+/*i-update_department.js*/
+Util.Objects["update_department"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			var form = u.qs("form");
+			u.f.init(form, this);
+		}
+		scene.ready();
+	}
+}
+
+
+/*i-update_user_information.js*/
+Util.Objects["user_information"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			var form = u.qs("form");
+			u.f.init(form, this);
+		}
+		scene.ready();
+	}
+}
+
+
 /*i-profile.js*/
 Util.Objects["front"] = new function() {
 	this.init = function(scene) {

@@ -12,6 +12,9 @@
 	border-bottom: 2px solid #808080;
 }
 
+#content .c-box {
+	font-size: 0;
+}
 
 #content .c-box > h3 {
 	padding-left: 0;

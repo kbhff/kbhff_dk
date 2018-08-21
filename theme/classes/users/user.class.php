@@ -55,7 +55,7 @@ class User extends UserCore {
 			"required" => true, 
 			"pattern" => "^[0-9A-Za-z]{24}$", 
 			"hint_message" => "Din verificerings kode", 
-			"error_message" => "Invalid kode, check på mellemrum i enden af din indtastede kode"
+			"error_message" => "Ugyldig kode. Kunne der være mellemrum i enden af din indtastede kode?"
 		));
 		$this->addToModel("department_id", array(
 			"type" => "string", 
@@ -91,8 +91,8 @@ class User extends UserCore {
 	
 	 function getKbhffUser(){
 		$user = $this->getUser();
-		$user["department"] = $this->getUserDepartment($user["id"]);
-		print_r($user);
+		$user["department"] = $this->getUserDepartment();
+		// print_r($user);
 
 		return $user;
 	}
@@ -103,15 +103,17 @@ class User extends UserCore {
 	 * @param int $user_id
 	 * @return array|false The department object, or false if the current user isn't associated with a department. 
 	 */
-	function getUserDepartment($user_id){
+	function getUserDepartment(){
 		
+		$user_id = session()->value("user_id");
+
 		//Query current user ID i user_departments and get the associated department ID 
 		$query = new Query();
 		$sql = "SELECT department_id FROM ".SITE_DB.".user_department WHERE user_id = $user_id";
 
 		if($query->sql($sql)) {
 			$department_id = $query->result(0,"department_id");
-			print_r ($department_id);
+			// print_r ($department_id);
 			
 			//Use getDepartment to find the department with the specified department ID.
 			include_once("classes/system/department.class.php");
@@ -126,8 +128,77 @@ class User extends UserCore {
 
 	}
 
+	/**
+	 * Update or set the current user's associated department.
+	 *
+	 * @param array $action REST parameters of current request
+	 * @return boolean
+	 */
 	function updateUserDepartment($action){
+		// Get content of $_POST array that have been "quality-assured" by Janitor 
+		$this->getPostedEntities();
 
+		print_r ($action);
+		// Check that the number of REST parameters is as expected and that the listed entries are valid.
+		if(count($action) == 1 && $this->validateList(array("department_id"))) {
+			
+			$user = $this->getKbhffUser();
+			$user_id = $user["id"];
+			$department_id = $this->getProperty("department_id", "value");
+			
+			$query = new Query();
+
+			$query->checkDbExistence(SITE_DB.".user_department");
+
+			
+			
+			//Check if the user is associated with a department and adjust query accordingly
+			if ($user["department"]) {
+				//Update department
+				$sql = "UPDATE ".SITE_DB.".user_department SET department_id = $department_id WHERE user_id = $user_id";
+				
+				if($query->sql($sql)) {
+					message()->addMessage("Department updated");
+					return true;
+				} 
+			}
+			else {
+				// Set department
+				$sql = "INSERT INTO ".SITE_DB.".user_department SET department_id = $department_id, user_id = $user_id";
+				
+				if($query->sql($sql)) {
+					message()->addMessage("Department assigned");
+					return true;
+				} 
+			}	
+
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * Remove accept of terms – for testing purposes
+	 *
+	 * @return boolean
+	 */
+	function unacceptTerms() {
+
+		$user_id = session()->value("user_id");
+
+		$query = new Query();
+
+		$sql = "DELETE FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id";
+
+		if($query->sql($sql)) {	
+			return true;
+		}
+
+		return false;
+
+
+		
 	}
 }
 
