@@ -614,9 +614,12 @@ ul.actions {
 	margin-bottom: 22px;
 	border-bottom: 2px solid #808080;
 }
+<<<<<<< HEAD
+=======
 #content .c-box {
 	font-size: 0;
 }
+>>>>>>> 21375b0caf99111b4d6424b88fb513994ec11f10
 #content .c-box > h3 {
 	padding-left: 0;
 	padding-right: 0;

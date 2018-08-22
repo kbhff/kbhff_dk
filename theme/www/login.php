@@ -140,7 +140,7 @@ if(is_array($action) && count($action)) {
 	else if(count($action) == 1 && $action[0] == "logoff") {
 
 		// CI logoff
-		include_once("classes/curl.class.php");
+		include_once("classes/helpers/curl.class.php");
 		$curl = new CurlRequest();
 		$params = array(
 			"useragent" => $_SERVER["HTTP_USER_AGENT"],
