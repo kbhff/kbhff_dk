@@ -220,8 +220,14 @@ class User extends UserCore {
 		$update_firstname = $query->sql("UPDATE ".SITE_DB.".users SET firstname = '$firstname' WHERE id = $user_id");
 		$update_lastname = $query->sql("UPDATE ".SITE_DB.".users SET lastname = '$lastname' WHERE id = $user_id");
 		$update_email = $query->sql("UPDATE ".SITE_DB.".user_usernames SET username = '$email' WHERE user_id = $user_id AND type = 'email'");
-		$update_mobile = $query->sql("UPDATE ".SITE_DB.".user_usernames SET username = '$mobile' WHERE user_id = $user_id AND type = 'mobile'");
-		
+
+		if ($user["mobile"]) {
+			$update_mobile = $query->sql("UPDATE ".SITE_DB.".user_usernames SET username = '$mobile' WHERE user_id = $user_id AND type = 'mobile'");
+		}
+		else {
+			$verification_code = randomKey(8);
+			$update_mobile = $query->sql("INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '$mobile', type = 'mobile', verification_code = '$verification_code', verified = 0");
+		}
 
 		// $sql_email = "UPDATE ".SITE_DB.".user_usernames SET username = '$email' WHERE user_id = $user_id AND type = 'email'";
 		// $sql_mobile = "UPDATE ".SITE_DB.".user_usernames SET username = '$mobile' WHERE user_id = $user_id AND type = 'mobile'";
