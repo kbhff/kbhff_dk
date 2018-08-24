@@ -36,31 +36,35 @@ $this->pageTitle("Brugeroplysninger");
 					"type" => "string",
 					"label" => "dit fornavn",
 					"value" => $user["firstname"],
-					"required" => false,
+					"required" => true,
 					"hint_message" => "Skriv dit fornavn",
-					"error_message" => "",
+					"error_message" => "Du skal angive et fornavn.",
 				]),
 
 				$UC->input("lastname", [
 					"type" => "string",
 					"label" => "dit efternavn",
 					"value" => $user["lastname"],
-					"required" => false,
+					"required" => true,
 					"hint_message" => "Skriv dit efternavn",
-					"error_message" => "",
+					"error_message" => "Du skal angive et efternavn.",
 				]),
 
 				$UC->input("email", [
 					"type" => "email",
 					"label" => "din e-mail",
 					"value" => $user["email"],
+					"required" => true,
 					"hint_message" => "Din email du bruger til at logge ind og få beskeder med",
 					"error_message" => "Ugyldig email",
 				]),
 
 				$UC->input("mobile", [
+					"type" => "string",
 					"label" => "dit nummer",
 					"value" => $user["mobile"],
+					"hint_message" => "Skriv dit mobiltelefonnummer, så vi kan sende dig beskeder",
+					"error_message" => "Ugyldigt nummer",
 				]);
 			?>
 		</fieldset>
