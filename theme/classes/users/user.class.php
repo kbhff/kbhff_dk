@@ -200,6 +200,47 @@ class User extends UserCore {
 
 		
 	}
+
+	function updateUserInformation() {
+		$this->getPostedEntities();
+
+		$user = $this->getKbhffUser();
+		$user_id = $user["id"];
+
+
+		$nickname = $this->getProperty("nickname", "value");
+		$firstname = $this->getProperty("firstname", "value");
+		$lastname = $this->getProperty("lastname", "value");
+		$email = $this->getProperty("email", "value");
+		$mobile = $this->getProperty("mobile", "value");
+		
+
+		$query = new Query();
+		$update_nickname = $query->sql("UPDATE ".SITE_DB.".users SET nickname = '$nickname' WHERE id = $user_id");
+		$update_firstname = $query->sql("UPDATE ".SITE_DB.".users SET firstname = '$firstname' WHERE id = $user_id");
+		$update_lastname = $query->sql("UPDATE ".SITE_DB.".users SET lastname = '$lastname' WHERE id = $user_id");
+		$update_email = $query->sql("UPDATE ".SITE_DB.".user_usernames SET username = '$email' WHERE user_id = $user_id AND type = 'email'");
+
+		if ($user["mobile"]) {
+			$update_mobile = $query->sql("UPDATE ".SITE_DB.".user_usernames SET username = '$mobile' WHERE user_id = $user_id AND type = 'mobile'");
+		}
+		else {
+			$verification_code = randomKey(8);
+			$update_mobile = $query->sql("INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '$mobile', type = 'mobile', verification_code = '$verification_code', verified = 0");
+		}
+
+		// $sql_email = "UPDATE ".SITE_DB.".user_usernames SET username = '$email' WHERE user_id = $user_id AND type = 'email'";
+		// $sql_mobile = "UPDATE ".SITE_DB.".user_usernames SET username = '$mobile' WHERE user_id = $user_id AND type = 'mobile'";
+
+		// $query->sql($sql_email);
+		// $query->sql($sql_mobile);
+
+		// if($query->sql($sql)) {
+		// 	return true;
+		// }
+
+		return true;
+	}
 }
 
 ?>

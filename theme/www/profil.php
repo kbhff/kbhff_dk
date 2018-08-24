@@ -71,6 +71,22 @@ if(is_array($action) && count($action)) {
 		}
 	}
 
+	else if($action[0] == "updateUserInformation" && $page->validateCsrfToken()) {
+
+		if($UC->updateUserInformation()) {
+			header("Location: /profil");
+			exit();
+		}
+
+		else {
+			message()->addMessage("Fejl!", array("type" => "error"));
+			$page->page([
+				"templates" => "pages/update_user_information.php"
+			]);
+			exit();
+		}
+	}
+
 	else if($action[0] == "unaccept") {
 		if($UC->unacceptTerms()) {
 			$page->page(array(

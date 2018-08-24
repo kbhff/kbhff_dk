@@ -25,27 +25,48 @@ $this->pageTitle("Brugeroplysninger");
 			<?= 
 				$UC->input("nickname", [
 					"type" => "string",
-					"required" => false,
 					"label" => "dit kaldenavn",
-					"hint_message" => "Skriv et navn du kan lide",
+					"value" => $user["nickname"],
+					"required" => false,
+					"hint_message" => "Skriv dit kaldenavn (kan også bare være dit navn)",
 					"error_message" => "",
 				]),
 			
+				$UC->input("firstname", [
+					"type" => "string",
+					"label" => "dit fornavn",
+					"value" => $user["firstname"],
+					"required" => false,
+					"hint_message" => "Skriv dit fornavn",
+					"error_message" => "",
+				]),
+
+				$UC->input("lastname", [
+					"type" => "string",
+					"label" => "dit efternavn",
+					"value" => $user["lastname"],
+					"required" => false,
+					"hint_message" => "Skriv dit efternavn",
+					"error_message" => "",
+				]),
+
 				$UC->input("email", [
 					"type" => "email",
 					"label" => "din e-mail",
+					"value" => $user["email"],
 					"hint_message" => "Din email du bruger til at logge ind og få beskeder med",
 					"error_message" => "Ugyldig email",
 				]),
 
 				$UC->input("mobile", [
-					"label" => "dit nummer"
+					"label" => "dit nummer",
+					"value" => $user["mobile"],
 				]);
 			?>
 		</fieldset>
 
 		<ul class="actions">
-			<?= $UC->submit("Opdater", array("class" => "primary", "wrapper" => "li.update")) ?>
+			<?= $UC->submit("Opdater", array("class" => "primary", "wrapper" => "li.save")) ?>
 		</ul>
 	<?= $UC->formEnd() ?>
 
