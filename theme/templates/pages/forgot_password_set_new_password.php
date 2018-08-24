@@ -22,7 +22,7 @@ $reset_token = session()->value("temp-reset-token");
 				<?= $model->input("confirm_password", array("required" => true, "label" => "Gentag nyt password", "hint_message" => "Skriv dit nye password igen for bekræftelse", "error_message" => "Dine passwords passer ikke")) ?>
 			</fieldset>
 			<ul class="actions">
-				<?= $model->submit("Set new password", array("class" => "primary", "wrapper" => "li.save")) ?>
+				<?= $model->submit("Bekræft nyt password", array("class" => "primary", "wrapper" => "li.save")) ?>
 			</ul>
 		<?= $model->formEnd() ?>
 	</div>
