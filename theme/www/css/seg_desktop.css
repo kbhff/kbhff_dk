@@ -566,7 +566,6 @@ body > div.overlay {
 	position: fixed;
 	z-index: 102;
 	background: #DDDDDD;
-	padding-top: 5px;
 	border: 1px solid #BBBBBB;
 	margin: 0 auto;
 	text-align: center;
@@ -576,8 +575,10 @@ body > div.overlay p {
 	font-family: 'Arial';
 	font-size: 14px;
 	color: #000000;
+	padding-right: 24px;
+	padding-left: 24px;
 	padding-bottom: 24px;
-	text-align: left;
+	text-align: center;
 }
 body > div.overlay h2 {
 	font-family: 'voresfont', Arial, Helvetica, sans-serif;
