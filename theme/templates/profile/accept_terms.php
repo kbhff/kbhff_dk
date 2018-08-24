@@ -6,14 +6,16 @@ global $UC;
 
 	<h1>Accepter vilkår for KBHFF's opbevaring og håndtering af persondata</h1>
 
-	<p>For at leve op til persondatalovgivningen, skal vi en enkelt gang bede dig om
-		at give dit samtykke til vi opbevarer persondata fra dig.
+	<p>I forbindelse med overgangen til det ny system, vil vi en enkelt gang bede dig om
+	 dit samtykke til at vi opbevarer og behandler den persondata, du har givet os.
 		Dette er en forudsætning fra lovgivningens side for at vi kan have dig som medlem.</p>
 
-	<p>Vælger du at afvise samtykke vil det medføre ophør af dit medlemskab og
-		den persondata vi har om dig på vores server slettes i overensstemmelse med vore retningslinjer.</p>
+	<p>Vi opbevarer følgende informationer: Navn, emailadresse, telefonnummer og dine indkøb.</P>
 
-	<p>Læs vores <a href="/persondata">retningslinjer for behandling og opbevaring af persondata</a></p>
+	<p>Afviser du dette samtykke, vil det medføre ophør af dit medlemskab og
+		den persondata, vi har om dig, slettes fra vores server i overensstemmelse med vore retningslinjer.</p>
+
+	<p>Læs mere i vore <a href="/persondata">retningslinjer for behandling og opbevaring af persondata</a></p>
 
 
 
