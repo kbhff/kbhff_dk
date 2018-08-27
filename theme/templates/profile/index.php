@@ -160,8 +160,9 @@ $department = $UC->getUserDepartment();
 					
 					<div class="user-info">
 						<p class="over">Navn:</p>
-						<p class="under"><?= $user['nickname'] ?></p>
+						<p class="under"><?= $user['nickname'] ? $user['nickname'] : "Dit kaldenavn" ?></p>
 					</div>
+
 					<div class="user-info">
 						<p class="over"> Fulde navn</p>
 						<p class="under"><?= $user['firstname'] ? $user['firstname'] : "(Dit fornavn)", " ", $user["lastname"] ? $user["lastname"] : "(Dit efternavn)" ?></p>
@@ -169,12 +170,12 @@ $department = $UC->getUserDepartment();
 
 					<div class="user-info">
 						<p class="over">Email:</p>
-						<p class="under"><?= $user["email"] ?></p>
+						<p class="under"><?= $user["email"] ? $user["email"] : "(Din e-mail)" ?></p>
 					</div>
 
 					<div class="user-info">
 						<p class="over">Mobil:</p>
-						<p class="under"><?= $user["mobile"] ?></p>
+						<p class="under"><?= $user["mobile"] ? $user["mobile"] : "(Dit mobil nummer)" ?></p>
 					</div>
 
 					<div class="user-info">
