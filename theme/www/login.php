@@ -339,10 +339,14 @@ if(is_array($action) && count($action)) {
 }
 
 
-
+if(session()->value("user_group_id")>1) {
+	header("Location: /profil");
+	exit();
+}
 // plain login
 $page->page(array(
-	"templates" => "pages/kbhff-login.php"
+	"templates" => "pages/kbhff-login.php",
+	"type" => "login"
 ));
 
 
