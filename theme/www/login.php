@@ -322,12 +322,15 @@ if(is_array($action) && count($action)) {
 
 		// creating new password
 		if($model->resetPassword($action)) {
+			message()->resetMessages();
+			message()->addMessage("Dit password blev opdateret.");
 			header("Location: /login");
 			exit();
 		}
 
 		// could not create new password
 		else {
+			message()->resetMessages();
 			message()->addMessage("Du kan ikke bruge dette password!", array("type" => "error"));
 			header("Location: glemt/nyt-password");
 			exit();
