@@ -80,6 +80,7 @@ Util.Objects["forgot"] = new function() {
 			// Getting new error and current error
 			var response_error = u.qs("p.errormessage", response);
 			var scene_error = u.qs("p.errormessage", this);
+			
 
 			if (!scene_error) {
 				u.ie(form, response_error);

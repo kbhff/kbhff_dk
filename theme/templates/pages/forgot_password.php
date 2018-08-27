@@ -27,11 +27,11 @@ $this->pageTitle("Glemt password");
 		<fieldset>
 			<?= $model->input("username", array(
 					"type" => "string", 
-					"label" => "Bruger login", 
+					"label" => "Emailadresse", 
 					"required" => true, 
 					"pattern" => "^(1|[0-9]{4,5}|[\+0-9\-\.\s\(\)]{5,18}|[\w\.\-_]+@[\w\-\.]+\.\w{2,10})$", 
-					"hint_message" => "Email, medlemsnummer eller telefonnummer", 
-					"error_message" => "Ugyldig bruger"
+					"hint_message" => "Skriv den emailadresse, som du har registreret hos KBHFF.", 
+					"error_message" => "Du skal angive en gyldig emailadresse."
 				));
 			?>
 		</fieldset>
