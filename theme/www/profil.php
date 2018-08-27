@@ -79,7 +79,7 @@ if(is_array($action) && count($action)) {
 		}
 
 		else {
-			message()->addMessage("Fejl!", array("type" => "error"));
+			// message()->addMessage("Fejl!", array("type" => "error"));
 			$page->page([
 				"templates" => "pages/update_user_information.php"
 			]);

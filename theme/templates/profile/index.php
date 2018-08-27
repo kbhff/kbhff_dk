@@ -160,7 +160,11 @@ $department = $UC->getUserDepartment();
 					
 					<div class="user-info">
 						<p class="over">Navn:</p>
-						<p class="under"><?= $user["nickname"] ?></p>
+						<p class="under"><?= $user['nickname'] ?></p>
+					</div>
+					<div class="user-info">
+						<p class="over"> Fulde navn</p>
+						<p class="under"><?= $user['firstname'] ? $user['firstname'] : "(Dit fornavn)", " ", $user["lastname"] ? $user["lastname"] : "(Dit efternavn)" ?></p>
 					</div>
 
 					<div class="user-info">

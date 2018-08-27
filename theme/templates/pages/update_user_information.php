@@ -55,7 +55,7 @@ $this->pageTitle("Brugeroplysninger");
 					"label" => "din e-mail",
 					"value" => $user["email"],
 					"required" => true,
-					"hint_message" => "Din email du bruger til at logge ind og få beskeder med",
+					"hint_message" => "Den e-mail du bruger til at logge ind med, og få e-mails fra",
 					"error_message" => "Ugyldig email",
 				]),
 

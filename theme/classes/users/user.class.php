@@ -202,44 +202,68 @@ class User extends UserCore {
 	}
 
 	function updateUserInformation() {
+		// Get posted values from form
 		$this->getPostedEntities();
 
+		// Get array of current users data, so we can assign user_id to a variable for queries
 		$user = $this->getKbhffUser();
-		$user_id = $user["id"];
+		$user_id = session()->value("user_id"); //session is safer than $user["id"];
 
+		// Retrieve values of user from database, store in variable
+		$current_nickname = $user["nickname"];
+		$current_firstname = $user["firstname"];
+		$current_lastname = $user["lastname"];
+		$current_email = $user["email"];
+		$current_mobile = $user["mobile"];
 
+		// Retrieve values of fields at post, store in variable
 		$nickname = $this->getProperty("nickname", "value");
 		$firstname = $this->getProperty("firstname", "value");
 		$lastname = $this->getProperty("lastname", "value");
 		$email = $this->getProperty("email", "value");
 		$mobile = $this->getProperty("mobile", "value");
 		
-
+		// Updating fields
 		$query = new Query();
-		$update_nickname = $query->sql("UPDATE ".SITE_DB.".users SET nickname = '$nickname' WHERE id = $user_id");
-		$update_firstname = $query->sql("UPDATE ".SITE_DB.".users SET firstname = '$firstname' WHERE id = $user_id");
-		$update_lastname = $query->sql("UPDATE ".SITE_DB.".users SET lastname = '$lastname' WHERE id = $user_id");
-		$update_email = $query->sql("UPDATE ".SITE_DB.".user_usernames SET username = '$email' WHERE user_id = $user_id AND type = 'email'");
 
-		if ($user["mobile"]) {
-			$update_mobile = $query->sql("UPDATE ".SITE_DB.".user_usernames SET username = '$mobile' WHERE user_id = $user_id AND type = 'mobile'");
+		if ($current_nickname !== $nickname) {
+			$query->sql("UPDATE ".SITE_DB.".users SET nickname = '$nickname' WHERE id = $user_id");
+			message()->addMessage("Nickname updated", ["type" => "error"]);
 		}
-		else {
+
+		if ($current_firstname !== $firstname) {
+			$query->sql("UPDATE ".SITE_DB.".users SET firstname = '$firstname' WHERE id = $user_id");
+			message()->addMessage("First name updated", ["type" => "error"]);
+		}
+		
+		if ($current_lastname !== $lastname) {
+			$query->sql("UPDATE ".SITE_DB.".users SET lastname = '$lastname' WHERE id = $user_id");	
+			message()->addMessage("Last name updated", ["type" => "error"]);
+		}
+
+		// Check if user has an email, and if a new email has been assigned
+		if ($current_email && $current_email !== $email) {
+			$query->sql("UPDATE ".SITE_DB.".user_usernames SET username = '$email' WHERE user_id = $user_id AND type = 'email'");
+			message()->addMessage("Email updated", ["type" => "error"]);
+		}
+		else if (!$current_email) { // If there's no email to corresponding user in database
 			$verification_code = randomKey(8);
-			$update_mobile = $query->sql("INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '$mobile', type = 'mobile', verification_code = '$verification_code', verified = 0");
+			$query->sql("INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '$email', type = 'email', verification_code = '$verification_code', verified = 0");
+			message()->addMessage("Email added", ["type" => "error"]);
 		}
 
-		// $sql_email = "UPDATE ".SITE_DB.".user_usernames SET username = '$email' WHERE user_id = $user_id AND type = 'email'";
-		// $sql_mobile = "UPDATE ".SITE_DB.".user_usernames SET username = '$mobile' WHERE user_id = $user_id AND type = 'mobile'";
+		// Checks if user has a mobile number assigned, and if new mobile number has been assigned
+		if ($current_mobile && $current_mobile !== $mobile) {
+			$query->sql("UPDATE ".SITE_DB.".user_usernames SET username = '$mobile' WHERE user_id = $user_id AND type = 'mobile'");
+			message()->addMessage("Mobile updated", ["type" => "error"]);
+		}
+		else if (!$current_mobile) { // If there's no mobile to corresponding user in database
+			$verification_code = randomKey(8);
+			$query->sql("INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '$mobile', type = 'mobile', verification_code = '$verification_code', verified = 0");
+			message()->addMessage("Mobile added", ["type" => "error"]);
+		}
 
-		// $query->sql($sql_email);
-		// $query->sql($sql_mobile);
-
-		// if($query->sql($sql)) {
-		// 	return true;
-		// }
-
-		return true;
+		return false;
 	}
 }
 
