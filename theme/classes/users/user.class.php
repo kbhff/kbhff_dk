@@ -201,70 +201,80 @@ class User extends UserCore {
 		
 	}
 
-	function updateUserInformation() {
+	function updateUserInformation($action) {
 		// Get posted values from form
 		$this->getPostedEntities();
 
-		// Get array of current users data, so we can assign user_id to a variable for queries
-		$user = $this->getKbhffUser();
-		$user_id = session()->value("user_id"); //session is safer than $user["id"];
-
-		// Retrieve values of user from database, store in variable
-		$current_nickname = $user["nickname"];
-		$current_firstname = $user["firstname"];
-		$current_lastname = $user["lastname"];
-		$current_email = $user["email"];
-		$current_mobile = $user["mobile"];
-
-		// Retrieve values of fields at post, store in variable
+		// Prevent nickname not assigned error
 		$nickname = $this->getProperty("nickname", "value");
-		$firstname = $this->getProperty("firstname", "value");
-		$lastname = $this->getProperty("lastname", "value");
-		$email = $this->getProperty("email", "value");
-		$mobile = $this->getProperty("mobile", "value");
-		
-		// Updating fields
-		$query = new Query();
-
-		if ($current_nickname !== $nickname) {
-			$query->sql("UPDATE ".SITE_DB.".users SET nickname = '$nickname' WHERE id = $user_id");
-			message()->addMessage("Nickname updated", ["type" => "error"]);
-		}
-
-		if ($current_firstname !== $firstname) {
-			$query->sql("UPDATE ".SITE_DB.".users SET firstname = '$firstname' WHERE id = $user_id");
-			message()->addMessage("First name updated", ["type" => "error"]);
+		if (!$nickname) {
+			$firstname = $this->getProperty("firstname", "value");
+			$lastname = $this->getProperty("lastname", "value");
+			$_POST["nickname"] = $firstname . " " . $lastname;
 		}
 		
-		if ($current_lastname !== $lastname) {
-			$query->sql("UPDATE ".SITE_DB.".users SET lastname = '$lastname' WHERE id = $user_id");	
-			message()->addMessage("Last name updated", ["type" => "error"]);
+		// Updates and checks if it went true(good) or false(bad)
+		if ($this->update(["update"])) {
+			message()->addMessage("Oplysninger opdateret");
+		}
+		else {
+			message()->addMessage("Opdateringen fejlede", ["type" => "error"]);
 		}
 
-		// Check if user has an email, and if a new email has been assigned
-		if ($current_email && $current_email !== $email) {
-			$query->sql("UPDATE ".SITE_DB.".user_usernames SET username = '$email' WHERE user_id = $user_id AND type = 'email'");
-			message()->addMessage("Email updated", ["type" => "error"]);
-		}
-		else if (!$current_email) { // If there's no email to corresponding user in database
-			$verification_code = randomKey(8);
-			$query->sql("INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '$email', type = 'email', verification_code = '$verification_code', verified = 0");
-			message()->addMessage("Email added", ["type" => "error"]);
-		}
+		return true;
+	}
 
-		// Checks if user has a mobile number assigned, and if new mobile number has been assigned
-		if ($current_mobile && $current_mobile !== $mobile) {
-			$query->sql("UPDATE ".SITE_DB.".user_usernames SET username = '$mobile' WHERE user_id = $user_id AND type = 'mobile'");
-			message()->addMessage("Mobile updated", ["type" => "error"]);
-		}
-		else if (!$current_mobile) { // If there's no mobile to corresponding user in database
-			$verification_code = randomKey(8);
-			$query->sql("INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '$mobile', type = 'mobile', verification_code = '$verification_code', verified = 0");
-			message()->addMessage("Mobile added", ["type" => "error"]);
-		}
+	function updateUserPassword($action) {
+		// Get posted values to make them available for models
+		$this->getPostedEntities();
+		$user_id = session()->value("user_id");
 
+		if(count($action) == 1 && $user_id) {
+			// If user already has a password
+			if($this->hasPassword()) {
+				// does values validate
+				if($this->validateList(array("new_password"))) {
+					$query = new Query();
+
+					// make sure type tables exist
+					$query->checkDbExistence($this->db_passwords);
+					$new_password = password_hash($this->getProperty("new_password", "value"), PASSWORD_DEFAULT);
+					
+					// DELETE OLD PASSWORD
+					$sql = "DELETE FROM ".$this->db_passwords." WHERE user_id = $user_id";
+					if($query->sql($sql)) {
+
+						// SAVE NEW PASSWORD
+						$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$new_password'";
+						if($query->sql($sql)) {
+							return true;
+						}
+					}
+				}
+			}
+			// user does not have a password
+			else {
+				// does values validate
+				if($this->validateList(array("new_password"))) {
+					$query = new Query();
+
+					// make sure type tables exist
+					$query->checkDbExistence($this->db_passwords);
+
+					// Hash to inject
+					$new_password = password_hash($this->getProperty("new_password", "value"), PASSWORD_DEFAULT);
+
+					// SAVE NEW PASSWORD
+					$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$new_password'";
+					if($query->sql($sql)) {
+						return true;
+					}
+				}
+			}
+		}
 		return false;
 	}
+
 }
 
 ?>

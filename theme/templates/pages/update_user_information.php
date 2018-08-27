@@ -11,14 +11,21 @@ $this->pageTitle("Brugeroplysninger");
 
 	<?= $UC->formStart("updateUserInformation", ["class" => "form_user"]) ?>
 
-<?	if(message()->hasMessages(array("type" => "error"))): ?>
+<?	if(message()->hasMessages()): ?>
 		<p class="errormessage">
 <?		$messages = message()->getMessages(array("type" => "error"));
-		message()->resetMessages();
 		foreach($messages as $message): ?>
 			<?= $message ?><br>
 <?		endforeach;?>
 		</p>
+		<p class="errormessage">
+<?		$messages = message()->getMessages(array("type" => "message"));
+		foreach($messages as $message): ?>
+			<?= $message ?><br>
+<?		endforeach;?>
+		</p>
+<?	message()->resetMessages(); ?>
+
 <?	endif; ?>
 
 		<fieldset>

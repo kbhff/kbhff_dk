@@ -12,6 +12,7 @@ document.write('<script type="text/javascript" src="/js/lib/desktop/i-confirm_ac
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-create_password.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-update_department.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-update_user_information.js"></script>');
+document.write('<script type="text/javascript" src="/js/lib/desktop/i-update_user_password.js"></script>');
 
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-profile.js"></script>');

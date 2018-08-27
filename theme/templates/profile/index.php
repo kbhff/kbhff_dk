@@ -180,15 +180,21 @@ $department = $UC->getUserDepartment();
 						<p class="under"><?= $user["mobile"] ? $user["mobile"] : "(Ikke angivet)" ?></p>
 					</div>
 
-					<div class="user-info">
-						<p class="over">Password:</p>
-						<p class="under">.........</p>
-					</div>
-
 					<ul class="actions">
 						<li class="change-info half-width"><a href="/profil/bruger" class="button">Ret</a></li>
 					</ul>
-					
+				</div>
+			</div>
+
+			<div class="section password">
+				<div class="c-box">
+					<h3>Kodeord</h3>
+					<p class="over">Password:</p>
+					<p class="under">?</p>
+
+					<ul class="actions">
+						<li class="change-info full-width"><a href="/profil/kodeord" class="button">Ændre kodeord</a></li>
+					</ul>
 				</div>
 			</div>
 

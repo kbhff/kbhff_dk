@@ -41,6 +41,7 @@ if(is_array($action) && count($action)) {
 		$UC->update();
 	}
 
+	// Reaching afdeling page
 	else if($action[0] == "afdeling") {
 		$page->page(array(
 			"templates" => "pages/update_user_department.php"
@@ -51,6 +52,13 @@ if(is_array($action) && count($action)) {
 	else if($action[0] == "bruger") {
 		$page->page(array(
 			"templates" => "pages/update_user_information.php"
+		));
+		exit();
+	}
+
+	else if($action[0] == "kodeord") {
+		$page->page(array(
+			"templates" => "pages/update_user_password.php"
 		));
 		exit();
 	}
@@ -73,7 +81,7 @@ if(is_array($action) && count($action)) {
 
 	else if($action[0] == "updateUserInformation" && $page->validateCsrfToken()) {
 
-		if($UC->updateUserInformation()) {
+		if($UC->updateUserInformation($action)) {
 			header("Location: /profil");
 			exit();
 		}
@@ -82,6 +90,22 @@ if(is_array($action) && count($action)) {
 			// message()->addMessage("Fejl!", array("type" => "error"));
 			$page->page([
 				"templates" => "pages/update_user_information.php"
+			]);
+			exit();
+		}
+	}
+
+	else if($action[0] == "updateUserPassword" && $page->validateCsrfToken()) {
+
+		if($UC->updateUserPassword($action)) {
+			header("Location: /profil");
+			exit();
+		}
+
+		else {
+			// message()->addMessage("Fejl!", array("type" => "error"));
+			$page->page([
+				"templates" => "pages/update_user_password.php"
 			]);
 			exit();
 		}
