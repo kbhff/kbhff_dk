@@ -41,7 +41,7 @@ if(is_array($action) && count($action)) {
 		$UC->update();
 	}
 
-	// Reaching afdeling page
+	// ../profil/afdeling lead to template
 	else if($action[0] == "afdeling") {
 		$page->page(array(
 			"templates" => "pages/update_user_department.php"
@@ -49,6 +49,7 @@ if(is_array($action) && count($action)) {
 		exit();
 	}
 
+	// ../profil/bruger lead to template
 	else if($action[0] == "bruger") {
 		$page->page(array(
 			"templates" => "pages/update_user_information.php"
@@ -56,6 +57,7 @@ if(is_array($action) && count($action)) {
 		exit();
 	}
 
+	// --/profil/kodeord lead to template
 	else if($action[0] == "kodeord") {
 		$page->page(array(
 			"templates" => "pages/update_user_password.php"
@@ -63,13 +65,15 @@ if(is_array($action) && count($action)) {
 		exit();
 	}
 
+	// Handling updateUserDepartment method, specified in user.class.php
 	else if($action[0] == "updateUserDepartment" && $page->validateCsrfToken()) {
 
+		//Method returns true
 		if($UC->updateUserDepartment($action)) {
 			header("Location: /profil");
 			exit();
 		}
-
+		// Method returns false
 		else {
 			message()->addMessage("Fejl!", array("type" => "error"));
 			$page->page(array(
@@ -79,13 +83,15 @@ if(is_array($action) && count($action)) {
 		}
 	}
 
+	// Handling updateUderInformation method, specified in user.class.php
 	else if($action[0] == "updateUserInformation" && $page->validateCsrfToken()) {
 
+		//Method returns true
 		if($UC->updateUserInformation($action)) {
 			header("Location: /profil");
 			exit();
 		}
-
+		//Method returns false
 		else {
 			// message()->addMessage("Fejl!", array("type" => "error"));
 			$page->page([
@@ -95,13 +101,15 @@ if(is_array($action) && count($action)) {
 		}
 	}
 
+	// Handling updateUserPassword method, specified in user.class.php
 	else if($action[0] == "updateUserPassword" && $page->validateCsrfToken()) {
 
+		//Method returns true
 		if($UC->updateUserPassword($action)) {
 			header("Location: /profil");
 			exit();
 		}
-
+		//Method returns false
 		else {
 			// message()->addMessage("Fejl!", array("type" => "error"));
 			$page->page([

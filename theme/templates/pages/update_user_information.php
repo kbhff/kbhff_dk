@@ -78,6 +78,7 @@ $this->pageTitle("Brugeroplysninger");
 
 		<ul class="actions">
 			<?= $UC->submit("Opdater", array("class" => "primary", "wrapper" => "li.save")) ?>
+			<li class="cancel"><a href=".." class="button">Anullér</a></li>
 		</ul>
 	<?= $UC->formEnd() ?>
 

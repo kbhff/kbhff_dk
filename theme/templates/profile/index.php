@@ -190,7 +190,7 @@ $department = $UC->getUserDepartment();
 				<div class="c-box">
 					<h3>Kodeord</h3>
 					<p class="over">Password:</p>
-					<p class="under">?</p>
+					<p class="under">(skjult)</p>
 
 					<ul class="actions">
 						<li class="change-info full-width"><a href="/profil/kodeord" class="button">Ændre kodeord</a></li>
