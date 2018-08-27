@@ -4780,9 +4780,9 @@ Util.Objects["accept_terms"] = new function() {
 			u.qs("div.field.checkbox .hint").innerHTML = ""
 			form_accept.actions["reject"].clicked = function() {
 				var overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600});
-				var warning = u.ae(overlay.div_content, "p",{html:"Er du sikker på, at du IKKE vil acceptere vore retningslinjer for persondata? <br> Hvis du trykker JA, SLET MIG vil du straks blive udmeldt."});
-				var delete_me = u.f.addAction(overlay.div_content, {"type":"button", "name":"delete_me", "class":"action delete_me","value":"Ja, slet mig"});
-				var regret = u.f.addAction(overlay.div_content, {"type":"button", "name":"regret", "class":"action regret primary", "value":"Fortryd"});
+				var warning = u.ae(overlay.div_content, "p",{html:"Du er ved at melde dig ud af KBHFF. Pga. lovgivning og hensyn til persondata kan du ikke være medlem af KBHFF uden at acceptere vores vilkår. Vi håber du vil genoverveje."});
+				var delete_me = u.f.addAction(overlay.div_content, {"type":"button", "name":"delete_me", "class":"action delete_me","value":"Meld mig ud af KBHFF"});
+				var regret = u.f.addAction(overlay.div_content, {"type":"button", "name":"regret", "class":"action regret primary", "value":"Fortryd udmelding"});
 				u.e.click(delete_me)
 				delete_me.clicked = function () {
 					 window.location = "/"

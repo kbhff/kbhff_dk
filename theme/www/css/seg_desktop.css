@@ -586,13 +586,13 @@ body > div.overlay h2 {
 	font-size: 28px;
 	line-height: 30px;
 	padding-bottom: 22px;
-	padding-top: 20px;
+	padding-top: 17px;
 	text-align: center;
 }
 .close {
 	position: absolute;
-	right: 12px;
-	top: 12px;
+	right: 17px;
+	top: 17px;
 	width: 32px;
 	height: 32px;
 	opacity: 0.3;
@@ -604,7 +604,7 @@ body > div.overlay h2 {
 	position: absolute;
 	left: 15px;
 	content: ' ';
-	height: 33px;
+	height: 28px;
 	width: 2px;
 	background-color: #333;
 }
