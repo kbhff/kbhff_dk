@@ -9,7 +9,7 @@ $this->pageTitle("Kodeord");
 	<h1>Kodeord</h1>
 	<h2>Her kan du ændre dit kodeord.</h2>
 
-	<?= $UC->formStart("updateUserPassword", ["class" => "form_user"]) ?>
+	<?= $UC->formStart("updateUserPassword", ["class" => "form_password"]) ?>
 
 <?	if(message()->hasMessages()): ?>
 		<p class="errormessage">
@@ -48,7 +48,7 @@ $this->pageTitle("Kodeord");
 
 		<ul class="actions">
 			<?= $UC->submit("Gem", array("class" => "primary", "wrapper" => "li.save")) ?>
-			<li class="cancel"><a href=".." class="button">Anullér</a></li>
+			<li class="cancel"><a href="/" class="button">Anullér</a></li>
 		</ul>
 	<?= $UC->formEnd() ?>
 

@@ -4,6 +4,24 @@ $user = $UC->getKbhffUser();
 $department = $UC->getUserDepartment();
 ?>
 
+<?	if(message()->hasMessages()): ?>
+		<p class="errormessage">
+<?		$messages = message()->getMessages(array("type" => "error"));
+		foreach($messages as $message): ?>
+			<?= $message ?><br>
+<?		endforeach;?>
+		</p>
+		<p class="message">
+<?		$messages = message()->getMessages(array("type" => "message"));
+		foreach($messages as $message): ?>
+			<?= $message ?><br>
+<?		endforeach;?>
+		</p>
+<?	message()->resetMessages(); ?>
+
+<?	endif; ?>
+
+
 <div class="scene profile i:profile">
 	<img src="/img/deprecated/banner.jpg"	/>
 
@@ -96,25 +114,27 @@ $department = $UC->getUserDepartment();
 				<div class="c-box">
 					<h3><?=$department["name"] ?> lokalafdeling</h3>
 
-					<div class="department-info">
-						<p class="over">Adresse:</p>
-						<p class="under">
-							<?= 
-								$department["address2"] 
-								? $department["address1"] . " (" . $department["address2"] . "), " . $department["postal"] . " " . $department["city"]
-								: $department["address1"] . ", " . $department["postal"] . " " . $department["city"]
-							?>
-						</p>
-					</div>
-
-					<div class="department-info">
-						<p class="over">Åbningtider:</p>
-						<p class="under"><?= $department["opening_hours"] ?></p>
-					</div>
-
-					<div class="department-info">
-						<p class="over">Kontakt:</p>
-						<p class="under">Mail: <?= $department["email"] ?></p>
+					<div class="fields">
+						<div class="department-info">
+							<p class="over">Adresse</p>
+							<p class="under">
+								<?= 
+									$department["address2"] 
+									? $department["address1"] . " (" . $department["address2"] . "), " . $department["postal"] . " " . $department["city"]
+									: $department["address1"] . ", " . $department["postal"] . " " . $department["city"]
+								?>
+							</p>
+						</div>
+	
+						<div class="department-info">
+							<p class="over">Åbningtider</p>
+							<p class="under"><?= $department["opening_hours"] ?></p>
+						</div>
+	
+						<div class="department-info">
+							<p class="over">Kontakt</p>
+							<p class="under">Mail: <?= $department["email"] ?></p>
+						</div>
 					</div>
 
 				</div>
@@ -125,31 +145,33 @@ $department = $UC->getUserDepartment();
 				<div class="c-box">
 					<h3>Dit medlemsskab</h3>
 					
-					<div class="membership-info">
-						<p class="over">Medlemsnummer:</p>
-						<p class="under">54321</p>
-					</div>
+					<div class="fields">
+						<div class="membership-info">
+							<p class="over">Medlemsnummer</p>
+							<p class="under">54321</p>
+						</div>
 
-					<div class="membership-info">
-						<p class="over">Status:</p>
-						<p class="under system-warning">Ikke betalt</p>
-					</div>
+						<div class="membership-info">
+							<p class="over">Status</p>
+							<p class="under system-warning">Ikke betalt</p>
+						</div>
 
-					<div class="membership-info">
-						<p class="over">Medlemstype:</p>
-						<p class="under">Frivillig</p>
-					</div>
+						<div class="membership-info">
+							<p class="over">Medlemstype</p>
+							<p class="under">Frivillig</p>
+						</div>
 
-					<div class="membership-info">
-						<p class="over">Lokalafdeling:</p>
-						<p class="under"><?= $department["name"] ?></p>
-					</div>
+						<div class="membership-info">
+							<p class="over">Lokalafdeling</p>
+							<p class="under"><?= $department["name"] ?></p>
+						</div>
 
-					<ul class="actions">
-						<li class="change-info third-width"><a href="/profil/afdeling" class="button">Ret</a></li>
-						<li class="cancel-membership third-width"><a href="#" class="button warning">Opsig</a></li>
-						<li class="cancel-membership third-width"><a href="#" class="button primary">Betal</a></li>
-					</ul>
+						<ul class="actions">
+							<li class="change-info third-width"><a href="/profil/afdeling" class="button">Ret</a></li>
+							<li class="cancel-membership third-width"><a href="#" class="button warning">Opsig</a></li>
+							<li class="cancel-membership third-width"><a href="#" class="button primary">Betal</a></li>
+						</ul>
+					</div>
 
 				</div>
 			</div>
@@ -158,43 +180,51 @@ $department = $UC->getUserDepartment();
 				<div class="c-box">
 					<h3>Dine brugeroplysninger</h3>
 					
-					<div class="user-info">
-						<p class="over">Navn:</p>
-						<p class="under"><?= $user['nickname'] ? $user['nickname'] : "(Ikke angivet)" ?></p>
-					</div>
+					<div class="fields">
+						<div class="user-info">
+							<p class="over">Navn</p>
+							<p class="under"><?= $user['nickname'] ? $user['nickname'] : "(Ikke angivet)" ?></p>
+						</div>
 
-					<div class="user-info">
-						<p class="over"> Fulde navn</p>
-						<p class="under">
-							<?= $user['firstname'] ? $user['firstname'] : "(Ikke angivet)", " ", $user["lastname"] ? $user["lastname"] : "(Ikke angiveet)" ?>
-						</p>
-					</div>
+						<div class="user-info">
+							<p class="over"> Fulde navn</p>
+							<p class="under">
+								<?= $user['firstname'] ? $user['firstname'] : "(Ikke angivet)", " ", $user["lastname"] ? $user["lastname"] : "(Ikke angiveet)" ?>
+							</p>
+						</div>
 
-					<div class="user-info">
-						<p class="over">Email:</p>
-						<p class="under"><?= $user["email"] ? $user["email"] : "(Ikke angivet)" ?></p>
-					</div>
+						<div class="user-info">
+							<p class="over">Email</p>
+							<p class="under"><?= $user["email"] ? $user["email"] : "(Ikke angivet)" ?></p>
+						</div>
 
-					<div class="user-info">
-						<p class="over">Mobil:</p>
-						<p class="under"><?= $user["mobile"] ? $user["mobile"] : "(Ikke angivet)" ?></p>
-					</div>
+						<div class="user-info">
+							<p class="over">Mobil</p>
+							<p class="under"><?= $user["mobile"] ? $user["mobile"] : "(Ikke angivet)" ?></p>
+						</div>
 
-					<ul class="actions">
-						<li class="change-info half-width"><a href="/profil/bruger" class="button">Ret</a></li>
-					</ul>
+						<ul class="actions">
+							<li class="change-info half-width"><a href="/profil/bruger" class="button">Ret</a></li>
+						</ul>
+					</div>
+					
 				</div>
 			</div>
 
 			<div class="section password">
 				<div class="c-box">
 					<h3>Kodeord</h3>
-					<p class="over">Password:</p>
-					<p class="under">(skjult)</p>
 
-					<ul class="actions">
-						<li class="change-info full-width"><a href="/profil/kodeord" class="button">Ændre kodeord</a></li>
-					</ul>
+					<div class="fields">
+						<p class="over">Password</p>
+						<p class="under">(skjult)</p>
+
+						<ul class="actions">
+							<li class="change-info full-width"><a href="/profil/kodeord" class="button">Ændre kodeord</a></li>
+						</ul>
+
+					</div>
+
 				</div>
 			</div>
 
