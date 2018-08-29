@@ -111,6 +111,30 @@ if(is_array($action) && count($action)) {
 		}
 	}
 
+	//Cancel membership
+	else if($action[0] == "opsig") {
+		$page->page(array(
+			"templates" => "pages/delete_user_information.php"
+		));
+		exit();
+	}
+
+	else if($action[0] == "deleteUserInformation" && $page->validateCsrfToken()) {
+		if($UC->deleteUserInformation($action)) {
+			header("Location: /");
+			exit();
+		}
+
+		else {
+			// message()->addMessage("Fejl!", array("type" => "error"));
+			$page->page([
+				"templates" => "pages/delete_user_information.php"
+			]);
+			exit();
+		}
+	}
+
+	//Unaccept terms
 	else if($action[0] == "unaccept") {
 		if($UC->unacceptTerms()) {
 			$page->page(array(
