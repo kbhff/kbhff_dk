@@ -4903,11 +4903,17 @@ Util.Objects["profile"] = new function() {
 			u.clickableElement(button_membership);
 			button_membership.clicked = function() {
 				this.membership_callback = function(response) {
-					var form_membership = u.qs(".form_department", response);
+					var form_department = u.qs(".form_department", response);
+					var form_fieldset = u.qs("fieldset", form_department);
 					var div_fields = u.qs("div.fields", box_membership);
-					u.ass(div_fields, {"display":"none"});
-					u.ae(box_membership, form_membership);
-					u.f.init(form_membership);
+					var divs_membership = u.qsa(".membership-info", div_fields);
+					var ul_buttons = u.qs("ul.actions", div_fields);
+					u.ass(divs_membership[3], {"display":"none"});
+					u.ass(ul_buttons, {"display":"none"});
+					u.ae(box_membership, form_department);
+					u.f.init(form_department);
+					u.ie(form_department, div_fields);
+					u.ae(div_fields, form_fieldset);
 				}
 				u.addClass(this, "disabled")
 				u.request(this, "/profil/afdeling", {"callback":"membership_callback"});
