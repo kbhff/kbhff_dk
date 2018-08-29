@@ -131,17 +131,12 @@ p.change-untill {
 	text-align: center;
 }
 
-#content p.message,
-#content p.errormessage {
-	position: absolute;
-	padding: 5px;
-	border: 2px solid #559C33;
-	background: #3E8E17;
-	color: #ffffff;
-	font-weight: 700;
+#content .membership fieldset {
+	float: right;
 }
 
-#content p.errormessage {
-	border: 2px solid #C22414;
-	background: #991d0f;
+#content .membership .field {
+	padding: 0;
+	padding-left: 12px;
+	padding-right: 12px;
 }

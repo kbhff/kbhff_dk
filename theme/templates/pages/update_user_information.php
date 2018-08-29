@@ -32,7 +32,7 @@ $this->pageTitle("Brugeroplysninger");
 			<?= 
 				$UC->input("nickname", [
 					"type" => "string",
-					"label" => "dit kaldenavn",
+					"label" => "Kaldenavn",
 					"value" => $user["nickname"],
 					"required" => false,
 					"hint_message" => "Skriv dit kaldenavn (kan også bare være dit navn)",
@@ -41,7 +41,7 @@ $this->pageTitle("Brugeroplysninger");
 			
 				$UC->input("firstname", [
 					"type" => "string",
-					"label" => "dit fornavn",
+					"label" => "Fornavn",
 					"value" => $user["firstname"],
 					"required" => true,
 					"hint_message" => "Skriv dit fornavn",
@@ -50,7 +50,7 @@ $this->pageTitle("Brugeroplysninger");
 
 				$UC->input("lastname", [
 					"type" => "string",
-					"label" => "dit efternavn",
+					"label" => "Efternavn",
 					"value" => $user["lastname"],
 					"required" => true,
 					"hint_message" => "Skriv dit efternavn",
@@ -59,7 +59,7 @@ $this->pageTitle("Brugeroplysninger");
 
 				$UC->input("email", [
 					"type" => "email",
-					"label" => "din e-mail",
+					"label" => "E-mail",
 					"value" => $user["email"],
 					"required" => true,
 					"hint_message" => "Den e-mail du bruger til at logge ind med, og få e-mails fra",
@@ -68,7 +68,7 @@ $this->pageTitle("Brugeroplysninger");
 
 				$UC->input("mobile", [
 					"type" => "string",
-					"label" => "dit nummer",
+					"label" => "Mobil",
 					"value" => $user["mobile"],
 					"hint_message" => "Skriv dit mobiltelefonnummer, så vi kan sende dig beskeder",
 					"error_message" => "Ugyldigt nummer",
