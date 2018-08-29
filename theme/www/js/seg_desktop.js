@@ -4886,6 +4886,22 @@ Util.Objects["user_password"] = new function() {
 }
 
 
+/*i-delete_user_information.js*/
+Util.Objects["delete_user_information"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			var confirm_cancellation = u.qs("form.confirm_cancellation", this);
+			u.f.init(confirm_cancellation);
+		}
+		scene.ready();
+	}
+}
+
+
 /*i-profile.js*/
 Util.Objects["profile"] = new function() {
 	this.init = function(scene) {
@@ -4923,8 +4939,7 @@ Util.Objects["profile"] = new function() {
 				this.userinfo_callback = function(response) {
 					var form_userinfo = u.qs(".form_user", response);
 					var div_fields = u.qs("div.fields", box_userinfo);
-					u.ass(div_fields, {"display":"none"});
-					u.ae(box_userinfo, form_userinfo);
+					box_userinfo.replaceChild(form_userinfo, div_fields);
 					u.f.init(form_userinfo);
 				}
 				u.addClass(this, "disabled")
@@ -4935,8 +4950,7 @@ Util.Objects["profile"] = new function() {
 				this.password_callback = function(response) {
 					var form_password = u.qs(".form_password", response);
 					var div_fields = u.qs("div.fields", box_password);
-					u.ass(div_fields, {"display":"none"});
-					u.ae(box_password, form_password);
+					box_password.replaceChild(form_password, div_fields);
 					u.f.init(form_password);
 				}
 				u.addClass(this, "disabled")
