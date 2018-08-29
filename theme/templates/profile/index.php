@@ -173,27 +173,6 @@ $department = $UC->getUserDepartment();
 						</ul>
 					</div>
 
-					<div class="membership-info">
-						<p class="over">Status:</p>
-						<p class="under system-warning">Ikke betalt</p>
-					</div>
-
-					<div class="membership-info">
-						<p class="over">Medlemstype:</p>
-						<p class="under">Frivillig</p>
-					</div>
-
-					<div class="membership-info">
-						<p class="over">Lokalafdeling:</p>
-						<p class="under"><?= $department["name"] ?></p>
-					</div>
-
-					<ul class="actions">
-						<li class="change-info third-width"><a href="/profil/afdeling" class="button">Ret</a></li>
-						<li class="cancel-membership third-width"><a href="/profil/opsig" class="button warning">Opsig</a></li>
-						<li class="cancel-membership third-width"><a href="#" class="button primary">Betal</a></li>
-					</ul>
-
 				</div>
 			</div>
 

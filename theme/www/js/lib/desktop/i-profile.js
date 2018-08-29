@@ -38,9 +38,10 @@ Util.Objects["profile"] = new function() {
 					u.ae(box_membership, form_department);
 					u.f.init(form_department);
 
+					// Insert fields into form
 					u.ie(form_department, div_fields);
 
-					// Move select into the right place
+					// Move select into leftover field spot
 					u.ae(div_fields, form_fieldset);
 				}
 				u.addClass(this, "disabled")
@@ -54,8 +55,7 @@ Util.Objects["profile"] = new function() {
 					var form_userinfo = u.qs(".form_user", response);
 					var div_fields = u.qs("div.fields", box_userinfo);
 
-					u.ass(div_fields, {"display":"none"});
-					u.ae(box_userinfo, form_userinfo);
+					box_userinfo.replaceChild(form_userinfo, div_fields);
 					u.f.init(form_userinfo);
 				}
 				u.addClass(this, "disabled")
@@ -69,8 +69,7 @@ Util.Objects["profile"] = new function() {
 					var form_password = u.qs(".form_password", response);
 					var div_fields = u.qs("div.fields", box_password);
 
-					u.ass(div_fields, {"display":"none"});
-					u.ae(box_password, form_password);
+					box_password.replaceChild(form_password, div_fields);
 					u.f.init(form_password);
 				}
 				u.addClass(this, "disabled")
