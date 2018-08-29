@@ -4870,14 +4870,78 @@ Util.Objects["user_information"] = new function() {
 }
 
 
-/*i-profile.js*/
-Util.Objects["front"] = new function() {
+/*i-update_user_password.js*/
+Util.Objects["user_password"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
 		scene.scrolled = function() {
 		}
 		scene.ready = function() {
+			var form = u.qs("form");
+			u.f.init(form, this);
+		}
+		scene.ready();
+	}
+}
+
+
+/*i-profile.js*/
+Util.Objects["profile"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			var box_membership = u.qs(".membership > .c-box", this);
+			var button_membership = u.qs(".membership li.change-info", this);
+			var box_userinfo = u.qs(".user > .c-box", this);
+			var button_userinfo = u.qs(".user li", this);
+			var box_password = u.qs(".password > .c-box", this);
+			var button_password = u.qs(".password li", this);
+			u.clickableElement(button_membership);
+			button_membership.clicked = function() {
+				this.membership_callback = function(response) {
+					var form_department = u.qs(".form_department", response);
+					var form_fieldset = u.qs("fieldset", form_department);
+					var div_fields = u.qs("div.fields", box_membership);
+					var divs_membership = u.qsa(".membership-info", div_fields);
+					var ul_buttons = u.qs("ul.actions", div_fields);
+					u.ass(divs_membership[3], {"display":"none"});
+					u.ass(ul_buttons, {"display":"none"});
+					u.ae(box_membership, form_department);
+					u.f.init(form_department);
+					u.ie(form_department, div_fields);
+					u.ae(div_fields, form_fieldset);
+				}
+				u.addClass(this, "disabled")
+				u.request(this, "/profil/afdeling", {"callback":"membership_callback"});
+			}
+			u.clickableElement(button_userinfo);
+			button_userinfo.clicked = function() {
+				this.userinfo_callback = function(response) {
+					var form_userinfo = u.qs(".form_user", response);
+					var div_fields = u.qs("div.fields", box_userinfo);
+					u.ass(div_fields, {"display":"none"});
+					u.ae(box_userinfo, form_userinfo);
+					u.f.init(form_userinfo);
+				}
+				u.addClass(this, "disabled")
+				u.request(this, "/profil/bruger", {"callback":"userinfo_callback"});
+			}
+			u.clickableElement(button_password);
+			button_password.clicked = function() {
+				this.password_callback = function(response) {
+					var form_password = u.qs(".form_password", response);
+					var div_fields = u.qs("div.fields", box_password);
+					u.ass(div_fields, {"display":"none"});
+					u.ae(box_password, form_password);
+					u.f.init(form_password);
+				}
+				u.addClass(this, "disabled")
+				u.request(this, "/profil/kodeord", {"callback":"password_callback"});
+			}
 		}
 		scene.ready();
 	}

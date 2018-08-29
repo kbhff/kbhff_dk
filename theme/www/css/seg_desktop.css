@@ -670,7 +670,8 @@ ul.actions {
 	margin-bottom: 22px;
 	border-bottom: 2px solid #808080;
 }
-#content .c-box {
+#content .c-box,
+#content .fields {
 	font-size: 0;
 }
 #content .c-box > h3 {
@@ -681,6 +682,13 @@ ul.actions {
 	margin-right: 12px;
 	margin-bottom: 12px;
 	border-bottom: 1px solid #000000;
+}
+#content .c-box > form > fieldset {
+	width: 100%;
+}
+#content .c-box ul.actions {
+	padding-top: 0;
+	padding-bottom: 0;
 }
 .orders,
 .order-headings,
@@ -713,7 +721,7 @@ ul.actions {
 	padding-bottom: 20px;
 }
 #content p.over {
-	font-size: 12px;
+	font-size: 11px;
 	padding-bottom: 0;
 	text-transform: uppercase;
 }
@@ -760,4 +768,12 @@ p.change-untill {
 #content ul.actions .third-width {
 	width: 33.3333%;
 	text-align: center;
+}
+#content .membership fieldset {
+	float: right;
+}
+#content .membership .field {
+	padding: 0;
+	padding-left: 12px;
+	padding-right: 12px;
 }
