@@ -179,7 +179,7 @@ class User extends UserCore {
 	}
 
 	/**
-	 * Remove accept of terms – for testing purposes
+	 * Remove current user's acceptance of terms – for testing purposes
 	 *
 	 * @return boolean
 	 */
@@ -195,11 +195,9 @@ class User extends UserCore {
 			return true;
 		}
 
-		return false;
-
-
-		
+		return false;		
 	}
+
 
 	function updateUserInformation($action) {
 		// Get posted values from form
@@ -215,10 +213,10 @@ class User extends UserCore {
 		
 		// Updates and checks if it went true(good) or false(bad)
 		if ($this->update(["update"])) {
-			message()->addMessage("Oplysninger opdateret");
+			message()->addMessage("Dine oplysninger blev opdateret");
 		}
 		else {
-			message()->addMessage("Opdateringen fejlede", ["type" => "error"]);
+			message()->addMessage("Opdateringen slog fejl", ["type" => "error"]);
 		}
 
 		return true;
@@ -273,6 +271,26 @@ class User extends UserCore {
 			}
 		}
 		return false;
+	}
+
+	function deleteUserInformation($action) {
+
+		if ($this->cancel(["cancel"])) {
+			message()->addMessage("Dine oplysninger blev slettet");
+			mailer()->send([
+				"subject" => "Dit medlemsskab af Københavns Fødevarefællesskab er opsagt",
+				"message" => "Du har meldt dig ud af Københavns Fødevarefællesskab. Tak for denne gang."
+				]);
+
+			return true;
+		}
+		else {
+			message()->addMessage("Sletningen slog fejl", ["type" => "error"]);
+			return false;
+		}
+		
+		//PERHAPS TODO: delete department affiliation
+
 	}
 
 }
