@@ -20,7 +20,7 @@ $this->pageTitle("Udmeldelse");
 				]) ?>
 			</fieldset>
 			<ul class="actions">
-				<?= $UC->submit("Farvel!", array("class" => "primary", "wrapper" => "li.save")) ?>
+				<?= $UC->submit("Farvel", array("class" => "primary", "wrapper" => "li.save")) ?>
 
 			</ul>
 		<?= $UC->formEnd() ?>
