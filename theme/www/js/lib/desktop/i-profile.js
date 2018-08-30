@@ -23,11 +23,13 @@ Util.Objects["profile"] = new function() {
 			var box_membership = u.qs(".membership > .c-box", this);
 			var button_membership = u.qs(".membership li.change-info", this);
 			button_membership.scene = this; // Create reference to scene
-			
+			var button_cancel = u.qs(".membership li.cancel-membership", this);
+
+			// "Ret" button
 			// Add click event to button and ignore href redirect.
 			u.clickableElement(button_membership);
-
-			button_membership.clicked = function() {
+			// When button is clicked
+			button_membership.clicked = function() { 
 				this.membership_callback = function(response) {
 					// Query form to inject
 					var form_department = u.qs(".form_department", response);
@@ -67,14 +69,8 @@ Util.Objects["profile"] = new function() {
 				// u.addClass(this, "disabled")
 				u.request(this, "/profil/afdeling", {"callback":"membership_callback"});
 			}
-		}
 
-		// Brugeroplysninger box
-		scene.initUserinfoBox = function() {
-			var box_userinfo = u.qs(".user > .c-box", this);
-			var button_userinfo = u.qs(".user li", this);
-			button_userinfo.scene = this;
-			
+			// "Opsig" button
 			u.clickableElement(button_cancel);
 			button_cancel.clicked = function() {
 				var overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600});
@@ -129,6 +125,14 @@ Util.Objects["profile"] = new function() {
 					this.overlay.close(event);
 				}
 			}
+
+		}
+
+		// Brugeroplysninger box
+		scene.initUserinfoBox = function() {
+			var box_userinfo = u.qs(".user > .c-box", this);
+			var button_userinfo = u.qs(".user li", this);
+			button_userinfo.scene = this;
 
 			u.clickableElement(button_userinfo);
 			button_userinfo.clicked = function() {
