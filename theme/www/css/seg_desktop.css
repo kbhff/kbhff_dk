@@ -183,10 +183,6 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 	font-family: 'voresfont', Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
 }
-#content h5 {
-}
-#content h6 {
-}
 #content p {
 	line-height: 24px;
 }
@@ -395,7 +391,73 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 	padding-left: 12px;
 	padding-right: 12px;
 }
-
+body > div.overlay_protection {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.4);
+	z-index: 101; }
+body > div.overlay {
+	position: fixed;
+	z-index: 102;
+	background: #DDDDDD;
+	border: 1px solid #BBBBBB;
+	margin: 0 auto;
+	text-align: center;
+	outline: none;
+}
+body > div.overlay p {
+	line-height: 24px;
+	font-family: 'Arial';
+	font-size: 14px;
+	color: #000000;
+	padding-right: 24px;
+	padding-left: 24px;
+	padding-bottom: 24px;
+	text-align: center;
+}
+body > div.overlay h2 {
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	font-size: 28px;
+	line-height: 30px;
+	padding-bottom: 22px;
+	padding-top: 17px;
+	text-align: center;
+}
+body > div.overlay fieldset {
+	margin: 0 auto;
+}
+body > div.overlay fieldset label {
+	text-align: left;
+}
+.close {
+	position: absolute;
+	right: 17px;
+	top: 17px;
+	width: 32px;
+	height: 32px;
+	opacity: 0.3;
+}
+.close:hover {
+	opacity: 1;
+}
+.close:before, .close:after {
+	position: absolute;
+	left: 15px;
+	content: ' ';
+	height: 28px;
+	width: 2px;
+	background-color: #333;
+}
+.close:before {
+	transform: rotate(45deg);
+}
+.close:after {
+	transform: rotate(-45deg);
+}
 
 /*s-form.css*/
 form {}
@@ -554,66 +616,6 @@ input[type="submit"] {
 /*s-accept_terms.css*/
 #content .scene.accept_terms form {padding-top: 50px; width: 300px; margin: 0 auto; text-align: center;}
 #content .scene.accept_terms form fieldset {width: auto;}
-body > div.overlay_protection {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(0, 0, 0, 0.4);
-	z-index: 101; }
-body > div.overlay {
-	position: fixed;
-	z-index: 102;
-	background: #DDDDDD;
-	border: 1px solid #BBBBBB;
-	margin: 0 auto;
-	text-align: center;
-}
-body > div.overlay p {
-	line-height: 24px;
-	font-family: 'Arial';
-	font-size: 14px;
-	color: #000000;
-	padding-right: 24px;
-	padding-left: 24px;
-	padding-bottom: 24px;
-	text-align: center;
-}
-body > div.overlay h2 {
-	font-family: 'voresfont', Arial, Helvetica, sans-serif;
-	text-transform: uppercase;
-	font-size: 28px;
-	line-height: 30px;
-	padding-bottom: 22px;
-	padding-top: 17px;
-	text-align: center;
-}
-.close {
-	position: absolute;
-	right: 17px;
-	top: 17px;
-	width: 32px;
-	height: 32px;
-	opacity: 0.3;
-}
-.close:hover {
-	opacity: 1;
-}
-.close:before, .close:after {
-	position: absolute;
-	left: 15px;
-	content: ' ';
-	height: 28px;
-	width: 2px;
-	background-color: #333;
-}
-.close:before {
-	transform: rotate(45deg);
-}
-.close:after {
-	transform: rotate(-45deg);
-}
 input.action {
 	background-color: #000000;
 	font-family: 'voresfont';
@@ -782,4 +784,7 @@ p.change-untill {
 #content ul.actions .third-width {
 	width: 33.3333%;
 	text-align: center;
+}
+body > div.overlay div.field.password {
+	padding-bottom: 20px;
 }
