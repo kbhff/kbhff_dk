@@ -74,6 +74,61 @@ Util.Objects["profile"] = new function() {
 			var box_userinfo = u.qs(".user > .c-box", this);
 			var button_userinfo = u.qs(".user li", this);
 			button_userinfo.scene = this;
+			
+			u.clickableElement(button_cancel);
+			button_cancel.clicked = function() {
+				var overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600});
+				var p_warning = u.ae(overlay.div_content, "p", {
+					html:"Du er ved at melde dig ud af KBHFF. Er du sikker?"
+				});
+				var ul_actions = u.ae(overlay.div_content, "ul", {
+					class:"actions"
+				})
+
+				// Add action buttons to cancel and confirm
+				var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"action delete_me","value":"Meld mig ud af KBHFF"});
+				var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"action regret primary", "value":"Fortryd udmelding"});
+				
+				// Add click event to go to password confirmation
+				u.e.click(delete_me)
+				delete_me.clicked = function () {
+					// Inject 'confirm cancellation' form
+					this.delete_me_callback = function(response) {
+												
+						// Query form to inject
+						var form_confirm_cancellation = u.qs(".confirm_cancellation", response);
+
+						// Hide elements to be replaced
+						u.ass(p_warning, {"display":"none"});
+						u.ass(ul_actions, {"display":"none"});						
+						// Append form and initialize it
+						u.ae(overlay.div_content, form_confirm_cancellation);
+						u.f.init(form_confirm_cancellation);
+						//u.f.addAction(overlay.div_content, {"type":"button", "name":"regret", "class":"action regret primary", "value":"Fortryd udmelding"});
+
+			
+					}
+	
+					u.request(this, "/profil/opsig", {
+						"callback":"delete_me_callback"
+					});
+				}
+				// Add click event to cancel and close overlay
+				u.e.click(regret)
+				regret.clicked = function () {
+						overlay.close ();
+				}
+
+				// Add "x"-close button to header
+				overlay.x_close = u.ae(overlay.div_header, "div", {class: "close"});
+				overlay.x_close.overlay = overlay;
+				u.ce(overlay.x_close);
+
+				// enable close/cancel buttons to close overlay
+				overlay.x_close.clicked = function (event) {
+					this.overlay.close(event);
+				}
+			}
 
 			u.clickableElement(button_userinfo);
 			button_userinfo.clicked = function() {
