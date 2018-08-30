@@ -275,7 +275,7 @@ class User extends UserCore {
 
 	function deleteUserInformation($action) {
 
-		if ($this->cancel(["cancel"])) {
+		if (1 || $this->cancel(["cancel"])) {
 			message()->addMessage("Dine oplysninger blev slettet");
 			mailer()->send([
 				"subject" => "Dit medlemsskab af Københavns Fødevarefællesskab er opsagt",
