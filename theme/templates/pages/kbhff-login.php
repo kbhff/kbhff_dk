@@ -14,7 +14,9 @@ session()->reset("temp-username");
 ?>
 <div class="scene login i:login">
 	<h1>Log ind</h1>
-	<p>I medlemssystemet kan du bl.a. bestille varer og booke vagter. <strong>Velkommen indenfor!</strong></p>
+	<p>I medlemssystemet kan du bestille varer, booke vagter og administrere dit medlemsskab. <strong>Velkommen indenfor!</strong></p>
+
+	<p>Du kan bruge e-mailadresse, telefonnummer eller medlemsnummer som brugernavn til at logge ind.</p>
 
 	<?= $model->formStart("dual", array("class" => "login")) ?>
 
@@ -33,7 +35,7 @@ session()->reset("temp-username");
 
 		<fieldset>
 			<?= $model->input("username", array(
-				"required" => true, 
+				"required" => true,
 				"value" => $username,
 				"pattern" => "^(1|[0-9]{4,5}|[\+0-9\-\.\s\(\)]{5,18}|[\w\.\-_]+@[\w\-\.]+\.\w{2,10})$",
 				"label" => "Brugernavn",

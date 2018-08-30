@@ -1,15 +1,15 @@
 <?php
-	
+
 $model = new Model();
 
 $this->pageTitle("Glemt password");
 ?>
 <div class="scene login i:forgot">
-	<h1>Har du glemt din kode?</h1>
-	<h2>Du kan logge ind med din email-adresse.</h2>
+	<h1>Glemt adgangskode?</h1>
+
 	<p>
-		Ønsker du at nulstille dit password, så indtast din e-mail nedenfor. 
-		Vi sender dig en mail med dine login-oplysninger og kode til at nulstille dit password.
+		Har du glemt din adgangskode? Indtast din e-mailadresse nedenfor,
+		så vi sender dig en mail med en ny kode til at nulstille dit password.
 	</p>
 
 	<?= $model->formStart("requestReset", ["class" => "request_password"]) ?>
@@ -26,11 +26,11 @@ $this->pageTitle("Glemt password");
 
 		<fieldset>
 			<?= $model->input("username", array(
-					"type" => "string", 
-					"label" => "Emailadresse", 
-					"required" => true, 
-					"pattern" => "^(1|[0-9]{4,5}|[\+0-9\-\.\s\(\)]{5,18}|[\w\.\-_]+@[\w\-\.]+\.\w{2,10})$", 
-					"hint_message" => "Skriv den emailadresse, som du har registreret hos KBHFF.", 
+					"type" => "string",
+					"label" => "Emailadresse",
+					"required" => true,
+					"pattern" => "^(1|[0-9]{4,5}|[\+0-9\-\.\s\(\)]{5,18}|[\w\.\-_]+@[\w\-\.]+\.\w{2,10})$",
+					"hint_message" => "Skriv den emailadresse, som du har registreret hos KBHFF.",
 					"error_message" => "Du skal angive en gyldig emailadresse."
 				));
 			?>
