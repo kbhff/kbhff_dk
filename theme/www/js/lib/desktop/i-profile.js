@@ -64,8 +64,17 @@ Util.Objects["profile"] = new function() {
 						}
 						u.request(this, this.action, {"data":data, "method":"POST"});
 					}
+
+					// Cancel button
+					form_department.actions["cancel"].clicked = function() {
+						this.response = function(response) {
+							var div_membership = u.qs(".membership .fields", response);
+							box_membership.replaceChild(div_membership, form_department);
+							form_department.scene.initMembershipBox(); // this.scene not working from here?
+						}
+						u.request(this, "/profil");
+					}
 				}
-				// u.addClass(this, "disabled")
 				u.request(this, "/profil/afdeling", {"callback":"membership_callback"});
 			}
 
@@ -196,6 +205,17 @@ Util.Objects["profile"] = new function() {
 						}
 						u.request(this, this.action, {"data":data, "method":"POST"});
 					}
+
+					// Cancel button
+					form_password.actions["cancel"].clicked = function() {
+						this.response = function(response) {
+							var div_userinfo = u.qs(".password .fields", response);
+							box_password.replaceChild(div_userinfo, form_password);
+							form_password.scene.initPasswordBox();
+						}
+						u.request(this, "/profil");
+					}
+
 				}
 				u.request(this, "/profil/kodeord", {"callback":"password_callback"});
 			}
