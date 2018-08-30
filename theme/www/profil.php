@@ -83,7 +83,7 @@ if(is_array($action) && count($action)) {
 		}
 	}
 
-	// Handling updateUderInformation method, specified in user.class.php
+	// Handling updateUserInformation method, specified in user.class.php
 	else if($action[0] == "updateUserInformation" && $page->validateCsrfToken()) {
 
 		//Method returns true

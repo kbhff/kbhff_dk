@@ -169,7 +169,7 @@ $department = $UC->getUserDepartment();
 						<ul class="actions">
 							<li class="change-info third-width"><a href="/profil/afdeling" class="button">Ret</a></li>
 							<li class="cancel-membership third-width"><a href="#" class="button warning">Opsig</a></li>
-							<li class="cancel-membership third-width"><a href="#" class="button primary">Betal</a></li>
+							<li class="pay-membership third-width"><a href="#" class="button primary">Betal</a></li>
 						</ul>
 					</div>
 
@@ -217,7 +217,7 @@ $department = $UC->getUserDepartment();
 
 					<div class="fields">
 						<p class="over">Password</p>
-						<p class="under">(skjult)</p>
+						<p class="under">***********</p>
 
 						<ul class="actions">
 							<li class="change-info full-width"><a href="/profil/kodeord" class="button">Ændre kodeord</a></li>

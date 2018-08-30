@@ -59,7 +59,7 @@ $this->pageTitle("Brugeroplysninger");
 
 				$UC->input("email", [
 					"type" => "email",
-					"label" => "E-mail",
+					"label" => "Email",
 					"value" => $user["email"],
 					"required" => true,
 					"hint_message" => "Den e-mail du bruger til at logge ind med, og få e-mails fra",
