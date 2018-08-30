@@ -24,6 +24,9 @@ Util.Objects["profile"] = new function() {
 			var button_membership = u.qs(".membership li.change-info", this);
 			button_membership.scene = this; // Create reference to scene
 			var button_cancel = u.qs(".membership li.cancel-membership", this);
+			// Query elements for syncing
+			var right_panel = u.qs(".c-one-third", this);
+			var box_department = u.qs(".department", this);
 
 			// "Ret" button
 			u.clickableElement(button_membership); // Add click event to button and ignore href redirect.
@@ -58,9 +61,16 @@ Util.Objects["profile"] = new function() {
 					form_department.submitted = function() {
 						var data = u.f.getParams(this);
 						this.response = function(response) {
+							// Replace form
 							var div_membership = u.qs(".membership .fields", response);
 							box_membership.replaceChild(div_membership, form_department);
-							this.scene.initMembershipBox(); // Run and query on scene
+
+							// Replace department box with updated box
+							var new_department_box = u.qs(".department", response);
+							right_panel.replaceChild(new_department_box, box_department);
+
+							// Init new box on scene
+							this.scene.initMembershipBox();
 						}
 						u.request(this, this.action, {"data":data, "method":"POST"});
 					}
@@ -141,6 +151,8 @@ Util.Objects["profile"] = new function() {
 			var box_userinfo = u.qs(".user > .c-box", this);
 			var button_userinfo = u.qs(".user li", this);
 			button_userinfo.scene = this;
+			var intro_header = u.qs(".section.intro > h2", this);
+			var span_name = u.qs("span.name", this);
 
 			u.clickableElement(button_userinfo);
 			button_userinfo.clicked = function() {
@@ -157,9 +169,16 @@ Util.Objects["profile"] = new function() {
 						var data = u.f.getParams(this);
 
 						this.response = function(response) {
+							// Replace form with updated box
 							var div_userinfo = u.qs(".user .fields", response);
 							box_userinfo.replaceChild(div_userinfo, form_userinfo);
-							this.scene.initUserinfoBox();
+
+							//sync name update
+							var new_name = u.qs("span.name", response);
+							intro_header.replaceChild(new_name, span_name);
+
+							// Init new box
+							form_userinfo.scene.initUserinfoBox();
 						}
 						u.request(this, this.action, {"data":data, "method":"POST"});
 					}
@@ -167,6 +186,7 @@ Util.Objects["profile"] = new function() {
 					// Cancel button
 					form_userinfo.actions["cancel"].clicked = function() {
 						this.response = function(response) {
+							// Replace form with box
 							var div_userinfo = u.qs(".user .fields", response);
 							box_userinfo.replaceChild(div_userinfo, form_userinfo);
 							form_userinfo.scene.initUserinfoBox();

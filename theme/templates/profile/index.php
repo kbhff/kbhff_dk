@@ -30,7 +30,7 @@ $department = $UC->getUserDepartment();
 		<div class="c-two-thirds">
 
 			<div class="section intro">
-				<h2>Velkommen <?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?></h2>
+				<h2>Velkommen <span class="name"><?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?></span></h2>
 				<p>
 					På min side kan du se og rette oplysninger om dig og dit medlemsskab. 
 					Du kan også se og rette dine eksisterende bestillinger og lave en ny bestilling (åbner GrøntShoppen). 
