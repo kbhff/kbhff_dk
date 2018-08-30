@@ -147,3 +147,7 @@ p.change-untill {
 	width: 33.3333%;
 	text-align: center;
 }
+
+body > div.overlay div.field.password {
+	padding-bottom: 20px;
+}
