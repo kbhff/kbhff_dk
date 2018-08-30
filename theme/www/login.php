@@ -322,12 +322,15 @@ if(is_array($action) && count($action)) {
 
 		// creating new password
 		if($model->resetPassword($action)) {
+			message()->resetMessages();
+			message()->addMessage("Dit password blev opdateret.");
 			header("Location: /login");
 			exit();
 		}
 
 		// could not create new password
 		else {
+			message()->resetMessages();
 			message()->addMessage("Du kan ikke bruge dette password!", array("type" => "error"));
 			header("Location: glemt/nyt-password");
 			exit();
@@ -336,10 +339,14 @@ if(is_array($action) && count($action)) {
 }
 
 
-
+if(session()->value("user_group_id")>1) {
+	header("Location: /profil");
+	exit();
+}
 // plain login
 $page->page(array(
-	"templates" => "pages/kbhff-login.php"
+	"templates" => "pages/kbhff-login.php",
+	"type" => "login"
 ));
 
 

@@ -4734,10 +4734,10 @@ Util.Objects["page"] = new function() {
 			}
 		}
 		page.initHeader = function() {
+			var logo = u.ie(this.hN, "a", {"class":"logo", "href":"/","html": 'KBHFF <span class="highlight">' + document.title + '</span>'});
+			u.ce(logo, {"type":"link"});
 			var frontpage_link = u.qs("li.front a", this.nN);
 			if(frontpage_link) {
-				var logo = u.ie(this.hN, "a", {"class":"logo", "href":frontpage_link.href, "html": 'KBHFF <span class="highlight">' + document.title + '</span>'});
-				u.ce(logo, {"type":"link"});
 				frontpage_link.parentNode.remove();
 			}
 		}
@@ -4780,9 +4780,9 @@ Util.Objects["accept_terms"] = new function() {
 			u.qs("div.field.checkbox .hint").innerHTML = ""
 			form_accept.actions["reject"].clicked = function() {
 				var overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600});
-				var warning = u.ae(overlay.div_content, "p",{html:"Er du sikker på, at du IKKE vil acceptere vore retningslinjer for persondata? <br> Hvis du trykker JA, SLET MIG vil du straks blive udmeldt."});
-				var delete_me = u.f.addAction(overlay.div_content, {"type":"button", "name":"delete_me", "class":"action delete_me","value":"Ja, slet mig"});
-				var regret = u.f.addAction(overlay.div_content, {"type":"button", "name":"regret", "class":"action regret primary", "value":"Fortryd"});
+				var warning = u.ae(overlay.div_content, "p",{html:"Du er ved at melde dig ud af KBHFF. Pga. lovgivning og hensyn til persondata kan du ikke være medlem af KBHFF uden at acceptere vores vilkår. Vi håber du vil genoverveje."});
+				var delete_me = u.f.addAction(overlay.div_content, {"type":"button", "name":"delete_me", "class":"action delete_me","value":"Meld mig ud af KBHFF"});
+				var regret = u.f.addAction(overlay.div_content, {"type":"button", "name":"regret", "class":"action regret primary", "value":"Fortryd udmelding"});
 				u.e.click(delete_me)
 				delete_me.clicked = function () {
 					 window.location = "/"
@@ -4870,14 +4870,199 @@ Util.Objects["user_information"] = new function() {
 }
 
 
-/*i-profile.js*/
-Util.Objects["front"] = new function() {
+/*i-update_user_password.js*/
+Util.Objects["user_password"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
 		scene.scrolled = function() {
 		}
 		scene.ready = function() {
+			var form = u.qs("form");
+			u.f.init(form, this);
+		}
+		scene.ready();
+	}
+}
+
+
+/*i-delete_user_information.js*/
+Util.Objects["delete_user_information"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			var confirm_cancellation = u.qs("form.confirm_cancellation", this);
+			u.f.init(confirm_cancellation);
+		}
+		scene.ready();
+	}
+}
+
+
+/*i-profile.js*/
+Util.Objects["profile"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			this.initMembershipBox();
+			this.initUserinfoBox();
+			this.initPasswordBox();
+		}
+		scene.initMembershipBox = function() {
+			var box_membership = u.qs(".membership > .c-box", this);
+			var button_membership = u.qs(".membership li.change-info", this);
+			button_membership.scene = this; 
+			var button_cancel = u.qs(".membership li.cancel-membership", this);
+			var right_panel = u.qs(".c-one-third", this);
+			var box_department = u.qs(".department", this);
+			u.clickableElement(button_membership); 
+			button_membership.clicked = function() { 
+				this.membership_callback = function(response) {
+					var form_department = u.qs(".form_department", response);
+					form_department.scene = this.scene; 
+					var form_fieldset = u.qs("fieldset", form_department);
+					var div_fields = u.qs("div.fields", box_membership);
+					var divs_membership = u.qsa(".membership-info", div_fields);
+					var ul_buttons = u.qs("ul.actions", div_fields);
+					u.ass(divs_membership[3], {"display":"none"});
+					u.ass(ul_buttons, {"display":"none"});
+					u.ae(box_membership, form_department);
+					u.f.init(form_department);
+					u.ie(form_department, div_fields);
+					u.ae(div_fields, form_fieldset);
+					form_department.submitted = function() {
+						var data = u.f.getParams(this);
+						this.response = function(response) {
+							var div_membership = u.qs(".membership .fields", response);
+							box_membership.replaceChild(div_membership, form_department);
+							var new_department_box = u.qs(".department", response);
+							right_panel.replaceChild(new_department_box, box_department);
+							this.scene.initMembershipBox();
+						}
+						u.request(this, this.action, {"data":data, "method":"POST"});
+					}
+					form_department.actions["cancel"].clicked = function() {
+						this.response = function(response) {
+							var div_membership = u.qs(".membership .fields", response);
+							box_membership.replaceChild(div_membership, form_department);
+							form_department.scene.initMembershipBox(); 
+						}
+						u.request(this, "/profil");
+					}
+				}
+				u.request(this, "/profil/afdeling", {"callback":"membership_callback"});
+			}
+			u.clickableElement(button_cancel);
+			button_cancel.clicked = function() {
+				var overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600});
+				var p_warning = u.ae(overlay.div_content, "p", {
+					html:"Du er ved at melde dig ud af KBHFF. Er du sikker?"
+				});
+				var ul_actions = u.ae(overlay.div_content, "ul", {
+					class:"actions"
+				})
+				var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"action delete_me","value":"Meld mig ud af KBHFF"});
+				var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"action regret primary", "value":"Fortryd udmelding"});
+				u.e.click(delete_me)
+				delete_me.clicked = function () {
+					this.delete_me_callback = function(response) {
+						var form_confirm_cancellation = u.qs(".confirm_cancellation", response);
+						u.ass(p_warning, {"display":"none"});
+						u.ass(ul_actions, {"display":"none"});						
+						u.ae(overlay.div_content, form_confirm_cancellation);
+						u.f.init(form_confirm_cancellation);
+					}
+					u.request(this, "/profil/opsig", {
+						"callback":"delete_me_callback"
+					});
+				}
+				u.e.click(regret)
+				regret.clicked = function () {
+						overlay.close ();
+				}
+				overlay.x_close = u.ae(overlay.div_header, "div", {class: "close"});
+				overlay.x_close.overlay = overlay;
+				u.ce(overlay.x_close);
+				overlay.x_close.clicked = function (event) {
+					this.overlay.close(event);
+				}
+			}
+		}
+		scene.initUserinfoBox = function() {
+			var box_userinfo = u.qs(".user > .c-box", this);
+			var button_userinfo = u.qs(".user li", this);
+			button_userinfo.scene = this;
+			var intro_header = u.qs(".section.intro > h2", this);
+			var span_name = u.qs("span.name", this);
+			u.clickableElement(button_userinfo);
+			button_userinfo.clicked = function() {
+				this.userinfo_callback = function(response) {
+					var form_userinfo = u.qs(".form_user", response);
+					form_userinfo.scene = this.scene;
+					var div_fields = u.qs("div.fields", box_userinfo);
+					box_userinfo.replaceChild(form_userinfo, div_fields);
+					u.f.init(form_userinfo);
+					form_userinfo.submitted = function() {
+						var data = u.f.getParams(this);
+						this.response = function(response) {
+							var div_userinfo = u.qs(".user .fields", response);
+							box_userinfo.replaceChild(div_userinfo, form_userinfo);
+							var new_name = u.qs("span.name", response);
+							intro_header.replaceChild(new_name, span_name);
+							form_userinfo.scene.initUserinfoBox();
+						}
+						u.request(this, this.action, {"data":data, "method":"POST"});
+					}
+					form_userinfo.actions["cancel"].clicked = function() {
+						this.response = function(response) {
+							var div_userinfo = u.qs(".user .fields", response);
+							box_userinfo.replaceChild(div_userinfo, form_userinfo);
+							form_userinfo.scene.initUserinfoBox();
+						}
+						u.request(this, "/profil");
+					}
+				}
+				u.request(this, "/profil/bruger", {"callback":"userinfo_callback"});
+			}
+		}
+		scene.initPasswordBox = function() {
+			var box_password = u.qs(".password > .c-box", this);
+			var button_password = u.qs(".password li", this);
+			button_password.scene = this;
+			u.clickableElement(button_password);
+			button_password.clicked = function() {
+				this.password_callback = function(response) {
+					var form_password = u.qs(".form_password", response);
+					form_password.scene = this.scene;
+					var div_fields = u.qs("div.fields", box_password);
+					box_password.replaceChild(form_password, div_fields);
+					u.f.init(form_password);
+					form_password.submitted = function() {
+						var data = u.f.getParams(this);
+						this.response = function(response) {
+							var div_password = u.qs(".password .fields", response);
+							box_password.replaceChild(div_password, form_password);
+							this.scene.initPasswordBox();
+						}
+						u.request(this, this.action, {"data":data, "method":"POST"});
+					}
+					form_password.actions["cancel"].clicked = function() {
+						this.response = function(response) {
+							var div_userinfo = u.qs(".password .fields", response);
+							box_password.replaceChild(div_userinfo, form_password);
+							form_password.scene.initPasswordBox();
+						}
+						u.request(this, "/profil");
+					}
+				}
+				u.request(this, "/profil/kodeord", {"callback":"password_callback"});
+			}
 		}
 		scene.ready();
 	}

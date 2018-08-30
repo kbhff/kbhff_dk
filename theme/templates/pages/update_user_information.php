@@ -11,21 +11,28 @@ $this->pageTitle("Brugeroplysninger");
 
 	<?= $UC->formStart("updateUserInformation", ["class" => "form_user"]) ?>
 
-<?	if(message()->hasMessages(array("type" => "error"))): ?>
+<?	if(message()->hasMessages()): ?>
 		<p class="errormessage">
 <?		$messages = message()->getMessages(array("type" => "error"));
-		message()->resetMessages();
 		foreach($messages as $message): ?>
 			<?= $message ?><br>
 <?		endforeach;?>
 		</p>
+		<p class="errormessage">
+<?		$messages = message()->getMessages(array("type" => "message"));
+		foreach($messages as $message): ?>
+			<?= $message ?><br>
+<?		endforeach;?>
+		</p>
+<?	message()->resetMessages(); ?>
+
 <?	endif; ?>
 
 		<fieldset>
 			<?= 
 				$UC->input("nickname", [
 					"type" => "string",
-					"label" => "dit kaldenavn",
+					"label" => "Kaldenavn",
 					"value" => $user["nickname"],
 					"required" => false,
 					"hint_message" => "Skriv dit kaldenavn (kan også bare være dit navn)",
@@ -34,7 +41,7 @@ $this->pageTitle("Brugeroplysninger");
 			
 				$UC->input("firstname", [
 					"type" => "string",
-					"label" => "dit fornavn",
+					"label" => "Fornavn",
 					"value" => $user["firstname"],
 					"required" => true,
 					"hint_message" => "Skriv dit fornavn",
@@ -43,7 +50,7 @@ $this->pageTitle("Brugeroplysninger");
 
 				$UC->input("lastname", [
 					"type" => "string",
-					"label" => "dit efternavn",
+					"label" => "Efternavn",
 					"value" => $user["lastname"],
 					"required" => true,
 					"hint_message" => "Skriv dit efternavn",
@@ -52,16 +59,16 @@ $this->pageTitle("Brugeroplysninger");
 
 				$UC->input("email", [
 					"type" => "email",
-					"label" => "din e-mail",
+					"label" => "Email",
 					"value" => $user["email"],
 					"required" => true,
-					"hint_message" => "Din email du bruger til at logge ind og få beskeder med",
+					"hint_message" => "Den e-mail du bruger til at logge ind med, og få e-mails fra",
 					"error_message" => "Ugyldig email",
 				]),
 
 				$UC->input("mobile", [
 					"type" => "string",
-					"label" => "dit nummer",
+					"label" => "Mobil",
 					"value" => $user["mobile"],
 					"hint_message" => "Skriv dit mobiltelefonnummer, så vi kan sende dig beskeder",
 					"error_message" => "Ugyldigt nummer",
@@ -71,6 +78,7 @@ $this->pageTitle("Brugeroplysninger");
 
 		<ul class="actions">
 			<?= $UC->submit("Opdater", array("class" => "primary", "wrapper" => "li.save")) ?>
+			<li class="cancel"><a href="/" class="button">Anullér</a></li>
 		</ul>
 	<?= $UC->formEnd() ?>
 

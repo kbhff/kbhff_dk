@@ -41,6 +41,7 @@ if(is_array($action) && count($action)) {
 		$UC->update();
 	}
 
+	// ../profil/afdeling lead to template
 	else if($action[0] == "afdeling") {
 		$page->page(array(
 			"templates" => "pages/update_user_department.php"
@@ -48,6 +49,7 @@ if(is_array($action) && count($action)) {
 		exit();
 	}
 
+	// ../profil/bruger lead to template
 	else if($action[0] == "bruger") {
 		$page->page(array(
 			"templates" => "pages/update_user_information.php"
@@ -55,13 +57,23 @@ if(is_array($action) && count($action)) {
 		exit();
 	}
 
+	// --/profil/kodeord lead to template
+	else if($action[0] == "kodeord") {
+		$page->page(array(
+			"templates" => "pages/update_user_password.php"
+		));
+		exit();
+	}
+
+	// Handling updateUserDepartment method, specified in user.class.php
 	else if($action[0] == "updateUserDepartment" && $page->validateCsrfToken()) {
 
+		//Method returns true
 		if($UC->updateUserDepartment($action)) {
 			header("Location: /profil");
 			exit();
 		}
-
+		// Method returns false
 		else {
 			message()->addMessage("Fejl!", array("type" => "error"));
 			$page->page(array(
@@ -71,15 +83,17 @@ if(is_array($action) && count($action)) {
 		}
 	}
 
+	// Handling updateUserInformation method, specified in user.class.php
 	else if($action[0] == "updateUserInformation" && $page->validateCsrfToken()) {
 
-		if($UC->updateUserInformation()) {
+		//Method returns true
+		if($UC->updateUserInformation($action)) {
 			header("Location: /profil");
 			exit();
 		}
-
+		//Method returns false
 		else {
-			message()->addMessage("Fejl!", array("type" => "error"));
+			// message()->addMessage("Fejl!", array("type" => "error"));
 			$page->page([
 				"templates" => "pages/update_user_information.php"
 			]);
@@ -87,6 +101,48 @@ if(is_array($action) && count($action)) {
 		}
 	}
 
+	// Handling updateUserPassword method, specified in user.class.php
+	else if($action[0] == "updateUserPassword" && $page->validateCsrfToken()) {
+
+		//Method returns true
+		if($UC->updateUserPassword($action)) {
+			header("Location: /profil");
+			exit();
+		}
+		//Method returns false
+		else {
+			// message()->addMessage("Fejl!", array("type" => "error"));
+			$page->page([
+				"templates" => "pages/update_user_password.php"
+			]);
+			exit();
+		}
+	}
+
+	//Cancel membership
+	else if($action[0] == "opsig") {
+		$page->page(array(
+			"templates" => "pages/delete_user_information.php"
+		));
+		exit();
+	}
+
+	else if($action[0] == "deleteUserInformation" && $page->validateCsrfToken()) {
+		if($UC->deleteUserInformation($action)) {
+			header("Location: /");
+			exit();
+		}
+
+		else {
+			// message()->addMessage("Fejl!", array("type" => "error"));
+			$page->page([
+				"templates" => "pages/delete_user_information.php"
+			]);
+			exit();
+		}
+	}
+
+	//Unaccept terms
 	else if($action[0] == "unaccept") {
 		if($UC->unacceptTerms()) {
 			$page->page(array(

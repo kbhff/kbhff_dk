@@ -179,7 +179,7 @@ class User extends UserCore {
 	}
 
 	/**
-	 * Remove accept of terms – for testing purposes
+	 * Remove current user's acceptance of terms – for testing purposes
 	 *
 	 * @return boolean
 	 */
@@ -195,52 +195,104 @@ class User extends UserCore {
 			return true;
 		}
 
-		return false;
-
-
-		
+		return false;		
 	}
 
-	function updateUserInformation() {
+
+	function updateUserInformation($action) {
+		// Get posted values from form
 		$this->getPostedEntities();
 
-		$user = $this->getKbhffUser();
-		$user_id = $user["id"];
-
-
+		// Prevent nickname not assigned error
 		$nickname = $this->getProperty("nickname", "value");
-		$firstname = $this->getProperty("firstname", "value");
-		$lastname = $this->getProperty("lastname", "value");
-		$email = $this->getProperty("email", "value");
-		$mobile = $this->getProperty("mobile", "value");
+		if (!$nickname) {
+			$firstname = $this->getProperty("firstname", "value");
+			$lastname = $this->getProperty("lastname", "value");
+			$_POST["nickname"] = $firstname . " " . $lastname;
+		}
 		
-
-		$query = new Query();
-		$update_nickname = $query->sql("UPDATE ".SITE_DB.".users SET nickname = '$nickname' WHERE id = $user_id");
-		$update_firstname = $query->sql("UPDATE ".SITE_DB.".users SET firstname = '$firstname' WHERE id = $user_id");
-		$update_lastname = $query->sql("UPDATE ".SITE_DB.".users SET lastname = '$lastname' WHERE id = $user_id");
-		$update_email = $query->sql("UPDATE ".SITE_DB.".user_usernames SET username = '$email' WHERE user_id = $user_id AND type = 'email'");
-
-		if ($user["mobile"]) {
-			$update_mobile = $query->sql("UPDATE ".SITE_DB.".user_usernames SET username = '$mobile' WHERE user_id = $user_id AND type = 'mobile'");
+		// Updates and checks if it went true(good) or false(bad)
+		if ($this->update(["update"])) {
+			message()->addMessage("Dine oplysninger blev opdateret");
 		}
 		else {
-			$verification_code = randomKey(8);
-			$update_mobile = $query->sql("INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '$mobile', type = 'mobile', verification_code = '$verification_code', verified = 0");
+			message()->addMessage("Opdateringen slog fejl", ["type" => "error"]);
 		}
-
-		// $sql_email = "UPDATE ".SITE_DB.".user_usernames SET username = '$email' WHERE user_id = $user_id AND type = 'email'";
-		// $sql_mobile = "UPDATE ".SITE_DB.".user_usernames SET username = '$mobile' WHERE user_id = $user_id AND type = 'mobile'";
-
-		// $query->sql($sql_email);
-		// $query->sql($sql_mobile);
-
-		// if($query->sql($sql)) {
-		// 	return true;
-		// }
 
 		return true;
 	}
+
+	function updateUserPassword($action) {
+		// Get posted values to make them available for models
+		$this->getPostedEntities();
+		$user_id = session()->value("user_id");
+
+		if(count($action) == 1 && $user_id) {
+			// If user already has a password
+			if($this->hasPassword()) {
+				// does values validate
+				if($this->validateList(array("new_password"))) {
+					$query = new Query();
+
+					// make sure type tables exist
+					$query->checkDbExistence($this->db_passwords);
+					$new_password = password_hash($this->getProperty("new_password", "value"), PASSWORD_DEFAULT);
+					
+					// DELETE OLD PASSWORD
+					$sql = "DELETE FROM ".$this->db_passwords." WHERE user_id = $user_id";
+					if($query->sql($sql)) {
+
+						// SAVE NEW PASSWORD
+						$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$new_password'";
+						if($query->sql($sql)) {
+							return true;
+						}
+					}
+				}
+			}
+			// user does not have a password
+			else {
+				// does values validate
+				if($this->validateList(array("new_password"))) {
+					$query = new Query();
+
+					// make sure type tables exist
+					$query->checkDbExistence($this->db_passwords);
+
+					// Hash to inject
+					$new_password = password_hash($this->getProperty("new_password", "value"), PASSWORD_DEFAULT);
+
+					// SAVE NEW PASSWORD
+					$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$new_password'";
+					if($query->sql($sql)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	function deleteUserInformation($action) {
+
+		if ($this->cancel(["cancel"])) {
+			message()->addMessage("Dine oplysninger blev slettet");
+			mailer()->send([
+				"subject" => "Dit medlemsskab af Københavns Fødevarefællesskab er opsagt",
+				"message" => "Du har meldt dig ud af Københavns Fødevarefællesskab. Tak for denne gang."
+				]);
+
+			return true;
+		}
+		else {
+			message()->addMessage("Sletningen slog fejl", ["type" => "error"]);
+			return false;
+		}
+		
+		//PERHAPS TODO: delete department affiliation
+
+	}
+
 }
 
 ?>
