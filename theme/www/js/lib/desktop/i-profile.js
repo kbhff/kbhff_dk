@@ -26,8 +26,7 @@ Util.Objects["profile"] = new function() {
 			var button_cancel = u.qs(".membership li.cancel-membership", this);
 
 			// "Ret" button
-			// Add click event to button and ignore href redirect.
-			u.clickableElement(button_membership);
+			u.clickableElement(button_membership); // Add click event to button and ignore href redirect.
 			// When button is clicked
 			button_membership.clicked = function() { 
 				this.membership_callback = function(response) {
