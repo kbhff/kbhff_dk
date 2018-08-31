@@ -1,4 +1,4 @@
-<?php 
+<?php
 $UC = new User();
 $user = $UC->getKbhffUser();
 $department = $UC->getUserDepartment();
@@ -32,14 +32,14 @@ $department = $UC->getUserDepartment();
 			<div class="section intro">
 				<h2>Velkommen <span class="name"><?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?></span></h2>
 				<p>
-					På min side kan du se og rette oplysninger om dig og dit medlemsskab. 
-					Du kan også se og rette dine eksisterende bestillinger og lave en ny bestilling (åbner GrøntShoppen). 
+					På min side kan du se og rette oplysninger om dig og dit medlemsskab.
+					Du kan også se og rette dine eksisterende bestillinger og lave en ny bestilling (åbner GrøntShoppen).
 					På sigt er det desuden meningen at du her skal kunne book frivillig-vagter og se nyheder og beskeder fra din lokalafdeling.
 				</p>
 				<div class="c-box">
 					<p>
-						<span class="highlight">OBS!</span> Østerbro lokalafdeling mangler en ny team-koordinator. 
-						Kunne du have lyst til at hjælpe KBHFF med at blive endnu bedre federe at være frivillig i og være med på et helt vildt sjovt 
+						<span class="highlight">OBS!</span> Østerbro lokalafdeling mangler en ny team-koordinator.
+						Kunne du have lyst til at hjælpe KBHFF med at blive endnu bedre federe at være frivillig i og være med på et helt vildt sjovt
 						og sejt hold, så skynd dig at skriv til anders@kbhff.dk eller mød op til mødet d. 8 august kl. 2017
 					</p>
 				</div>
@@ -66,7 +66,7 @@ $department = $UC->getUserDepartment();
 					<p class="change-untill">20/5 kl. 23.59</p>
 					<ul class="actions change"><li class="change"><a href="#" class="button disabled">ret</a></li></ul>
 				</div>
-				
+
 				<div class="order">
 					<p class="pickup-date">30.05.2018</p>
 					<p class="order-place">Vesterbro</p>
@@ -107,7 +107,7 @@ $department = $UC->getUserDepartment();
 
 			<ul class="actions">
 				<li class="new-order full-width"><a href="#" class="button primary">Ny bestilling</a></li>
-				<li class="book-shift full-width"><a href="#" class="button primary">Book en vagt</a></li>
+				<li class="book-shift full-width"><a href="#" class="button primary">Ta' en vagt</a></li>
 			</ul>
 
 			<div class="section department">
@@ -118,19 +118,19 @@ $department = $UC->getUserDepartment();
 						<div class="department-info">
 							<p class="over">Adresse</p>
 							<p class="under">
-								<?= 
-									$department["address2"] 
+								<?=
+									$department["address2"]
 									? $department["address1"] . " (" . $department["address2"] . "), " . $department["postal"] . " " . $department["city"]
 									: $department["address1"] . ", " . $department["postal"] . " " . $department["city"]
 								?>
 							</p>
 						</div>
-	
+
 						<div class="department-info">
 							<p class="over">Åbningtider</p>
 							<p class="under"><?= $department["opening_hours"] ?></p>
 						</div>
-	
+
 						<div class="department-info">
 							<p class="over">Kontakt</p>
 							<p class="under">Mail: <?= $department["email"] ?></p>
@@ -144,7 +144,7 @@ $department = $UC->getUserDepartment();
 			<div class="section membership">
 				<div class="c-box">
 					<h3>Dit medlemsskab</h3>
-					
+
 					<div class="fields">
 						<div class="membership-info">
 							<p class="over">Medlemsnummer</p>
@@ -152,7 +152,7 @@ $department = $UC->getUserDepartment();
 						</div>
 
 						<div class="membership-info">
-							<p class="over">Status</p>
+							<p class="over">Kontingent</p>
 							<p class="under system-warning">Ikke betalt</p>
 						</div>
 
@@ -179,7 +179,7 @@ $department = $UC->getUserDepartment();
 			<div class="section user">
 				<div class="c-box">
 					<h3>Dine brugeroplysninger</h3>
-					
+
 					<div class="fields">
 						<div class="user-info">
 							<p class="over">Navn</p>
@@ -207,7 +207,7 @@ $department = $UC->getUserDepartment();
 							<li class="change-info half-width"><a href="/profil/bruger" class="button">Ret</a></li>
 						</ul>
 					</div>
-					
+
 				</div>
 			</div>
 
