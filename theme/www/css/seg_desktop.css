@@ -433,7 +433,7 @@ body > div.overlay fieldset {
 body > div.overlay fieldset label {
 	text-align: left;
 }
-.close {
+body > div.overlay .close {
 	position: absolute;
 	right: 17px;
 	top: 17px;
@@ -441,10 +441,10 @@ body > div.overlay fieldset label {
 	height: 32px;
 	opacity: 0.3;
 }
-.close:hover {
+body > div.overlay .close:hover {
 	opacity: 1;
 }
-.close:before, .close:after {
+body > div.overlay .close:before, body > div.overlay .close:after {
 	position: absolute;
 	left: 15px;
 	content: ' ';
@@ -452,16 +452,16 @@ body > div.overlay fieldset label {
 	width: 2px;
 	background-color: #333;
 }
-.close:before {
+body > div.overlay .close:before {
 	transform: rotate(45deg);
 }
-.close:after {
+body > div.overlay .close:after {
 	transform: rotate(-45deg);
 }
 
 /*s-form.css*/
 form {}
-fieldset {width: 50%;}
+.scene > form fieldset {width: 50%;}
 div.field {
 	padding: 0 0 25px; position: relative; font-size: 0; z-index: 1;
 	padding-left: 10px;
@@ -616,37 +616,7 @@ input[type="submit"] {
 /*s-accept_terms.css*/
 #content .scene.accept_terms form {padding-top: 50px; width: 300px; margin: 0 auto; text-align: center;}
 #content .scene.accept_terms form fieldset {width: auto;}
-input.action {
-	background-color: #000000;
-	font-family: 'voresfont';
-	text-transform: uppercase;
-	font-size: 14px;
-	line-height: 22px;
-	padding: 7px 14px;
-	display: block;
-	color: #ffffff;
-	width: auto;
-	height: auto;
-	display: block;
-	border: none;
-	cursor: pointer;
-	font-weight: 400;
-}
-li.regret input.action {
-	background-color: #3e8e17;
-	color: #ffffff;
-}
-li.regret input.action:hover {
-	background-color: #357914;
-	color: #ffffff;
-}
-li.delete_me input.action {
-	background-color: #BBBBBB;
-}
-li.delete_me input.action:hover {
-	background-color: #999999;
-}
-ul.actions li {
+body.profil div.overlay.confirm_reject_terms ul.actions li {
 	width: auto;
 	height: auto;
 	padding: 0 5px 10px 0;
@@ -655,7 +625,7 @@ ul.actions li {
 	-webkit-user-select: none;
 	user-select: none;
 }
-ul.actions {
+body.profil div.overlay.confirm_reject_terms ul.actions {
 	list-style: none;
 	margin: 0 0 0 2px;
 	font-size: 0;
