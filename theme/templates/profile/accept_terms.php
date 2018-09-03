@@ -4,7 +4,7 @@ global $UC;
 ?>
 <div class="scene accept_terms i:accept_terms">
 
-	<h1>Samtykkeerklæring om persondata</h1>
+	<h1>Samtykke om brug af persondata</h1>
 
 	<p>I forbindelse med overgangen til det nye system vil vi en enkelt gang bede dig om
 	 dit samtykke til at vi opbevarer og behandler den persondata, du har givet os.
