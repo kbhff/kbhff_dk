@@ -1,7 +1,7 @@
 /*
-#content .scene.profile p {padding: 0;}
+#content div.profile .scene.profile p {padding: 0;}
 */
-#content .section > h2 {
+#content div.profile .section > h2 {
 	padding: 0;
 
 	margin-left: 12px;
@@ -12,12 +12,12 @@
 	border-bottom: 2px solid #808080;
 }
 
-#content .c-box,
-#content .fields {
+#content div.profile .c-box,
+#content div.profile .fields {
 	font-size: 0;
 }
 
-#content .c-box > h3 {
+#content div.profile .c-box > h3 {
 	padding-left: 0;
 	padding-right: 0;
 	padding-bottom: 0;
@@ -28,93 +28,93 @@
 	border-bottom: 1px solid #000000;
 }
 
-#content .c-box > form > fieldset {
+#content div.profile .c-box > form > fieldset {
 	width: 100%;
 	padding-top: 6px;
 }
 
-#content .c-box ul.actions {
+#content div.profile .c-box ul.actions {
 	padding-top: 5px;
 	padding-bottom: 0;
 }
 
-#content .membership fieldset {
+#content div.profile .membership fieldset {
 	float: right;
 }
 
-#content .membership .field {
+#content div.profile .membership .field {
 	padding: 0;
 	padding-top: 5px;
 	padding-left: 12px;
 	padding-right: 12px;
 }
 
-.orders,
-.order-headings,
-.order {
+#content div.profile .orders,
+#content div.profile .order-headings,
+#content div.profile .order {
 	font-size: 12px;
 	font-size: 0;
 }
 
-.orders {
+#content div.profile .orders {
 	margin-left: 12px;
 	margin-right: 12px;
 }
 
-.opening-times,
-.membership-info {
+#content div.profile .opening-times,
+#content div.profile .membership-info {
 	display: inline-block;
 	vertical-align: top;
 	width: 50%;
 }
 
-.pickup-date,
-.order-place,
-.order-products,
-.change-untill {
+#content div.profile .pickup-date,
+#content div.profile .order-place,
+#content div.profile .order-products,
+#content div.profile .change-untill {
 	display: inline-block;
 	vertical-align: top;
 	box-sizing: border-box;
 	width: 25%;
 }
 
-.department-info,
-.membership-info,
-.user-info {
+#content div.profile .department-info,
+#content div.profile .membership-info,
+#content div.profile .user-info {
 	padding-bottom: 25px;
 }
 
-#content .password p.under {
+#content div.profile .password p.under {
 	font-size: 26px;
 	padding-bottom: 25px;
 }
 
-#content p.over {
+#content div.profile p.over {
 	font-size: 11px;
 	padding-bottom: 0;
 	text-transform: uppercase;
 }
 
-#content p.under {
+#content div.profile p.under {
 	font-size: 18px;
 	padding-bottom: 0;
 }
 
-p.change-untill {
+#content div.profile p.change-untill {
 	width: 17%;
 }
-#content ul.actions.change {
+#content div.profile ul.actions.change {
 	padding: 0;
 	margin: 0;
 	width: 8%	;
 }
 
-#content ul.actions.change > li {
+#content div.profile ul.actions.change > li {
 	padding: 0;
 	margin: 0;
 }
 
-#content ul.actions.change > li > a {
+#content div.profile ul.actions.change > li > a {
 	padding: 0;
 	margin: 0;
 
@@ -124,30 +124,30 @@ p.change-untill {
 }
 
 
-#content ul.actions {
+#content div.profile ul.actions {
 	width: 100%;
 	box-sizing: border-box;
 	padding-right: 14px;
 	padding-top: 20px;
 }
 
-#content ul.actions li {
+#content div.profile ul.actions li {
 	box-sizing: border-box;
 }
 
-#content ul.actions .full-width {
+#content div.profile ul.actions .full-width {
 	width: 100%;
 	text-align: center;
 }
-#content ul.actions .half-width {
+#content div.profile ul.actions .half-width {
 	width: 50%;
 	text-align: center;
 }
-#content ul.actions .third-width {
+#content div.profile ul.actions .third-width {
 	width: 33.3333%;
 	text-align: center;
 }
 
-body > div.overlay div.field.password {
+body.profil > div.overlay div.field.password {
 	padding-bottom: 20px;
 }
