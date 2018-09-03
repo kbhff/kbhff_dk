@@ -148,6 +148,6 @@ p.change-untill {
 	text-align: center;
 }
 
-body > div.overlay div.field.password {
+body.profil > div.overlay div.field.password {
 	padding-bottom: 20px;
 }
