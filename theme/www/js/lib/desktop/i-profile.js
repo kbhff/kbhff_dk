@@ -100,8 +100,8 @@ Util.Objects["profile"] = new function() {
 				})
 
 				// Add action buttons to cancel and confirm
-				var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"action delete_me","value":"Meld mig ud af KBHFF"});
-				var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"action regret primary", "value":"Fortryd udmelding"});
+				var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"button delete_me","value":"Meld mig ud af KBHFF"});
+				var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"button regret primary", "value":"Fortryd udmelding"});
 				
 				// Add click event to go to password confirmation
 				u.e.click(delete_me)
@@ -120,7 +120,39 @@ Util.Objects["profile"] = new function() {
 						u.f.init(form_confirm_cancellation);
 						//u.f.addAction(overlay.div_content, {"type":"button", "name":"regret", "class":"action regret primary", "value":"Fortryd udmelding"});
 
-			
+						form_confirm_cancellation.submitted = function () {
+							var data = u.f.getParams(this);
+							this.response = function(response) {			
+								console.log(response);
+								var div_scene_login = u.qs("div.scene.login", response);
+								console.log(div_scene_login);
+								if (div_scene_login) {
+									location.href = "/";
+								}
+								else {
+									var error_message = u.qs("p.errormessage", response);
+									u.ass(form_confirm_cancellation, {"display":"none"})
+									
+									
+									u.ae(overlay.div_content, error_message);
+									var ul_actions = u.ae(overlay.div_content, "ul", {
+										class:"actions"
+									});
+									var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
+
+									u.e.click(button_close)
+									button_close.clicked = function () {
+										overlay.close ();
+									}
+
+								}
+							}
+							
+							u.request(this, this.action, {
+								"data":data,
+								"method":"POST"
+							})
+						}
 					}
 	
 					u.request(this, "/profil/opsig", {

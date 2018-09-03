@@ -24,8 +24,8 @@ Util.Objects["accept_terms"] = new function() {
 				var warning = u.ae(overlay.div_content, "p",{html:"Du er ved at melde dig ud af KBHFF. Pga. lovgivning og hensyn til persondata kan du ikke være medlem af KBHFF uden at acceptere vores vilkår. Vi håber du vil genoverveje."});
 
 				// Add action buttons to cancel and confirm
-				var delete_me = u.f.addAction(overlay.div_content, {"type":"button", "name":"delete_me", "class":"action delete_me","value":"Meld mig ud af KBHFF"});
-				var regret = u.f.addAction(overlay.div_content, {"type":"button", "name":"regret", "class":"action regret primary", "value":"Fortryd udmelding"});
+				var delete_me = u.f.addAction(overlay.div_content, {"type":"button", "name":"delete_me", "class":"button delete_me","value":"Meld mig ud af KBHFF"});
+				var regret = u.f.addAction(overlay.div_content, {"type":"button", "name":"regret", "class":"button regret primary", "value":"Fortryd udmelding"});
 				
 				// Add click event to go to main page
 				u.e.click(delete_me)

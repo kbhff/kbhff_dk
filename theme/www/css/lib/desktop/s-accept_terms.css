@@ -1,39 +1,6 @@
 #content .scene.accept_terms form {padding-top: 50px; width: 300px; margin: 0 auto; text-align: center;}
 #content .scene.accept_terms form fieldset {width: auto;}
 
-
-
-
-input.action {
-	background-color: #000000;
-	font-family: 'voresfont';
-	text-transform: uppercase;
-	font-size: 14px;
-	line-height: 22px;
-	padding: 7px 14px;
-	display: block;
-	color: #ffffff;
-	width: auto;
-	height: auto;
-	display: block;
-	border: none;
-	cursor: pointer;
-	font-weight: 400;
-}
-li.regret input.action {
-	background-color: #3e8e17;
-	color: #ffffff;
-}
-li.regret input.action:hover {
-	background-color: #357914;
-	color: #ffffff;
-}
-li.delete_me input.action {
-	background-color: #BBBBBB;
-}
-li.delete_me input.action:hover {
-	background-color: #999999;
-}
 ul.actions li {
 	width: auto;
 	height: auto;
