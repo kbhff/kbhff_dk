@@ -91,7 +91,7 @@ Util.Objects["profile"] = new function() {
 			// "Opsig" button
 			u.clickableElement(button_cancel);
 			button_cancel.clicked = function() {
-				var overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600});
+				var overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600, class:"confirm_cancel_membership"});
 				var p_warning = u.ae(overlay.div_content, "p", {
 					html:"Du er ved at melde dig ud af KBHFF. Er du sikker?"
 				});

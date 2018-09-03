@@ -20,7 +20,7 @@ Util.Objects["accept_terms"] = new function() {
 			u.qs("div.field.checkbox .hint").innerHTML = ""
 
 			form_accept.actions["reject"].clicked = function() {
-				var overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600});
+				var overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600, class:"confirm_reject_terms"});
 				var warning = u.ae(overlay.div_content, "p",{html:"Du er ved at melde dig ud af KBHFF. Pga. lovgivning og hensyn til persondata kan du ikke være medlem af KBHFF uden at acceptere vores vilkår. Vi håber du vil genoverveje."});
 
 				// Add action buttons to cancel and confirm

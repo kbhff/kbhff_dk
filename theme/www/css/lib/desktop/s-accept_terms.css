@@ -1,7 +1,7 @@
 #content .scene.accept_terms form {padding-top: 50px; width: 300px; margin: 0 auto; text-align: center;}
 #content .scene.accept_terms form fieldset {width: auto;}
 
-ul.actions li {
+body.profil div.overlay.confirm_reject_terms ul.actions li {
 	width: auto;
 	height: auto;
 	padding: 0 5px 10px 0;
@@ -11,7 +11,7 @@ ul.actions li {
 	user-select: none;
 }
 
-ul.actions {
+body.profil div.overlay.confirm_reject_terms ul.actions {
 	list-style: none;
 	margin: 0 0 0 2px;
 	font-size: 0;
