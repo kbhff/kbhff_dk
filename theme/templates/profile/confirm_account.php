@@ -9,7 +9,7 @@ $this->pageTitle("Bekræft din konto");
 <div class="scene login i:confirm_account">
 
 	<h1>Bekræft din konto</h1>
-	<p><span class='highlight'>TAK.</span> Vi har nu sendt dig en mail, i mailen er der en kode som du kan indtaste her for at bekræfte din konto.</p>
+	<p><span class='highlight'>TAK.</span> Vi har nu sendt dig en mail. I mailen er der en kode, som du kan indtaste her for at bekræfte din konto.</p>
 
 
 	<?= $model->formStart("confirmAccount", ["class" => "confirm_account"]) ?>
@@ -29,8 +29,8 @@ $this->pageTitle("Bekræft din konto");
 			<?= $model->input("verification_code", array(
 					"label" => "Kode", 
 					"required" => true, 
-					"hint_message" => "Din verificerings kode", 
-					"error_message" => "Check at du har indtastet kode fra e-mailen korrekt"
+					"hint_message" => "Din verificeringskode", 
+					"error_message" => "Check at du har indtastet koden fra e-mailen korrekt"
 				));
 			?>
 		</fieldset>
