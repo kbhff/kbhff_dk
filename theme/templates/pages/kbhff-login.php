@@ -39,7 +39,7 @@ session()->reset("temp-username");
 				"value" => $username,
 				"pattern" => "^(1|[0-9]{4,5}|[\+0-9\-\.\s\(\)]{5,18}|[\w\.\-_]+@[\w\-\.]+\.\w{2,10})$",
 				"label" => "Brugernavn",
-				"hint_message" => "Brug dit medlemsnummer, email eller telefonnummer som brugernavn",
+				"hint_message" => "Brug dit medlemsnr, email eller telefonnummer som brugernavn",
 				"error_message" => "Det ligner ikke et gyldigt brugernavn",
 			)); ?>
 			<?= $model->input("password", array(
