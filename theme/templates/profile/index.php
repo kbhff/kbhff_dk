@@ -189,7 +189,7 @@ $department = $UC->getUserDepartment();
 						<div class="user-info">
 							<p class="over"> Fulde navn</p>
 							<p class="under">
-								<?= $user['firstname'] ? $user['firstname'] : "(Ikke angivet)", " ", $user["lastname"] ? $user["lastname"] : "(Ikke angiveet)" ?>
+								<?= $user['firstname'] ? $user['firstname'] : "(Ikke angivet)", " ", $user["lastname"] ? $user["lastname"] : "(Ikke angivet)" ?>
 							</p>
 						</div>
 

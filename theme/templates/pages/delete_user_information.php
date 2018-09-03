@@ -10,6 +10,17 @@ $this->pageTitle("Udmeldelse");
 	<h2>Bemærk, at denne handling er uomgørlig.</h2>
 
 	<?= $UC->formStart("deleteUserInformation", array("class" => "confirm_cancellation")) ?>	
+
+	<?	if(message()->hasMessages(array("type" => "error"))): ?>
+		<p class="errormessage">
+	<?	$messages = message()->getMessages(array("type" => "error"));
+		message()->resetMessages();
+		foreach($messages as $message): ?>
+			<?= $message ?><br>
+	<?		endforeach;?>
+		</p>
+	<?	endif; ?>
+	
 			<fieldset>
 				<?= $UC->input("password", [
 					"required" => true, 

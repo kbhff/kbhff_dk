@@ -275,17 +275,32 @@ class User extends UserCore {
 
 	function deleteUserInformation($action) {
 
-		if ($this->cancel(["cancel"])) {
+		$user = $this->getKbhffUser();
+		$user_email = $user["email"];
+
+		$cancel_result = $this->cancel(["cancel"]); 
+		if ($cancel_result === true) {
 			message()->addMessage("Dine oplysninger blev slettet");
 			mailer()->send([
 				"subject" => "Dit medlemsskab af Københavns Fødevarefællesskab er opsagt",
-				"message" => "Du har meldt dig ud af Københavns Fødevarefællesskab. Tak for denne gang."
+				"message" => "Du har meldt dig ud af Københavns Fødevarefællesskab. Tak for denne gang.",
+				"recipients" => [$user_email]
 				]);
 
 			return true;
 		}
+		else if(isset($cancel_result["error"]) && $cancel_result["error"] == "unpaid_orders") {
+			message()->addMessage("Du kan ikke udmelde dig, da du har ubetalte ordrer.", array("type" => "error"));
+			return false;
+
+		}
+		else if(isset($cancel_result["error"]) && $cancel_result["error"] == "wrong_password") {
+			message()->addMessage("Du kan ikke udmelde dig, da du har angivet et forkert password.", array("type" => "error"));
+			return false;
+
+		}
 		else {
-			message()->addMessage("Sletningen slog fejl", ["type" => "error"]);
+			message()->addMessage("Udmeldelsen slog fejl", ["type" => "error"]);
 			return false;
 		}
 		
