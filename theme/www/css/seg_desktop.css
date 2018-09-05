@@ -433,7 +433,7 @@ body > div.overlay fieldset {
 body > div.overlay fieldset label {
 	text-align: left;
 }
-body > div.overlay .close {
+.close {
 	position: absolute;
 	right: 17px;
 	top: 17px;
@@ -441,10 +441,10 @@ body > div.overlay .close {
 	height: 32px;
 	opacity: 0.3;
 }
-body > div.overlay .close:hover {
+.close:hover {
 	opacity: 1;
 }
-body > div.overlay .close:before, body > div.overlay .close:after {
+.close:before, .close:after {
 	position: absolute;
 	left: 15px;
 	content: ' ';
@@ -452,16 +452,16 @@ body > div.overlay .close:before, body > div.overlay .close:after {
 	width: 2px;
 	background-color: #333;
 }
-body > div.overlay .close:before {
+.close:before {
 	transform: rotate(45deg);
 }
-body > div.overlay .close:after {
+.close:after {
 	transform: rotate(-45deg);
 }
 
 /*s-form.css*/
 form {}
-.scene > form fieldset {width: 50%;}
+fieldset {width: 50%;}
 div.field {
 	padding: 0 0 25px; position: relative; font-size: 0; z-index: 1;
 	padding-left: 10px;
