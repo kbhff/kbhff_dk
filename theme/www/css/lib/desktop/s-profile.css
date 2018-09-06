@@ -102,6 +102,7 @@
 
 #content div.profile p.change-untill {
 	width: 17%;
+	padding-right: 0;
 }
 #content div.profile ul.actions.change {
 	display: inline-block;
