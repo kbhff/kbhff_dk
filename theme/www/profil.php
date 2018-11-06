@@ -22,8 +22,36 @@ if(is_array($action) && count($action) == 1 && $action[0] == "accept" && $page->
 	$UC->acceptedTerms();
 
 }
+
+else if (is_array($action) && count($action)) {
+	// ../profil/opsig lead to template
+	if($action[0] == "opsig") {
+		$page->page(array(
+			"templates" => "pages/delete_user_information.php"
+		));
+		exit();
+	}
+
+	// Cancel membership
+	else if($action[0] == "deleteUserInformation" && $page->validateCsrfToken()) {
+		if($UC->deleteUserInformation($action)) {
+			header("Location: /");
+			exit();
+		}
+
+		else {
+			// message()->addMessage("Fejl!", array("type" => "error"));
+			$page->page([
+				"templates" => "pages/delete_user_information.php"
+			]);
+			exit();
+		}
+	}
+}
+
+
 // User must always accept terms - force dialogue if user has not accepted the terms
-else if(!$UC->hasAcceptedTerms()) {
+if(!$UC->hasAcceptedTerms()) {
 
 	$page->page(array(
 		"templates" => "profile/accept_terms.php",
@@ -57,7 +85,7 @@ if(is_array($action) && count($action)) {
 		exit();
 	}
 
-	// --/profil/kodeord lead to template
+	// ../profil/kodeord lead to template
 	else if($action[0] == "kodeord") {
 		$page->page(array(
 			"templates" => "pages/update_user_password.php"
@@ -119,30 +147,7 @@ if(is_array($action) && count($action)) {
 		}
 	}
 
-	//Cancel membership
-	else if($action[0] == "opsig") {
-		$page->page(array(
-			"templates" => "pages/delete_user_information.php"
-		));
-		exit();
-	}
-
-	else if($action[0] == "deleteUserInformation" && $page->validateCsrfToken()) {
-		if($UC->deleteUserInformation($action)) {
-			header("Location: /");
-			exit();
-		}
-
-		else {
-			// message()->addMessage("Fejl!", array("type" => "error"));
-			$page->page([
-				"templates" => "pages/delete_user_information.php"
-			]);
-			exit();
-		}
-	}
-
-	//Unaccept terms
+	// Unaccept terms
 	else if($action[0] == "unaccept") {
 		if($UC->unacceptTerms()) {
 			$page->page(array(
@@ -152,7 +157,7 @@ if(is_array($action) && count($action)) {
 		}
 
 		exit();
-	}	
+	}
 
 }
 
