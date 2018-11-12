@@ -23,6 +23,7 @@ if(is_array($action) && count($action) == 1 && $action[0] == "accept" && $page->
 
 }
 
+// Need to be able to delete account before user has accepted terms
 else if (is_array($action) && count($action)) {
 	// ../profil/opsig lead to template
 	if($action[0] == "opsig") {
