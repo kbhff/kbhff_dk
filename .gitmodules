@@ -7,3 +7,6 @@
 [submodule "submodules/css-merger"]
 	path = submodules/css-merger
 	url = https://github.com/parentnode/css-merger
+[submodule "submodules/asset-builder"]
+	path = submodules/asset-builder
+	url = https://github.com/parentnode/asset-builder.git
