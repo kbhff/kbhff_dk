@@ -1,0 +1,477 @@
+
+/*seg_desktop_include.css*/
+
+/*s-page.css*/
+html {
+	min-height: 100%;
+}
+body {
+	background: #ffffff;
+	margin: 0;
+}
+* {
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+	line-height: 24px;
+	color: #000000;
+}
+#page {}
+h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dd, dt {padding: 0; margin: 0;}
+h1, h2, h3, h4, h5, h6, p, li, dd, dt, span, a {line-height: 1em; font-weight: 400;}
+ul {list-style: none;}
+a {text-decoration: none; cursor: pointer;}
+img {border: 0; display: block;}
+form, fieldset, label, input, select, textarea {padding: 0; margin: 0; font-weight: normal;}
+fieldset {border: none;}
+input, select, textarea {font-size: 20px; color: #333333; outline: none;}
+a, span {font-size: inherit; font-family: inherit; font-style: inherit; font-weight: inherit; line-height: inherit; color: inherit; text-transform: inherit;}
+em, strong {font-size: inherit; font-family: inherit; line-height: inherit; color: inherit; text-transform: inherit;}
+sup {line-height: 1em; font-family: inherit; color: inherit;}
+
+
+/*s-fonts.css*/
+@font-face {
+	font-family: 'voresfont';
+	src: url('fonts/vores_font/voresfont.eot');
+	src: url('fonts/vores_font/voresfont.eot?#iefix') format('embedded-opentype'),
+		 url('fonts/vores_font/voresfont.woff2') format('woff2'),
+		 url('fonts/vores_font/voresfont.woff') format('woff'),
+		 url('fonts/vores_font/voresfont.svg#alte_din_1451_mittelschriftRg') format('svg'),
+		 url('fonts/vores_font/voresfont.ttf') format('truetype');
+	font-weight: 400;
+	font-style: normal;
+}
+
+/*s-form.css*/
+form {}
+fieldset {width: 50%;}
+div.field {padding: 0 0 25px; position: relative; font-size: 0; z-index: 1;}
+div.field label {display: block; margin: 0 0 0 3px; line-height: 12px; font-size: 11px; text-transform: uppercase;}
+div.field input,
+div.field select,
+div.field textarea {box-shadow: inset 0 1px 2px #dedede; box-sizing: border-box; border-radius: 0; background: #ffffff; border: 1px solid #999999; display: inline-block; vertical-align: top; margin: 2px; position: relative; z-index: 1;}
+div.field input {width: calc(100% - 4px); padding: 3px 5px 3px 6px;}
+div.field select {width: calc(100% - 4px); padding: 2px 3px 2px 2px;
+	background: #ffffff url(../img/gx_select.svg) no-repeat right 7px;
+	background-size: 20px 20px;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+}
+@media all and (-webkit-min-device-pixel-ratio:0) {
+	div.field select {padding: 3px 3px 3px 6px;}
+}
+div.field select option {height: 24px;}
+div.field textarea {width: calc(100% - 4px); height: 100px; resize: none; overflow: auto; padding: 3px 0 2px 6px;}
+div.field textarea.autoexpand {width: calc(100% - 4px); padding: 3px 6px 2px; overflow: hidden;}
+div.field.checkbox {}
+div.field.checkbox label {display: inline-block; vertical-align: top; text-transform: none; font-size: 14px; line-height: 24px; padding: 0 0 0 28px;
+	background: transparent url(../img/gx_checkbox_unchecked.svg) no-repeat left center;
+	background-size: 20px 20px;
+}
+div.field.checkbox input:checked + label {
+	background-image: url(../img/gx_checkbox_checked.svg);
+}
+div.field.checkbox input {z-index: 2; position: absolute; top: 0; left: 0; width: 20px; height: 20px; opacity: 0;}
+div.field.radiobuttons .item {padding: 3px 0 0; position: relative;}
+div.field.radiobuttons .item label {display: block; text-transform: none; font-size: 14px; line-height: 24px;  padding: 0 0 0 28px;
+	background: transparent url(../img/gx_radiobutton_unchecked.svg) no-repeat left center;
+	background-size: 20px 20px;
+}
+div.field.radiobuttons .item input:checked + label {
+	background-image: url(../img/gx_radiobutton_checked.svg);
+}
+div.field.radiobuttons .item input {z-index: 2; position: absolute; top: 0; left: 0; width: 20px; height: 20px; opacity: 0;}
+div.field.focus input,
+div.field.focus select,
+div.field.focus textarea {margin: 0; width: 100%; border: 3px solid #3E8E17;}
+div.field.focus textarea:not(.autoexpand) {height: 104px;}
+div.field.checkbox.focus label {
+	background-image: url(../img/gx_checkbox_unchecked_focus.svg);
+}
+div.field.radiobuttons .item input.focus + label {
+	background-image: url(../img/gx_radiobutton_unchecked_focus.svg);
+}
+div.field.checkbox.focus input:checked + label {
+	background-image: url(../img/gx_checkbox_checked_focus.svg);
+}
+div.field.radiobuttons .item input.focus:checked + label {
+	background-image: url(../img/gx_radiobutton_checked_focus.svg);
+}
+div.field.error input,
+div.field.error select,
+div.field.error textarea {margin: 0; width: 100%; border: 3px solid #C22414;}
+div.field.error textarea:not(.autoexpand) {height: 104px;}
+div.field .indicator {display: inline-block; vertical-align: top; width: 12px; height: 12px; margin-left: 4px;}
+div.field.required .indicator {
+	background: transparent url(../img/gx_required.svg) no-repeat center 1px;
+	background-size: 9px 9px;
+}
+div.field.checkbox .indicator {margin-top: 7px;}
+div.field.correct .indicator {
+	background-image: url(../img/gx_correct.svg);
+	background-position: center -2px;
+	background-size: 14px 14px;
+}
+div.field div.help {position: relative;}
+div.field div.error,
+div.field div.hint {opacity: 0; position: absolute; top: 0; left: 0; font-size: 12px; line-height: 13px; margin: 0 0 0 3px;
+	transform: translate(0, -10px);
+	transition: 0.3s all ease-out;
+}
+div.field div.error {color: #C22414;}
+div.field.error div.error {opacity: 1;
+	transform: translate(0, 0);
+}
+div.field div.hint {color: #999999;}
+div.field.focus div.hint,
+div.field.hover div.hint {opacity: 1;
+	transform: translate(0, 0);
+}
+div.field.error div.hint {opacity: 0;
+	transform: translate(0, -10px);
+}
+ul.actions,
+#content ul.actions {list-style: none; margin: 0 0 0 2px; font-size: 0;}
+ul.actions li,
+#content ul.actions li {width: auto; height: auto; display: inline-block; padding: 0 5px 10px 0; vertical-align: top;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+ul.actions input.button,
+ul.actions a.button,
+#content ul.actions a.button {font-size: 14px; display: block; padding: 7px 14px; line-height: 22px; background-color: #bbbbbb; color: #ffffff; border: none; cursor: pointer;
+	font-weight: 400;
+	text-transform: uppercase;
+	font-family: "voresfont";
+}
+ul.actions input.button {width: auto; height: auto;}
+ul.actions a.button,
+#content ul.actions a.button {text-decoration: none;}
+ul.actions input.button:hover,
+ul.actions a.button:hover,
+#content ul.actions a.button:hover {background-color: #999999;}
+ul.actions input.button.primary,
+ul.actions a.button.primary,
+#content ul.actions a.button.primary {background-color: #3e8e17; color: #ffffff;}
+ul.actions input.button.primary:hover,
+ul.actions a.button.primary:hover,
+#content ul.actions a.button.primary:hover {background-color: #357914;}
+ul.actions input.button.disabled,
+ul.actions a.button.disabled,
+#content ul.actions a.button.disabled,
+ul.actions input.button.disabled:hover
+ul.actions a.button.disabled:hover,
+#content ul.actions a.button.disabled:hover {cursor: default !important; color: #aaaaaa !important; background-color: #eeeeee !important;}
+textarea,
+input[type="text"],
+input[type="button"],
+input[type="submit"] {
+	-webkit-appearance: none;
+	-webkit-border-radius: 0;
+}
+
+
+/*s-header.css*/
+#header {
+    position: relative;
+    width: 960px;
+    margin: 0 auto;
+	padding: 16px 0 10px;
+}
+#header .logo {
+	box-sizing: border-box;
+	height: 48px;
+	padding: 6px 8px 6px 54px;
+	display: inline-block;
+	background: transparent url(../img/logos/logo-stempel_sort_lille_gulerod.png) no-repeat top left;
+	font-family: 'voresfont';
+	font-size: 28px;
+	line-height: 32px;
+    max-width: 50%;
+	text-transform: uppercase;
+}
+#header ul.servicenavigation {
+	position: absolute;
+	line-height: 14px;
+	top: 14px;
+	right: 0px;
+	max-width: 50%;
+}
+#header ul.servicenavigation li {
+	display: inline-block;
+	padding-left: 16px;
+	line-height: 14px;
+}
+#header ul.servicenavigation li.navigation {
+	display: none;
+}
+#header ul.servicenavigation a {
+	color: #666;
+}
+#header ul.servicenavigation a:hover {
+	color: #3e8e17;
+	text-decoration: underline;
+}
+
+
+/*s-navigation.css*/
+#navigation {
+    position: relative;
+    width: 960px;
+    margin: 0 auto;
+}
+#navigation ul.navigation {
+	font-size: 0;
+	padding-bottom: 5px;
+}
+#navigation ul.navigation li {
+	display: inline-block;
+	margin-right: 5px;
+}
+#navigation ul.navigation a {
+	font-family: 'voresfont';
+	text-transform: uppercase;
+	font-size: 14px;
+	line-height: 22px;
+	padding: 7px 14px;
+	display: block;
+	color: #ffffff;
+	background-color: #000000;
+}
+#navigation ul.navigation a:hover {
+	background-color: #3e8e17;
+}
+
+/*s-content.css*/
+#content {
+	margin: 0 auto;
+	position: relative;
+    width: 960px;
+}
+#content p,
+#content ul,
+#content ol,
+#content pre,
+#content table,
+#content blockquote {
+	padding-bottom: 24px;
+}
+#content h1 {
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	font-size: 40px;
+	line-height: 48px;
+	box-shadow: 0px -5px black inset;
+	padding-bottom: 2px;
+	padding-top: 13px;
+}
+#content h2 {
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	font-size: 28px;
+	line-height: 30px;
+	padding-bottom: 22px;
+	padding-top: 20px;
+}
+#content h3 {
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	font-size: 20px;
+	line-height: 24px;
+	padding-top: 12px;
+	padding-bottom: 12px;
+}
+#content h4 {
+	font-size: 14px;
+	line-height: 24px;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+}
+#content h5 {
+}
+#content h6 {
+}
+#content p {
+	line-height: 24px;
+}
+#content h1 + p {
+	padding-top: 18px;
+}
+#content h4 + ul,
+#content h4 + ol {
+	padding-top: 18px;
+}
+#content a {
+	text-decoration: none;
+	color: #3e8e17;
+	font-weight: bold;
+}
+#content a:hover {
+	color: black;
+}
+#content blockquote {
+	font-style: italic;
+	margin: 0px;
+}
+#content img {
+	width: 100%;
+	display: block;
+}
+#content ol {
+	list-style-type: decimal;
+	padding-left: 0px;
+}
+#content ul {
+	list-style: disc;
+	margin-left: 28px;
+}
+#content li {
+	line-height: 24px;
+	padding-left: 8px;
+}
+#content ul.richtext {
+	list-style: none;
+	margin-left: 0;
+}
+#content ul.richtext > li {
+	padding-left: 0;
+}
+#content li + li {
+	padding-top: 12px;
+}
+#content dt {
+	font-size: 14px;
+	line-height: 24px;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+}
+#content dd {
+	padding-bottom: 12px;
+}
+#content dl {
+	padding-bottom: 12px;
+}
+#content code {
+	display: block;
+	padding: 24px;
+	margin-bottom: 24px;
+	white-space: pre-wrap;
+	font-family: monospace;
+	background-color: #DDDDDD;
+}
+#content span.path {
+	font-family: monospace;
+	background-color: #DDDDDD;
+	padding: 0 6px;
+}
+#content span.green {
+	color: #3e8e17;
+	font-weight: 700;
+}
+#content ul.color-list {
+	list-style: none;
+	margin: 0;
+}
+#content ul.color-list li {
+	display: inline-block;
+	box-sizing: border-box;
+	margin-right: 8px;
+	padding: 0;
+	width: 200px;
+	vertical-align: top;
+}
+span.colortest {
+	display: block;
+	width: 200px;
+	height: 200px;
+}
+#content ul.button-list {
+	list-style: none;
+	margin: 0;
+}
+#content ul.button-list li {
+	box-sizing: border-box;
+	padding: 0 0 25px 0;
+	vertical-align: top;
+}
+#content img.big-logo {
+	width: 200px;
+	height: 200px;
+	padding-bottom: 15px;
+}
+#content img.small-logo {
+	display: inline-block;
+	padding-right: 15px;
+	width: 50px;
+	height: 50px;
+}
+
+
+/*s-footer.css*/
+#footer {
+	height: 48px;
+	background: #484848;
+}
+#footer ul.servicenavigation {
+	margin: 0 auto;
+	position: relative;
+    width: 960px;
+	text-align: right;
+}
+#footer ul.servicenavigation li {
+	display: inline-block;
+	padding: 17px 0 10px 15px;
+	color: #ffffff;
+}
+#footer ul.servicenavigation li.copyright {
+	float: left;
+	padding-left: 0;
+}
+
+
+/*s-styleguide.css*/
+#content .scene.styleguide .highlight {
+	color: #3e8e17;
+}
+#content .scene.styleguide .color-primary {
+	background: #3E8E17;
+}
+#content .scene.styleguide .color-primary-lighter {
+	background: #559C33;
+}
+#content .scene.styleguide .color-primary-darker {
+	background: #357914;
+}
+#content .scene.styleguide .color-signal-red {
+	background: #C2381E;
+}
+#content .scene.styleguide .color-black {
+	background: #060606;
+}
+#content .scene.styleguide .color-grey-darker {
+	background: #333333;
+}
+#content .scene.styleguide .color-grey-dark {
+	background: #666666;
+}
+#content .scene.styleguide .color-grey {
+	background: #999999;
+}
+#content .scene.styleguide .color-grey-light {
+	background: #BBBBBB;
+}
+#content .scene.styleguide .color-grey-lighter {
+	background: #DDDDDD;
+}
+
+
+/*s-pages.css*/
+#content ol ol {padding-left: 30px;}
+fieldset.login p,
+fieldset.verify p {
+	font-weight: 700;
+}
+span {
+	color: #3e8e17;
+}

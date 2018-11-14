@@ -1,0 +1,193 @@
+form {}
+
+fieldset {width: 50%;}
+
+div.field {
+	padding: 0 0 25px; position: relative; font-size: 0; z-index: 1;
+
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+div.field label {display: block; margin: 0 0 0 3px; line-height: 12px; font-size: 11px; text-transform: uppercase;}
+
+/* FORM INPUTS INITIAL STATE */
+div.field input,
+div.field select,
+div.field textarea {box-shadow: inset 0 1px 2px #dedede; box-sizing: border-box; border-radius: 0; background: #ffffff; border: 1px solid #999999; display: inline-block; vertical-align: top; margin: 2px; position: relative; z-index: 1;}
+
+div.field input {width: calc(100% - 4px); padding: 3px 5px 3px 6px;}
+div.field select {width: calc(100% - 4px); padding: 2px 3px 2px 2px;
+	background: #ffffff url(/img/gx_select.svg) no-repeat right 7px;
+	background-size: 20px 20px;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+}
+/* WEBKIT ADJUSTMENT */
+@media all and (-webkit-min-device-pixel-ratio:0) {
+	div.field select {padding: 3px 3px 3px 6px;}
+}
+div.field select option {height: 24px;}
+div.field textarea {width: calc(100% - 4px); height: 100px; resize: none; overflow: auto; padding: 3px 0 2px 6px;}
+div.field textarea.autoexpand {width: calc(100% - 4px); padding: 3px 6px 2px; overflow: hidden;}
+
+div.field.checkbox {}
+div.field.checkbox label {display: inline-block; vertical-align: top; text-transform: none; font-size: 14px; line-height: 24px; padding: 0 0 0 28px;
+	background: transparent url(/img/gx_checkbox_unchecked.svg) no-repeat left center;
+	background-size: 20px 20px;
+}
+div.field.checkbox input:checked + label {
+	background-image: url(/img/gx_checkbox_checked.svg);
+}
+div.field.checkbox input {z-index: 2; position: absolute; top: 0; left: 0; width: 20px; height: 20px; opacity: 0;}
+
+div.field.radiobuttons .item {padding: 3px 0 0; position: relative;}
+div.field.radiobuttons .item label {display: block; text-transform: none; font-size: 14px; line-height: 24px;  padding: 0 0 0 28px;
+	background: transparent url(/img/gx_radiobutton_unchecked.svg) no-repeat left center;
+	background-size: 20px 20px;
+}
+div.field.radiobuttons .item input:checked + label {
+	background-image: url(/img/gx_radiobutton_checked.svg);
+}
+div.field.radiobuttons .item input {z-index: 2; position: absolute; top: 0; left: 0; width: 20px; height: 20px; opacity: 0;}
+
+
+/* FOCUS STATE */	
+div.field.focus input,
+div.field.focus select,
+div.field.focus textarea {margin: 0; width: 100%; border: 3px solid #3E8E17;}
+div.field.focus textarea:not(.autoexpand) {height: 104px;}
+
+div.field.checkbox.focus label {
+	background-image: url(/img/gx_checkbox_unchecked_focus.svg);
+}
+div.field.radiobuttons .item input.focus + label {
+	background-image: url(/img/gx_radiobutton_unchecked_focus.svg);
+}
+
+div.field.checkbox.focus input:checked + label {
+	background-image: url(/img/gx_checkbox_checked_focus.svg);
+}
+div.field.radiobuttons .item input.focus:checked + label {
+	background-image: url(/img/gx_radiobutton_checked_focus.svg);
+}
+
+
+/* ERROR STATE */
+div.field.error input,
+div.field.error select,
+div.field.error textarea {margin: 0; width: 100%; border: 3px solid #C22414;}
+div.field.error textarea:not(.autoexpand) {height: 104px;}
+
+
+/* VALIDATION */	
+div.field .indicator {display: inline-block; vertical-align: top; width: 12px; height: 12px; margin-left: 4px;}
+div.field.required .indicator {
+	background: transparent url(/img/gx_required.svg) no-repeat center 1px;
+	background-size: 9px 9px;
+}
+div.field.checkbox .indicator {margin-top: 7px;}
+
+/* CORRECT VALIDATION */
+div.field.correct .indicator {
+	background-image: url(/img/gx_correct.svg);
+	background-position: center -2px;
+	background-size: 14px 14px;
+}
+
+/* DEFAULT STATE */
+div.field select.default {
+	color: #999999;
+}
+
+
+
+/* HELP - HINT AND ERROR MESSAGES */
+div.field div.help {position: relative;}
+	
+div.field div.error,
+div.field div.hint {opacity: 0; position: absolute; top: 0; left: 0; font-size: 12px; line-height: 13px; margin: 0 0 0 3px;
+	transform: translate(0, -10px);
+	transition: 0.3s all ease-out;
+}
+
+/* HELP - ERRORS */
+div.field div.error {color: #C22414;}
+div.field.error div.error {opacity: 1;
+	transform: translate(0, 0);
+}
+/* HELP - HINTS */
+div.field div.hint {color: #999999;}
+div.field.focus div.hint,
+div.field.hover div.hint {opacity: 1;
+	transform: translate(0, 0);
+}
+div.field.error div.hint {opacity: 0;
+	transform: translate(0, -10px);
+}
+
+
+
+/* BUTTONS */
+ul.actions,
+#content ul.actions {list-style: none; margin: 0 0 0 2px; font-size: 0;}
+
+ul.actions li,
+#content ul.actions li {width: auto; height: auto; display: inline-block; padding: 0 5px 10px 0; vertical-align: top;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+
+/* DEFAULT BUTTON */
+ul.actions input.button,
+ul.actions a.button,
+#content ul.actions a.button {font-size: 14px; display: block; padding: 7px 14px; line-height: 22px; background-color: #bbbbbb; color: #ffffff; border: none; cursor: pointer;
+	font-weight: 400;
+	text-transform: uppercase;
+	font-family: "voresfont";
+}
+
+ul.actions input.button {width: auto; height: auto;}
+ul.actions a.button,
+#content ul.actions a.button {text-decoration: none;}
+
+ul.actions input.button:hover,
+ul.actions a.button:hover,
+#content ul.actions a.button:hover {background-color: #999999;}
+
+/* PRIMARY BUTTON */
+ul.actions input.button.primary,
+ul.actions a.button.primary,
+#content ul.actions a.button.primary {background-color: #3e8e17; color: #ffffff;}
+ul.actions input.button.primary:hover,
+ul.actions a.button.primary:hover,
+#content ul.actions a.button.primary:hover {background-color: #357914;}
+
+/* WARNING BUTTON */
+ul.actions input.button.warning,
+ul.actions a.button.warning,
+#content ul.actions a.button.warning {background-color: #C22414; color: #ffffff;}
+ul.actions input.button.warning:hover,
+ul.actions a.button.warning:hover,
+#content ul.actions a.button.warning:hover {background-color: #9a2a1d;}
+
+
+/* DISABLED BUTTON */
+ul.actions input.button.disabled,
+ul.actions a.button.disabled,
+#content ul.actions a.button.disabled,
+ul.actions input.button.disabled:hover
+ul.actions a.button.disabled:hover,
+#content ul.actions a.button.disabled:hover {cursor: default !important; color: #aaaaaa !important; background-color: #eeeeee !important;}
+
+/* SAFARI FIXES */
+textarea,
+input[type="text"],
+input[type="button"],
+input[type="submit"] {
+	-webkit-appearance: none;
+	-webkit-border-radius: 0;
+}
+

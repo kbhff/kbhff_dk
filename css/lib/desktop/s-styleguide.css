@@ -1,0 +1,116 @@
+
+#content .scene.styleguide .highlight {
+	color: #3e8e17;
+}
+#content .scene.styleguide .color-primary {
+	background: #3E8E17;
+}
+#content .scene.styleguide .color-primary-lighter {
+	background: #559C33;
+}
+#content .scene.styleguide .color-primary-darker {
+	background: #357914;
+}
+#content .scene.styleguide .color-signal-red {
+	background: #C2381E;
+}
+#content .scene.styleguide .color-black {
+	background: #060606;
+}
+#content .scene.styleguide .color-grey-darker {
+	background: #333333;
+}
+#content .scene.styleguide .color-grey-dark {
+	background: #666666;
+}
+#content .scene.styleguide .color-grey {
+	background: #999999;
+}
+#content .scene.styleguide .color-grey-light {
+	background: #BBBBBB;
+}
+#content .scene.styleguide .color-grey-lighter {
+	background: #DDDDDD;
+}
+
+
+/* ----- BUTTONS ---- */
+/*
+.button {
+	box-sizing: border-box;
+	display: inline-block;
+	height: 35px;
+	border: 0px;
+	padding: 0px 14px;
+	font-family: 'voresfont';
+	font-size: 14px;
+	line-height: 35px !important;
+	text-align: center;
+	text-transform: uppercase;
+	min-width: 82px;
+
+	background-color: #DDDDDD;
+	color: black;
+}
+.button:hover {
+		cursor: pointer;
+		background-color: #BBBBBB;
+}
+.button.primary {
+	background-color: #3E8E17;
+	color: white;
+}
+.button.primary:hover{
+	background-color: #357914;
+	cursor: pointer;
+}
+.button.outline {
+	background: transparent;
+	border: 2px solid #3E8E17;
+}
+*/
+
+
+ /* ---- LIST OF COLORS FOR STYLE GUIDE ---- */
+#content ul.color-list {
+	list-style: none;
+	margin: 0;
+}
+#content ul.color-list li {
+	display: inline-block;
+	box-sizing: border-box;
+	margin-right: 8px;
+	padding: 0;
+	width: 200px;
+	vertical-align: top;
+}
+span.colortest {
+	display: block;
+	width: 200px;
+	height: 200px;
+}
+
+ /* ---- LIST OF BUTTONS FOR STYLE GUIDE ---- */
+#content ul.button-list {
+	list-style: none;
+	margin: 0;
+}
+#content ul.button-list li {
+	box-sizing: border-box;
+	padding: 0 0 25px 0;
+	vertical-align: top;
+}
+
+
+/* ---- Logos for style-guide --- */
+#content img.big-logo {
+	width: 200px;
+	height: 200px;
+	padding-bottom: 15px;
+}    
+#content img.small-logo {
+	display: inline-block;
+	padding-right: 15px;
+	width: 50px;
+	height: 50px;
+}
