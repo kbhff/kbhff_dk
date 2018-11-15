@@ -49,12 +49,12 @@ u.e.addWindowEvent = function(node, type, action) {
 
 	window["_OnWindowEvent_node_"+ id] = node;
 	// callback passed as function reference
-	if(typeof(action) == "function") {
+	if(fun(action)) {
 		eval('window["_OnWindowEvent_callback_' + id + '"] = function(event) {window["_OnWindowEvent_node_'+ id + '"]._OnWindowEvent_callback_'+id+' = '+action+'; window["_OnWindowEvent_node_'+ id + '"]._OnWindowEvent_callback_'+id+'(event);};');
 	} 
 	// callback passed as function name value
 	else {
-		eval('window["_OnWindowEvent_callback_' + id + '"] = function(event) {if(typeof(window["_OnWindowEvent_node_'+ id + '"]["'+action+'"]) == "function") {window["_OnWindowEvent_node_'+id+'"]["'+action+'"](event);}};');
+		eval('window["_OnWindowEvent_callback_' + id + '"] = function(event) {if(fun(window["_OnWindowEvent_node_'+ id + '"]["'+action+'"])) {window["_OnWindowEvent_node_'+id+'"]["'+action+'"](event);}};');
 	}
 	u.e.addEvent(window, type, window["_OnWindowEvent_callback_" + id]);
 	return id;
@@ -78,12 +78,12 @@ u.e.addWindowStartEvent = function(node, action) {
 
 	window["_Onstart_node_"+ id] = node;
 	// callback passed as function reference
-	if(typeof(action) == "function") {
+	if(fun(action)) {
 		eval('window["_Onstart_callback_' + id + '"] = function(event) {window["_Onstart_node_'+ id + '"]._Onstart_callback_'+id+' = '+action+'; window["_Onstart_node_'+ id + '"]._Onstart_callback_'+id+'(event);};');
 	} 
 	// callback passed as function name value
 	else {
-		eval('window["_Onstart_callback_' + id + '"] = function(event) {if(typeof(window["_Onstart_node_'+ id + '"]["'+action+'"]) == "function") {window["_Onstart_node_'+id+'"]["'+action+'"](event);}};');
+		eval('window["_Onstart_callback_' + id + '"] = function(event) {if(fun(window["_Onstart_node_'+ id + '"]["'+action+'"])) {window["_Onstart_node_'+id+'"]["'+action+'"](event);}};');
 	}
 	u.e.addStartEvent(window, window["_Onstart_callback_" + id]);
 	return id;
@@ -106,12 +106,12 @@ u.e.addWindowMoveEvent = function(node, action) {
 
 	window["_Onmove_node_"+ id] = node;
 	// callback passed as function reference
-	if(typeof(action) == "function") {
+	if(fun(action)) {
 		eval('window["_Onmove_callback_' + id + '"] = function(event) {window["_Onmove_node_'+ id + '"]._Onmove_callback_'+id+' = '+action+'; window["_Onmove_node_'+ id + '"]._Onmove_callback_'+id+'(event);};');
 	} 
 	// callback passed as function name value
 	else {
-		eval('window["_Onmove_callback_' + id + '"] = function(event) {if(typeof(window["_Onmove_node_'+ id + '"]["'+action+'"]) == "function") {window["_Onmove_node_'+id+'"]["'+action+'"](event);}};');
+		eval('window["_Onmove_callback_' + id + '"] = function(event) {if(fun(window["_Onmove_node_'+ id + '"]["'+action+'"])) {window["_Onmove_node_'+id+'"]["'+action+'"](event);}};');
 	}
 
 	// add event listener
@@ -136,12 +136,12 @@ u.e.addWindowEndEvent = function(node, action) {
 
 	window["_Onend_node_"+ id] = node;
 	// callback passed as function reference
-	if(typeof(action) == "function") {
+	if(fun(action)) {
 		eval('window["_Onend_callback_' + id + '"] = function(event) {window["_Onend_node_'+ id + '"]._Onend_callback_'+id+' = '+action+'; window["_Onend_node_'+ id + '"]._Onend_callback_'+id+'(event);};');
 	} 
 	// callback passed as function name value
 	else {
-		eval('window["_Onend_callback_' + id + '"] = function(event) {if(typeof(window["_Onend_node_'+ id + '"]["'+action+'"]) == "function") {window["_Onend_node_'+id+'"]["'+action+'"](event);}};');
+		eval('window["_Onend_callback_' + id + '"] = function(event) {if(fun(window["_Onend_node_'+ id + '"]["'+action+'"])) {window["_Onend_node_'+id+'"]["'+action+'"](event);}};');
 	}
 
 	// add event listener
@@ -158,67 +158,3 @@ u.e.removeWindowEndEvent = function(node, id) {
 	window["_Onend_node_"+ id] = null;
 	window["_Onend_callback_"+ id] = null;
 }
-
-
-
-
-/**
-* THEORETIC STUFF - Ready to be deprecated in favor of plain u.e.addWindowEvent
-*/
-
-// probably just use on event listener and make it call all appropriate callbacks on registrered nodes
-u.e.addWindowResizeEvent = function(node, action) {
-	var id = u.randomString();
-
-	window["_Onresize_node_"+ id] = node;
-	// callback passed as function reference
-	if(typeof(action) == "function") {
-		eval('window["_Onresize_callback_' + id + '"] = function(event) {window["_Onresize_node_'+ id + '"]._Onresize_callback_'+id+' = '+action+'; window["_Onresize_node_'+ id + '"]._Onresize_callback_'+id+'(event);};');
-	} 
-	// callback passed as function name value
-	else {
-		eval('window["_Onresize_callback_' + id + '"] = function(event) {if(typeof(window["_Onresize_node_'+ id + '"]["'+action+'"]) == "function") {window["_Onresize_node_'+id+'"]["'+action+'"](event);}};');
-	}
-	u.e.addEvent(window, "resize", window["_Onresize_callback_" + id]);
-	return id;
-}
-u.e.removeWindowResizeEvent = function(node, id) {
-
-	// remove event listener
-	u.e.removeEvent(window, "resize", window["_Onresize_callback_"+id]);
-
-	// remove callback references
-	window["_Onresize_node_"+id]["_Onresize_callback_"+id] = null;
-	window["_Onresize_node_"+id] = null;
-	window["_Onresize_callback_"+id] = null;
-}
-
-// create window scroll event listener with callback to node
-// returns hidden mapping id, to enable event removal
-u.e.addWindowScrollEvent = function(node, action) {
-	var id = u.randomString();
-
-	window["_Onscroll_node_"+ id] = node;
-	// callback passed as function reference
-	if(typeof(action) == "function") {
-		eval('window["_Onscroll_callback_' + id + '"] = function(event) {window["_Onscroll_node_'+ id + '"]._Onscroll_callback_'+id+' = '+action+'; window["_Onscroll_node_'+ id + '"]._Onscroll_callback_'+id+'(event);};');
-	} 
-	// callback passed as function name value
-	else {
-		eval('window["_Onscroll_callback_' + id + '"] = function(event) {if(typeof(window["_Onscroll_node_'+ id + '"]["'+action+'"]) == "function") {window["_Onscroll_node_'+id+'"]["'+action+'"](event);}};');
-	}
-	u.e.addEvent(window, "scroll", window["_Onscroll_callback_" + id]);
-	return id;
-}
-// Remove window scroll event from node based on hidden id
-u.e.removeWindowScrollEvent = function(node, id) {
-
-	// remove event listener
-	u.e.removeEvent(window, "scroll", window["_Onscroll_callback_"+id]);
-
-	// remove callback references
-	window["_Onscroll_node_"+id]["_Onscroll_callback_"+id] = null;
-	window["_Onscroll_node_"+id] = null;
-	window["_Onscroll_callback_"+id] = null;
-}
-

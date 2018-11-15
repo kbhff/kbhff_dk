@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-11-14 15:53:38
+asset-builder @ 2018-11-15 15:50:20
 */
 
 /*seg_desktop_include.css*/
@@ -35,12 +35,12 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 /*s-fonts.css*/
 @font-face {
 	font-family: 'voresfont';
-	src: url('fonts/voresfont.eot');
-	src: url('fonts/voresfont.eot?#iefix') format('embedded-opentype'),
-		 url('fonts/voresfont.woff2') format('woff2'),
-		 url('fonts/voresfont.woff') format('woff'),
-		 url('fonts/voresfont.svg#alte_din_1451_mittelschriftRg') format('svg'),
-		 url('fonts/voresfont.ttf') format('truetype');
+	src: url('fonts/vores_font/voresfont.eot');
+	src: url('fonts/vores_font/voresfont.eot?#iefix') format('embedded-opentype'),
+		 url('fonts/vores_font/voresfont.woff2') format('woff2'),
+		 url('fonts/vores_font/voresfont.woff') format('woff'),
+		 url('fonts/vores_font/voresfont.svg#alte_din_1451_mittelschriftRg') format('svg'),
+		 url('fonts/vores_font/voresfont.ttf') format('truetype');
 	font-weight: 400;
 	font-style: normal;
 }
@@ -603,78 +603,5 @@ body > div.overlay fieldset label {
 #footer ul.servicenavigation li.copyright {
 	float: left;
 	padding-left: 0;
-}
-
-
-/*s-styleguide.css*/
-#content .scene.styleguide .highlight {
-	color: #3e8e17;
-}
-#content .scene.styleguide .color-primary {
-	background: #3E8E17;
-}
-#content .scene.styleguide .color-primary-lighter {
-	background: #559C33;
-}
-#content .scene.styleguide .color-primary-darker {
-	background: #357914;
-}
-#content .scene.styleguide .color-signal-red {
-	background: #C2381E;
-}
-#content .scene.styleguide .color-black {
-	background: #060606;
-}
-#content .scene.styleguide .color-grey-darker {
-	background: #333333;
-}
-#content .scene.styleguide .color-grey-dark {
-	background: #666666;
-}
-#content .scene.styleguide .color-grey {
-	background: #999999;
-}
-#content .scene.styleguide .color-grey-light {
-	background: #BBBBBB;
-}
-#content .scene.styleguide .color-grey-lighter {
-	background: #DDDDDD;
-}
-#content ul.color-list {
-	list-style: none;
-	margin: 0;
-}
-#content ul.color-list li {
-	display: inline-block;
-	box-sizing: border-box;
-	margin-right: 8px;
-	padding: 0;
-	width: 200px;
-	vertical-align: top;
-}
-span.colortest {
-	display: block;
-	width: 200px;
-	height: 200px;
-}
-#content ul.button-list {
-	list-style: none;
-	margin: 0;
-}
-#content ul.button-list li {
-	box-sizing: border-box;
-	padding: 0 0 25px 0;
-	vertical-align: top;
-}
-#content img.big-logo {
-	width: 200px;
-	height: 200px;
-	padding-bottom: 15px;
-}    
-#content img.small-logo {
-	display: inline-block;
-	padding-right: 15px;
-	width: 50px;
-	height: 50px;
 }
 

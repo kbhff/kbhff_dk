@@ -18,7 +18,7 @@ div.field textarea {box-shadow: inset 0 1px 2px #dedede; box-sizing: border-box;
 
 div.field input {width: calc(100% - 4px); padding: 3px 5px 3px 6px;}
 div.field select {width: calc(100% - 4px); padding: 2px 3px 2px 2px;
-	background: #ffffff url(/img/gx_select.svg) no-repeat right 7px;
+	background: #ffffff url(../../../img/gx_select.svg) no-repeat right 7px;
 	background-size: 20px 20px;
 	-webkit-appearance: none;
 	-moz-appearance: none;
@@ -33,21 +33,21 @@ div.field textarea.autoexpand {width: calc(100% - 4px); padding: 3px 6px 2px; ov
 
 div.field.checkbox {}
 div.field.checkbox label {display: inline-block; vertical-align: top; text-transform: none; font-size: 14px; line-height: 24px; padding: 0 0 0 28px;
-	background: transparent url(/img/gx_checkbox_unchecked.svg) no-repeat left center;
+	background: transparent url(../../../img/gx_checkbox_unchecked.svg) no-repeat left center;
 	background-size: 20px 20px;
 }
 div.field.checkbox input:checked + label {
-	background-image: url(/img/gx_checkbox_checked.svg);
+	background-image: url(../../../img/gx_checkbox_checked.svg);
 }
 div.field.checkbox input {z-index: 2; position: absolute; top: 0; left: 0; width: 20px; height: 20px; opacity: 0;}
 
 div.field.radiobuttons .item {padding: 3px 0 0; position: relative;}
 div.field.radiobuttons .item label {display: block; text-transform: none; font-size: 14px; line-height: 24px;  padding: 0 0 0 28px;
-	background: transparent url(/img/gx_radiobutton_unchecked.svg) no-repeat left center;
+	background: transparent url(../../../img/gx_radiobutton_unchecked.svg) no-repeat left center;
 	background-size: 20px 20px;
 }
 div.field.radiobuttons .item input:checked + label {
-	background-image: url(/img/gx_radiobutton_checked.svg);
+	background-image: url(../../../img/gx_radiobutton_checked.svg);
 }
 div.field.radiobuttons .item input {z-index: 2; position: absolute; top: 0; left: 0; width: 20px; height: 20px; opacity: 0;}
 
@@ -59,17 +59,17 @@ div.field.focus textarea {margin: 0; width: 100%; border: 3px solid #3E8E17;}
 div.field.focus textarea:not(.autoexpand) {height: 104px;}
 
 div.field.checkbox.focus label {
-	background-image: url(/img/gx_checkbox_unchecked_focus.svg);
+	background-image: url(../../../img/gx_checkbox_unchecked_focus.svg);
 }
 div.field.radiobuttons .item input.focus + label {
-	background-image: url(/img/gx_radiobutton_unchecked_focus.svg);
+	background-image: url(../../../img/gx_radiobutton_unchecked_focus.svg);
 }
 
 div.field.checkbox.focus input:checked + label {
-	background-image: url(/img/gx_checkbox_checked_focus.svg);
+	background-image: url(../../../img/gx_checkbox_checked_focus.svg);
 }
 div.field.radiobuttons .item input.focus:checked + label {
-	background-image: url(/img/gx_radiobutton_checked_focus.svg);
+	background-image: url(../../../img/gx_radiobutton_checked_focus.svg);
 }
 
 
@@ -83,14 +83,14 @@ div.field.error textarea:not(.autoexpand) {height: 104px;}
 /* VALIDATION */	
 div.field .indicator {display: inline-block; vertical-align: top; width: 12px; height: 12px; margin-left: 4px;}
 div.field.required .indicator {
-	background: transparent url(/img/gx_required.svg) no-repeat center 1px;
+	background: transparent url(../../../img/gx_required.svg) no-repeat center 1px;
 	background-size: 9px 9px;
 }
 div.field.checkbox .indicator {margin-top: 7px;}
 
 /* CORRECT VALIDATION */
 div.field.correct .indicator {
-	background-image: url(/img/gx_correct.svg);
+	background-image: url(../../../img/gx_correct.svg);
 	background-position: center -2px;
 	background-size: 14px 14px;
 }

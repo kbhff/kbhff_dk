@@ -1,6 +1,22 @@
+/**
+* Notify response object structure
+* {
+*	"cms_message":{
+*		"message":[
+*			"message1", "message2"
+*		],
+*		"error":[
+*			"message1", "message2"
+*		]
+*		
+*	}
+* }
+*/
+
 u.notifier = function(node) {
 	
-	// u.bug("enable notifier");
+	u.bug_force = true;
+	u.bug("enable notifier");
 
 	var notifications = u.qs("div.notifications", node);
 	if(!notifications) {
@@ -8,8 +24,7 @@ u.notifier = function(node) {
 	}
 
 	node.notifications.hide_delay = 4500;
-	node.notifications.hide = function() {
-
+	node.notifications.hide = function(node) {
 		u.a.transition(this, "all 0.5s ease-in-out");
 		u.a.translate(this, 0, -this.offsetHeight);
 	}
@@ -19,7 +34,7 @@ u.notifier = function(node) {
 		var class_name = "message";
 
 		// additional info passed to function as JSON object
-		if(typeof(_options) == "object") {
+		if(obj(_options)) {
 			var argument;
 			for(argument in _options) {
 
@@ -30,47 +45,58 @@ u.notifier = function(node) {
 			}
 		}
 
-		var output;
+		var output = [];
 
-		// u.bug("message:" + typeof(response) + "; JSON: " + response.isJSON + "; HTML: " + response.isHTML);
+//		u.bug("message:" + typeof(response) + "; JSON: " + response.isJSON + "; HTML: " + response.isHTML);
 
-		if(typeof(response) == "object" && response.isJSON) {
+		if(obj(response)) {
+//		if(obj(response) && response.isJSON) {
 
 			var message = response.cms_message;
-			var cms_status = response.cms_status;
+			var cms_status = typeof(response.cms_status) != "undefined" ? response.cms_status : "";
 
 			// TODO: message can be JSON object
-			if(typeof(message) == "object") {
+			if(obj(message)) {
 				for(type in message) {
 //					u.bug("typeof(message[type]:" + typeof(message[type]) + "; " + type);
-					if(typeof(message[type]) == "string") {
-						output = u.ae(this.notifications, "div", {"class":class_name+" "+cms_status, "html":message[type]});
+					if(str(message[type])) {
+						output.push(u.ae(this.notifications, "div", {"class":class_name+" "+cms_status+" "+type, "html":message[type]}));
 					}
-					else if(typeof(message[type]) == "object" && message[type].length) {
+					else if(obj(message[type]) && message[type].length) {
 						var node, i;
-						for(i = 0; _message = message[type][i]; i++) {
-							output = u.ae(this.notifications, "div", {"class":class_name+" "+cms_status, "html":_message});
+						for(i = 0; i < message[type].length; i++) {
+							_message = message[type][i];
+
+							output.push(u.ae(this.notifications, "div", {"class":class_name+" "+cms_status+" "+type, "html":_message}));
 						}
 					
 					}
 				}
 			
 			}
-			else if(typeof(message) == "string") {
-				output = u.ae(this.notifications, "div", {"class":class_name+" "+cms_status, "html":message});
+			else if(str(message)) {
+				output.push(u.ae(this.notifications, "div", {"class":class_name+" "+cms_status, "html":message}));
 			}
 		
-			if(typeof(this.notifications.show) == "function") {
+			if(fun(this.notifications.show)) {
 				this.notifications.show();
 			}
 		
 		}
-		else if(typeof(response) == "object" && response.isHTML) {
+		else if(obj(response) && response.isHTML) {
 
 			// check for login
-			var login = u.qs(".scene.login", response);
+			var login = u.qs(".scene.login form", response);
 			var messages = u.qsa(".scene div.messages p", response);
 			if(login && !u.qs("#login_overlay")) {
+
+				// // remove article from login (if it exists)
+				// // it should not be shown in quick login
+				// var article = u.qs("div.article", login);
+				// if(article) {
+				// 	article.parentNode.removeChild(article);
+				// }
+
 
 				this.autosave_disabled = true;
 
@@ -84,18 +110,18 @@ u.notifier = function(node) {
 				overlay.node = this;
 				u.ae(overlay, login);
 				u.as(document.body, "overflow", "hidden");
-				var form = u.qs("form", overlay);
+//				var form = u.qs("form", overlay);
 
-				var relogin = u.ae(login, "p", {"class":"relogin", "html":(u.txt["relogin"] ? u.txt["relogin"] : "Your session expired")});
-				login.insertBefore(relogin, form);
+				var relogin = u.ie(login, "h1", {"class":"relogin", "html":(u.txt["relogin"] ? u.txt["relogin"] : "Your session expired")});
+//				login.insertBefore(relogin, form);
 
-				form.overlay = overlay;
-				u.ae(form, "input", {"type":"hidden", "name":"ajaxlogin", "value":"true"})
-				u.f.init(form);
+				login.overlay = overlay;
+				u.ae(login, "input", {"type":"hidden", "name":"ajaxlogin", "value":"true"})
+				u.f.init(login);
 
-				form.fields["username"].focus();
+				login.fields["username"].focus();
 
-				form.submitted = function() {
+				login.submitted = function() {
 					this.response = function(response) {
 						if(response.isJSON && response.cms_status == "success") {
 							var csrf_token = response.cms_object["csrf-token"];
@@ -105,15 +131,18 @@ u.notifier = function(node) {
 							var dom_vars = u.qsa("*", page);
 
 							var i, node;
-							for(i = 0; node = data_vars[i]; i++) {
+							for(i = 0; i < data_vars.length; i++) {
+								node = data_vars[i];
 								// u.bug("data:" + u.nodeId(node) + ", " + node.getAttribute("data-csrf-token"));
 								node.setAttribute("data-csrf-token", csrf_token);
 							}
-							for(i = 0; node = input_vars[i]; i++) {
+							for(i = 0; ni <input_vars.length; i++) {
+								node = input_vars[i];
 								// u.bug("input:" + u.nodeId(node) + ", " + node.value);
 								node.value = csrf_token;
 							}
-							for(i = 0; node = dom_vars[i]; i++) {
+							for(i = 0;i <= dom_vars.length; i++) {
+								node = dom_vars[i];
 								if(node.csrf_token) {
 									// u.bug("dom:" + u.nodeId(node) + ", " + node.csrf_token);
 									node.csrf_token = csrf_token;
@@ -125,7 +154,9 @@ u.notifier = function(node) {
 							// additional overlay cleanup (edge case handling)
 							var multiple_overlays = u.qsa("#login_overlay");
 							if(multiple_overlays) {
-								for(i = 0; overlay = multiple_overlays[i]; i++) {
+								for(i = 0; i < multiple_overlays.length; i++) {
+									overlay = multiple_overlays[i];
+
 									overlay.parentNode.removeChild(overlay);
 								}
 							}
@@ -169,14 +200,16 @@ u.notifier = function(node) {
 			// look for messages in HTML
 			else if(messages) {
 //				u.bug(messages);
-				for(i = 0; message = messages[i]; i++) {
-					output = u.ae(this.notifications, "div", {"class":message.className, "html":message.innerHTML});
+				for(i = 0; i < messages.length; i++) {
+					message = messages[i];
+
+					output.push(u.ae(this.notifications, "div", {"class":message.className, "html":message.innerHTML}));
 				}
 			}
 		}
 
 
-		u.t.setTimer(this.notifications, this.notifications.hide, this.notifications.hide_delay);
+		this.t_notifier = u.t.setTimer(this.notifications, this.notifications.hide, this.notifications.hide_delay, output);
 
 		// if(message) {
 		// 	message.hide = function() {

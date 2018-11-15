@@ -161,14 +161,19 @@ u.e.drag = function(node, boundaries, _options) {
 
 	node.e_drag = true;
 
-	node._moves_counted = 0;
-	node._moves_required = (u.system("android, winphone")) ? 2 : 0;
+//	node._moves_counted = 0;
+//	node._moves_required = (u.system("android, winphone")) ? 2 : 0;
+//	node._moves_required = 5;
 
 	// check for empty node
 	if(node.childNodes.length < 2 && node.innerHTML.trim() == "") {
 		node.innerHTML = "&nbsp;";
 	}
 
+	// radius for movement after mousedown/touchstart before element is "picked"
+	// a simple click will not cause a pick
+	// shifted from counting move-events because new phones thow 5 moveevent events on a tap (sensitive screen, powerful chips) - now we measure the distance travelled in those movements, to know if the user shows intent of dragging
+	node.distance_to_pick = 2;
 
 	// default values
 	node.drag_strict = true;
@@ -177,6 +182,7 @@ u.e.drag = function(node, boundaries, _options) {
 	node.drag_dropout = true;
 
 	// debug displaying of boundaries
+	// TODO: needs to be updated
 	node.show_bounds = false;
 
 	// default callbacks
@@ -186,7 +192,7 @@ u.e.drag = function(node, boundaries, _options) {
 
 
 	// additional info passed to function as JSON object
-	if(typeof(_options) == "object") {
+	if(obj(_options)) {
 		var _argument;
 		for(_argument in _options) {
 
@@ -383,6 +389,7 @@ y: 3 -> -2 = 5 (3 - -2)
 
 */
 
+//	u.bug(init_speed_x + ", " + init_speed_y);
 
 	if(
 		(init_speed_x > init_speed_y && this.only_horizontal) || 
@@ -391,10 +398,11 @@ y: 3 -> -2 = 5 (3 - -2)
 
 //		u.bug("valid pick:" + u.nodeId(this) + ", " + this._moves_counted + ", " + this._moves_required)
 
-		if(this._moves_counted >= this._moves_required) {
+//		if(this._moves_counted >= this._moves_required) {
+		if((init_speed_x > this.distance_to_pick || init_speed_y > this.distance_to_pick)) {
 
 			// reset moves count
-			this._moves_counted = 0;
+//			this._moves_counted = 0;
 
 //			u.bug("actual pick:" + u.nodeId(this))
 
@@ -444,7 +452,7 @@ y: 3 -> -2 = 5 (3 - -2)
 			u.e.addEndEvent(this, u.e._drop);
 
 			// notify of pick
-			if(typeof(this[this.callback_picked]) == "function") {
+			if(fun(this[this.callback_picked])) {
 				this[this.callback_picked](event);
 			}
 
@@ -490,9 +498,9 @@ y: 3 -> -2 = 5 (3 - -2)
 			}
 
 		}
-		else {
-			this._moves_counted++;
-		}
+		// else {
+		// 	this._moves_counted++;
+		// }
 
 	}
 
@@ -557,7 +565,7 @@ u.e._drag = function(event) {
 		this._y = this.current_y;
 	}
 
-	u.bug("locked:" + this.locked);
+//	u.bug("locked:" + this.locked + ", " + this.only_horizontal + ", " + this.only_vertical);
 
 	if(this.e_swipe) {
 //		u.bug("swiping:" + this.locked + ", " + this.only_horizontal + ", " + this.only_vertical + ", " + Math.abs(this.current_xps) + ":" + Math.abs(this.current_yps));
@@ -749,10 +757,10 @@ u.e._drag = function(event) {
 	}
 
 	// notify of movement
-	if(typeof(this[this.callback_moved]) == "function") {
+	if(fun(this[this.callback_moved])) {
 		this[this.callback_moved](event);
 	}
-	// if(typeof(this.moved) == "function") {
+	// if(fun(this.moved)) {
 	// 	this.moved(event);
 	// }
 
@@ -781,16 +789,16 @@ u.e._drop = function(event) {
 		u.stats.event(this, this.e_swipe_options);
 
 
-		if(this.swiped == "left" && typeof(this.swipedLeft) == "function") {
+		if(this.swiped == "left" && fun(this.swipedLeft)) {
 			this.swipedLeft(event);
 		}
-		else if(this.swiped == "right" && typeof(this.swipedRight) == "function") {
+		else if(this.swiped == "right" && fun(this.swipedRight)) {
 			this.swipedRight(event);
 		}
-		else if(this.swiped == "down" && typeof(this.swipedDown) == "function") {
+		else if(this.swiped == "down" && fun(this.swipedDown)) {
 			this.swipedDown(event);
 		}
-		else if(this.swiped == "up" && typeof(this.swipedUp) == "function") {
+		else if(this.swiped == "up" && fun(this.swipedUp)) {
 			this.swipedUp(event);
 		}
 //		this.swiped = false;
@@ -837,7 +845,7 @@ u.e._drop = function(event) {
 			this.transitioned = null;
 			u.a.transition(this, "none");
 
-			if(typeof(this.projected) == "function") {
+			if(fun(this.projected)) {
 				this.projected(event);
 			}
 		}
@@ -870,12 +878,12 @@ u.e._drop = function(event) {
 	}
 
 	// notify of drop
-	if(typeof(this[this.callback_dropped]) == "function") {
+	if(fun(this[this.callback_dropped])) {
 		this[this.callback_dropped](event);
 	}
 
 
-	// if(typeof(this.dropped) == "function") {
+	// if(fun(this.dropped)) {
 	// 	this.dropped(event);
 	// }
 

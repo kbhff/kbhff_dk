@@ -27,7 +27,8 @@ Util.getElement = u.ge = function(identifier, scope) {
 	}
 	scope = scope ? scope : document;
 	regexp = new RegExp("(^|\\s)" + identifier + "(\\s|$|\:)");
-	for(i = 0; node = scope.getElementsByTagName("*")[i]; i++) {
+	for(i = 0; i < scope.getElementsByTagName("*").length; i++) {
+		node = scope.getElementsByTagName("*")[i];
 		if(regexp.test(node.className)) {
 			return node;
 		}
@@ -42,7 +43,8 @@ Util.getElements = u.ges = function(identifier, scope) {
 	var nodes = new Array();
 	scope = scope ? scope : document;
 	regexp = new RegExp("(^|\\s)" + identifier + "(\\s|$|\:)");
-	for(i = 0; node = scope.getElementsByTagName("*")[i]; i++) {
+	for(i = 0; i < scope.getElementsByTagName("*").length; i++) {
+		node = scope.getElementsByTagName("*")[i];
 		if(regexp.test(node.className)) {
 			nodes.push(node);
 		}
@@ -60,7 +62,7 @@ Util.parentNode = u.pn = function(node, _options) {
 	var exclude = "";
 	var include = "";
 
-	if(typeof(_options) == "object") {
+	if(obj(_options)) {
 		var _argument;
 		for(_argument in _options) {
 
@@ -101,7 +103,7 @@ Util.previousSibling = u.ps = function(node, _options) {
 	// TODO: Consider option to start over from end, if no prev is found
 	// var loop = false;
 
-	if(typeof(_options) == "object") {
+	if(obj(_options)) {
 		var _argument;
 		for(_argument in _options) {
 
@@ -143,7 +145,7 @@ Util.nextSibling = u.ns = function(node, _options) {
 	// TODO: Consider option to start over, if no next is found
 	// var loop = false;
 
-	if(typeof(_options) == "object") {
+	if(obj(_options)) {
 		var _argument;
 		for(_argument in _options) {
 
@@ -181,7 +183,7 @@ Util.childNodes = u.cn = function(node, _options) {
 	var exclude = "";
 	var include = "";
 
-	if(typeof(_options) == "object") {
+	if(obj(_options)) {
 		var _argument;
 		for(_argument in _options) {
 
@@ -198,7 +200,8 @@ Util.childNodes = u.cn = function(node, _options) {
 
 	var i, child;
 	var children = new Array();
-	for(i = 0; child = node.childNodes[i]; i++) {
+	for(i = 0; i < node.childNodes.length; i++) {
+		child = node.childNodes[i]
 		if(child && child.nodeType != 3 && child.nodeType != 8 && (!exclude || (!u.inNodeList(child, exclude_nodes))) && (!include || (u.inNodeList(child, include_nodes)))) {
 			children.push(child);
 		}
@@ -220,7 +223,7 @@ Util.childNodes = u.cn = function(node, _options) {
 Util.appendElement = u.ae = function(_parent, node_type, attributes) {
 	try {
 		// is node_type already DOM node
-		var node = (typeof(node_type) == "object") ? node_type : document.createElement(node_type);
+		var node = (obj(node_type)) ? node_type : document.createElement(node_type);
 		node = _parent.appendChild(node);
 
 		// add attributes
@@ -248,7 +251,7 @@ Util.appendElement = u.ae = function(_parent, node_type, attributes) {
 */
 Util.insertElement = u.ie = function(_parent, node_type, attributes) {
 	try {
-		var node = (typeof(node_type) == "object") ? node_type : document.createElement(node_type);
+		var node = (obj(node_type)) ? node_type : document.createElement(node_type);
 		node = _parent.insertBefore(node, _parent.firstChild);
 		// add attributes
 		if(attributes) {
@@ -334,7 +337,7 @@ Util.clickableElement = u.ce = function(node, _options) {
 	node._use_link = "a";
 	node._click_type = "manual";
 
-	if(typeof(_options) == "object") {
+	if(obj(_options)) {
 		var _argument;
 		for(_argument in _options) {
 
@@ -362,7 +365,7 @@ Util.clickableElement = u.ce = function(node, _options) {
 		u.ac(node, "clickable");
 	}
 
-	if(typeof(u.e) != "undefined" && typeof(u.e.click) == "function") {
+	if(obj(u.e) && fun(u.e.click)) {
 
 		// set up click event handler and pass options for tracking
 		u.e.click(node, _options);
@@ -373,7 +376,7 @@ Util.clickableElement = u.ce = function(node, _options) {
 			node.clicked = function(event) {
 
 				// allow for custom action before actual click is executed
-				if(typeof(node.preClicked) == "function") {
+				if(fun(node.preClicked)) {
 					node.preClicked();
 				}
 
@@ -383,7 +386,7 @@ Util.clickableElement = u.ce = function(node, _options) {
 				}
 				else {
 					// HASH/POPSTATE navigation
-					if(typeof(u.h) != "undefined" && u.h.is_listening) {
+					if(obj(u.h) && u.h.is_listening) {
 						u.h.navigate(this.url, this);
 					}
 					else {
@@ -401,9 +404,10 @@ Util.clickableElement = u.ce = function(node, _options) {
 Util.classVar = u.cv = function(node, var_name) {
 //	u.bug(u.nodeId(node) + ":" + node.className);
 	try {
-		var regexp = new RegExp(var_name + ":[?=\\w/\\#~:.,?+=?&%@!\\-]*");
-		if(node.className.match(regexp)) {
-			return node.className.match(regexp)[0].replace(var_name + ":", "");
+		var regexp = new RegExp("(\^| )" + var_name + ":[?=\\w/\\#~:.,?+=?&%@!\\-]*");
+		var match = node.className.match(regexp);
+		if(match) {
+			return match[0].replace(var_name + ":", "").trim();
 		}
 	}
 	catch(exception) {
@@ -450,13 +454,19 @@ Util.hasClass = u.hc = function(node, classname) {
 Util.addClass = u.ac = function(node, classname, dom_update) {
 	try {
 		if(classname) {
-			var regexp = new RegExp("(^|\\s)" + classname + "(\\s|$)");
-			if(!regexp.test(node.className)) {
-				node.className += node.className ? " " + classname : classname;
-
+			if(node.classList){
+				node.classList.add(classname);
 				// force dom update (performance killer, but will make rendering more detailed)
 				dom_update === false ? false : node.offsetTop;
 			}
+			else {
+				var regexp = new RegExp("(^|\\s)" + classname + "(\\s|$)");
+				if(!regexp.test(node.className)) {
+					node.className += node.className ? " " + classname : classname;
+					dom_update === false ? false : node.offsetTop;
+				}
+			}
+			
 			return node.className;
 		}
 	}
@@ -465,16 +475,23 @@ Util.addClass = u.ac = function(node, classname, dom_update) {
 	}
 	return false;
 }
+
 // Remove all instances of classname from element
+// TODO: SVG.className cannot be set (needs to be SVG.className.baseVal || use classList works from IE 11)
 Util.removeClass = u.rc = function(node, classname, dom_update) {
 	try {
 		if(classname) {
-			var regexp = new RegExp("(\\b)" + classname + "(\\s|$)", "g");
-			node.className = node.className.replace(regexp, " ").trim().replace(/[\s]{2}/g, " ");
-
-			// force dom update (performance killer, but will make rendering more detailed)
-			dom_update === false ? false : node.offsetTop;
-			return node.className;
+			if(node.classList.contains(classname)) {
+				node.classList.remove(classname);
+			}
+			else {
+				var regexp = new RegExp("(\\b)" + classname + "(\\s|$)", "g");
+				node.className = node.className.replace(regexp, " ").trim().replace(/[\s]{2}/g, " ");
+	
+				// force dom update (performance killer, but will make rendering more detailed)
+				dom_update === false ? false : node.offsetTop;
+				return node.className;
+			}
 		}
 	}
 	catch(exception) {
@@ -488,22 +505,41 @@ Util.removeClass = u.rc = function(node, classname, dom_update) {
 // if _classname is given as parameter, switch between to two classnames
 Util.toggleClass = u.tc = function(node, classname, _classname, dom_update) {
 	try {
-		var regexp = new RegExp("(^|\\s)" + classname + "(\\s|$|\:)");
-		if(regexp.test(node.className)) {
-			u.rc(node, classname, false);
-			if(_classname) {
-				u.ac(node, _classname, false);
+		if(node.classList) {
+
+			if(node.classList.contains(classname)) {
+				node.classList.remove(classname);
+				if(_classname) {
+					node.classList.add(_classname);
+				}
+			}
+
+			else {
+				node.classList.add(classname);
+				if(_classname) {
+					node.classList.remove(_classname);
+				}
 			}
 		}
 		else {
-			u.ac(node, classname, false);
-			if(_classname) {
-				u.rc(node, _classname, false);
+			var regexp = new RegExp("(^|\\s)" + classname + "(\\s|$|\:)");
+			if(regexp.test(node.className)) {
+				u.rc(node, classname, false);
+				if(_classname) {
+					u.ac(node, _classname, false);
+				}
 			}
-		}
 
-		dom_update === false ? false : node.offsetTop;
-		return node.className;
+			else {
+				u.ac(node, classname, false);
+				if(_classname) {
+					u.rc(node, _classname, false);
+				}
+			}
+	
+			dom_update === false ? false : node.offsetTop;
+			return node.className;
+		}
 	}
 	catch(exception) {
 		u.exception("u.tc", arguments, exception);
@@ -607,7 +643,8 @@ Util.selectText = function(node) {
 Util.inNodeList = function(node, list) {
 
 	var i, list_node;
-	for(i = 0; list_node = list[i]; i++) {
+	for(i = 0; i < list.length; i++) {
+		list_node = list[i]
 		if(list_node === node) {
 			return true;
 		}
@@ -617,23 +654,20 @@ Util.inNodeList = function(node, list) {
 }
 
 // is node within scope
-// TODO: compare speed with other methods
-Util.nodeWithin = u.nw = function(node, scope) {
-	var node_key = u.randomString(8);
-	var scope_key = u.randomString(8);
-	u.ac(node, node_key);
-	u.ac(scope, scope_key);
+u.contains = Util.nodeWithin = u.nw = function(node, scope) {
 
-	if(u.qs("."+scope_key+" ."+node_key)) {
-
-		u.rc(node, node_key);
-		u.rc(scope, scope_key);
-
-		return true;
+	if(scope != node) {
+		if(scope.contains(node)) {
+			return true
+		}
 	}
+	return false;
 
-	u.rc(node, node_key);
-	u.rc(scope, scope_key);
+}
+u.containsOrIs = function(node, scope) {
+
+	if(scope == node || u.contains(node, scope)) {
+		return true
+	}
 	return false;
 }
-

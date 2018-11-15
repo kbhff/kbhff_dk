@@ -13,7 +13,9 @@ Util.cutString = function(string, length) {
 
 	// calculate length compensation
 	if(matches) {
-		for(i = 0; match = matches[i]; i++){
+		for(i = 0; i < matches.length; i++){
+			match = matches[i];
+
 			// only compensate if entity is within shown length
 			if(string.indexOf(match) < length){
 				length += match.length-1;
@@ -108,3 +110,76 @@ Util.normalize = function(string) {
 
 	return string;
 }
+
+// select correct form, based on count
+Util.pluralize = function(count, singular, plural) {
+	if(count != 1) {
+		return count + " " + plural;
+	}
+	return count + " " + singular;
+}
+
+
+
+// is string valid JSON
+Util.isStringJSON = function(string) {
+
+	// JSON hints
+	// ( | { - json
+	if(string.trim().substr(0, 1).match(/[\{\[]/i) && string.trim().substr(-1, 1).match(/[\}\]]/i)) {
+//		u.bug("guessing JSON:" + string, "green");
+
+		try {
+			// test for json object()
+			var test = JSON.parse(string);
+			if(obj(test)) {
+				test.isJSON = true;
+				return test;
+			}
+		}
+		// ignore exception
+		catch(exception) {
+			console.log(exception)
+		}
+	}
+
+	// unknown response
+	return false;
+}
+
+// is string valid HTML
+Util.isStringHTML = function(string) {
+
+	// HTML hints
+	// < - HTML
+	if(string.trim().substr(0, 1).match(/[\<]/i) && string.trim().substr(-1, 1).match(/[\>]/i)) {
+//		u.bug("guessing HTML" + string, "green");
+
+		// test for DOM
+		try {
+			var test = document.createElement("div");
+			test.innerHTML = string;
+
+			// seems to be a valid test for now
+			if(test.childNodes.length) {
+
+				// sometimes if a head/body tag is actually sent from the server, we may need some of its information
+				// getting head/body info with regular expression on responseText
+				var body_class = string.match(/<body class="([a-z0-9A-Z_: ]+)"/);
+				test.body_class = body_class ? body_class[1] : "";
+				var head_title = string.match(/<title>([^$]+)<\/title>/);
+				test.head_title = head_title ? head_title[1] : "";
+
+				test.isHTML = true;
+				return test;
+			}
+		}
+		// ignore exception
+		catch(exception) {}
+	}
+
+	// unknown response
+	return false;
+}
+
+
