@@ -7,19 +7,18 @@ Util.Timer = u.t = new function() {
 
 	// Add new timer to object
 	this.setTimer = function(node, action, timeout, param) {
-//		u.bug("setTimer:"+u.nodeId(node)+", "+typeof(action) +", "+timeout)
+//		u.bug("setTimer:"+u.nodeId(node)+", "+typeof(action) +", "+timeout + ", " + typeof(timeout))
 
 		var id = this._timers.length;
 		param = param ? param : {"target":node, "type":"timeout"};
 
 		this._timers[id] = {"_a":action, "_n":node, "_p":param, "_t":setTimeout("u.t._executeTimer("+id+")", timeout)};
-
 		return id;
 	}
 
 	// Reset timer
 	this.resetTimer = function(id) {
-//		u.bug("resetTimer:");
+//		u.bug("resetTimer:" + id);
 //		u.xInObject(this._timers[id]);
 
 		if(this._timers[id]) {
@@ -40,13 +39,13 @@ Util.Timer = u.t = new function() {
 		var node = timer._n;
 		
 		// function reference
-		if(typeof(timer._a) == "function") {
+		if(fun(timer._a)) {
 			node._timer_action = timer._a;
 			node._timer_action(timer._p);
 			node._timer_action = null;
 		}
 		// function name
-		else if(typeof(node[timer._a]) == "function") {
+		else if(fun(node[timer._a])) {
 			node[timer._a](timer._p);
 		}
 
@@ -75,12 +74,12 @@ Util.Timer = u.t = new function() {
 	this._executeInterval = function(id) {
 
 		var node = this._timers[id]._n;
-		if(typeof(this._timers[id]._a) == "function") {
+		if(fun(this._timers[id]._a)) {
 			node._interval_action = this._timers[id]._a;
 			node._interval_action(this._timers[id]._p);
 			node._interval_action = null;
 		}
-		else if(typeof(node[this._timers[id]._a]) == "function") {
+		else if(fun(node[this._timers[id]._a])) {
 			node[this._timers[id]._a](this._timers[id]._p);
 		}
 

@@ -17,38 +17,51 @@ Util.request = function(node, url, _options) {
 	node[request_id].request_async = true;
 	node[request_id].request_data = "";
 	node[request_id].request_headers = false;
+	node[request_id].request_credentials = false;
+
+	node[request_id].response_type = false;
 
 	node[request_id].callback_response = "response";
 	node[request_id].callback_error = "responseError";
 
 	node[request_id].jsonp_callback = "callback";
 
+	node[request_id].request_timeout = false;
+
 
 	// additional info passed to function as JSON object
-	if(typeof(_options) == "object") {
+	if(obj(_options)) {
 		var argument;
 		for(argument in _options) {
 
 			switch(argument) {
-				case "method"				: node[request_id].request_method		= _options[argument]; break;
+				case "method"				: node[request_id].request_method			= _options[argument]; break;
 
 				// PARAMS IS DEPRECATED - REPLACED BY data
-				case "params"				: node[request_id].request_data			= _options[argument]; break;
-				case "data"					: node[request_id].request_data			= _options[argument]; break;
+				case "params"				: node[request_id].request_data				= _options[argument]; break;
+				case "data"					: node[request_id].request_data				= _options[argument]; break;
 
-				case "async"				: node[request_id].request_async		= _options[argument]; break;
-				case "headers"				: node[request_id].request_headers		= _options[argument]; break;
+				case "async"				: node[request_id].request_async			= _options[argument]; break;
+				case "headers"				: node[request_id].request_headers			= _options[argument]; break;
+				case "credentials"			: node[request_id].request_credentials		= _options[argument]; break;
 
-				case "callback"				: node[request_id].callback_response	= _options[argument]; break;
-				case "error_callback"		: node[request_id].callback_error		= _options[argument]; break;
+				case "responseType"			: node[request_id].response_type			= _options[argument]; break;
 
-				case "jsonp_callback"		: node[request_id].jsonp_callback		= _options[argument]; break;
+				case "callback"				: node[request_id].callback_response		= _options[argument]; break;
+				case "error_callback"		: node[request_id].callback_error			= _options[argument]; break;
+
+				case "jsonp_callback"		: node[request_id].jsonp_callback			= _options[argument]; break;
+
+
+				case "timeout"				: node[request_id].request_timeout			= _options[argument]; break;
 			}
 
 		}
 	}
 
 //	u.bug("request:" + node[request_id].request_url + ", " + node[request_id].request_method + ", " + node[request_id].request_data + ", " + node[request_id].request_async + ", " + node[request_id].request_headers);
+
+
 
 	// regular HTTP request
 	if(node[request_id].request_method.match(/GET|POST|PUT|PATCH/i)) {
@@ -57,15 +70,27 @@ Util.request = function(node, url, _options) {
 		node[request_id].HTTPRequest.node = node;
 		node[request_id].HTTPRequest.request_id = request_id;
 
+		// set specific responseType for request
+		if(node[request_id].response_type) {
+			node[request_id].HTTPRequest.responseType = node[request_id].response_type;
+		}
+
 		// listen for async request state change
 		if(node[request_id].request_async) {
+
+			// On somesystems (like sharepoint), the XMLHTTPRequest is modified and applying 
+			// a readystatechange handler directy will not work
+			//
+			// This also enables callback for browsers which doesn't support event listeners on XMLHTTPRequest object 
+			// (for desktop_light extension, where eventlistener must be applied differently)
 			node[request_id].HTTPRequest.statechanged = function() {
 				if(this.readyState == 4 || this.IEreadyState) {
 					// process async response
 					u.validateResponse(this);
 				}
 			}
-			if(typeof(node[request_id].HTTPRequest.addEventListener) == "function") {
+			// correctly handle readystatechange
+			if(fun(node[request_id].HTTPRequest.addEventListener)) {
 				u.e.addEvent(node[request_id].HTTPRequest, "readystatechange", node[request_id].HTTPRequest.statechanged);
 			}
 		}
@@ -83,16 +108,24 @@ Util.request = function(node, url, _options) {
 				node[request_id].request_url += params ? ((!node[request_id].request_url.match(/\?/g) ? "?" : "&") + params) : "";
 
 				node[request_id].HTTPRequest.open(node[request_id].request_method, node[request_id].request_url, node[request_id].request_async);
-				node[request_id].HTTPRequest.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
 
-				// rails form proofing
-				var csfr_field = u.qs('meta[name="csrf-token"]');
-				if(csfr_field && csfr_field.content) {
-					node[request_id].HTTPRequest.setRequestHeader("X-CSRF-Token", csfr_field.content);
+				// set timeout?
+				if(node[request_id].request_timeout) {
+					node[request_id].HTTPRequest.timeout = node[request_id].request_timeout;
+				}
+
+				// Request with credentials
+				if(node[request_id].request_credentials) {
+					node[request_id].HTTPRequest.withCredentials = true;
+				}
+
+				// set default content type
+				if(typeof(node[request_id].request_headers) != "object" || (!node[request_id].request_headers["Content-Type"] && !node[request_id].request_headers["content-type"])) {
+					node[request_id].HTTPRequest.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
 				}
 
 				// add additional headers
-				if(typeof(node[request_id].request_headers) == "object") {
+				if(obj(node[request_id].request_headers)) {
 					var header;
 					for(header in node[request_id].request_headers) {
 						node[request_id].HTTPRequest.setRequestHeader(header, node[request_id].request_headers[header]);
@@ -114,7 +147,8 @@ Util.request = function(node, url, _options) {
 
 
 				// Stringify JSON objects
-				if(typeof(node[request_id].request_data) == "object" && node[request_id].request_data.constructor.toString().match(/function Object/i)) {
+				// TODO: 'function Object' is that mobile safari? - which versions?
+				if(obj(node[request_id].request_data) && node[request_id].request_data.constructor.toString().match(/function Object/i)) {
 					params = JSON.stringify(node[request_id].request_data);
 				}
 				else {
@@ -124,25 +158,36 @@ Util.request = function(node, url, _options) {
 				// open connection
 				node[request_id].HTTPRequest.open(node[request_id].request_method, node[request_id].request_url, node[request_id].request_async);
 
+				// set timeout?
+				if(node[request_id].request_timeout) {
+					node[request_id].HTTPRequest.timeout = node[request_id].request_timeout;
+				}
+
+				// Request with credentials
+				if(node[request_id].request_credentials) {
+					node[request_id].HTTPRequest.withCredentials = true;
+				}
+
 				// use appropriate header
-				if(!params.constructor.toString().match(/FormData/i)) {
+				// XMLHttpRequests are sent as content-type text if nothing is declared
+				// FormData will automatically get a form-data content-type (including boundary information)
+				// if custom headers are not specified, set content-type according to what is being sent
+				if(!params.constructor.toString().match(/FormData/i) && (typeof(node[request_id].request_headers) != "object" || (!node[request_id].request_headers["Content-Type"] && !node[request_id].request_headers["content-type"]))) {
 					node[request_id].HTTPRequest.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
 				}
-				// node[request_id].HTTPRequest.setRequestHeader("Content-Type","multipart/formdata");
 
-				// rails form proofing
-				var csfr_field = u.qs('meta[name="csrf-token"]');
-				if(csfr_field && csfr_field.content) {
-					node[request_id].HTTPRequest.setRequestHeader("X-CSRF-Token", csfr_field.content);
-				}
 
 				// add additional headers
-				if(typeof(node[request_id].request_headers) == "object") {
+				// setting a content-type for a form-data request will ruin the request
+				// - but that's the developers fault. Don't check for it.
+				if(obj(node[request_id].request_headers)) {
 					var header;
 					for(header in node[request_id].request_headers) {
 						node[request_id].HTTPRequest.setRequestHeader(header, node[request_id].request_headers[header]);
 					}
 				}
+
+
 
 				// send params
 				node[request_id].HTTPRequest.send(params);
@@ -152,13 +197,12 @@ Util.request = function(node, url, _options) {
 		// catch security exceptions and other exeptions
 		catch(exception) {
 
-//			u.bug("Request exc:" + exception)
 			node[request_id].HTTPRequest.exception = exception;
 			u.validateResponse(node[request_id].HTTPRequest);
 			return;
 		}
 
-		// process synchronous response
+		// process synchronous response (response should be ready directly)
 		if(!node[request_id].request_async) {
 			u.validateResponse(node[request_id].HTTPRequest);
 		}
@@ -166,11 +210,25 @@ Util.request = function(node, url, _options) {
 	// request by script injection
 	else if(node[request_id].request_method.match(/SCRIPT/i)) {
 
+		// apply timeout check
+		if(node[request_id].request_timeout) {
+			// handle timeout
+			node[request_id].timedOut = function(requestee) {
+				this.status = 0;
+				delete this.timedOut;
+				delete this.t_timeout;
+
+				Util.validateResponse({node: requestee.node, request_id: requestee.request_id});
+			}
+			node[request_id].t_timeout = u.t.setTimer(node[request_id], "timedOut", node[request_id].request_timeout, {node: node, request_id: request_id});
+		}
+
 		// generate callback key
 		var key = u.randomString();
 
 		// create global reference
 		document[key] = new Object();
+		document[key].key = key;
 		document[key].node = node;
 		document[key].request_id = request_id;
 		document[key].responder = function(response) {
@@ -180,6 +238,17 @@ Util.request = function(node, url, _options) {
 			response_object.node = this.node;
 			response_object.request_id = this.request_id;
 			response_object.responseText = response;
+
+			// make sure to reset any timeout still roaming
+			u.t.resetTimer(this.node[this.request_id].t_timeout);
+			delete this.node[this.request_id].timedOut;
+			delete this.node[this.request_id].t_timeout;
+
+			// clean up
+			u.qs("head").removeChild(this.node[this.request_id].script_tag);
+			delete this.node[this.request_id].script_tag;
+			delete document[this.key];
+
 			u.validateResponse(response_object);
 		}
 
@@ -192,7 +261,7 @@ Util.request = function(node, url, _options) {
 		node[request_id].request_url += (!node[request_id].request_url.match(/\?/g) ? "?" : "&") + node[request_id].jsonp_callback + "=document."+key+".responder";
 
 		// add JSON Request to HTML head
-		u.ae(u.qs("head"), "script", ({"type":"text/javascript", "src":node[request_id].request_url}));
+		node[request_id].script_tag = u.ae(u.qs("head"), "script", ({"type":"text/javascript", "src":node[request_id].request_url}));
 	}
 
 	return request_id;
@@ -202,7 +271,7 @@ Util.request = function(node, url, _options) {
 
 // convert simple (first level only) JSON to parameter string
 Util.JSONtoParams = function(json) {
-	if(typeof(json) == "object") {
+	if(obj(json)) {
 		var params = "", param;
 		for(param in json) {
 			params += (params ? "&" : "") + param + "=" + json[param];
@@ -220,68 +289,6 @@ Util.JSONtoParams = function(json) {
 
 
 
-// is string valid JSON
-Util.isStringJSON = function(string) {
-
-	// JSON hints
-	// ( | { - json
-	if(string.trim().substr(0, 1).match(/[\{\[]/i) && string.trim().substr(-1, 1).match(/[\}\]]/i)) {
-//		u.bug("guessing JSON:" + string, "green");
-
-		try {
-			// test for json object()
-			var test = JSON.parse(string);
-			if(typeof(test) == "object") {
-				test.isJSON = true;
-				return test;
-			}
-		}
-		// ignore exception
-		catch(exception) {}
-	}
-
-	// unknown response
-	return false;
-}
-
-// is string valid HTML
-Util.isStringHTML = function(string) {
-
-	// HTML hints
-	// < - HTML
-	if(string.trim().substr(0, 1).match(/[\<]/i) && string.trim().substr(-1, 1).match(/[\>]/i)) {
-//		u.bug("guessing HTML" + string, "green");
-
-		// test for DOM
-		try {
-			var test = document.createElement("div");
-			test.innerHTML = string;
-
-			// seems to be a valid test for now
-			if(test.childNodes.length) {
-
-				// sometimes if a head/body tag is actually sent from the server, we may need some of its information
-				// getting head/body info with regular expression on responseText
-				var body_class = string.match(/<body class="([a-z0-9A-Z_: ]+)"/);
-				test.body_class = body_class ? body_class[1] : "";
-				var head_title = string.match(/<title>([^$]+)<\/title>/);
-				test.head_title = head_title ? head_title[1] : "";
-
-				test.isHTML = true;
-				return test;
-			}
-		}
-		// ignore exception
-		catch(exception) {}
-	}
-
-	// unknown response
-	return false;
-}
-
-
-
-
 // evaluate responseText string
 // see what response contains
 Util.evaluateResponseText = function(responseText) {
@@ -289,7 +296,7 @@ Util.evaluateResponseText = function(responseText) {
 	var object;
 
 	// already a JSON object (could be the response from a SCRIPT)
-	if(typeof(responseText) == "object") {
+	if(obj(responseText)) {
 		// u.bug("guessing object:" + responseText, "green");
 
 		responseText.isJSON = true;
@@ -332,49 +339,82 @@ Util.evaluateResponseText = function(responseText) {
 
 // Simple validation of responseText
 // Makes callback to appropriate notifier
-Util.validateResponse = function(response){
-//	u.bug("validateResponse:" + response);
+Util.validateResponse = function(HTTPRequest){
+	// u.bug("validateResponse:");
+	// console.log(HTTPRequest);
 
 	var object = false;
 
-	if(response) {
+	if(HTTPRequest) {
 
-//		u.bug("response:" + response + ":" + u.nodeId(response.node) + ":" + response.status)
+		var node = HTTPRequest.node;
+		var request_id = HTTPRequest.request_id;
+		var request = node[request_id];
+		delete request.HTTPRequest;
 
-		// u.bug("status:" + response.status + ":" + u.nodeId(response.node));
-		// u.bug("responseText:" + response.responseText);
+
+		// stop any requests which already returned a response
+		if(request.finished) {
+			return;
+		}
+
+		// mark request as expired
+		request.finished = true;
+
+		// console.log(HTTPRequest.responseText);
+
+		// u.bug("response:" + HTTPRequest + ":" + u.nodeId(HTTPRequest.node) + ":" + HTTPRequest.status)
+		// u.bug("status:" + HTTPRequest.status + ":" + u.nodeId(HTTPRequest.node));
+		// u.bug("responseText:" + HTTPRequest.responseText);
 
 		try {
+			
+			// map response status to request object
+			request.status = HTTPRequest.status;
+
 			// valid response status
-			if(response.status && !response.status.toString().match(/403|404|500/)) {
-				object = u.evaluateResponseText(response.responseText);
+			if(HTTPRequest.status && !HTTPRequest.status.toString().match(/[45][\d]{2}/)) {
+				// if responseType is defined and response was returned
+				if(HTTPRequest.responseType && HTTPRequest.response) {
+					object = HTTPRequest.response;
+				}
+				// if no responseType or no response object, then evaluate responseText if it exists
+				else if(HTTPRequest.responseText) {
+					object = u.evaluateResponseText(HTTPRequest.responseText);
+				}
 			}
 			// SCRIPT has no response.status
 			// is responseText available for evaluation
-			else if(response.responseText) {
-				object = u.evaluateResponseText(response.responseText);
+			else if(HTTPRequest.responseText && typeof(HTTPRequest.status) == "undefined") {
+				object = u.evaluateResponseText(HTTPRequest.responseText);
 			}
+
 		}
 		catch(exception) {
-			response.exception = exception;
+			request.exception = exception;
 //			u.bug("HTTPRequest exection:" + exception);
 		}
+	}
+	// invalid response - should not be possible, but anyway ... in case it happens, console will give you a hint
+	else {
+		console.log("Lost track of this request. There is no way of routing it back to requestee.")
+		return;
 	}
 //	u.bug("object:" + object);
 
 	// did validation yield usable object
-	if(object) {
+	if(object !== false) {
 
 		// callback to Response handler
 //		u.bug("response:" + typeof(response.node[response.node.callback_response]))
 
 		// Function reference
-		if(typeof(response.node[response.request_id].callback_response) == "function") {
-			response.node[response.request_id].callback_response(object, response.request_id);
+		if(fun(request.callback_response)) {
+			request.callback_response(object, request_id);
 		}
 		// Function name
-		else if(typeof(response.node[response.node[response.request_id].callback_response]) == "function") {
-			response.node[response.node[response.request_id].callback_response](object, response.request_id);
+		else if(fun(node[request.callback_response])) {
+			node[request.callback_response](object, request_id);
 		}
 
 	}
@@ -382,23 +422,23 @@ Util.validateResponse = function(response){
 
 		// callback to ResponseError handler
 		// Function reference
-		if(typeof(response.node[response.request_id].callback_error) == "function") {
-			response.node[response.request_id].callback_error(response, response.request_id);
+		if(fun(request.callback_error)) {
+			request.callback_error({error:true,status:request.status}, request_id);
 		}
 		// Function name
-		else if(typeof(response.node[response.node[response.request_id].callback_error]) == "function") {
-			response.node[response.node[response.request_id].callback_error](response, response.request_id);
+		else if(fun(node[request.callback_error])) {
+			node[request.callback_error]({error:true,status:request.status}, request_id);
 		}
 
 		// no responseError is declared - forward error to normal response handler
 
 		// Function reference - no error handler
-		else if(typeof(response.node[response.request_id].callback_response) == "function") {
-			response.node[response.request_id].callback_response(response, response.request_id);
+		else if(fun(request.callback_response)) {
+			request.callback_response({error:true,status:request.status}, request_id);
 		}
 		// Function name - no error handler
-		else if(typeof(response.node[response.node[response.request_id].callback_response]) == "function") {
-			response.node[response.node[response.request_id].callback_response](response, response.request_id);
+		else if(fun(node[request.callback_response])) {
+			node[request.callback_response]({error:true,status:request.status}, request_id);
 		}
 
 	}

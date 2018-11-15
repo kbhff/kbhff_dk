@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <head>
 	<link rel="stylesheet" href="">
-	<script type="text/javascript" src="https://detector-v4.dearapi.com/js-include/?site=kbhff-site&dev=0"></script>
+	<script type="text/javascript" src="https://detector-v4.dearapi.com/js-include/"></script>
 </head>
 
 <body>
-	<div id="content" class="scene template i:template">
+	<div id="content" class="scene template ">
 
 		<h1>Development template</h1>
 
@@ -266,7 +266,18 @@
 		<div class="section">
 			<h2>Form elements</h2>
 
-			<form action="#" method="POST" class="form">
+			<script type="text/javascript">
+				if (typeof(u) == "object") {
+					// Standard form initializer
+					u.o.standardForm = new function() {
+						this.init = function(form) {
+							u.f.init(form);
+						}
+					}
+				}
+			</script>
+
+			<form action="#" method="POST" class="form i:standardForm">
 				<fieldset>
 					<h3>Primary data</h3>
 

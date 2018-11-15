@@ -1,28 +1,48 @@
 // Save cookie
 // Session-cookie as default - set keep for extended validity
+
+// Using localStorage when possible, to avoid sending data back and forth
 Util.saveCookie = function(name, value, _options) {
 
 	var expires = true;
 	var path = false;
 
+	// force oldschool cookie
+	var force = false;
+
 	// additional info passed to function as JSON object
-	if(typeof(_options) == "object") {
+	if(obj(_options)) {
 		var _argument;
 		for(_argument in _options) {
 
 			switch(_argument) {
 				case "expires"	: expires	= _options[_argument]; break;
 				case "path"		: path		= _options[_argument]; break;
+
+				case "force"	: force		= _options[_argument]; break;
 			}
 
 		}
 	}
 
+	// check localStorage first, undless the force is against it
+	if(!force && obj(window.localStorage) && obj(window.sessionStorage)) {
+		if(expires === true) {
+			window.sessionStorage.setItem(name, value);
+		}
+		else {
+			window.localStorage.setItem(name, value);
+		}
+		return;
+	}
+
+
+	// use cookie
 	// create correct expire value
 	if(expires === false) {
 		expires = ";expires=Mon, 04-Apr-2020 05:00:00 GMT";
 	}
-	else if(typeof(expires) === "string") {
+	else if(str(expires)) {
 		expires = ";expires="+expires;
 	}
 	else {
@@ -30,7 +50,7 @@ Util.saveCookie = function(name, value, _options) {
 	}
 
 	// create correct path value
-	if(typeof(path) === "string") {
+	if(str(path)) {
 		path = ";path="+path;
 	}
 	else {
@@ -43,16 +63,27 @@ Util.saveCookie = function(name, value, _options) {
 // Get cookie
 Util.getCookie = function(name) {
 	var matches;
+
+	// check localStarage first
+	if(obj(window.sessionStorage) && window.sessionStorage.getItem(name)) {
+		return window.sessionStorage.getItem(name)
+	}
+	else if(obj(window.localStorage) && window.localStorage.getItem(name)) {
+		return window.localStorage.getItem(name)
+	}
+
+	// check cookie if no match was found
 	return (matches = document.cookie.match(encodeURIComponent(name) + "=([^;]+)")) ? decodeURIComponent(matches[1]) : false;
 }
 
 // Delete cookie
+// Deletes all types of cookies
 Util.deleteCookie = function(name, _options) {
 
 	var path = false;
 
 	// additional info passed to function as JSON object
-	if(typeof(_options) == "object") {
+	if(obj(_options)) {
 		var _argument;
 		for(_argument in _options) {
 
@@ -63,8 +94,16 @@ Util.deleteCookie = function(name, _options) {
 		}
 	}
 
+	// clear all references
+	if(obj(window.sessionStorage)) {
+		window.sessionStorage.removeItem(name);
+	}
+	if(obj(window.localStorage)) {
+		window.localStorage.removeItem(name);
+	}
+
 	// create correct path value
-	if(typeof(path) === "string") {
+	if(str(path)) {
 		path = ";path="+path;
 	}
 	else {
@@ -132,7 +171,7 @@ Util.cookieReference = function(node, _options) {
 	var ignore_classvars = false;
 
 	// additional info passed to function as JSON object
-	if(typeof(_options) == "object") {
+	if(obj(_options)) {
 		var _argument;
 		for(_argument in _options) {
 

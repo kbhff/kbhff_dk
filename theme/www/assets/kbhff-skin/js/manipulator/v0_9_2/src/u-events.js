@@ -43,9 +43,12 @@ Util.Events = u.e = new function() {
 
 
 	// theoretical support for dual input sources
+	// TODO: in some rare edge cases Firefox on windows ontouchmove and onmousemove are both null but maxTouchPoints is 0.
+	// In most cases this in-between state disappears after restarting the computer (maybe maxTouchPoints should not be used for this detection??)
+
 	if(navigator.maxTouchPoints > 1) {
 
-		if(typeof(document.ontouchmove) == "undefined" && typeof(document.onmousemove) == "undefined") {
+		if((typeof(document.ontouchmove) == "undefined" && typeof(document.onmousemove) == "undefined") || (document.ontouchmove === null && document.onmousemove === null)) {
 
 			this.event_support = "multi";
 		}
@@ -66,6 +69,8 @@ Util.Events = u.e = new function() {
 		}
 
 	}
+
+	// console.log(this.event_support);
 
 //	this.event_support = navigator.maxTouchPoints > 1 "multi" ? : (typeof(document.ontouchmove) == "undefined" ? "touch" : "mouse"));
 //	this.event_pref = "touch";
@@ -322,7 +327,7 @@ Util.Events = u.e = new function() {
 
 	// reset events for click, hold and dblclick
 	this.resetClickEvents = function(node) {
-//		u.bug("resetClickEvents:" + u.nodeId(node));
+		// u.bug("resetClickEvents:", node);
 
 		u.t.resetTimer(node.t_held);
 		u.t.resetTimer(node.t_clicked);
@@ -347,7 +352,7 @@ Util.Events = u.e = new function() {
 		this.resetClickEvents(node);
 
 		// is drag event enabled?
-		if(typeof(this.resetDragEvents) == "function") {
+		if(fun(this.resetDragEvents)) {
 			this.resetDragEvents(node);
 		}
 	}
@@ -372,7 +377,7 @@ Util.Events = u.e = new function() {
 	* Multiple event possible
 	*/
 	this._inputStart = function(event) {
-//		u.bug("_inputStart:" + u.nodeId(this));
+		// u.bug("_inputStart:", this);
 
 //		u.xInObject(event);
 
@@ -398,7 +403,9 @@ Util.Events = u.e = new function() {
 		this.move_last_y = 0;
 
 		// keep track of moves after start event to cancel event more controlled (after a number of moves)
-		this._moves_cancel = 0;
+//		this._moves_cancel = 0;
+//		u.bug("this._moves_counted:" + this._moves_counted);
+//		this._moves_counted = 0;
 
 		// reset swipe detections
 		this.swiped = false;
@@ -463,7 +470,7 @@ Util.Events = u.e = new function() {
 		if(this.e_drag || this.e_swipe) {
 //			u.bug("drag set" + this.nodeName)
 			u.e.addMoveEvent(this, u.e._pick);
-			u.e.addEndEvent(this, u.e._drop);
+//			u.e.addEndEvent(this, u.e._drop);
 		}
 
 
@@ -475,7 +482,7 @@ Util.Events = u.e = new function() {
 
 
 		// callback TODO - what function name?
-		if(typeof(this.inputStarted) == "function") {
+		if(fun(this.inputStarted)) {
 			this.inputStarted(event);
 		}
 
@@ -484,29 +491,30 @@ Util.Events = u.e = new function() {
 
 
 	this._cancelClick = function(event) {
-//		u.bug("_cancelClick:" + u.nodeId(this))
+		// u.bug("_cancelClick:", this);
 
 		// use complete move since inputStart to determine whether to cancel click
 		var offset_x = u.eventX(event) - this.start_event_x;
 		var offset_y = u.eventY(event) - this.start_event_y;
 
 		// should click be cancelled
-		if(event.type.match(/mouseout/) || this._moves_cancel > 1 || (event.type.match(/move/) && (Math.abs(offset_x) > 15 || Math.abs(offset_y) > 15))) {
+		if(event.type.match(/mouseout/) || (event.type.match(/move/) && (Math.abs(offset_x) > 15 || Math.abs(offset_y) > 15))) {
+//		if(event.type.match(/mouseout/) || this._moves_cancel > 5 || (event.type.match(/move/) && (Math.abs(offset_x) > 15 || Math.abs(offset_y) > 15))) {
 
 			u.e.resetClickEvents(this);
 
 			// new event
-			if(typeof(this.clickCancelled) == "function") {
+			if(fun(this.clickCancelled)) {
 				this.clickCancelled(event);
 			}
 
 		}
 
 		// count move events to cancel click appropriately
-		else if(event.type.match(/move/)) {
-
-			this._moves_cancel++;
-		}
+		// else if(event.type.match(/move/)) {
+		//
+		// 	this._moves_cancel++;
+		// }
 
 	}
 
@@ -514,7 +522,7 @@ Util.Events = u.e = new function() {
 //		u.bug("_move:" + u.nodeId(this))
 		// new event
 
-		if(typeof(this.moved) == "function") {
+		if(fun(this.moved)) {
 
 			this.current_x = u.eventX(event) - this.start_event_x;
 			this.current_y = u.eventY(event) - this.start_event_y;
@@ -560,7 +568,7 @@ Util.Events = u.e = new function() {
 		u.e.resetNestedEvents(this);
 
 		// notify held
-		if(typeof(this.held) == "function") {
+		if(fun(this.held)) {
 			this.held(event);
 		}
 	}
@@ -594,7 +602,7 @@ Util.Events = u.e = new function() {
 		u.e.resetNestedEvents(this);
 
 		// notify of click
-		if(typeof(this.clicked) == "function") {
+		if(fun(this.clicked)) {
 			this.clicked(event);
 		}
 
@@ -613,7 +621,8 @@ Util.Events = u.e = new function() {
 		u.e.addStartEvent(node, this._inputStart);
 	}
 	this._dblclicked = function(event) {
-//		u.bug("_dblclicked:" + u.nodeId(this) + ", " + event.type)
+		// u.bug("_dblclicked:",this, event.type);
+
 		// if valid click timer, treat as dblclick
 		if(u.t.valid(this.t_clicked) && event) {
 
@@ -625,7 +634,7 @@ Util.Events = u.e = new function() {
 			u.e.resetNestedEvents(this);
 
 			// notify base
-			if(typeof(this.dblclicked) == "function") {
+			if(fun(this.dblclicked)) {
 				this.dblclicked(event);
 			}
 			return;
@@ -662,18 +671,20 @@ Util.Events = u.e = new function() {
 
 		// default values
 		node._hover_out_delay = 100;
+		node._hover_over_delay = 0;
 		node._callback_out = "out";
 		node._callback_over = "over";
 
 
 		// additional info passed to function as JSON object
-		if(typeof(_options) == "object") {
+		if(obj(_options)) {
 			var argument;
 			for(argument in _options) {
 
 				switch(argument) {
 					case "over"				: node._callback_over		= _options[argument]; break;
 					case "out"				: node._callback_out		= _options[argument]; break;
+					case "delay_over"		: node._hover_over_delay	= _options[argument]; break;
 					case "delay"			: node._hover_out_delay		= _options[argument]; break;
 				}
 			}
@@ -683,30 +694,68 @@ Util.Events = u.e = new function() {
 		u.e.addOverEvent(node, this._over);
 		u.e.addOutEvent(node, this._out);
 	}
-	this._over = function(event) {
 
-		u.t.resetTimer(this.t_out);
+	// actual mouseover event - wait for delay, if any
+	this._over = function(event) {
 //		u.bug("_over:" + u.nodeId(this));
 
-		// notify base (but only when state changes)
-		if(typeof(this[this._callback_over]) == "function" && !this.is_hovered) {
-			this[this._callback_over](event);
+		u.t.resetTimer(this.t_out);
+
+		// no delay
+		if(!this._hover_over_delay) {
+			u.e.__over.call(this, event);
+		}
+		// set wait delay
+		else if(!u.t.valid(this.t_over)) {
+			this.t_over = u.t.setTimer(this, u.e.__over, this._hover_over_delay, event);
+		}
+	}
+
+	this.__over = function(event) {
+//		u.bug("__over:" + u.nodeId(this));
+
+		u.t.resetTimer(this.t_out);
+
+		// only notify base when state changes
+		if(!this.is_hovered) {
+			this.is_hovered = true;
+
+			// skip initial over delay while in hovered state
+			u.e.removeOverEvent(this, u.e._over);
+			u.e.addOverEvent(this, u.e.__over);
+
+			
+			// notify base (but only when state changes)
+			if(fun(this[this._callback_over])) {
+				this[this._callback_over](event);
+			}
+
 		}
 
-		this.is_hovered = true;
-
 	}
+	// actual mouseout event - wait for delay
 	this._out = function(event) {
 //		u.bug("_out:" + u.nodeId(this));
+
+		u.t.resetTimer(this.t_over);
+		u.t.resetTimer(this.t_out);
+
+		// update out delay
 		this.t_out = u.t.setTimer(this, u.e.__out, this._hover_out_delay, event);
+
 	}
+	// delayed out event with callback
 	this.__out = function(event) {
+//		u.bug("_out_is_real:" + u.nodeId(this));
+
 		this.is_hovered = false;
 
-//		u.bug("_out_is_real:" + u.nodeId(this));
-		
+		// restore event handlers
+		u.e.removeOverEvent(this, u.e.__over);
+		u.e.addOverEvent(this, u.e._over);
+
 		// notify base
-		if(typeof(this[this._callback_out]) == "function") {
+		if(fun(this[this._callback_out])) {
 			this[this._callback_out](event);
 		}
 		
