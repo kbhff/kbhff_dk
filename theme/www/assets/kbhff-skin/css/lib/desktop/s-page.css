@@ -1,0 +1,34 @@
+html {
+	min-height: 100%;
+}
+body {
+	background: #ffffff;
+	margin: 0;
+}
+
+* {
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+	line-height: 24px;
+	color: #000000;
+}
+
+#page {}
+
+
+/* BASE */
+h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dd, dt {padding: 0; margin: 0;}
+h1, h2, h3, h4, h5, h6, p, li, dd, dt, span, a {line-height: 1em; font-weight: 400;}
+
+ul {list-style: none;}
+a {text-decoration: none; cursor: pointer;}
+
+img {border: 0; display: block;}
+form, fieldset, label, input, select, textarea {padding: 0; margin: 0; font-weight: normal;}
+fieldset {border: none;}
+input, select, textarea {font-size: 20px; color: #333333; outline: none;}
+
+
+a, span {font-size: inherit; font-family: inherit; font-style: inherit; font-weight: inherit; line-height: inherit; color: inherit; text-transform: inherit;}
+em, strong {font-size: inherit; font-family: inherit; line-height: inherit; color: inherit; text-transform: inherit;}
+sup {line-height: 1em; font-family: inherit; color: inherit;}
