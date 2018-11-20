@@ -20,32 +20,77 @@ Util.Objects["accept_terms"] = new function() {
 			u.qs("div.field.checkbox .hint").innerHTML = ""
 
 			form_accept.actions["reject"].clicked = function() {
-				var overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600, class:"confirm_reject_terms"});
-				var warning = u.ae(overlay.div_content, "p",{html:"Du er ved at melde dig ud af KBHFF. Pga. lovgivning og hensyn til persondata kan du ikke være medlem af KBHFF uden at acceptere vores vilkår. Vi håber du vil genoverveje."});
+				var overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600, class:"confirm_cancel_membership"});
+				var p_warning = u.ae(overlay.div_content, "p", {
+					html:"Du er ved at melde dig ud af KBHFF. Pga. lovgivning og hensyn til persondata kan du ikke være medlem af KBHFF uden at acceptere vores vilkår. Vi håber du vil genoverveje."
+				});
+				var ul_actions = u.ae(overlay.div_content, "ul", {
+					class:"actions"
+				})
 
 				// Add action buttons to cancel and confirm
-				var delete_me = u.f.addAction(overlay.div_content, {"type":"button", "name":"delete_me", "class":"button delete_me","value":"Meld mig ud af KBHFF"});
-				var regret = u.f.addAction(overlay.div_content, {"type":"button", "name":"regret", "class":"button regret primary", "value":"Fortryd udmelding"});
+				var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"button delete_me","value":"Meld mig ud af KBHFF"});
+				var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"button regret primary", "value":"Fortryd udmelding"});
 				
-				// Add click event to go to main page
+				// Add click event to go to password confirmation
 				u.e.click(delete_me)
 				delete_me.clicked = function () {
-					 window.location = "/"
+					// Inject 'confirm cancellation' form
+					this.delete_me_callback = function(response) {
+					
+						// Query form to inject
+						var form_confirm_cancellation = u.qs(".confirm_cancellation", response);
+
+						// Hide elements to be replaced
+						u.ass(p_warning, {"display":"none"});
+						u.ass(ul_actions, {"display":"none"});
+						// Append form and initialize it
+						u.ae(overlay.div_content, form_confirm_cancellation);
+						u.f.init(form_confirm_cancellation);
+						//u.f.addAction(overlay.div_content, {"type":"button", "name":"regret", "class":"action regret primary", "value":"Fortryd udmelding"});
+
+						form_confirm_cancellation.submitted = function () {
+							var data = u.f.getParams(this);
+							this.response = function(response) {
+								console.log(response);
+								var div_scene_login = u.qs("div.scene.login", response);
+								console.log(div_scene_login);
+								if (div_scene_login) {
+									location.href = "/";
+								}
+								else {
+									var error_message = u.qs("p.errormessage", response);
+									u.ass(form_confirm_cancellation, {"display":"none"})
+									
+									
+									u.ae(overlay.div_content, error_message);
+									var ul_actions = u.ae(overlay.div_content, "ul", {
+										class:"actions"
+									});
+									var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
+
+									u.e.click(button_close)
+									button_close.clicked = function () {
+										overlay.close ();
+									}
+								}
+							}
+							
+							u.request(this, this.action, {
+								"data":data,
+								"method":"POST"
+							})
+						}
+					}
+	
+					u.request(this, "/profil/opsig", {
+						"callback":"delete_me_callback"
+					});
 				}
 				// Add click event to cancel and close overlay
 				u.e.click(regret)
 				regret.clicked = function () {
 						overlay.close ();
-				}
-
-				// Add "x"-close button to header
-				overlay.x_close = u.ae(overlay.div_header, "div", {class: "close"});
-				overlay.x_close.overlay = overlay;
-				u.ce(overlay.x_close);
-
-				// enable close/cancel buttons to close overlay
-				overlay.x_close.clicked = function (event) {
-					this.overlay.close(event);
 				}
 			}
 		}

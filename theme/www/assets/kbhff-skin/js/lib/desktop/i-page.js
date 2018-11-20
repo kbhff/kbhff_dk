@@ -36,8 +36,8 @@ Util.Objects["page"] = new function() {
 
 
 			// forward scroll event to current scene
-			if(page.cN.scene && typeof(page.cN.scene.resized) == "function") {
-				page.cN.scene.resized();
+			if(this.cN && this.cN.scene && typeof(this.cN.scene.resized) == "function") {
+				this.cN.scene.resized();
 			}
 		}
 
@@ -48,8 +48,8 @@ Util.Objects["page"] = new function() {
 			page.scrolled_y = u.scrollY();
 
 			// forward scroll event to current scene
-			if(page.cN.scene && typeof(page.cN.scene.scrolled) == "function") {
-				page.cN.scene.scrolled();
+			if(this.cN && this.cN.scene && typeof(this.cN.scene.scrolled) == "function") {
+				this.cN.scene.scrolled();
 			}
 		}
 
@@ -62,6 +62,8 @@ Util.Objects["page"] = new function() {
 
 				// page is ready
 				this.is_ready = true;
+
+				this.cN.scene = u.qs(".scene", this);
 
 				// set resize handler
 				u.e.addWindowEvent(this, "resize", this.resized);

@@ -1,0 +1,30 @@
+#navigation {
+    position: relative;
+    width: 936px;
+    margin: 0 auto;
+}
+
+#navigation ul.navigation {
+	font-size: 0;
+	padding-bottom: 5px;
+}
+
+#navigation ul.navigation li {
+	display: inline-block;
+	margin-right: 5px;
+}
+
+#navigation ul.navigation a {
+	font-family: 'voresfont';
+	text-transform: uppercase;
+	font-size: 14px;
+	line-height: 22px;
+
+	padding: 7px 14px;
+	display: block;
+	color: #ffffff;
+	background-color: #000000;
+}
+#navigation ul.navigation a:hover {
+	background-color: #3e8e17;
+}

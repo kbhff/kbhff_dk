@@ -1,16 +1,6 @@
-@import url(/css/lib/s-fonts.css);
+@import url(../../assets/kbhff-skin/css/seg_desktop.css);
 
 
-@import url(http://udvikler-kbhff.local/css/lib/desktop/s-page.css);
-@import url(http://udvikler-kbhff.local/css/lib/desktop/s-header.css);
-@import url(http://udvikler-kbhff.local/css/lib/desktop/s-navigation.css);
-@import url(http://udvikler-kbhff.local/css/lib/desktop/s-footer.css);
-
-@import url(http://udvikler-kbhff.local/css/lib/desktop/s-content.css);
-@import url(http://udvikler-kbhff.local/css/lib/desktop/s-form.css);
-@import url(http://udvikler-kbhff.local/css/lib/desktop/s-pages.css);
-
-
-@import url(/css/lib/desktop/s-login.css);
-@import url(/css/lib/desktop/s-accept_terms.css);
-@import url(/css/lib/desktop/s-profile.css);
+@import url(desktop/s-login.css);
+@import url(desktop/s-accept_terms.css);
+@import url(desktop/s-profile.css);

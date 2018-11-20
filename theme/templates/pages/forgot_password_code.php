@@ -6,7 +6,7 @@ $this->pageTitle("Verificering");
 ?>
 <div class="scene login i:forgot">
 	<h1>Nulstil password</h1>
-	<h2>Verficer at du vil nulstille dit password</h2>
+	<h2>Verificér at du vil nulstille dit password</h2>
 	<p class="validateParagraph"><span class='highlight'>TAK.</span> Vi har nu sendt dig en mail. I mailen er en kode, som du kan indtaste her og hvorefter du vil blive bedt om at vælge et nyt password.</p>
 
 

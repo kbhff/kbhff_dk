@@ -168,7 +168,7 @@ $department = $UC->getUserDepartment();
 
 						<ul class="actions">
 							<li class="change-info third-width"><a href="/profil/afdeling" class="button">Ret</a></li>
-							<li class="cancel-membership third-width"><a href="#" class="button warning">Opsig</a></li>
+							<li class="cancel-membership third-width"><a href="/profil/opsig" class="button warning">Opsig</a></li>
 							<li class="pay-membership third-width"><a href="#" class="button primary">Betal</a></li>
 						</ul>
 					</div>

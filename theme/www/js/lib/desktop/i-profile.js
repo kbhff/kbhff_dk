@@ -114,7 +114,7 @@ Util.Objects["profile"] = new function() {
 
 						// Hide elements to be replaced
 						u.ass(p_warning, {"display":"none"});
-						u.ass(ul_actions, {"display":"none"});						
+						u.ass(ul_actions, {"display":"none"});
 						// Append form and initialize it
 						u.ae(overlay.div_content, form_confirm_cancellation);
 						u.f.init(form_confirm_cancellation);
@@ -122,7 +122,7 @@ Util.Objects["profile"] = new function() {
 
 						form_confirm_cancellation.submitted = function () {
 							var data = u.f.getParams(this);
-							this.response = function(response) {			
+							this.response = function(response) {
 								console.log(response);
 								var div_scene_login = u.qs("div.scene.login", response);
 								console.log(div_scene_login);
@@ -144,7 +144,6 @@ Util.Objects["profile"] = new function() {
 									button_close.clicked = function () {
 										overlay.close ();
 									}
-
 								}
 							}
 							
@@ -163,16 +162,6 @@ Util.Objects["profile"] = new function() {
 				u.e.click(regret)
 				regret.clicked = function () {
 						overlay.close ();
-				}
-
-				// Add "x"-close button to header
-				overlay.x_close = u.ae(overlay.div_header, "div", {class: "close"});
-				overlay.x_close.overlay = overlay;
-				u.ce(overlay.x_close);
-
-				// enable close/cancel buttons to close overlay
-				overlay.x_close.clicked = function (event) {
-					this.overlay.close(event);
 				}
 			}
 

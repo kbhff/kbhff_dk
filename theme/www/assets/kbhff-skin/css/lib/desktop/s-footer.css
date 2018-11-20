@@ -1,0 +1,21 @@
+#footer {
+	height: 48px;
+	background: #484848;
+}
+#footer ul.servicenavigation {
+	margin: 0 auto;
+	position: relative;
+    width: 936px;
+
+	text-align: right;
+}
+#footer ul.servicenavigation li {
+	display: inline-block;
+
+	padding: 17px 0 10px 15px;
+	color: #ffffff;
+}
+#footer ul.servicenavigation li.copyright {
+	float: left;
+	padding-left: 0;
+}

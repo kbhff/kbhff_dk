@@ -27,7 +27,7 @@ global $UC;
 
 		<ul class="actions">
 			<?= $UC->submit("Fortsæt", array("class" => "primary", "wrapper" => "li.accept")) ?>
-			<?= $UC->button("Nej, meld mig ud", array("wrapper" => "li.reject")) ?>
+			<li class="reject"><a href="/profil/opsig" class="button">Nej, meld mig ud</a></li>
 		</ul>
 
 	<?= $UC->formEnd() ?>
