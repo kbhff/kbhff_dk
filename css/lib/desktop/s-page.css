@@ -1,7 +1,4 @@
-html {
-	min-height: 100%;
-}
-body {
+	body {
 	background: #ffffff;
 	margin: 0;
 }
@@ -11,6 +8,9 @@ body {
 	font-size: 14px;
 	line-height: 24px;
 	color: #000000;
+}
+body > .highlight {
+	color: #3e8e17;
 }
 
 #page {}
