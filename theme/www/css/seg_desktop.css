@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-11-15 16:24:00
+asset-builder @ 2018-11-27 15:04:29
 */
 
 /*seg_desktop_include.css*/
@@ -591,30 +591,15 @@ body > div.overlay fieldset label {
 
 
 /*s-login.css*/
-#content .scene.login form {padding-top: 50px; width: 400px; margin: 0 auto;}
-#content .scene.login form fieldset {width: auto;}
+#content .scene.login form {padding-top: 50px;}
 #content .scene.login ul.actions li.forgot {padding: 7px; line-height: 22px;}
-#content .scene.login div.signup {width: 400px; margin: 0 auto;}
+#content .scene.login form .field {margin: 0 auto;}
+#content .scene.login form ul.actions {margin: 0 auto;}
+#content .scene.login div.signup {width: calc(50% + calc(12px * 2)); margin: 0 auto;}
 
 
 /*s-accept_terms.css*/
-#content .scene.accept_terms form {padding-top: 50px; width: 300px; margin: 0 auto; text-align: center;}
-#content .scene.accept_terms form fieldset {width: auto;}
-body.profil div.overlay.confirm_reject_terms ul.actions li {
-	width: auto;
-	height: auto;
-	padding: 0 5px 10px 0;
-	vertical-align: top;
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	user-select: none;
-}
-body.profil div.overlay.confirm_reject_terms ul.actions {
-	list-style: none;
-	margin: 0 0 0 2px;
-	font-size: 0;
-	display: inline-block;
-}
+#content .scene.accept_terms form {padding-top: 50px; text-align: center;}
 
 
 /*s-profile.css*/
