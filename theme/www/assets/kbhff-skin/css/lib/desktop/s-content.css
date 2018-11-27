@@ -2,7 +2,7 @@
 	margin: 0 auto;
 	position: relative;
 	width: 960px;
-	
+
 }
 
 /*#content * {
@@ -30,7 +30,7 @@
 	line-height: 48px;
 	box-shadow: 0px -5px black inset;
 	padding-bottom: 2px;
-	padding-top: 13px; 
+	padding-top: 13px;
 }
 
 #content h2 {
@@ -38,7 +38,7 @@
 	text-transform: uppercase;
 	font-size: 28px;
 	line-height: 30px;
-	padding-bottom: 22px;	
+	padding-bottom: 22px;
 	padding-top: 20px;
 }
 
@@ -67,7 +67,7 @@
 	padding-top: 18px;
 }
 
-#content h4 + ul, 
+#content h4 + ul,
 #content h4 + ol {
 	padding-top: 18px;
 }
@@ -77,16 +77,11 @@
 	text-decoration: none;
 	color: #3e8e17;
 	font-weight: bold;
-	/* Hvordan markere besøgte links? */
 }
 
 
 #content a:hover {
 	color: black;
-}
-
-#content .highlight {
-	color: #3e8e17;
 }
 
 #content .system-warning {
@@ -98,25 +93,22 @@
 	margin: 0px;
 }
 
-
-
+#content img.fit-width {
+	width: 100%;
+}
 
 #content img {
-	width: 100%;
 	display: block;
-
 	box-sizing: border-box;
 	padding-left: 12px;
 	padding-right: 12px;
 }
 
 #content ol {
-	
+
 	list-style-type: decimal;
 	margin-left: 16px;
 }
-
-
 #content ul {
 	list-style: disc;
 	margin-left: 15px;
@@ -144,15 +136,12 @@
 	font-family: 'voresfont', Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
 }
-
-#content dd {
-	padding-bottom: 12px;
-}
-
 #content dl {
 	padding-bottom: 12px;
 }
-
+#content dd {
+	padding-bottom: 12px;
+}
 #content code {
 	display: block;
 	padding: 24px;
@@ -168,12 +157,44 @@
 	padding: 0 6px;
 }
 
-#content span.green {
-	color: #3e8e17;
-	font-weight: 700;
+
+/* Making sure content works with grid system */
+#content h1 {
+	margin-left: 12px;
+	margin-right: 12px;
+}
+#content h2,
+#content h3,
+#content h4,
+#content p,
+#content ol,
+#content ul,
+#content dl {
+	padding-left: 12px;
+	padding-right: 12px;
 }
 
-/** 
+
+/*
+#content li h3 {
+	white-space: nowrap;
+}
+*/
+/*
+#content li blockquote,
+#content li p {
+	padding: 0px;
+}
+*/
+/*
+#content li p + p {
+	padding-top: 24px;
+}
+*/
+
+
+
+/**
 *	Grid system START
 */
 #content div.c-wrapper {
@@ -313,49 +334,9 @@
 }
 
 
-
-
-/** 
+/**
 *	Grid system END
 */
-
-
-
-
-/* Making sure content works with grid system */
-#content h1 {
-	margin-left: 12px;
-	margin-right: 12px;
-}
-#content h2,
-#content h3,
-#content h4,
-#content p,
-#content ol,
-#content ul,
-#content dl {
-	padding-left: 12px;
-	padding-right: 12px;
-}
-
-
-/*
-#content li h3 {
-	white-space: nowrap;
-}
-*/
-/*
-#content li blockquote,
-#content li p {
-	padding: 0px;
-}
-*/
-/*
-#content li p + p {
-	padding-top: 24px;
-}
-*/
-
 
 
 /* Overlay */
@@ -384,9 +365,7 @@ body > div.overlay p {
 	font-family: 'Arial';
 	font-size: 14px;
 	color: #000000;
-	padding-right: 24px;
-	padding-left: 24px;
-	padding-bottom: 24px;
+	padding: 0 24px 24px;
 	text-align: center;
 }
 
@@ -399,7 +378,9 @@ body > div.overlay h2 {
 	padding-top: 17px;
 	text-align: center;
 }
-
+body > div.overlay .header {
+	cursor: move;
+}
 body > div.overlay fieldset {
 	margin: 0 auto;
 }
@@ -408,7 +389,7 @@ body > div.overlay fieldset label {
 	text-align: left;
 }
 
-.close {
+body > div.overlay .close {
 	position: absolute;
 	right: 17px;
 	top: 17px;
@@ -416,10 +397,10 @@ body > div.overlay fieldset label {
 	height: 32px;
 	opacity: 0.3;
 }
-.close:hover {
+body > div.overlay .close:hover {
 	opacity: 1;
 }
-.close:before, .close:after {
+body > div.overlay .close:before, body > div.overlay .close:after {
 	position: absolute;
 	left: 15px;
 	content: ' ';
@@ -427,9 +408,9 @@ body > div.overlay fieldset label {
 	width: 2px;
 	background-color: #333;
 }
-.close:before {
+body > div.overlay .close:before {
 	transform: rotate(45deg);
 }
-.close:after {
+body > div.overlay .close:after {
 	transform: rotate(-45deg);
 }
