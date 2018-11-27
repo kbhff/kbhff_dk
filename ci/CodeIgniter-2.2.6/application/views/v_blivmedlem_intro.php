@@ -14,7 +14,7 @@
 <span ID="title" style="float: left;" onClick="window.location.href='/minside/';" title="Til min forside">K&Oslash;BENHAVNS<br>
 F&Oslash;DEVAREF&AElig;LLESSKAB <span id="green">/ MEDLEMSSYSTEM</span></span>
 <button class="form_button" style="float: right; margin-top:33px;" onClick="window.location.href='http://kbhff.dk';">G&Aring; TIL KBHFF</button>
-<img src="/img/banner.jpg" alt="K&oslash;benhavns F&oslash;devare F&aelig;llesskab" width="800" height="188" border="0">
+<img class="fit-width" src="/img/banner.jpg" alt="K&oslash;benhavns F&oslash;devare F&aelig;llesskab" width="800" height="188" border="0">
 <h1><?php echo $heading;?><!--, trin 1/5--></h1>
 <p>K&oslash;benhavns F&oslash;devaref&aelig;llesskab er en medlemsejet og -drevet indk&oslash;bsforening, der fokuserer p&aring; at tilbyde &oslash;kologiske, velsmagende, lokalt producerede og b&aelig;redygtige f&oslash;devarer i et s&aelig;sonbaseret udbud til priser, hvor alle kan v&aelig;re med.</p>
 <img src="/img/pose.gif" alt="" width="300" height="225" border="0" align="right">

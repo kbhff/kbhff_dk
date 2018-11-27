@@ -23,7 +23,7 @@ $department = $UC->getUserDepartment();
 
 
 <div class="scene profile i:profile">
-	<img src="/img/deprecated/banner.jpg"	/>
+	<img class="fit-width" src="/img/deprecated/banner.jpg"	/>
 
 	<div class="c-wrapper">
 

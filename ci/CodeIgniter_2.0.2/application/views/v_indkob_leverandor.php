@@ -72,7 +72,7 @@ $(function() {
 <span id="tt">
 <span ID="title" style="float: left;" onClick="window.location.href='/minside/';" title="Til min forside">K&Oslash;BENHAVNS<br>
 F&Oslash;DEVAREF&AElig;LLESSKAB <span id="green">/ LEVERAND&Oslash;RSYSTEM</span></span>
-<img src="/img/banner.jpg" alt="K&oslash;benhavns F&oslash;devare F&aelig;llesskab" width="800" height="188" border="0">
+<img class="fit-width" src="/img/banner.jpg" alt="K&oslash;benhavns F&oslash;devare F&aelig;llesskab" width="800" height="188" border="0">
 <div id="menu">
   <ul>
    <li>
