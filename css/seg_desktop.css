@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-11-27 17:23:21
+asset-builder @ 2018-11-28 15:03:39
 */
 
 /*seg_desktop_include.css*/
@@ -15,9 +15,7 @@ asset-builder @ 2018-11-27 17:23:21
 	line-height: 24px;
 	color: #000000;
 }
-body > .highlight {
-	color: #3e8e17;
-}
+#page span.highlight {color: #3e8e17;}
 #page {}
 h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dd, dt {padding: 0; margin: 0;}
 h1, h2, h3, h4, h5, h6, p, li, dd, dt, span, a {line-height: 1em; font-weight: 400;}
@@ -191,15 +189,15 @@ input[type="submit"] {
 
 /*s-header.css*/
 #header {
-    position: relative;
-    width: 936px;
-    margin: 0 auto;
-	padding: 16px 0 10px;
+	position: relative;
+	width: 936px;
+	margin: 0 auto;
+	padding: 28px 0 10px;
 }
 #header .logo {
 	box-sizing: border-box;
 	height: 48px;
-	padding: 6px 8px 6px 54px;
+	padding: 10px 8px 6px 54px;
 	display: inline-block;
 	background: transparent url(../img/logos/logo-stempel_sort_lille_gulerod.png) no-repeat top left;
 	font-family: 'voresfont';
@@ -209,8 +207,8 @@ input[type="submit"] {
 }
 #header ul.servicenavigation {
 	position: absolute;
-	line-height: 14px;
-	top: 14px;
+	line-height: 6px;
+	top: 6px;
 	right: 0px;
 }
 #header ul.servicenavigation li {
@@ -411,6 +409,7 @@ input[type="submit"] {
 	display: inline-block;
 	vertical-align: top;
 	font-size: 0;
+	min-height: 200px;
 }
 #content div.c-three-quarters {
 	width: 75%;

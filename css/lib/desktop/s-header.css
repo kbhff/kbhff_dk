@@ -1,13 +1,13 @@
 #header {
-    position: relative;
-    width: 936px;
-    margin: 0 auto;
-	padding: 16px 0 10px;
+	position: relative;
+	width: 936px;
+	margin: 0 auto;
+	padding: 28px 0 10px;
 }
 #header .logo {
 	box-sizing: border-box;
 	height: 48px;
-	padding: 6px 8px 6px 54px;
+	padding: 10px 8px 6px 54px;
 	display: inline-block;
 	background: transparent url(../../../img/logos/logo-stempel_sort_lille_gulerod.png) no-repeat top left;
 	font-family: 'voresfont';
@@ -18,8 +18,8 @@
 
 #header ul.servicenavigation {
 	position: absolute;
-	line-height: 14px;
-	top: 14px;
+	line-height: 6px;
+	top: 6px;
 	right: 0px;
 }
 
