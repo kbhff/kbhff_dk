@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-11-27 15:05:01
+asset-builder @ 2018-11-27 17:23:21
 */
 
 /*seg_desktop_include.css*/
@@ -142,7 +142,7 @@ div.field.error div.hint {opacity: 0;
 	transform: translate(0, -10px);
 }
 ul.actions,
-#content ul.actions {list-style: none; margin: 0 0 0 2px; font-size: 0; width: calc(50% - calc(12px / 2));}
+#content ul.actions {list-style: none; margin: 0 0 0 2px; font-size: 0; width: 50%;}
 ul.actions li,
 #content ul.actions li {width: auto; height: auto; display: inline-block; padding: 0 5px 10px 0; vertical-align: top;
 	-moz-user-select: none;
@@ -556,6 +556,9 @@ body > div.overlay .close {
 	width: 32px;
 	height: 32px;
 	opacity: 0.3;
+}
+body > div.overlay ul.actions {
+	width: 100%;
 }
 body > div.overlay .close:hover {
 	opacity: 1;

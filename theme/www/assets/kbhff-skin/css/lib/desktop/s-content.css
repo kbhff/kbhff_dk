@@ -397,6 +397,10 @@ body > div.overlay .close {
 	height: 32px;
 	opacity: 0.3;
 }
+body > div.overlay ul.actions {
+	width: 100%;
+}
+
 body > div.overlay .close:hover {
 	opacity: 1;
 }
