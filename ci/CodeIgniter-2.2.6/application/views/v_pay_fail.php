@@ -11,22 +11,22 @@
 <span ID="title" style="float: left;" onClick="window.location.href='/minside/';" title="Til min forside">K&Oslash;BENHAVNS<br>
 F&Oslash;DEVAREF&AElig;LLESSKAB <span id="green">/ MEDLEMSSYSTEM</span></span>
 <button class="form_button" style="float: right; margin-top:33px;" onClick="window.location.href='http://kbhff.dk';">G&Aring; TIL KBHFF</button>
-<img src="/img/banner.jpg" alt="K&oslash;benhavns F&oslash;devare F&aelig;llesskab" width="800" height="188" border="0">
-	<?php 
+<img class="fit-width" src="/img/banner.jpg" alt="K&oslash;benhavns F&oslash;devare F&aelig;llesskab" width="800" height="188" border="0">
+	<?php
 	if ($this->session->userdata('uid') > 0)
 	{
-		echo getMenu(site_url(), $this->session->userdata('permissions'), $this->session->userdata('uid')); 
+		echo getMenu(site_url(), $this->session->userdata('permissions'), $this->session->userdata('uid'));
 	} else {
 echo ('
  <div id="menu">
   <ul>
    <li>
-    <a href="/">Log ind</a> 
+    <a href="/">Log ind</a>
    </li>
  </div>
 ');
 	}
-	
+
 
 	?>
 <h1><?php echo $heading;?></h1>

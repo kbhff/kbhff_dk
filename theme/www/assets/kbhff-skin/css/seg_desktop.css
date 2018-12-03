@@ -1,14 +1,11 @@
 /*
-asset-builder @ 2018-11-15 15:50:20
+asset-builder @ 2018-11-28 15:03:39
 */
 
 /*seg_desktop_include.css*/
 
 /*s-page.css*/
-html {
-	min-height: 100%;
-}
-body {
+	body {
 	background: #ffffff;
 	margin: 0;
 }
@@ -18,6 +15,7 @@ body {
 	line-height: 24px;
 	color: #000000;
 }
+#page span.highlight {color: #3e8e17;}
 #page {}
 h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dd, dt {padding: 0; margin: 0;}
 h1, h2, h3, h4, h5, h6, p, li, dd, dt, span, a {line-height: 1em; font-weight: 400;}
@@ -48,9 +46,9 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 
 /*s-form.css*/
 form {}
-fieldset {width: 50%;}
 div.field {
 	padding: 0 0 25px; position: relative; font-size: 0; z-index: 1;
+	width: calc(50% + 10px);
 	padding-left: 10px;
 	padding-right: 10px;
 }
@@ -142,7 +140,7 @@ div.field.error div.hint {opacity: 0;
 	transform: translate(0, -10px);
 }
 ul.actions,
-#content ul.actions {list-style: none; margin: 0 0 0 2px; font-size: 0;}
+#content ul.actions {list-style: none; margin: 0 0 0 2px; font-size: 0; width: 50%;}
 ul.actions li,
 #content ul.actions li {width: auto; height: auto; display: inline-block; padding: 0 5px 10px 0; vertical-align: top;
 	-moz-user-select: none;
@@ -191,32 +189,27 @@ input[type="submit"] {
 
 /*s-header.css*/
 #header {
-    position: relative;
-    width: 936px;
-    margin: 0 auto;
-	padding: 16px 0 10px;
+	position: relative;
+	width: 936px;
+	margin: 0 auto;
+	padding: 28px 0 10px;
 }
 #header .logo {
-	box-sizing: border-box; 
+	box-sizing: border-box;
 	height: 48px;
-	padding: 6px 8px 6px 54px;
+	padding: 10px 8px 6px 54px;
 	display: inline-block;
-	background: transparent url(../img/logo-stempel_sort_lille_gulerod.png) no-repeat top left;
+	background: transparent url(../img/logos/logo-stempel_sort_lille_gulerod.png) no-repeat top left;
 	font-family: 'voresfont';
 	font-size: 28px;
 	line-height: 32px;
-    max-width: 50%;
 	text-transform: uppercase;
-}
-#header .highlight {
-	color: #3e8e17;
 }
 #header ul.servicenavigation {
 	position: absolute;
-	line-height: 14px;
-	top: 14px;
+	line-height: 6px;
+	top: 6px;
 	right: 0px;
-	max-width: 50%;
 }
 #header ul.servicenavigation li {
 	display: inline-block;
@@ -284,14 +277,14 @@ input[type="submit"] {
 	line-height: 48px;
 	box-shadow: 0px -5px black inset;
 	padding-bottom: 2px;
-	padding-top: 13px; 
+	padding-top: 13px;
 }
 #content h2 {
 	font-family: 'voresfont', Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
 	font-size: 28px;
 	line-height: 30px;
-	padding-bottom: 22px;	
+	padding-bottom: 22px;
 	padding-top: 20px;
 }
 #content h3 {
@@ -314,7 +307,7 @@ input[type="submit"] {
 #content h1 + p {
 	padding-top: 18px;
 }
-#content h4 + ul, 
+#content h4 + ul,
 #content h4 + ol {
 	padding-top: 18px;
 }
@@ -326,9 +319,6 @@ input[type="submit"] {
 #content a:hover {
 	color: black;
 }
-#content .highlight {
-	color: #3e8e17;
-}
 #content .system-warning {
 	color: #C22414;
 }
@@ -336,8 +326,10 @@ input[type="submit"] {
 	font-style: italic;
 	margin: 0px;
 }
-#content img {
+#content img.fit-width {
 	width: 100%;
+}
+#content img {
 	display: block;
 	box-sizing: border-box;
 	padding-left: 12px;
@@ -371,10 +363,10 @@ input[type="submit"] {
 	font-family: 'voresfont', Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
 }
-#content dd {
+#content dl {
 	padding-bottom: 12px;
 }
-#content dl {
+#content dd {
 	padding-bottom: 12px;
 }
 #content code {
@@ -390,9 +382,19 @@ input[type="submit"] {
 	background-color: #DDDDDD;
 	padding: 0 6px;
 }
-#content span.green {
-	color: #3e8e17;
-	font-weight: 700;
+#content h1 {
+	margin-left: 12px;
+	margin-right: 12px;
+}
+#content h2,
+#content h3,
+#content h4,
+#content p,
+#content ol,
+#content ul,
+#content dl {
+	padding-left: 12px;
+	padding-right: 12px;
 }
 #content div.c-wrapper {
 	display: block;
@@ -407,6 +409,7 @@ input[type="submit"] {
 	display: inline-block;
 	vertical-align: top;
 	font-size: 0;
+	min-height: 200px;
 }
 #content div.c-three-quarters {
 	width: 75%;
@@ -502,20 +505,6 @@ input[type="submit"] {
 #content div.c-three-quarters > div.c-primary-box.c-one-half {
 	width: calc(66.6666% - 24px);
 }
-#content h1 {
-	margin-left: 12px;
-	margin-right: 12px;
-}
-#content h2,
-#content h3,
-#content h4,
-#content p,
-#content ol,
-#content ul,
-#content dl {
-	padding-left: 12px;
-	padding-right: 12px;
-}
 body > div.overlay_protection {
 	position: fixed;
 	top: 0;
@@ -538,9 +527,7 @@ body > div.overlay p {
 	font-family: 'Arial';
 	font-size: 14px;
 	color: #000000;
-	padding-right: 24px;
-	padding-left: 24px;
-	padding-bottom: 24px;
+	padding: 0 24px 24px;
 	text-align: center;
 }
 body > div.overlay h2 {
@@ -552,13 +539,16 @@ body > div.overlay h2 {
 	padding-top: 17px;
 	text-align: center;
 }
+body > div.overlay .header {
+	cursor: move;
+}
 body > div.overlay fieldset {
 	margin: 0 auto;
 }
 body > div.overlay fieldset label {
 	text-align: left;
 }
-.close {
+body > div.overlay .close {
 	position: absolute;
 	right: 17px;
 	top: 17px;
@@ -566,10 +556,13 @@ body > div.overlay fieldset label {
 	height: 32px;
 	opacity: 0.3;
 }
-.close:hover {
+body > div.overlay ul.actions {
+	width: 100%;
+}
+body > div.overlay .close:hover {
 	opacity: 1;
 }
-.close:before, .close:after {
+body > div.overlay .close:before, body > div.overlay .close:after {
 	position: absolute;
 	left: 15px;
 	content: ' ';
@@ -577,12 +570,13 @@ body > div.overlay fieldset label {
 	width: 2px;
 	background-color: #333;
 }
-.close:before {
+body > div.overlay .close:before {
 	transform: rotate(45deg);
 }
-.close:after {
+body > div.overlay .close:after {
 	transform: rotate(-45deg);
 }
+
 
 /*s-footer.css*/
 #footer {

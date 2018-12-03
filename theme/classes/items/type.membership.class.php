@@ -15,7 +15,7 @@
 * 2100 København Ø
 * Denmark
 * mail: start@think.dk
-*	
+*
 * This source code is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -54,7 +54,7 @@ class TypeMembership extends Itemtype {
 			"type" => "string",
 			"label" => "Name",
 			"required" => true,
-			"hint_message" => "Membership name", 
+			"hint_message" => "Membership name",
 			"error_message" => "Membership needs a name."
 		));
 
@@ -128,8 +128,8 @@ class TypeMembership extends Itemtype {
 			$model = $IC->typeObject("message");
 
 			$model->sendMessage([
-				"item_id" => $message_id, 
-				"user_id" => $user_id, 
+				"item_id" => $message_id,
+				"user_id" => $user_id,
 				"values" => ["PRICE" => $price]
 			]);
 

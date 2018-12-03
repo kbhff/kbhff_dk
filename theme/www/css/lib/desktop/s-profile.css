@@ -29,8 +29,11 @@
 }
 
 #content div.profile .c-box > form > fieldset {
-	width: 100%;
 	padding-top: 6px;
+}
+#content div.profile .c-box > form > fieldset .field {
+	width: 100%;
+	box-sizing: border-box;
 }
 
 #content div.profile .c-box ul.actions {
@@ -52,7 +55,7 @@
 #content div.profile .orders,
 #content div.profile .order-headings,
 #content div.profile .order {
-	font-size: 12px;
+	/* font-size: 12px; */
 	font-size: 0;
 }
 
@@ -124,7 +127,6 @@
 	padding-right: 8px;
 	font-size: 12px;
 }
-
 
 #content div.profile ul.actions {
 	width: 100%;

@@ -1,6 +1,5 @@
-#content .scene.login form {padding-top: 50px; width: 400px; margin: 0 auto;}
-#content .scene.login form fieldset {width: auto;}
+#content .scene.login form {padding-top: 50px;}
 #content .scene.login ul.actions li.forgot {padding: 7px; line-height: 22px;}
-
-
-#content .scene.login div.signup {width: 400px; margin: 0 auto;}
+#content .scene.login form .field {margin: 0 auto;}
+#content .scene.login form > ul.actions {margin: 0 auto; width: calc(50% + calc(12px / 2));}
+#content .scene.login div.signup {width: calc(50% + 30px); margin: 0 auto;}
