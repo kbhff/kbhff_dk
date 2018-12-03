@@ -49,156 +49,60 @@ class TypeSignupfee extends Itemtype {
 		// itemtype database
 		$this->db = SITE_DB.".item_signupfee";
 
-				// Name
-				$this->addToModel("name", array(
-					"type" => "string",
-					"label" => "Name",
-					"required" => true,
-					"hint_message" => "Membership name",
-					"error_message" => "Membership needs a name."
-				));
 
-				$this->addToModel("item_price", array(
-					"type" => "string",
-					"label" => "New price",
-					"pattern" => "[0-9,]+",
-					"class" => "price",
-					"required" => true,
-					"hint_message" => "State the price INCLUDING VAT, using comma (,) as decimal point.",
-					"error_message" => "Price cannot be empty."
-				));
-				
-				$this->addToModel("item_price_vatrate", array(
-					"type" => "integer",
-					"label" => "Vatrate",
-					"class" => "vatrate",
-					"required" => true,
-					"hint_message" => "VAT rate for this product.",
-					"error_message" => "VAT rate cannot be empty."
-				));
-				function shipped($order_item_id, $order) {
+		// Name
+		$this->addToModel("name", array(
+			"type" => "string",
+			"label" => "Name",
+			"required" => true,
+			"hint_message" => "Signup fee name",
+			"error_message" => "Signup fee needs a name."
+		));
 
-					// print "\n<br>###$order_item_id### shipped\n<br>";
+		// Class
+		$this->addToModel("classname", array(
+			"type" => "string",
+			"label" => "CSS Class",
+			"hint_message" => "CSS class for custom styling. If you don't know what this is, just leave it empty"
+		));
 
-				}
+		// Associated membership type
+		$this->addToModel("associated_membership_id", array(
+			"type" => "select",
+			"options" => array(
+				"hej", 
+				"hej hej", 
+				"hej hej hej"),
+			"label" => "Associated membership type",
+			"hint_message" => "Select a membership that will apply to users when they pay this signup fee",
+			"error_message" => "A signup fee must be associated with a membership type"
 
-				// user subscribed to an item
-				function subscribed($subscription) {
-			//		print_r($subscription);
+		));
 
-					// check for subscription error
-					if($subscription && $subscription["item_id"] && $subscription["user_id"] && $subscription["order"]) {
+		// Description
+		$this->addToModel("description", array(
+			"type" => "text",
+			"label" => "SEO description",
+			"hint_message" => "Write a short description of the signup fee for SEO.",
+			"error_message" => "A short description without any words? How weird."
+		));
 
-						$item_id = $subscription["item_id"];
-						$user_id = $subscription["user_id"];
-						$order = $subscription["order"];
-						$item_key = arrayKeyValue($order["items"], "item_id", $item_id);
-						$order_item = $order["items"][$item_key];
+		// HTML
+		$this->addToModel("html", array(
+			"type" => "html",
+			"label" => "Full description",
+			"hint_message" => "Write a full description of the signup fee.",
+			"error_message" => "A full description without any words? How weird."
+		));
 
-						$message_id = $subscription["item"]["subscribed_message_id"];
+	}
 
-						// variables for email
-						$price = formatPrice(array("price" => $order_item["total_price"], "vat" => $order_item["total_vat"],  $order_item["total_price"], "country" => $order["country"], "currency" => $order["currency"]));
+	function shipped($order_item_id, $order) {
 
+		print "\n<br>###$order_item_id### shipped\n<br>";
 
-						$IC = new Items();
-						$model = $IC->typeObject("message");
+	}
 
-						$model->sendMessage([
-							"item_id" => $message_id,
-							"user_id" => $user_id,
-							"values" => ["PRICE" => $price]
-						]);
+}
 
-						global $page;
-						$page->addLog("membership->subscribed: item_id:$item_id, user_id:$user_id, order_id:".$order["id"]);
-
-
-			//
-			//
-			// 			$classname = $subscription["item"]["classname"];
-			//
-			//
-			// 			$UC = new User();
-			//
-			// 			// switch user id to enable user data collection
-			// 			$current_user_id = session()->value("user_id");
-			// 			session()->value("user_id", $user_id);
-			//
-			// 			// get user, order and  info
-			// 			$user = $UC->getUser();
-			//
-			// 			// switch back to correct user
-			// 			session()->value("user_id", $current_user_id);
-			//
-			//
-			// //			print "subscription:\n";
-			// //			print_r($subscription);
-			//
-			// 			// variables for email
-			// 			$nickname = $user["nickname"];
-			// 			$email = $user["email"];
-			// 			$membership = $user["membership"];
-			//
-			// 			// print "nickname:" . $nickname."<br>\n";
-			// 			// print "email:" . $email."<br>\n";
-			// 			// print "classname:" . $classname."<br>\n";
-			// 			// print "member no:" . $membership["id"]."<br>\n";
-			// 			// print "membership:" . $membership["item"]["name"]."<br>\n";
-			// 			// print "price:" . $price."\n";
-			//
-			//
-			// 			//$nickname = false;
-			// 			if($nickname && $email && $membership && $price && $classname) {
-			//
-			// 				mailer()->send(array(
-			// 					"values" => array(
-			// 						"ORDER_NO" => $order["order_no"],
-			// 						"MEMBER_ID" => $membership["id"],
-			// 						"MEMBERSHIP" => $membership["item"]["name"],
-			// 						"PRICE" => $price,
-			// 						"EMAIL" => $email,
-			// 						"NICKNAME" => $nickname
-			// 					),
-			// 					"recipients" => $email,
-			// 					"template" => "subscription_".$classname
-			// 				));
-			//
-			// 				// send notification email to admin
-			// 				mailer()->send(array(
-			// 					"recipients" => SHOP_ORDER_NOTIFIES,
-			// 					"subject" => SITE_URL . " - New ".$subscription["item"]["name"].": " . $email,
-			// 					"message" => "Do something"
-			// 				));
-			//
-			// 			}
-			// 			else {
-			//
-			// 				// send notification email to admin
-			// 				mailer()->send(array(
-			// 					"subject" => "ERROR: subscription creation: " . $email,
-			// 					"message" => "Do something",
-			// 					"template" => "system"
-			// 				));
-			//
-			// 			}
-
-					}
-
-				}
-
-				function unsubscribed($subscription) {
-
-					// check for subscription error
-					if($subscription) {
-
-						global $page;
-						$page->addLog("membership->unsubscribed: item_id:".$subscription["item_id"].", user_id:".$subscription["user_id"]);
-
-					}
-
-				}
-
-			}
-
-			?>
+?>
