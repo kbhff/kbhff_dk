@@ -11,7 +11,7 @@ $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "positio
 
 ?>
 
-<div class="scene membership i:membership">
+<div class="scene signupfees i:signupfees">
 
 <? if($page_item && $page_item["status"]):
 	$media = $IC->sliceMedia($page_item); ?>
