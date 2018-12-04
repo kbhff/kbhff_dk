@@ -31,18 +31,19 @@ if(is_array($action) && count($action)) {
 
 	else if($action[0] == "addToCart" && $page->validateCsrfToken()) {
 
-		 // $user_id = session()->value("user_id");
-		 // if($user_id > 1) {
-		 //
-		 // 	$UC = new User();
-		 // 	$membership = $UC->getMembership();
-		 // 	if($membership && $membership["subscription_id"]) {
-		 //
-		 // 		header("Location: already-member");
-		 // 		exit();
-		 //
-		 // 	}
-		 // }
+		// Check if user is already a member
+		$user_id = session()->value("user_id");
+		if($user_id > 1) {
+
+			$UC = new User();
+			$membership = $UC->getMembership();
+			if($membership && $membership["subscription_id"]) {
+
+				header("Location: already-member");
+				exit();
+
+			}
+		}
 
 		// add membership to new or existing cart
 		$cart = $SC->addToCart(array("addToCart"));
@@ -58,6 +59,13 @@ if(is_array($action) && count($action)) {
 		}
 
 	}
+
+
+
+	// THIS SECTION HAS NOT BEEN UPDATED YET
+	// START OLD SECTION
+
+
 
 	// /signup/confirm/email|mobile/#email|mobile#/#verification_code#
 	else if($action[0] == "confirm" && count($action) == 4) {
@@ -159,6 +167,15 @@ if(is_array($action) && count($action)) {
 		exit();
 
 	}
+
+
+
+	// END OLD SECTION
+	// BELOW THIS LINE IS NEW STUFF
+
+
+
+	// /bliv-medlem/signup
 	else if($action[0] == "signup") {
 
 		$page->page(array(
@@ -167,12 +184,13 @@ if(is_array($action) && count($action)) {
 		exit();
 
 	}
+
 }
 
 // plain signup directly
-// /signup
+// /bliv-medlem
 $page->page(array(
-	"templates" => "signup/membership.php"
+	"templates" => "signup/signupfees.php"
 ));
 
 ?>
