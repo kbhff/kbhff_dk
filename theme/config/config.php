@@ -22,6 +22,7 @@ define("SITE_EMAIL", "info@kbhff.dk");
 define("DEFAULT_PAGE_DESCRIPTION", "");
 define("DEFAULT_LANGUAGE_ISO", "EN");
 define("DEFAULT_COUNTRY_ISO", "DK");
+define("DEFAULT_CURRENCY_ISO", "DKK");
 
 
 // ENABLE ITEMS MODEL
