@@ -33,7 +33,7 @@ define("SITE_MEMBERS", true);
 
 // Enable shop model
 define("SITE_SHOP", true);
-define("SHOP_ORDER_NOTIFIES", "email@domain.tld");
+define("SHOP_ORDER_NOTIFIES", "soren@parentnode.dk");
 
 // Enable notifications (send collection email after N notifications)
 define("SITE_COLLECT_NOTIFICATIONS", 50);
