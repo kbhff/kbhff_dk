@@ -8,11 +8,13 @@ include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 
 
 $action = $page->actions();
+$SC = new Shop();
 $model = new User();
 
 
 $page->bodyClass("signup");
 $page->pageTitle("Bliv medlem");
+
 
 
 if(is_array($action) && count($action)) {
@@ -24,6 +26,37 @@ if(is_array($action) && count($action)) {
 			"templates" => "signup/receipt.php"
 		));
 		exit();
+	}
+
+
+	else if($action[0] == "addToCart" && $page->validateCsrfToken()) {
+
+		 // $user_id = session()->value("user_id");
+		 // if($user_id > 1) {
+		 //
+		 // 	$UC = new User();
+		 // 	$membership = $UC->getMembership();
+		 // 	if($membership && $membership["subscription_id"]) {
+		 //
+		 // 		header("Location: already-member");
+		 // 		exit();
+		 //
+		 // 	}
+		 // }
+
+		// add membership to new or existing cart
+		$cart = $SC->addToCart(array("addToCart"));
+		// successful creation
+		if($cart) {
+			header("Location: signup");
+			exit();
+
+		}
+		// something went wrong
+		else {
+			message()->addMessage("Colonizing Mars! Waw. The computer is so excited it cannot process your request right now. Try again later.", array("type" => "error"));
+		}
+
 	}
 
 	// /signup/confirm/email|mobile/#email|mobile#/#verification_code#
@@ -66,6 +99,7 @@ if(is_array($action) && count($action)) {
 	// /signup/save
 	else if($action[0] == "save" && $page->validateCsrfToken()) {
 
+	$UC = new User();
 		// create new user
 		$user = $model->newUser(array("newUser"));
 
@@ -125,13 +159,20 @@ if(is_array($action) && count($action)) {
 		exit();
 
 	}
+	else if($action[0] == "signup") {
 
+		$page->page(array(
+			"templates" => "signup/signup.php"
+		));
+		exit();
+
+	}
 }
 
 // plain signup directly
 // /signup
 $page->page(array(
-	"templates" => "signup/signup.php"
+	"templates" => "signup/membership.php"
 ));
 
 ?>
