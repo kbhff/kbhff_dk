@@ -80,3 +80,4 @@ $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "positio
 	</div>
 
 <? endif; ?>
+</div>
