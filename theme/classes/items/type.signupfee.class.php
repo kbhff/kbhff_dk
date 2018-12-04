@@ -69,10 +69,6 @@ class TypeSignupfee extends Itemtype {
 		// Associated membership type
 		$this->addToModel("associated_membership_id", array(
 			"type" => "select",
-			"options" => array(
-				"hej", 
-				"hej hej", 
-				"hej hej hej"),
 			"label" => "Associated membership type",
 			"hint_message" => "Select a membership that will apply to users when they pay this signup fee",
 			"error_message" => "A signup fee must be associated with a membership type"
