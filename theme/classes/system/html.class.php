@@ -30,13 +30,13 @@ class HTML extends HTMLCore {
 		$_ .= '<p>No comments yet</p>';
 		endif;
 		$_ .= '</div>';
-		
+
 		return $_;
 
 	}
-	
-	function frontendOffer($item, $url, $description = false) {
 
+	function frontendOffer($item, $url, $description = false) {
+	
 		$_ = '';
 
 		if($item["prices"]) {
@@ -67,7 +67,7 @@ class HTML extends HTMLCore {
 				}
 
 			$_ .= '</ul>';
-	
+
 		}
 
 		return $_;
@@ -158,7 +158,7 @@ class HTML extends HTMLCore {
 					case "default"           : $default             = $_value; break;
 
 					case "url"               : $url                 = $_value; break;
-					
+
 					case "editing"           : $editing             = $_value; break;
 					case "schema"            : $schema              = $_value; break;
 
@@ -215,7 +215,7 @@ class HTML extends HTMLCore {
 	function serverMessages($type = []) {
 
 		$_ = '';
-		
+
 		if(message()->hasMessages($type)) {
 			$_ .= '<div class="messages">';
 

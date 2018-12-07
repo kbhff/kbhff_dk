@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-03 10:02:33
+asset-builder @ 2018-12-06 15:35:30
 */
 
 /*seg_desktop_include.css*/
@@ -724,4 +724,20 @@ body > div.overlay .close:after {
 body.profil > div.overlay div.field.password {
 	padding-bottom: 20px;
 }
+
+
+/*s-signupfees.css*/
+#content div.signupfees ul.offer {list-style-type: none; padding-bottom: 0;}
+#content div.signupfees li.signupfee {display: inline-block; width: calc(50% - 14px - 12px); vertical-align: top; text-align: center; background-color: #f2f2f2; margin-top: 48px; margin-right: 12px; margin-left: 12px; padding-left: 0;}
+#content div.signupfees li + li {padding-top: 0;}
+#content div.signupfees h3 {margin-right: 12px; margin-left: 12px; border-bottom: 1px solid #000000;}
+#content div.signupfees ul.signupfees {margin-left: 0;}
+#content div.signupfees ul.offer li.name,
+#content div.signupfees ul.offer li.currency,
+#content div.signupfees ul.offer li.url {display: none;}
+#content div.signupfees ul.offer li {padding-left: 0; padding-top: 3px;}
+#content div.signupfees ul.offer li p {padding-left: 0; text-align: left;}
+#content div.signupfees ul.actions li {display: block; width: 100%;}
+#content div.signupfees ul.actions {margin: 0 auto;}
+#content div.signupfees ul.actions input {margin: 0 auto;}
 

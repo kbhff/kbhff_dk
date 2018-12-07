@@ -1,0 +1,47 @@
+#content .scene.membership ul.info {display: none;}
+#content .scene.membership h1 {margin-bottom: 22px;}
+#content .scene.membership div.article ul.offer li.description {display: none;}
+#content .scene.membership div.article ul.offer li {font-size: 32px;}
+#content .scene.membership div.article ul.offer {padding-bottom: 24px;}
+
+/*
+#content div.signupfees.membership ul.actions input {margin: 0;}
+#content div.signupfees.membership ul.actions {margin: 0;} */
+/* #content div.signupfees.membership ul.offer li.description {display: none;}
+#content div.signupfees.membership ul.offer li {font-size: 30px; display: block;}
+#content div.signupfees.membership ul.offer {padding-top: 12px; padding-bottom: 16px;} */
+#content .scene.membership div.related {padding-top: 34px;}
+#content .scene.membership div.related h2 {padding-top: 12px;}
+#content .scene.membership div.related ul.items.membership {padding: 0; margin: 0; list-style-type: none;}
+/* #content div.signupfees.membership ul.membership ul.offer li {font-size: 14px;} */
+#content .scene.membership div.related ul.items.membership h3 {padding-top: 12px; padding-bottom: 2px;}
+#content .scene.membership div.related ul.items.membership > li {padding-top: 12px; padding-left: 0;}
+#content .scene.membership div.related ul.items.membership div.description {padding-top: 12px;}
+
+
+
+#content .scene ul.info {position: relative; z-index: 1; padding-bottom: 26px; padding-right: 0; display: inline-block; vertical-align: top; width: auto; font-size: 0;}
+#content .scene ul.info li {width: auto; font-size: 12px; line-height: 12px; color: #cccccc; display: inline-block; vertical-align: top;}
+#content .scene ul.info > li.author:before,
+#content .scene ul.info > li.place:before {content: "\00a0|\00a0"; color: #dedede; display: inline-block; vertical-align: top; font-size: 12px; line-height: 10px; }
+#content .scene ul.info li.main_entity,
+#content .scene ul.info li.url,
+#content .scene ul.info li.publisher,
+#content .scene ul.info li.image_info,
+#content .scene ul.info li.modified_at,
+#content .scene ul.info li.latitude,
+#content .scene ul.info li.longitude {display: none;}
+
+
+
+#content .scene ul.offer,
+#content .scene .articlebody ul.offer {font-size: 0; padding: 0; margin: 0; list-style: none;}
+#content .scene ul.offer li.name,
+#content .scene ul.offer li.currency,
+#content .scene ul.offer li.url {display: none;}
+#content .scene ul.offer li {font-size: 14px; width: auto; display: inline-block; vertical-align: top; padding: 0 5px 0 12px;}
+#content .scene ul.offer li.default {text-decoration: line-through;}
+#content .scene ul.offer li.description {padding-top: 4px; display: block;}
+
+#content .scene ul.offer li.description ul {list-style: disc;}
+#content .scene ul.offer li.description ul li {display: list-item; padding: 0 0 3px; font-size: 13px;}

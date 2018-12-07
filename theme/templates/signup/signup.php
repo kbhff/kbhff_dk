@@ -13,15 +13,16 @@ include_once("classes/system/department.class.php");
 $DC = new Department();
 $departments = $DC->getDepartments();
 
-// $IC = new Model();
-// $department = $model->getModel(array("model" => "department", "name" => true, "extend" => "true", ));
-// $department_name = $department["name"];
-// print_r($department_name);
 
 $email = $model->getProperty("email", "value");
 $name = $model->getProperty("name", "value");
 ?>
 <div class="scene signup i:signup">
+
+	
+
+	<div class="section">
+
 
 <? if($page_item && $page_item["status"]):
 	$media = $IC->sliceMedia($page_item); ?>
@@ -81,7 +82,8 @@ $name = $model->getProperty("name", "value");
 		</fieldset>
 
 		<ul class="actions">
-			<?= $model->submit("Join", array("class" => "primary", "wrapper" => "li.signup")) ?>
+			<?= $model->submit("Næste", array("class" => "primary", "wrapper" => "li.signup")) ?>
+			<li class="reject"><a href="/bliv-medlem" class="button">Annuller</a></li>
 		</ul>
 	<?= $model->formEnd() ?>
 

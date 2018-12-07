@@ -184,7 +184,14 @@ if(is_array($action) && count($action)) {
 		exit();
 
 	}
+	// view specific membership
+	else if(count($action) == 1 && !preg_match("/signup|addToCart/", $action[0])) {
 
+		$page->page(array(
+			"templates" => "signup/view.php"
+		));
+		exit();
+	}
 }
 
 // plain signup directly
