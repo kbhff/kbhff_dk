@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-07 12:10:27
+asset-builder @ 2018-12-10 12:49:43
 */
 
 /*seg_desktop_include.css*/
@@ -590,6 +590,7 @@ body > div.overlay .close:after {
 #content .scene ul.info li.modified_at,
 #content .scene ul.info li.latitude,
 #content .scene ul.info li.longitude {display: none;}
+#content .scene ul.info li + li {padding-top: 0;}
 #content .scene ul.offer,
 #content .scene .articlebody ul.offer {font-size: 0; padding: 0; margin: 0; list-style: none;}
 #content .scene ul.offer li.name,
