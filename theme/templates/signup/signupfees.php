@@ -2,6 +2,7 @@
 global $action;
 global $model;
 
+
 $IC = new Items();
 $page_item = $IC->getItem(array("tags" => "page:signupfees", "extend" => array("user" => true, "tags" => true, "mediae" => true)));
 if($page_item) {
@@ -66,7 +67,75 @@ $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "positio
 					<li class="signupfee"<?= $signupfee["classname"] ? " ".$signupfee["classname"] : "" ?> itemprop="offers">
 						<h3><?= $signupfee["name"] ?></h3>
 
-						<?= $HTML->frontendOffer($signupfee, SITE_URL."/bliv-medlem", $signupfee["html"]);?>
+					<? $membership_item = $IC->getItem(array("id" => $signupfee["associated_membership_id"], "extend" => array("prices" => true))); ?>
+
+
+					<ul class="offer" itemscope itemtype="http://schema.org/Offer">
+						<li class="name" itemprop="name" content="<?= $signupfee["name"] ?>"></li>
+						<li class="currency" itemprop="priceCurrency" content="<?= $this->currency() ?>"></li>
+						<li class="suscribtion_price"><p>Indmeldelsesgebyr:</p></li>
+						<? if($signupfee["prices"]) {
+								$offer_key = arrayKeyValue($signupfee["prices"], "type", "offer");
+								$default_key = arrayKeyValue($signupfee["prices"], "type", "default");
+
+								if($offer_key !== false) { ?>
+									<li class="price default"><?= formatPrice($signupfee["prices"][$default_key]).(isset($signupfee["subscription_method"]) && $signupfee["subscription_method"] && $signupfee["prices"][$default_key]["price"] ? ' / '.$signupfee["subscription_method"]["name"] : '') ?></li>
+									<li class="price offer" itemprop="price" content="<?= $signupfee["prices"][$offer_key]["price"]?>"><?= formatPrice($signupfee["prices"][$offer_key]).(isset($signupfee["subscription_method"]) && $signupfee["subscription_method"] && $signupfee["prices"][$default_key]["price"] ? ' / '.$signupfee["subscription_method"]["name"] : '') ?></li>
+<?
+								}
+								else if($signupfee["prices"][$default_key]["price"]) { ?>
+									<li class="price" itemprop="price" content="<?= $signupfee["prices"][$default_key]["price"]?>"><?= formatPrice($signupfee["prices"][$default_key]).(isset($signupfee["subscription_method"]) && $signupfee["subscription_method"] && $signupfee["prices"][$default_key]["price"] ? ' / '.$signupfee["subscription_method"]["name"] : '') ?></li>
+<?
+								}
+								else { ?>
+									<li class="price" itemprop="price" content="<?= $signupfee["prices"][$default_key]["price"] ?>">Free</li>
+<?
+								}
+?>
+							<li class="url" itemprop="url" content="<?$url?>"></li>
+<?
+ 							}
+
+
+						if($signupfee["html"]) { ?>
+							<li class="description" itemprop="description"><?=$signupfee["html"]?></li>
+<? 							}
+
+?>
+					</ul>
+
+
+
+
+						<ul class="offer" itemscope itemtype="http://schema.org/Offer">
+							<li class="name" itemprop="name" content="<?= $membership_item["name"] ?>"></li>
+							<li class="currency" itemprop="priceCurrency" content="<?= $this->currency() ?>"></li>
+							<li class="suscribtion_price"><p>Årligt kontingent:</p></li>
+							<? if($membership_item["prices"]) {
+									$offer_key = arrayKeyValue($membership_item["prices"], "type", "offer");
+									$default_key = arrayKeyValue($membership_item["prices"], "type", "default");
+
+									if($offer_key !== false) { ?>
+										<li class="price default"><?= formatPrice($membership_item["prices"][$default_key]).(isset($membership_item["subscription_method"]) && $membership_item["subscription_method"] && $membership_item["prices"][$default_key]["price"] ? ' / '.$membership_item["subscription_method"]["name"] : '') ?></li>
+										<li class="price offer" itemprop="price" content="<?= $membership_item["prices"][$offer_key]["price"]?>"><?= formatPrice($membership_item["prices"][$offer_key]).(isset($membership_item["subscription_method"]) && $membership_item["subscription_method"] && $membership_item["prices"][$default_key]["price"] ? ' / '.$membership_item["subscription_method"]["name"] : '') ?></li>
+<?
+									}
+									else if($membership_item["prices"][$default_key]["price"]) { ?>
+										<li class="price" itemprop="price" content="<?= $membership_item["prices"][$default_key]["price"]?>"><?= formatPrice($membership_item["prices"][$default_key]).(isset($membership_item["subscription_method"]) && $membership_item["subscription_method"] && $membership_item["prices"][$default_key]["price"] ? ' / '.$membership_item["subscription_method"]["name"] : '') ?></li>
+<?
+									}
+									else { ?>
+										<li class="price" itemprop="price" content="<?= $membership_item["prices"][$default_key]["price"] ?>">Free</li>
+<?
+									}
+?>
+								<li class="url" itemprop="url" content="<?$url?>"></li>
+<?
+									}
+?>
+								<li class="price_description"><p>Du betaler 200 kr om året for at være medlem af Københavns Fødevarefællesskab. Bekøbet skal betales hvert år i maj, så du behøver derfor ikke at betale det ved indmeldelsen.</p></li>
+						</ul>
+
 
 						<?= $model->formStart("/bliv-medlem/addToCart", array("class" => "signup labelstyle:inject")) ?>
 							<?= $model->input("quantity", array("value" => 1, "type" => "hidden")); ?>

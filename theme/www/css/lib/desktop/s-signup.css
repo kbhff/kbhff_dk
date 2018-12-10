@@ -1,21 +1,14 @@
-/* #content div.signupfees ul.offer {display: block; list-style-type: none; padding-bottom: 0; margin-left: 0;} */
-#content div.signupfees li.signupfee {display: inline-block; width: calc(50% - 14px - 12px); vertical-align: top; text-align: center; background-color: #f2f2f2; margin-top: 48px; margin-right: 12px; margin-left: 12px; padding-left: 0;}
-#content div.signupfees li + li {padding-top: 0;}
-#content div.signupfees h3 {margin-right: 12px; margin-left: 12px; border-bottom: 1px solid #000000;}
-#content div.signupfees ul.signupfees {margin-left: 0;}
+#content .scene.signupfees li.signupfee {display: inline-block; width: calc(50% - 14px - 12px); vertical-align: top; text-align: center; background-color: #f2f2f2; margin-top: 48px; margin-right: 12px; margin-left: 12px; padding-left: 0;}
+#content .scene.signupfees li + li {padding-top: 0;}
+#content .scene.signupfees h3 {padding-bottom: 0; margin-right: 12px; margin-left: 12px; margin-top: 12px; border-bottom: 1px solid #000000; font-size: 26px;}
+#content .scene.signupfees ul.signupfees {margin-left: 0;}
+#content .scene.signupfees ul.offer li {padding-left: 0; padding-top: 12px; font-size: 20px; text-align: left; font-weight: 500}
+#content .scene.signupfees ul.actions li {display: block; width: 100%;}
+#content .scene.signupfees ul.actions {margin: 0 auto;}
+#content .scene.signupfees ul.actions input {margin: 0 auto;}
+#content .scene.signupfees ul.offer li.suscribtion_price > p {padding: 0; font-size: 20px;}
 
-
-/* #content div.signupfees ul.offer li.name,
-#content div.signupfees ul.offer li.currency,
-#content div.signupfees ul.offer li.url
- {display: none;} */
-#content div.signupfees ul.offer li {padding-left: 0; padding-top: 12px;}
-/* #content div.signupfees ul.offer li p {padding-left: 0; text-align: left;} */
-#content div.signupfees ul.actions li {display: block; width: 100%;}
-#content div.signupfees ul.actions {margin: 0 auto;}
-#content div.signupfees ul.actions input {margin: 0 auto;}
-
-/* #content div.signupfees ul.info {display: none;} */
+#content .scene.signupfees div.article ul.info {display: none;}
 
 
 #content .scene.signup form .field {margin: 0 auto;}
