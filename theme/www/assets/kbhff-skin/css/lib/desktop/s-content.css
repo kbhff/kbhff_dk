@@ -438,6 +438,7 @@ body > div.overlay .close:after {
 #content .scene ul.info li.modified_at,
 #content .scene ul.info li.latitude,
 #content .scene ul.info li.longitude {display: none;}
+#content .scene ul.info li + li {padding-top: 0;}
 
 
 
