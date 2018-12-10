@@ -19,7 +19,7 @@ $page->pageTitle("Bliv medlem");
 
 if(is_array($action) && count($action)) {
 
-	// /signup/kvittering
+	// /bliv-medlem/kvittering
 	if($action[0] == "kvittering") {
 
 		$page->page(array(
@@ -28,7 +28,7 @@ if(is_array($action) && count($action)) {
 		exit();
 	}
 
-
+	// /bliv-medlem/addToCart (submitted from /bliv-medlem)
 	else if($action[0] == "addToCart" && $page->validateCsrfToken()) {
 
 		// Check if user is already a member
@@ -59,6 +59,45 @@ if(is_array($action) && count($action)) {
 		}
 
 	}
+
+	// /bliv-medlem/save (submitted from /bliv-medlem/tilmelding)
+	else if($action[0] == "save" && $page->validateCsrfToken()) {
+
+		// create new user
+		$user = $model->newUser(array("newUser"));
+
+		// successful creation
+		if(isset($user["user_id"])) {
+
+			$order = $SC->newOrderFromCart(array("newOrderFromCart", $_COOKIE["cart_reference"]));
+			if($order) {
+
+				// redirect to leave POST state
+				header("Location: /butik/betaling/".$order["order_no"]);
+				exit();
+
+			}
+			else {
+
+				// redirect to leave POST state
+				header("Location: /butik/kurv");
+				exit();
+
+			}
+
+		}
+
+		// user exists
+		else if(isset($user["status"]) && $user["status"] == "USER_EXISTS") {
+			message()->addMessage("Sorry, the computer says you either have a bad memory or a bad conscience!", array("type" => "error"));
+		}
+		// something went wrong
+		else {
+			message()->addMessage("Sorry, computer says no!", array("type" => "error"));
+		}
+
+	}
+
 
 
 
@@ -104,33 +143,6 @@ if(is_array($action) && count($action)) {
 		exit();
 	}
 
-	// /signup/save
-	else if($action[0] == "save" && $page->validateCsrfToken()) {
-
-	$UC = new User();
-		// create new user
-		$user = $model->newUser(array("newUser"));
-
-		// successful creation
-		if(isset($user["user_id"])) {
-
-			// redirect to leave POST state
-			header("Location: receipt");
-			exit();
-
-		}
-
-		// user exists
-		else if(isset($user["status"]) && $user["status"] == "USER_EXISTS") {
-			message()->addMessage("Sorry, the computer says you either have a bad memory or a bad conscience!", array("type" => "error"));
-		}
-		// something went wrong
-		else {
-			message()->addMessage("Sorry, computer says no!", array("type" => "error"));
-		}
-
-	}
-
 	// post username, maillist_id and verification_token
 	else if($action[0] == "unsubscribe" && $page->validateCsrfToken()) {
 
@@ -174,7 +186,6 @@ if(is_array($action) && count($action)) {
 	// BELOW THIS LINE IS NEW STUFF
 
 
-
 	// /bliv-medlem/tilmelding
 	else if($action[0] == "tilmelding") {
 
@@ -194,6 +205,7 @@ if(is_array($action) && count($action)) {
 
 	}
 	// view specific membership
+	// /bliv-medlem/medlemsskaber/#sindex#
 	else if(count($action) == 2 && $action[0] == "medlemskaber") {
 
 		$page->page(array(
