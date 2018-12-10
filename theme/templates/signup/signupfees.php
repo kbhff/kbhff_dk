@@ -133,7 +133,7 @@ $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "positio
 <?
 									}
 ?>
-								<li class="price_description"><p>Du betaler 200 kr om året for at være medlem af Københavns Fødevarefællesskab. Bekøbet skal betales hvert år i maj, så du behøver derfor ikke at betale det ved indmeldelsen.</p></li>
+								
 						</ul>
 
 
