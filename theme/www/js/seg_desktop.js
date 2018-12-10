@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-03 10:02:33
+asset-builder @ 2018-12-06 15:35:30
 */
 
 /*seg_desktop_include.js*/
@@ -4979,6 +4979,54 @@ Util.Objects["delete_user_information"] = new function() {
 		scene.ready = function() {
 			var confirm_cancellation = u.qs("form.confirm_cancellation", this);
 			u.f.init(confirm_cancellation);
+		}
+		scene.ready();
+	}
+}
+
+
+/*i-signupfees.js*/
+Util.Objects["signupfees"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			u.bug("scene.ready:", this);
+			var signupfees = u.qsa("ul.offer");
+			var largestHeight = 0;
+			for (var i = 0; i < signupfees.length; i++) {
+				if (u.actualHeight(signupfees[i]) > largestHeight) {
+					largestHeight = u.actualHeight(signupfees[i]);
+				}
+			}
+			u.ass(signupfees[1], {"height":largestHeight+"px"});
+		}
+		scene.ready();
+	}
+}
+
+
+/*i-signup.js*/
+Util.Objects["signup"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			page.cN.scene = this;
+			var signup_form = u.qs("form.signup", this);
+			var place_holder = u.qs("div.articlebody .placeholder.signup", this);
+			if(signup_form && place_holder) {
+				place_holder.parentNode.replaceChild(signup_form, place_holder);
+			}
+			if(signup_form) {
+				u.f.init(signup_form);
+			}
+			page.acceptCookies();
+			page.resized();
 		}
 		scene.ready();
 	}

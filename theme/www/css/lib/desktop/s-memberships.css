@@ -1,0 +1,11 @@
+#content .scene.membership ul.info {display: none;}
+#content .scene.membership h1 {margin-bottom: 22px;}
+#content .scene.membership div.article ul.offer li.description {display: none;}
+#content .scene.membership div.article ul.offer li {font-size: 32px;}
+#content .scene.membership div.article ul.offer {padding-bottom: 24px;}
+#content .scene.membership div.related {padding-top: 34px;}
+#content .scene.membership div.related h2 {padding-top: 12px;}
+#content .scene.membership div.related ul.items.membership {padding: 0; margin: 0; list-style-type: none;}
+#content .scene.membership div.related ul.items.membership h3 {padding-top: 12px; padding-bottom: 2px;}
+#content .scene.membership div.related ul.items.membership > li {padding-top: 12px; padding-left: 0;}
+#content .scene.membership div.related ul.items.membership div.description {padding-top: 12px;}
