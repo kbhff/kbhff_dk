@@ -19,11 +19,11 @@ $page->pageTitle("Bliv medlem");
 
 if(is_array($action) && count($action)) {
 
-	// /signup/receipt
-	if($action[0] == "receipt") {
+	// /signup/kvittering
+	if($action[0] == "kvittering") {
 
 		$page->page(array(
-			"templates" => "signup/receipt.php"
+			"templates" => "signup/kvittering.php"
 		));
 		exit();
 	}
@@ -39,7 +39,7 @@ if(is_array($action) && count($action)) {
 			$membership = $UC->getMembership();
 			if($membership && $membership["subscription_id"]) {
 
-				header("Location: already-member");
+				header("Location: allerede-medlem");
 				exit();
 
 			}
@@ -49,7 +49,7 @@ if(is_array($action) && count($action)) {
 		$cart = $SC->addToCart(array("addToCart"));
 		// successful creation
 		if($cart) {
-			header("Location: signup");
+			header("Location: tilmelding");
 			exit();
 
 		}
@@ -175,8 +175,8 @@ if(is_array($action) && count($action)) {
 
 
 
-	// /bliv-medlem/signup
-	else if($action[0] == "signup") {
+	// /bliv-medlem/tilmelding
+	else if($action[0] == "tilmelding") {
 
 		$page->page(array(
 			"templates" => "signup/signup.php"
@@ -184,15 +184,25 @@ if(is_array($action) && count($action)) {
 		exit();
 
 	}
-	// view specific membership
-	else if(count($action) == 1 && !preg_match("/signup|addToCart/", $action[0])) {
+	// /bliv-medlem/allerede-medlem
+	else if($action[0] == "allerede-medlem") {
 
 		$page->page(array(
-			"templates" => "signup/view.php"
+			"templates" => "signup/already-member.php"
+		));
+		exit();
+
+	}
+	// view specific membership
+	else if(count($action) == 2 && $action[0] == "medlemskaber") {
+
+		$page->page(array(
+			"templates" => "signup/membership.php"
 		));
 		exit();
 	}
 }
+
 
 // plain signup directly
 // /bliv-medlem
