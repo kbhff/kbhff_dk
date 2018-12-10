@@ -72,9 +72,9 @@ class TypeSignupfee extends Itemtype {
 			"label" => "Associated membership type",
 			"hint_message" => "Select a membership that will apply to users when they pay this signup fee",
 			"error_message" => "A signup fee must be associated with a membership type"
-
+			
 		));
-
+		
 		// Description
 		$this->addToModel("description", array(
 			"type" => "text",
@@ -82,7 +82,7 @@ class TypeSignupfee extends Itemtype {
 			"hint_message" => "Write a short description of the signup fee for SEO.",
 			"error_message" => "A short description without any words? How weird."
 		));
-
+		
 		// HTML
 		$this->addToModel("html", array(
 			"type" => "html",
@@ -90,13 +90,50 @@ class TypeSignupfee extends Itemtype {
 			"hint_message" => "Write a full description of the signup fee.",
 			"error_message" => "A full description without any words? How weird."
 		));
-
+		
 	}
+	
+	function shipped($order_item, $order) {
+		
+		// print "\n<br>###$order_item### shipped\n<br>";
 
-	function shipped($order_item_id, $order) {
+		include_once("classes/users/superuser.class.php");
+		$UC = new SuperUser();
 
-		print "\n<br>###$order_item_id### shipped\n<br>";
+		include_once("classes/items/items.class.php");
+		$IC = new Items();
+		$signupfee_item = $IC->getItem(array("id" => $order_item["item_id"], "extend" => true));
 
+		
+
+		
+
+		// set values for creating subscription
+
+		$_POST["order_id"] = $order["id"];
+		$_POST["item_id"] = $signupfee_item["associated_membership_id"];
+		$_POST["user_id"] = $order["user_id"];
+
+		// print_r($order); 
+		// print_r($signupfee_item); 
+		// print_r($order_item); 
+		// print_r($signupfee_item["associated_membership_id"]); exit(); 
+		
+		$subscription = $UC->addSubscription(array("addSubscription"));		
+		if ($subscription) {
+			$expires_at = "2019-05-01 00:00:00";
+			
+			$query = new Query();
+			$sql = "UPDATE ".SITE_DB.".user_item_subscriptions SET expires_at = '$expires_at' WHERE id = ".$subscription["id"];
+			if($query->sql($sql)) {
+				return true;
+			}
+		}
+		
+		return false;
+
+
+		
 	}
 
 }

@@ -28,7 +28,7 @@ $page->pageTitle("Signup fees");
 
 if(is_array($action) && count($action)) {
 
-	// LIST/EDIT/NEW/NEW_ADDRESS/EDIT_ADDRESS
+	// LIST/EDIT/NEW
 	if(preg_match("/^(list|edit|new)$/", $action[0])) {
 
 		$page->page(array(
