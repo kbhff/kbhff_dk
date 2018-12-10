@@ -23,7 +23,7 @@ if(is_array($action) && count($action)) {
 	if($action[0] == "kvittering") {
 
 		$page->page(array(
-			"templates" => "signup/kvittering.php"
+			"templates" => "signup/receipt.php"
 		));
 		exit();
 	}
