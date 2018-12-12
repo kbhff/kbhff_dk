@@ -31,7 +31,7 @@ if(is_array($action) && count($action)) {
 		}
 
 		// if payment id exists (gateway payment receipt)
-		else if(count($action) == 4) {
+		else if(count($action) == 3) {
 
 			$page->page(array(
 				"templates" => "shop/receipt/".$action[2].".php"
@@ -60,7 +60,27 @@ if(is_array($action) && count($action)) {
 		exit();
 	}
 
-	
+
+	// process payment
+	else if(count($action) == 4 && $action[0] == "betaling" && $action[2] == "process" && $page->validateCsrfToken()) {
+
+		$payment_id = $model->processOrderPayment($action);
+		if($payment_id) {
+
+			// redirect to leave POST state
+			header("Location: /butik/kvittering/".$action[1]."/".$action[2]."/".$payment_id);
+			exit();
+
+		}
+		else {
+
+			// redirect to leave POST state
+			header("Location: /butik/kvittering/".$action[1]."/error");
+			exit();
+
+		}
+
+	}
 
 }
 
