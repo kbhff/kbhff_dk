@@ -29,7 +29,7 @@ $this->pageTitle("Kodeord");
 <?	endif; ?>
 
 		<fieldset>
-			<?= 
+			<?=
 				$UC->input("new_password", [
 					"label" => "Dit nye kodeord",
 					"required" => true,
@@ -48,7 +48,7 @@ $this->pageTitle("Kodeord");
 
 		<ul class="actions">
 			<?= $UC->submit("Gem", array("class" => "primary", "wrapper" => "li.save")) ?>
-			<li class="cancel"><a href="/" class="button">Anullér</a></li>
+			<li class="cancel"><a href="/" class="button">Annullér</a></li>
 		</ul>
 	<?= $UC->formEnd() ?>
 

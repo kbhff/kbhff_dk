@@ -133,7 +133,7 @@ $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "positio
 <?
 									}
 ?>
-								
+
 						</ul>
 
 
@@ -142,7 +142,7 @@ $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "positio
 							<?= $model->input("item_id", array("value" => $signupfee["item_id"], "type" => "hidden")); ?>
 
 							<ul class="actions">
-								<?= $model->link("Læs mere her", "/bliv-medlem/".$signupfee["sindex"], array("wrapper" => "li.readmore")) ?>
+								<?= $model->link("Læs mere her", "/bliv-medlem/medlemskaber/".$signupfee["sindex"], array("wrapper" => "li.readmore")) ?>
 								<?= $model->submit("Tilmeld", array("class" => "primary", "wrapper" => "li.signup")) ?>
 							</ul>
 						<?= $model->formEnd() ?>

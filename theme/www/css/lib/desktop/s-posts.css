@@ -1,0 +1,11 @@
+#content .scene ul.items.articles li.item.article h3 {padding-left: 8px;}
+#content .scene ul.items.articles li.item.article p {padding-left: 8px;}
+#content .scene ul.items.articles li.item.article > ul.info {display: none;}
+#content .scene div.categories ul.tags li {list-style-type: none; padding: 0;}
+#content .scene div.categories ul.tags {padding: 0;}
+#content .scene ul.items.articles ul.tags li {list-style-type: none;}
+#content .scene ul.items.articles {list-style-type: none; padding-left: 0; margin-left: 0;}
+#content .scene ul.items.articles ul.tags li {width: auto; font-size: 14px; line-height: 14px; display: inline-block;}
+#content .scene ul.items.articles ul.tags li::after {content: "\00a0|\00a0"; color: #3E8E17;}
+#content .scene ul.items.articles ul.tags li + li {padding-top: 0;}
+#content .scene ul.items.articles ul.tags {padding: 0; margin-left: 0; padding-top: 20px;}

@@ -27,6 +27,18 @@ if(count($action) == 1) {
 	exit();
 
 }
+
+else if(count($action) == 2 && $action[0] == "post-grid") {
+
+	$page->page(array(
+		"templates" => "pages/post_grid.php"
+	));
+	exit();
+
+}
+
+
+
 // /posts/tag/#tag#
 // /posts/tag/#tag#/#sindex#
 else if(count($action) >= 2 && $action[0] == "tag") {
@@ -46,4 +58,3 @@ exit();
 
 
 ?>
- 

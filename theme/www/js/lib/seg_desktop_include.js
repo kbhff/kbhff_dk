@@ -14,8 +14,11 @@ document.write('<script type="text/javascript" src="/js/lib/desktop/i-delete_use
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-signupfees.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-signup.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-comments.js"></script>');
-document.write('<script type="text/javascript" src="/js/lib/desktop/u-expandarrow.js"></script>');
+document.write('<script type="text/javascript" src="/js/lib/desktop/i-payment.js"></script>');
+
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-profile.js"></script>');
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-forgot.js"></script>');
+
+document.write('<script type="text/javascript" src="/js/lib/desktop/u-expandarrow.js"></script>');

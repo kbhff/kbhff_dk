@@ -45,7 +45,7 @@ $IC = new Items();
 		<? if($cart["items"]): ?>
 		<ul class="items">
 			<? foreach($cart["items"] as $cart_item):
-				$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true))); 
+				$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true)));
 				$price = $model->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
 			?>
 			<li class="item id:<?= $item["id"] ?>">
@@ -68,11 +68,11 @@ $IC = new Items();
 					<span class="unit_price"><?= formatPrice($price) ?></span>
 					<span class="total_price">
 						<?= formatPrice(array(
-								"price" => $price["price"]*$cart_item["quantity"], 
-								"vat" => $price["vat"]*$cart_item["quantity"], 
-								"currency" => $cart["currency"], 
+								"price" => $price["price"]*$cart_item["quantity"],
+								"vat" => $price["vat"]*$cart_item["quantity"],
+								"currency" => $cart["currency"],
 								"country" => $cart["country"]
-							), 
+							),
 							array("vat" => true)
 						) ?>
 					</span>
@@ -108,7 +108,7 @@ $IC = new Items();
 			</li>
 		</ul>
 		<? else: ?>
-		<p>You don't have any items in your cart yet. <br />Check out our <a href="/memberships">memberships</a> now.</p>
+		<p>You don't have any items in your cart yet. <br />Check out our <a href="/bliv-medlem">memberships</a> now.</p>
 		<ul class="items">
 			<li class="total">
 				<h3>

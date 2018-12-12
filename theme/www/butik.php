@@ -31,7 +31,7 @@ if(is_array($action) && count($action)) {
 		}
 
 		// if payment id exists (gateway payment receipt)
-		else if(count($action) == 3) {
+		else if(count($action) == 4) {
 
 			$page->page(array(
 				"templates" => "shop/receipt/".$action[2].".php"
@@ -50,7 +50,7 @@ if(is_array($action) && count($action)) {
 		}
 
 	}
-	
+
 	# /butik/betaling/#order_no#
 	else if($action[0] == "betaling" && count($action) == 2) {
 
@@ -62,7 +62,7 @@ if(is_array($action) && count($action)) {
 
 
 	// process payment
-	else if(count($action) == 4 && $action[0] == "betaling" && $action[2] == "process" && $page->validateCsrfToken()) {
+	else if(count($action) == 4 && $action[0] == "betaling" && $action[3] == "process" && $page->validateCsrfToken()) {
 
 		$payment_id = $model->processOrderPayment($action);
 		if($payment_id) {
@@ -81,6 +81,7 @@ if(is_array($action) && count($action)) {
 		}
 
 	}
+
 
 }
 

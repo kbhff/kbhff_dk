@@ -81,7 +81,7 @@ $items = $IC->getItems(array("itemtype" => $itemtype, "status" => 1, "extend" =>
 		</li>
 		<? endforeach; ?>
 	</ul>
-	
+
 <? else: ?>
 	<p>No posts</p>
 <? endif; ?>

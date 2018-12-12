@@ -1,0 +1,16 @@
+#content .scene.shopPayment form.card {margin-top: 32px; width: 40%; padding-left: 12px;}
+#content .scene.shopPayment form.card fieldset {background-color: #f2f2f2;}
+#content .scene.shopPayment form.card fieldset div.field.tel.card {width: 90%; margin: 0 auto; padding-top: 24px;}
+#content .scene.shopPayment form.card fieldset div.field.tel.exp_month {width: 15%; display: inline-block; margin-left: 2.5%;}
+#content .scene.shopPayment form.card fieldset div.field.tel.exp_year {width: 15%; display: inline-block;}
+#content .scene.shopPayment form.card fieldset div.field.cvc {display: inline-block; width: 20%;}
+#content .scene.shopPayment form.card fieldset span.slash {font-size: 20px; vertical-align: middle;}
+
+#content .scene.shopPayment form.card ul.actions {width: 100%; margin-left: 0; padding-left: 0; margin-top: 12px;}
+
+#content .scene.shopPayment form.card div.fan {display: inline-block; background-color: #f2f2f2f2; padding: 6px calc(2.5% + 10px); margin-right: 12px;}
+#content .scene.shopPayment form.card div.fan.mobilepay_fan {background-color: #bbbbbb;}
+#content .scene.shopPayment form.card div.payment_explanation {display: none; background-color: #f2f2f2f2;}
+
+#content .scene.shopPayment > p {font-size: 12px; line-height: 12px; padding-bottom: 0;}
+#content .scene.shopPayment > h1 + p {padding: 12px; font-size: 14px;}

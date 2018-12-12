@@ -1,13 +1,4 @@
 
-#content .scene div.article h1 {margin-bottom: 12px;}
+#content .scene div.article h1 {margin-bottom: 24px;}
 #content .scene div.article ul.info {display: none;}
 #content .scene div.article ul.tags {display: none;}
-
-
-
-
-
-
-
-
-#content .scene.post div.article ul.info li + li {padding-top: 0;}
