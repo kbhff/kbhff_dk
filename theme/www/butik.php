@@ -17,11 +17,11 @@ $page->pageTitle("Shop");
 
 if(is_array($action) && count($action)) {
 
-	// /shop/receipt
-	if($action[0] == "receipt") {
+	// /shop/kvittering
+	if($action[0] == "kvittering") {
 
 
-		if(count($action) == 3 && $action[2] == "error") {
+		if(count($action) == 3 && $action[2] == "fejl") {
 
 			$page->page(array(
 				"templates" => "shop/receipt/error.php"
@@ -75,7 +75,7 @@ if(is_array($action) && count($action)) {
 		else {
 
 			// redirect to leave POST state
-			header("Location: /butik/kvittering/".$action[1]."/error");
+			header("Location: /butik/kvittering/".$action[1]."/fejl");
 			exit();
 
 		}

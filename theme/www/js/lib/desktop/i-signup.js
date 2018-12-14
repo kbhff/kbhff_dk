@@ -27,8 +27,8 @@ Util.Objects["signup"] = new function() {
 				u.f.init(signup_form);
 			}
 
-			// accept cookies?
-			page.acceptCookies();
+			// // accept cookies?
+			// page.acceptCookies();
 
 			page.resized();
 		}
