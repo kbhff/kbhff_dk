@@ -55,7 +55,7 @@ if(is_array($action) && count($action)) {
 		}
 		// something went wrong
 		else {
-			message()->addMessage("Der skete en fejl! Prøv igen senere.", array("type" => "error"));
+			message()->addMessage("Colonizing Mars! Waw. The computer is so excited it cannot process your request right now. Try again later.", array("type" => "error"));
 		}
 
 	}
@@ -69,23 +69,36 @@ if(is_array($action) && count($action)) {
 		// successful creation
 		if(isset($user["user_id"])) {
 
-			// redirect to leave POST state
-			header("Location: verificer");
-			exit();
+			$order = $SC->newOrderFromCart(array("newOrderFromCart", $_COOKIE["cart_reference"]));
+			if($order) {
+
+				// redirect to leave POST state
+				header("Location: /butik/betaling/".$order["order_no"]);
+				exit();
+
+			}
+			else {
+
+				// redirect to leave POST state
+				header("Location: /butik/kurv");
+				exit();
+
+			}
+
 		}
 
 		// user exists
 		else if(isset($user["status"]) && $user["status"] == "USER_EXISTS") {
 
 			// redirect to leave post state
-			message()->addMessage("Det ser ud til at du allerede er registreret som bruger. Prøv at log ind.", array("type" => "error"));
+			message()->addMessage("Det ser ud til at du allerede er registreret som bruger.", array("type" => "error"));
 
 			header("Location: /login");
 			exit();
 		}
 		// something went wrong
 		else {
-			message()->addMessage("Der skete en fejl under oprettelsen. Prøv igen.", array("type" => "error"));
+			message()->addMessage("Der skete en fejl under oprettelsen. Prøv igen senere.", array("type" => "error"));
 
 			header("Location: tilmelding");
 			exit();
@@ -93,74 +106,13 @@ if(is_array($action) && count($action)) {
 
 	}
 
-	// bliv-medlem/confirm
-	else if($action[0] == "confirm" && $page->validateCsrfToken()) {
 
-		// Verify and enable user
-		$result = $model->confirmUser($action);
-
-		// user has already been verified
-		if($result && isset($result["status"]) && $result["status"] == "USER_VERIFIED") {
-			message()->addMessage("Du er allerede verificeret! Prøv at logge ind.", array("type" => "error"));
-			$page->page(array(
-				"templates" => "pages/kbhff-login.php"
-			));
-			exit();
-		}
-
-		// code is valid
-		else if($result) {
-
-			header("Location: bekraeft/til-betaling");
-			exit();
-		}
-
-		// code is not valid
-		else {
-			message()->addMessage("Forkert verificeringskode. Prøv igen!", array("type" => "error"));
-			$page->page(array(
-				"templates" => "signup/verify.php"
-			));
-			exit();
-		}
-
-	}
-
-	// /signup/confirm/email|mobile/#email|mobile#/#verification_code#
-	else if($action[0] == "confirm" && count($action) == 3) {
-
-		// session()->value("signup_type", $action[1]);
-		// session()->value("signup_username", $action[2]);
-
-		// Confirm user returns either true, false or an object
-		$result = $model->confirmUser($action);
-
-		// user han already been verified
-		if($result && isset($result["status"]) && $result["status"] == "USER_VERIFIED") {
-			message()->addMessage("Du er allerde verificeret. Pøv at logge ind.", array("type" => "error"));
-			$page->page(array(
-				"templates" => "pages/kbhff-login.php"
-			));
-			exit();
-		}
-
-		// code is valid
-		else if($result) {
-
-			header("Location: /bliv-medlem/bekraeft/til-betaling");
-			exit();
-		}
-		// code is not valid
-		else {
-			// redirect to leave POST state
-			header("Location: /bliv-medlem/bekraeft/fejl");
-			exit();
-		}
-	}
 
 
 	// THIS SECTION HAS NOT BEEN UPDATED YET
 	// START OLD SECTION
+
+
 
 	// /signup/confirm/email|mobile/#email|mobile#/#verification_code#
 	else if($action[0] == "confirm" && count($action) == 4) {
@@ -184,11 +136,17 @@ if(is_array($action) && count($action)) {
 		}
 		exit();
 	}
-
 	else if($action[0] == "confirm" && $action[1] == "receipt") {
 
 		$page->page(array(
 			"templates" => "signup/confirmed.php"
+		));
+		exit();
+	}
+	else if($action[0] == "confirm" && $action[1] == "error") {
+
+		$page->page(array(
+			"templates" => "signup/confirmation_failed.php"
 		));
 		exit();
 	}
@@ -230,57 +188,10 @@ if(is_array($action) && count($action)) {
 
 	}
 
+
+
 	// END OLD SECTION
 	// BELOW THIS LINE IS NEW STUFF
-
-	else if($action[0] == "bekraeft" && $action[1] == "til-betaling") {
-
-		$order = $SC->newOrderFromCart(array("newOrderFromCart", $_COOKIE["cart_reference"]));
-		if($order) {
-
-			// redirect to leave POST state
-			header("Location: /butik/betaling/".$order["order_no"]);
-			exit();
-		}
-
-		else {
-			message()->addMessage("Det ser ud til at der er sket en fejl.", array("type" => "error"));
-
-			header("Location: /butik/kurv");
-			exit();
-		}
-	}
-
-
-	else if($action[0] == "bekraeft" && $action[1] == "fejl") {
-
-		$page->page(array(
-			"templates" => "signup/confirmation_failed.php"
-		));
-		exit();
-	}
-
-
-	//bliv-medlem/verficier
-	else if($action[0] == "verificer") {
-
-		$page->page(array(
-			"templates" => "signup/verify.php"
-		));
-		exit();
-
-
-	}
-
-	// bliv-medlem/spring-over
-	else if($action[0] == "spring-over") {
-
-		$page->page([
-			"templates" => "signup/verify-skip.php"
-		]);
-		exit();
-
-	}
 
 
 	// /bliv-medlem/tilmelding
