@@ -61,6 +61,7 @@ $name = $model->getProperty("name", "value");
 <? endif; ?>
 
 	<?= $model->formStart("save", array("class" => "signup labelstyle:inject")) ?>
+		<?= $model->input("maillist", array("type" => "hidden", "value" => "Nyheder")); ?>
 
 <?	if(message()->hasMessages(array("type" => "error"))): ?>
 		<p class="errormessage">
