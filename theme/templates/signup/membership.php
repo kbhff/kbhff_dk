@@ -7,7 +7,7 @@ global $model;
 
 $IC = new Items();
 
-$sindex = $action[0];
+$sindex = $action[1];
 $related_items = false;
 
 
