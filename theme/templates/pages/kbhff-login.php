@@ -58,7 +58,7 @@ session()->reset("temp-username");
 
 <?	if(defined("SITE_SIGNUP") && SITE_SIGNUP): ?>
 	<div class="signup">
-		<p>Endnu ikke medlem? <a href="<?= SITE_SIGNUP ?>">Indmeld dig her</a>.</p>
+		<p>Endnu ikke medlem? <a href="<?= SITE_SIGNUP ?>">Meld dig ind nu</a>.</p>
 	</div>
 <?	endif; ?>
 
