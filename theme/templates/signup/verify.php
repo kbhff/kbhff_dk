@@ -16,7 +16,7 @@ if($page_item) {
 	<p>Emailen indeholder en verifikationskode, som du kan bruge i inputfeltet nedenfor.</p>
 	<p>Alternativt kan du springe over verificeringen nu og verificere senere gennem et link fra aktiveringsemailen.</p>
 
-	<?= $model->formStart("bekraeft/til-betaling", ["class" => "verify_code"]) ?>
+	<?= $model->formStart("bekraeft", ["class" => "verify_code"]) ?>
 
 <?	if(message()->hasMessages(array("type" => "error"))): ?>
 		<p class="errormessage">
