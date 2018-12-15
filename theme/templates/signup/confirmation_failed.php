@@ -20,7 +20,7 @@ session()->reset("signup_email");
 ?>
 <div class="scene signup i:scene">
 
-<? if($page_item && $page_item["status"]): 
+<? if($page_item && $page_item["status"]):
 	$media = $IC->sliceMedia($page_item); ?>
 	<div class="article i:article id:<?= $page_item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
 
@@ -42,7 +42,7 @@ session()->reset("signup_email");
 
 
 		<?= $HTML->articleInfo($page_item, "/signup/confirm/error", [
-			"media" => $media, 
+			"media" => $media,
 		]) ?>
 
 
@@ -53,8 +53,8 @@ session()->reset("signup_email");
 		<? endif; ?>
 	</div>
 <? else:?>
-	<h1>What??</h1>
-	<p><?= $username ?> could not be verified.</p>
+	<h1>Hvad??</h1>
+	<p><?= $username ?> kunne ikke verificeres.</p>
 <? endif; ?>
 
 </div>

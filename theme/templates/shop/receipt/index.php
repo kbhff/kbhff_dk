@@ -68,12 +68,12 @@ if(isset($action[2])) {
 
 <? if($order): ?>
 
-	<h1>Thank you for supporting change.</h1>
+	<h1>Tak for det.</h1>
 
 
 <?	if($receipt_type == "banktransfer"): ?>
 
-	<h2>Pay with Bank transfer</h2>
+	<h2>Betal med bankoverførsel</h2>
 
 	<p>
 	<? if($subscription_method && $payment_date && $remaining_order_price["price"] == $total_order_price["price"]): ?>
