@@ -4,14 +4,32 @@
     margin: 0 auto;
 }
 
-#navigation ul.navigation {
+#navigation ul.navigation,
+#navigation ul.navigation ul, {
 	font-size: 0;
 	padding-bottom: 5px;
+}
+
+#navigation ul.navigation ul {
+	position: absolute;
+	z-index: 100;
+	opacity: 0;
+	display: none;
+	background-color: #fff;
+	left: -9px;
+	white-space: nowrap;	
+	
 }
 
 #navigation ul.navigation li {
 	display: inline-block;
 	margin-right: 5px;
+	position: relative;
+}
+
+#navigation ul.navigation ul li {
+	display: block;
+	margin: 6px 9px;
 }
 
 #navigation ul.navigation a {
@@ -25,6 +43,13 @@
 	color: #ffffff;
 	background-color: #000000;
 }
+
+#navigation ul.navigation ul li a{
+	background-color: #666;
+	
+}
+
 #navigation ul.navigation a:hover {
 	background-color: #3e8e17;
 }
+

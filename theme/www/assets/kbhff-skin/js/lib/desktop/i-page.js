@@ -73,6 +73,9 @@ Util.Objects["page"] = new function() {
 				// Initialize header
 				this.initHeader();
 
+				// Initialize navigation
+				this.initNavigation();
+
 				// Initial size adjustment
 				this.resized();
 			}
@@ -89,6 +92,64 @@ Util.Objects["page"] = new function() {
 				frontpage_link.parentNode.remove();
 			}
 
+		}
+
+		// initialize navigation
+		page.initNavigation = function() {
+
+			page.nN_nodes = u.qsa("li.nav-node-primary", page.nN);
+			
+			var z_index_counter = 100;
+
+			for (var i = 0; i < page.nN_nodes.length; i++) {
+				var nav_node = page.nN_nodes[i];
+				nav_node.subnav = u.qs("ul", nav_node);
+								
+				if (nav_node.subnav) {
+					
+					u.e.hover(nav_node, {
+						"delay":"200"
+					});
+
+					nav_node.is_over = false;
+
+					nav_node.over = function(event) {
+						nav_node.is_over = true;
+
+						z_index_counter++;
+
+						u.ass(this.subnav, {
+							"display":"block",
+							"z-index": z_index_counter
+						});
+						
+						u.a.transition(this.subnav, "all 0.3s ease-out")
+
+						u.ass(this.subnav, {
+							"opacity":"1"
+						});
+					}
+					
+					nav_node.out = function(event) {
+						nav_node.is_over = false;
+
+						this.subnav.transitioned = function() {
+							if(!nav_node.is_over) {
+								u.ass(this, {
+									"display":"none"
+								});
+							}
+						};
+
+						u.a.transition(this.subnav, "all 0.15s ease-out");
+						
+						u.ass(this.subnav, {
+							"opacity":"0"
+						});
+
+					}
+				}
+			}
 		}
 
 		// ready to start page builing process

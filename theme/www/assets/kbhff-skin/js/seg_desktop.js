@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-10 12:49:43
+asset-builder @ 2018-12-15 20:47:03
 */
 
 /*seg_desktop_include.js*/
@@ -994,18 +994,14 @@ u.easings = new function() {
 }
 Util.Events = u.e = new function() {
 	this.event_pref = typeof(document.ontouchmove) == "undefined" || (navigator.maxTouchPoints > 1 && navigator.userAgent.match(/Windows/i)) ? "mouse" : "touch";
-	if(navigator.maxTouchPoints > 1) {
-		if((typeof(document.ontouchmove) == "undefined" && typeof(document.onmousemove) == "undefined") || (document.ontouchmove === null && document.onmousemove === null)) {
-			this.event_support = "multi";
-		}
+    if ((obj(document.ontouchmove) && obj(document.ontouchmove)) || (fun(document.ontouchmove) && fun(document.ontouchmove))) {
+        this.event_support = "multi";
+    }
+    else if (obj(document.onmousemove) || fun(document.onmousemove)) {
+		this.event_support = "mouse";
 	}
-	if(!this.event_support) {
-		if(typeof(document.ontouchmove) == "undefined") {
-			this.event_support = "mouse";
-		}
-		else {
-			this.event_support = "touch";
-		}
+	else {
+		this.event_support = "touch";
 	}
 	this.events = {
 		"mouse": {
@@ -2602,9 +2598,15 @@ Util.Form = u.f = new function() {
 			}
 			else if(u.hc(iN.field, "tel")) {
 				pattern = iN.getAttribute("pattern");
+				compare_to = iN.getAttribute("data-compare-to");
 				if(
-					!pattern && iN.val().match(/^([\+0-9\-\.\s\(\)]){5,18}$/) ||
-					(pattern && iN.val().match("^"+pattern+"$"))
+					(
+						!pattern && iN.val().match(/^([\+0-9\-\.\s\(\)]){5,18}$/)
+						||
+						(pattern && iN.val().match("^"+pattern+"$"))
+					)
+					&&
+					(!compare_to || iN.val() == iN._form.fields[compare_to].val())
 				) {
 					this.fieldCorrect(iN);
 				}
@@ -2613,9 +2615,16 @@ Util.Form = u.f = new function() {
 				}
 			}
 			else if(u.hc(iN.field, "email")) {
+				compare_to = iN.getAttribute("data-compare-to");
+				pattern = iN.getAttribute("pattern");
 				if(
-					!pattern && iN.val().match(/^([^<>\\\/%$])+\@([^<>\\\/%$])+\.([^<>\\\/%$]{2,20})$/) ||
-					(pattern && iN.val().match("^"+pattern+"$"))
+					(
+						!pattern && iN.val().match(/^([^<>\\\/%$])+\@([^<>\\\/%$])+\.([^<>\\\/%$]{2,20})$/)
+						 ||
+						(pattern && iN.val().match("^"+pattern+"$"))
+					)
+					&&
+					(!compare_to || iN.val() == iN._form.fields[compare_to].val())
 				) {
 					this.fieldCorrect(iN);
 				}
@@ -4664,6 +4673,7 @@ Util.Objects["page"] = new function() {
 				u.e.addWindowEvent(this, "resize", this.resized);
 				u.e.addWindowEvent(this, "scroll", this.scrolled);
 				this.initHeader();
+				this.initNavigation();
 				this.resized();
 			}
 		}
@@ -4673,6 +4683,46 @@ Util.Objects["page"] = new function() {
 			var frontpage_link = u.qs("li.front a", this.nN);
 			if(frontpage_link) {
 				frontpage_link.parentNode.remove();
+			}
+		}
+		page.initNavigation = function() {
+			page.nN_nodes = u.qsa("li.nav-node-primary", page.nN);
+			var z_index_counter = 100;
+			for (var i = 0; i < page.nN_nodes.length; i++) {
+				var nav_node = page.nN_nodes[i];
+				nav_node.subnav = u.qs("ul", nav_node);
+				if (nav_node.subnav) {
+					u.e.hover(nav_node, {
+						"delay":"200"
+					});
+					nav_node.is_over = false;
+					nav_node.over = function(event) {
+						nav_node.is_over = true;
+						z_index_counter++;
+						u.ass(this.subnav, {
+							"display":"block",
+							"z-index": z_index_counter
+						});
+						u.a.transition(this.subnav, "all 0.3s ease-out")
+						u.ass(this.subnav, {
+							"opacity":"1"
+						});
+					}
+					nav_node.out = function(event) {
+						nav_node.is_over = false;
+						this.subnav.transitioned = function() {
+							if(!nav_node.is_over) {
+								u.ass(this, {
+									"display":"none"
+								});
+							}
+						};
+						u.a.transition(this.subnav, "all 0.15s ease-out");
+						u.ass(this.subnav, {
+							"opacity":"0"
+						});
+					}
+				}
 			}
 		}
 		page.ready();
