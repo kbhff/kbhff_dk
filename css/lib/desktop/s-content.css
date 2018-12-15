@@ -277,7 +277,8 @@
 #content div.c-primary-box p,
 #content div.c-primary-box ol,
 #content div.c-primary-box ul,
-#content div.c-primary-box dl {
+#content div.c-primary-box dl,
+#content div.c-primary-box li {
 	color: white;
 }
 
