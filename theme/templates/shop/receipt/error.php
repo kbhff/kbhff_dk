@@ -4,8 +4,8 @@ global $model;
 ?>
 <div class="scene shopReceipt i:scene">
 
-	<h1>Error</h1>
-	<h2>Shit.</h2>
-	<p>Something went wrong, sorry for this! We will get in touch with you as soon as we figured out what happened.</p>
+	<h1>Fejl</h1>
+	<h2>Hov.</h2>
+	<p>Noget gik galt. Vi undskylder meget. Vi vil hurtigst muligt prøve at finde ud af, hvad der gik galt, og så hører du fra os.</p>
 
 </div>

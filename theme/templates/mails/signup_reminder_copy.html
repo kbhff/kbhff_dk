@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Aktiver din konto hos {SITE_NAME}</title>
+	<title>Activate your account on {SITE_NAME}!</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 	<style type="text/css">
 		table.janitor-email h1,
-		table.janitor-email h2 {font-family: 'voresfont', Arial, sans-serif !important;}
+		table.janitor-email h2 {font-family: 'PT Serif', 'Times New Roman', Times, serif !important;}
 		table.janitor-email h3,
-		table.janitor-email p {font-family: Arial, sans-serif !important;}
+		table.janitor-email p {font-family: 'OpenSans', Verdana, sans-serif !important;}
 		table.janitor-email td {padding: 0;}
 		@media all and (max-width: 620px) {
 			table.janitor-email {width: 100% !important;}
@@ -52,8 +52,8 @@
 	</tr>
 	<tr>
 		<td align="right" style="text-align: right;">
-			<h2 class="ignore_text" style="margin: 0 10px 0 0; padding: 0; color: #000000; font-family: 'voresfont', Arial, sans-serif; font-size: 38px; line-height: 38px; font-weight: 400;">
-				<a href="{SITE_URL}" style="font-family: 'voresfont', Arial, sans-serif; font-size: 38px; line-height: 38px; font-weight: 400; color: #000000; text-decoration: none; white-space: nowrap; text-transform: uppercase;"><img = src="http://pre-launch.kbhff.dk/img/logo-stempel_sort_lille.png" alt="logo" height="44" align="top"/>&nbsp;{SITE_NAME}</a>
+			<h2 class="ignore_text" style="margin: 0 10px 0 0; padding: 0; color: #000000; font-family: 'Times New Roman', Times, serif; font-size: 38px; line-height: 38px; font-weight: 400;">
+				<a href="{SITE_URL}" style="font-family: 'Times New Roman', Times, serif; font-size: 38px; line-height: 38px; font-weight: 400; color: #000000; text-decoration: none; white-space: nowrap;">{SITE_NAME}</a>
 			</h2>
 		</td>
 	</tr>
@@ -62,33 +62,40 @@
 	</tr>
 	<tr>
 		<td align="left" style="text-align: left;">
-			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 20px 0 30px;">
-				Hej <em>{USERNAME}</em>
-			</p>
-			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
+			<h1 style="font-family: 'Times New Roman', Times, serif; font-size: 30px; font-weight: 400; color: #000000; padding: 0; margin: 0 0 20px;">Verify your email.</h1>
+			<p style="font-family: Verdana, sans-serif; font-size: 15px; color: #777777; padding: 0; margin: 20px 0 30px;">
+				Hej {NICKNAME},<br />
 				Du har oprettet en konto hos {SITE_NAME}, og det er rigtig fedt.
 			</p>
-			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
-			Du har dog ikke verificeret din email endnu. Så hvis du undrer dig over, hvorfor du ikke har hørt fra os endnu, er det netop derfor!
-			Klik på verificeringslinket nedenfor eller kopier koden ind i feltet:
+			<p style="font-family: Verdana, sans-serif; font-size: 15px; color: #777777; padding: 0; margin: 0 0 30px;">
+				Du har dog ikke verificeret din email endnu. Så hvis du undrer dig over, hvorfor du ikke har hørt fra os endnu, er det netop derfor!
+				Klik på verificeringslinket nedenfor eller kopier koden ind i feltet:
 			</p>
 			<table>
 			<tr>
-				<td bgcolor="#ffffff" style="padding: 14px  0px; font-family: Arial, sans-serif; font-size: 28px; color: #3e8e17; margin: 30px 0;">{VERIFICATION}</td>
+				<td bgcolor="#3e8e17" style="padding: 14px 60px; font-family: Verdana, sans-serif; font-size: 28px; color: #ffffff; margin: 30px 0;">
+				{VERIFICATION}
+				</td>
 			</tr>
 			</table>
 
 			<table border="0" cellpadding="0" cellspacing="0" style="width: auto; margin: 30px 0;">
 			<tr>
 				<td bgcolor="#3e8e17" style="padding: 7px 30px; font-family: Verdana, sans-serif; font-size: 15px; color: #ffffff; margin: 0; border-radius: 5px;">
-					<a href="{SITE_URL}/bliv-medlem/bekraeft/{EMAIL}/{VERIFICATION}" style="text-decoration: none; color: #ffffff;">Alternativt kan du klikke her for at verificere din email</a>
+					<a href="{SITE_URL}/bliv-medlem/bekraeft/email/{EMAIL}/{VERIFICATION}" style="text-decoration: none; color: #ffffff;">Klik her for at verificere din email</a>
 				</td>
 			</tr>
 			</table>
-			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 15px;">
-			Din konto vil blive aktiv og du kan begynde at bestille grøntsager, når du har <a href="{SITE_URL}/bliv-medlem/bekraeft/{EMAIL}/{VERIFICATION}" style="font-family: Arial, sans-serif; font-size: 14px; text-decoration: none; color: #000000;"><strong style="color: #3e8e17;">verificeret din email.</strong></a>
-			<h2 style="font-family: Arial, sans-serif; font-size: 26px; font-weight: 400; color: #000000; padding: 0; margin: 30px 0 10px;">Dine kontooplysninger:</h2>
-			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 15px;">
+
+			<p style="font-family: Verdana, sans-serif; font-size: 15px; color: #777777; padding: 0; margin: 30px 0;">
+				Din konto vil blive aktiv og tilgængelig, når du har
+				<a href="{SITE_URL}/bliv-medlem/bekraeft/email/{EMAIL}/{VERIFICATION}" style="color: #000000 !important; text-decoration: underline;">verificeret din email</a>.
+			</p>
+			<h2 style="font-family: 'Times New Roman', Times, serif; font-size: 26px; font-weight: 400; color: #000000; padding: 0; margin: 30px 0 10px;">Your account details:</h2>
+			<p style="font-family: Verdana, sans-serif; font-size: 15px; color: #777777; padding: 0; margin: 10px 0 15px;">
+				Efter du har verificeret kan du logge ind med nedenstående oplysninger:
+			</p>
+			<p style="font-family: Verdana, sans-serif; font-size: 15px; color: #777777; padding: 0; margin: 15px 0 30px;">
 				<strong style="color: #000000;">URL:</strong><br />
 				<a style="margin-bottom: 10px; display: inline-block; vertical-align: top; color: #777777;">{SITE_URL}</a><br />
 				<strong style="color: #000000;">Brugernavn:</strong><br />
@@ -96,21 +103,21 @@
 				<strong style="color: #000000; margin-top: 10px;">Kodeord:</strong><br />
 				(encrypted)
 			</p>
-			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 15px;">
-			Tak for tilmeldingen!
+			<p style="font-family: Verdana, sans-serif; font-size: 15px; color: #777777; padding: 0; margin: 30px 0 15px;">
+				Tak for tilmeldingen!
 			</p>
-			</p>
-			Grønne hilsener
+			<p style="font-family: Verdana, sans-serif; font-size: 15px; color: #777777; padding: 0; margin: 15px 0 15px;">
+				{FROM}
 			</p>
 		</td>
 	</tr>
 	<tr>
-		<td height="10" style="height: 10px; font-size: 1px; line-height: 1px;">&nbsp;</td>
+		<td height="30" style="height: 30px; font-size: 1px; line-height: 1px;">&nbsp;</td>
 	</tr>
 	<tr>
 		<td align="left" style="text-align: left;">
-			<h2 style="margin: 0; padding: 0; color: #000000; font-family: 'voresfont', Arial, sans-serif; font-size: 15px; line-height: 15px; font-weight: 400;">
-				<a href="{SITE_URL}" style="font-family: 'voresfont', Arial, sans-serif; font-size: 15px; line-height: 15px; font-weight: 400; color: #000000; text-decoration: none; text-transform: uppercase;">{SITE_NAME}</a>
+			<h2 style="margin: 0; padding: 0; color: #000000; font-family: 'Times New Roman', Times, serif; font-size: 38px; line-height: 38px; font-weight: 400;">
+				<a href="{SITE_URL}" style="font-family: 'Times New Roman', Times, serif; font-size: 38px; line-height: 38px; font-weight: 400; color: #000000; text-decoration: none;">{SITE_NAME}</a>
 			</h2>
 		</td>
 	</tr>

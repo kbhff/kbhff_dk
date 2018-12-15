@@ -79,7 +79,7 @@ if(is_array($action) && count($action)) {
 
 				// create new password for user to prepare for Janitor login
 				$password = password_hash(getPost("password"), PASSWORD_DEFAULT);
-	
+
 				// Let's try to get the user_id
 				$sql = "SELECT usernames.user_id as user_id FROM ".SITE_DB.".user_usernames as usernames WHERE usernames.username='$username'";
 //				print $sql."<br>\n";
@@ -205,7 +205,7 @@ if(is_array($action) && count($action)) {
 	else if(count($action) == 1 && $action[0] == "confirmAccount" && $page->validateCsrfToken()) {
 
 		// request password reset
-		$user_id = $model->confirmAccount($action);
+		$user_id = $model->confirmUser($action);
 		if($user_id) {
 
 			// if user has password, forward to login page

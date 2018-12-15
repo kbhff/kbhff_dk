@@ -63,20 +63,20 @@ if(count($action) == 4) {
 
 <? if($order): ?>
 
-	<h1>Thank you for supporting change.</h1>
+	<h1>Tak for betalingen.</h1>
 
-	<h2>Your payment of <?= formatPrice(["price" => $payment["payment_amount"], "currency" => $payment["currency"]]) ?> has been processed successfully.</h2>
+	<h2>Din betaling på <?= formatPrice(["price" => $payment["payment_amount"], "currency" => $payment["currency"]]) ?> has been processed successfully.</h2>
 
 <? endif; ?>
 
 
 <? if($is_membership): ?>
-	<p>We are thrilled to have you on board - go ahead and check out our <a href="/events">upcoming events</a>!</p>
+	<p>Nu kan du endelig bestille dine grøntsager.</p>
 <? endif; ?>
 
 
 <? if(!$active_account): ?>
-	<p>Remember to activate your account, otherwise you won't get our newsletter. Check your inbox for the Activation email.</p>
+	<p>Husk at aktivere din konto, hvis du ikke har gjort det endnu. Ellers kan du ikke modtage nyhedsbreve eller bestille grøntsager. Kig i din indbakke efter aktiveringsemailen.</p>
 <? endif; ?>
 
 

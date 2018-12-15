@@ -20,7 +20,7 @@ session()->reset("signup_email");
 ?>
 <div class="scene signup i:scene">
 
-<? if($page_item && $page_item["status"]): 
+<? if($page_item && $page_item["status"]):
 	$media = $IC->sliceMedia($page_item); ?>
 	<div class="article i:article id:<?= $page_item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
 
@@ -42,7 +42,7 @@ session()->reset("signup_email");
 
 
 		<?= $HTML->articleInfo($page_item, "/signup/confirm/receipt", [
-			"media" => $media, 
+			"media" => $media,
 		]) ?>
 
 
@@ -55,8 +55,8 @@ session()->reset("signup_email");
 
 <? else:?>
 
-	<h1>Thank you!</h1>
-	<p><em><?= $username ?></em> has been confirmed. Go ahead and <a href="/login">log in</a>.</p>
+	<h1>Tak!</h1>
+	<p><em><?= $username ?></em> er verificeret. Du kan nu <a href="/login">logge ind</a>.</p>
 
 <? endif; ?>
 
