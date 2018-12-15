@@ -15,7 +15,7 @@ $departments = $DC->getDepartments();
 
 
 $email = $model->getProperty("email", "value");
-$name = $model->getProperty("name", "value");
+// $name = $model->getProperty("name", "value");
 ?>
 <div class="scene signup i:signup">
 
@@ -57,10 +57,11 @@ $name = $model->getProperty("name", "value");
 		<? endif; ?>
 	</div>
 <? else:?>
-	<h1>Tilmelding</h1>
+	<h1>Sign up</h1>
 <? endif; ?>
 
 	<?= $model->formStart("save", array("class" => "signup labelstyle:inject")) ?>
+		<?= $model->input("maillist", array("type" => "hidden", "value" => "Nyheder")); ?>
 
 <?	if(message()->hasMessages(array("type" => "error"))): ?>
 		<p class="errormessage">
@@ -73,10 +74,11 @@ $name = $model->getProperty("name", "value");
 <?	endif; ?>
 
 		<fieldset>
-			<?= $model->input("name", array("type" => "string", "label" => "Navn", "value" => $name, "hint_message" => "Skriv dit navn her", "error_message" => "Dit navn må kun indeholde bogstaver.")) ?>
-			<?= $model->input("email", array("required" => true, "value" => $email, "hint_message" => "Indtast din email.", "error_message" => "Du har indtastet en ugyldig emailadresse.")); ?>
-			<?= $model->input("email", array("label" => "Email (igen)", "required" => true, "value" => $email, "hint_message" => "Indtast din email.", "error_message" => "Du har indtastet en ugyldig emailadresse.")); ?>
-			<?= $model->input("password", array("type" => "password", "label" => "password", "hint_message" => "Indtast et password.", "error_message" => "Dit password skal være mellem 8 og 20 karakterer.")); ?>
+			<?= $model->input("firstname", array("required" => true, "label" => "Fornavn", "hint_message" => "Skriv dit fornavn her", "error_message" => "Dit fornavn må kun indeholde bogstaver.")) ?>
+			<?= $model->input("lastname", array("required" => true, "label" => "Efternavn", "hint_message" => "Skriv dit efternavn her", "error_message" => "Dit efternavn må kun indeholde bogstaver.")) ?>
+			<?= $model->input("email", array("required" => true, "label" => "Din email", "value" => $email, "hint_message" => "Indtast din email.", "error_message" => "Du har indtastet en ugyldig emailadresse.")); ?>
+			<?= $model->input("confirm_email", array("label" => "Gentag din email", "required" => true, "hint_message" => "Indtast din email igen.", "error_message" => "De to email adresser er ikke ens.")); ?>
+			<?= $model->input("password", array("label" => "password", "hint_message" => "Indtast et password.", "error_message" => "Dit password skal være mellem 8 og 20 karakterer.")); ?>
 			<?= $model->input("department", array("type" => "select", "label" => "Vælg lokalafdeling", "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),)); ?>
 			<?= $model->input("terms"); ?>
 		</fieldset>
