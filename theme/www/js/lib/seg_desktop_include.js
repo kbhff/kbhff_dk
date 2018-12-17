@@ -16,6 +16,7 @@ document.write('<script type="text/javascript" src="/js/lib/desktop/i-signup.js"
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-comments.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-payment.js"></script>');
 
+document.write('<script type="text/javascript" src="/js/lib/desktop/i-header_image.js"></script>');
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-profile.js"></script>');
 
