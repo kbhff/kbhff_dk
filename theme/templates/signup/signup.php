@@ -20,10 +20,6 @@ $email = $model->getProperty("email", "value");
 <div class="scene signup i:signup">
 
 
-
-	<div class="section">
-
-
 <? if($page_item && $page_item["status"]):
 	$media = $IC->sliceMedia($page_item); ?>
 	<div class="article i:article id:<?= $page_item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
@@ -60,33 +56,33 @@ $email = $model->getProperty("email", "value");
 	<h1>Sign up</h1>
 <? endif; ?>
 
-	<?= $model->formStart("save", array("class" => "signup labelstyle:inject")) ?>
-		<?= $model->input("maillist", array("type" => "hidden", "value" => "Nyheder")); ?>
+<?= $model->formStart("save", array("class" => "signup labelstyle:inject")) ?>
+<?= $model->input("maillist", array("type" => "hidden", "value" => "Nyheder")); ?>
 
-<?	if(message()->hasMessages(array("type" => "error"))): ?>
-		<p class="errormessage">
-<?		$messages = message()->getMessages(array("type" => "error"));
+<? if(message()->hasMessages(array("type" => "error"))): ?>
+	<p class="errormessage">
+<?	$messages = message()->getMessages(array("type" => "error"));
 		message()->resetMessages();
 		foreach($messages as $message): ?>
-			<?= $message ?><br>
-<?		endforeach;?>
-		</p>
+		<?= $message ?><br>
+<?	endforeach;?>
+	</p>
 <?	endif; ?>
 
-		<fieldset>
-			<?= $model->input("firstname", array("required" => true, "label" => "Fornavn", "hint_message" => "Skriv dit fornavn her", "error_message" => "Dit fornavn må kun indeholde bogstaver.")) ?>
-			<?= $model->input("lastname", array("required" => true, "label" => "Efternavn", "hint_message" => "Skriv dit efternavn her", "error_message" => "Dit efternavn må kun indeholde bogstaver.")) ?>
-			<?= $model->input("email", array("required" => true, "label" => "Din email", "value" => $email, "hint_message" => "Indtast din email.", "error_message" => "Du har indtastet en ugyldig emailadresse.")); ?>
-			<?= $model->input("confirm_email", array("label" => "Gentag din email", "required" => true, "hint_message" => "Indtast din email igen.", "error_message" => "De to email adresser er ikke ens.")); ?>
-			<?= $model->input("password", array("label" => "password", "hint_message" => "Indtast et password.", "error_message" => "Dit password skal være mellem 8 og 20 karakterer.")); ?>
-			<?= $model->input("department", array("type" => "select", "label" => "Vælg lokalafdeling", "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),)); ?>
-			<?= $model->input("terms"); ?>
-		</fieldset>
+	<fieldset>
+		<?= $model->input("firstname", array("required" => true, "label" => "Fornavn", "hint_message" => "Skriv dit fornavn her", "error_message" => "Dit fornavn må kun indeholde bogstaver.")) ?>
+		<?= $model->input("lastname", array("required" => true, "label" => "Efternavn", "hint_message" => "Skriv dit efternavn her", "error_message" => "Dit efternavn må kun indeholde bogstaver.")) ?>
+		<?= $model->input("email", array("required" => true, "label" => "Din email", "value" => $email, "hint_message" => "Indtast din email.", "error_message" => "Du har indtastet en ugyldig emailadresse.")); ?>
+		<?= $model->input("confirm_email", array("label" => "Gentag din email", "required" => true, "hint_message" => "Indtast din email igen.", "error_message" => "De to email adresser er ikke ens.")); ?>
+		<?= $model->input("password", array("label" => "password", "hint_message" => "Indtast et password.", "error_message" => "Dit password skal være mellem 8 og 20 karakterer.")); ?>
+		<?= $model->input("department", array("type" => "select", "label" => "Vælg lokalafdeling", "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),)); ?>
+		<?= $model->input("terms"); ?>
+	</fieldset>
 
-		<ul class="actions">
-			<?= $model->submit("Næste", array("class" => "primary", "wrapper" => "li.signup")) ?>
-			<li class="reject"><a href="/bliv-medlem" class="button">Annuller</a></li>
-		</ul>
-	<?= $model->formEnd() ?>
+	<ul class="actions">
+		<?= $model->submit("Næste", array("class" => "primary", "wrapper" => "li.signup")) ?>
+		<li class="reject"><a href="/bliv-medlem" class="button">Annuller</a></li>
+	</ul>
+<?= $model->formEnd() ?>
 
 </div>
