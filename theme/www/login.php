@@ -204,9 +204,19 @@ if(is_array($action) && count($action)) {
 	// login/confirmAccount
 	else if(count($action) == 1 && $action[0] == "confirmAccount" && $page->validateCsrfToken()) {
 
-		// request password reset
+		// confirmUser returns either: user_id, false or an object with status "USER_VERIFIED"
 		$user_id = $model->confirmUser($action);
-		if($user_id) {
+
+
+		// user has already been verified
+		if($user_id && isset($user_id["status"]) && $user_id["status"] == "USER_VERIFIED") {
+			message()->addMessage("Din konto er allerede aktiveret! Prøv at logge ind.", array("type" => "error"));
+			header("Location: /login");
+			exit();
+		}
+
+		// Successful verification
+		else if($user_id) {
 
 			// if user has password, forward to login page
 			if($model->hasPassword()) {
@@ -225,7 +235,7 @@ if(is_array($action) && count($action)) {
 
 		}
 
-		// could not create reset request
+		// could not verify
 		else {
 			message()->addMessage("Beklager, du kan ikke aktivere den givne konto!", array("type" => "error"));
 			header("Location: /login");
