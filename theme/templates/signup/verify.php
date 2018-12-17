@@ -19,23 +19,23 @@ if($page_item) {
 	<?= $model->formStart("bekraeft", ["class" => "verify_code"]) ?>
 
 <?	if(message()->hasMessages(array("type" => "error"))): ?>
-		<p class="errormessage">
+	<p class="errormessage">
 <?		$messages = message()->getMessages(array("type" => "error"));
 		message()->resetMessages();
 		foreach($messages as $message): ?>
 			<?= $message ?><br>
 <?		endforeach;?>
-		</p>
+	</p>
 <?	endif; ?>
 
-		<fieldset>
-			<?= $model->input("verification_code"); ?>
-		</fieldset>
+	<fieldset>
+		<?= $model->input("verification_code"); ?>
+	</fieldset>
 
-		<ul class="actions">
-			<?= $model->submit("Verificer email", array("class" => "primary", "wrapper" => "li.reset")) ?>
-			<li class="skip"><a href="spring-over" class="button">Spring over</a></li>
-		</ul>
+	<ul class="actions">
+		<?= $model->submit("Verificer email", array("class" => "primary", "wrapper" => "li.reset")) ?>
+		<li class="skip"><a href="spring-over" class="button">Spring over</a></li>
+	</ul>
 	<?= $model->formEnd() ?>
 
 </div>

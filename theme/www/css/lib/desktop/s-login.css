@@ -1,5 +1,7 @@
 #content .scene.login form {padding-top: 50px;}
-#content .scene.login ul.actions li.forgot {padding: 7px; line-height: 22px;}
-#content .scene.login form .field {margin: 0 auto;}
-#content .scene.login form > ul.actions {margin: 0 auto; width: calc(50% + calc(12px / 2));}
-#content .scene.login div.signup {width: calc(50% + 30px); margin: 0 auto;}
+#content .scene.login ul.actions li.forgot {line-height: 22px;}
+#content .scene.login form .field {width: 35%; margin: 0 auto;}
+#content .scene.login form > ul.actions {margin: 0 auto; width: 35%}
+#content .scene.login div.signup {width: 35%; margin: 0 auto;}
+#content .scene.login div.signup p {padding-left: 0;}
+#content .scene.login p {width: 600px; margin: 0 auto;}
