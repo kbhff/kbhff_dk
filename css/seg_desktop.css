@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-15 20:47:03
+asset-builder @ 2018-12-17 16:09:14
 */
 
 /*seg_desktop_include.css*/
@@ -48,7 +48,6 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 form {}
 div.field {
 	padding: 0 0 25px; position: relative; font-size: 0; z-index: 1;
-	width: calc(50% + 10px);
 	padding-left: 10px;
 	padding-right: 10px;
 }
@@ -140,9 +139,9 @@ div.field.error div.hint {opacity: 0;
 	transform: translate(0, -10px);
 }
 ul.actions,
-#content ul.actions {list-style: none; margin: 0 0 0 2px; font-size: 0; width: 50%;}
+#content ul.actions {list-style: none; margin: 0 0 0 2px; font-size: 0;}
 ul.actions li,
-#content ul.actions li {width: auto; height: auto; display: inline-block; padding: 0 5px 10px 0; vertical-align: top;
+#content ul.actions li {width: auto; height: auto; display: inline-block; padding: 0 5px 10px 0; margin-left: 2px; vertical-align: top;
 	-moz-user-select: none;
 	-webkit-user-select: none;
 	user-select: none;
@@ -600,9 +599,9 @@ body > div.overlay .close:after {
 	transform: rotate(-45deg);
 }
 #content .scene ul.info {position: relative; z-index: 1; padding-bottom: 26px; padding-right: 0; display: inline-block; vertical-align: top; width: auto; font-size: 0;}
-#content .scene ul.info li {width: auto; font-size: 12px; line-height: 12px; color: #cccccc; display: inline-block; vertical-align: top;}
+#content .scene ul.info li {width: auto; font-size: 12px; line-height: 12px; color: #bbbbbb; display: inline-block; vertical-align: top;}
 #content .scene ul.info > li.author:before,
-#content .scene ul.info > li.place:before {content: "\00a0|\00a0"; color: #dedede; display: inline-block; vertical-align: top; font-size: 12px; line-height: 10px; }
+#content .scene ul.info > li.place:before {content: "\00a0|\00a0"; color: #bbbbbb; display: inline-block; vertical-align: top; font-size: 12px; line-height: 10px; }
 #content .scene ul.info li.main_entity,
 #content .scene ul.info li.url,
 #content .scene ul.info li.publisher,
