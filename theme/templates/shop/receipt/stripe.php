@@ -71,12 +71,12 @@ if(count($action) == 4) {
 
 
 <? if($is_membership): ?>
-	<p>Nu kan du endelig bestille dine grøntsager.</p>
+	<p>Nu kan du begynde at bestille dine grøntsager.</p>
 <? endif; ?>
 
 
 <? if(!$active_account): ?>
-	<p>Husk at aktivere din konto, hvis du ikke har gjort det endnu. Ellers kan du ikke modtage nyhedsbreve eller bestille grøntsager. Kig i din indbakke efter aktiveringsemailen.</p>
+	<p>Husk at aktivere din konto ved at verificere din email, hvis du ikke har gjort det endnu. Ellers kan du ikke modtage nyhedsbreve eller bestille grøntsager. Kig i din indbakke efter aktiveringsemailen.</p>
 <? endif; ?>
 
 

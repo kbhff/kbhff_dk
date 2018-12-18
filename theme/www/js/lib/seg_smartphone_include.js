@@ -5,3 +5,5 @@ document.write('<script type="text/javascript" src="/js/lib/smartphone/i-login.j
 
 document.write('<script type="text/javascript" src="/js/lib/smartphone/i-header_image.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/smartphone/i-stripe.js"></script>');
+document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/v0_9_2/src/beta-u-paymentcards.js"></script>');
+

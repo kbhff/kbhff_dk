@@ -14,7 +14,6 @@ $user = $UC->getUser();
 $order = $model->getOrders(array("order_no" => $order_no));
 $membership = $UC->getMembership();
 
-
 $is_membership = false;
 $subscription_method = false;
 
@@ -52,9 +51,10 @@ else {
 
 <? if($order): ?>
 
-
 	<h1>Betal dit medlemskab</h1>
-	<p>Indmeldelsesgebyr: <?= $total_order_price["price"] ?>.</p>
+	<p>Indmeldelsesgebyr: <?= $order["items"][0]["unit_price"] ?> DKK.</p>
+	<p>Moms: <?= $total_order_price["vat"] ?> DKK.</p>
+	<p>I alt: <?= $total_order_price["price"] ?> DKK.</p>
 	<?= $model->formStart("/butik/betaling/".$order_no."/stripe/process", array("class" => "card")) ?>
 		<? //= $model->input("reference", array("type" => "hidden", "value" => $reference)); ?>
 		<? //= $model->input("email", array("type" => "hidden", "value" => $user["email"])); ?>
@@ -73,13 +73,12 @@ else {
 
 	<p>Betalingsreference: <?= $reference ?>.</p>
 	<p class="note">
-		Vi bruger <a href="https://stripe.com" target="_blank">Stripe</a> til at behandle betalingen. 
-		<br />Vi beholder ingen kortinformationer på vores server. 
-		<br />All kommunikation er krypteret.<br />
+		Vi bruger <a href="https://stripe.com" target="_blank">Stripe</a> til at behandle betalingen. <br />
+		Vi beholder ingen kortinformationer på vores server. <br />
+		All kommunikation er krypteret. <br />
 	</p>
 
-	<p class="skip">Hvis du ikke vil betale nu kan du gøre det senere ved at <a href="/" class="skip">springe over.</a></li>
-
+	<p>Hvis du ikke vil betale nu kan du gøre det senere ved at <a href="/">springe over.</a></p>
 
 <? else: ?>
 
