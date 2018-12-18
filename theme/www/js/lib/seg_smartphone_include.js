@@ -4,3 +4,4 @@ document.write('<script type="text/javascript" src="/js/lib/smartphone/i-front.j
 document.write('<script type="text/javascript" src="/js/lib/smartphone/i-login.js"></script>');
 
 document.write('<script type="text/javascript" src="/js/lib/smartphone/i-header_image.js"></script>');
+document.write('<script type="text/javascript" src="/js/lib/smartphone/i-stripe.js"></script>');
