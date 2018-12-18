@@ -27,6 +27,12 @@ Util.Objects["signup"] = new function() {
 				u.f.init(signup_form);
 			}
 
+			var verify_form = u.qs("form.verify_code", this);
+
+			if(verify_form) {
+				u.f.init(verify_form);
+			}
+
 			// // accept cookies?
 			// page.acceptCookies();
 
