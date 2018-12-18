@@ -53,7 +53,7 @@ else {
 <? if($order): ?>
 
 
-	<h1>Opret nyt medlemskab</h1>
+	<h1>Betal dit medlemskab</h1>
 	<p>Indmeldelsesgebyr: <?= $total_order_price["price"] ?>.</p>
 	<?= $model->formStart("/butik/betaling/".$order_no."/stripe/process", array("class" => "card")) ?>
 		<? //= $model->input("reference", array("type" => "hidden", "value" => $reference)); ?>
