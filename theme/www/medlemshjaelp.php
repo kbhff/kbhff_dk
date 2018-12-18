@@ -144,7 +144,7 @@ if($action) {
 			exit();
 		}
 		
-		// /medlemshjaelp/bet aling/#order_no#/spring-over
+		// /medlemshjaelp/betaling/#order_no#/spring-over
 		else if(count($action) === 4 && $action[3] == "spring-over") {
 			$page->page(array(
 				"templates" => "member-help/receipt/skipped.php"
@@ -180,8 +180,9 @@ if($action) {
 		}
 
 		else {
+			message()->resetMessages();
 			message()->addMessage("Der skete en fejl i registreringen af betalingen.", array("type" => "error"));
-			header("Location: /paymentError");
+			header("Location: paymentError");
 			exit();
 		}
 	
