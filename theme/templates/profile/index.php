@@ -21,9 +21,6 @@ $department = $UC->getUserDepartment();
 
 <?	endif; ?>
 
-<pre>
-	<? print_r($user) ?>
-</pre>
 
 <div class="scene profile i:profile">
 	<div class="header_image i:header_image variant:1 format:jpg"></div>
