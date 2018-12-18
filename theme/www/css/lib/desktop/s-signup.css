@@ -12,6 +12,12 @@
 
 #content .scene.signupfees div.article ul.info {display: none;}
 
-#content .scene.signup form {padding-top: 32px;}
-#content .scene.signup form .field {margin: 0 auto;}
-#content .scene.signup form > ul.actions {margin: 0 auto;}
+/* Signup form */
+#content .scene.signup form {padding-top: 50px;}
+#content .scene.signup ul.actions li.forgot {line-height: 22px;}
+#content .scene.signup form .field {width: 35%; margin: 0 auto;}
+#content .scene.signup form > ul.actions {margin: 0 auto; width: 35%}
+#content .scene.signup div.signup {width: 35%; margin: 0 auto;}
+#content .scene.signup div.signup p {padding-left: 0;}
+#content .scene.signup p {width: 600px; margin: 0 auto;}
+
