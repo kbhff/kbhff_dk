@@ -1,4 +1,4 @@
-#content .scene.shopPayment form.card {margin-top: 32px; width: 40%; padding-left: 12px;}
+#content .scene.shopPayment form.card {margin-top: 32px; width: 40%;}
 #content .scene.shopPayment form.card fieldset {background-color: #f2f2f2;}
 #content .scene.shopPayment form.card fieldset div.field.tel.card {width: 90%; margin: 0 auto; padding-top: 24px;}
 #content .scene.shopPayment form.card fieldset div.field.tel.exp_month {width: 15%; display: inline-block; margin-left: 2.5%;}
@@ -14,3 +14,11 @@
 
 #content .scene.shopPayment > p {font-size: 12px; line-height: 12px; padding-bottom: 0;}
 #content .scene.shopPayment > h1 + p {padding: 12px; font-size: 14px;}
+
+
+#content .scene.shopPayment form {padding-top: 50px; margin: 0 auto;}
+#content .scene.shopPayment ul.actions li.forgot {line-height: 22px;}
+#content .scene.shopPayment form .field {width: 35%; margin: 0 auto;}
+#content .scene.shopPayment form > ul.actions {margin: 0 auto; width: 35%}
+#content .scene.shopPayment p {width: 40%; margin: 0 auto;}
+#content .scene.shopPayment h2 {width: 40%; margin: 0 auto;}
