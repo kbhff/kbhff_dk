@@ -54,7 +54,7 @@ class SuperUser extends SuperUserCore {
 
 
 			// does values validate - minimum is email and nickname
-			if(count($action) == 1 && $this->validateList(array("email", "nickname")) && $email) {
+			if(count($action) == 1 && $this->validateList(array("email", "firstname", "lastname")) && $email) {
 
 				$query = new Query();
 				$nickname = $this->getProperty("nickname", "value");
@@ -72,6 +72,26 @@ class SuperUser extends SuperUserCore {
 						$names[] = $name;
 						$values[] = $name."='".$entity["value"]."'";
 					}
+				}
+
+				// if no nickname were posted, use email
+				if(!$nickname) {
+					if($firstname && $lastname) {
+						$nickname = $firstname . " " . $lastname;
+					}
+					else if($firstname) {
+						$nickname = $firstname;
+					}
+					else if($lastname) {
+						$nickname = $lastname;
+					}
+					else {
+						$nickname = $email;
+					}
+
+					$values[] = "nickname='".$nickname."'";
+					$quantity = $this->getProperty("quantity", "value");
+					$item_id = $this->getProperty("item_id", "value");
 				}
 
 
