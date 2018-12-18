@@ -119,10 +119,27 @@ class TypeMembership extends Itemtype {
 			$order = $subscription["order"];
 			$item_key = arrayKeyValue($order["items"], "item_id", $item_id);
 			$order_item = $order["items"][$item_key];
-
 			$message_id = $subscription["item"]["subscribed_message_id"];
 
-			// variables for email
+
+			$query = new Query();
+			// Add member number as username (if it doesn't already exist)
+			$sql = "SELECT username FROM ".SITE_DB.".user_usernames WHERE user_id = $user_id, type = 'member_no'";
+			if(!$query->sql($sql)) {
+
+				include_once("classes/users/superuser.class.php");
+				$UC = new SuperUser();
+
+				// get member no
+				$member = $UC->getMembers(["user_id" => $user_id]);
+
+				// insert as username
+				$sql = "INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '".$member["id"]."', type = 'member_no', verified=1, verification_code = '".randomKey(8)."'";
+				$query->sql($sql);
+			}
+
+
+			// price variable for email
 			$price = formatPrice(array("price" => $order_item["total_price"], "vat" => $order_item["total_vat"],  $order_item["total_price"], "country" => $order["country"], "currency" => $order["currency"]));
 
 
