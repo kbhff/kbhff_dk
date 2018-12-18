@@ -1,4 +1,10 @@
 
-#content .scene div.article h1 {margin-bottom: 24px;}
-#content .scene div.article ul.info {display: none;}
+#content .scene div.article h1 {margin-bottom: 10px;}
+/* #content .scene div.article ul.info {display: none;} */
 #content .scene div.article ul.tags {display: none;}
+
+#content .article > div.articlebody {width: 600px; margin: 0 auto;}
+#content .article > ul.info {width: 600px; margin: 0 auto; padding-left: 0; margin-left: 12px;}
+
+
+#content .article > ul.info li {padding-left: 0}

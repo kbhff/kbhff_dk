@@ -262,185 +262,216 @@
 
 
 		</div>
-
-		<div class="section">
+		<div class="c-wrapper section">
 			<h2>Form elements</h2>
+			<div class="c-one-half">
 
-			<script type="text/javascript">
-				if (typeof(u) == "object") {
-					// Standard form initializer
-					u.o.standardForm = new function() {
-						this.init = function(form) {
-							u.f.init(form);
+				<script type="text/javascript">
+					if (typeof(u) == "object") {
+						// Standard form initializer
+						u.o.standardForm = new function() {
+							this.init = function(form) {
+								u.f.init(form);
+							}
 						}
 					}
-				}
-			</script>
+				</script>
 
-			<form action="#" method="POST" class="form i:standardForm">
-				<fieldset>
-					<h3>Primary data</h3>
+				<form action="#" method="POST" class="form i:standardForm">
+					<fieldset>
+						<h3>Primary data</h3>
 
-					<div class="field string">
-						<label for="input_text1">Text</label>
-						<input type="text" name="string1" id="input_text1" />
-						<div class="help">
-							<div class="hint">hint message which is pretty long and explaining a lot of things</div>
-							<div class="error">error message</div>
+						<div class="field string">
+							<label for="input_text1">Text</label>
+							<input type="text" name="string1" id="input_text1" />
+							<div class="help">
+								<div class="hint">hint message which is pretty long and explaining a lot of things</div>
+								<div class="error">error message</div>
+							</div>
 						</div>
-					</div>
 
-					<div class="field string required">
-						<label for="input_text2">Text required</label>
-						<input type="text" name="string2" id="input_text2" />
-						<div class="help">
-							<div class="hint">hint message</div>
-							<div class="error">error message which is pretty long and explaining a lot of things</div>
+						<div class="field string required">
+							<label for="input_text2">Text required</label>
+							<input type="text" name="string2" id="input_text2" />
+							<div class="help">
+								<div class="hint">hint message</div>
+								<div class="error">error message which is pretty long and explaining a lot of things</div>
+							</div>
 						</div>
-					</div>
-				</fieldset>
+					</fieldset>
 
-				<fieldset>
-					<h3>Secondary data</h3>
+					<fieldset>
+						<h3>Secondary data</h3>
 
-					<div class="field email required">
-						<label for="input_email">Email required</label>
-						<input type="email" name="email" id="input_email" maxlength="255" />
-						<div class="help">
-							<div class="hint">hint message</div>
-							<div class="error">error message</div>
+						<div class="field email required">
+							<label for="input_email">Email required</label>
+							<input type="email" name="email" id="input_email" maxlength="255" />
+							<div class="help">
+								<div class="hint">hint message</div>
+								<div class="error">error message</div>
+							</div>
 						</div>
-					</div>
 
-					<div class="field password required">
-						<label for="input_password">Password required</label>
-						<input type="password" name="password" id="input_password" maxlength="255" />
-						<div class="help">
-							<div class="hint">hint message</div>
-							<div class="error">error message</div>
+						<div class="field password required">
+							<label for="input_password">Password required</label>
+							<input type="password" name="password" id="input_password" maxlength="255" />
+							<div class="help">
+								<div class="hint">hint message</div>
+								<div class="error">error message</div>
+							</div>
 						</div>
-					</div>
 
-					<div class="field select">
-						<label for="input_select">Select</label>
-						<select name="select" id="input_select">
-							<option value="0">test</option>
-							<option value="1">apple</option>
-							<option value="2" selected="selected">pear</option>
-							<option value="3">banana</option>
-						</select>
-						<div class="help">
-							<div class="hint">hint message</div>
-							<div class="error">error message</div>
+						<div class="field select">
+							<label for="input_select">Select</label>
+							<select name="select" id="input_select">
+								<option value="0">test</option>
+								<option value="1">apple</option>
+								<option value="2" selected="selected">pear</option>
+								<option value="3">banana</option>
+							</select>
+							<div class="help">
+								<div class="hint">hint message</div>
+								<div class="error">error message</div>
+							</div>
 						</div>
-					</div>
 
-					<div class="field select required">
-						<label for="input_select2">Select required</label>
-						<select name="select2" id="input_select2">
-							<option value="" selected="selected">-- Choose --</option>
-							<option value="0">test</option>
-							<option value="1">apple</option>
-							<option value="2">pear</option>
-							<option value="3">banana</option>
-						</select>
-						<div class="help">
-							<div class="hint">hint message</div>
-							<div class="error">error message</div>
+						<div class="field select required">
+							<label for="input_select2">Select required</label>
+							<select name="select2" id="input_select2">
+								<option value="" selected="selected">-- Choose --</option>
+								<option value="0">test</option>
+								<option value="1">apple</option>
+								<option value="2">pear</option>
+								<option value="3">banana</option>
+							</select>
+							<div class="help">
+								<div class="hint">hint message</div>
+								<div class="error">error message</div>
+							</div>
 						</div>
-					</div>
 
-					<div class="field text">
-						<label for="input_text">Text</label>
-						<textarea name="text" id="input_text"></textarea>
-						<div class="help">
-							<div class="hint">hint message</div>
-							<div class="error">error message</div>
+						<div class="field text">
+							<label for="input_text">Text</label>
+							<textarea name="text" id="input_text"></textarea>
+							<div class="help">
+								<div class="hint">hint message</div>
+								<div class="error">error message</div>
+							</div>
 						</div>
-					</div>
 
-					<div class="field text required">
-						<label for="input_text">Text required</label>
-						<textarea name="text" id="input_text"></textarea>
-						<div class="help">
-							<div class="hint">hint message</div>
-							<div class="error">error message</div>
+						<div class="field text required">
+							<label for="input_text">Text required</label>
+							<textarea name="text" id="input_text"></textarea>
+							<div class="help">
+								<div class="hint">hint message</div>
+								<div class="error">error message</div>
+							</div>
 						</div>
-					</div>
 
-					<div class="field checkbox">
-						<input type="hidden" name="checkbox1" value="0" />
-						<input type="checkbox" name="checkbox1" id="input_checkbox1" value="1" />
-						<label for="input_checkbox1">Checkbox</label>
-						<div class="help">
-							<div class="hint">hint message which is pretty long and explaining a lot of things</div>
-							<div class="error">error message</div>
+						<div class="field checkbox">
+							<input type="hidden" name="checkbox1" value="0" />
+							<input type="checkbox" name="checkbox1" id="input_checkbox1" value="1" />
+							<label for="input_checkbox1">Checkbox</label>
+							<div class="help">
+								<div class="hint">hint message which is pretty long and explaining a lot of things</div>
+								<div class="error">error message</div>
+							</div>
 						</div>
-					</div>
 
-					<div class="field checkbox required">
-						<input type="hidden" name="checkbox2" value="0" />
-						<input type="checkbox" name="checkbox2" id="input_checkbox2" value="1" />
-						<label for="input_checkbox2">Checkbox required</label>
-						<div class="help">
-							<div class="hint">hint message</div>
-							<div class="error">error message which is pretty long and explaining a lot of things</div>
+						<div class="field checkbox required">
+							<input type="hidden" name="checkbox2" value="0" />
+							<input type="checkbox" name="checkbox2" id="input_checkbox2" value="1" />
+							<label for="input_checkbox2">Checkbox required</label>
+							<div class="help">
+								<div class="hint">hint message</div>
+								<div class="error">error message which is pretty long and explaining a lot of things</div>
+							</div>
 						</div>
-					</div>
 
-					<div class="field radiobuttons">
-						<label>Radiobuttons</label>
-						<div class="item">
-							<input type="radio" name="radiobuttons" id="input_radiobuttons_value1" value="value1" />
-							<label for="input_radiobuttons_value1">text1</label>
+						<div class="field radiobuttons">
+							<label>Radiobuttons</label>
+							<div class="item">
+								<input type="radio" name="radiobuttons" id="input_radiobuttons_value1" value="value1" />
+								<label for="input_radiobuttons_value1">text1</label>
+							</div>
+							<div class="item">
+								<input type="radio" name="radiobuttons" id="input_radiobuttons_value2" value="value2" />
+								<label for="input_radiobuttons_value2">text2</label>
+							</div>
+							<div class="help">
+								<div class="hint">hint message</div>
+								<div class="error">error message</div>
+							</div>
 						</div>
-						<div class="item">
-							<input type="radio" name="radiobuttons" id="input_radiobuttons_value2" value="value2" />
-							<label for="input_radiobuttons_value2">text2</label>
-						</div>
-						<div class="help">
-							<div class="hint">hint message</div>
-							<div class="error">error message</div>
-						</div>
-					</div>
 
-					<div class="field radiobuttons required">
-						<label>Radiobuttons required</label>
-						<div class="item">
-							<input type="radio" name="radiobuttons2" id="input_radiobuttons_value3" value="value1" />
-							<label for="input_radiobuttons_value3">text1</label>
+						<div class="field radiobuttons required">
+							<label>Radiobuttons required</label>
+							<div class="item">
+								<input type="radio" name="radiobuttons2" id="input_radiobuttons_value3" value="value1" />
+								<label for="input_radiobuttons_value3">text1</label>
+							</div>
+							<div class="item">
+								<input type="radio" name="radiobuttons2" id="input_radiobuttons_value4" value="value2" />
+								<label for="input_radiobuttons_value4">text2</label>
+							</div>
+							<div class="help">
+								<div class="hint">hint message</div>
+								<div class="error">error message</div>
+							</div>
 						</div>
-						<div class="item">
-							<input type="radio" name="radiobuttons2" id="input_radiobuttons_value4" value="value2" />
-							<label for="input_radiobuttons_value4">text2</label>
-						</div>
-						<div class="help">
-							<div class="hint">hint message</div>
-							<div class="error">error message</div>
-						</div>
-					</div>
 
-					<ul class="actions">
-						<li class="save">
-							<input type="submit" value="Submit" class="button primary" />
-						</li>
-						<li class="cancel">
-							<input type="button" value="Cancel" class="button" />
-						</li>
-						<li class="link">
-							<a href="#" class="button">Cancel link</a>
-						</li>
-						<li class="disabled">
-							<input type="button" value="Disabled button" class="button disabled" />
-						</li>
-						<li class="disabled">
-							<a href="#" class="button disabled">Disabled link</a>
-						</li>
-					</ul>
+						<ul class="actions">
+							<li class="save">
+								<input type="submit" value="Submit" class="button primary" />
+							</li>
+							<li class="cancel">
+								<input type="button" value="Cancel" class="button" />
+							</li>
+							<li class="link">
+								<a href="#" class="button">Cancel link</a>
+							</li>
+							<li class="disabled">
+								<input type="button" value="Disabled button" class="button disabled" />
+							</li>
+							<li class="disabled">
+								<a href="#" class="button disabled">Disabled link</a>
+							</li>
+						</ul>
 
-				</fieldset>
-			</form>
+					</fieldset>
+				</form>
+			</div>
+			<div class="c-one-quarter">
+				<form action="#" method="POST" class="form i:standardForm">
+					<fieldset>
+						<h3>Primary data</h3>
+
+						<div class="field string">
+							<label for="input_text1">Text</label>
+							<input type="text" name="string1" id="input_text1" />
+							<div class="help">
+								<div class="hint">hint message which is pretty long and explaining a lot of things</div>
+								<div class="error">error message</div>
+							</div>
+						</div>
+
+						<div class="field string required">
+							<label for="input_text2">Text required</label>
+							<input type="text" name="string2" id="input_text2" />
+							<div class="help">
+								<div class="hint">hint message</div>
+								<div class="error">error message which is pretty long and explaining a lot of things</div>
+							</div>
+						</div>
+
+					</fieldset>
+				</form>
+			</div>
+			<div class="c-one-quarter">
+
+			</div>
 		</div>
+
 
 	</div>
 </body>

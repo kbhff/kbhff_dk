@@ -59,18 +59,18 @@ else {
 		<? //= $model->input("reference", array("type" => "hidden", "value" => $reference)); ?>
 		<? //= $model->input("email", array("type" => "hidden", "value" => $user["email"])); ?>
 
-		<fieldset>
-			<?= $model->input("card_number", array("type" => "tel")); ?>
-			<?= $model->input("card_exp_month", array("type" => "tel")); ?><span class="slash">/</span><?= $model->input("card_exp_year", array("type" => "tel")); ?>
-			<?= $model->input("card_cvc", array("type" => "tel")); ?>
+	<fieldset>
+		<?= $model->input("card_number", array("type" => "tel")); ?>
+		<?= $model->input("card_exp_month", array("type" => "tel")); ?><span class="slash">/</span><?= $model->input("card_exp_year", array("type" => "tel")); ?>
+		<?= $model->input("card_cvc", array("type" => "tel")); ?>
 
-		</fieldset>
+	</fieldset>
 
-		<ul class="actions">
-			<li class="cancel"><a href="/" class="button">Annullér</a></li>
-			<li class="cancel"><a href="/" class="button">Spring over</a></li>
-			<?= $model->submit("Betal ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
-		</ul>
+	<ul class="actions">
+		<li class="cancel"><a href="/" class="button">Annullér</a></li>
+		<li class="cancel"><a href="/" class="button">Spring over</a></li>
+		<?= $model->submit("Betal ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
+	</ul>
 	<?= $model->formEnd() ?>
 
 	<p>Betalingsreference: <?= $reference ?>.</p>

@@ -429,9 +429,9 @@ body > div.overlay .close:after {
 /* Articles */
 
 #content .scene ul.info {position: relative; z-index: 1; padding-bottom: 26px; padding-right: 0; display: inline-block; vertical-align: top; width: auto; font-size: 0;}
-#content .scene ul.info li {width: auto; font-size: 12px; line-height: 12px; color: #cccccc; display: inline-block; vertical-align: top;}
+#content .scene ul.info li {width: auto; font-size: 12px; line-height: 12px; color: #bbbbbb; display: inline-block; vertical-align: top;}
 #content .scene ul.info > li.author:before,
-#content .scene ul.info > li.place:before {content: "\00a0|\00a0"; color: #dedede; display: inline-block; vertical-align: top; font-size: 12px; line-height: 10px; }
+#content .scene ul.info > li.place:before {content: "\00a0|\00a0"; color: #bbbbbb; display: inline-block; vertical-align: top; font-size: 12px; line-height: 10px; }
 #content .scene ul.info li.main_entity,
 #content .scene ul.info li.url,
 #content .scene ul.info li.publisher,

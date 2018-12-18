@@ -75,7 +75,7 @@ $email = $model->getProperty("email", "value");
 		<?= $model->input("email", array("required" => true, "label" => "Din email", "value" => $email, "hint_message" => "Indtast din email.", "error_message" => "Du har indtastet en ugyldig emailadresse.")); ?>
 		<?= $model->input("confirm_email", array("label" => "Gentag din email", "required" => true, "hint_message" => "Indtast din email igen.", "error_message" => "De to email adresser er ikke ens.")); ?>
 		<?= $model->input("password", array("label" => "password", "hint_message" => "Indtast et password.", "error_message" => "Dit password skal være mellem 8 og 20 karakterer.")); ?>
-		<?= $model->input("department", array("type" => "select", "label" => "Vælg lokalafdeling", "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),)); ?>
+		<?= $model->input("department_id", array("type" => "select", "label" => "Vælg lokalafdeling", "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),)); ?>
 		<?= $model->input("terms"); ?>
 	</fieldset>
 

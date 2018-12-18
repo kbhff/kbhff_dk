@@ -101,13 +101,9 @@ class TypeSignupfee extends Itemtype {
 		include_once("classes/users/superuser.class.php");
 		$UC = new SuperUser();
 
-		include_once("classes/items/items.class.php");
 		$IC = new Items();
 		$signupfee_item = $IC->getItem(array("id" => $order_item["item_id"], "extend" => true));
 
-		
-
-		
 
 		// set values for creating subscription
 
