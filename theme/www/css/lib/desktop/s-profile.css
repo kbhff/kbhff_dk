@@ -82,6 +82,11 @@
 	width: 25%;
 }
 
+#content div.profile .new-order,
+#content div.profile .book-shift {
+	padding-right: 0;
+}
+
 #content div.profile .department-info,
 #content div.profile .membership-info,
 #content div.profile .user-info {

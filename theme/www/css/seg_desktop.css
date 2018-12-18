@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-06 15:35:30
+asset-builder @ 2018-12-18 16:03:45
 */
 
 /*seg_desktop_include.css*/
@@ -39,10 +39,37 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 	font-weight: 400;
 	font-style: normal;
 }
+#content .scene div.article h1 {margin-bottom: 10px;}
+#content .scene div.article ul.tags {display: none;}
+#content .scene .article > div.articlebody {width: 600px; margin: 0 auto;}
+#content .scene .article > ul.info {width: 100%; margin: 0 auto; padding-left: 12px; padding-right: 12px; box-sizing: border-box;}
+#content .scene .article > ul.info li {padding-left: 0}
+#content .scene .c-wrapper .article > div.articlebody {width: 100%;}
+#content .scene ul.info {position: relative; z-index: 1; padding-bottom: 26px; padding-right: 0; display: inline-block; vertical-align: top; width: auto; font-size: 0;}
+#content .scene ul.info li {width: auto; font-size: 12px; line-height: 12px; display: inline-block; vertical-align: top;}
+#content .scene ul.info > li.author:before,
+#content .scene ul.info > li.place:before {content: "\00a0|\00a0"; display: inline-block; vertical-align: top; font-size: 12px; line-height: 10px; }
+#content .scene ul.info li.main_entity,
+#content .scene ul.info li.url,
+#content .scene ul.info li.publisher,
+#content .scene ul.info li.image_info,
+#content .scene ul.info li.modified_at,
+#content .scene ul.info li.latitude,
+#content .scene ul.info li.longitude {display: none;}
+#content .scene ul.info li + li {padding-top: 0;}
+#content .scene ul.offer,
+#content .scene .articlebody ul.offer {font-size: 0; padding: 0; margin: 0; list-style: none;}
+#content .scene ul.offer li.name,
+#content .scene ul.offer li.currency,
+#content .scene ul.offer li.url {display: none;}
+#content .scene ul.offer li {font-size: 14px; width: auto; display: inline-block; vertical-align: top; padding: 0 5px 0 12px;}
+#content .scene ul.offer li.default {text-decoration: line-through;}
+#content .scene ul.offer li.description {padding-top: 4px; display: block;}
+#content .scene ul.offer li.description ul {list-style: disc;}
+#content .scene ul.offer li.description ul li {display: list-item; padding: 0 0 3px; font-size: 13px;}
 form {}
 div.field {
 	padding: 0 0 25px; position: relative; font-size: 0; z-index: 1;
-	width: calc(50% + 10px);
 	padding-left: 10px;
 	padding-right: 10px;
 }
@@ -112,7 +139,8 @@ div.field.correct .indicator {
 	background-position: center -2px;
 	background-size: 14px 14px;
 }
-div.field select.default {
+div.field select.default,
+div.field input.default {
 	color: #999999;
 }
 div.field div.help {position: relative;}
@@ -126,15 +154,10 @@ div.field.error div.error {opacity: 1;
 	transform: translate(0, 0);
 }
 div.field div.hint {color: #999999;}
-div.field.focus div.hint,
-div.field.hover div.hint {opacity: 1;
-	transform: translate(0, 0);
-}
-div.field.error div.hint {opacity: 0;
-	transform: translate(0, -10px);
-}
+div.field.focus div.hint {opacity: 1; transform: translate(0, 0);}
+div.field.error div.hint {opacity: 0; transform: translate(0, -10px);}
 ul.actions,
-#content ul.actions {list-style: none; margin: 0 0 0 2px; font-size: 0; width: 50%;}
+#content ul.actions {list-style: none; margin: 0 0 0 2px; font-size: 0;}
 ul.actions li,
 #content ul.actions li {width: auto; height: auto; display: inline-block; padding: 0 5px 10px 0; vertical-align: top;
 	-moz-user-select: none;
@@ -218,17 +241,32 @@ input[type="submit"] {
 	text-decoration: underline;
 }
 #navigation {
-    position: relative;
-    width: 936px;
-    margin: 0 auto;
+	position: relative;
+	width: 936px;
+	margin: 0 auto;
 }
-#navigation ul.navigation {
+#navigation ul.navigation,
+#navigation ul.navigation ul {
 	font-size: 0;
-	padding-bottom: 5px;
+	padding-bottom: 10px;
+}
+#navigation ul.navigation ul {
+	position: absolute;
+	z-index: 100;
+	opacity: 0;
+	display: none;
+	background-color: #fff;
+	left: -9px;
+	white-space: nowrap;	
 }
 #navigation ul.navigation li {
 	display: inline-block;
 	margin-right: 5px;
+	position: relative;
+}
+#navigation ul.navigation ul li {
+	display: block;
+	margin: 6px 9px;
 }
 #navigation ul.navigation a {
 	font-family: 'voresfont';
@@ -239,6 +277,9 @@ input[type="submit"] {
 	display: block;
 	color: #ffffff;
 	background-color: #000000;
+}
+#navigation ul.navigation ul li a{
+	background-color: #666;
 }
 #navigation ul.navigation a:hover {
 	background-color: #3e8e17;
@@ -343,6 +384,9 @@ input[type="submit"] {
 #content li + li {
 	padding-top: 12px;
 }
+#content dl {
+	padding-bottom: 12px;
+}
 #content dt {
 	font-size: 14px;
 	line-height: 24px;
@@ -386,6 +430,7 @@ input[type="submit"] {
 	display: block;
 	font-size: 0;
 	width: 100%;
+	min-height: 100px;
 }
 #content div.c-one-quarter,
 #content div.c-one-third,
@@ -440,7 +485,8 @@ input[type="submit"] {
 #content div.c-primary-box p,
 #content div.c-primary-box ol,
 #content div.c-primary-box ul,
-#content div.c-primary-box dl {
+#content div.c-primary-box dl,
+#content div.c-primary-box li {
 	color: white;
 }
 #content div.c-box.c-one-quarter,
@@ -585,10 +631,12 @@ body > div.overlay .close:after {
 
 /*s-login.css*/
 #content .scene.login form {padding-top: 50px;}
-#content .scene.login ul.actions li.forgot {padding: 7px; line-height: 22px;}
-#content .scene.login form .field {margin: 0 auto;}
-#content .scene.login form > ul.actions {margin: 0 auto; width: calc(50% + calc(12px / 2));}
-#content .scene.login div.signup {width: calc(50% + 30px); margin: 0 auto;}
+#content .scene.login ul.actions li.forgot {line-height: 22px;}
+#content .scene.login form .field {width: 35%; margin: 0 auto;}
+#content .scene.login form > ul.actions {margin: 0 auto; width: 35%}
+#content .scene.login div.signup {width: 35%; margin: 0 auto;}
+#content .scene.login div.signup p {padding-left: 0;}
+#content .scene.login p {width: 600px; margin: 0 auto;}
 
 
 /*s-accept_terms.css*/
@@ -636,6 +684,7 @@ body > div.overlay .close:after {
 	padding-top: 5px;
 	padding-left: 12px;
 	padding-right: 12px;
+	width: 90%;
 }
 #content div.profile .orders,
 #content div.profile .order-headings,
@@ -660,6 +709,10 @@ body > div.overlay .close:after {
 	vertical-align: top;
 	box-sizing: border-box;
 	width: 25%;
+}
+#content div.profile .new-order,
+#content div.profile .book-shift {
+	padding-right: 0;
 }
 #content div.profile .department-info,
 #content div.profile .membership-info,
@@ -726,18 +779,76 @@ body.profil > div.overlay div.field.password {
 }
 
 
-/*s-signupfees.css*/
-#content div.signupfees ul.offer {list-style-type: none; padding-bottom: 0;}
-#content div.signupfees li.signupfee {display: inline-block; width: calc(50% - 14px - 12px); vertical-align: top; text-align: center; background-color: #f2f2f2; margin-top: 48px; margin-right: 12px; margin-left: 12px; padding-left: 0;}
-#content div.signupfees li + li {padding-top: 0;}
-#content div.signupfees h3 {margin-right: 12px; margin-left: 12px; border-bottom: 1px solid #000000;}
-#content div.signupfees ul.signupfees {margin-left: 0;}
-#content div.signupfees ul.offer li.name,
-#content div.signupfees ul.offer li.currency,
-#content div.signupfees ul.offer li.url {display: none;}
-#content div.signupfees ul.offer li {padding-left: 0; padding-top: 3px;}
-#content div.signupfees ul.offer li p {padding-left: 0; text-align: left;}
-#content div.signupfees ul.actions li {display: block; width: 100%;}
-#content div.signupfees ul.actions {margin: 0 auto;}
-#content div.signupfees ul.actions input {margin: 0 auto;}
+/*s-signup.css*/
+#content .scene.signupfees h3 {padding-bottom: 0; margin-right: 12px; margin-left: 12px; margin-top: 12px; border-bottom: 1px solid #000000; font-size: 26px;}
+#content .scene.signupfees ul.signupfees {margin-left: 0;}
+#content .scene.signupfees li.signupfee {display: inline-block; width: calc(50% - 14px - 12px); vertical-align: top; text-align: center; background-color: #f2f2f2; margin-top: 48px; margin-right: 12px; margin-left: 12px; padding-left: 0;}
+#content .scene.signupfees li.signupfee + li {padding-top: 0;}
+#content .scene.signupfees ul.offer li {padding-left: 0; padding-top: 12px; font-size: 20px; text-align: left; font-weight: 500}
+#content .scene.signupfees ul.actions {margin: 0 auto;}
+#content .scene.signupfees ul.actions input {margin: 0 auto;}
+#content .scene.signupfees ul.actions li {display: block; width: 100%;}
+#content .scene.signupfees ul.offer li.suscribtion_price > p {padding: 0; font-size: 20px;}
+#content .scene.signupfees div.article ul.info {display: none;}
+#content .scene.signup form {padding-top: 50px;}
+#content .scene.signup ul.actions li.forgot {line-height: 22px;}
+#content .scene.signup form .field {width: 35%; margin: 0 auto;}
+#content .scene.signup form > ul.actions {margin: 0 auto; width: 35%}
+#content .scene.signup div.signup {width: 35%; margin: 0 auto;}
+#content .scene.signup div.signup p {padding-left: 0;}
+#content .scene.signup p {width: 600px; margin: 0 auto;}
+#content .scene.signup h2 {width: 600px; margin: 0 auto;}
+
+
+/*s-memberships.css*/
+#content .scene.membership ul.info {display: none;}
+#content .scene.membership h1 {margin-bottom: 22px;}
+#content .scene.membership div.article ul.offer li.description {display: none;}
+#content .scene.membership div.article ul.offer li {font-size: 32px;}
+#content .scene.membership div.article ul.offer {padding-bottom: 24px;}
+#content .scene.membership div.related {padding-top: 34px;}
+#content .scene.membership div.related h2 {padding-top: 12px;}
+#content .scene.membership div.related ul.items.membership {padding: 0; margin: 0; list-style-type: none;}
+#content .scene.membership div.related ul.items.membership h3 {padding-top: 12px; padding-bottom: 2px;}
+#content .scene.membership div.related ul.items.membership > li {padding-top: 12px; padding-left: 0;}
+#content .scene.membership div.related ul.items.membership div.description {padding-top: 12px;}
+
+
+/*s-posts.css*/
+#content .scene ul.items.articles li.item.article h3 {padding-left: 8px;}
+#content .scene ul.items.articles li.item.article p {padding-left: 8px;}
+#content .scene ul.items.articles li.item.article > ul.info {display: none;}
+#content .scene div.categories ul.tags li {list-style-type: none; padding: 0;}
+#content .scene div.categories ul.tags {padding: 0;}
+#content .scene ul.items.articles ul.tags li {list-style-type: none;}
+#content .scene ul.items.articles {list-style-type: none; padding-left: 0; margin-left: 0;}
+#content .scene ul.items.articles ul.tags li {width: auto; font-size: 14px; line-height: 14px; display: inline-block;}
+#content .scene ul.items.articles ul.tags li::after {content: "\00a0|\00a0"; color: #3E8E17;}
+#content .scene ul.items.articles ul.tags li + li {padding-top: 0;}
+#content .scene ul.items.articles ul.tags {padding: 0; margin-left: 0; padding-top: 20px;}
+
+
+/*s-shop.css*/
+#content .scene.shopPayment form.card {margin-top: 32px; width: 40%;}
+#content .scene.shopPayment form.card fieldset {background-color: #f2f2f2;}
+#content .scene.shopPayment form.card fieldset div.field.tel.card {width: 90%; margin: 0 auto; padding-top: 24px;}
+#content .scene.shopPayment form.card fieldset div.field.tel.exp_month {width: 15%; display: inline-block; margin-left: 2.5%;}
+#content .scene.shopPayment form.card fieldset div.field.tel.exp_year {width: 15%; display: inline-block;}
+#content .scene.shopPayment form.card fieldset div.field.cvc {display: inline-block; width: 20%;}
+#content .scene.shopPayment form.card fieldset span.slash {font-size: 20px; vertical-align: middle;}
+#content .scene.shopPayment form.card ul.actions {width: 100%; margin-left: 0; padding-left: 0; margin-top: 12px;}
+#content .scene.shopPayment form.card div.fan {display: inline-block; background-color: #f2f2f2f2; padding: 6px calc(2.5% + 10px); margin-right: 12px;}
+#content .scene.shopPayment form.card div.fan.mobilepay_fan {background-color: #bbbbbb;}
+#content .scene.shopPayment form.card div.payment_explanation {display: none; background-color: #f2f2f2f2;}
+#content .scene.shopPayment > p {font-size: 12px; line-height: 12px; padding-bottom: 0;}
+#content .scene.shopPayment > h1 + p {padding: 12px; font-size: 14px;}
+#content .scene.shopPayment form {padding-top: 50px; margin: 0 auto;}
+#content .scene.shopPayment ul.actions li.forgot {line-height: 22px;}
+#content .scene.shopPayment form .field {width: 35%; margin: 0 auto;}
+#content .scene.shopPayment form > ul.actions {margin: 0 auto; width: 35%}
+#content .scene.shopPayment p {width: 40%; margin: 0 auto;}
+#content .scene.shopPayment h2 {width: 40%; margin: 0 auto;}
+
+/*s-cart.css*/
+#content .scene.cart 
 
