@@ -100,13 +100,13 @@ if($item) {
 					data-readstate="<?= $item["readstate"] ?>"
 					>
 
-					<h3 itemprop="headline"><a href="/bliv-medlem/<?= $item["sindex"] ?>"><?= strip_tags($item["name"]) ?></a></h3>
+					<h3 itemprop="headline"><a href="/bliv-medlem/medlemskaber/<?= $item["sindex"] ?>"><?= strip_tags($item["name"]) ?></a></h3>
 
 
 					<?= $HTML->frontendOffer($item, SITE_URL."/bliv-medlem") ?>
 
 
-					<?= $HTML->articleInfo($item, "/bliv-medlem/".$item["sindex"], [
+					<?= $HTML->articleInfo($item, "/bliv-medlem/medlemskaber/".$item["sindex"], [
 						"media" => $media
 					]) ?>
 

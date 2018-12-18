@@ -57,7 +57,6 @@ $email = $model->getProperty("email", "value");
 <? endif; ?>
 
 <?= $model->formStart("save", array("class" => "signup labelstyle:inject")) ?>
-<?= $model->input("maillist", array("type" => "hidden", "value" => "Nyheder")); ?>
 
 <? if(message()->hasMessages(array("type" => "error"))): ?>
 	<p class="errormessage">
@@ -77,6 +76,7 @@ $email = $model->getProperty("email", "value");
 		<?= $model->input("password", array("label" => "password", "hint_message" => "Indtast et password.", "error_message" => "Dit password skal være mellem 8 og 20 karakterer.")); ?>
 		<?= $model->input("department_id", array("type" => "select", "label" => "Vælg lokalafdeling", "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),)); ?>
 		<?= $model->input("terms", array("label" => 'Jeg accepterer <a href="/persondata" target="_blank">vilkår og betingelser</a>')); ?>
+		<?= $model->input("maillist", array("type" => "checkbox", "label" => "Vil du modtage nyhedsbreve?", "value" => "Nyheder", "checked" => true)); ?>
 	</fieldset>
 
 	<ul class="actions">
