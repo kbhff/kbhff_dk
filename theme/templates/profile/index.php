@@ -1,29 +1,35 @@
 <?php
 $UC = new User();
+$SC = new Shop();
 $user = $UC->getKbhffUser();
 $department = $UC->getUserDepartment();
+
+$is_member = $user["membership"]["id"];
+$is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"]["payment_status"] < 2 ? true : false;
+
 ?>
 
-<?	if(message()->hasMessages()): ?>
-		<p class="errormessage">
-<?		$messages = message()->getMessages(array("type" => "error"));
-		foreach($messages as $message): ?>
-			<?= $message ?><br>
-<?		endforeach;?>
-		</p>
-		<p class="message">
-<?		$messages = message()->getMessages(array("type" => "message"));
-		foreach($messages as $message): ?>
-			<?= $message ?><br>
-<?		endforeach;?>
-		</p>
-<?	message()->resetMessages(); ?>
-
-<?	endif; ?>
 
 
 <div class="scene profile i:profile">
 	<div class="header_image i:header_image variant:1 format:jpg"></div>
+
+<?	if(message()->hasMessages()): ?>
+	<p class="errormessage">
+<?		$messages = message()->getMessages(array("type" => "error"));
+	foreach($messages as $message): ?>
+		<?= $message ?><br>
+<?		endforeach;?>
+	</p>
+	<p class="message">
+<?		$messages = message()->getMessages(array("type" => "message"));
+	foreach($messages as $message): ?>
+		<?= $message ?><br>
+<?		endforeach;?>
+	</p>
+<?	message()->resetMessages(); ?>
+
+<?	endif; ?>
 
 	<div class="c-wrapper">
 
@@ -148,28 +154,28 @@ $department = $UC->getUserDepartment();
 					<div class="fields">
 						<div class="membership-info">
 							<p class="over">Medlemsnummer</p>
-							<p class="under"><?= $user["membership"]["id"] ? $user["membership"]["id"] : "(ingen)" ?></p>
+							<p class="under"><?= $is_member ? $user["membership"]["id"] : "(intet)" ?></p>
 						</div>
 
 						<div class="membership-info">
 							<p class="over">Kontingent</p>
-							<p class="under system-warning">Ikke betalt</p>
+							<p class="under <?= $is_member ? ["unpaid", "partial", "paid"][$user["membership"]["order"]["payment_status"]] : "" ?>"><?= $is_member ? $SC->payment_statuses_dk[$user["membership"]["order"]["payment_status"]] : "(intet)" ?></p>
 						</div>
 
 						<div class="membership-info">
 							<p class="over">Medlemstype</p>
-							<p class="under"><?= $user["membership"]["item"] ? $user["membership"]["item"]["sindex"] : "(ingen)" ?></p>
+							<p class="under"><?= $is_member ? $user["membership"]["item"]["name"] : "(ingen)" ?></p>
 						</div>
 
 						<div class="membership-info">
 							<p class="over">Lokalafdeling</p>
-							<p class="under"><?= $department["name"] ?></p>
+							<p class="under"><?= $department["name"] ? $department["name"] : "(ingen)" ?></p>
 						</div>
 
 						<ul class="actions">
 							<li class="change-info third-width"><a href="/profil/afdeling" class="button">Ret</a></li>
 							<li class="cancel-membership third-width"><a href="/profil/opsig" class="button warning">Opsig</a></li>
-							<li class="pay-membership third-width"><a href="#" class="button primary">Betal</a></li>
+							<li class="pay-membership third-width"><a href="/profil/mine-ordrer<?= $is_membership_paid ? "" : "/".$user["membership"]["order"]["order_no"] ?>" class="button<?= $is_member && !$is_membership_paid ? " primary" : "" ?>"><?= $is_member && !$is_membership_paid ? "Betal" : "Ordrer" ?></a></li>
 						</ul>
 					</div>
 
