@@ -15,7 +15,6 @@ document.write('<script type="text/javascript" src="/js/lib/desktop/i-delete_use
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-signupfees.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-signup.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-comments.js"></script>');
-document.write('<script type="text/javascript" src="/js/lib/desktop/i-payment.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-stripe.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-member_help_signup.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-member_help_payment.js"></script>');

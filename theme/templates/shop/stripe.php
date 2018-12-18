@@ -47,7 +47,7 @@ else {
 //$this->headerIncludes(["https://checkout.stripe.com/checkout.js"]);
 
 ?>
-<div class="scene shopPayment stripe <?= $order ? "i:stripe i:payment" : "i:scene" ?>">
+<div class="scene shopPayment stripe <?= $order ? "i:stripe" : "i:scene" ?>">
 
 <? if($order): ?>
 

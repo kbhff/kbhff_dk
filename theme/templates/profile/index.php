@@ -148,7 +148,7 @@ $department = $UC->getUserDepartment();
 					<div class="fields">
 						<div class="membership-info">
 							<p class="over">Medlemsnummer</p>
-							<p class="under">54321</p>
+							<p class="under"><?= $user["membership"]["id"] ? $user["membership"]["id"] : "(ingen)" ?></p>
 						</div>
 
 						<div class="membership-info">
@@ -158,7 +158,7 @@ $department = $UC->getUserDepartment();
 
 						<div class="membership-info">
 							<p class="over">Medlemstype</p>
-							<p class="under">Frivillig</p>
+							<p class="under"><?= $user["membership"]["item"] ? $user["membership"]["item"]["sindex"] : "(ingen)" ?></p>
 						</div>
 
 						<div class="membership-info">

@@ -65,13 +65,13 @@ if(count($action) == 4) {
 
 	<h1>Tak for betalingen.</h1>
 
-	<h2>Din betaling på <?= formatPrice(["price" => $payment["payment_amount"], "currency" => $payment["currency"]]) ?> has been processed successfully.</h2>
+	<h2>Din betaling på <?= formatPrice(["price" => $payment["payment_amount"], "currency" => $payment["currency"]]) ?> er gået igennem.</h2>
 
 <? endif; ?>
 
 
 <? if($is_membership): ?>
-	<p>Nu kan du begynde at bestille dine grøntsager.</p>
+	<p>Du er medlem, og du kan begynde at bestille dine grøntsager.</p>
 <? endif; ?>
 
 
