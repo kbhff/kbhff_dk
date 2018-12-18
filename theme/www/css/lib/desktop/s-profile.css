@@ -43,6 +43,7 @@
 
 #content div.profile .membership fieldset {
 	float: right;
+	width: 50%;
 }
 
 #content div.profile .membership .field {
@@ -50,7 +51,6 @@
 	padding-top: 5px;
 	padding-left: 12px;
 	padding-right: 12px;
-	width: 90%;
 }
 
 #content div.profile .orders,
