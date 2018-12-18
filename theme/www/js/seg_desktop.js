@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-06 15:35:30
+asset-builder @ 2018-12-18 16:03:44
 */
 
 /*seg_desktop_include.js*/
@@ -994,18 +994,14 @@ u.easings = new function() {
 }
 Util.Events = u.e = new function() {
 	this.event_pref = typeof(document.ontouchmove) == "undefined" || (navigator.maxTouchPoints > 1 && navigator.userAgent.match(/Windows/i)) ? "mouse" : "touch";
-	if(navigator.maxTouchPoints > 1) {
-		if((typeof(document.ontouchmove) == "undefined" && typeof(document.onmousemove) == "undefined") || (document.ontouchmove === null && document.onmousemove === null)) {
-			this.event_support = "multi";
-		}
+    if ((obj(document.ontouchmove) && obj(document.ontouchmove)) || (fun(document.ontouchmove) && fun(document.ontouchmove))) {
+        this.event_support = "multi";
+    }
+    else if (obj(document.onmousemove) || fun(document.onmousemove)) {
+		this.event_support = "mouse";
 	}
-	if(!this.event_support) {
-		if(typeof(document.ontouchmove) == "undefined") {
-			this.event_support = "mouse";
-		}
-		else {
-			this.event_support = "touch";
-		}
+	else {
+		this.event_support = "touch";
 	}
 	this.events = {
 		"mouse": {
@@ -2602,9 +2598,15 @@ Util.Form = u.f = new function() {
 			}
 			else if(u.hc(iN.field, "tel")) {
 				pattern = iN.getAttribute("pattern");
+				compare_to = iN.getAttribute("data-compare-to");
 				if(
-					!pattern && iN.val().match(/^([\+0-9\-\.\s\(\)]){5,18}$/) ||
-					(pattern && iN.val().match("^"+pattern+"$"))
+					(
+						!pattern && iN.val().match(/^([\+0-9\-\.\s\(\)]){5,18}$/)
+						||
+						(pattern && iN.val().match("^"+pattern+"$"))
+					)
+					&&
+					(!compare_to || iN.val() == iN._form.fields[compare_to].val())
 				) {
 					this.fieldCorrect(iN);
 				}
@@ -2613,9 +2615,16 @@ Util.Form = u.f = new function() {
 				}
 			}
 			else if(u.hc(iN.field, "email")) {
+				compare_to = iN.getAttribute("data-compare-to");
+				pattern = iN.getAttribute("pattern");
 				if(
-					!pattern && iN.val().match(/^([^<>\\\/%$])+\@([^<>\\\/%$])+\.([^<>\\\/%$]{2,20})$/) ||
-					(pattern && iN.val().match("^"+pattern+"$"))
+					(
+						!pattern && iN.val().match(/^([^<>\\\/%$])+\@([^<>\\\/%$])+\.([^<>\\\/%$]{2,20})$/)
+						 ||
+						(pattern && iN.val().match("^"+pattern+"$"))
+					)
+					&&
+					(!compare_to || iN.val() == iN._form.fields[compare_to].val())
 				) {
 					this.fieldCorrect(iN);
 				}
@@ -4661,6 +4670,7 @@ Util.Objects["page"] = new function() {
 				u.e.addWindowEvent(this, "resize", this.resized);
 				u.e.addWindowEvent(this, "scroll", this.scrolled);
 				this.initHeader();
+				this.initNavigation();
 				this.resized();
 			}
 		}
@@ -4670,6 +4680,46 @@ Util.Objects["page"] = new function() {
 			var frontpage_link = u.qs("li.front a", this.nN);
 			if(frontpage_link) {
 				frontpage_link.parentNode.remove();
+			}
+		}
+		page.initNavigation = function() {
+			page.nN_nodes = u.qsa("li.nav-node-primary", page.nN);
+			var z_index_counter = 100;
+			for (var i = 0; i < page.nN_nodes.length; i++) {
+				var nav_node = page.nN_nodes[i];
+				nav_node.subnav = u.qs("ul", nav_node);
+				if (nav_node.subnav) {
+					u.e.hover(nav_node, {
+						"delay":"200"
+					});
+					nav_node.is_over = false;
+					nav_node.over = function(event) {
+						nav_node.is_over = true;
+						z_index_counter++;
+						u.ass(this.subnav, {
+							"display":"block",
+							"z-index": z_index_counter
+						});
+						u.a.transition(this.subnav, "all 0.3s ease-out")
+						u.ass(this.subnav, {
+							"opacity":"1"
+						});
+					}
+					nav_node.out = function(event) {
+						nav_node.is_over = false;
+						this.subnav.transitioned = function() {
+							if(!nav_node.is_over) {
+								u.ass(this, {
+									"display":"none"
+								});
+							}
+						};
+						u.a.transition(this.subnav, "all 0.15s ease-out");
+						u.ass(this.subnav, {
+							"opacity":"0"
+						});
+					}
+				}
 			}
 		}
 		page.ready();
@@ -4791,6 +4841,158 @@ u.overlay = function (_options) {
 	}
 	overlay._resized();
 	return overlay;
+}
+
+
+/*beta-u-paymentcards.js*/
+u.paymentCards = new function() {
+	this.payment_cards = [
+		{
+			"type": 'maestro',
+			"patterns": [5018, 502, 503, 506, 56, 58, 639, 6220, 67],
+			"format": /(\d{1,4})/g,
+			"card_length": [12,13,14,15,16,17,18,19],
+			"cvc_length": [3],
+			"luhn": true
+		},
+		{
+			"type": 'forbrugsforeningen',
+			"patterns": [600],
+			"format": /(\d{1,4})/g,
+			"card_length": [16],
+			"cvc_length": [3],
+			"luhn": true,
+		},
+		{
+			"type": 'dankort',
+			"patterns": [5019],
+			"format": /(\d{1,4})/g,
+			"card_length": [16],
+			"cvc_length": [3],
+			"luhn": true
+		},
+		{
+			"type": 'visa',
+			"patterns": [4],
+			"format": /([\d]{1,4})([\d]{1,4})?([\d]{1,4})?([\d]{1,4})?/,
+			"card_length": [13, 16],
+			"cvc_length": [3],
+			"luhn": true
+		},
+		{
+			"type": 'mastercard',
+			"patterns": [51, 52, 53, 54, 55, 22, 23, 24, 25, 26, 27],
+			"format": /(\d{1,4})/g,
+			"card_length": [16],
+			"cvc_length": [3],
+			"luhn": true
+		},
+		{
+			"type": 'amex',
+			"patterns": [34, 37],
+			"format": /(\d{1,4})([\d]{0,6})?(\d{1,5})?/,
+			"card_length": [15],
+			"cvc_length": [3,4],
+			"luhn": true
+		}
+	];
+	this.validateCardNumber = function(card_number) {
+		var card = this.getCardTypeFromNumber(card_number);
+		if(card && parseInt(card_number) == card_number) {
+			var i, allowed_length;
+			for(i = 0; i < card.card_length.length; i++) {
+				allowed_length = card.card_length[i];
+				if(card_number.length == allowed_length) {
+					if(card.luhn) {
+						return this.luhnCheck(card_number);
+					}
+					else {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	this.validateExpDate = function(month, year) {
+		if(
+			this.validateExpMonth(month) && 
+			this.validateExpYear(year) && 
+			new Date(year, month-1) >= new Date(new Date().getFullYear(), new Date().getMonth())
+		) {
+			return true;
+		}
+		return false;
+	}
+	this.validateExpMonth = function(month) {
+		if(month && parseInt(month) == month && month >= 1 && month <= 12) {
+			return true;
+		}
+		return false;
+	}
+	this.validateExpYear = function(year) {
+		if(year && parseInt(year) == year && new Date(year, 0) >= new Date(new Date().getFullYear(), 0)) {
+			return true;
+		}
+		return false;
+	}
+	this.validateCVC = function(cvc, card_number) {
+		var cvc_length = [3,4];
+		if(card_number && parseInt(card_number) == card_number) {
+			var card = this.getCardTypeFromNumber(card_number);
+			if(card) {
+				cvc_length = card.cvc_length;
+			}
+		}
+		if(cvc && parseInt(cvc) == cvc) {
+			var i, allowed_length;
+			for(i = 0; i < cvc_length.length; i++) {
+				allowed_length = cvc_length[i];
+				if(cvc.toString().length == allowed_length) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	this.getCardTypeFromNumber = function(card_number) {
+		var i, j, card, pattern, regex;
+		for(i = 0; card = this.payment_cards[i]; i++) {
+			for(j = 0; j < card.patterns.length; j++) {
+				pattern = card.patterns[j];
+				if(card_number.match('^' + pattern)) {
+					return card;
+				}
+			}
+		}
+		return false;
+	}
+	this.formatCardNumber = function(card_number) {
+		var card = this.getCardTypeFromNumber(card_number);
+		if(card) {
+			var matches = card_number.match(card.format);
+			if(matches) {
+				if(matches.length > 1 && matches[0] == card_number) {
+					matches.shift();
+					card_number = matches.join(" ").trim();
+				}
+				else {
+					card_number = matches.join(" ");
+				}
+			}
+		}
+		return card_number;
+	}
+	this.luhnCheck = function(card_number) {
+		var ca, sum = 0, mul = 1;
+		var len = card_number.length;
+		while (len--) {
+			ca = parseInt(card_number.charAt(len),10) * mul;
+			sum += ca - (ca>9)*9;
+			mul ^= 3;
+		};
+		return (sum%10 === 0) && (sum > 0);
+	};
 }
 
 
@@ -4994,14 +5196,20 @@ Util.Objects["signupfees"] = new function() {
 		}
 		scene.ready = function() {
 			u.bug("scene.ready:", this);
-			var signupfees = u.qsa("ul.offer");
+			var signupfees = u.qsa("ul.offer li.description");
+			console.log(signupfees)
 			var largestHeight = 0;
 			for (var i = 0; i < signupfees.length; i++) {
 				if (u.actualHeight(signupfees[i]) > largestHeight) {
-					largestHeight = u.actualHeight(signupfees[i]);
+					var largestHeight = u.actualHeight(signupfees[i]);
+					console.log(largestHeight)
+					console.log(i)
 				}
 			}
-			u.ass(signupfees[1], {"height":largestHeight+"px"});
+			var j = signupfees.length;
+			while (j--) {
+				u.ass(signupfees[j], {"height":largestHeight+"px"})
+			}
 		}
 		scene.ready();
 	}
@@ -5025,10 +5233,292 @@ Util.Objects["signup"] = new function() {
 			if(signup_form) {
 				u.f.init(signup_form);
 			}
-			page.acceptCookies();
+			var verify_form = u.qs("form.verify_code", this);
+			if(verify_form) {
+				u.f.init(verify_form);
+			}
+			// 
 			page.resized();
 		}
 		scene.ready();
+	}
+}
+
+
+/*i-comments.js*/
+Util.Objects["comments"] = new function() {
+	this.init = function(div) {
+		div.item_id = u.cv(div, "item_id");
+		div.list = u.qs("ul.comments", div);
+		div.comments = u.qsa("li.comment", div.list);
+		div.header = u.qs("h2", div);
+		div.header.div = div;
+		u.addExpandArrow(div.header);
+		u.ce(div.header);
+		div.header.clicked = function() {
+			if(u.hc(this.div, "open")) {
+				u.rc(this.div, "open");
+				u.addExpandArrow(this);
+				u.saveCookie("comments_open_state", 0, {"path":"/"});
+			}
+			else {
+				u.ac(this.div, "open");
+				u.addCollapseArrow(this);
+				u.saveCookie("comments_open_state", 1, {"path":"/"});
+			}
+		}
+		div.comments_open_state = u.getCookie("comments_open_state", {"path":"/"});
+		if(div.comments_open_state == 1) {
+			div.header.clicked();
+		}
+		div.initComment = function(node) {
+			node.div = this;
+		}
+		div.csrf_token = div.getAttribute("data-csrf-token");
+		div.add_comment_url = div.getAttribute("data-comment-add");
+		if(div.add_comment_url && div.csrf_token) {
+			div.actions = u.ae(div, "ul", {"class":"actions"});
+			div.bn_comment = u.ae(u.ae(div.actions, "li", {"class":"add"}), "a", {"html":u.txt["add_comment"], "class":"button primary comment"});
+			div.bn_comment.div = div;
+			u.ce(div.bn_comment);
+			div.bn_comment.clicked = function() {
+				var actions, bn_add, bn_cancel;
+				u.as(this.div.actions, "display", "none");
+				this.div.form = u.f.addForm(this.div, {"action":this.div.add_comment_url+"/"+this.div.item_id, "class":"add labelstyle:inject"});
+				this.div.form.div = div;
+				u.ae(this.div.form, "input", {"type":"hidden","name":"csrf-token", "value":this.div.csrf_token});
+				u.f.addField(this.div.form, {"type":"text", "name":"item_comment", "label":u.txt["comment"]});
+				actions = u.ae(this.div.form, "ul", {"class":"actions"});
+				bn_add = u.f.addAction(actions, {"value":u.txt["add_comment"], "class":"button primary update", "name":"add"});
+				bn_add.div = div;
+				bn_cancel = u.f.addAction(actions, {"value":u.txt["cancel"], "class":"button cancel", "type":"button", "name":"cancel"});
+				bn_cancel.div = div;
+				u.f.init(this.div.form);
+				this.div.form.submitted = function() {
+					this.response = function(response) {
+						if(response.cms_status == "success" && response.cms_object) {
+							if(!div.list) {
+								var p = u.qs("p", div);
+								if(p) {
+									p.parentNode.removeChild(p);
+								}
+								div.list = u.ie(div, "ul", {"class":"comments"});
+								div.insertBefore(div.list, div.actions);
+							}
+							var comment_li = u.ae(this.div.list, "li", {"class":"comment comment_id:"+response.cms_object["id"]});
+							var info = u.ae(comment_li, "ul", {"class":"info"});
+							u.ae(info, "li", {"class":"created_at", "html":response.cms_object["created_at"]});
+							u.ae(info, "li", {"class":"author", "html":response.cms_object["nickname"]});
+							u.ae(comment_li, "p", {"class":"comment", "html":response.cms_object["comment"]})
+							this.div.initComment(comment_li);
+							this.parentNode.removeChild(this);
+							u.as(this.div.actions, "display", "");
+						}
+					}
+					u.request(this, this.action, {"method":"post", "params":u.f.getParams(this)});
+				}
+				u.ce(bn_cancel);
+				bn_cancel.clicked = function(event) {
+					u.e.kill(event);
+					this.div.form.parentNode.removeChild(this.div.form);
+					u.as(this.div.actions, "display", "");
+				}
+			}
+		}
+		else {
+			u.ae(div, "p", {"html": (u.txt["login_to_comment"] ? u.txt["login_to_comment"] : "Login or signup to comment")});
+		}
+		var i, node;
+		for(i = 0; node = div.comments[i]; i++) {
+			div.initComment(node);
+		}
+	}
+}
+
+
+/*i-payment.js*/
+Util.Objects["payment"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			u.bug("scene.ready:", this);
+			var payment_form = u.qs("form.card");
+			var card_fieldset = u.qs("fieldset")
+			var payment_explanation = u.ie(payment_form, "div", {"class":"payment_explanation","html":"Her står en tekst der fortæller dig at du skal ned i afdelingen for at betale dette og at du kan klikke 'spring over'"})
+			var mobilepay_fan = u.ie(payment_form, "div", {"class":"fan mobilepay_fan","html":"Mobilepay/Kontant"});
+			var visa_fan = u.insertElement(payment_form, "div", {"class":"fan visa_fan","html":"Dankort/VISA"});
+			var fieldset_height = u.actualHeight(card_fieldset);
+			u.e.click(mobilepay_fan);
+			mobilepay_fan.clicked = function () {
+				u.as(card_fieldset, "display", "none");
+				u.ass(payment_explanation, {"display":"block", "height":fieldset_height+"px"});
+				u.as(visa_fan, "backgroundColor", "#BBBBBB");
+				u.as(mobilepay_fan, "backgroundColor", "#f2f2f2f2");
+			}
+			u.e.click(visa_fan);
+			visa_fan.clicked = function () {
+				u.as(payment_explanation, "display", "none");
+				u.as(card_fieldset, "display", "block");
+				u.as(mobilepay_fan, "backgroundColor", "#BBBBBB");
+				u.as(visa_fan, "backgroundColor", "#f2f2f2f2")
+			}
+		}
+		scene.ready();
+	}
+}
+
+
+/*i-stripe.js*/
+Util.Objects["stripe"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			page.cN.scene = this;
+			this.card_form = u.qs("form.card", this);
+			u.f.customValidate["card"] = function(iN) {
+				var card_number = iN.val().replace(/ /g, "");
+				if(u.paymentCards.validateCardNumber(card_number)) {
+					u.f.fieldCorrect(iN);
+					u.f.validate(iN._form.fields["card_cvc"]);
+				}
+				else {
+					u.f.fieldError(iN);
+				}
+			}
+			u.f.customValidate["exp_month"] = function(iN) {
+				var month = iN.val();
+				var year = iN._form.fields["card_exp_year"].val();
+				if(year && parseInt(year) < 100) {
+					year = parseInt("20"+year);
+				}
+				if(u.paymentCards.validateExpMonth(month)) {
+					u.f.fieldCorrect(iN);
+				}
+				else {
+					u.f.fieldError(iN);
+				}
+				if(!iN.validating_year) {
+					iN._form.fields["card_exp_year"].validating_month = true;
+					u.f.validate(iN._form.fields["card_exp_year"]);
+					iN._form.fields["card_exp_year"].validating_month = false;
+				}
+			}
+			u.f.customValidate["exp_year"] = function(iN) {
+				var year = iN.val();
+				var month = iN._form.fields["card_exp_month"].val();
+				if(year && parseInt(year) < 100) {
+					year = parseInt("20"+year);
+				}
+				if(!iN.validating_month) {
+					iN._form.fields["card_exp_month"].validating_year = true;
+					u.f.validate(iN._form.fields["card_exp_month"]);
+					iN._form.fields["card_exp_month"].validating_year = false;
+				}
+				if(u.paymentCards.validateExpDate(month, year)) {
+					u.f.fieldCorrect(iN);
+				}
+				else if(!month && u.paymentCards.validateExpYear(year)) {
+					u.rc(iN, "correct");
+					u.rc(iN.field, "correct");
+				}
+				else {
+					u.f.fieldError(iN);
+					u.f.fieldError(iN._form.fields["card_exp_month"]);
+				}
+			}
+			u.f.customValidate["cvc"] = function(iN) {
+				var cvc = iN.val();
+				var card_number = iN._form.fields["card_number"].val().replace(/ /g, "");
+				if(u.paymentCards.validateCVC(cvc, card_number)) {
+					u.f.fieldCorrect(iN);
+				}
+				else {
+					u.f.fieldError(iN);
+				}
+			}
+			u.f.init(this.card_form);
+			this.card_form.submitted = function() {
+				if(!this.is_submitting) {
+					this.is_submitting = true;
+					this.DOMsubmit();
+				}
+			}
+			this.card_form.fields["card_number"].updated = function(iN) {
+				var value = this.val();
+				this.value = u.paymentCards.formatCardNumber(value.replace(/ /g, ""));
+				var card = u.paymentCards.getCardTypeFromNumber(value);
+				if(card && card.type != this.current_card) {
+					if(this.current_card) {
+						u.rc(this, this.current_card);
+					}
+					this.current_card = card.type;
+					u.ac(this, this.current_card);
+				}
+				else if(!card) {
+					if(this.current_card) {
+						u.rc(this, this.current_card);
+					}
+				}
+			}
+			this.card_form.fields["card_exp_year"].changed = function(iN) {
+				var year = parseInt(this.val());
+				if(year > 99) {
+					if(year > 2000 && year < 2100) {
+						this.val(year-2000);
+					}
+				}
+			}
+			this.card_form.fields["card_exp_month"].changed = function(iN) {
+				var month = parseInt(this.val());
+				if(month < 10) {
+					this.val("0"+month);
+				}
+			}
+			// 
+			page.resized();
+		}
+		scene.ready();
+	}
+}
+
+/*i-member_help_signup.js*/
+Util.Objects["member_help_signup"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			page.cN.scene = this;
+			var signup_form = u.qs("form.member_help_signup", this);
+			var place_holder = u.qs("div.articlebody .placeholder.signup", this);
+			if(signup_form && place_holder) {
+				place_holder.parentNode.replaceChild(signup_form, place_holder);
+			}
+			if(signup_form) {
+				u.f.init(signup_form);
+			}
+			// 
+			page.resized();
+		}
+		scene.ready();
+	}
+}
+
+
+
+/*i-header_image.js*/
+Util.Objects["header_image"] = new function() {
+	this.init = function(div) {
+			var variant = u.cv(div, "variant");
+			var format = u.cv(div, "format");
+			u.ae(div, "img", {class:"fit-width", src:"/img/banners/desktop/pi_" + variant + "." + format});
 	}
 }
 
@@ -5292,5 +5782,116 @@ Util.Objects["forgot"] = new function() {
 		}
 		scene.ready();
 	}
+}
+
+
+/*u-expandarrow.js*/
+u.addExpandArrow = function(node) {
+	if(node.collapsearrow) {
+		node.collapsearrow.parentNode.removeChild(node.collapsearrow);
+		node.collapsearrow = false;
+	}
+	node.expandarrow = u.svg({
+		"name":"expandarrow",
+		"node":node,
+		"class":"arrow",
+		"width":17,
+		"height":17,
+		"shapes":[
+			{
+				"type": "line",
+				"x1": 2,
+				"y1": 2,
+				"x2": 7,
+				"y2": 9
+			},
+			{
+				"type": "line",
+				"x1": 6,
+				"y1": 9,
+				"x2": 11,
+				"y2": 2
+			}
+		]
+	});
+}
+u.addCollapseArrow = function(node) {
+	if(node.expandarrow) {
+		node.expandarrow.parentNode.removeChild(node.expandarrow);
+		node.expandarrow = false;
+	}
+	node.collapsearrow = u.svg({
+		"name":"collapsearrow",
+		"node":node,
+		"class":"arrow",
+		"width":17,
+		"height":17,
+		"shapes":[
+			{
+				"type": "line",
+				"x1": 2,
+				"y1": 9,
+				"x2": 7,
+				"y2": 2
+			},
+			{
+				"type": "line",
+				"x1": 6,
+				"y1": 2,
+				"x2": 11,
+				"y2": 9
+			}
+		]
+	});
+}
+u.addPreviousArrow = function(node) {
+	node.arrow = u.svg({
+		"name":"prevearrow",
+		"node":node,
+		"class":"arrow",
+		"width":17,
+		"height":17,
+		"shapes":[
+			{
+				"type": "line",
+				"x1": 9,
+				"y1": 2,
+				"x2": 2,
+				"y2": 7
+			},
+			{
+				"type": "line",
+				"x1": 2,
+				"y1": 6,
+				"x2": 9,
+				"y2": 11
+			}
+		]
+	});
+}
+u.addNextArrow = function(node) {
+	node.arrow = u.svg({
+		"name":"nextearrow",
+		"node":node,
+		"class":"arrow",
+		"width":17,
+		"height":17,
+		"shapes":[
+			{
+				"type": "line",
+				"x1": 2,
+				"y1": 2,
+				"x2": 9,
+				"y2": 7
+			},
+			{
+				"type": "line",
+				"x1": 9,
+				"y1": 6,
+				"x2": 2,
+				"y2": 11
+			}
+		]
+	});
 }
 
