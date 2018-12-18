@@ -16,7 +16,7 @@ $page->pageTitle("Persondata");
 
 
 $page->page(array(
-	"templates" => "pages/personal_data.php"
+	"templates" => "pages/person_data.php"
 	)
 );
 exit();
