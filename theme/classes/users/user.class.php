@@ -67,6 +67,11 @@ class User extends UserCore {
 
 	}
 
+	// save user department on save user
+	function postSave() {
+		$this->updateUserDepartment(["updateUserDepartment"]);
+	}
+
 	function updateDepartment($action) {
 		
 		
@@ -165,7 +170,6 @@ class User extends UserCore {
 			else {
 				// Set department
 				$sql = "INSERT INTO ".SITE_DB.".user_department SET department_id = $department_id, user_id = $user_id";
-				
 				if($query->sql($sql)) {
 					message()->addMessage("Department assigned");
 					return true;
