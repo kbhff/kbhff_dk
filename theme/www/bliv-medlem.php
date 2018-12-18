@@ -90,7 +90,7 @@ if($action) {
 		else if(isset($user["status"]) && $user["status"] == "USER_EXISTS") {
 
 			// redirect to leave post state
-			message()->addMessage("Det ser ud til at du allerede er registreret som bruger. Prøv at log ind.", array("type" => "error"));
+			message()->addMessage("Det ser ud til at du allerede er registreret som bruger. Prøv at logge ind.", array("type" => "error"));
 
 			header("Location: /login");
 			exit();
@@ -189,7 +189,7 @@ if($action) {
 
 			// user han already been verified
 			if($result && isset($result["status"]) && $result["status"] == "USER_VERIFIED") {
-				message()->addMessage("Du er allerde verificeret. Pøv at logge ind.", array("type" => "error"));
+				message()->addMessage("Du er allerede verificeret. Pøv at logge ind.", array("type" => "error"));
 				header("Location: /login");
 				exit();
 			}
