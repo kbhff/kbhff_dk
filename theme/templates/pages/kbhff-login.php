@@ -14,9 +14,11 @@ session()->reset("temp-username");
 ?>
 <div class="scene login i:login">
 	<h1>Log ind</h1>
-	<p>I medlemssystemet kan du bestille varer, booke vagter og administrere dit medlemsskab. <strong>Velkommen indenfor!</strong></p>
-
-	<p>Du kan bruge e-mailadresse, telefonnummer eller medlemsnummer som brugernavn til at logge ind.</p>
+	<p>
+		I medlemssystemet kan du bestille varer, booke vagter og administrere dit medlemsskab.
+		Du kan bruge e-mailadresse, telefonnummer eller medlemsnummer som brugernavn til at logge ind.
+		<strong>Velkommen indenfor!</strong>
+	</p>
 
 	<?= $model->formStart("dual", array("class" => "login")) ?>
 

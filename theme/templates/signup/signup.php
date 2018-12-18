@@ -76,7 +76,7 @@ $email = $model->getProperty("email", "value");
 		<?= $model->input("confirm_email", array("label" => "Gentag din email", "required" => true, "hint_message" => "Indtast din email igen.", "error_message" => "De to email adresser er ikke ens.")); ?>
 		<?= $model->input("password", array("label" => "password", "hint_message" => "Indtast et password.", "error_message" => "Dit password skal være mellem 8 og 20 karakterer.")); ?>
 		<?= $model->input("department_id", array("type" => "select", "label" => "Vælg lokalafdeling", "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),)); ?>
-		<?= $model->input("terms"); ?>
+		<?= $model->input("terms", array("label" => 'Jeg accepterer <a href="/persondata" target="_blank">vilkår og betingelser</a>')); ?>
 	</fieldset>
 
 	<ul class="actions">

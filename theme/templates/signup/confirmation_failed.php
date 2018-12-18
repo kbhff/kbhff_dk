@@ -54,7 +54,7 @@ session()->reset("signup_email");
 	</div>
 <? else:?>
 	<h1>Hvad??</h1>
-	<p><?= $username ?> kunne ikke verificeres.</p>
+	<p>Du kunne ikke verificeres.</p>
 <? endif; ?>
 
 </div>

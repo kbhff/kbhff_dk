@@ -53,7 +53,7 @@ else {
 <? if($order): ?>
 
 
-	<h1>Opret nyt medlemskab</h1>
+	<h1>Betal dit medlemskab</h1>
 	<p>Indmeldelsesgebyr: <?= $total_order_price["price"] ?>.</p>
 	<?= $model->formStart("/butik/betaling/".$order_no."/stripe/process", array("class" => "card")) ?>
 		<? //= $model->input("reference", array("type" => "hidden", "value" => $reference)); ?>
@@ -67,16 +67,19 @@ else {
 	</fieldset>
 
 	<ul class="actions">
-		<li class="cancel"><a href="/" class="button">Annullér</a></li>
-		<li class="cancel"><a href="/" class="button">Spring over</a></li>
 		<?= $model->submit("Betal ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
 	</ul>
 	<?= $model->formEnd() ?>
 
 	<p>Betalingsreference: <?= $reference ?>.</p>
 	<p class="note">
-		Vi bruger <a href="https://stripe.com" target="_blank">Stripe</a> til at behandle betalingen. <br />Vi beholder ingen kortinformationer på vores server. <br />All kommunikation er krypteret.
+		Vi bruger <a href="https://stripe.com" target="_blank">Stripe</a> til at behandle betalingen. 
+		<br />Vi beholder ingen kortinformationer på vores server. 
+		<br />All kommunikation er krypteret.<br />
 	</p>
+
+	<p class="skip">Hvis du ikke vil betale nu kan du gøre det senere ved at <a href="/" class="skip">springe over.</a></li>
+
 
 <? else: ?>
 
