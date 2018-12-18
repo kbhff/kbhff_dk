@@ -1,6 +1,7 @@
 document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/seg_desktop.js"></script>');
 
 document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/v0_9_2/src/beta-u-overlay.js"></script>');
+document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/v0_9_2/src/beta-u-paymentcards.js"></script>');
 
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-login.js"></script>');
