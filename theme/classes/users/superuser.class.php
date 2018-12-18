@@ -24,6 +24,19 @@ class SuperUser extends SuperUserCore {
 
 	}
 
+
+	// save user department on save user
+	function postSave($user_id) {
+		$this->updateUserDepartment(["updateUserDepartment", $user_id]);
+	}
+
+
+	// TODO: should be implemented later
+	function updateUserDepartment($action) {
+		
+	}
+
+
 	// shop clerk creates new user via member help
 	function newUserFromMemberHelp($action) {
 
@@ -201,6 +214,13 @@ class SuperUser extends SuperUserCore {
 								// ignore subscription if maillist does not exist
 
 							}
+
+							// itemtype post save handler?
+							// TODO: Consider if failed postSave should have consequences
+							if(method_exists($this, "postSave")) {
+								$this->postSave($user_id);
+							}
+
 
 							message()->resetMessages();
 
