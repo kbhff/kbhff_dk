@@ -206,6 +206,8 @@
 	font-size: 0;
 	width: 100%;
 
+	min-height: 100px;
+
 	/* background: green; */
 }
 
@@ -425,32 +427,3 @@ body > div.overlay .close:after {
 	transform: rotate(-45deg);
 }
 
-
-/* Articles */
-
-#content .scene ul.info {position: relative; z-index: 1; padding-bottom: 26px; padding-right: 0; display: inline-block; vertical-align: top; width: auto; font-size: 0;}
-#content .scene ul.info li {width: auto; font-size: 12px; line-height: 12px; color: #bbbbbb; display: inline-block; vertical-align: top;}
-#content .scene ul.info > li.author:before,
-#content .scene ul.info > li.place:before {content: "\00a0|\00a0"; color: #bbbbbb; display: inline-block; vertical-align: top; font-size: 12px; line-height: 10px; }
-#content .scene ul.info li.main_entity,
-#content .scene ul.info li.url,
-#content .scene ul.info li.publisher,
-#content .scene ul.info li.image_info,
-#content .scene ul.info li.modified_at,
-#content .scene ul.info li.latitude,
-#content .scene ul.info li.longitude {display: none;}
-#content .scene ul.info li + li {padding-top: 0;}
-
-
-
-#content .scene ul.offer,
-#content .scene .articlebody ul.offer {font-size: 0; padding: 0; margin: 0; list-style: none;}
-#content .scene ul.offer li.name,
-#content .scene ul.offer li.currency,
-#content .scene ul.offer li.url {display: none;}
-#content .scene ul.offer li {font-size: 14px; width: auto; display: inline-block; vertical-align: top; padding: 0 5px 0 12px;}
-#content .scene ul.offer li.default {text-decoration: line-through;}
-#content .scene ul.offer li.description {padding-top: 4px; display: block;}
-
-#content .scene ul.offer li.description ul {list-style: disc;}
-#content .scene ul.offer li.description ul li {display: list-item; padding: 0 0 3px; font-size: 13px;}

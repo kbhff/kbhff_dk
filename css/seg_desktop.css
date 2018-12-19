@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-17 16:09:14
+asset-builder @ 2018-12-18 16:02:55
 */
 
 /*seg_desktop_include.css*/
@@ -42,6 +42,37 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 	font-weight: 400;
 	font-style: normal;
 }
+
+
+/*s-article.css*/
+#content .scene div.article h1 {margin-bottom: 10px;}
+#content .scene div.article ul.tags {display: none;}
+#content .scene .article > div.articlebody {width: 600px; margin: 0 auto;}
+#content .scene .article > ul.info {width: 100%; margin: 0 auto; padding-left: 12px; padding-right: 12px; box-sizing: border-box;}
+#content .scene .article > ul.info li {padding-left: 0}
+#content .scene .c-wrapper .article > div.articlebody {width: 100%;}
+#content .scene ul.info {position: relative; z-index: 1; padding-bottom: 26px; padding-right: 0; display: inline-block; vertical-align: top; width: auto; font-size: 0;}
+#content .scene ul.info li {width: auto; font-size: 12px; line-height: 12px; display: inline-block; vertical-align: top;}
+#content .scene ul.info > li.author:before,
+#content .scene ul.info > li.place:before {content: "\00a0|\00a0"; display: inline-block; vertical-align: top; font-size: 12px; line-height: 10px; }
+#content .scene ul.info li.main_entity,
+#content .scene ul.info li.url,
+#content .scene ul.info li.publisher,
+#content .scene ul.info li.image_info,
+#content .scene ul.info li.modified_at,
+#content .scene ul.info li.latitude,
+#content .scene ul.info li.longitude {display: none;}
+#content .scene ul.info li + li {padding-top: 0;}
+#content .scene ul.offer,
+#content .scene .articlebody ul.offer {font-size: 0; padding: 0; margin: 0; list-style: none;}
+#content .scene ul.offer li.name,
+#content .scene ul.offer li.currency,
+#content .scene ul.offer li.url {display: none;}
+#content .scene ul.offer li {font-size: 14px; width: auto; display: inline-block; vertical-align: top; padding: 0 5px 0 12px;}
+#content .scene ul.offer li.default {text-decoration: line-through;}
+#content .scene ul.offer li.description {padding-top: 4px; display: block;}
+#content .scene ul.offer li.description ul {list-style: disc;}
+#content .scene ul.offer li.description ul li {display: list-item; padding: 0 0 3px; font-size: 13px;}
 
 
 /*s-form.css*/
@@ -117,7 +148,8 @@ div.field.correct .indicator {
 	background-position: center -2px;
 	background-size: 14px 14px;
 }
-div.field select.default {
+div.field select.default,
+div.field input.default {
 	color: #999999;
 }
 div.field div.help {position: relative;}
@@ -131,17 +163,12 @@ div.field.error div.error {opacity: 1;
 	transform: translate(0, 0);
 }
 div.field div.hint {color: #999999;}
-div.field.focus div.hint,
-div.field.hover div.hint {opacity: 1;
-	transform: translate(0, 0);
-}
-div.field.error div.hint {opacity: 0;
-	transform: translate(0, -10px);
-}
+div.field.focus div.hint {opacity: 1; transform: translate(0, 0);}
+div.field.error div.hint {opacity: 0; transform: translate(0, -10px);}
 ul.actions,
 #content ul.actions {list-style: none; margin: 0 0 0 2px; font-size: 0;}
 ul.actions li,
-#content ul.actions li {width: auto; height: auto; display: inline-block; padding: 0 5px 10px 0; margin-left: 2px; vertical-align: top;
+#content ul.actions li {width: auto; height: auto; display: inline-block; padding: 0 5px 10px 0; vertical-align: top;
 	-moz-user-select: none;
 	-webkit-user-select: none;
 	user-select: none;
@@ -229,14 +256,14 @@ input[type="submit"] {
 
 /*s-navigation.css*/
 #navigation {
-    position: relative;
-    width: 936px;
-    margin: 0 auto;
+	position: relative;
+	width: 936px;
+	margin: 0 auto;
 }
 #navigation ul.navigation,
-#navigation ul.navigation ul, {
+#navigation ul.navigation ul {
 	font-size: 0;
-	padding-bottom: 5px;
+	padding-bottom: 10px;
 }
 #navigation ul.navigation ul {
 	position: absolute;
@@ -421,6 +448,7 @@ input[type="submit"] {
 	display: block;
 	font-size: 0;
 	width: 100%;
+	min-height: 100px;
 }
 #content div.c-one-quarter,
 #content div.c-one-third,
@@ -598,28 +626,6 @@ body > div.overlay .close:before {
 body > div.overlay .close:after {
 	transform: rotate(-45deg);
 }
-#content .scene ul.info {position: relative; z-index: 1; padding-bottom: 26px; padding-right: 0; display: inline-block; vertical-align: top; width: auto; font-size: 0;}
-#content .scene ul.info li {width: auto; font-size: 12px; line-height: 12px; color: #bbbbbb; display: inline-block; vertical-align: top;}
-#content .scene ul.info > li.author:before,
-#content .scene ul.info > li.place:before {content: "\00a0|\00a0"; color: #bbbbbb; display: inline-block; vertical-align: top; font-size: 12px; line-height: 10px; }
-#content .scene ul.info li.main_entity,
-#content .scene ul.info li.url,
-#content .scene ul.info li.publisher,
-#content .scene ul.info li.image_info,
-#content .scene ul.info li.modified_at,
-#content .scene ul.info li.latitude,
-#content .scene ul.info li.longitude {display: none;}
-#content .scene ul.info li + li {padding-top: 0;}
-#content .scene ul.offer,
-#content .scene .articlebody ul.offer {font-size: 0; padding: 0; margin: 0; list-style: none;}
-#content .scene ul.offer li.name,
-#content .scene ul.offer li.currency,
-#content .scene ul.offer li.url {display: none;}
-#content .scene ul.offer li {font-size: 14px; width: auto; display: inline-block; vertical-align: top; padding: 0 5px 0 12px;}
-#content .scene ul.offer li.default {text-decoration: line-through;}
-#content .scene ul.offer li.description {padding-top: 4px; display: block;}
-#content .scene ul.offer li.description ul {list-style: disc;}
-#content .scene ul.offer li.description ul li {display: list-item; padding: 0 0 3px; font-size: 13px;}
 
 
 /*s-footer.css*/
