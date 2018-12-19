@@ -99,13 +99,12 @@ session()->reset("temp-username");
 			<?= $model->submit("Log ind", array("class" => "primary", "wrapper" => "li.login")) ?>
 		</ul>
 	<?= $model->formEnd() ?>
+	
 	<p class="forgot">Har du <a href="/login/glemt">glemt din adgangskode</a>?</p>
 
 
 <?	if(defined("SITE_SIGNUP") && SITE_SIGNUP): ?>
-	<div class="signup">
-		<p>Endnu ikke medlem? <a href="<?= SITE_SIGNUP ?>">Meld dig ind nu</a>.</p>
-	</div>
+		<p class="signup">Endnu ikke medlem? <a href="<?= SITE_SIGNUP ?>">Meld dig ind nu</a>.</p>
 <?	endif; ?>
 
 </div>
