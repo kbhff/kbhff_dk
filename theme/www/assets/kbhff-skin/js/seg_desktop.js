@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-18 16:02:55
+asset-builder @ 2018-12-19 16:13:27
 */
 
 /*seg_desktop_include.js*/
@@ -4741,6 +4741,16 @@ Util.Objects["scene"] = new function() {
 		scene.ready = function() {
 		}
 		scene.ready();
+	}
+}
+
+
+/*i-banner.js*/
+Util.Objects["banner"] = new function() {
+	this.init = function(div) {
+			var variant = u.cv(div, "variant");
+			var format = u.cv(div, "format");
+			u.ae(div, "img", {class:"fit-width", src:"/img/banners/desktop/pi_" + variant + "." + format});	
 	}
 }
 
