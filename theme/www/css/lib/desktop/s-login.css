@@ -4,4 +4,5 @@
 
 #content .scene.login p {box-sizing: border-box; width: 380px; margin: 0 auto;}
 #content .scene.login p.forgot,
-#content .scene.login p.signup {text-align: center;}
+#content .scene.login p.signup,
+#content .scene.login h2 {text-align: center;}
