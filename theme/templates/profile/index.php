@@ -188,7 +188,7 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 
 					<div class="fields">
 						<div class="user-info">
-							<p class="over">Navn</p>
+							<p class="over">Kaldenavn</p>
 							<p class="under"><?= $user['nickname'] ? $user['nickname'] : "(Ikke angivet)" ?></p>
 						</div>
 
