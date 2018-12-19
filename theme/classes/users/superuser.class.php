@@ -97,7 +97,7 @@ class SuperUser extends SuperUserCore {
 
 			$query->checkDbExistence(SITE_DB.".user_department");
 
-			$user_department = this->getUserDepartment(array("user_id" => $user_id));
+			$user_department = $this->getUserDepartment(array("user_id" => $user_id));
 
 			//Check if the user is associated with a department and adjust query accordingly
 			if ($user_department) {
