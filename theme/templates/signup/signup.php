@@ -73,7 +73,7 @@ $email = $model->getProperty("email", "value");
 		<?= $model->input("lastname", array("required" => true, "label" => "Efternavn", "hint_message" => "Skriv dit efternavn her", "error_message" => "Dit efternavn må kun indeholde bogstaver.")) ?>
 		<?= $model->input("email", array("required" => true, "label" => "Din email", "value" => $email, "hint_message" => "Indtast din email.", "error_message" => "Du har indtastet en ugyldig emailadresse.")); ?>
 		<?= $model->input("confirm_email", array("label" => "Gentag din email", "required" => true, "hint_message" => "Indtast din email igen.", "error_message" => "De to email adresser er ikke ens.")); ?>
-		<?= $model->input("password", array("label" => "password", "hint_message" => "Indtast et password.", "error_message" => "Dit password skal være mellem 8 og 20 karakterer.")); ?>
+		<?= $model->input("password", array("required" => true, "label" => "Adgangskode", "hint_message" => "Indtast en adgangskode.", "error_message" => "Din adgangskode skal være mellem 8 og 20 karakterer.")); ?>
 		<?= $model->input("department_id", array("type" => "select", "label" => "Vælg lokalafdeling", "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),)); ?>
 		<?= $model->input("terms", array("label" => 'Jeg accepterer <a href="/persondata" target="_blank">vilkår og betingelser</a>')); ?>
 		<?= $model->input("maillist", array("type" => "checkbox", "label" => "Vil du modtage nyhedsbreve?", "value" => "Nyheder")); ?>
