@@ -21,7 +21,7 @@ class SuperUser extends SuperUserCore {
 
 		parent::__construct(get_class());
 
-
+	
 	}
 
 
@@ -30,10 +30,97 @@ class SuperUser extends SuperUserCore {
 		$this->updateUserDepartment(["updateUserDepartment", $user_id]);
 	}
 
+	/**
+	 * Get the current user's associated department.
+	 *
+	 * @param int $user_id
+	 * @return array|false The department object, or false if the current user isn't associated with a department.
+	 */
+	function getUserDepartment($_options=false) {
+		
+		// default values
+		$user_id = false;
+
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+
+					case "user_id"        : $user_id          = $_value; break;
+				}
+			}
+		}
+
+
+		//Query current user ID i user_departments and get the associated department ID
+		$query = new Query();
+		
+		if($user_id) {
+			$sql = "SELECT department_id FROM ".SITE_DB.".user_department WHERE user_id = $user_id";
+
+			if($query->sql($sql)) {
+				$department_id = $query->result(0,"department_id");
+				// print_r ($department_id);
+
+				//Use getDepartment to find the department with the specified department ID.
+				include_once("classes/system/department.class.php");
+
+				$DC = new Department();
+				$department = $DC->getDepartment(["id"=>$department_id]);
+
+				return $department;
+			}
+		}
+
+		return false;
+
+	}
+	/**
+	 * Update or set the current user's associated department.
+	 *
+	 * @param array $action REST parameters of current request
+	 * @return boolean
+	 */
+
 
 	// TODO: should be implemented later
 	function updateUserDepartment($action) {
-		
+		// Get content of $_POST array that have been "quality-assured" by Janitor
+		$this->getPostedEntities();
+
+		// Check that the number of REST parameters is as expected and that the listed entries are valid.
+		if(count($action) == 2 && $this->validateList(array("department_id"))) {
+
+			$user_id = $action[1];
+			$department_id = $this->getProperty("department_id", "value");
+
+			$query = new Query();
+
+			$query->checkDbExistence(SITE_DB.".user_department");
+
+			$user_department = this->getUserDepartment(array("user_id" => $user_id));
+
+			//Check if the user is associated with a department and adjust query accordingly
+			if ($user_department) {
+				//Update department
+				$sql = "UPDATE ".SITE_DB.".user_department SET department_id = $department_id WHERE user_id = $user_id";
+
+				if($query->sql($sql)) {
+					message()->addMessage("Department updated");
+					return true;
+				}
+			}
+			else {
+				// Set department
+				$sql = "INSERT INTO ".SITE_DB.".user_department SET department_id = $department_id, user_id = $user_id";
+				if($query->sql($sql)) {
+					message()->addMessage("Department assigned");
+					return true;
+				}
+			}
+
+		}
+
+		return false;
 	}
 
 
@@ -170,20 +257,20 @@ class SuperUser extends SuperUserCore {
 								// send verification email to user
 								mailer()->send(array(
 									"values" => array(
-										"NICKNAME" => $nickname, 
-										"EMAIL" => $email, 
+										"NICKNAME" => $nickname,
+										"EMAIL" => $email,
 										"VERIFICATION" => $verification_code,
 										"PASSWORD" => $mail_password
-									), 
+									),
 									"track_clicks" => false,
-									"recipients" => $email, 
+									"recipients" => $email,
 									"template" => "signup"
 								));
 
 								// send notification email to admin
 								mailer()->send(array(
-									"subject" => SITE_URL . " - New User: " . $email, 
-									"message" => "Check out the new user: " . SITE_URL . "/janitor/admin/user/edit/" . $user_id, 
+									"subject" => SITE_URL . " - New User: " . $email,
+									"message" => "Check out the new user: " . SITE_URL . "/janitor/admin/user/edit/" . $user_id,
 									"tracking" => false
 									// "template" => "system"
 								));
@@ -192,14 +279,14 @@ class SuperUser extends SuperUserCore {
 							else {
 								// send error email notification
 								mailer()->send(array(
-									"recipients" => $email, 
+									"recipients" => $email,
 									"template" => "signup_error"
 								));
 
 								// send notification email to admin
 								mailer()->send(array(
-									"subject" => "New User created ERROR: " . $email, 
-									"message" => "Check out the new user: " . SITE_URL . "/janitor/admin/user/edit/" . $user_id, 
+									"subject" => "New User created ERROR: " . $email,
+									"message" => "Check out the new user: " . SITE_URL . "/janitor/admin/user/edit/" . $user_id,
 									"tracking" => false
 									// "template" => "system"
 								));
@@ -230,7 +317,7 @@ class SuperUser extends SuperUserCore {
 									// add maillist for current user
 									$this->addMaillist(array("addMaillist"));
 								}
-								
+
 								// ignore subscription if maillist does not exist
 
 							}

@@ -15,7 +15,7 @@
 * 2100 København Ø
 * Denmark
 * mail: start@think.dk
-*	
+*
 * This source code is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -50,21 +50,21 @@ class User extends UserCore {
 		parent::__construct(get_class());
 
 		$this->addToModel("reset-token", array(
-			"type" => "string", 
-			"label" => "Kode", 
-			"required" => true, 
-			"pattern" => "^[0-9A-Za-z]{24}$", 
-			"hint_message" => "Din verificerings kode", 
+			"type" => "string",
+			"label" => "Kode",
+			"required" => true,
+			"pattern" => "^[0-9A-Za-z]{24}$",
+			"hint_message" => "Din verificerings kode",
 			"error_message" => "Ugyldig kode. Kunne der være mellemrum i enden af din indtastede kode?"
 		));
 		$this->addToModel("department_id", array(
-			"type" => "string", 
-			"label" => "Afdeling", 
-			"required" => true, 
-			"hint_message" => "Vælg en afdeling", 
+			"type" => "string",
+			"label" => "Afdeling",
+			"required" => true,
+			"hint_message" => "Vælg en afdeling",
 			"error_message" => "Du skal vælge en afdeling."
 		));
-
+		
 	}
 
 	// save user department on save user
@@ -73,8 +73,8 @@ class User extends UserCore {
 	}
 
 	function updateDepartment($action) {
-		
-		
+
+
 	}
 
 	function validateCode($action) {
@@ -90,10 +90,10 @@ class User extends UserCore {
 	}
 	/**
 	 * Get the current user, including her associated department.
-	 * 
-	 * @return array The user object, with the department object appended as a new property.  
+	 *
+	 * @return array The user object, with the department object appended as a new property.
 	 */
-	
+
 	 function getKbhffUser(){
 		$user = $this->getUser();
 		$user["department"] = $this->getUserDepartment();
@@ -106,26 +106,26 @@ class User extends UserCore {
 	 * Get the current user's associated department.
 	 *
 	 * @param int $user_id
-	 * @return array|false The department object, or false if the current user isn't associated with a department. 
+	 * @return array|false The department object, or false if the current user isn't associated with a department.
 	 */
-	function getUserDepartment(){
-		
+	function getUserDepartment($_options=false){
+
 		$user_id = session()->value("user_id");
 
-		//Query current user ID i user_departments and get the associated department ID 
+		//Query current user ID i user_departments and get the associated department ID
 		$query = new Query();
 		$sql = "SELECT department_id FROM ".SITE_DB.".user_department WHERE user_id = $user_id";
 
 		if($query->sql($sql)) {
 			$department_id = $query->result(0,"department_id");
 			// print_r ($department_id);
-			
+
 			//Use getDepartment to find the department with the specified department ID.
 			include_once("classes/system/department.class.php");
-			
+
 			$DC = new Department();
 			$department = $DC->getDepartment(["id"=>$department_id]);
-			
+
 			return $department;
 		}
 
@@ -140,32 +140,32 @@ class User extends UserCore {
 	 * @return boolean
 	 */
 	function updateUserDepartment($action){
-		// Get content of $_POST array that have been "quality-assured" by Janitor 
+		// Get content of $_POST array that have been "quality-assured" by Janitor
 		$this->getPostedEntities();
 
 		print_r ($action);
 		// Check that the number of REST parameters is as expected and that the listed entries are valid.
 		if(count($action) == 1 && $this->validateList(array("department_id"))) {
-			
+
 			$user = $this->getKbhffUser();
 			$user_id = $user["id"];
 			$department_id = $this->getProperty("department_id", "value");
-			
+
 			$query = new Query();
 
 			$query->checkDbExistence(SITE_DB.".user_department");
 
-			
-			
+
+
 			//Check if the user is associated with a department and adjust query accordingly
 			if ($user["department"]) {
 				//Update department
 				$sql = "UPDATE ".SITE_DB.".user_department SET department_id = $department_id WHERE user_id = $user_id";
-				
+
 				if($query->sql($sql)) {
 					message()->addMessage("Department updated");
 					return true;
-				} 
+				}
 			}
 			else {
 				// Set department
@@ -173,8 +173,8 @@ class User extends UserCore {
 				if($query->sql($sql)) {
 					message()->addMessage("Department assigned");
 					return true;
-				} 
-			}	
+				}
+			}
 
 		}
 
@@ -195,11 +195,11 @@ class User extends UserCore {
 
 		$sql = "DELETE FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id";
 
-		if($query->sql($sql)) {	
+		if($query->sql($sql)) {
 			return true;
 		}
 
-		return false;		
+		return false;
 	}
 
 
@@ -214,7 +214,7 @@ class User extends UserCore {
 			$lastname = $this->getProperty("lastname", "value");
 			$_POST["nickname"] = $firstname . " " . $lastname;
 		}
-		
+
 		// Updates and checks if it went true(good) or false(bad)
 		if ($this->update(["update"])) {
 			message()->addMessage("Dine oplysninger blev opdateret");
@@ -241,7 +241,7 @@ class User extends UserCore {
 					// make sure type tables exist
 					$query->checkDbExistence($this->db_passwords);
 					$new_password = password_hash($this->getProperty("new_password", "value"), PASSWORD_DEFAULT);
-					
+
 					// DELETE OLD PASSWORD
 					$sql = "DELETE FROM ".$this->db_passwords." WHERE user_id = $user_id";
 					if($query->sql($sql)) {
@@ -282,7 +282,7 @@ class User extends UserCore {
 		$user = $this->getKbhffUser();
 		$user_email = $user["email"];
 
-		$cancel_result = $this->cancel(["cancel"]); 
+		$cancel_result = $this->cancel(["cancel"]);
 		if ($cancel_result === true) {
 			message()->addMessage("Dine oplysninger blev slettet");
 			mailer()->send([
@@ -307,7 +307,7 @@ class User extends UserCore {
 			message()->addMessage("Udmeldelsen slog fejl", ["type" => "error"]);
 			return false;
 		}
-		
+
 		//PERHAPS TODO: delete department affiliation
 
 	}
