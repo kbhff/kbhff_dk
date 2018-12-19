@@ -64,7 +64,8 @@
 }
 
 #content h1 + p,
-#content h1 + h3 {
+#content h1 + h3,
+#content h1 + .c-wrapper {
 	padding-top: 46px;
 }
 
@@ -255,14 +256,14 @@
 	margin-bottom: 24px;
 }
 
-#content div.c-box > :first-child,
-#content div.c-primary-box > :first-child {
-	padding-top: 12px;
+#content .c-box > h2,
+#content .c-primary-box > h2 {
+	padding-top: 22px;
 }
 
-#content div.c-box > :last-child,
-#content div.c-primary-box > :last-child {
-	padding-bottom: 12px;
+#content div.c-box > p:first-child,
+#content div.c-primary-box > p:first-child {
+	padding-top: 12px;
 }
 
 #content div.c-box {
@@ -428,3 +429,8 @@ body > div.overlay .close:after {
 	transform: rotate(-45deg);
 }
 
+/* MISC */
+#content div.messages p.error,
+#content p.errormessage {color: #C22414;}
+
+#content .banner > img {padding-top: 5px;}
