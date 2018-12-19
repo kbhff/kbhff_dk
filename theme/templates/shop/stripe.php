@@ -52,9 +52,15 @@ else {
 <? if($order): ?>
 
 	<h1>Betal dit medlemskab</h1>
-	<p>Indmeldelsesgebyr: <?= $order["items"][0]["unit_price"] ?> DKK.</p>
-	<p>Moms: <?= $total_order_price["vat"] ?> DKK.</p>
-	<p>I alt: <?= $total_order_price["price"] ?> DKK.</p>
+	<ul class="orders">
+	<? foreach($order["items"] as $i => $item): ?>
+		<li class="unit_price"> <?= $item["quantity"]." x ".$item["name"]." a ". formatPrice(array("price" => $item["unit_price"], "currency" => $order["currency"])) ?> <span class="price"><?= formatPrice(array("price" => $item["total_price"], "currency" => $order["currency"]))?></span></li> 
+	<? endforeach; ?>
+		<li>Heraf moms <span class="price vat_price"><?= formatPrice(array("price" => $total_order_price["vat"], "currency" => $total_order_price["currency"])) ?></span></li>
+		<li class="total_price">I alt <span class="price"><?= formatPrice($total_order_price) ?> </span></li>
+	</ul>
+			
+
 	<?= $model->formStart("/butik/betaling/".$order_no."/stripe/process", array("class" => "card")) ?>
 		<? //= $model->input("reference", array("type" => "hidden", "value" => $reference)); ?>
 		<? //= $model->input("email", array("type" => "hidden", "value" => $user["email"])); ?>
