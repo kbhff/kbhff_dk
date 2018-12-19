@@ -1,1 +1,77 @@
-/* #content .scene.member_help_payment form {padding-top: 50px;} */
+#content .scene.member_help_payment > p {font-size: 12px; line-height: 12px; padding-bottom: 0;}
+#content .scene.member_help_payment > h1 + p {padding: 12px; font-size: 14px;}
+
+#content .scene.member_help_payment div.payment_options {
+	margin: 0 auto;
+	margin-top: 32px; 
+	width: 40%;
+}
+#content .scene.member_help_payment div.payment_options h4.fan {
+	display: inline-block; 
+	background-color: #f2f2f2f2; 
+	padding: 6px calc(2.5% + 10px); 
+	margin-right: 12px; 
+	cursor:pointer;
+}
+#content .scene.member_help_payment div.payment_options h4.cash_fan {
+	background-color: #bbbbbb;
+}
+#content .scene.member_help_payment form.cash {display:none;}
+
+#content .scene.member_help_payment form fieldset {background-color: #f2f2f2; position: relative; padding-bottom: 40px} 
+
+#content .scene.member_help_payment form ul.actions {width: 100%; margin-left: 0; padding-left: 0; margin-top: 12px;}
+#content .scene.member_help_payment ul.actions li.forgot {line-height: 22px;}
+
+#content .scene.member_help_payment form.mobilepay .qr {float: right; position: relative;}
+#content .scene.member_help_payment form.mobilepay .qr::before {
+	/* float: right; */
+	content: "";
+    display: block;
+    position: absolute;
+    z-index: 1;
+    top: 12px;
+    bottom: 12px;
+    border: 1px solid #999;
+    border-width: 0 0 0 1px;
+}
+
+#content .scene.member_help_payment form.mobilepay .qr img {
+	width: 158px;
+	padding: 0;
+	border: 8px solid white;
+	margin: 14px;
+}
+
+#content .scene.member_help_payment form.mobilepay  h5 {
+	padding: 14px 12px 0px; 
+	font-size: 16px; 
+	line-height: 24px;
+}
+
+#content .scene.member_help_payment form.mobilepay .qr h5 {
+	text-align: center;}
+
+
+#content .scene.member_help_payment form.mobilepay .code p {
+	width: 50%;
+	margin-top: -5px;
+	padding-bottom: 12px;
+}
+
+#content .scene.member_help_payment form.mobilepay .code p.payment_info {
+	font-size: 24px;
+	padding-bottom: 8px;
+}
+
+#content .scene.member_help_payment form .checkbox {
+	padding: 12px 10px;
+	position: absolute;
+	bottom: 0;
+}
+
+#content .scene.member_help_payment form div.cash.instructions p {
+	font-size: 16px;
+	padding: 12px 12px 12px;
+}
+
