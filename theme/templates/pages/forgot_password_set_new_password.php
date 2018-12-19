@@ -18,11 +18,11 @@ $reset_token = session()->value("temp-reset-token");
 			<?= $model->input("reset-token", array("type" => "hidden", "value" => $reset_token)) ?>
 
 			<fieldset>
-				<?= $model->input("new_password", array("required" => true, "label" => "Nyt password", "hint_message" => "Skriv dit nye password – 8-20 tegn", "error_message" => "Ugyldigt password")) ?>
-				<?= $model->input("confirm_password", array("required" => true, "label" => "Gentag nyt password", "hint_message" => "Skriv dit nye password igen for at bekræfte", "error_message" => "Dine passwords stemmer ikke overens.")) ?>
+				<?= $model->input("new_password", array("required" => true, "label" => "Ny adgangskode", "hint_message" => "Skriv dit nye adgangskode – 8-20 tegn", "error_message" => "Ugyldig adgangskode")) ?>
+				<?= $model->input("confirm_password", array("required" => true, "label" => "Gentag ny adgangskode", "hint_message" => "Skriv dit nye password igen for at adgangskode", "error_message" => "Dine adgangskoder stemmer ikke overens.")) ?>
 			</fieldset>
 			<ul class="actions">
-				<?= $model->submit("Bekræft nyt password", array("class" => "primary", "wrapper" => "li.save")) ?>
+				<?= $model->submit("Bekræft ny adgangskode", array("class" => "primary", "wrapper" => "li.save")) ?>
 			</ul>
 		<?= $model->formEnd() ?>
 	</div>
