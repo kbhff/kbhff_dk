@@ -4,6 +4,11 @@ $user = $UC->getKbhffUser();
 $department = $UC->getUserDepartment();
 ?>
 
+
+
+<div class="scene profile i:profile">
+	<img class="fit-width" src="/img/deprecated/banner.jpg"	/>
+	
 <?	if(message()->hasMessages()): ?>
 		<p class="errormessage">
 <?		$messages = message()->getMessages(array("type" => "error"));
@@ -20,10 +25,6 @@ $department = $UC->getUserDepartment();
 <?	message()->resetMessages(); ?>
 
 <?	endif; ?>
-
-
-<div class="scene profile i:profile">
-	<img class="fit-width" src="/img/deprecated/banner.jpg"	/>
 
 	<div class="c-wrapper">
 
