@@ -75,3 +75,12 @@
 	padding: 12px 12px 12px;
 }
 
+#content .scene.member_help_signup p.metatext {
+	font-style: italic;
+	font-size: 12px;
+} 
+
+#content .scene.member_help_signup p.terms_summary {
+	/* font-size: 16px; */
+	font-weight: 700;
+}
