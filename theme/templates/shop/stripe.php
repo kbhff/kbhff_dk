@@ -66,9 +66,11 @@ else {
 		<? //= $model->input("email", array("type" => "hidden", "value" => $user["email"])); ?>
 
 	<fieldset>
-		<?= $model->input("card_number", array("type" => "tel")); ?>
-		<?= $model->input("card_exp_month", array("type" => "tel")); ?><span class="slash">/</span><?= $model->input("card_exp_year", array("type" => "tel")); ?>
-		<?= $model->input("card_cvc", array("type" => "tel")); ?>
+		<?= $model->input("card_number", array("type" => "tel", "label" => "Kortnummer", "hint_message" => "Indtast dit kortnummer", "error_message" => "Ugyldigt kortnummer")); ?>
+		<?= $model->input("card_exp_month", array("type" => "tel", "hint_message" => "Måned", "error_message" => "Ugyldig")); ?>
+		<span class="slash">/</span>
+		<?= $model->input("card_exp_year", array("type" => "tel", "hint_message" => "År", "error_message" => "Ugyldig")); ?>
+		<?= $model->input("card_cvc", array("type" => "tel", "hint_message" => "Kontrolnummer", "error_message" => "Ugyldig")); ?>
 
 	</fieldset>
 
@@ -83,8 +85,6 @@ else {
 		Vi beholder ingen kortinformationer på vores server. <br />
 		All kommunikation er krypteret. <br />
 	</p>
-
-	<p>Hvis du ikke vil betale nu kan du gøre det senere ved at <a href="/">springe over.</a></p>
 
 <? else: ?>
 
