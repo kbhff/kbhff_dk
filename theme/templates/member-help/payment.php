@@ -56,15 +56,9 @@ else {
 <? if($order): ?>
 
 <? 
-	function strToHex($string){
-		$hex='';
-		for ($i=0; $i < strlen($string); $i++){
-			$hex .= dechex(ord($string[$i]));
-		}
-		return $hex;
-	}
+	// print_r($order);
 
-	$transaction_id = strToHex($order["order_no"]); 
+	$transaction_id = $order["order_no"]; 
 ?>
 
 	<h1>Opret nyt medlem</h1>
@@ -86,39 +80,54 @@ else {
 	<?	endif; ?>
 
 	<p>Indmeldelsesgebyr: <?= $total_order_price["price"] ?>.</p>
-	<?= $model->formStart("registerPayment", array("class" => "card")) ?>
-		<?= $model->input("payment_amount", array("type" => "hidden", "value" => $total_order_price["price"])); ?>
-		<?= $model->input("payment_method", array("type" => "hidden", "value" => "mobilepay")); ?>
-		<?= $model->input("order_id", array("type" => "hidden", "value" => $order["id"])); ?>
-		<?= $model->input("transaction_id", array("type" => "hidden", "value" => $transaction_id)); ?>
-		<fieldset>
-			<img class="qr" src="/img/qr-codes/qr-signup-vesterbro.png" alt="QR-kode til indmeldelse i Vesterbro-afdelingen">
-		</fieldset>
-
-
-	<ul class="actions">
-		<li class="cancel"><a href="/" class="button">Annullér</a></li>
-		<!-- <li class="cancel"><a href="/" class="button">Spring over</a></li> -->
-		<?= $model->submit("Godkend betaling af ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
-	</ul>
-	<?= $model->formEnd() ?>
-
-
-	<?= $model->formStart("registerPayment", array("class" => "card")) ?>
-		<?= $model->input("payment_amount", array("type" => "hidden", "value" => $total_order_price["price"])); ?>
-		<?= $model->input("payment_method", array("type" => "hidden", "value" => "cash")); ?>
-		<?= $model->input("order_id", array("type" => "hidden", "value" => $order["id"])); ?>
-		<?= $model->input("transaction_id", array("type" => "hidden", "value" => $transaction_id)); ?>
-		<fieldset>
-			<?= $model->input("confirm_cash_payment", array("type" => "checkbox", "label" => "Personen har betalt ".formatPrice($total_order_price)." kontant.", "required" => true,  "value" => $transaction_id)); ?>
-		</fieldset>
-
-	<ul class="actions">
-		<li class="cancel"><a href="/" class="button">Annullér</a></li>
-		<!-- <li class="cancel"><a href="/" class="button">Spring over</a></li> -->
-		<?= $model->submit("Godkend betaling af ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
-	</ul>
-	<?= $model->formEnd() ?>
+	<div class="payment_options">
+		<?= $model->formStart("registerPayment", ["class" => "mobilepay"]) ?>
+			<fieldset class="mobilepay">
+				<?= $model->input("payment_amount", array("type" => "hidden", "value" => $total_order_price["price"])); ?>
+				<?= $model->input("payment_method", array("type" => "hidden", "value" => "mobilepay")); ?>
+				<?= $model->input("order_id", array("type" => "hidden", "value" => $order["id"])); ?>
+				<?= $model->input("transaction_id", array("type" => "hidden", "value" => $transaction_id)); ?>
+				<!-- <div class="mobilepay qr">
+					<h5>QR-kode</h5>
+					<img src="/img/qr-codes/qr-signup-vesterbro.png" alt="QR-kode til indmeldelse i Vesterbro-afdelingen">
+				</div> -->
+				<div class="mobilepay code">
+					<h5>MobilePay-nummer</h5>
+					<p>(Vesterbro)</p>
+					<p class="payment_info"><span class="highlight">XXXXX</span></p>
+					<h5>Medlemsoprettelseskode</h5>
+					<p>(Skrives i kommentarfeltet)</p>
+					<p class="payment_info"><span class="highlight"><?=$transaction_id?></span></p>
+				</div>
+				<?= $model->input("confirm_cash_payment", array("type" => "checkbox", "label" => "Personen har betalt ".formatPrice($total_order_price)." med MobilePay.", "required" => true)); ?>
+			</fieldset>
+	
+		<ul class="actions">
+			<li class="cancel"><a href="/" class="button">Annullér</a></li>
+			<!-- <li class="cancel"><a href="/" class="button">Spring over</a></li> -->
+			<?= $model->submit("Godkend betaling af ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
+		</ul>
+		<?= $model->formEnd() ?>
+	
+		<?= $model->formStart("registerPayment", ["class" => "cash"]) ?>
+			<fieldset class="cash">
+				<?= $model->input("payment_amount", array("type" => "hidden", "value" => $total_order_price["price"])); ?>
+				<?= $model->input("payment_method", array("type" => "hidden", "value" => "cash")); ?>
+				<?= $model->input("order_id", array("type" => "hidden", "value" => $order["id"])); ?>
+				<?= $model->input("transaction_id", array("type" => "hidden", "value" => $transaction_id)); ?>
+				<div class="cash instructions">
+					<p>Bekræft nedenfor at personen har betalt kontant.</p>
+				</div>
+				<?= $model->input("confirm_cash_payment", array("type" => "checkbox", "label" => "Personen har betalt ".formatPrice($total_order_price)." kontant.", "required" => true)); ?>
+			</fieldset>
+	
+		<ul class="actions">
+			<li class="cancel"><a href="/" class="button">Annullér</a></li>
+			<!-- <li class="cancel"><a href="/" class="button">Spring over</a></li> -->
+			<?= $model->submit("Godkend betaling af ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
+		</ul>
+		<?= $model->formEnd() ?>
+	</div>
 
 
 	<p>Betalingsreference: <?= $reference ?>.</p>
