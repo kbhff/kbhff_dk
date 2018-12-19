@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-19 09:50:31
+asset-builder @ 2018-12-19 20:35:02
 */
 
 /*seg_desktop_include.css*/
@@ -39,13 +39,14 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 	font-weight: 400;
 	font-style: normal;
 }
-#content .scene div.article h1 {margin-bottom: 10px;}
-#content .scene div.article ul.tags {display: none;}
-#content .scene .article > div.articlebody {width: 600px; margin: 0 auto;}
-#content .scene .article > ul.info {width: 100%; margin: 0 auto; padding-left: 12px; padding-right: 12px; box-sizing: border-box;}
+#content .scene .article h1 {}
+#content .scene .article ul.tags {display: none;}
+#content .scene .article > ul.info {width: 100%; margin: 0 auto; padding-top: 10px; padding-left: 12px; padding-right: 12px; box-sizing: border-box;}
 #content .scene .article > ul.info li {padding-left: 0}
-#content .scene .c-wrapper .article > div.articlebody {width: 100%;}
-#content .scene ul.info {position: relative; z-index: 1; padding-bottom: 26px; padding-right: 0; display: inline-block; vertical-align: top; width: auto; font-size: 0;}
+#content .scene > .article > .articlebody {width: 600px; margin: 0 auto;} 
+#content .scene .article .articlebody > p:first-child,
+#content .scene .article .articlebody > h3:first-child {padding-top: 46px;}
+#content .scene ul.info {position: relative; z-index: 1; padding-right: 0; padding-bottom: 0; display: inline-block; vertical-align: top; width: auto; font-size: 0; line-height: 1em;}
 #content .scene ul.info li {width: auto; font-size: 12px; line-height: 12px; display: inline-block; vertical-align: top;}
 #content .scene ul.info > li.author:before,
 #content .scene ul.info > li.place:before {content: "\00a0|\00a0"; display: inline-block; vertical-align: top; font-size: 12px; line-height: 10px; }
@@ -73,7 +74,7 @@ div.field {
 	padding-left: 10px;
 	padding-right: 10px;
 }
-div.field label {display: block; margin: 0 0 0 3px; line-height: 12px; font-size: 11px; text-transform: uppercase;}
+div.field label {display: block; margin: 0 0 0 2px; line-height: 12px; font-size: 11px; text-transform: uppercase;}
 div.field input,
 div.field select,
 div.field textarea {box-shadow: inset 0 1px 2px #dedede; box-sizing: border-box; border-radius: 0; background: #ffffff; border: 1px solid #999999; display: inline-block; vertical-align: top; margin: 2px; position: relative; z-index: 1;}
@@ -139,7 +140,7 @@ div.field.correct .indicator {
 	background-position: center -2px;
 	background-size: 14px 14px;
 }
-div.field select.default,
+div.field .default,
 div.field input.default {
 	color: #999999;
 }
@@ -157,9 +158,9 @@ div.field div.hint {color: #999999;}
 div.field.focus div.hint {opacity: 1; transform: translate(0, 0);}
 div.field.error div.hint {opacity: 0; transform: translate(0, -10px);}
 ul.actions,
-#content ul.actions {list-style: none; margin: 0 0 0 2px; font-size: 0;}
+#content ul.actions {list-style: none; text-align: right; margin: 0; font-size: 0;}
 ul.actions li,
-#content ul.actions li {width: auto; height: auto; display: inline-block; padding: 0 5px 10px 0; vertical-align: top;
+#content ul.actions li {width: auto; height: auto; display: inline-block; padding: 0 0 10px 5px; vertical-align: top;
 	-moz-user-select: none;
 	-webkit-user-select: none;
 	user-select: none;
@@ -206,12 +207,12 @@ input[type="submit"] {
 	position: relative;
 	width: 936px;
 	margin: 0 auto;
-	padding: 28px 0 10px;
+	padding: 18px 0 18px;
 }
 #header .logo {
 	box-sizing: border-box;
 	height: 48px;
-	padding: 10px 8px 6px 54px;
+	padding: 8px 0 0 54px;
 	display: inline-block;
 	background: transparent url(../img/logos/logo-stempel_sort_lille_gulerod.png) no-repeat top left;
 	font-family: 'voresfont';
@@ -248,7 +249,6 @@ input[type="submit"] {
 #navigation ul.navigation,
 #navigation ul.navigation ul {
 	font-size: 0;
-	padding-bottom: 10px;
 }
 #navigation ul.navigation ul {
 	position: absolute;
@@ -312,7 +312,7 @@ input[type="submit"] {
 	font-size: 28px;
 	line-height: 30px;
 	padding-bottom: 22px;
-	padding-top: 20px;
+	padding-top: 46px;
 }
 #content h3 {
 	font-family: 'voresfont', Arial, Helvetica, sans-serif;
@@ -331,8 +331,10 @@ input[type="submit"] {
 #content p {
 	line-height: 24px;
 }
-#content h1 + p {
-	padding-top: 18px;
+#content h1 + p,
+#content h1 + h3,
+#content h1 + .c-wrapper {
+	padding-top: 46px;
 }
 #content h4 + ul,
 #content h4 + ol {
@@ -464,13 +466,13 @@ input[type="submit"] {
 	margin-right: 12px;
 	margin-bottom: 24px;
 }
-#content div.c-box > :first-child,
-#content div.c-primary-box > :first-child {
-	padding-top: 12px;
+#content .c-box > h2,
+#content .c-primary-box > h2 {
+	padding-top: 22px;
 }
-#content div.c-box > :last-child,
-#content div.c-primary-box > :last-child {
-	padding-bottom: 12px;
+#content div.c-box > p:first-child,
+#content div.c-primary-box > p:first-child {
+	padding-top: 12px;
 }
 #content div.c-box {
 	background: #f2f2f2;
@@ -608,6 +610,9 @@ body > div.overlay .close:before {
 body > div.overlay .close:after {
 	transform: rotate(-45deg);
 }
+#content div.messages p.error,
+#content p.errormessage {color: #C22414;}
+#content .banner > img {padding-top: 5px;}
 #footer {
 	height: 48px;
 	background: #484848;
@@ -630,14 +635,13 @@ body > div.overlay .close:after {
 
 
 /*s-login.css*/
-#content .scene.login form {padding-top: 50px;}
-#content .scene.login ul.actions li.forgot {line-height: 22px;}
-#content .scene.login form .field {width: 35%; margin: 0 auto;}
-#content .scene.login form > ul.actions {margin: 0 auto; width: 35%}
-#content .scene.login div.signup {width: 35%; margin: 0 auto;}
-#content .scene.login div.signup p {padding-left: 0;}
-#content .scene.login p {width: 600px; margin: 0 auto;}
-
+#content .scene.login form {width: 380px; margin: 0 auto; padding-top: 20px;}
+#content .scene.login ul.actions { text-align: center; }
+#content .scene.login ul.actions li { padding: 0 2.5px 10px 2.5px; }
+#content .scene.login p {box-sizing: border-box; width: 380px; margin: 0 auto;}
+#content .scene.login p.forgot,
+#content .scene.login p.signup,
+#content .scene.login h2 {text-align: center;}
 
 /*s-accept_terms.css*/
 #content .scene.accept_terms form {padding-top: 50px; text-align: center;}
@@ -710,9 +714,8 @@ body > div.overlay .close:after {
 	box-sizing: border-box;
 	width: 25%;
 }
-#content div.profile .new-order.full-width,
-#content div.profile .book-shift.full-width {
-	padding-right: 0;
+#content div.profile .full-width,
+#content div.profile .full-width {
 }
 #content div.profile .department-info,
 #content div.profile .membership-info,
@@ -756,7 +759,6 @@ body > div.overlay .close:after {
 #content div.profile ul.actions {
 	width: 100%;
 	box-sizing: border-box;
-	padding-right: 14px;
 	padding-top: 20px;
 }
 #content div.profile ul.actions li {
@@ -765,6 +767,8 @@ body > div.overlay .close:after {
 #content div.profile ul.actions .full-width {
 	width: 100%;
 	text-align: center;
+	padding-left: 0;
+	padding-right: 0;
 }
 #content div.profile ul.actions .half-width {
 	width: 50%;
@@ -790,14 +794,10 @@ body.profil > div.overlay div.field.password {
 #content .scene.signupfees ul.actions li {display: block; width: 100%;}
 #content .scene.signupfees ul.offer li.suscribtion_price > p {padding: 0; font-size: 20px;}
 #content .scene.signupfees div.article ul.info {display: none;}
-#content .scene.signup form {padding-top: 50px;}
-#content .scene.signup ul.actions li.forgot {line-height: 22px;}
-#content .scene.signup form .field {width: 35%; margin: 0 auto;}
-#content .scene.signup form > ul.actions {margin: 0 auto; width: 35%}
-#content .scene.signup div.signup {width: 35%; margin: 0 auto;}
-#content .scene.signup div.signup p {padding-left: 0;}
-#content .scene.signup p {width: 600px; margin: 0 auto;}
-#content .scene.signup h2 {width: 600px; margin: 0 auto;}
+#content .scene.signup form {width: 380px; margin: 0 auto; padding-top: 20px;}
+#content .scene.signup ul.actions li { padding: 0 2.5px 10px 2.5px; }
+#content .scene.signup p {box-sizing: border-box; width: 380px; margin: 0 auto;}
+#content .scene.signup h2 {text-align: center;}
 
 
 /*s-memberships.css*/
@@ -829,29 +829,94 @@ body.profil > div.overlay div.field.password {
 
 
 /*s-shop.css*/
-#content .scene.shopPayment form.card {margin-top: 32px; width: 40%;}
+#content .scene.shopPayment ul.orders {padding-top: 50px; margin: 0 auto; width: 450px; padding-bottom: 0;}
+#content .scene.shopPayment ul.orders > li {list-style-type: none; padding-left: 0; font-size: 16px;}
+#content .scene.shopPayment ul.orders > li span.price {float: right;}
+#content .scene.shopPayment ul.orders > li.total_price {font-size: 18px; font-weight: 700; border-top: 1px solid #000000; padding-top: 12px; margin-top: 12px;}
+#content .scene.shopPayment form.card {width: 450px; margin: 0 auto; padding-top: 50px;}
 #content .scene.shopPayment form.card fieldset {background-color: #f2f2f2;}
-#content .scene.shopPayment form.card fieldset div.field.tel.card {width: 90%; margin: 0 auto; padding-top: 24px;}
-#content .scene.shopPayment form.card fieldset div.field.tel.exp_month {width: 15%; display: inline-block; margin-left: 2.5%;}
-#content .scene.shopPayment form.card fieldset div.field.tel.exp_year {width: 15%; display: inline-block;}
-#content .scene.shopPayment form.card fieldset div.field.cvc {display: inline-block; width: 20%;}
-#content .scene.shopPayment form.card fieldset span.slash {font-size: 20px; vertical-align: middle;}
-#content .scene.shopPayment form.card ul.actions {width: 100%; margin-left: 0; padding-left: 0; margin-top: 12px;}
-#content .scene.shopPayment form.card div.fan {display: inline-block; background-color: #f2f2f2f2; padding: 6px calc(2.5% + 10px); margin-right: 12px;}
-#content .scene.shopPayment form.card div.fan.mobilepay_fan {background-color: #bbbbbb;}
-#content .scene.shopPayment form.card div.payment_explanation {display: none; background-color: #f2f2f2f2;}
-#content .scene.shopPayment > p {font-size: 12px; line-height: 12px; padding-bottom: 0;}
-#content .scene.shopPayment > h1 + p {padding: 12px; font-size: 14px;}
-#content .scene.shopPayment form {padding-top: 50px; margin: 0 auto;}
-#content .scene.shopPayment ul.actions li.forgot {line-height: 22px;}
-#content .scene.shopPayment form .field {width: 35%; margin: 0 auto;}
-#content .scene.shopPayment form > ul.actions {margin: 0 auto; width: 35%}
-#content .scene.shopPayment p {width: 40%; margin: 0 auto;}
-#content .scene.shopPayment h2 {width: 40%; margin: 0 auto;}
+#content .scene.shopPayment form.card fieldset div.field.tel.card {width: 400px; margin: 0 auto; padding-top: 24px;}
+#content .scene.shopPayment form.card fieldset div.field.tel.exp_month {width: 65px; display: inline-block; margin-left: 15px;}
+#content .scene.shopPayment form.card fieldset div.field.tel.exp_year {width: 65px; display: inline-block;}
+#content .scene.shopPayment form.card fieldset div.field.cvc {width: 85px; float: right; margin-right: 15px;}
+#content .scene.shopPayment form.card fieldset span.slash {font-size: 26px; vertical-align: middle; padding-top: 22px;}
+#content .scene.shopPayment form.card ul.actions {text-align: center; padding-right: 0; padding-left: 0; margin-top: 12px;}
+#content .scene.shopPayment form.card ul.actions li {padding: 0;}
+#content .scene.shopPayment > p {width: 450px; margin: 0 auto; font-size: 12px; line-height: 12px; padding-bottom: 0;}
+
 
 /*s-cart.css*/
 #content .scene.cart 
 
 
 /*s-member_help.css*/
-
+#content .scene.member_help_payment > p {font-size: 12px; line-height: 12px; padding-bottom: 0;}
+#content .scene.member_help_payment > h1 + p {padding: 12px; font-size: 14px;}
+#content .scene.member_help_payment div.payment_options {
+	margin: 0 auto;
+	margin-top: 32px; 
+	width: 40%;
+}
+#content .scene.member_help_payment div.payment_options h4.fan {
+	display: inline-block; 
+	background-color: #f2f2f2f2; 
+	padding: 6px calc(2.5% + 10px); 
+	margin-right: 12px; 
+	cursor:pointer;
+}
+#content .scene.member_help_payment div.payment_options h4.cash_fan {
+	background-color: #bbbbbb;
+}
+#content .scene.member_help_payment form.cash {display:none;}
+#content .scene.member_help_payment form fieldset {background-color: #f2f2f2; position: relative; padding-bottom: 40px} 
+#content .scene.member_help_payment form ul.actions {width: 100%; margin-left: 0; padding-left: 0; margin-top: 12px;}
+#content .scene.member_help_payment ul.actions li.forgot {line-height: 22px;}
+#content .scene.member_help_payment form.mobilepay .qr {float: right; position: relative;}
+#content .scene.member_help_payment form.mobilepay .qr::before {
+	content: "";
+    display: block;
+    position: absolute;
+    z-index: 1;
+    top: 12px;
+    bottom: 12px;
+    border: 1px solid #999;
+    border-width: 0 0 0 1px;
+}
+#content .scene.member_help_payment form.mobilepay .qr img {
+	width: 158px;
+	padding: 0;
+	border: 8px solid white;
+	margin: 14px;
+}
+#content .scene.member_help_payment form.mobilepay  h5 {
+	padding: 14px 12px 0px; 
+	font-size: 16px; 
+	line-height: 24px;
+}
+#content .scene.member_help_payment form.mobilepay .qr h5 {
+	text-align: center;}
+#content .scene.member_help_payment form.mobilepay .code p {
+	width: 50%;
+	margin-top: -5px;
+	padding-bottom: 12px;
+}
+#content .scene.member_help_payment form.mobilepay .code p.payment_info {
+	font-size: 24px;
+	padding-bottom: 8px;
+}
+#content .scene.member_help_payment form .checkbox {
+	padding: 12px 10px;
+	position: absolute;
+	bottom: 0;
+}
+#content .scene.member_help_payment form div.cash.instructions p {
+	font-size: 16px;
+	padding: 12px 12px 12px;
+}
+#content .scene.member_help_signup p.metatext {
+	font-style: italic;
+	font-size: 12px;
+} 
+#content .scene.member_help_signup p.terms_summary {
+	font-weight: 700;
+}

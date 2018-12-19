@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-19 09:50:31
+asset-builder @ 2018-12-19 20:35:02
 */
 
 /*seg_smartphone_include.js*/
@@ -4737,6 +4737,13 @@ Util.Objects["scene"] = new function() {
 		scene.ready();
 	}
 }
+Util.Objects["banner"] = new function() {
+	this.init = function(div) {
+			var variant = u.cv(div, "variant");
+			var format = u.cv(div, "format");
+			u.ae(div, "img", {class:"fit-width", src:"/img/banners/desktop/pi_" + variant + "." + format});	
+	}
+}
 u.f.fixFieldHTML = function(field) {
 	if(field._indicator) {
 		u.ae(u.qs("label", field), field._indicator);
@@ -4820,16 +4827,6 @@ Util.Objects["login"] = new function() {
 			u.f.init(this._form);
 		}
 		scene.ready();
-	}
-}
-
-
-/*i-header_image.js*/
-Util.Objects["header_image"] = new function() {
-	this.init = function(div) {
-			var variant = u.cv(div, "variant");
-			var format = u.cv(div, "format");
-			u.ae(div, "img", {class:"fit-width", src:"/img/banners/smartphone/pi_" + variant + "." + format});	
 	}
 }
 
