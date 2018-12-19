@@ -29,7 +29,7 @@ if($page_item) {
 <?	endif; ?>
 
 	<fieldset>
-		<?= $model->input("verification_code"); ?>
+		<?= $model->input("verification_code", array("label" => "Verifikationskode", "hint_message" => "Indtast verifikationskoden som blev sendt til din email.", "error_message" => "Forkert verifikationskode")); ?>
 	</fieldset>
 
 	<ul class="actions">
