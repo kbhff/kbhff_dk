@@ -94,6 +94,21 @@ class Department extends Model {
 			"error_message" => "Invalid opening hours"
 		));
 
+		// MobilePay number for signup in shop
+		$this->addToModel("mobilepay_id", array(
+			"type" => "string",
+			"label" => "MobilePay number for signup",
+			"hint_message" => "The department has a MobilePay number that new members can use if they go to a physical shop to sign up.",
+			"error_message" => "Invalid MobilePay number"
+		));
+
+		// Accepts new members?
+		$this->addToModel("accepts_signup", array(
+			"type" => "checkbox",
+			"label" => "New members can sign up for this department",
+			"hint_message" => "A few departments do not accept new members. If this department is one of them, uncheck this box.",
+		));
+
 	}
 	
 	/**
@@ -106,7 +121,7 @@ class Department extends Model {
 	function saveDepartment($action) {
 		$this->getPostedEntities();
 
-		if(count($action) == 1 && $this->validateList(array("name", "abbreviation", "address1", "address2", "city", "postal", "email", "opening_hours"))) {
+		if(count($action) == 1 && $this->validateList(array("name", "abbreviation", "address1", "address2", "city", "postal", "email", "opening_hours", "mobilepay_id", "accepts_signup"))) {
 
 			$query = new Query();
 
@@ -120,13 +135,15 @@ class Department extends Model {
 			$city = $this->getProperty("city", "value");
 			$email = $this->getProperty("email", "value");
 			$opening_hours = $this->getProperty("opening_hours", "value");
+			$mobilepay_id = $this->getProperty("mobilepay_id", "value");
+			$accepts_signup = $this->getProperty("accepts_signup", "value");
 			
 
 
 			// Check if the department is already created (to avoid faulty double entries)
 			$sql = "SELECT * FROM ".$this->db." WHERE name = '$name'";
 			if(!$query->sql($sql)) {
-				$sql = "INSERT INTO ".$this->db." SET name='$name', abbreviation='$abbreviation', address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours',email='$email'";
+				$sql = "INSERT INTO ".$this->db." SET name='$name', abbreviation='$abbreviation', address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours',email='$email',mobilepay_id='$mobilepay_id',accepts_signup='$accepts_signup' ";
 				if($query->sql($sql)) {
 					message()->addMessage("Department created");
 					return array("item_id" => $query->lastInsertId());		
@@ -223,7 +240,7 @@ class Department extends Model {
 		
 
 		// Check that the number of REST parameters is as expected and that the listed entries are valid.
-		if(count($action) == 2 && $this->validateList(array("name", "abbreviation", "address1", "address2", "city", "postal", "email", "opening_hours"))) {
+		if(count($action) == 2 && $this->validateList(array("name", "abbreviation", "address1", "address2", "city", "postal", "email", "opening_hours", "mobilepay_id", "accepts_signup"))) {
 
 			// Ask the database to update the row with the id that came from $action. Update with the values that were received from getPostedEntities(). 
 			$query = new Query();
@@ -237,8 +254,10 @@ class Department extends Model {
 			$city = $this->getProperty("city", "value");
 			$email = $this->getProperty("email", "value");
 			$opening_hours = $this->getProperty("opening_hours", "value");
+			$mobilepay_id = $this->getProperty("mobilepay_id", "value");
+			$accepts_signup = $this->getProperty("accepts_signup", "value");
 
-			$sql = "UPDATE ".$this->db." SET name='$name', abbreviation='$abbreviation',address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours',email='$email' WHERE id = '$id'";
+			$sql = "UPDATE ".$this->db." SET name='$name', abbreviation='$abbreviation',address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours',email='$email',mobilepay_id='$mobilepay_id',accepts_signup='$accepts_signup' WHERE id = '$id'";
 				if($query->sql($sql)) {
 					message()->addMessage("Department updated");
 					return $this->getDepartment(["id"=>$id]);		

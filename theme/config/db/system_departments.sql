@@ -8,6 +8,8 @@ CREATE TABLE `SITE_DB`.`system_departments` (
   `postal` varchar(50) NOT NULL DEFAULT "",
   `email` varchar(50) NOT NULL DEFAULT "",
   `opening_hours` text NOT NULL DEFAULT "",
+  `mobilepay_id` int(10) DEFAULT NULL,
+  `accepts_signup` int(1) NOT NULL DEFAULT 1,
 
 
 

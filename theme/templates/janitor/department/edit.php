@@ -27,6 +27,8 @@ $department = $model->getDepartment(array("id" => $department_id));
 				<?= $model->input("city", array("value" => $department["city"])) ?>
 				<?= $model->input("email", array("value" => $department["email"])) ?>
 				<?= $model->input("opening_hours", array("class" => "autoexpand short", "value" => $department["opening_hours"])) ?>
+				<?= $model->input("mobilepay_id", array("value" => $department["mobilepay_id"])) ?>
+				<?= $model->input("accepts_signup", array("checked" => "true", "value" => $department["accepts_signup"])) ?>
 			</fieldset>
 
 			<?= $JML->editActions($department) ?>

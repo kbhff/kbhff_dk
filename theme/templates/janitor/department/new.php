@@ -20,6 +20,8 @@ global $model;
 			<?= $model->input("city") ?>
 			<?= $model->input("email") ?>
 			<?= $model->input("opening_hours", array("class" => "autoexpand short")) ?>
+			<?= $model->input("mobilepay_id") ?>
+			<?= $model->input("accepts_signup", array("value" => 1)) ?>
 
 		</fieldset>
 
