@@ -39,7 +39,7 @@
 	font-size: 28px;
 	line-height: 30px;
 	padding-bottom: 22px;
-	padding-top: 20px;
+	padding-top: 46px;
 }
 
 
@@ -63,8 +63,9 @@
 	line-height: 24px;
 }
 
-#content h1 + p {
-	padding-top: 18px;
+#content h1 + p,
+#content h1 + h3 {
+	padding-top: 46px;
 }
 
 #content h4 + ul,

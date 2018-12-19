@@ -33,7 +33,7 @@
 
 			<h1>Development template</h1>
 
-			<div class="section">
+			<div class="section scene">
 				<h2>Content examples</h2>
 				<p>This page contains multiple variations of content with the purpose of making CSS development more consistent.</p>
 
@@ -164,7 +164,7 @@
 			</div>
 
 
-			<div class="section">
+			<div class="section scene">
 				<h2>Grid examples</h2>
 
 				<div class="c-wrapper">
@@ -287,7 +287,7 @@
 
 			</div>
 
-			<div class="section">
+			<div class="section scene">
 
 				<div class="article i:article id:10" itemscope itemtype="http://schema.org/NewsArticle">
 					<ul class="tags">
@@ -346,7 +346,7 @@
 	
 				<div class="c-wrapper">
 
-					<div class="c-one-half">
+					<div class="c-two-thirds">
 							<div class="article i:article id:10" itemscope itemtype="http://schema.org/NewsArticle">
 								<ul class="tags">
 									<li><a href="/posts">Posts</a></li>
@@ -402,7 +402,7 @@
 							</div>
 					</div>
 
-					<div class="c-one-half">
+					<div class="c-one-third">
 							<div class="article i:article id:10" itemscope itemtype="http://schema.org/NewsArticle">
 								<ul class="tags">
 									<li><a href="/posts">Posts</a></li>
@@ -410,40 +410,12 @@
 						
 								<h1 itemprop="headline">Article</h1>
 						
-								<ul class="info">
-									<li class="published_at" itemprop="datePublished" content="2018-12-18">2018-12-18, 11:35</li>
-									<li class="modified_at" itemprop="dateModified" content="2018-12-18"></li>
-									<li class="author" itemprop="author">Guybrush</li>
-									<li class="main_entity share" itemprop="mainEntityOfPage" content="http://kbhff.local/posts/article-2"></li>
-									<li class="publisher" itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
-										<ul class="publisher_info">
-											<li class="name" itemprop="name" content="parentnode.dk"></li>
-											<li class="logo" itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
-												<span class="image_url" itemprop="url" content="http://kbhff.local/img/logo-large.png"></span>
-												<span class="image_width" itemprop="width" content="720"></span>
-												<span class="image_height" itemprop="height" content="405"></span>
-											</li>
-										</ul>
-									</li>
-									<li class="image_info" itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
-										<span class="image_url" itemprop="url" content="http://kbhff.local/img/logo-large.png"></span>
-										<span class="image_width" itemprop="width" content="720"></span>
-										<span class="image_height" itemprop="height" content="405"></span>
-									</li>
-								</ul>
-						
 						
 								<div class="articlebody" itemprop="articleBody">
-									<h2>Lorem Ipsum</h2>
 									<p>
 										<strong>Lorem ipsum</strong> dolor sit amet consectetur <em>adipisicing elit</em>.
 										<span>Consequatur repudiandae</span>, beatae laboriosam voluptatum rerum quaerat,
 										officiis vitae obcaecati modi cumque ad atque quas aperiam excepturi doloremque placeat deleniti quidem voluptas.
-									</p>
-									<p>
-										Lorem ipsum dolor sit amet consectetur adipisicing elit.
-										Blanditiis autem quidem est, reprehenderit in magnam architecto earum dolores amet voluptatum saepe a doloribus doloremque.
-										Laboriosam reiciendis consequuntur accusamus impedit hic.
 									</p>
 									<ul>
 										<li>Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
@@ -463,7 +435,7 @@
 
 			</div>
 
-			<div class="c-wrapper section">
+			<div class="c-wrapper section scene">
 				<h2>Form elements</h2>
 				<div class="c-one-half">
 
@@ -478,7 +450,7 @@
 						}
 					</script>
 
-					<form action="#" method="POST" class="form i:standardForm">
+					<form action="#" method="POST" class="form i:standardForm labelstyle:inject">
 						<fieldset>
 							<h3>Primary data</h3>
 
@@ -622,20 +594,20 @@
 							</div>
 
 							<ul class="actions">
-								<li class="save">
-									<input type="submit" value="Submit" class="button primary" />
-								</li>
-								<li class="cancel">
-									<input type="button" value="Cancel" class="button" />
-								</li>
-								<li class="link">
-									<a href="#" class="button">Cancel link</a>
+								<li class="disabled">
+									<a href="#" class="button disabled">Disabled link</a>
 								</li>
 								<li class="disabled">
 									<input type="button" value="Disabled button" class="button disabled" />
 								</li>
-								<li class="disabled">
-									<a href="#" class="button disabled">Disabled link</a>
+								<li class="link">
+									<a href="#" class="button">Cancel link</a>
+								</li>
+								<li class="cancel">
+									<input type="button" value="Cancel" class="button" />
+								</li>
+								<li class="save">
+									<input type="submit" value="Submit" class="button primary" />
 								</li>
 							</ul>
 
@@ -643,7 +615,7 @@
 					</form>
 				</div>
 				<div class="c-one-quarter">
-					<form action="#" method="POST" class="form i:standardForm">
+					<form action="#" method="POST" class="form i:standardForm labelstyle:inject">
 						<fieldset>
 							<h3>Primary data</h3>
 
@@ -664,6 +636,15 @@
 									<div class="error">error message which is pretty long and explaining a lot of things</div>
 								</div>
 							</div>
+
+							<ul class="actions">
+								<li class="cancel">
+									<input type="button" value="Cancel" class="button" />
+								</li>
+								<li class="save">
+									<input type="submit" value="Submit" class="button primary" />
+								</li>
+							</ul>
 
 						</fieldset>
 					</form>

@@ -6,7 +6,7 @@ div.field {
 	padding-right: 10px;
 }
 
-div.field label {display: block; margin: 0 0 0 3px; line-height: 12px; font-size: 11px; text-transform: uppercase;}
+div.field label {display: block; margin: 0 0 0 2px; line-height: 12px; font-size: 11px; text-transform: uppercase;}
 
 /* FORM INPUTS INITIAL STATE */
 div.field input,
@@ -93,7 +93,7 @@ div.field.correct .indicator {
 }
 
 /* DEFAULT STATE */
-div.field select.default,
+div.field .default,
 div.field input.default {
 	color: #999999;
 }
@@ -123,10 +123,10 @@ div.field.error div.hint {opacity: 0; transform: translate(0, -10px);}
 
 /* BUTTONS */
 ul.actions,
-#content ul.actions {list-style: none; margin: 0 0 0 2px; font-size: 0;}
+#content ul.actions {list-style: none; text-align: right; margin: 0; font-size: 0;}
 
 ul.actions li,
-#content ul.actions li {width: auto; height: auto; display: inline-block; padding: 0 5px 10px 0; vertical-align: top;
+#content ul.actions li {width: auto; height: auto; display: inline-block; padding: 0 0 10px 5px; vertical-align: top;
 	-moz-user-select: none;
 	-webkit-user-select: none;
 	user-select: none;
