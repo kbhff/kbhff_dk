@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-19 16:13:28
+asset-builder @ 2018-12-19 18:39:38
 */
 
 /*seg_desktop_include.css*/
@@ -219,12 +219,12 @@ input[type="submit"] {
 	position: relative;
 	width: 936px;
 	margin: 0 auto;
-	padding: 28px 0 10px;
+	padding: 18px 0 18px;
 }
 #header .logo {
 	box-sizing: border-box;
 	height: 48px;
-	padding: 10px 8px 6px 54px;
+	padding: 8px 0 0 54px;
 	display: inline-block;
 	background: transparent url(../img/logos/logo-stempel_sort_lille_gulerod.png) no-repeat top left;
 	font-family: 'voresfont';
@@ -350,7 +350,8 @@ input[type="submit"] {
 	line-height: 24px;
 }
 #content h1 + p,
-#content h1 + h3 {
+#content h1 + h3,
+#content h1 + .c-wrapper {
 	padding-top: 46px;
 }
 #content h4 + ul,
@@ -483,13 +484,13 @@ input[type="submit"] {
 	margin-right: 12px;
 	margin-bottom: 24px;
 }
-#content div.c-box > :first-child,
-#content div.c-primary-box > :first-child {
-	padding-top: 12px;
+#content .c-box > h2,
+#content .c-primary-box > h2 {
+	padding-top: 22px;
 }
-#content div.c-box > :last-child,
-#content div.c-primary-box > :last-child {
-	padding-bottom: 12px;
+#content div.c-box > p:first-child,
+#content div.c-primary-box > p:first-child {
+	padding-top: 12px;
 }
 #content div.c-box {
 	background: #f2f2f2;
@@ -627,6 +628,9 @@ body > div.overlay .close:before {
 body > div.overlay .close:after {
 	transform: rotate(-45deg);
 }
+#content div.messages p.error,
+#content p.errormessage {color: #C22414;}
+#content .banner > img {padding-top: 5px;}
 
 
 /*s-footer.css*/
