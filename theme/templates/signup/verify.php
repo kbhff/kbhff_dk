@@ -33,8 +33,8 @@ if($page_item) {
 	</fieldset>
 
 	<ul class="actions">
-		<?= $model->submit("Verificer email", array("class" => "primary", "wrapper" => "li.reset")) ?>
 		<li class="skip"><a href="spring-over" class="button">Spring over</a></li>
+		<?= $model->submit("Verificer email", array("class" => "primary", "wrapper" => "li.reset")) ?>
 	</ul>
 	<?= $model->formEnd() ?>
 
