@@ -82,8 +82,8 @@
 	width: 25%;
 }
 
-#content div.profile .new-order,
-#content div.profile .book-shift {
+#content div.profile .new-order.full-width,
+#content div.profile .book-shift.full-width {
 	padding-right: 0;
 }
 
