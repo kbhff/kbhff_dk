@@ -13,13 +13,9 @@
 #content .scene.signupfees div.article ul.info {display: none;}
 
 /* Signup form */
-#content .scene.signup form {padding-top: 50px;}
-#content .scene.signup ul.actions li.forgot {line-height: 22px;}
-#content .scene.signup form .field {width: 360px; margin: 0 auto;}
-#content .scene.signup form > ul.actions {width: 360px; margin: 0 auto;}
-#content .scene.signup div.signup {width: 360px; margin: 0 auto;}
-#content .scene.signup div.signup p {padding-left: 0;}
-#content .scene.signup p {width: 360px; margin: 0 auto;}
-#content .scene.signup h2 {width: 360px; margin: 0 auto;}
+#content .scene.signup form {width: 360px; margin: 0 auto; padding-top: 46px;}
+#content .scene.signup ul.actions li { padding: 0 2.5px 10px 2.5px; }
+
+#content .scene.signup p {box-sizing: border-box; width: 360px; margin: 0 auto;}
 
 
