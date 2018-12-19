@@ -93,7 +93,8 @@ div.field.correct .indicator {
 }
 
 /* DEFAULT STATE */
-div.field select.default {
+div.field select.default,
+div.field input.default {
 	color: #999999;
 }
 
@@ -115,13 +116,8 @@ div.field.error div.error {opacity: 1;
 }
 /* HELP - HINTS */
 div.field div.hint {color: #999999;}
-div.field.focus div.hint,
-div.field.hover div.hint {opacity: 1;
-	transform: translate(0, 0);
-}
-div.field.error div.hint {opacity: 0;
-	transform: translate(0, -10px);
-}
+div.field.focus div.hint {opacity: 1; transform: translate(0, 0);}
+div.field.error div.hint {opacity: 0; transform: translate(0, -10px);}
 
 
 
