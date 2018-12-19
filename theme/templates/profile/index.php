@@ -12,6 +12,7 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 
 
 <div class="scene profile i:profile">
+	<div class="banner i:banner variant:1 format:jpg"></div>
 
 <?	if(message()->hasMessages()): ?>
 	<p class="errormessage">
@@ -35,9 +36,6 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 		<div class="c-two-thirds">
 
 			<div class="section intro">
-	
-				<div class="banner i:banner variant:1 format:jpg"></div>
-
 				<h2>Velkommen <span class="name"><?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?></span></h2>
 				<p>
 					På min side kan du se og rette oplysninger om dig og dit medlemsskab.
