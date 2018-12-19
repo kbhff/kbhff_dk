@@ -80,8 +80,8 @@ $email = $model->getProperty("email", "value");
 	</fieldset>
 
 	<ul class="actions">
-		<?= $model->submit("Næste", array("class" => "primary", "wrapper" => "li.signup")) ?>
 		<li class="reject"><a href="/bliv-medlem" class="button">Annuller</a></li>
+		<?= $model->submit("Næste", array("class" => "primary", "wrapper" => "li.signup")) ?>
 	</ul>
 <?= $model->formEnd() ?>
 
