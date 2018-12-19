@@ -58,7 +58,6 @@ $email = $model->getProperty("email", "value");
 <div class="c-wrapper">
 	<div class="c-one-half">
 		<?= $model->formStart("save", array("class" => "member_help_signup labelstyle:inject")) ?>
-		<?= $model->input("maillist", array("type" => "hidden", "value" => "Nyheder")); ?>
 		<?= $model->input("quantity", array("type" => "hidden", "value" => 1)); ?>
 		
 		<? if(message()->hasMessages(array("type" => "error"))): ?>
@@ -77,7 +76,7 @@ $email = $model->getProperty("email", "value");
 				<?= $model->input("email", array("required" => true, "label" => "Medlemmets e-mailadresse", "value" => $email, "hint_message" => "Indtast medlemmets e-mailadresse.", "error_message" => "Du har indtastet en ugyldig e-mailadresse.")); ?>
 				<?= $model->input("confirm_email", array("label" => "Gentag medlemmets e-mailadresse", "required" => true, "hint_message" => "Indtast medlemmets e-mailadresse igen.", "error_message" => "De to e-mailadresser er ikke ens.")); ?>
 				<?= $model->input("item_id", array("required" => true, "type" => "select", "label" => "Vælg medlemskab", "options" => $HTML->toOptions($signupfees, "id", "name", ["add" => ["" => "Vælg medlemskab"]]),)); ?>
-				<?= $model->input("department", array("required" => true,"type" => "select", "label" => "Vælg lokalafdeling", "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),)); ?>						
+				<?= $model->input("department_id", array("required" => true,"type" => "select", "label" => "Vælg lokalafdeling", "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),)); ?>						
 			</fieldset>
 			
 		</div>
