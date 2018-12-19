@@ -84,3 +84,8 @@
 	/* font-size: 16px; */
 	font-weight: 700;
 }
+
+#content .scene.member_help_payment ul.orders {padding-top: 50px; margin: 0 auto; width: 450px; padding-bottom: 0;}
+#content .scene.member_help_payment ul.orders > li {list-style-type: none; padding-left: 0; font-size: 16px;}
+#content .scene.member_help_payment ul.orders > li span.price {float: right;}
+#content .scene.member_help_payment ul.orders > li.total_price {font-size: 18px; font-weight: 700; border-top: 1px solid #000000; padding-top: 12px; margin-top: 12px;}

@@ -14,11 +14,28 @@ $order = $model->getOrders(array("order_no" => $order_no));
 // print_r($order); 
 
 $department = $UC->getUserDepartment(["user_id" => $order["user_id"]]);
-print_r($department);
+// print_r($department);
 
 $is_membership = false;
 $subscription_method = false;
 
+$payment_methods = $this->paymentMethods();
+// print_r($payment_methods); exit();
+$mobilepay_payment_method_id = false; 
+$cash_payment_method_id = false; 
+
+if($payment_methods) {
+	foreach ($payment_methods as $payment_method) {
+		if($payment_method["classname"] == "mobilepay") {
+			$mobilepay_payment_method_id = $payment_method["id"];
+		}
+		elseif ($payment_method["classname"] == "cash") {
+			$cash_payment_method_id = $payment_method["id"]; 
+		}
+	}
+}
+
+// print_r($mobilepay_payment_method_id); exit();
 
 if($order) {
 	$total_order_price = $model->getTotalOrderPrice($order["id"]);
@@ -51,7 +68,7 @@ else {
 ?>
 <div class="scene member_help_payment <?= $order ? "i:member_help_payment" : "i:scene" ?>">
 
-<? if($order): ?>
+<? if($order && $mobilepay_payment_method_id && $cash_payment_method_id): ?>
 
 <? 
 	// print_r($order);
@@ -68,21 +85,21 @@ else {
 			<?= $message ?><br>
 	<?		endforeach;?>
 		</p>
-		<p class="message">
-	<?		$messages = message()->getMessages(array("type" => "message"));
-		foreach($messages as $message): ?>
-			<?= $message ?><br>
-	<?		endforeach;?>
-		</p>
 	<?	message()->resetMessages(); ?>
 	<?	endif; ?>
 
-	<p>Indmeldelsesgebyr: <?= $total_order_price["price"] ?>.</p>
+	<ul class="orders">
+	<? foreach($order["items"] as $i => $item): ?>
+		<li class="unit_price"> <?= $item["quantity"]." x ".$item["name"]." a ". formatPrice(array("price" => $item["unit_price"], "currency" => $order["currency"])) ?> <span class="price"><?= formatPrice(array("price" => $item["total_price"], "currency" => $order["currency"]))?></span></li> 
+	<? endforeach; ?>
+		<li>Heraf moms <span class="price vat_price"><?= formatPrice(array("price" => $total_order_price["vat"], "currency" => $total_order_price["currency"])) ?></span></li>
+		<li class="total_price">I alt <span class="price"><?= formatPrice($total_order_price) ?> </span></li>
+	</ul>
 	<div class="payment_options">
-		<?= $model->formStart("registerPayment", ["class" => "mobilepay"]) ?>
+		<?= $model->formStart("registerPayment/".$order_no, ["class" => "mobilepay"]) ?>
 			<fieldset class="mobilepay">
 				<?= $model->input("payment_amount", array("type" => "hidden", "value" => $total_order_price["price"])); ?>
-				<?= $model->input("payment_method", array("type" => "hidden", "value" => "mobilepay")); ?>
+				<?= $model->input("payment_method", array("type" => "hidden", "value" => $mobilepay_payment_method_id)); ?>
 				<?= $model->input("order_id", array("type" => "hidden", "value" => $order["id"])); ?>
 				<?= $model->input("transaction_id", array("type" => "hidden", "value" => $transaction_id)); ?>
 				<!-- <div class="mobilepay qr">
@@ -101,16 +118,16 @@ else {
 			</fieldset>
 	
 		<ul class="actions">
-			<li class="cancel"><a href="/" class="button">Annullér</a></li>
+			<!-- <li class="cancel"><a href="/" class="button">Annullér</a></li> -->
 			<!-- <li class="cancel"><a href="/" class="button">Spring over</a></li> -->
 			<?= $model->submit("Godkend betaling af ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
 		</ul>
 		<?= $model->formEnd() ?>
 	
-		<?= $model->formStart("registerPayment", ["class" => "cash"]) ?>
+		<?= $model->formStart("registerPayment/".$order_no, ["class" => "cash"]) ?>
 			<fieldset class="cash">
 				<?= $model->input("payment_amount", array("type" => "hidden", "value" => $total_order_price["price"])); ?>
-				<?= $model->input("payment_method", array("type" => "hidden", "value" => "cash")); ?>
+				<?= $model->input("payment_method", array("type" => "hidden", "value" => $cash_payment_method_id)); ?>
 				<?= $model->input("order_id", array("type" => "hidden", "value" => $order["id"])); ?>
 				<?= $model->input("transaction_id", array("type" => "hidden", "value" => $transaction_id)); ?>
 				<div class="cash instructions">
@@ -120,16 +137,12 @@ else {
 			</fieldset>
 	
 		<ul class="actions">
-			<li class="cancel"><a href="/" class="button">Annullér</a></li>
-			<!-- <li class="cancel"><a href="/" class="button">Spring over</a></li> -->
+			<!-- <li class="cancel"><a href="/" class="button">Annullér</a></li> -->
+			<li class="cancel"><a href="/medlemshjaelp/betaling/spring-over/kvittering" class="button">Spring over</a></li>
 			<?= $model->submit("Godkend betaling af ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
 		</ul>
 		<?= $model->formEnd() ?>
 	</div>
-
-
-	<p>Betalingsreference: <?= $reference ?>.</p>
-
 <? else: ?>
 
 	<h1>Er du ved at gennemføre en betaling?</h1>

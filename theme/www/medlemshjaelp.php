@@ -144,16 +144,16 @@ if($action) {
 			exit();
 		}
 		
-		// /medlemshjaelp/betaling/#order_no#/spring-over
-		else if(count($action) === 4 && $action[3] == "spring-over") {
+		// /medlemshjaelp/betaling/spring-over/kvittering
+		else if(count($action) === 3 && $action[1] == "spring-over") {
 			$page->page(array(
 				"templates" => "member-help/receipt/skipped.php"
 			));
 			exit();
 		} 
 
-		// /medlemshjaelp/betaling/#order_no#/kvittering
-		else if(count($action) === 4 && $action[3] == "kvittering") {
+		// /medlemshjaelp/betaling/#payment_id#/kvittering
+		else if(count($action) === 3 && $action[2] == "kvittering") {
 			$page->page(array(
 				"templates" => "member-help/receipt/index.php"
 			));
@@ -163,26 +163,24 @@ if($action) {
 		
 	}
 	
-	// /medlemshjaelp/registerPayment
-	else if($action[0] == "registerPayment") {
+	// /medlemshjaelp/registerPayment/#order_no#
+	else if(count($action) === 2 && $action[0] == "registerPayment") {
 		include_once("classes/shop/supershop.class.php");
 		$SC = new SuperShop();
 
-		$payment_id = $SC->registerPayment($action);
-
-		print_r($payment_id);
+		$payment_id = $SC->registerPayment(["registerPayment"]);
 
 
 		if($payment_id) {
 			
-			header("Location: /betaling".$payment_id."/kvittering");
+			header("Location: /medlemshjaelp/betaling/".$payment_id."/kvittering");
 			exit();
 		}
 
 		else {
 			message()->resetMessages();
 			message()->addMessage("Der skete en fejl i registreringen af betalingen.", array("type" => "error"));
-			header("Location: paymentError");
+			header("Location: /medlemshjaelp/betaling/".$action[1]);
 			exit();
 		}
 	
