@@ -82,9 +82,9 @@
 	width: 25%;
 }
 
-#content div.profile .new-order.full-width,
-#content div.profile .book-shift.full-width {
-	padding-right: 0;
+#content div.profile .full-width,
+#content div.profile .full-width {
+
 }
 
 #content div.profile .department-info,
@@ -137,7 +137,6 @@
 #content div.profile ul.actions {
 	width: 100%;
 	box-sizing: border-box;
-	padding-right: 14px;
 	padding-top: 20px;
 }
 
@@ -148,6 +147,8 @@
 #content div.profile ul.actions .full-width {
 	width: 100%;
 	text-align: center;
+	padding-left: 0;
+	padding-right: 0;
 }
 #content div.profile ul.actions .half-width {
 	width: 50%;

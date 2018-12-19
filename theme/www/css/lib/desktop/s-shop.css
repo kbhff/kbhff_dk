@@ -1,24 +1,18 @@
-#content .scene.shopPayment form.card {margin-top: 32px; width: 40%;}
+#content .scene.shopPayment ul.orders {padding-top: 50px; margin: 0 auto; width: 450px; padding-bottom: 0;}
+#content .scene.shopPayment ul.orders > li {list-style-type: none; padding-left: 0; font-size: 16px;}
+#content .scene.shopPayment ul.orders > li span.price {float: right;}
+#content .scene.shopPayment ul.orders > li.total_price {font-size: 18px; font-weight: 700; border-top: 1px solid #000000; padding-top: 12px; margin-top: 12px;}
+
+
+#content .scene.shopPayment form.card {width: 450px; margin: 0 auto; padding-top: 50px;}
 #content .scene.shopPayment form.card fieldset {background-color: #f2f2f2;}
-#content .scene.shopPayment form.card fieldset div.field.tel.card {width: 90%; margin: 0 auto; padding-top: 24px;}
-#content .scene.shopPayment form.card fieldset div.field.tel.exp_month {width: 15%; display: inline-block; margin-left: 2.5%;}
-#content .scene.shopPayment form.card fieldset div.field.tel.exp_year {width: 15%; display: inline-block;}
-#content .scene.shopPayment form.card fieldset div.field.cvc {display: inline-block; width: 20%;}
-#content .scene.shopPayment form.card fieldset span.slash {font-size: 20px; vertical-align: middle;}
-
-#content .scene.shopPayment form.card ul.actions {width: 100%; margin-left: 0; padding-left: 0; margin-top: 12px;}
-
-#content .scene.shopPayment form.card div.fan {display: inline-block; background-color: #f2f2f2f2; padding: 6px calc(2.5% + 10px); margin-right: 12px;}
-#content .scene.shopPayment form.card div.fan.mobilepay_fan {background-color: #bbbbbb;}
-#content .scene.shopPayment form.card div.payment_explanation {display: none; background-color: #f2f2f2f2;}
-
-#content .scene.shopPayment > p {font-size: 12px; line-height: 12px; padding-bottom: 0;}
-#content .scene.shopPayment > h1 + p {padding: 12px; font-size: 14px;}
+#content .scene.shopPayment form.card fieldset div.field.tel.card {width: 400px; margin: 0 auto; padding-top: 24px;}
+#content .scene.shopPayment form.card fieldset div.field.tel.exp_month {width: 65px; display: inline-block; margin-left: 15px;}
+#content .scene.shopPayment form.card fieldset div.field.tel.exp_year {width: 65px; display: inline-block;}
+#content .scene.shopPayment form.card fieldset div.field.cvc {display: inline-block; width: 85px;}
+#content .scene.shopPayment form.card fieldset span.slash {font-size: 30px; vertical-align: middle;}
+#content .scene.shopPayment form.card ul.actions {padding-right: 0; padding-left: 0; margin-top: 12px;}
 
 
-#content .scene.shopPayment form {padding-top: 50px; margin: 0 auto;}
-#content .scene.shopPayment ul.actions li.forgot {line-height: 22px;}
-#content .scene.shopPayment form .field {width: 35%; margin: 0 auto;}
-#content .scene.shopPayment form > ul.actions {margin: 0 auto; width: 35%}
-#content .scene.shopPayment p {width: 40%; margin: 0 auto;}
-#content .scene.shopPayment h2 {width: 40%; margin: 0 auto;}
+#content .scene.shopPayment > p {width: 450px; margin: 0 auto; font-size: 12px; line-height: 12px; padding-bottom: 0;}
+
