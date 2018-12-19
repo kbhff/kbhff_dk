@@ -1,7 +1,7 @@
-#content .scene.login form {width: 360px; margin: 0 auto; padding-top: 20px;}
+#content .scene.login form {width: 380px; margin: 0 auto; padding-top: 20px;}
 #content .scene.login ul.actions { text-align: center; }
 #content .scene.login ul.actions li { padding: 0 2.5px 10px 2.5px; }
 
-#content .scene.login p {box-sizing: border-box; width: 360px; margin: 0 auto;}
+#content .scene.login p {box-sizing: border-box; width: 380px; margin: 0 auto;}
 #content .scene.login p.forgot,
 #content .scene.login p.signup {text-align: center;}
