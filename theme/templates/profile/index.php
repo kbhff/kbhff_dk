@@ -12,7 +12,7 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 
 
 <div class="scene profile i:profile">
-	<div class="header_image i:header_image variant:1 format:jpg"></div>
+	<div class="banner i:banner variant:1 format:jpg"></div>
 
 <?	if(message()->hasMessages()): ?>
 	<p class="errormessage">
