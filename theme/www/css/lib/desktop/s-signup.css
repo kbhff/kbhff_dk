@@ -1,3 +1,4 @@
+#content .scene.signupfees h1 {color: #ffffff; box-shadow: 0px -5px white inset;}
 #content .scene.signupfees h3 {padding-bottom: 8px; margin-right: 12px; margin-left: 12px; margin-top: 12px; border-bottom: 1px solid #000000; font-size: 26px;}
 #content .scene.signupfees ul.signupfees {margin-left: 0;}
 #content .scene.signupfees li.signupfee {display: inline-block; width: calc(50% - 14px - 12px); vertical-align: top; text-align: center; background-color: rgba(255, 255, 255, 0.9); margin-top: 48px; margin-right: 12px; margin-left: 12px; padding-left: 0;}
@@ -21,8 +22,8 @@
 #content .scene.signup h2 {text-align: center;}
 
 #content .scene.signupfees div.article {position: relative; z-index: 11;}
-#content .scene.signupfees div.article div.articlebody {width: 500px; padding-left: 12px; padding-right: 12px; background-color: rgba(255, 255, 255, 0.9);}
-#content .scene.signupfees div.article div.articlebody p:first-child {padding-top: 24px; margin-top: 22px;}
+#content .scene.signupfees div.article div.articlebody {background-color: rgba(255, 255, 255, 0.9);}
+#content .scene.signupfees div.article div.articlebody p {padding-top: 24px; margin-top: 22px;}
 #content .scene.signupfees ul.signupfees {position: relative; z-index: 11;}
 #content .scene.signupfees div.bg {z-index: 10; position: absolute; top: 63px; width: calc(50% - 12px); background-repeat: no-repeat; background-color: transparent; background-position: left top; background-size: cover; height: calc(100% - 63px);}
 #content .scene.signupfees div.bg.supporter {left: 12px; background-image: url(/img/signup/bg_supporter.jpg);}

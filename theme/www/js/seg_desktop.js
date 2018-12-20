@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-20 18:10:05
+asset-builder @ 2018-12-20 23:34:25
 */
 
 /*seg_desktop_include.js*/
@@ -5203,7 +5203,6 @@ Util.Objects["signupfees"] = new function() {
 		scene.scrolled = function() {
 		}
 		scene.ready = function() {
-			u.bug("scene.ready:", this);
 			var signupfees = u.qsa("ul.offer li.description");
 			console.log(signupfees)
 			var largestHeight = 0;
@@ -5220,6 +5219,19 @@ Util.Objects["signupfees"] = new function() {
 			}
 			var bg1 = u.ae(scene, "div", {class:"bg volunteer"});
 			var bg2 = u.ae(scene, "div", {class:"bg supporter"});
+			page.resized();
+			u.ass(bg1, {
+				height: page.browser_h + "px",
+				top: -(u.absY(scene)) + "px",
+				right: -(page.browser_w - u.absX(scene) - scene.offsetWidth) + "px",
+				width: (page.browser_w / 2) + "px",
+			});
+			u.ass(bg2, {
+				height: page.browser_h + "px",
+				top: -(u.absY(scene)) + "px",
+				left: -(page.browser_w - u.absX(scene) - scene.offsetWidth) + "px",
+				width: (page.browser_w / 2) + "px",
+			});
 		}
 		scene.ready();
 	}
