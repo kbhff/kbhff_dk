@@ -5,6 +5,7 @@ Util.Objects["banner"] = new function() {
 			var format = u.cv(div, "format");
 
 			u.ae(div, "img", {class:"fit-width", src:"/img/banners/desktop/pi_" + variant + "." + format});	
+			u.ae(div, "div", {class:"logo"});
 
 	}
 }

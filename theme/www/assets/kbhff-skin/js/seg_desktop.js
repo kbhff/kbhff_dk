@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-20 15:53:35
+asset-builder @ 2018-12-20 17:57:53
 */
 
 /*seg_desktop_include.js*/
@@ -4751,6 +4751,7 @@ Util.Objects["banner"] = new function() {
 			var variant = u.cv(div, "variant");
 			var format = u.cv(div, "format");
 			u.ae(div, "img", {class:"fit-width", src:"/img/banners/desktop/pi_" + variant + "." + format});	
+			u.ae(div, "div", {class:"logo"});
 	}
 }
 
