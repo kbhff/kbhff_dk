@@ -14,7 +14,6 @@ Util.Objects["profile"] = new function() {
 			this.initMembershipBox();
 			this.initUserinfoBox();
 			this.initPasswordBox();
-
 		}
 		
 		// Medlemsskab box
@@ -30,9 +29,12 @@ Util.Objects["profile"] = new function() {
 
 			// "Ret" button
 			u.clickableElement(button_membership); // Add click event to button and ignore href redirect.
-			// When button is clicked
-			button_membership.clicked = function() { 
+			button_membership.clicked = function() {
+
 				this.response = function(response) {
+					this.is_requesting = false;
+					u.rc(this, "loading");
+
 					// Query form to inject
 					var form_department = u.qs(".form_department", response);
 					form_department.scene = this.scene; // Create reference to scene
@@ -60,7 +62,11 @@ Util.Objects["profile"] = new function() {
 					// Update button
 					form_department.submitted = function() {
 						var data = u.f.getParams(this);
+
 						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
+							
 							// Replace form
 							var div_membership = u.qs(".membership .fields", response);
 							box_membership.replaceChild(div_membership, form_department);
@@ -72,20 +78,42 @@ Util.Objects["profile"] = new function() {
 							// Init new box on scene
 							this.scene.initMembershipBox();
 						}
-						u.request(this, this.action, {"data":data, "method":"POST"});
+
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, this.action, {"data":data, "method":"POST"});
+						}
+
 					}
 
 					// Cancel button
 					form_department.actions["cancel"].clicked = function() {
+
 						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
+
 							var div_membership = u.qs(".membership .fields", response);
 							box_membership.replaceChild(div_membership, form_department);
 							form_department.scene.initMembershipBox(); // this.scene not working from here?
 						}
-						u.request(this, "/profil");
+
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, "/profil");
+						}
+
 					}
 				}
-				u.request(this, "/profil/afdeling");
+
+				if (!this.is_requesting) {
+					this.is_requesting = true;
+					u.ac(this, "loading");
+					u.request(this, "/profil/afdeling");
+				}
+
 			}
 
 			// "Opsig" button
@@ -106,9 +134,12 @@ Util.Objects["profile"] = new function() {
 				// Add click event to go to password confirmation
 				u.e.click(delete_me)
 				delete_me.clicked = function () {
+
 					// Inject 'confirm cancellation' form
 					this.response = function(response) {
-												
+						this.is_requesting = false;
+						u.rc(this, "loading");
+
 						// Query form to inject
 						var form_confirm_cancellation = u.qs(".confirm_cancellation", response);
 
@@ -122,8 +153,11 @@ Util.Objects["profile"] = new function() {
 
 						form_confirm_cancellation.submitted = function () {
 							var data = u.f.getParams(this);
+
 							this.response = function(response) {
-								console.log(response);
+								this.is_requesting = false;
+								u.rc(this, "loading");
+
 								var div_scene_login = u.qs("div.scene.login", response);
 								console.log(div_scene_login);
 								if (div_scene_login) {
@@ -147,16 +181,26 @@ Util.Objects["profile"] = new function() {
 								}
 							}
 							
-							u.request(this, this.action, {"data":data, "method":"POST"});
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.action, {"data":data, "method":"POST"});
+							}
+
 						}
 					}
-	
-					u.request(this, "/profil/opsig");
+
+					if (!this.is_requesting) {
+						this.is_requesting = true;
+						u.ac(this, "loading");
+						u.request(this, "/profil/opsig");
+					}
+
 				}
 				// Add click event to cancel and close overlay
 				u.e.click(regret)
 				regret.clicked = function () {
-						overlay.close ();
+					overlay.close ();
 				}
 			}
 
@@ -172,7 +216,11 @@ Util.Objects["profile"] = new function() {
 
 			u.clickableElement(button_userinfo);
 			button_userinfo.clicked = function() {
+
 				this.response = function(response) {
+					this.is_requesting = false;
+					u.rc(this, "loading");
+
 					var form_userinfo = u.qs(".form_user", response);
 					form_userinfo.scene = this.scene;
 					var div_fields = u.qs("div.fields", box_userinfo);
@@ -185,6 +233,9 @@ Util.Objects["profile"] = new function() {
 						var data = u.f.getParams(this);
 
 						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
+
 							// Replace form with updated box
 							var div_userinfo = u.qs(".user .fields", response);
 							box_userinfo.replaceChild(div_userinfo, form_userinfo);
@@ -196,22 +247,45 @@ Util.Objects["profile"] = new function() {
 							// Init new box
 							form_userinfo.scene.initUserinfoBox();
 						}
-						u.request(this, this.action, {"data":data, "method":"POST"});
+
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, this.action, {"data":data, "method":"POST"});
+
+						}
+
 					}
 
 					// Cancel button
 					form_userinfo.actions["cancel"].clicked = function() {
 						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
+
 							// Replace form with box
 							var div_userinfo = u.qs(".user .fields", response);
 							box_userinfo.replaceChild(div_userinfo, form_userinfo);
 							form_userinfo.scene.initUserinfoBox();
 						}
-						u.request(this, "/profil");
+
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, "/profil");
+						}
+
 					}
 				}
-				u.request(this, "/profil/bruger");
+
+				if (!this.is_requesting) {
+					this.is_requesting = true;
+					u.ac(this, "loading");
+					u.request(this, "/profil/bruger");
+				}
+
 			}
+		
 		}
 
 		// Kodeord box
@@ -222,7 +296,11 @@ Util.Objects["profile"] = new function() {
 
 			u.clickableElement(button_password);
 			button_password.clicked = function() {
+
 				this.response = function(response) {
+					this.is_requesting = false;
+					u.rc(this, "loading");
+
 					var form_password = u.qs(".form_password", response);
 					form_password.scene = this.scene;
 					var div_fields = u.qs("div.fields", box_password);
@@ -235,25 +313,50 @@ Util.Objects["profile"] = new function() {
 						var data = u.f.getParams(this);
 
 						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
+
 							var div_password = u.qs(".password .fields", response);
 							box_password.replaceChild(div_password, form_password);
 							this.scene.initPasswordBox();
 						}
-						u.request(this, this.action, {"data":data, "method":"POST"});
+
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, this.action, {"data":data, "method":"POST"});
+						}
+
 					}
 
 					// Cancel button
 					form_password.actions["cancel"].clicked = function() {
+
 						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
+
 							var div_userinfo = u.qs(".password .fields", response);
 							box_password.replaceChild(div_userinfo, form_password);
 							form_password.scene.initPasswordBox();
 						}
-						u.request(this, "/profil");
+
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, "/profil");
+						}
+
 					}
 
 				}
-				u.request(this, "/profil/kodeord");
+
+				if (!this.is_requesting) {
+					this.is_requesting = true;
+					u.ac(this, "loading");
+					u.request(this, "/profil/kodeord");
+				}
+
 			}
 		}
 
