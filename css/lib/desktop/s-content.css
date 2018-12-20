@@ -120,6 +120,10 @@
 	padding-left: 8px;
 }
 
+#content ul.info {
+	display: none;
+}
+
 #content ul.richtext {
 	list-style: none;
 	margin-left: 0;
@@ -434,4 +438,9 @@ body > div.overlay .close:after {
 #content div.messages p.error,
 #content p.errormessage {color: #C22414;}
 
+#content .banner {position: relative;}
 #content .banner > img {padding-top: 5px;}
+#content .banner > div.logo {position: absolute; top: 5px; left: 25px; width: 318px; height: 206px;
+	background: transparent url(/img/banners/desktop/logo_layover.png) no-repeat top left;
+	background-size: 100% auto;
+}
