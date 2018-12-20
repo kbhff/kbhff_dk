@@ -1,5 +1,5 @@
 <div class="scene i:scene" itemscope itemtype="http://schema.org/NewsArticle">
-	<h1>Signup error</h1>
+	<h1>Fejl ved tilmelding</h1>
 
 <?	if(message()->hasMessages()): ?>
 	<p class="errormessage">

@@ -79,11 +79,12 @@ else {
 	</ul>
 	<?= $model->formEnd() ?>
 
-	<p>Betalingsreference: <?= $reference ?>.</p>
+	<p></p>
 	<p class="note">
+		Betalingsreference: <?= $reference ?>. <br />
 		Vi bruger <a href="https://stripe.com" target="_blank">Stripe</a> til at behandle betalingen. <br />
-		Vi beholder ingen kortinformationer på vores server. <br />
-		All kommunikation er krypteret. <br />
+		Vi opbevarer ingen kortinformationer på vores server. <br />
+		Al kommunikation er krypteret. <br />
 	</p>
 
 <? else: ?>

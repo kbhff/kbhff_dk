@@ -3,11 +3,9 @@
 	<h1>Medlemshjælp</h1>
 
 			<div class="c-wrapper">
-				<div class="c-one-half">
-					<ul class="actions">
-						<li><a class="button primary clickable" href="/medlemshjaelp/tilmelding">Opret nyt medlem</a></li>
-					</ul>
-				</div>
+				<ul class="actions">
+					<li><a class="button primary clickable" href="/medlemshjaelp/tilmelding">Opret nyt medlem</a></li>
+				</ul>
 			</div>
 
 </div>
