@@ -286,7 +286,7 @@ class User extends UserCore {
 		if ($cancel_result === true) {
 			message()->addMessage("Dine oplysninger blev slettet");
 			mailer()->send([
-				"subject" => "Dit medlemsskab af Københavns Fødevarefællesskab er opsagt",
+				"subject" => "Dit medlemskab af Københavns Fødevarefællesskab er opsagt",
 				"message" => "Du har meldt dig ud af Københavns Fødevarefællesskab. Tak for denne gang.",
 				"recipients" => [$user_email]
 				]);

@@ -56,7 +56,7 @@ session()->reset("temp-username");
 <? else:?>
 	<h1>Log ind</h1>
 	<p>
-		I medlemssystemet kan du bestille varer, booke vagter og administrere dit medlemsskab.
+		I medlemssystemet kan du bestille varer, booke vagter og administrere dit medlemskab.
 		Du kan bruge e-mailadresse, telefonnummer eller medlemsnummer som brugernavn til at logge ind.
 		<strong>Velkommen indenfor!</strong>
 	</p>

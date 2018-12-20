@@ -16,7 +16,7 @@ Util.Objects["profile"] = new function() {
 			this.initPasswordBox();
 		}
 		
-		// Medlemsskab box
+		// Medlemskab box
 		scene.initMembershipBox = function() {
 			// Query needed elements
 			var box_membership = u.qs(".membership > .c-box", this);

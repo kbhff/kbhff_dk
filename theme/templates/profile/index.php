@@ -38,7 +38,7 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 			<div class="section intro">
 				<h2>Velkommen <span class="name"><?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?></span></h2>
 				<p>
-					På min side kan du se og rette oplysninger om dig og dit medlemsskab.
+					På min side kan du se og rette oplysninger om dig og dit medlemskab.
 					Du kan også se og rette dine eksisterende bestillinger og lave en ny bestilling (åbner GrøntShoppen).
 					På sigt er det desuden meningen at du her skal kunne book frivillig-vagter og se nyheder og beskeder fra din lokalafdeling.
 				</p>
@@ -149,7 +149,7 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 
 			<div class="section membership">
 				<div class="c-box">
-					<h3>Dit medlemsskab</h3>
+					<h3>Dit medlemskab</h3>
 
 					<div class="fields">
 						<div class="membership-info">

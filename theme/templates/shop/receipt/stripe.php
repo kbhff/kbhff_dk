@@ -60,24 +60,31 @@ if(count($action) == 4) {
 
 ?>
 <div class="scene shopReceipt i:scene">
+	<div class="article">
+	<? if($order): ?>
+	
+		<h1>Tak for betalingen</h1>
+		<div class="articlebody">
+			<h2>Din betaling på <?= formatPrice(["price" => $payment["payment_amount"], "currency" => $payment["currency"]]) ?> er godkendt</h2>
+		
+		<? endif; ?>
+		
+		
+		<? if($is_membership): ?>
+			<p>Du er medlem, og du kan begynde at bestille dine grøntsager.</p>
+		<? endif; ?>
+		
+		
+		<? if(!$active_account): ?>
+			<p>Husk at aktivere din konto ved at verificere din email, hvis du ikke har gjort det endnu. Ellers kan du ikke modtage nyhedsbreve eller bestille grøntsager. Kig i din indbakke efter aktiveringsemailen.</p>
+		<? else: ?>
+			<ul class="actions">
+				<li><a class="button primary clickable" href="/">Log ind</a></li>
+			</ul>
+		<? endif; ?>
+		</div>
+	</div>
 
-<? if($order): ?>
-
-	<h1>Tak for betalingen</h1>
-
-	<h2>Din betaling på <?= formatPrice(["price" => $payment["payment_amount"], "currency" => $payment["currency"]]) ?> er gået igennem.</h2>
-
-<? endif; ?>
-
-
-<? if($is_membership): ?>
-	<p>Du er medlem, og du kan begynde at bestille dine grøntsager.</p>
-<? endif; ?>
-
-
-<? if(!$active_account): ?>
-	<p>Husk at aktivere din konto ved at verificere din email, hvis du ikke har gjort det endnu. Ellers kan du ikke modtage nyhedsbreve eller bestille grøntsager. Kig i din indbakke efter aktiveringsemailen.</p>
-<? endif; ?>
 
 
 </div>

@@ -47,7 +47,7 @@ $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "positio
 		<? endif; ?>
 	</div>
 <? else:?>
-	<h1>Vælg medlemsskab</h1>
+	<h1>Vælg medlemskab</h1>
 <? endif; ?>
 
 <? if($signupfees): ?>

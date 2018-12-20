@@ -91,7 +91,7 @@ if($item) {
 
 	<? if($related_items): ?>
 		<div class="related">
-			<h2>Andre medlemsskaber <a href="/bliv-medlem">(oversigt)</a></h2>
+			<h2>Andre medlemskaber <a href="/bliv-medlem">(oversigt)</a></h2>
 
 			<ul class="items membership">
 	<?		foreach($related_items as $item):
