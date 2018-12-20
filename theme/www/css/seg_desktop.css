@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-20 14:07:56
+asset-builder @ 2018-12-20 16:14:41
 */
 
 /*seg_desktop_include.css*/
@@ -39,6 +39,7 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 	font-weight: 400;
 	font-style: normal;
 }
+#content .scene .article ul.info {display: none;}
 #content .scene .article h1 {}
 #content .scene .article ul.tags {display: none;}
 #content .scene .article > ul.info {width: 100%; margin: 0 auto; padding-top: 10px; padding-left: 12px; padding-right: 12px; box-sizing: border-box;}
