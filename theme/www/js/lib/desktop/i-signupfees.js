@@ -26,6 +26,10 @@ Util.Objects["signupfees"] = new function() {
 			while (j--) {
 				u.ass(signupfees[j], {"height":largestHeight+"px"})
 			}
+
+
+			var bg1 = u.ae(scene, "div", {class:"bg volunteer"});
+			var bg2 = u.ae(scene, "div", {class:"bg supporter"});
 		}
 
 		// scene is ready
