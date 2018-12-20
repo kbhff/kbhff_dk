@@ -63,7 +63,7 @@ if($action) {
 					$order = $SC->newOrderFromCart(array("newOrderFromCart", $cart["id"], $cart["cart_reference"]));
 					if($order) {						
 						// print_r($cart); exit();
-
+						message()->resetMessages();
 						header("Location: betaling/".$order["order_no"]);
 						exit();
 					}
@@ -172,7 +172,7 @@ if($action) {
 
 
 		if($payment_id) {
-			
+			message()->resetMessages();
 			header("Location: /medlemshjaelp/betaling/".$payment_id."/kvittering");
 			exit();
 		}
