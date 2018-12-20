@@ -63,7 +63,7 @@ if(count($action) == 4) {
 
 <? if($order): ?>
 
-	<h1>Tak for betalingen.</h1>
+	<h1>Tak for betalingen</h1>
 
 	<h2>Din betaling på <?= formatPrice(["price" => $payment["payment_amount"], "currency" => $payment["currency"]]) ?> er gået igennem.</h2>
 
