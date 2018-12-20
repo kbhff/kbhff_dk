@@ -226,7 +226,7 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 						<p class="under">***********</p>
 
 						<ul class="actions">
-							<li class="change-info full-width"><a href="/profil/kodeord" class="button">Ændre adgangskode</a></li>
+							<li class="change-info full-width"><a href="/profil/kodeord" class="button">Skift adgangskode</a></li>
 						</ul>
 
 					</div>

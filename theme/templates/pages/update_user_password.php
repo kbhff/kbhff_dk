@@ -2,12 +2,12 @@
 $UC = new User();
 $user = $UC->getKbhffUser();
 
-$this->pageTitle("Kodeord");
+$this->pageTitle("Adgangskode");
 ?>
 
 <div class="scene user_password i:user_password">
-	<h1>Kodeord</h1>
-	<h2>Her kan du ændre dit kodeord.</h2>
+	<h1>Adgangskode</h1>
+	<h2>Her kan du ændre din adgangskode.</h2>
 
 	<?= $UC->formStart("updateUserPassword", ["class" => "form_password"]) ?>
 
@@ -31,16 +31,16 @@ $this->pageTitle("Kodeord");
 		<fieldset>
 			<?=
 				$UC->input("new_password", [
-					"label" => "Dit nye kodeord",
+					"label" => "Din nye adgangskode",
 					"required" => true,
-					"hint_message" => "Dit nye kodeord",
+					"hint_message" => "Din nye adgangskode",
 					"error_message" => "",
 				]),
 
 				$UC->input("confirm_password", [
-					"label" => "Gentag dit nye kodeord",
+					"label" => "Gentag din nye adgangskode",
 					"required" => true,
-					"hint_message" => "Dit nye kodeord",
+					"hint_message" => "Din nye adgangskode",
 					"error_message" => "",
 				]);
 			?>

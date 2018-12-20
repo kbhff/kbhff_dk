@@ -56,7 +56,8 @@ session()->reset("signup_email");
 <? else:?>
 
 	<h1>Tak!</h1>
-	<p><em><?= $username ?></em> er verificeret. Du kan nu <a href="/login">logge ind</a>.</p>
+	<p><em><?= $username ?></em> er verificeret.</p>
+	<p>Du kan nu <a href="/login">logge ind</a>.</p>
 
 <? endif; ?>
 
