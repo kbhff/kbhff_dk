@@ -409,6 +409,7 @@ body > div.overlay .close {
 }
 body > div.overlay ul.actions {
 	width: 100%;
+	text-align: center;
 }
 
 body > div.overlay .close:hover {
