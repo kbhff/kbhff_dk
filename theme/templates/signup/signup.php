@@ -75,8 +75,8 @@ $email = $model->getProperty("email", "value");
 		<?= $model->input("confirm_email", array("label" => "Gentag din email", "required" => true, "hint_message" => "Indtast din email igen.", "error_message" => "De to email adresser er ikke ens.")); ?>
 		<?= $model->input("password", array("required" => true, "label" => "Adgangskode", "hint_message" => "Indtast en adgangskode.", "error_message" => "Din adgangskode skal være mellem 8 og 20 karakterer.")); ?>
 		<?= $model->input("department_id", array("type" => "select", "label" => "Vælg lokalafdeling", "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),)); ?>
-		<?= $model->input("terms", array("label" => 'Jeg accepterer <a href="/persondata" target="_blank">vilkår og betingelser</a>')); ?>
-		<?= $model->input("maillist", array("type" => "checkbox", "label" => "Vil du modtage nyhedsbreve?", "value" => "Nyheder")); ?>
+		<?= $model->input("terms", array("label" => 'Jeg accepterer <a href="/persondata" target="_blank">KBHFF\'s vilkår og betingelser</a>', "hint_message" => "Nødvendigt for at blive medlem af KBHFF.", "error_message" => "Man kan ikke være medlem, hvis man ikke accepterer KBHFF's betingelser.")); ?>
+		<?= $model->input("maillist", array("type" => "checkbox", "label" => "Jeg vil gerne modtage KBHFF's nyhedsbrev.", "value" => "Nyheder")); ?>
 	</fieldset>
 
 	<ul class="actions">
