@@ -12,7 +12,7 @@ $model = new Shop();
 
 
 $page->bodyClass("shop");
-$page->pageTitle("Shop");
+$page->pageTitle("Butik");
 
 
 if(is_array($action) && count($action)) {
