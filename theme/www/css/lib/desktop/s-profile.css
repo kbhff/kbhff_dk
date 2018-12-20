@@ -82,11 +82,6 @@
 	width: 25%;
 }
 
-#content div.profile .full-width,
-#content div.profile .full-width {
-
-}
-
 #content div.profile .department-info,
 #content div.profile .membership-info,
 #content div.profile .user-info {
@@ -118,6 +113,10 @@
 	padding: 0;
 	margin: 0;
 	width: 8%;
+}
+
+#content div.profile ul.actions .change-info {
+	padding-left: 0;
 }
 
 #content div.profile ul.actions.change > li {

@@ -210,7 +210,7 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 						</div>
 
 						<ul class="actions">
-							<li class="change-info half-width"><a href="/profil/bruger" class="button">Ret</a></li>
+							<li class="change-info full-width"><a href="/profil/bruger" class="button">Ret</a></li>
 						</ul>
 					</div>
 
