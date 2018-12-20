@@ -61,28 +61,36 @@ if($item) {
 
 
 
-		<div class="articlebody" itemprop="articleBody">
-			<?= $item["html"] ?>
+		<div class="c-wrapper">
+			<div class="c-two-thirds">
+				<div class="articlebody" itemprop="articleBody">
+					<?= $item["html"] ?>
+				</div>
+		
+				<? if($item["mediae"]): ?>
+					<? foreach($item["mediae"] as $media): ?>
+				<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">
+					<p>Image: <a href="/images/<?= $item["item_id"] ?>/<?= $media["variant"] ?>/500x.<?= $media["format"] ?>"><?= $media["name"] ?></a></p>
+				</div>
+					<? endforeach; ?>
+				<? endif; ?>
+			</div>
+	
+			<div class="c-one-third c-box">
+				<h2>Meld dig ind</h2>
+
+				<?= $HTML->frontendOffer($item, SITE_URL."/bliv-medlem", $item["description"]) ?>
+		
+				<?= $model->formStart("/bliv-medlem/addToCart", array("class" => "signup labelstyle:inject")) ?>
+					<?= $model->input("quantity", array("value" => 1, "type" => "hidden")); ?>
+					<?= $model->input("item_id", array("value" => $item["item_id"], "type" => "hidden")); ?>
+		
+					<ul class="actions">
+						<?= $model->submit("Tilmeld", array("class" => "primary", "wrapper" => "li.signup")) ?>
+					</ul>
+				<?= $model->formEnd() ?>
+			</div>
 		</div>
-
-		<? if($item["mediae"]): ?>
-			<? foreach($item["mediae"] as $media): ?>
-		<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">
-			<p>Image: <a href="/images/<?= $item["item_id"] ?>/<?= $media["variant"] ?>/500x.<?= $media["format"] ?>"><?= $media["name"] ?></a></p>
-		</div>
-			<? endforeach; ?>
-		<? endif; ?>
-
-		<?= $HTML->frontendOffer($item, SITE_URL."/bliv-medlem", $item["description"]) ?>
-
-		<?= $model->formStart("/bliv-medlem/addToCart", array("class" => "signup labelstyle:inject")) ?>
-			<?= $model->input("quantity", array("value" => 1, "type" => "hidden")); ?>
-			<?= $model->input("item_id", array("value" => $item["item_id"], "type" => "hidden")); ?>
-
-			<ul class="actions">
-				<?= $model->submit("Tilmeld", array("class" => "primary", "wrapper" => "li.signup")) ?>
-			</ul>
-		<?= $model->formEnd() ?>
 
 
 
