@@ -105,7 +105,7 @@ if($action) {
 
 	}
 
-	//bliv-medlem/verficer
+	//bliv-medlem/verificer
 	else if($action[0] == "verificer") {
 
 		$page->page(array(
