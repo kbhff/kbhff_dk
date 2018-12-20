@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-20 17:58:54
+asset-builder @ 2018-12-20 18:10:05
 */
 
 /*seg_desktop_include.css*/
@@ -810,8 +810,8 @@ body.profil > div.overlay div.field.password {
 #content .scene.signup p {box-sizing: border-box; width: 380px; margin: 0 auto;}
 #content .scene.signup h2 {text-align: center;}
 #content .scene.signupfees div.article {position: relative; z-index: 11;}
-#content .scene.signupfees div.article div.articlebody {background-color: rgba(255, 255, 255, 0.9);}
-#content .scene.signupfees div.article div.articlebody p {padding-top: 24px; margin-top: 22px;}
+#content .scene.signupfees div.article div.articlebody {width: 500px; padding-left: 12px; padding-right: 12px; background-color: rgba(255, 255, 255, 0.9);}
+#content .scene.signupfees div.article div.articlebody p:first-child {padding-top: 24px; margin-top: 22px;}
 #content .scene.signupfees ul.signupfees {position: relative; z-index: 11;}
 #content .scene.signupfees div.bg {z-index: 10; position: absolute; top: 63px; width: calc(50% - 12px); background-repeat: no-repeat; background-color: transparent; background-position: left top; background-size: cover; height: calc(100% - 63px);}
 #content .scene.signupfees div.bg.supporter {left: 12px; background-image: url(../img/signup/bg_supporter.jpg);}
