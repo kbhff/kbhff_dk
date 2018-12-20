@@ -24,6 +24,13 @@ Util.Objects["member_help_payment"] = new function() {
 			var mobilepay_code_div_height = u.actualHeight(mobilepay_code_div);
 			u.as(cash_fieldset, "height", fieldset_height + "px"); 
 			u.as(cash_instructions, "height", mobilepay_code_div_height + "px"); 
+
+			if(mobilepay_form) {
+				u.f.init(mobilepay_form);
+			}
+			if(cash_form) {
+				u.f.init(cash_form);
+			}
 			
 
 

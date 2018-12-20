@@ -54,56 +54,56 @@ $email = $model->getProperty("email", "value");
 <? else:?>
 	<h1>Opret nyt medlem</h1>
 <? endif; ?>
-<h2>Brugeroplysninger</h2>
-<div class="c-wrapper">
-	<div class="c-one-half">
-		<?= $model->formStart("save", array("class" => "member_help_signup labelstyle:inject")) ?>
+	<h2>Brugeroplysninger</h2>
+	<?= $model->formStart("save", array("class" => "member_help_signup labelstyle:inject")) ?>
 		<?= $model->input("quantity", array("type" => "hidden", "value" => 1)); ?>
-		
-		<? if(message()->hasMessages(array("type" => "error"))): ?>
-			<p class="errormessage">
-		<?	$messages = message()->getMessages(array("type" => "error"));
-				message()->resetMessages();
-				foreach($messages as $message): ?>
-				<?= $message ?><br>
-		<?	endforeach;?>
-			</p>
-		<?	endif; ?>
-		
-			<fieldset>
-				<?= $model->input("firstname", array("required" => true, "label" => "Fornavn", "hint_message" => "Skriv medlemmets fornavn her", "error_message" => "Fornavn er obligatorisk. Det kan kun indeholde bogstaver.")) ?>
-				<?= $model->input("lastname", array("required" => true, "label" => "Efternavn", "hint_message" => "Skriv medlemmets efternavn her", "error_message" => "Efternavn er obligatorisk. Det kan kun indeholde bogstaver.")) ?>
-				<?= $model->input("email", array("required" => true, "label" => "Medlemmets e-mailadresse", "value" => $email, "hint_message" => "Indtast medlemmets e-mailadresse.", "error_message" => "Du har indtastet en ugyldig e-mailadresse.")); ?>
-				<?= $model->input("confirm_email", array("label" => "Gentag medlemmets e-mailadresse", "required" => true, "hint_message" => "Indtast medlemmets e-mailadresse igen.", "error_message" => "De to e-mailadresser er ikke ens.")); ?>
-				<?= $model->input("item_id", array("required" => true, "type" => "select", "label" => "Vælg medlemskab", "options" => $HTML->toOptions($signupfees, "id", "name", ["add" => ["" => "Vælg medlemskab"]]),)); ?>
-				<?= $model->input("department_id", array("required" => true,"type" => "select", "label" => "Vælg lokalafdeling", "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),)); ?>						
-			</fieldset>
+		<div class="c-wrapper">
+			<div class="c-one-half">
+				
+			<? if(message()->hasMessages(array("type" => "error"))): ?>
+				<p class="errormessage">
+			<?	$messages = message()->getMessages(array("type" => "error"));
+					message()->resetMessages();
+					foreach($messages as $message): ?>
+					<?= $message ?><br>
+			<?	endforeach;?>
+				</p>
+			<?	endif; ?>
 			
-		</div>
-		<div class="c-one-half c-box">
-			<fieldset>
-				<div class="terms">
-					<h3>Godkend brug af oplysninger</h3>
-					<p class="metatext">Vis denne side til personen og bed personen selv om at sætte krydset.</p>
-					<p class="terms_summary">Vi kan godt lide privatliv. Derfor indsamler vi kun de oplysninger vi skal bruge, og vi kontakter dig kun når vi vurderer at det er i din interesse.</p>
-					<ul>
-						<li>Summary of terms 1</li>
-						<li>Summary of terms 2</li>
-						<li>Summary of terms 3</li>
-					</ul>
+				<fieldset>
+					<?= $model->input("firstname", array("required" => true, "label" => "Fornavn", "hint_message" => "Skriv medlemmets fornavn her", "error_message" => "Fornavn er obligatorisk. Det kan kun indeholde bogstaver.")) ?>
+					<?= $model->input("lastname", array("required" => true, "label" => "Efternavn", "hint_message" => "Skriv medlemmets efternavn her", "error_message" => "Efternavn er obligatorisk. Det kan kun indeholde bogstaver.")) ?>
+					<?= $model->input("email", array("required" => true, "label" => "Medlemmets e-mailadresse", "value" => $email, "hint_message" => "Indtast medlemmets e-mailadresse.", "error_message" => "Du har indtastet en ugyldig e-mailadresse.")); ?>
+					<?= $model->input("confirm_email", array("label" => "Gentag medlemmets e-mailadresse", "required" => true, "hint_message" => "Indtast medlemmets e-mailadresse igen.", "error_message" => "De to e-mailadresser er ikke ens.")); ?>
+					<?= $model->input("item_id", array("required" => true, "type" => "select", "label" => "Vælg medlemskab", "hint_message" => "Vælg typen af medlemskab.", "error_message" => "Der skal vælges et medlemskab.", "options" => $HTML->toOptions($signupfees, "id", "name", ["add" => ["" => "Vælg medlemskab"]]),)); ?>
+					<?= $model->input("department_id", array("required" => true,"type" => "select", "label" => "Vælg lokalafdeling", "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),)); ?>						
+				</fieldset>
+				
+			</div>
+			<div class="c-one-half c-box">
+				<fieldset>
+					<div class="terms">
+						<h3>Godkend brug af oplysninger</h3>
+						<p class="metatext">Vis denne side til personen og bed personen selv om at sætte krydset.</p>
+						<p class="terms_summary">Vi kan godt lide privatliv. Derfor indsamler vi kun de oplysninger vi skal bruge, og vi kontakter dig kun når vi vurderer at det er i din interesse.</p>
+						<ul>
+							<li>Summary of terms 1</li>
+							<li>Summary of terms 2</li>
+							<li>Summary of terms 3</li>
+						</ul>
 
-				</div>
-				<?= $model->input("terms", array("label" => 'Jeg accepterer <a href="/persondata" target="_blank">KBHFF\'s vilkår og betingelser</a>.')); ?>
-				<?= $model->input("maillist", array("type" => "checkbox", "label" => "Jeg vil gerne modtage KBHFF's nyhedsbrev.", "value" => "Nyheder")); ?>
+					</div>
+					<?= $model->input("terms", array("label" => 'Jeg accepterer <a href="/persondata" target="_blank">KBHFF\'s vilkår og betingelser</a>.', "required" => true, "hint_message" => "Nødvendigt for at blive medlem af KBHFF.", "error_message" => "Man kan ikke være medlem, hvis man ikke accepterer KBHFF's betingelser.")); ?>
+					<?= $model->input("maillist", array("type" => "checkbox", "label" => "Jeg vil gerne modtage KBHFF's nyhedsbrev.", "value" => "Nyheder")); ?>
 
-			</fieldset>
-			
-		</div>
+				</fieldset>
+				
+			</div>
 			<ul class="actions">
 				<li class="reject"><a href="/medlemshjaelp" class="button">Annuller</a></li>
 				<?= $model->submit("Næste", array("class" => "primary", "wrapper" => "li.member_help_signup")) ?>
 			</ul>
-		<?= $model->formEnd() ?>
-</div>
+		</div>
+	<?= $model->formEnd() ?>
 
 </div>

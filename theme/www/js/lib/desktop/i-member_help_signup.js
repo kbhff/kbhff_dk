@@ -17,18 +17,10 @@ Util.Objects["member_help_signup"] = new function() {
 			page.cN.scene = this;
 
 			var signup_form = u.qs("form.member_help_signup", this);
-			var place_holder = u.qs("div.articlebody .placeholder.signup", this);
-
-			if(signup_form && place_holder) {
-				place_holder.parentNode.replaceChild(signup_form, place_holder);
-			}
 
 			if(signup_form) {
 				u.f.init(signup_form);
 			}
-
-			// // accept cookies?
-			// page.acceptCookies();
 
 			page.resized();
 		}
