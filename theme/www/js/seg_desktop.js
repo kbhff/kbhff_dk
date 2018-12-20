@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-20 16:14:40
+asset-builder @ 2018-12-20 17:58:53
 */
 
 /*seg_desktop_include.js*/
@@ -4742,6 +4742,7 @@ Util.Objects["banner"] = new function() {
 			var variant = u.cv(div, "variant");
 			var format = u.cv(div, "format");
 			u.ae(div, "img", {class:"fit-width", src:"/img/banners/desktop/pi_" + variant + "." + format});	
+			u.ae(div, "div", {class:"logo"});
 	}
 }
 u.f.fixFieldHTML = function(field) {
@@ -5217,6 +5218,8 @@ Util.Objects["signupfees"] = new function() {
 			while (j--) {
 				u.ass(signupfees[j], {"height":largestHeight+"px"})
 			}
+			var bg1 = u.ae(scene, "div", {class:"bg volunteer"});
+			var bg2 = u.ae(scene, "div", {class:"bg supporter"});
 		}
 		scene.ready();
 	}
