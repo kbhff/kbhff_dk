@@ -47,8 +47,8 @@ $this->pageTitle("Kodeord");
 		</fieldset>
 
 		<ul class="actions">
-			<?= $UC->submit("Gem", array("class" => "primary", "wrapper" => "li.save")) ?>
 			<li class="cancel"><a href="/" class="button">Annullér</a></li>
+			<?= $UC->submit("Gem", array("class" => "primary", "wrapper" => "li.save")) ?>
 		</ul>
 	<?= $UC->formEnd() ?>
 

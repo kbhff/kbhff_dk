@@ -102,8 +102,8 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 				</div>
 
 				<ul class="actions">
-					<li class="new-order"><a href="#" class="button primary">Ny bestilling</a></li>
 					<li class="view-orders"><a href="#" class="button">Se gamle bestillinger</a></li>
+					<li class="new-order"><a href="#" class="button primary">Ny bestilling</a></li>
 				</ul>
 			</div>
 
