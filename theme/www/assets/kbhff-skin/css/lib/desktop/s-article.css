@@ -1,5 +1,5 @@
 /* Articles */
-
+#content .scene .article ul.info {display: none;}
 
 #content .scene .article h1 {}
 #content .scene .article ul.tags {display: none;}
