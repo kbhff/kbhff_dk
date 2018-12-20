@@ -221,7 +221,7 @@ $department = $UC->getUserDepartment();
 						<p class="under">***********</p>
 
 						<ul class="actions">
-							<li class="change-info full-width"><a href="/profil/kodeord" class="button">Ændre kodeord</a></li>
+							<li class="change-info full-width"><a href="/profil/" class="button">Ændre adgangskode</a></li>
 						</ul>
 
 					</div>
