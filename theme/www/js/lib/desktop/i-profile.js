@@ -32,7 +32,7 @@ Util.Objects["profile"] = new function() {
 			u.clickableElement(button_membership); // Add click event to button and ignore href redirect.
 			// When button is clicked
 			button_membership.clicked = function() { 
-				this.membership_callback = function(response) {
+				this.response = function(response) {
 					// Query form to inject
 					var form_department = u.qs(".form_department", response);
 					form_department.scene = this.scene; // Create reference to scene
@@ -85,7 +85,7 @@ Util.Objects["profile"] = new function() {
 						u.request(this, "/profil");
 					}
 				}
-				u.request(this, "/profil/afdeling", {"callback":"membership_callback"});
+				u.request(this, "/profil/afdeling");
 			}
 
 			// "Opsig" button
@@ -107,7 +107,7 @@ Util.Objects["profile"] = new function() {
 				u.e.click(delete_me)
 				delete_me.clicked = function () {
 					// Inject 'confirm cancellation' form
-					this.delete_me_callback = function(response) {
+					this.response = function(response) {
 												
 						// Query form to inject
 						var form_confirm_cancellation = u.qs(".confirm_cancellation", response);
@@ -147,16 +147,11 @@ Util.Objects["profile"] = new function() {
 								}
 							}
 							
-							u.request(this, this.action, {
-								"data":data,
-								"method":"POST"
-							})
+							u.request(this, this.action, {"data":data, "method":"POST"});
 						}
 					}
 	
-					u.request(this, "/profil/opsig", {
-						"callback":"delete_me_callback"
-					});
+					u.request(this, "/profil/opsig");
 				}
 				// Add click event to cancel and close overlay
 				u.e.click(regret)
@@ -177,7 +172,7 @@ Util.Objects["profile"] = new function() {
 
 			u.clickableElement(button_userinfo);
 			button_userinfo.clicked = function() {
-				this.userinfo_callback = function(response) {
+				this.response = function(response) {
 					var form_userinfo = u.qs(".form_user", response);
 					form_userinfo.scene = this.scene;
 					var div_fields = u.qs("div.fields", box_userinfo);
@@ -215,7 +210,7 @@ Util.Objects["profile"] = new function() {
 						u.request(this, "/profil");
 					}
 				}
-				u.request(this, "/profil/bruger", {"callback":"userinfo_callback"});
+				u.request(this, "/profil/bruger");
 			}
 		}
 
@@ -227,7 +222,7 @@ Util.Objects["profile"] = new function() {
 
 			u.clickableElement(button_password);
 			button_password.clicked = function() {
-				this.password_callback = function(response) {
+				this.response = function(response) {
 					var form_password = u.qs(".form_password", response);
 					form_password.scene = this.scene;
 					var div_fields = u.qs("div.fields", box_password);
@@ -258,7 +253,7 @@ Util.Objects["profile"] = new function() {
 					}
 
 				}
-				u.request(this, "/profil/kodeord", {"callback":"password_callback"});
+				u.request(this, "/profil/kodeord");
 			}
 		}
 
