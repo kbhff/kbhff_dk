@@ -66,14 +66,15 @@ if(is_array($action) && count($action)) {
 
 		$payment_id = $model->processOrderPayment($action);
 		if($payment_id) {
-
+			message()->resetMessages();
 			// redirect to leave POST state
 			header("Location: /butik/kvittering/".$action[1]."/".$action[2]."/".$payment_id);
 			exit();
 
 		}
 		else {
-
+			message()->resetMessages();
+			message()->addMessage("Der skete en fejl i registreringen af betalingen.", array("type" => "error"));
 			// redirect to leave POST state
 			header("Location: /butik/kvittering/".$action[1]."/fejl");
 			exit();

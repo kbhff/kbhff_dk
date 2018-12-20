@@ -68,7 +68,7 @@ if(isset($action[2])) {
 
 <? if($order): ?>
 
-	<h1>Tak for det.</h1>
+	<h1>Tak for det</h1>
 
 
 <?	if($receipt_type == "cash"): ?>

@@ -10,7 +10,7 @@
 #content .scene.shopPayment form.card fieldset div.field.tel.exp_month {width: 65px; display: inline-block; margin-left: 15px;}
 #content .scene.shopPayment form.card fieldset div.field.tel.exp_year {width: 65px; display: inline-block;}
 #content .scene.shopPayment form.card fieldset div.field.cvc {width: 85px; float: right; margin-right: 15px;}
-#content .scene.shopPayment form.card fieldset span.slash {font-size: 26px; vertical-align: middle; padding-top: 22px;}
+#content .scene.shopPayment form.card fieldset span.slash {font-size: 26px; vertical-align: middle; position: relative; top: 10px;}
 #content .scene.shopPayment form.card ul.actions {text-align: center; padding-right: 0; padding-left: 0; margin-top: 12px;}
 #content .scene.shopPayment form.card ul.actions li {padding: 0;}
 

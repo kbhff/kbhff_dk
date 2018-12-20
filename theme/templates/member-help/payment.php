@@ -114,7 +114,7 @@ else {
 					<p>(Skrives i kommentarfeltet)</p>
 					<p class="payment_info"><span class="highlight"><?=$transaction_id?></span></p>
 				</div>
-				<?= $model->input("confirm_cash_payment", array("type" => "checkbox", "label" => "Personen har betalt ".formatPrice($total_order_price)." med MobilePay.", "required" => true)); ?>
+				<?= $model->input("confirm_mobilepay_payment", array("type" => "checkbox", "label" => "Personen har betalt ".formatPrice($total_order_price)." med MobilePay.", "required" => true)); ?>
 			</fieldset>
 	
 		<ul class="actions">

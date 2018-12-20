@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-20 09:28:34
+asset-builder @ 2018-12-20 16:14:40
 */
 
 /*seg_desktop_include.js*/
@@ -5469,14 +5469,9 @@ Util.Objects["member_help_signup"] = new function() {
 		scene.ready = function() {
 			page.cN.scene = this;
 			var signup_form = u.qs("form.member_help_signup", this);
-			var place_holder = u.qs("div.articlebody .placeholder.signup", this);
-			if(signup_form && place_holder) {
-				place_holder.parentNode.replaceChild(signup_form, place_holder);
-			}
 			if(signup_form) {
 				u.f.init(signup_form);
 			}
-			// 
 			page.resized();
 		}
 		scene.ready();
@@ -5504,6 +5499,12 @@ Util.Objects["member_help_payment"] = new function() {
 			var mobilepay_code_div_height = u.actualHeight(mobilepay_code_div);
 			u.as(cash_fieldset, "height", fieldset_height + "px"); 
 			u.as(cash_instructions, "height", mobilepay_code_div_height + "px"); 
+			if(mobilepay_form) {
+				u.f.init(mobilepay_form);
+			}
+			if(cash_form) {
+				u.f.init(cash_form);
+			}
 			var cash_fan = u.insertElement(payment_options, "h4", {"class":"fan cash_fan","html":"Kontant"});
 			var mobilepay_fan = u.ie(payment_options, "h4", {"class":"fan mobilepay_fan","html":"MobilePay"});
 			u.e.click(mobilepay_fan);
@@ -5546,8 +5547,10 @@ Util.Objects["profile"] = new function() {
 			var right_panel = u.qs(".c-one-third", this);
 			var box_department = u.qs(".department", this);
 			u.clickableElement(button_membership); 
-			button_membership.clicked = function() { 
-				this.membership_callback = function(response) {
+			button_membership.clicked = function() {
+				this.response = function(response) {
+					this.is_requesting = false;
+					u.rc(this, "loading");
 					var form_department = u.qs(".form_department", response);
 					form_department.scene = this.scene; 
 					var form_fieldset = u.qs("fieldset", form_department);
@@ -5563,24 +5566,40 @@ Util.Objects["profile"] = new function() {
 					form_department.submitted = function() {
 						var data = u.f.getParams(this);
 						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
 							var div_membership = u.qs(".membership .fields", response);
 							box_membership.replaceChild(div_membership, form_department);
 							var new_department_box = u.qs(".department", response);
 							right_panel.replaceChild(new_department_box, box_department);
 							this.scene.initMembershipBox();
 						}
-						u.request(this, this.action, {"data":data, "method":"POST"});
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, this.action, {"data":data, "method":"POST"});
+						}
 					}
 					form_department.actions["cancel"].clicked = function() {
 						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
 							var div_membership = u.qs(".membership .fields", response);
 							box_membership.replaceChild(div_membership, form_department);
 							form_department.scene.initMembershipBox(); 
 						}
-						u.request(this, "/profil");
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, "/profil");
+						}
 					}
 				}
-				u.request(this, "/profil/afdeling", {"callback":"membership_callback"});
+				if (!this.is_requesting) {
+					this.is_requesting = true;
+					u.ac(this, "loading");
+					u.request(this, "/profil/afdeling");
+				}
 			}
 			u.clickableElement(button_cancel);
 			button_cancel.clicked = function() {
@@ -5595,7 +5614,9 @@ Util.Objects["profile"] = new function() {
 				var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"button regret primary", "value":"Fortryd udmelding"});
 				u.e.click(delete_me)
 				delete_me.clicked = function () {
-					this.delete_me_callback = function(response) {
+					this.response = function(response) {
+						this.is_requesting = false;
+						u.rc(this, "loading");
 						var form_confirm_cancellation = u.qs(".confirm_cancellation", response);
 						u.ass(p_warning, {"display":"none"});
 						u.ass(ul_actions, {"display":"none"});
@@ -5604,7 +5625,8 @@ Util.Objects["profile"] = new function() {
 						form_confirm_cancellation.submitted = function () {
 							var data = u.f.getParams(this);
 							this.response = function(response) {
-								console.log(response);
+								this.is_requesting = false;
+								u.rc(this, "loading");
 								var div_scene_login = u.qs("div.scene.login", response);
 								console.log(div_scene_login);
 								if (div_scene_login) {
@@ -5624,19 +5646,22 @@ Util.Objects["profile"] = new function() {
 									}
 								}
 							}
-							u.request(this, this.action, {
-								"data":data,
-								"method":"POST"
-							})
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.action, {"data":data, "method":"POST"});
+							}
 						}
 					}
-					u.request(this, "/profil/opsig", {
-						"callback":"delete_me_callback"
-					});
+					if (!this.is_requesting) {
+						this.is_requesting = true;
+						u.ac(this, "loading");
+						u.request(this, "/profil/opsig");
+					}
 				}
 				u.e.click(regret)
 				regret.clicked = function () {
-						overlay.close ();
+					overlay.close ();
 				}
 			}
 		}
@@ -5648,7 +5673,9 @@ Util.Objects["profile"] = new function() {
 			var span_name = u.qs("span.name", this);
 			u.clickableElement(button_userinfo);
 			button_userinfo.clicked = function() {
-				this.userinfo_callback = function(response) {
+				this.response = function(response) {
+					this.is_requesting = false;
+					u.rc(this, "loading");
 					var form_userinfo = u.qs(".form_user", response);
 					form_userinfo.scene = this.scene;
 					var div_fields = u.qs("div.fields", box_userinfo);
@@ -5657,24 +5684,40 @@ Util.Objects["profile"] = new function() {
 					form_userinfo.submitted = function() {
 						var data = u.f.getParams(this);
 						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
 							var div_userinfo = u.qs(".user .fields", response);
 							box_userinfo.replaceChild(div_userinfo, form_userinfo);
 							var new_name = u.qs("span.name", response);
 							intro_header.replaceChild(new_name, span_name);
 							form_userinfo.scene.initUserinfoBox();
 						}
-						u.request(this, this.action, {"data":data, "method":"POST"});
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, this.action, {"data":data, "method":"POST"});
+						}
 					}
 					form_userinfo.actions["cancel"].clicked = function() {
 						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
 							var div_userinfo = u.qs(".user .fields", response);
 							box_userinfo.replaceChild(div_userinfo, form_userinfo);
 							form_userinfo.scene.initUserinfoBox();
 						}
-						u.request(this, "/profil");
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, "/profil");
+						}
 					}
 				}
-				u.request(this, "/profil/bruger", {"callback":"userinfo_callback"});
+				if (!this.is_requesting) {
+					this.is_requesting = true;
+					u.ac(this, "loading");
+					u.request(this, "/profil/bruger");
+				}
 			}
 		}
 		scene.initPasswordBox = function() {
@@ -5683,7 +5726,9 @@ Util.Objects["profile"] = new function() {
 			button_password.scene = this;
 			u.clickableElement(button_password);
 			button_password.clicked = function() {
-				this.password_callback = function(response) {
+				this.response = function(response) {
+					this.is_requesting = false;
+					u.rc(this, "loading");
 					var form_password = u.qs(".form_password", response);
 					form_password.scene = this.scene;
 					var div_fields = u.qs("div.fields", box_password);
@@ -5692,22 +5737,38 @@ Util.Objects["profile"] = new function() {
 					form_password.submitted = function() {
 						var data = u.f.getParams(this);
 						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
 							var div_password = u.qs(".password .fields", response);
 							box_password.replaceChild(div_password, form_password);
 							this.scene.initPasswordBox();
 						}
-						u.request(this, this.action, {"data":data, "method":"POST"});
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, this.action, {"data":data, "method":"POST"});
+						}
 					}
 					form_password.actions["cancel"].clicked = function() {
 						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
 							var div_userinfo = u.qs(".password .fields", response);
 							box_password.replaceChild(div_userinfo, form_password);
 							form_password.scene.initPasswordBox();
 						}
-						u.request(this, "/profil");
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, "/profil");
+						}
 					}
 				}
-				u.request(this, "/profil/kodeord", {"callback":"password_callback"});
+				if (!this.is_requesting) {
+					this.is_requesting = true;
+					u.ac(this, "loading");
+					u.request(this, "/profil/kodeord");
+				}
 			}
 		}
 		scene.ready();

@@ -214,14 +214,14 @@ $department = $UC->getUserDepartment();
 
 			<div class="section password">
 				<div class="c-box">
-					<h3>Kodeord</h3>
+					<h3>Adgangskode</h3>
 
 					<div class="fields">
 						<p class="over">Password</p>
 						<p class="under">***********</p>
 
 						<ul class="actions">
-							<li class="change-info full-width"><a href="/profil/kodeord" class="button">Ændre kodeord</a></li>
+							<li class="change-info full-width"><a href="/profil/" class="button">Skift adgangskode</a></li>
 						</ul>
 
 					</div>

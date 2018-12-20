@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-20 09:28:35
+asset-builder @ 2018-12-20 16:14:41
 */
 
 /*seg_desktop_include.css*/
@@ -39,6 +39,7 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 	font-weight: 400;
 	font-style: normal;
 }
+#content .scene .article ul.info {display: none;}
 #content .scene .article h1 {}
 #content .scene .article ul.tags {display: none;}
 #content .scene .article > ul.info {width: 100%; margin: 0 auto; padding-top: 10px; padding-left: 12px; padding-right: 12px; box-sizing: border-box;}
@@ -592,6 +593,7 @@ body > div.overlay .close {
 }
 body > div.overlay ul.actions {
 	width: 100%;
+	text-align: center;
 }
 body > div.overlay .close:hover {
 	opacity: 1;
@@ -714,9 +716,6 @@ body > div.overlay .close:after {
 	box-sizing: border-box;
 	width: 25%;
 }
-#content div.profile .full-width,
-#content div.profile .full-width {
-}
 #content div.profile .department-info,
 #content div.profile .membership-info,
 #content div.profile .user-info {
@@ -744,6 +743,9 @@ body > div.overlay .close:after {
 	padding: 0;
 	margin: 0;
 	width: 8%;
+}
+#content div.profile ul.actions .change-info {
+	padding-left: 0;
 }
 #content div.profile ul.actions.change > li {
 	padding: 0;
@@ -804,7 +806,7 @@ body.profil > div.overlay div.field.password {
 #content .scene.membership ul.info {display: none;}
 #content .scene.membership h1 {margin-bottom: 22px;}
 #content .scene.membership div.article ul.offer li.description {display: none;}
-#content .scene.membership div.article ul.offer li {font-size: 32px;}
+#content .scene.membership div.article ul.offer li {font-size: 32px; padding-top: 5px}
 #content .scene.membership div.article ul.offer {padding-bottom: 24px;}
 #content .scene.membership div.related {padding-top: 34px;}
 #content .scene.membership div.related h2 {padding-top: 12px;}
@@ -812,6 +814,8 @@ body.profil > div.overlay div.field.password {
 #content .scene.membership div.related ul.items.membership h3 {padding-top: 12px; padding-bottom: 2px;}
 #content .scene.membership div.related ul.items.membership > li {padding-top: 12px; padding-left: 0;}
 #content .scene.membership div.related ul.items.membership div.description {padding-top: 12px;}
+#content .scene.membership ul.offer,
+#content .scene.scene.membership form {display: inline-block;}
 
 
 /*s-posts.css*/
@@ -839,7 +843,7 @@ body.profil > div.overlay div.field.password {
 #content .scene.shopPayment form.card fieldset div.field.tel.exp_month {width: 65px; display: inline-block; margin-left: 15px;}
 #content .scene.shopPayment form.card fieldset div.field.tel.exp_year {width: 65px; display: inline-block;}
 #content .scene.shopPayment form.card fieldset div.field.cvc {width: 85px; float: right; margin-right: 15px;}
-#content .scene.shopPayment form.card fieldset span.slash {font-size: 26px; vertical-align: middle; padding-top: 22px;}
+#content .scene.shopPayment form.card fieldset span.slash {font-size: 26px; vertical-align: middle; position: relative; top: 10px;}
 #content .scene.shopPayment form.card ul.actions {text-align: center; padding-right: 0; padding-left: 0; margin-top: 12px;}
 #content .scene.shopPayment form.card ul.actions li {padding: 0;}
 #content .scene.shopPayment > p {width: 450px; margin: 0 auto; font-size: 12px; line-height: 12px; padding-bottom: 0;}
