@@ -26,7 +26,7 @@ class SuperUser extends SuperUserCore {
 
 
 	// save user department on save user
-	function postSave($user_id) {
+	function saved($user_id) {
 		$this->updateUserDepartment(["updateUserDepartment", $user_id]);
 	}
 
@@ -324,8 +324,8 @@ class SuperUser extends SuperUserCore {
 
 							// itemtype post save handler?
 							// TODO: Consider if failed postSave should have consequences
-							if(method_exists($this, "postSave")) {
-								$this->postSave($user_id);
+							if(method_exists($this, "saved")) {
+								$this->saved($user_id);
 							}
 
 
