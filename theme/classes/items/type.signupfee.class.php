@@ -43,6 +43,7 @@ class TypeSignupfee extends Itemtype {
 	*/
 	function __construct() {
 
+		// Construct Itemtype class and pass itemtype as parameter
 		parent::__construct(get_class());
 
 
@@ -94,28 +95,24 @@ class TypeSignupfee extends Itemtype {
 		
 	}
 	
-	function shipped($order_item, $order) {
-		
+	function shipped($order_item, $order) {	
 		// print "\n<br>###$order_item### shipped\n<br>";
 
 		include_once("classes/users/superuser.class.php");
 		$UC = new SuperUser();
 
+		// get the signupfee data object
 		$IC = new Items();
 		$signupfee_item = $IC->getItem(array("id" => $order_item["item_id"], "extend" => true));
 
 
-		// set values for creating subscription
-
+		// add values to POST array. These will be used by the addSubscription method.
 		$_POST["order_id"] = $order["id"];
 		$_POST["item_id"] = $signupfee_item["associated_membership_id"];
 		$_POST["user_id"] = $order["user_id"];
 
-		// print_r($order); 
-		// print_r($signupfee_item); 
-		// print_r($order_item); 
-		// print_r($signupfee_item["associated_membership_id"]); exit(); 
 		
+		// create subscription (with hardcoded expiry date – may become dynamic in the future)
 		$subscription = $UC->addSubscription(array("addSubscription"));		
 		if ($subscription) {
 			$expires_at = "2019-05-01 00:00:00";

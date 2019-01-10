@@ -9,10 +9,12 @@ class Department extends Model {
 
 	/**
 	* Initialization: set variable names and validation rules for Department model.
+	*
+	* @return void 
 	*/
 	function __construct() {
 
-		// Construct Model *before* adding it to Department model (to avoid Model overwriting Department) 
+		// Construct Model class, passing the Department model as a parameter. The Model class is constructed *before* adding it to Department model (to avoid Model overwriting Department) 
 		parent::__construct(get_class());
 
 
@@ -115,16 +117,18 @@ class Department extends Model {
 	 * Saves the department to the database.
 	 * 
 	 * @param array $action REST parameters of current request
-	 * @return void
+	 * @return array|false Department id, if everything goes well
 	 */
 
 	function saveDepartment($action) {
+		
+		// Get content of $_POST array which have been "quality-assured" by Janitor 
 		$this->getPostedEntities();
 
 		if(count($action) == 1 && $this->validateList(array("name", "abbreviation", "address1", "address2", "city", "postal", "email", "opening_hours", "mobilepay_id", "accepts_signup"))) {
 
 			$query = new Query();
-
+ 
 			$query->checkDbExistence($this->db);
 
 			$name = $this->getProperty("name", "value");
@@ -140,10 +144,13 @@ class Department extends Model {
 			
 
 
-			// Check if the department is already created (to avoid faulty double entries)
+			// Check if the department is already created (to avoid faulty double entries)  
 			$sql = "SELECT * FROM ".$this->db." WHERE name = '$name'";
 			if(!$query->sql($sql)) {
+				// enter the department into the database
 				$sql = "INSERT INTO ".$this->db." SET name='$name', abbreviation='$abbreviation', address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours',email='$email',mobilepay_id='$mobilepay_id',accepts_signup='$accepts_signup' ";
+				
+				// if successful, add message and return department id
 				if($query->sql($sql)) {
 					message()->addMessage("Department created");
 					return array("item_id" => $query->lastInsertId());		
@@ -156,7 +163,7 @@ class Department extends Model {
 
 		}
 
-
+		// something went wrong
 		message()->addMessage("Could not create department.", array("type"=>"error"));
 		return false;
 	}
@@ -166,15 +173,11 @@ class Department extends Model {
 	 * Get list of departments from database.
 	 *
 	 * @param array|boolean $_options Array containing unsorted function parameters
-	 * @return void
+	 * @return array|false Department data object (via callback to Query->results()
 	 */
 	function getDepartments($_options = false) {
-
-		// Define default values
-		// $id = false;
 		
-		
-		// Search through $_options to find recognized parameters
+		// If any parameters were passed, search through $_options to find recognized parameters (This is currently only a placeholder, which will come to use if, for example, we at some point need to query a subset of departments)
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
@@ -196,8 +199,8 @@ class Department extends Model {
 	/**
 	 * Get a single department from database.
 	 *
-	 * @param array|boolean $_options Associative array containing unsorted function parameters. Findes der et tag for at angive de mulige parametre?
-	 * @return void
+	 * @param array|boolean $_options Associative array containing unsorted function parameters.
+	 * @return array|false Department data object (via callback to Query->result(0))
 	 */
 	function getDepartment($_options = false) {
 
@@ -231,19 +234,16 @@ class Department extends Model {
 	 * Update a single department.
 	 *
 	 * @param array $action REST parameters of current request
-	 * @return void
+	 * @return array|false Updated Department data object (via callback to getDepartment())
 	 */
 	function updateDepartment($action) {
 		
-		// Get content of $_POST array that have been "quality-assured" by Janitor 
+		// Get content of $_POST array which have been "quality-assured" by Janitor 
 		$this->getPostedEntities();
 		
 
 		// Check that the number of REST parameters is as expected and that the listed entries are valid.
 		if(count($action) == 2 && $this->validateList(array("name", "abbreviation", "address1", "address2", "city", "postal", "email", "opening_hours", "mobilepay_id", "accepts_signup"))) {
-
-			// Ask the database to update the row with the id that came from $action. Update with the values that were received from getPostedEntities(). 
-			$query = new Query();
 			
 			$id = $action[1];
 			$name = $this->getProperty("name", "value");
@@ -256,8 +256,11 @@ class Department extends Model {
 			$opening_hours = $this->getProperty("opening_hours", "value");
 			$mobilepay_id = $this->getProperty("mobilepay_id", "value");
 			$accepts_signup = $this->getProperty("accepts_signup", "value");
-
+			
+			// Ask the database to update the row with the id that came from $action. Update with the values that were received from getPostedEntities(). 
+			$query = new Query();
 			$sql = "UPDATE ".$this->db." SET name='$name', abbreviation='$abbreviation',address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours',email='$email',mobilepay_id='$mobilepay_id',accepts_signup='$accepts_signup' WHERE id = '$id'";
+				// if successful, add message and return the department data object
 				if($query->sql($sql)) {
 					message()->addMessage("Department updated");
 					return $this->getDepartment(["id"=>$id]);		
@@ -265,6 +268,7 @@ class Department extends Model {
 
 		}
 
+		// something went wrong
 		return false;
 	}
 
@@ -272,7 +276,7 @@ class Department extends Model {
 	 * Delete a single department.
 	 *
 	 * @param array $action REST parameters
-	 * @return void
+	 * @return boolean
 	 */
 	function deleteDepartment($action) {
 

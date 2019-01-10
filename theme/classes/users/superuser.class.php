@@ -19,21 +19,29 @@ class SuperUser extends SuperUserCore {
 	*/
 	function __construct() {
 
+		// Construct SuperUserCore class
 		parent::__construct(get_class());
 
 	
 	}
 
 
-	// save user department on save user
+	/**
+	 * Save user department after saving user
+	 *
+	 * @param integer $user_id
+	 * @return void
+	 */
 	function postSave($user_id) {
+
+		// Call updateUserDepartment with a "fake" $action array
 		$this->updateUserDepartment(["updateUserDepartment", $user_id]);
 	}
 
 	/**
-	 * Get the current user's associated department.
+	 * Get a user's associated department.
 	 *
-	 * @param int $user_id
+	 * @param array|false $_options Associative array containing unsorted function parameters. In this case it should contain a user ID.
 	 * @return array|false The department object, or false if the current user isn't associated with a department.
 	 */
 	function getUserDepartment($_options=false) {
@@ -51,7 +59,7 @@ class SuperUser extends SuperUserCore {
 		}
 
 
-		//Query current user ID i user_departments and get the associated department ID
+		//Query user ID in user_departments and get the associated department ID
 		$query = new Query();
 		
 		if($user_id) {
@@ -59,9 +67,8 @@ class SuperUser extends SuperUserCore {
 
 			if($query->sql($sql)) {
 				$department_id = $query->result(0,"department_id");
-				// print_r ($department_id);
 
-				//Use getDepartment to find the department with the specified department ID.
+				// Use getDepartment to find the department with the specified department ID.
 				include_once("classes/system/department.class.php");
 
 				$DC = new Department();
@@ -80,9 +87,6 @@ class SuperUser extends SuperUserCore {
 	 * @param array $action REST parameters of current request
 	 * @return boolean
 	 */
-
-
-	// TODO: should be implemented later
 	function updateUserDepartment($action) {
 		// Get content of $_POST array that have been "quality-assured" by Janitor
 		$this->getPostedEntities();
@@ -93,15 +97,15 @@ class SuperUser extends SuperUserCore {
 			$user_id = $action[1];
 			$department_id = $this->getProperty("department_id", "value");
 
+			// Create user_department table if it doesn't already exist
 			$query = new Query();
-
 			$query->checkDbExistence(SITE_DB.".user_department");
 
+			// Check if the user is associated with a department and adjust query accordingly
 			$user_department = $this->getUserDepartment(array("user_id" => $user_id));
 
-			//Check if the user is associated with a department and adjust query accordingly
 			if ($user_department) {
-				//Update department
+				// Update department
 				$sql = "UPDATE ".SITE_DB.".user_department SET department_id = $department_id WHERE user_id = $user_id";
 
 				if($query->sql($sql)) {
@@ -124,22 +128,28 @@ class SuperUser extends SuperUserCore {
 	}
 
 
-	// shop clerk creates new user via member help
+	/**
+	 * Shop clerk creates new user via member help
+	 *
+	 * @param array $action REST parameters of current request
+	 * @return array|false Success: array with user ID, nickname, and email. Error: false or array with error message. 
+	 */
 	function newUserFromMemberHelp($action) {
 
+		// Log that the method has been started
 		global $page;
 		$page->addLog("user->newUserFromMemberHelp: initiated");
 
 		// only attempt user creation if signups are allowed for this site
 		if(defined("SITE_SIGNUP") && SITE_SIGNUP) {
 
-			// Get posted values to make them available for models
+			// Get content of $_POST array which have been "quality-assured" by Janitor 
 			$this->getPostedEntities();
 			$terms = $this->getProperty("terms", "value");
 			$email = $this->getProperty("email", "value");
 
 
-			// if user hasn't accepted terms
+			// if user hasn't accepted terms, return error
 			if(!$terms) {
 				$page->addLog("user->newUserFromMemberHelp: missing terms agreement");
 				return array("status" => "MISSING_TERMS");
@@ -153,7 +163,7 @@ class SuperUser extends SuperUserCore {
 			}
 
 
-			// does values validate - minimum is email and nickname
+			// Check if values validate – minimum is email, firstname, and lastname
 			if(count($action) == 1 && $this->validateList(array("email", "firstname", "lastname")) && $email) {
 
 				$query = new Query();
@@ -174,7 +184,7 @@ class SuperUser extends SuperUserCore {
 					}
 				}
 
-				// if no nickname were posted, use email
+				// if no nickname were posted, attempt to construct it, or, if everything fails, use email
 				if(!$nickname) {
 					if($firstname && $lastname) {
 						$nickname = $firstname . " " . $lastname;
@@ -195,23 +205,25 @@ class SuperUser extends SuperUserCore {
 				}
 
 
-				// add member user group
+				// add the "Member" user group to $values array, which will define the new user
 				$values[] = "user_group_id=2";
 
-
+				// Create query string by imploding the $values array into a comma-separated string
 				$sql = "INSERT INTO ".$this->db." SET " . implode(",", $values);
 				// print $sql."<br>\n";
+				
+				
 				if($query->sql($sql)) {
 
 					$user_id = $query->lastInsertId();
 
-
-					// Gererate verification code
+					// Generate verification code
 					$verification_code = randomKey(8);
 
 					// add email to user_usernames
 					$sql = "INSERT INTO $this->db_usernames SET username = '$email', verified = 0, verification_code = '$verification_code', type = 'email', user_id = $user_id";
 					// print $sql."<br>\n";
+					
 					if($query->sql($sql)) {
 
 
