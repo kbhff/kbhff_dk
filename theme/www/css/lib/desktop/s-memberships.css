@@ -3,13 +3,14 @@
 #content .scene.membership .c-wrapper,
 #content .scene.membership .c-two-thirds,
 #content .scene.membership .c-one-third {min-height: 0;}
-#content .scene.membership .c-wrapper {text-align: center; padding-top: 46px;}
+#content .scene.membership .c-wrapper {padding-top: 46px;}
 #content .scene.membership div.article .c-wrapper p {padding-top: 0;}
 #content .scene.membership div.article ul.offer li.description {display: none;}
 #content .scene.membership div.article ul.offer li {font-size: 22px; padding: 0;}
 #content .scene.membership div.article ul.offer {padding: 0 12px 24px 12px;}
 #content .scene.membership div.article ul.actions {text-align: center; padding-bottom: 22px}
 #content .scene.membership div.article ul.actions li {padding: 0;}
+#content .scene.membership div.article .c-box {text-align: center;}
 
 #content .scene.membership div.related {padding-top: 34px;}
 #content .scene.membership div.related h2 {padding-top: 12px;}
