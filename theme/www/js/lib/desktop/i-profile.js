@@ -32,6 +32,7 @@ Util.Objects["profile"] = new function() {
 			button_membership.clicked = function() {
 
 				this.response = function(response) {
+					// Update request state
 					this.is_requesting = false;
 					u.rc(this, "loading");
 
@@ -64,6 +65,7 @@ Util.Objects["profile"] = new function() {
 						var data = u.f.getParams(this);
 
 						this.response = function(response) {
+							// Update request state
 							this.is_requesting = false;
 							u.rc(this, "loading");
 							
@@ -79,6 +81,7 @@ Util.Objects["profile"] = new function() {
 							this.scene.initMembershipBox();
 						}
 
+						// Prevent double requesting
 						if (!this.is_requesting) {
 							this.is_requesting = true;
 							u.ac(this, "loading");
@@ -91,6 +94,7 @@ Util.Objects["profile"] = new function() {
 					form_department.actions["cancel"].clicked = function() {
 
 						this.response = function(response) {
+							// Update request state
 							this.is_requesting = false;
 							u.rc(this, "loading");
 
@@ -99,6 +103,7 @@ Util.Objects["profile"] = new function() {
 							form_department.scene.initMembershipBox(); // this.scene not working from here?
 						}
 
+						// Prevent double requesting
 						if (!this.is_requesting) {
 							this.is_requesting = true;
 							u.ac(this, "loading");
@@ -108,6 +113,7 @@ Util.Objects["profile"] = new function() {
 					}
 				}
 
+				// Prevent double requesting
 				if (!this.is_requesting) {
 					this.is_requesting = true;
 					u.ac(this, "loading");

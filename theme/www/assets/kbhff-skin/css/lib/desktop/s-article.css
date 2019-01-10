@@ -1,5 +1,8 @@
 /* Articles */
-#content .scene .article ul.info {display: none;}
+#content .scene .article .articlebody > p:first-child,
+#content .scene .article .articlebody > h3:first-child,
+#content .scene .article .articlebody > .c-wrapper:first-child {padding-top: 46px;}
+
 
 #content .scene .article h1 {}
 #content .scene .article ul.tags {display: none;}
@@ -7,10 +10,8 @@
 #content .scene .article > ul.info li {padding-left: 0}
 #content .scene > .article > .articlebody {width: 600px; margin: 0 auto;} /* Only 600px width if article stands alone (no grid) */
 
-#content .scene .article .articlebody > p:first-child,
-#content .scene .article .articlebody > h3:first-child {padding-top: 46px;}
-
-#content .scene ul.info {position: relative; z-index: 1; padding-right: 0; padding-bottom: 0; display: inline-block; vertical-align: top; width: auto; font-size: 0; line-height: 1em;}
+/* OFFER TODO: SCOPE AND GENERALIZE */
+#content .scene ul.info {position: relative; z-index: 1; padding-right: 0; padding-bottom: 0; vertical-align: top; width: auto; font-size: 0; line-height: 1em;}
 #content .scene ul.info li {width: auto; font-size: 12px; line-height: 12px; display: inline-block; vertical-align: top;}
 #content .scene ul.info > li.author:before,
 #content .scene ul.info > li.place:before {content: "\00a0|\00a0"; display: inline-block; vertical-align: top; font-size: 12px; line-height: 10px; }
@@ -24,7 +25,7 @@
 #content .scene ul.info li + li {padding-top: 0;}
 
 
-/* OFFER */
+/* OFFER  TODO: SCOPE AND GENERALIZE */
 #content .scene ul.offer,
 #content .scene .articlebody ul.offer {font-size: 0; padding: 0; margin: 0; list-style: none;}
 #content .scene ul.offer li.name,

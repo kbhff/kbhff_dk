@@ -68,7 +68,7 @@ class User extends UserCore {
 	}
 
 	// save user department on save user
-	function postSave($user_id) {
+	function saved($user_id) {
 		$this->updateUserDepartment(["updateUserDepartment"]);
 	}
 

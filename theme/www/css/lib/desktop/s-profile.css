@@ -1,136 +1,11 @@
-/*
-#content div.profile .scene.profile p {padding: 0;}
-*/
+/* GENERAL */
 #content div.profile .section > h2 {
 	padding: 0;
-
 	margin-left: 12px;
 	margin-right: 12px;
 	margin-top: 20px;
 	margin-bottom: 22px;
-
 	border-bottom: 2px solid #808080;
-}
-
-#content div.profile .c-box,
-#content div.profile .fields {
-	font-size: 0;
-}
-
-#content div.profile .c-box > h3 {
-	padding-left: 0;
-	padding-right: 0;
-	padding-bottom: 0;
-
-	margin-left: 12px;
-	margin-right: 12px;
-	margin-bottom: 12px;
-	border-bottom: 1px solid #000000;
-}
-
-#content div.profile .c-box > form > fieldset {
-	padding-top: 6px;
-}
-#content div.profile .c-box > form > fieldset .field {
-	width: 100%;
-	box-sizing: border-box;
-}
-
-#content div.profile .c-box ul.actions {
-	padding-top: 5px;
-	padding-bottom: 0;
-}
-
-#content div.profile .membership fieldset {
-	float: right;
-	width: 50%;
-}
-
-#content div.profile .membership .field {
-	padding: 0;
-	padding-top: 5px;
-	padding-left: 12px;
-	padding-right: 12px;
-}
-
-#content div.profile .orders,
-#content div.profile .order-headings,
-#content div.profile .order {
-	/* font-size: 12px; */
-	font-size: 0;
-}
-
-#content div.profile .orders {
-	margin-left: 12px;
-	margin-right: 12px;
-}
-
-#content div.profile .opening-times,
-#content div.profile .membership-info {
-	display: inline-block;
-	vertical-align: top;
-	width: 50%;
-}
-
-#content div.profile .pickup-date,
-#content div.profile .order-place,
-#content div.profile .order-products,
-#content div.profile .change-untill {
-	display: inline-block;
-	vertical-align: top;
-	box-sizing: border-box;
-	width: 25%;
-}
-
-#content div.profile .department-info,
-#content div.profile .membership-info,
-#content div.profile .user-info {
-	padding-bottom: 25px;
-}
-
-#content div.profile .password p.under {
-	font-size: 26px;
-	padding-bottom: 25px;
-}
-
-#content div.profile p.over {
-	font-size: 11px;
-	padding-bottom: 0;
-	text-transform: uppercase;
-}
-
-#content div.profile p.under {
-	font-size: 18px;
-	padding-bottom: 0;
-}
-
-#content div.profile p.change-untill {
-	width: 17%;
-	padding-right: 0;
-}
-#content div.profile ul.actions.change {
-	display: inline-block;
-	padding: 0;
-	margin: 0;
-	width: 8%;
-}
-
-#content div.profile ul.actions .change-info {
-	padding-left: 0;
-}
-
-#content div.profile ul.actions.change > li {
-	padding: 0;
-	margin: 0;
-}
-
-#content div.profile ul.actions.change > li > a {
-	padding: 0;
-	margin: 0;
-
-	padding-left: 8px;
-	padding-right: 8px;
-	font-size: 12px;
 }
 
 #content div.profile ul.actions {
@@ -158,6 +33,123 @@
 	text-align: center;
 }
 
-body.profil > div.overlay div.field.password {
-	padding-bottom: 20px;
+
+/* LEFT COLUMN */
+
+#content div.profile .orders,
+#content div.profile .order-headings,
+#content div.profile .order {
+	font-size: 0;
+}
+
+#content div.profile .orders {
+	margin-left: 12px;
+	margin-right: 12px;
+}
+
+#content div.profile .opening-times,
+#content div.profile .membership-info {
+	display: inline-block;
+	vertical-align: top;
+	width: 50%;
+}
+
+#content div.profile .pickup-date,
+#content div.profile .order-place,
+#content div.profile .order-products,
+#content div.profile .change-untill {
+	display: inline-block;
+	vertical-align: top;
+	box-sizing: border-box;
+	width: 25%;
+}
+
+#content div.profile p.change-untill {
+	width: 17%;
+	padding-right: 0;
+}
+#content div.profile ul.actions.change {
+	display: inline-block;
+	padding: 0;
+	margin: 0;
+	width: 8%;
+}
+
+#content div.profile ul.actions .change-info {
+	padding-left: 0;
+}
+
+#content div.profile ul.actions.change > li {
+	padding: 0;
+	margin: 0;
+}
+
+#content div.profile ul.actions.change > li > a {
+	padding: 0;
+	margin: 0;
+	padding-left: 8px;
+	padding-right: 8px;
+	font-size: 12px;
+}
+
+/* RIGHT COLUMN */
+
+#content div.profile .c-box,
+#content div.profile .fields {
+	font-size: 0;
+}
+#content div.profile .c-box ul.actions {
+	padding-top: 5px;
+	padding-bottom: 0;
+}
+
+
+#content div.profile .c-box > h3 {
+	padding-left: 0;
+	padding-right: 0;
+	padding-bottom: 0;
+	margin-left: 12px;
+	margin-right: 12px;
+	margin-bottom: 12px;
+	border-bottom: 1px solid #000000;
+}
+
+#content div.profile p.over {
+	font-size: 11px;
+	padding-bottom: 0;
+	text-transform: uppercase;
+}
+#content div.profile p.under {
+	font-size: 18px;
+	padding-bottom: 0;
+}
+
+#content div.profile .c-box > form > fieldset {
+	padding-top: 6px;
+}
+#content div.profile .c-box > form > fieldset .field {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+#content div.profile .membership fieldset {
+	float: right;
+	width: 50%;
+}
+#content div.profile .membership .field {
+	padding: 0;
+	padding-top: 5px;
+	padding-left: 12px;
+	padding-right: 12px;
+}
+
+#content div.profile .department-info,
+#content div.profile .membership-info,
+#content div.profile .user-info {
+	padding-bottom: 25px;
+}
+
+#content div.profile .password p.under {
+	font-size: 26px;
+	padding-bottom: 25px;
 }

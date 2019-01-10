@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-20 16:14:41
+asset-builder @ 2018-12-20 23:45:52
 */
 
 /*seg_desktop_include.css*/
@@ -39,15 +39,15 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 	font-weight: 400;
 	font-style: normal;
 }
-#content .scene .article ul.info {display: none;}
+#content .scene .article .articlebody > p:first-child,
+#content .scene .article .articlebody > h3:first-child,
+#content .scene .article .articlebody > .c-wrapper:first-child {padding-top: 46px;}
 #content .scene .article h1 {}
 #content .scene .article ul.tags {display: none;}
 #content .scene .article > ul.info {width: 100%; margin: 0 auto; padding-top: 10px; padding-left: 12px; padding-right: 12px; box-sizing: border-box;}
 #content .scene .article > ul.info li {padding-left: 0}
 #content .scene > .article > .articlebody {width: 600px; margin: 0 auto;} 
-#content .scene .article .articlebody > p:first-child,
-#content .scene .article .articlebody > h3:first-child {padding-top: 46px;}
-#content .scene ul.info {position: relative; z-index: 1; padding-right: 0; padding-bottom: 0; display: inline-block; vertical-align: top; width: auto; font-size: 0; line-height: 1em;}
+#content .scene ul.info {position: relative; z-index: 1; padding-right: 0; padding-bottom: 0; vertical-align: top; width: auto; font-size: 0; line-height: 1em;}
 #content .scene ul.info li {width: auto; font-size: 12px; line-height: 12px; display: inline-block; vertical-align: top;}
 #content .scene ul.info > li.author:before,
 #content .scene ul.info > li.place:before {content: "\00a0|\00a0"; display: inline-block; vertical-align: top; font-size: 12px; line-height: 10px; }
@@ -377,6 +377,9 @@ input[type="submit"] {
 	line-height: 24px;
 	padding-left: 8px;
 }
+#content ul.info {
+	display: none;
+}
 #content ul.richtext {
 	list-style: none;
 	margin-left: 0;
@@ -614,7 +617,12 @@ body > div.overlay .close:after {
 }
 #content div.messages p.error,
 #content p.errormessage {color: #C22414;}
+#content .banner {position: relative;}
 #content .banner > img {padding-top: 5px;}
+#content .banner > div.logo {position: absolute; top: 5px; left: 25px; width: 318px; height: 206px;
+	background: transparent url(../img/banners/desktop/logo_layover.png) no-repeat top left;
+	background-size: 100% auto;
+}
 #footer {
 	height: 48px;
 	background: #484848;
@@ -786,36 +794,48 @@ body.profil > div.overlay div.field.password {
 
 
 /*s-signup.css*/
-#content .scene.signupfees h3 {padding-bottom: 0; margin-right: 12px; margin-left: 12px; margin-top: 12px; border-bottom: 1px solid #000000; font-size: 26px;}
+#content .scene.signupfees h1 {color: #ffffff; box-shadow: 0px -5px white inset;}
+#content .scene.signupfees h3 {padding-bottom: 8px; margin-right: 12px; margin-left: 12px; margin-top: 12px; border-bottom: 1px solid #000000; font-size: 26px;}
 #content .scene.signupfees ul.signupfees {margin-left: 0;}
-#content .scene.signupfees li.signupfee {display: inline-block; width: calc(50% - 14px - 12px); vertical-align: top; text-align: center; background-color: #f2f2f2; margin-top: 48px; margin-right: 12px; margin-left: 12px; padding-left: 0;}
+#content .scene.signupfees li.signupfee {display: inline-block; width: calc(50% - 14px - 12px); vertical-align: top; text-align: center; background-color: rgba(255, 255, 255, 0.9); margin-top: 48px; margin-right: 12px; margin-left: 12px; padding-left: 0;}
 #content .scene.signupfees li.signupfee + li {padding-top: 0;}
 #content .scene.signupfees ul.offer li {padding-left: 0; padding-top: 12px; font-size: 20px; text-align: left; font-weight: 500}
-#content .scene.signupfees ul.actions {margin: 0 auto; text-align: center;}
+#content .scene.signupfees ul.actions {margin: 0 auto; padding-top: 5px; text-align: center;}
 #content .scene.signupfees ul.actions input {margin: 0 auto;}
 #content .scene.signupfees ul.actions li {display: block; width: 100%; padding-left: 0;}
+#content .scene.signupfees ul.actions li.readmore {padding-bottom: 20px;}
 #content .scene.signupfees ul.offer li.suscribtion_price > p {padding: 0; font-size: 20px;}
 #content .scene.signupfees div.article ul.info {display: none;}
 #content .scene.signup form {width: 380px; margin: 0 auto; padding-top: 20px;}
 #content .scene.signup ul.actions li { padding: 0 2.5px 10px 2.5px; }
 #content .scene.signup p {box-sizing: border-box; width: 380px; margin: 0 auto;}
 #content .scene.signup h2 {text-align: center;}
-
+#content .scene.signupfees div.article {position: relative; z-index: 11;}
+#content .scene.signupfees div.article div.articlebody {background-color: rgba(255, 255, 255, 0.9);}
+#content .scene.signupfees div.article div.articlebody p {padding-top: 24px; margin-top: 22px;}
+#content .scene.signupfees ul.signupfees {position: relative; z-index: 11;}
+#content .scene.signupfees div.bg {z-index: 10; position: absolute; top: 63px; width: calc(50% - 12px); background-repeat: no-repeat; background-color: transparent; background-position: left top; background-size: cover; height: calc(100% - 63px);}
+#content .scene.signupfees div.bg.supporter {left: 12px; background-image: url(../img/signup/bg_supporter.jpg);}
+#content .scene.signupfees div.bg.volunteer {right: 12px; background-image: url(../img/signup/bg_volunteer.jpg);}
 
 /*s-memberships.css*/
-#content .scene.membership ul.info {display: none;}
 #content .scene.membership h1 {margin-bottom: 22px;}
+#content .scene.membership .c-wrapper,
+#content .scene.membership .c-two-thirds,
+#content .scene.membership .c-one-third {min-height: 0;}
+#content .scene.membership .c-wrapper {text-align: center; padding-top: 46px;}
+#content .scene.membership div.article .c-wrapper p {padding-top: 0;}
 #content .scene.membership div.article ul.offer li.description {display: none;}
-#content .scene.membership div.article ul.offer li {font-size: 32px; padding-top: 5px}
-#content .scene.membership div.article ul.offer {padding-bottom: 24px;}
+#content .scene.membership div.article ul.offer li {font-size: 22px; padding: 0;}
+#content .scene.membership div.article ul.offer {padding: 0 12px 24px 12px;}
+#content .scene.membership div.article ul.actions {text-align: center; padding-bottom: 22px}
+#content .scene.membership div.article ul.actions li {padding: 0;}
 #content .scene.membership div.related {padding-top: 34px;}
 #content .scene.membership div.related h2 {padding-top: 12px;}
 #content .scene.membership div.related ul.items.membership {padding: 0; margin: 0; list-style-type: none;}
 #content .scene.membership div.related ul.items.membership h3 {padding-top: 12px; padding-bottom: 2px;}
 #content .scene.membership div.related ul.items.membership > li {padding-top: 12px; padding-left: 0;}
 #content .scene.membership div.related ul.items.membership div.description {padding-top: 12px;}
-#content .scene.membership ul.offer,
-#content .scene.scene.membership form {display: inline-block;}
 
 
 /*s-posts.css*/
@@ -847,6 +867,7 @@ body.profil > div.overlay div.field.password {
 #content .scene.shopPayment form.card ul.actions {text-align: center; padding-right: 0; padding-left: 0; margin-top: 12px;}
 #content .scene.shopPayment form.card ul.actions li {padding: 0;}
 #content .scene.shopPayment > p {width: 450px; margin: 0 auto; font-size: 12px; line-height: 12px; padding-bottom: 0;}
+#content .scene.shopReceipt ul.actions {text-align: center}
 
 
 /*s-cart.css*/
@@ -854,6 +875,7 @@ body.profil > div.overlay div.field.password {
 
 
 /*s-member_help.css*/
+#content .scene.member_help ul.actions {text-align:center}
 #content .scene.member_help_payment > p {font-size: 12px; line-height: 12px; padding-bottom: 0;}
 #content .scene.member_help_payment > h1 + p {padding: 12px; font-size: 14px;}
 #content .scene.member_help_payment div.payment_options {
