@@ -11,9 +11,10 @@ Util.Objects["comments"] = new function() {
 		div.header = u.qs("h2", div);
 		div.header.div = div;
 		u.addExpandArrow(div.header);
-
+		// Make header clickable and add click event 
 		u.ce(div.header);
 		div.header.clicked = function() {
+			// if header is open, close it, add expand arrow and save cookie.
 			if(u.hc(this.div, "open")) {
 
 				u.rc(this.div, "open");
@@ -21,13 +22,14 @@ Util.Objects["comments"] = new function() {
 				u.saveCookie("comments_open_state", 0, {"path":"/"});
 			}
 			else {
-
+			// if header is not open, open it, add collapse arrow and save cookie.
 				u.ac(this.div, "open");
 				u.addCollapseArrow(this);
 				u.saveCookie("comments_open_state", 1, {"path":"/"});
 			}
 		}
-
+		// get cookies and initialize click event if cookie == 1
+		// that is if header is open, has added collapse arrow and saved cookie 
 		div.comments_open_state = u.getCookie("comments_open_state", {"path":"/"});
 		if(div.comments_open_state == 1) {
 			div.header.clicked();
@@ -62,7 +64,7 @@ Util.Objects["comments"] = new function() {
 				// hide original add button
 				u.as(this.div.actions, "display", "none");
 
-				// add comment form
+				// add comment form specific to interaction data
 				this.div.form = u.f.addForm(this.div, {"action":this.div.add_comment_url+"/"+this.div.item_id, "class":"add labelstyle:inject"});
 				this.div.form.div = div;
 
@@ -79,6 +81,7 @@ Util.Objects["comments"] = new function() {
 				u.f.init(this.div.form);
 
 				// handle form submit
+			
 				this.div.form.submitted = function() {
 
 					this.response = function(response) {
