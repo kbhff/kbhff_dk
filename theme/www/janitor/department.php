@@ -47,7 +47,7 @@ if(is_array($action) && count($action)) {
 
 }
 
-// no template found
+// bad command
 $page->page(array(
 	"templates" => "pages/404.php"
 ));

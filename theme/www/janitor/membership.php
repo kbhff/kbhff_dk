@@ -1,7 +1,6 @@
 <?php
+// enable access control
 $access_item["/"] = true;
-$access_item["/comments"] = true;
-$access_item["/addComment"] = "/comments";
 
 $access_item["/subscription"] = true;
 $access_item["/updateSubscriptionMethod"] = "/subscription";
@@ -15,20 +14,22 @@ if(isset($read_access) && $read_access) {
 
 include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 
-
+// get REST parameters
 $action = $page->actions();
+
+// define which model this controller is referring to
 $IC = new Items();
 $itemtype = "membership";
 $model = $IC->typeObject($itemtype);
 
-
+// page info
 $page->bodyClass("membership");
 $page->pageTitle("Memberships");
 
 
 if(is_array($action) && count($action)) {
 
-	// LIST/EDIT/NEW/NEW_ADDRESS/EDIT_ADDRESS
+	// LIST/EDIT/NEW
 	if(preg_match("/^(list|edit|new)$/", $action[0])) {
 
 		$page->page(array(
@@ -41,9 +42,10 @@ if(is_array($action) && count($action)) {
 	// Class interface
 	else if($page->validateCsrfToken() && preg_match("/[a-zA-Z]+/", $action[0])) {
 
-		// check if custom function exists on User class
+		// check if custom function exists on Membership class
 		if($model && method_exists($model, $action[0])) {
 
+			// output custom function to screen as JSON
 			$output = new Output();
 			$output->screen($model->{$action[0]}($action));
 			exit();
