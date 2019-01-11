@@ -44,23 +44,23 @@ class Page extends PageCore {
 	}
 
 	/**
-	* Get/set current user country
+	* Get/set current user department
 	*
-	* Pass value to set country
+	* Pass value to set department
 	*
-	* @return country ISO id on get
+	* @return string department name
 	*/
 	function department($value = false) {
 		// set
 		if($value !== false) {
 
 			$query = new Query();
-			// only allow valid country
-			// look for country in DB
+			// only allow valid department
+			// look for department in DB
 			if($query->sql("SELECT * FROM ".SITE_DB.".system_departments WHERE id = '".$value."'")) {
 				session()->value("department", $value);
 			}
-			// $value is not valid country
+			// $value is not a valid department
 			else {
 				session()->value("department", "");
 			}
@@ -69,25 +69,26 @@ class Page extends PageCore {
 		// get
 		else {
 
-			// country has not been set for current user session yet
+			// department has not been set for current user session yet
 			if(!session()->value("department")) {
-				// set default country
+				// set default department
 				$this->department("");
 			}
 
-			// return current user country
+			// return current user department
 			return session()->value("department");
 		}
 	}
 
 	/**
-	* Get array of available countries (with details)
-	* Optional get details for specific country
+	* Get array of available departments (with details)
+	* Optionally get details for specific department
 	*
-	* @return Array of countries or array of country details
+	* @return array Array of departments or array of department details
 	*/
 	function departments($id = false) {
 
+		// load apartments into cache if not already there
 		if(!cache()->value("departments")) {
 
 			$query = new Query();
@@ -95,14 +96,14 @@ class Page extends PageCore {
 			cache()->value("departments", $query->results());
 		}
 
-		// looking for specific country details
+		// looking for specific department details
 		if($id !== false) {
 			$departments = cache()->value("departments");
 			$key = arrayKeyValue($departments, "id", $id);
 			if($key !== false) {
 				return $departments[$key];
 			}
-			// invalid country requested - return default country
+			// invalid department requested - return default department
 			else {
 				$key = arrayKeyValue($departments, "id", $this->department());
 				return $departments[$key];
