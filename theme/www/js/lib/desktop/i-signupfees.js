@@ -11,7 +11,7 @@ Util.Objects["signupfees"] = new function() {
 
 		scene.ready = function() {
 			// u.bug("scene.ready 1:", this);
-
+			// finds the largest height of the signupfees-descriptions 
 			var signupfees = u.qsa("ul.offer li.description");
 			console.log(signupfees)
 			var largestHeight = 0;
@@ -22,16 +22,18 @@ Util.Objects["signupfees"] = new function() {
 					console.log(i)
 				}
 			}
+			// adds the largest height to all of the signupfees-descriptions
 			var j = signupfees.length;
 			while (j--) {
 				u.ass(signupfees[j], {"height":largestHeight+"px"})
 			}
 			console.log("bloa");
-
+	
 			var bg1 = u.ae(scene, "div", {class:"bg volunteer"});
 			var bg2 = u.ae(scene, "div", {class:"bg supporter"});
 
 			page.resized();
+			// adds height and width to divs
 //			console.log("shoo:", page.offsetHeight);
 			u.ass(bg1, {
 				height: page.offsetHeight + "px",

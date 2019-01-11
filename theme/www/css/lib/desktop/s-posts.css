@@ -1,6 +1,9 @@
+/* adds padding to article-item */
 #content .scene ul.items.articles li.item.article h3 {padding-left: 8px;}
 #content .scene ul.items.articles li.item.article p {padding-left: 8px;}
 #content .scene ul.items.articles li.item.article > ul.info {display: none;}
+
+/*adds styling to ul tags */
 #content .scene div.categories ul.tags li {list-style-type: none; padding: 0;}
 #content .scene div.categories ul.tags {padding: 0;}
 #content .scene ul.items.articles ul.tags li {list-style-type: none;}
