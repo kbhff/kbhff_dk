@@ -1,4 +1,6 @@
 <?php
+
+// enable access control
 $access_item["/"] = true;
 if(isset($read_access) && $read_access) {
 	return;
@@ -8,11 +10,13 @@ include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 include_once("classes/users/superuser.class.php");
 include_once("classes/shop/supershop.class.php");
 
-
+// get REST parameters
 $action = $page->actions();
+
+// define which model this controller is referring to
 $model = new SuperUser();
 
-
+// page info
 $page->bodyClass("member_help");
 $page->pageTitle("Medlemshjælp");
 
@@ -43,31 +47,35 @@ if($action) {
 	
 	// /medlemshjaelp/save
 	else if($action[0] == "save" && $page->validateCsrfToken()) {
-		// create new user
+		
+		// create new user (with a "fake" $action-array)
 		$user = $model->newUserFromMemberHelp(array("newUserFromMemberHelp"));
 		
 		// successful creation
 		if(isset($user["user_id"])) {
 			$SC = new SuperShop();
 			
+			// add user_id to $_POST array, which will be used to create a new cart with addCart()
 			$_POST["user_id"] = $user["user_id"];
 			
+			// create cart
 			$cart = $SC->addCart(array("addCart"));
-			
 			if($cart) {
-				// print_r($cart);
-				// print_r("-------POST-------");
-				// print_r($_POST); exit();
-
+				
+				// add new user to cart
 				if($SC->addToCart(array("addToCart", $cart["cart_reference"]))) {
+					
+					// convert cart to order
 					$order = $SC->newOrderFromCart(array("newOrderFromCart", $cart["id"], $cart["cart_reference"]));
 					if($order) {						
-						// print_r($cart); exit();
+						
+						// redirect to payment
 						message()->resetMessages();
 						header("Location: betaling/".$order["order_no"]);
 						exit();
 					}
 					
+					// error
 					else {
 						message()->resetMessages();
 						message()->addMessage("Det mislykkedes at omdanne indkøbskurven til en ordre.", array("type" => "error"));
@@ -76,6 +84,7 @@ if($action) {
 					}
 				}
 				
+				// error
 				else {
 					message()->resetMessages();
 					message()->addMessage("Det mislykkedes at føje medlemskabet til indkøbskurven.", array("type" => "error"));
@@ -84,6 +93,7 @@ if($action) {
 				}
 			}
 			
+			// error
 			else {
 				message()->resetMessages();
 				message()->addMessage("Det mislykkedes at oprette en indkøbskurv.", array("type" => "error"));
@@ -169,16 +179,20 @@ if($action) {
 		include_once("classes/shop/supershop.class.php");
 		$SC = new SuperShop();
 
+		// create payment id
 		$payment_id = $SC->registerPayment(["registerPayment"]);
-
-
-		if($payment_id) {
+		if($payment_id) {		
+			
+			// redirect to receipt
 			message()->resetMessages();
 			header("Location: /medlemshjaelp/betaling/".$payment_id."/kvittering");
 			exit();
 		}
 
+		// error
 		else {
+			
+			// redirect back to payment
 			message()->resetMessages();
 			message()->addMessage("Der skete en fejl i registreringen af betalingen.", array("type" => "error"));
 			header("Location: /medlemshjaelp/betaling/".$action[1]);
