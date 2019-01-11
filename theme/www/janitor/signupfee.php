@@ -1,11 +1,6 @@
 <?php
+// enable access control
 $access_item["/"] = true;
-$access_item["/comments"] = true;
-$access_item["/addComment"] = "/comments";
-
-$access_item["/subscription"] = true;
-$access_item["/updateSubscriptionMethod"] = "/subscription";
-
 $access_item["/new"] = true;
 $access_item["/save"] = "/new";
 
@@ -15,13 +10,15 @@ if(isset($read_access) && $read_access) {
 
 include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 
-
+// get REST parameters
 $action = $page->actions();
+
+// define which model this controller is referring to
 $IC = new Items();
 $itemtype = "signupfee";
 $model = $IC->typeObject($itemtype);
 
-
+// page info
 $page->bodyClass("signupfee");
 $page->pageTitle("Signup fees");
 
@@ -44,6 +41,7 @@ if(is_array($action) && count($action)) {
 		// check if custom function exists on User class
 		if($model && method_exists($model, $action[0])) {
 
+			// output custom function to screen as JSON
 			$output = new Output();
 			$output->screen($model->{$action[0]}($action));
 			exit();
