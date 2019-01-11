@@ -17,8 +17,8 @@ $page->pageTitle("Posts");
 
 
 
-// news list for tags
-// /posts/#sindex#
+// view specific post 
+// /posts/#sindex# (submitted from /posts)
 if(count($action) == 1) {
 
 	$page->page(array(
@@ -27,7 +27,8 @@ if(count($action) == 1) {
 	exit();
 
 }
-
+// view specific post in a two column grid-layout
+// /posts/post-grid/#sindex#
 else if(count($action) == 2 && $action[0] == "post-grid") {
 
 	$page->page(array(
@@ -41,6 +42,7 @@ else if(count($action) == 2 && $action[0] == "post-grid") {
 
 // /posts/tag/#tag#
 // /posts/tag/#tag#/#sindex#
+// overview of tag-specific posts when clicking on relevant tag 
 else if(count($action) >= 2 && $action[0] == "tag") {
 
 	$page->page(array(
@@ -50,7 +52,8 @@ else if(count($action) >= 2 && $action[0] == "tag") {
 
 }
 
-
+// /posts
+// overview of posts
 $page->page(array(
 	"templates" => "pages/posts.php"
 ));
