@@ -72,11 +72,7 @@ class User extends UserCore {
 		$this->updateUserDepartment(["updateUserDepartment"]);
 	}
 
-	function updateDepartment($action) {
-
-
-	}
-
+	// Validate reset token
 	function validateCode($action) {
 		// get posted variables
 		$this->getPostedEntities();
@@ -86,10 +82,13 @@ class User extends UserCore {
 		if(count($action) == 1 && $this->checkResetToken($token)) {
 			return $token;
 		}
+
+		// Error
 		return false;
 	}
+
 	/**
-	 * Get the current user, including her associated department.
+	 * Get the current user, including associated department.
 	 *
 	 * @return array The user object, with the department object appended as a new property.
 	 */
@@ -203,6 +202,7 @@ class User extends UserCore {
 	}
 
 
+	// Update users profile data
 	function updateUserInformation($action) {
 		// Get posted values from form
 		$this->getPostedEntities();
@@ -226,6 +226,7 @@ class User extends UserCore {
 		return true;
 	}
 
+	// Update password
 	function updateUserPassword($action) {
 		// Get posted values to make them available for models
 		$this->getPostedEntities();
@@ -277,6 +278,7 @@ class User extends UserCore {
 		return false;
 	}
 
+	// Delete account
 	function deleteUserInformation($action) {
 
 		$user = $this->getKbhffUser();
