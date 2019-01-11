@@ -1,9 +1,11 @@
+/*styling of order list */
+
 #content .scene.shopPayment ul.orders {padding-top: 50px; margin: 0 auto; width: 450px; padding-bottom: 0;}
 #content .scene.shopPayment ul.orders > li {list-style-type: none; padding-left: 0; font-size: 16px;}
 #content .scene.shopPayment ul.orders > li span.price {float: right;}
 #content .scene.shopPayment ul.orders > li.total_price {font-size: 18px; font-weight: 700; border-top: 1px solid #000000; padding-top: 12px; margin-top: 12px;}
 
-
+/*styling of card*/
 #content .scene.shopPayment form.card {width: 450px; margin: 0 auto; padding-top: 50px;}
 #content .scene.shopPayment form.card fieldset {background-color: #f2f2f2;}
 #content .scene.shopPayment form.card fieldset div.field.tel.card {width: 400px; margin: 0 auto; padding-top: 24px;}
