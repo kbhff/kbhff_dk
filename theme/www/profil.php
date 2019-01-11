@@ -35,11 +35,14 @@ else if (is_array($action) && count($action)) {
 
 	// Cancel membership
 	else if($action[0] == "deleteUserInformation" && $page->validateCsrfToken()) {
+
+		// Method returns true
 		if($UC->deleteUserInformation($action)) {
 			header("Location: /");
 			exit();
 		}
 
+		// Method fails
 		else {
 			// message()->addMessage("Fejl!", array("type" => "error"));
 			$page->page([
@@ -66,6 +69,7 @@ if(!$UC->hasAcceptedTerms()) {
 
 if(is_array($action) && count($action)) {
 
+	// Allow update
 	if($action[0] == "update" && $page->validateCsrfToken()) {
 		$UC->update();
 	}
@@ -148,8 +152,10 @@ if(is_array($action) && count($action)) {
 		}
 	}
 
-	// Unaccept terms
+	// Unaccept terms, for testing purposes
 	else if($action[0] == "unaccept") {
+
+		// Method returns true
 		if($UC->unacceptTerms()) {
 			$page->page(array(
 				"templates" => "pages/unaccept_terms.php"
@@ -157,6 +163,7 @@ if(is_array($action) && count($action)) {
 			exit();
 		}
 
+		// Fallback
 		exit();
 	}
 
