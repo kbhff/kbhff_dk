@@ -36,7 +36,7 @@ if(is_array($action) && count($action)) {
 
 
 
-		// Do CI login
+		// Do CI login TODO: Do a check before loading curl for CI and fix CI password overriding Janitor password (if set)
 		include_once("classes/helpers/curl.class.php");
 		$curl = new CurlRequest();
 		$params = array(
@@ -95,6 +95,8 @@ if(is_array($action) && count($action)) {
 
 			session()->value("kbhff_session", true);
 		}
+
+
 
 		// Perform Janitor login and redirect to /profil
 		session()->value("login_forward", "/profil");
@@ -348,12 +350,13 @@ if(is_array($action) && count($action)) {
 	}
 }
 
-
+// If there's a user currently logged in
 if(session()->value("user_group_id")>1) {
 	header("Location: /profil");
 	exit();
 }
-// plain login
+
+// Fallback
 $page->page(array(
 	"templates" => "pages/kbhff-login.php",
 	"type" => "login"
