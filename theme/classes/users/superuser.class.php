@@ -26,8 +26,14 @@ class SuperUser extends SuperUserCore {
 	}
 
 
-	// save user department on save user
-	function saved($user_id) {
+	/**
+	 * Save user department after saving user
+	 *
+	 * @param integer $user_id
+	 * @return void
+	 */	function saved($user_id) {
+		
+		// Call updateUserDepartment with a "fake" $action array
 		$this->updateUserDepartment(["updateUserDepartment", $user_id]);
 	}
 
@@ -205,7 +211,6 @@ class SuperUser extends SuperUserCore {
 				$sql = "INSERT INTO ".$this->db." SET " . implode(",", $values);
 				// print $sql."<br>\n";
 				
-				
 				if($query->sql($sql)) {
 
 					$user_id = $query->lastInsertId();
@@ -213,13 +218,13 @@ class SuperUser extends SuperUserCore {
 					// Generate verification code
 					$verification_code = randomKey(8);
 
-					// add email to user_usernames
+					// add email and verification code to user_usernames. Use email as username.
 					$sql = "INSERT INTO $this->db_usernames SET username = '$email', verified = 0, verification_code = '$verification_code', type = 'email', user_id = $user_id";
 					// print $sql."<br>\n";
 					
 					if($query->sql($sql)) {
 
-
+						// If there's a mobile number, use it as username
 						$mobile = $this->getProperty("mobile", "value");
 						if($mobile) {
 							$sql = "INSERT INTO $this->db_usernames SET username = '$mobile', verified = 1, verification_code = '$verification_code', type = 'mobile', user_id = $user_id";
@@ -232,7 +237,7 @@ class SuperUser extends SuperUserCore {
 						$raw_password = $this->getProperty("password", "value");
 						$mail_password = "******** (password is encrypted)";
 
-						// if raw password was not sent - set temp password and include it in activation email
+						// if raw password was not sent (or too easy to guess) - set temp password and include it in activation email
 						if(!$raw_password || $raw_password == "Password") {
 							// add temp password
 							$raw_password = randomKey(8);
@@ -242,6 +247,7 @@ class SuperUser extends SuperUserCore {
 						// encrypt password
 						$password = password_hash($raw_password, PASSWORD_DEFAULT);
 						$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$password'";
+						
 						// password added successfully
 						if($query->sql($sql)) {
 
@@ -255,7 +261,7 @@ class SuperUser extends SuperUserCore {
 							// add log
 							$page->addLog("user->newUserFromMemberHelp: created: " . $email . ", user_id:$user_id");
 
-							// success
+							// verification code success
 							// send activation email
 							if($verification_code) {
 
@@ -279,8 +285,8 @@ class SuperUser extends SuperUserCore {
 									"tracking" => false
 									// "template" => "system"
 								));
-							}
-							// error
+							}							
+							// verification code error
 							else {
 								// send error email notification
 								mailer()->send(array(
@@ -311,7 +317,7 @@ class SuperUser extends SuperUserCore {
 
 							// maillist subscription sent as string?
 							$maillist = getPost("maillist");
-							if($maillist) {
+							if($maillist) {	
 								// check if maillist exists
 								$maillists = $page->maillists();
 								$maillist_match = arrayKeyValue($maillists, "name", $maillist);
