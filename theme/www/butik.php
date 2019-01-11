@@ -16,11 +16,44 @@ $page->pageTitle("Butik");
 
 
 if(is_array($action) && count($action)) {
+	
+	//butik/betaling/#order_no# (submitted from bliv-medlem/bekraeft|spring-over)
+	if($action[0] == "betaling" && count($action) == 2) {
 
-	// /shop/kvittering
-	if($action[0] == "kvittering") {
+		$page->page(array(
+			"templates" => "shop/stripe.php"
+		));
+		exit();
+	}
+	
+	// process payment
+	// butik/betaling/#order_no#/stripe/process (submitted from butik/betaling/#order_no#)
+	else if(count($action) == 4 && $action[0] == "betaling" && $action[3] == "process" && $page->validateCsrfToken()) {
+		// process gateway data and create payment-id
+		$payment_id = $model->processOrderPayment($action);
+		// successful payment and creation of payment-id
+		if($payment_id) {
+			message()->resetMessages();
+			// redirect to leave POST state
+			header("Location: /butik/kvittering/".$action[1]."/".$action[2]."/".$payment_id);
+			exit();
 
+		}
+		// Something went wrong
+		else {
+			message()->resetMessages();
+			message()->addMessage("Der skete en fejl i registreringen af betalingen.", array("type" => "error"));
+			// redirect to leave POST state
+			header("Location: /butik/kvittering/".$action[1]."/fejl");
+			exit();
 
+		}
+
+	}
+	// /butik/kvittering (submitted from butik/betaling/#order_no#/stripe/process)
+	else if($action[0] == "kvittering") {
+
+		// butik/kvittering/#order_no#/fejl
 		if(count($action) == 3 && $action[2] == "fejl") {
 
 			$page->page(array(
@@ -30,7 +63,8 @@ if(is_array($action) && count($action)) {
 
 		}
 
-		// if payment id exists (gateway payment receipt)
+		// if payment id exists and payment is processed successfully (gateway payment receipt)
+		// butik/kvittering/#order_no#/#gateway#/#payment_id#
 		else if(count($action) == 4) {
 
 			$page->page(array(
@@ -51,43 +85,10 @@ if(is_array($action) && count($action)) {
 
 	}
 
-	# /butik/betaling/#order_no#
-	else if($action[0] == "betaling" && count($action) == 2) {
-
-		$page->page(array(
-			"templates" => "shop/stripe.php"
-		));
-		exit();
-	}
-
-
-	// process payment
-	else if(count($action) == 4 && $action[0] == "betaling" && $action[3] == "process" && $page->validateCsrfToken()) {
-
-		$payment_id = $model->processOrderPayment($action);
-		if($payment_id) {
-			message()->resetMessages();
-			// redirect to leave POST state
-			header("Location: /butik/kvittering/".$action[1]."/".$action[2]."/".$payment_id);
-			exit();
-
-		}
-		else {
-			message()->resetMessages();
-			message()->addMessage("Der skete en fejl i registreringen af betalingen.", array("type" => "error"));
-			// redirect to leave POST state
-			header("Location: /butik/kvittering/".$action[1]."/fejl");
-			exit();
-
-		}
-
-	}
-
-
 }
 
-// plain signup directly
-// /signup
+// go to cart directly
+// /butik
 $page->page(array(
 	"templates" => "shop/cart.php"
 ));
