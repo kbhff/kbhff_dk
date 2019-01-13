@@ -285,6 +285,8 @@ class User extends UserCore {
 		$user_email = $user["email"];
 
 		$cancel_result = $this->cancel(["cancel"]);
+
+		// if cancel goes through and returns true then send a mail
 		if ($cancel_result === true) {
 			message()->addMessage("Dine oplysninger blev slettet");
 			mailer()->send([
@@ -295,16 +297,19 @@ class User extends UserCore {
 
 			return true;
 		}
+		// Cannot cancel account due to unpaid orders
 		else if(isset($cancel_result["error"]) && $cancel_result["error"] == "unpaid_orders") {
 			message()->addMessage("Du kan ikke udmelde dig, da du har ubetalte ordrer.", array("type" => "error"));
 			return false;
 
 		}
+		// Cannot cancel account due to wrong password
 		else if(isset($cancel_result["error"]) && $cancel_result["error"] == "wrong_password") {
 			message()->addMessage("Du kan ikke udmelde dig, da du har angivet et forkert password.", array("type" => "error"));
 			return false;
 
 		}
+		// Any unknown error
 		else {
 			message()->addMessage("Udmeldelsen slog fejl", ["type" => "error"]);
 			return false;
