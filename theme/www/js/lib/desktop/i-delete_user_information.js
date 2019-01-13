@@ -12,9 +12,11 @@ Util.Objects["delete_user_information"] = new function() {
 		scene.ready = function() {
 			// u.bug("scene.ready:", this);
 
-
+			// initialize form
 			var confirm_cancellation = u.qs("form.confirm_cancellation", this);
-			u.f.init(confirm_cancellation);
+			if (confirm_cancellation) {
+				u.f.init(confirm_cancellation);
+			}
 
 		}
 

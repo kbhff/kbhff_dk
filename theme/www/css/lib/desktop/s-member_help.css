@@ -1,33 +1,46 @@
-#content .scene.member_help ul.actions {text-align:center}
+/* Signup */
+#content .scene.member_help_signup p.metatext {
+	font-style: italic;
+	font-size: 12px;
+} 
 
+#content .scene.member_help_signup p.terms_summary {
+	font-weight: 700;
+}
+
+/* Payment */
 #content .scene.member_help_payment > p {font-size: 12px; line-height: 12px; padding-bottom: 0;}
 #content .scene.member_help_payment > h1 + p {padding: 12px; font-size: 14px;}
 
+/* Payment – Order summary */
+#content .scene.member_help_payment ul.orders {padding-top: 50px; margin: 0 auto; width: 450px; padding-bottom: 0;}
+#content .scene.member_help_payment ul.orders > li {list-style-type: none; padding-left: 0; font-size: 16px;}
+#content .scene.member_help_payment ul.orders > li span.price {float: right;}
+#content .scene.member_help_payment ul.orders > li.total_price {font-size: 18px; font-weight: 700; border-top: 1px solid #000000; padding-top: 12px; margin-top: 12px;}
+
+/* Payment – tabs */
 #content .scene.member_help_payment div.payment_options {
 	margin: 0 auto;
 	margin-top: 32px; 
 	width: 40%;
 }
-#content .scene.member_help_payment div.payment_options h4.fan {
+#content .scene.member_help_payment div.payment_options h4.tab {
 	display: inline-block; 
 	background-color: #f2f2f2f2; 
 	padding: 6px calc(2.5% + 10px); 
 	margin-right: 12px; 
 	cursor:pointer;
 }
-#content .scene.member_help_payment div.payment_options h4.cash_fan {
+#content .scene.member_help_payment div.payment_options h4.cash_tab {
 	background-color: #bbbbbb;
 }
 #content .scene.member_help_payment form.cash {display:none;}
 
 #content .scene.member_help_payment form fieldset {background-color: #f2f2f2; position: relative; padding-bottom: 40px} 
 
-#content .scene.member_help_payment form ul.actions {width: 100%; margin-left: 0; padding-left: 0; margin-top: 12px;}
-#content .scene.member_help_payment ul.actions li.forgot {line-height: 22px;}
-
+/* Payment – MobilePay */
 #content .scene.member_help_payment form.mobilepay .qr {float: right; position: relative;}
 #content .scene.member_help_payment form.mobilepay .qr::before {
-	/* float: right; */
 	content: "";
     display: block;
     position: absolute;
@@ -66,28 +79,15 @@
 	padding-bottom: 8px;
 }
 
-#content .scene.member_help_payment form .checkbox {
-	padding: 12px 10px;
-	position: absolute;
-	bottom: 0;
-}
-
+/* Payment – Cash */
 #content .scene.member_help_payment form div.cash.instructions p {
 	font-size: 16px;
 	padding: 12px 12px 12px;
 }
 
-#content .scene.member_help_signup p.metatext {
-	font-style: italic;
-	font-size: 12px;
-} 
+/* Payment – checkboxes and buttons */
+#content .scene.member_help_payment form .checkbox {padding: 12px 10px; position: absolute; bottom: 0;}
 
-#content .scene.member_help_signup p.terms_summary {
-	/* font-size: 16px; */
-	font-weight: 700;
-}
+#content .scene.member_help_payment form ul.actions {width: 100%; margin-left: 0; padding-left: 0; margin-top: 12px;}
+#content .scene.member_help ul.actions {text-align:center}
 
-#content .scene.member_help_payment ul.orders {padding-top: 50px; margin: 0 auto; width: 450px; padding-bottom: 0;}
-#content .scene.member_help_payment ul.orders > li {list-style-type: none; padding-left: 0; font-size: 16px;}
-#content .scene.member_help_payment ul.orders > li span.price {float: right;}
-#content .scene.member_help_payment ul.orders > li.total_price {font-size: 18px; font-weight: 700; border-top: 1px solid #000000; padding-top: 12px; margin-top: 12px;}

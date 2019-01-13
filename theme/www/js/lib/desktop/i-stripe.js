@@ -18,6 +18,8 @@ Util.Objects["stripe"] = new function() {
 			page.cN.scene = this;
 
 			this.card_form = u.qs("form.card", this);
+
+			// Validate card number
 			u.f.customValidate["card"] = function(iN) {
 //				u.bug("local validation");
 
@@ -32,6 +34,7 @@ Util.Objects["stripe"] = new function() {
 
 			}
 
+			//  Validate expiration month
 			u.f.customValidate["exp_month"] = function(iN) {
 //				u.bug("local month validation: from year: " + iN.validating_year + " " + u.randomString(3));
 
@@ -61,6 +64,7 @@ Util.Objects["stripe"] = new function() {
 
 			}
 
+			// Validate expiration year
 			u.f.customValidate["exp_year"] = function(iN) {
 //				u.bug("local year validation: from month: " + iN.validating_month + " " + u.randomString(3));
 
@@ -97,6 +101,7 @@ Util.Objects["stripe"] = new function() {
 
 			}
 
+			// Validate CVC
 			u.f.customValidate["cvc"] = function(iN) {
 //				u.bug("local cvc validation");
 

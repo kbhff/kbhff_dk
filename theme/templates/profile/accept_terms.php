@@ -18,7 +18,7 @@ global $UC;
 	<p>Læs mere i vore <a href="/persondata">retningslinjer for behandling og opbevaring af persondata</a></p>
 
 
-
+	<!-- create form with a single checkbox and acccept/cancel buttons -->
 	<?= $UC->formStart("accept", array("class" => "accept")) ?>
 
 		<fieldset>

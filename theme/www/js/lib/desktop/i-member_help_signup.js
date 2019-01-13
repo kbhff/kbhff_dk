@@ -16,8 +16,8 @@ Util.Objects["member_help_signup"] = new function() {
 
 			page.cN.scene = this;
 
+			// initialize signup form
 			var signup_form = u.qs("form.member_help_signup", this);
-
 			if(signup_form) {
 				u.f.init(signup_form);
 			}
