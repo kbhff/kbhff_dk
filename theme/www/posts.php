@@ -16,7 +16,6 @@ $page->bodyClass("posts");
 $page->pageTitle("Posts");
 
 
-
 // view specific post 
 // /posts/#sindex# (submitted from /posts)
 if(count($action) == 1) {
@@ -27,6 +26,8 @@ if(count($action) == 1) {
 	exit();
 
 }
+
+
 // view specific post in a two column grid-layout
 // /posts/post-grid/#sindex#
 else if(count($action) == 2 && $action[0] == "post-grid") {
@@ -37,7 +38,6 @@ else if(count($action) == 2 && $action[0] == "post-grid") {
 	exit();
 
 }
-
 
 
 // /posts/tag/#tag#
@@ -51,6 +51,7 @@ else if(count($action) >= 2 && $action[0] == "tag") {
 	exit();
 
 }
+
 
 // /posts
 // overview of posts
