@@ -24,19 +24,19 @@ if($order) {
 		$amount = formatPrice($total_order_price);
 	}
 
-
+// check if membership order has membership order id 
 	if($membership && $membership["order"]) {
 		$is_membership = ($membership["order"] && $order["id"] == $membership["order"]["id"]) ? true : false;
 	}
 
-
+// if membership has subscription method and duration of subsription, save variables with information
 	if($membership && $membership["item"] && $membership["item"]["subscription_method"] && $membership["item"]["subscription_method"]["duration"]) {
 		$subscription_method = $membership["item"]["subscription_method"];
 		$payment_date = $membership["renewed_at"] ? date("jS", strtotime($membership["renewed_at"])) : date("jS", strtotime($membership["created_at"]));
 	}
 
 }
-
+// save membership references 
 if($is_membership) {
 	$reference = "Member ".$membership["id"];
 }
@@ -53,7 +53,8 @@ else {
 
 	<h1>Betal dit medlemskab</h1>
 	<ul class="orders">
-	<? foreach($order["items"] as $i => $item): ?>
+	<? // loop through order items and show price, quantity and total order price.
+	foreach($order["items"] as $i => $item): ?>
 		<li class="unit_price"> <?= $item["quantity"]." x ".$item["name"]." a ". formatPrice(array("price" => $item["unit_price"], "currency" => $order["currency"])) ?> <span class="price"><?= formatPrice(array("price" => $item["total_price"], "currency" => $order["currency"]))?></span></li> 
 	<? endforeach; ?>
 		<li>Heraf moms <span class="price vat_price"><?= formatPrice(array("price" => $total_order_price["vat"], "currency" => $total_order_price["currency"])) ?></span></li>

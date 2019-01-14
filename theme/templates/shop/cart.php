@@ -22,10 +22,14 @@ $IC = new Items();
 ?>
 <div class="scene cart i:cart">
 	<h1>Your cart</h1>
-
-	<?= $HTML->serverMessages() ?>
-
-<? if($cart["items"]) :?>
+	<?
+	//print all stored messages if any
+	print $HTML->serverMessages();
+	?>
+<? 
+	// if cart has items, add action of checkout button to html output
+	if($cart["items"]) :
+	?>
 	<div class="checkout">
 		<ul class="actions">
 			<?= $JML->oneButtonForm("Checkout", "/shop/checkout", array(
@@ -44,13 +48,17 @@ $IC = new Items();
 		<h2>Cart contents</h2>
 		<? if($cart["items"]): ?>
 		<ul class="items">
-			<? foreach($cart["items"] as $cart_item):
+			<? 
+			// if cart has items, loops through all cart items and show each specific item and its price, quantity and editing options(delete and update quantity)
+			foreach($cart["items"] as $cart_item):
 				$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true)));
 				$price = $model->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
 			?>
 			<li class="item id:<?= $item["id"] ?>">
 				<h3>
-					<?= $model->formStart("/shop/updateCartItemQuantity/".$cart["cart_reference"]."/".$cart_item["id"], array("class" => "updateCartItemQuantity labelstyle:inject")) ?>
+					<?
+					// add option of updating item quantity to item 
+					print $model->formStart("/shop/updateCartItemQuantity/".$cart["cart_reference"]."/".$cart_item["id"], array("class" => "updateCartItemQuantity labelstyle:inject")) ?>
 						<fieldset>
 							<?= $model->input("quantity", array(
 								"type" => "integer",
@@ -67,7 +75,8 @@ $IC = new Items();
 					<span class="a">á </span>
 					<span class="unit_price"><?= formatPrice($price) ?></span>
 					<span class="total_price">
-						<?= formatPrice(array(
+						<? // add total price and vat to item 
+						print formatPrice(array(
 								"price" => $price["price"]*$cart_item["quantity"],
 								"vat" => $price["vat"]*$cart_item["quantity"],
 								"currency" => $cart["currency"],
@@ -90,7 +99,8 @@ $IC = new Items();
 				<? endif; ?>
 
 				<ul class="actions">
-					<?= $JML->oneButtonForm("Delete", "/shop/deleteFromCart/".$cart["cart_reference"]."/".$cart_item["id"], array(
+					<? // add action of delete button to item 
+					print $JML->oneButtonForm("Delete", "/shop/deleteFromCart/".$cart["cart_reference"]."/".$cart_item["id"], array(
 						"wrapper" => "li.delete",
 						"static" => true
 					)) ?>
@@ -102,7 +112,8 @@ $IC = new Items();
 				<h3>
 					<span class="name">Total</span>
 					<span class="total_price">
-						<?= formatPrice($model->getTotalCartPrice($cart["id"]), array("vat" => true)) ?>
+						<? // add total price of cart to html output
+						print formatPrice($model->getTotalCartPrice($cart["id"]), array("vat" => true)) ?>
 					</span>
 				</h3>
 			</li>
@@ -122,7 +133,8 @@ $IC = new Items();
 		<? endif; ?>
 	</div>
 
-<? if($cart["items"]) :?>
+	<? // if cart has items, add action of checkout button to html output
+	if($cart["items"]) :?>
 	<div class="checkout">
 		<ul class="actions">
 			<?= $JML->oneButtonForm("Checkout", "/shop/checkout", array(
@@ -134,5 +146,5 @@ $IC = new Items();
 			)) ?>
 		</ul>
 	</div>
-<? endif; ?>
+<? 	endif; ?>
 </div>
