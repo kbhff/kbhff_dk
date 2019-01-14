@@ -24,7 +24,7 @@ if($order) {
 		$amount = formatPrice($total_order_price);
 	}
 
-// check if membership order has membership order id 
+// is the users membership related to this order?
 	if($membership && $membership["order"]) {
 		$is_membership = ($membership["order"] && $order["id"] == $membership["order"]["id"]) ? true : false;
 	}
