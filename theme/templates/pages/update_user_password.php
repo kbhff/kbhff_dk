@@ -9,11 +9,11 @@ $this->pageTitle("Adgangskode");
 	<h1>Adgangskode</h1>
 	<h2>Her kan du ændre din adgangskode.</h2>
 
-	<!-- start form field -->
+
 	<?= $UC->formStart("updateUserPassword", ["class" => "form_password"]) ?>
 
-		<!-- print messages -->
-<?	if(message()->hasMessages()): ?>
+<?	//print messages
+	if(message()->hasMessages()): ?>
 		<p class="errormessage">
 <?		$messages = message()->getMessages(array("type" => "error"));
 		foreach($messages as $message): ?>
@@ -30,7 +30,6 @@ $this->pageTitle("Adgangskode");
 
 <?	endif; ?>
 
-		<!-- user must write new password two times to confirm -->
 		<fieldset>
 			<?=
 				$UC->input("new_password", [
@@ -49,13 +48,11 @@ $this->pageTitle("Adgangskode");
 			?>
 		</fieldset>
 
-		<!-- confirm/cancel buttons -->
 		<ul class="actions">
 			<li class="cancel"><a href="/" class="button">Annullér</a></li>
 			<?= $UC->submit("Gem", array("class" => "primary", "wrapper" => "li.save")) ?>
 		</ul>
 
-	<!-- end form field -->
 	<?= $UC->formEnd() ?>
 
 </div>

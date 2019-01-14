@@ -9,21 +9,20 @@ $this->pageTitle("Udmeldelse");
 	<h1>Vil du udmeldes?</h1>
 	<h2>Bemærk, at denne handling er uomgørlig.</h2>
 
-	<!-- start form field -->
 	<?= $UC->formStart("deleteUserInformation", array("class" => "confirm_cancellation")) ?>
 
-		<!-- print error messages -->
-	<?	if(message()->hasMessages(array("type" => "error"))): ?>
+<?	// print error messages
+	if(message()->hasMessages(array("type" => "error"))): ?>
 		<p class="errormessage">
-	<?	$messages = message()->getMessages(array("type" => "error"));
-		message()->resetMessages();
+<?		$messages = message()->getMessages(array("type" => "error"));
 		foreach($messages as $message): ?>
 			<?= $message ?><br>
-	<?		endforeach;?>
+<?		endforeach;?>
 		</p>
-	<?	endif; ?>
+<?	message()->resetMessages(); ?>
+
+<?	endif; ?>
 	
-		<!-- user must enter password to confirm deletion -->
 		<fieldset>
 			<?= $UC->input("password", [
 				"min" => 1,
@@ -33,13 +32,11 @@ $this->pageTitle("Udmeldelse");
 			]) ?>
 		</fieldset>
 		
-		<!-- 'confirm' button -->
 		<ul class="actions">
 			<?= $UC->submit("Farvel", array("class" => "primary", "wrapper" => "li.save")) ?>
 
 		</ul>
 
-	<!-- end form field -->
 	<?= $UC->formEnd() ?>
 
 

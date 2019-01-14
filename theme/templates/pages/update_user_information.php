@@ -9,11 +9,11 @@ $this->pageTitle("Brugeroplysninger");
 	<h1>Brugeroplysninger</h1>
 	<h2>Her kan du rette i dine brugeroplysninger.</h2>
 
-	<!-- start form field -->
 	<?= $UC->formStart("updateUserInformation", ["class" => "form_user"]) ?>
 
-		<!-- print messages -->
-<?	if(message()->hasMessages()): ?>
+		
+<?	// print messages
+	if(message()->hasMessages()): ?>
 		<p class="errormessage">
 <?		$messages = message()->getMessages(array("type" => "error"));
 		foreach($messages as $message): ?>
@@ -27,10 +27,8 @@ $this->pageTitle("Brugeroplysninger");
 <?		endforeach;?>
 		</p>
 <?	message()->resetMessages(); ?>
-
 <?	endif; ?>
 
-		<!-- add fields for user information -->
 		<fieldset>
 			<?= 
 				$UC->input("nickname", [
@@ -79,13 +77,11 @@ $this->pageTitle("Brugeroplysninger");
 			?>
 		</fieldset>
 
-		<!-- add confirm/cancel buttons -->
 		<ul class="actions">
 			<li class="cancel"><a href="/" class="button">Anullér</a></li>
 			<?= $UC->submit("Opdater", array("class" => "primary", "wrapper" => "li.save")) ?>
 		</ul>
 
-	<!-- end form field -->
 	<?= $UC->formEnd() ?>
 
 </div>
