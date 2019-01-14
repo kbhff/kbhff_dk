@@ -13,14 +13,15 @@ if($page_item) {
 
 // $username = session()->value("signup_username");
 // session()->reset("signup_username");
-
+// get specific username
 $username = session()->value("signup_email");
 session()->reset("signup_email");
 
 ?>
 <div class="scene signup i:scene">
 
-<? if($page_item && $page_item["status"]):
+<?  // if page is created in backend, add it to html output
+if($page_item && $page_item["status"]):
 	$media = $IC->sliceMedia($page_item); ?>
 	<div class="article i:article id:<?= $page_item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
 

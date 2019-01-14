@@ -14,7 +14,8 @@ $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "positio
 
 <div class="scene signupfees i:signupfees">
 
-<? if($page_item && $page_item["status"]):
+<? // show page created in backend
+if($page_item && $page_item["status"]):
 	$media = $IC->sliceMedia($page_item); ?>
 	<div class="article i:article id:<?= $page_item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
 
@@ -55,10 +56,13 @@ $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "positio
 	<div class="signupfees">
 
 
-		<?= $HTML->serverMessages() ?>
+		<? // add any stored messages to html output
+		print $HTML->serverMessages() ?>
 
 		<ul class="signupfees">
-		<? foreach($signupfees as $i => $signupfee): ?>
+		<? // loop through signupfees and add them to html output
+		// Misspelling in 2 * <li class="suscribtion_price"> - has to be corrected here and in css 
+		foreach($signupfees as $i => $signupfee): ?>
 			<li class="signupfee<?= $signupfee["classname"] ? " ".$signupfee["classname"] : "" ?>">
 				<h3><?= $signupfee["name"] ?></h3>
 
@@ -69,7 +73,8 @@ $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "positio
 					<li class="name" itemprop="name" content="<?= $signupfee["name"] ?>"></li>
 					<li class="currency" itemprop="priceCurrency" content="<?= $this->currency() ?>"></li>
 					<li class="suscribtion_price"><p>Indmeldelsesgebyr:</p></li>
-				<? if($signupfee["prices"]) {
+				<? // if signupfee has an offer, show the price, else show the default price. If neither is true show 'free'.
+				if($signupfee["prices"]) {
 						$offer_key = arrayKeyValue($signupfee["prices"], "type", "offer");
 						$default_key = arrayKeyValue($signupfee["prices"], "type", "default");
 
@@ -91,7 +96,7 @@ $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "positio
 <?
 						}
 
-
+					// show description of signupfee
 					if($signupfee["html"]) { ?>
 					<li class="description" itemprop="description"><?=$signupfee["html"]?></li>
 <? 				}
@@ -106,7 +111,8 @@ $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "positio
 					<li class="name" itemprop="name" content="<?= $membership_item["name"] ?>"></li>
 					<li class="currency" itemprop="priceCurrency" content="<?= $this->currency() ?>"></li>
 					<li class="suscribtion_price"><p>Årligt kontingent:</p></li>
-				<? if($membership_item["prices"]) {
+				<? // show price of membership. If it has an offer, show this, else show default price. If none, show free. 
+				if($membership_item["prices"]) {
 						$offer_key = arrayKeyValue($membership_item["prices"], "type", "offer");
 						$default_key = arrayKeyValue($membership_item["prices"], "type", "default");
 

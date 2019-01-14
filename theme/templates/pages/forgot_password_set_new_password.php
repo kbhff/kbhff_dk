@@ -14,7 +14,10 @@ $reset_token = session()->value("temp-reset-token");
 		<h2>Password</h2>
 
 		<?= $model->formStart("resetPassword", array("class" => "reset_password")) ?>
-			<?= $model->input("reset-token", array("type" => "hidden", "value" => $reset_token)) ?>
+			<?
+				// Send reset token along with the rest of the form
+				print $model->input("reset-token", array("type" => "hidden", "value" => $reset_token))
+			?>
 
 			<fieldset>
 				<?= $model->input("new_password", array("required" => true, "label" => "Ny adgangskode", "hint_message" => "Skriv dit nye adgangskode – 8-20 tegn", "error_message" => "Ugyldig adgangskode")) ?>

@@ -13,14 +13,15 @@ include_once("classes/system/department.class.php");
 $DC = new Department();
 $departments = $DC->getDepartments();
 
-
+// get email value from form input 
 $email = $model->getProperty("email", "value");
 // $name = $model->getProperty("name", "value");
 ?>
 <div class="scene signup i:signup">
 
 
-<? if($page_item && $page_item["status"]):
+<? // add page created in backend to html output
+if($page_item && $page_item["status"]):
 	$media = $IC->sliceMedia($page_item); ?>
 	<div class="article i:article id:<?= $page_item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
 
@@ -58,7 +59,8 @@ $email = $model->getProperty("email", "value");
 
 <?= $model->formStart("save", array("class" => "signup labelstyle:inject")) ?>
 
-<? if(message()->hasMessages(array("type" => "error"))): ?>
+<? // show error messages if any
+if(message()->hasMessages(array("type" => "error"))): ?>
 	<p class="errormessage">
 <?	$messages = message()->getMessages(array("type" => "error"));
 		message()->resetMessages();

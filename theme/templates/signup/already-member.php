@@ -12,7 +12,8 @@ if($page_item) {
 
 <div class="scene already_member i:scene">
 
-<? if($page_item && $page_item["status"]):
+<? // if page is created in backend, add it to html output
+if($page_item && $page_item["status"]):
 	$media = $IC->sliceMedia($page_item); ?>
 	<div class="article i:article id:<?= $page_item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
 
