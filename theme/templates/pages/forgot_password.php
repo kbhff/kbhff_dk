@@ -15,7 +15,8 @@ $this->pageTitle("Glemt password");
 
 	<?= $model->formStart("requestReset", ["class" => "request_password"]) ?>
 	
-		<? if(message()->hasMessages(array("type" => "error"))): ?>
+		<?	// Displays any backend generated messages
+			if(message()->hasMessages(array("type" => "error"))): ?>
 				<p class="errormessage">
 			<?	$messages = message()->getMessages(array("type" => "error"));
 				message()->resetMessages();

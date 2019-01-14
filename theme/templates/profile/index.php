@@ -19,7 +19,8 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 
 	<div class="banner i:banner variant:1 format:jpg"></div>
 
-	<?	if(message()->hasMessages()): ?>
+	<?	// Display any backend generated messages
+		if(message()->hasMessages()): ?>
 		<p class="errormessage">
 		<? $messages = message()->getMessages(array("type" => "error"));
 		foreach($messages as $message): ?>

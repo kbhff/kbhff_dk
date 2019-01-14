@@ -18,7 +18,8 @@ $this->pageTitle("Verificering");
 
 	<?= $model->formStart("validateCode", ["class" => "verify_code"]) ?>
 
-		<? if(message()->hasMessages(array("type" => "error"))): ?>
+		<?	// Display any backend generated messages
+			if(message()->hasMessages(array("type" => "error"))): ?>
 				<p class="errormessage">
 			<?	$messages = message()->getMessages(array("type" => "error"));
 				message()->resetMessages();
