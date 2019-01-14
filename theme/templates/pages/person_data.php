@@ -11,13 +11,14 @@ if($item) {
 
 <div class="scene post i:generic">
 
-<!-- print the page-article created in the backend --> 
-<? if($item):
+<? // print the page-article created in the backend
+	if($item):
 	$media = $IC->sliceMedia($item); ?>
 
 	<div class="article i:article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle">
-<!-- print media if uploaded -->
-		<? if($media): ?>
+
+<? // print media if uploaded
+	if($media): ?>
 		<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">
 			<p>Image: <a href="/images/<?= $item["item_id"] ?>/<?= $media["variant"] ?>/500x.<?= $media["format"] ?>"><?= $media["name"] ?></a></p>
 		</div>
@@ -26,12 +27,12 @@ if($item) {
 
 		<h1 itemprop="headline"><?= $item["name"] ?></h1>
 
-<!-- print text -->
 		<div class="articlebody" itemprop="articleBody">
-			<?= $item["html"] ?>
+			<?= $item["html"]?>
 		</div>
-<!-- print all mediae uploaded -->
-		<? if($item["mediae"]): ?>
+
+<? // print all mediae uploaded
+	if($item["mediae"]): ?>
 			<? foreach($item["mediae"] as $media): ?>
 		<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">
 			<p>Image: <a href="/images/<?= $item["item_id"] ?>/<?= $media["variant"] ?>/500x.<?= $media["format"] ?>"><?= $media["name"] ?></a></p>
