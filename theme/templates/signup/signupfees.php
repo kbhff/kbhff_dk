@@ -61,7 +61,7 @@ if($page_item && $page_item["status"]):
 
 		<ul class="signupfees">
 		<? // loop through signupfees and add them to html output
-		// Misspelling in <li class="suscribtion_price"> - has to be corrected in css 
+		// Misspelling in 2 * <li class="suscribtion_price"> - has to be corrected here and in css 
 		foreach($signupfees as $i => $signupfee): ?>
 			<li class="signupfee<?= $signupfee["classname"] ? " ".$signupfee["classname"] : "" ?>">
 				<h3><?= $signupfee["name"] ?></h3>
