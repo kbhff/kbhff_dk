@@ -15,7 +15,7 @@ $this->pageTitle("Glemt password");
 
 	<?= $model->formStart("requestReset", ["class" => "request_password"]) ?>
 	
-		<?	// Displays any backend generated messages
+		<?	// Display any backend generated messages
 			if(message()->hasMessages(array("type" => "error"))): ?>
 				<p class="errormessage">
 			<?	$messages = message()->getMessages(array("type" => "error"));
@@ -24,7 +24,7 @@ $this->pageTitle("Glemt password");
 					<?= $message ?><br>
 			<?	endforeach; ?>
 				</p>
-		<? endif; ?>
+		<?	endif; ?>
 
 		<fieldset>
 			<?= $model->input("username", array(
