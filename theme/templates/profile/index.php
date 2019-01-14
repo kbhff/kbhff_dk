@@ -1,9 +1,13 @@
 <?php
+// Get methods for user and shop data manipulation
 $UC = new User();
 $SC = new Shop();
+
+// Get current user and related department
 $user = $UC->getKbhffUser();
 $department = $UC->getUserDepartment();
 
+// Get membership status
 $is_member = $user["membership"]["id"];
 $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"]["payment_status"] < 2 ? true : false;
 
@@ -12,24 +16,26 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 
 
 <div class="scene profile i:profile">
+
 	<div class="banner i:banner variant:1 format:jpg"></div>
 
-<?	if(message()->hasMessages()): ?>
-	<p class="errormessage">
-<?		$messages = message()->getMessages(array("type" => "error"));
-	foreach($messages as $message): ?>
-		<?= $message ?><br>
-<?		endforeach;?>
-	</p>
-	<p class="message">
-<?		$messages = message()->getMessages(array("type" => "message"));
-	foreach($messages as $message): ?>
-		<?= $message ?><br>
-<?		endforeach;?>
-	</p>
-<?	message()->resetMessages(); ?>
+	<?	// Display any backend generated messages
+		if(message()->hasMessages()): ?>
+		<p class="errormessage">
+		<? $messages = message()->getMessages(array("type" => "error"));
+		foreach($messages as $message): ?>
+			<?= $message ?><br>
+		<? endforeach;?>
+		</p>
+		<p class="message">
+		<? $messages = message()->getMessages(array("type" => "message"));
+		foreach($messages as $message): ?>
+			<?= $message ?><br>
+		<? endforeach; ?>
+		</p>
+		<? message()->resetMessages(); ?>
+	<?	endif; ?>
 
-<?	endif; ?>
 
 	<div class="c-wrapper">
 
@@ -146,7 +152,6 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 				</div>
 			</div>
 
-
 			<div class="section membership">
 				<div class="c-box">
 					<h3>Dit medlemskab</h3>
@@ -187,6 +192,7 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 					<h3>Dine brugeroplysninger</h3>
 
 					<div class="fields">
+
 						<div class="user-info">
 							<p class="over">Kaldenavn</p>
 							<p class="under"><?= $user['nickname'] ? $user['nickname'] : "(Ikke angivet)" ?></p>
@@ -212,6 +218,7 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 						<ul class="actions">
 							<li class="change-info full-width"><a href="/profil/bruger" class="button">Ret</a></li>
 						</ul>
+
 					</div>
 
 				</div>
@@ -228,7 +235,6 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 						<ul class="actions">
 							<li class="change-info full-width"><a href="/profil/kodeord" class="button">Skift adgangskode</a></li>
 						</ul>
-
 					</div>
 
 				</div>

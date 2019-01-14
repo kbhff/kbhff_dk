@@ -18,14 +18,14 @@ if($item) {
 	$media = $IC->sliceMedia($item); ?>
 
 	<div class="article i:article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle">
-
+<!-- print media -->
 		<? if($media): ?>
 		<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">
 			<p>Image: <a href="/images/<?= $item["item_id"] ?>/<?= $media["variant"] ?>/500x.<?= $media["format"] ?>"><?= $media["name"] ?></a></p>
 		</div>
 		<? endif; ?>
 
-
+<!-- print tags -->
 		<ul class="tags">
 			<li><a href="/posts">Posts</a></li>
 			<? if($item["tags"]): ?>
@@ -40,7 +40,7 @@ if($item) {
 
 		<h1 itemprop="headline"><?= $item["name"] ?></h1>
 
-
+<!-- print article info -->
 		<ul class="info">
 			<li class="published_at" itemprop="datePublished" content="<?= date("Y-m-d", strtotime($item["published_at"])) ?>"><?= date("Y-m-d, H:i", strtotime($item["published_at"])) ?></li>
 			<li class="modified_at" itemprop="dateModified" content="<?= date("Y-m-d", strtotime($item["modified_at"])) ?>"></li>
@@ -63,11 +63,11 @@ if($item) {
 			</li>
 		</ul>
 
-
+<!-- print text -->
 		<div class="articlebody" itemprop="articleBody">
 			<?= $item["html"] ?>
 		</div>
-
+<!-- print all mediae -->
 		<? if($item["mediae"]): ?>
 			<? foreach($item["mediae"] as $media): ?>
 		<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">

@@ -33,7 +33,7 @@ Util.Objects["signupfees"] = new function() {
 			var bg2 = u.ae(scene, "div", {class:"bg supporter"});
 
 			page.resized();
-			// adds height and width to divs
+			// adds height and width to bg-divs
 //			console.log("shoo:", page.offsetHeight);
 			u.ass(bg1, {
 				height: page.offsetHeight + "px",

@@ -1,7 +1,8 @@
 <?php
-
+// Get instanced class depending on what methods we'll need
 $model = new Model();
 
+// Title which is displayed in the browser tab/titlebar
 $this->pageTitle("Glemt password");
 ?>
 <div class="scene login i:forgot">
@@ -13,16 +14,17 @@ $this->pageTitle("Glemt password");
 	</p>
 
 	<?= $model->formStart("requestReset", ["class" => "request_password"]) ?>
-
-<?	if(message()->hasMessages(array("type" => "error"))): ?>
-		<p class="errormessage">
-<?		$messages = message()->getMessages(array("type" => "error"));
-		message()->resetMessages();
-		foreach($messages as $message): ?>
-			<?= $message ?><br>
-<?		endforeach;?>
-		</p>
-<?	endif; ?>
+	
+		<?	// Displays any backend generated messages
+			if(message()->hasMessages(array("type" => "error"))): ?>
+				<p class="errormessage">
+			<?	$messages = message()->getMessages(array("type" => "error"));
+				message()->resetMessages();
+				foreach($messages as $message): ?>
+					<?= $message ?><br>
+			<?	endforeach; ?>
+				</p>
+		<? endif; ?>
 
 		<fieldset>
 			<?= $model->input("username", array(
@@ -39,6 +41,7 @@ $this->pageTitle("Glemt password");
 		<ul class="actions">
 			<?= $model->submit("Send mig en mail", array("class" => "primary", "wrapper" => "li.reset")) ?>
 		</ul>
+
 	<?= $model->formEnd() ?>
 
 </div>
