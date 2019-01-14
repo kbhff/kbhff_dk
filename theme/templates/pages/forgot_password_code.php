@@ -27,7 +27,7 @@ $this->pageTitle("Verificering");
 					<?= $message ?><br>
 			<?	endforeach; ?>
 				</p>
-		<? endif; ?>
+		<?	endif; ?>
 
 		<fieldset>
 			<?= $model->input("reset-token"); ?>

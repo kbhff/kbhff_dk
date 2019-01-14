@@ -242,6 +242,5 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 
 		</div>
 
-
 	</div>
 </div>
