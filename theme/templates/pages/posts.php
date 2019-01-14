@@ -16,7 +16,7 @@ $items = $IC->getItems(array("itemtype" => $itemtype, "status" => 1, "extend" =>
 		This is the posts page.
 	</h2>
 
-
+<!-- print tag categories -->
 <? if($categories): ?>
 	<div class="categories">
 		<ul class="tags">
@@ -34,7 +34,7 @@ $items = $IC->getItems(array("itemtype" => $itemtype, "status" => 1, "extend" =>
 		<? foreach($items as $item):
 			$media = $IC->sliceMedia($item); ?>
 		<li class="item article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle">
-
+<!-- print tags -->
 			<ul class="tags">
 				<li><a href="/posts">Posts</a></li>
 				<? if($item["tags"]): ?>
@@ -48,7 +48,7 @@ $items = $IC->getItems(array("itemtype" => $itemtype, "status" => 1, "extend" =>
 
 			<h3 itemprop="headline"><a href="/posts/<?= $item["sindex"] ?>"><?= $item["name"] ?></a></h3>
 
-
+<!-- print article info -->
 			<ul class="info">
 				<li class="published_at" itemprop="datePublished" content="<?= date("Y-m-d", strtotime($item["published_at"])) ?>"><?= date("Y-m-d, H:i", strtotime($item["published_at"])) ?></li>
 				<li class="modified_at" itemprop="dateModified" content="<?= date("Y-m-d", strtotime($item["modified_at"])) ?>"></li>
@@ -70,7 +70,7 @@ $items = $IC->getItems(array("itemtype" => $itemtype, "status" => 1, "extend" =>
 					<span class="image_height" itemprop="height" content="405"></span>
 				</li>
 			</ul>
-
+<!-- print article description -->
 
 			<? if($item["description"]): ?>
 			<div class="description" itemprop="description">

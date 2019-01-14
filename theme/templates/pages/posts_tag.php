@@ -9,11 +9,11 @@ $items = $IC->getItems(array("itemtype" => $itemtype, "status" => 1, "tags" => $
 $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 
 ?>
-
+<!-- show posts overview of specific tag categories -->
 <div class="scene posts tag i:scene">
 	<h1>Posts</h1>
 	<h2><?= $selected_tag ?></h2>
-
+<!-- print tag categories -->
 <? if($categories): ?>
 	<div class="categories">
 		<ul class="tags">
@@ -25,14 +25,13 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 	</div>
 <? endif; ?>
 
-
 <?	if($items): ?>
 	<ul class="items articles">
 		<? foreach($items as $item):
 			$media = $IC->sliceMedia($item); ?>
 		<li class="item article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle">
 
-
+<!-- print tags -->
 			<ul class="tags">
 				<li><a href="/posts">Posts</a></li>
 				<? if($item["tags"]): ?>
@@ -47,7 +46,7 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 
 			<h3 itemprop="headline"><a href="/posts/<?= $item["sindex"] ?>"><?= $item["name"] ?></a></h3>
 
-
+<!-- print article info -->
 			<ul class="info">
 				<li class="published_at" itemprop="datePublished" content="<?= date("Y-m-d", strtotime($item["published_at"])) ?>"><?= date("Y-m-d, H:i", strtotime($item["published_at"])) ?></li>
 				<li class="modified_at" itemprop="dateModified" content="<?= date("Y-m-d", strtotime($item["modified_at"])) ?>"></li>
@@ -70,7 +69,7 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 				</li>
 			</ul>
 
-
+<!-- print article description -->
 			<? if($item["description"]): ?>
 			<div class="description" itemprop="description">
 				<p><?= nl2br($item["description"]) ?></p>
