@@ -25,7 +25,7 @@ if($user) {
 
 // order no indicated in url
 if(isset($action[1])) {
-
+	// get order no
 	$order_no = $action[1];
 	if($order_no) {
 		$order = $model->getOrders(array("order_no" => $order_no));
@@ -34,7 +34,7 @@ if(isset($action[1])) {
 		// get potential user membership
 		$membership = $UC->getMembership();
 
-
+		// get order prices
 		if($order) {
 			$total_order_price = $model->getTotalOrderPrice($order["id"]);
 			$remaining_order_price = $model->getRemainingOrderPrice($order["id"]);

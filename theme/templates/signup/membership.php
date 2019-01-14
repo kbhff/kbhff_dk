@@ -15,7 +15,7 @@ $item = $IC->getItem(array("sindex" => $sindex, "extend" => array("tags" => true
 if($item) {
 	$this->sharingMetaData($item);
 
-
+	// generate pagination
 	$next = $IC->getNext($item["item_id"], array("itemtype" => $item["itemtype"], "tags" => $item["tags"], "order" => "position ASC", "status" => 1, "extend" => true));
 	$prev = $IC->getPrev($item["item_id"], array("itemtype" => $item["itemtype"], "tags" => $item["tags"], "order" => "position ASC", "status" => 1, "extend" => true));
 
@@ -34,21 +34,18 @@ if($item) {
 <div class="scene membership i:membership">
 
 
-<? if($item):
+<? // show specific membership page
+if($item):
 	$media = $IC->sliceMedia($item); ?>
 
-	<div class="article i:article id:<?= $item["item_id"] ?> service" itemscope itemtype="http://schema.org/Article"
-		data-csrf-token="<?= session()->value("csrf") ?>"
-		>
+	<div class="article i:article id:<?= $item["item_id"] ?> service" itemscope itemtype="http://schema.org/Article"data-csrf-token="<?= session()->value("csrf") ?>">
 
 		<? if($media): ?>
 		<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>"></div>
 		<? endif; ?>
 
 
-		<?= $HTML->articleTags($item, [
-			"context" => false
-		]) ?>
+		<?= $HTML->articleTags($item, ["context" => false]) ?>
 
 
 		<h1 itemprop="headline"><?= $item["name"] ?></h1>
@@ -97,7 +94,8 @@ if($item) {
 	</div>
 
 
-	<? if($related_items): ?>
+	<? // show other memberships if there are any
+	if($related_items): ?>
 		<div class="related">
 			<h2>Andre medlemskaber <a href="/bliv-medlem">(oversigt)</a></h2>
 
