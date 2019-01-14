@@ -49,7 +49,7 @@ $IC = new Items();
 		<? if($cart["items"]): ?>
 		<ul class="items">
 			<? 
-			// if cart has items, loops through all cart items and show each specific item and its price, quantity and editing options(delete and update quantity)
+			// if cart has items, loop through all cart items and show each specific item and its price, quantity and editing options(delete and update quantity)
 			foreach($cart["items"] as $cart_item):
 				$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true)));
 				$price = $model->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
