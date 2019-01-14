@@ -96,7 +96,7 @@ if($action) {
 			
 			// redirect to leave POST state
 			header("Location: /login");
-			exit();
+			exit(); 
 		}
 		// something went wrong
 		else {
@@ -119,7 +119,8 @@ if($action) {
 		exit();
 
 	}
-		// bliv-medlem/spring-over (submitted from bliv-medlem/verificer)
+	
+	// bliv-medlem/spring-over (submitted from bliv-medlem/verificer)
 	else if($action[0] == "spring-over") {
 
 		// Converts cart to order and updates cookie with cart-reference. 
@@ -174,7 +175,7 @@ if($action) {
 
 				else {
 					
-					// Something went wrong
+					// something went wrong
 					message()->addMessage("Det ser ud til at der er sket en fejl.", array("type" => "error"));
 					// redirect to leave POST state
 					header("Location: /butik/kurv");
@@ -183,7 +184,7 @@ if($action) {
 
 			}
 
-			// code is not valid and user is not verified and enabaled.
+			// code is not valid and user is not verified and enabled.
 			else {
 				message()->addMessage("Forkert verificeringskode. Prøv igen!", array("type" => "error"));
 				// redirect to leave POST state
@@ -212,7 +213,7 @@ if($action) {
 				exit();
 			}
 
-			// code is valid and user is verfified and enabled
+			// code is valid and user is veriffied and enabled
 			else if($result) {
 				// redirect to leave POST state
 				header("Location: /bliv-medlem/bekraeft/kvittering");
