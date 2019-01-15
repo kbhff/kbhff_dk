@@ -315,7 +315,7 @@ class SuperUser extends SuperUserCore {
 
 							// MAILLIST
 
-							// maillist subscription sent as string?
+							// maillist subscription sent as string
 							$maillist = getPost("maillist");
 							if($maillist) {	
 								// check if maillist exists
@@ -333,7 +333,7 @@ class SuperUser extends SuperUserCore {
 
 							}
 
-							// itemtype post save handler?
+							// itemtype post save handler
 							// TODO: Consider if failed postSave should have consequences
 							if(method_exists($this, "saved")) {
 								$this->saved($user_id);
