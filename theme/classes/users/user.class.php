@@ -92,7 +92,6 @@ class User extends UserCore {
 	 *
 	 * @return array The user object, with the department object appended as a new property.
 	 */
-
 	 function getKbhffUser(){
 		$user = $this->getUser();
 		$user["department"] = $this->getUserDepartment();
@@ -139,7 +138,7 @@ class User extends UserCore {
 	 * @return boolean
 	 */
 	function updateUserDepartment($action){
-		// Get content of $_POST array that have been "quality-assured" by Janitor
+		// Get content of $_POST array that have been mapped to the model entities object
 		$this->getPostedEntities();
 
 		print_r ($action);
@@ -207,7 +206,7 @@ class User extends UserCore {
 		// Get posted values from form
 		$this->getPostedEntities();
 
-		// Prevent nickname not assigned error
+		// Prevent "nickname not assigned" error
 		$nickname = $this->getProperty("nickname", "value");
 		if (!$nickname) {
 			$firstname = $this->getProperty("firstname", "value");
@@ -243,11 +242,11 @@ class User extends UserCore {
 					$query->checkDbExistence($this->db_passwords);
 					$new_password = password_hash($this->getProperty("new_password", "value"), PASSWORD_DEFAULT);
 
-					// DELETE OLD PASSWORD
+					// Delete old password
 					$sql = "DELETE FROM ".$this->db_passwords." WHERE user_id = $user_id";
 					if($query->sql($sql)) {
 
-						// SAVE NEW PASSWORD
+						// Save new password
 						$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$new_password'";
 						if($query->sql($sql)) {
 							return true;
@@ -267,7 +266,7 @@ class User extends UserCore {
 					// Hash to inject
 					$new_password = password_hash($this->getProperty("new_password", "value"), PASSWORD_DEFAULT);
 
-					// SAVE NEW PASSWORD
+					// Save new password
 					$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$new_password'";
 					if($query->sql($sql)) {
 						return true;

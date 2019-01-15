@@ -356,7 +356,7 @@ if(session()->value("user_group_id")>1) {
 	exit();
 }
 
-// Fallback
+// Default template
 $page->page(array(
 	"templates" => "pages/kbhff-login.php",
 	"type" => "login"
