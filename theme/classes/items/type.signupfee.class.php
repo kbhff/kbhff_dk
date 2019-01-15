@@ -101,7 +101,7 @@ class TypeSignupfee extends Itemtype {
 		include_once("classes/users/superuser.class.php");
 		$UC = new SuperUser();
 
-		// get the signupfee data object
+		// get the signupfee item
 		$IC = new Items();
 		$signupfee_item = $IC->getItem(array("id" => $order_item["item_id"], "extend" => true));
 
@@ -112,11 +112,13 @@ class TypeSignupfee extends Itemtype {
 		$_POST["user_id"] = $order["user_id"];
 
 		
-		// create subscription (with hardcoded expiry date – may become dynamic in the future)
+		// create subscription
 		$subscription = $UC->addSubscription(array("addSubscription"));		
 		if ($subscription) {
+			// TODO: hardcoded expiry date – may become dynamic in the future
 			$expires_at = "2019-05-01 00:00:00";
 			
+			// overwrite the automatically generated expiry date with custom value
 			$query = new Query();
 			$sql = "UPDATE ".SITE_DB.".user_item_subscriptions SET expires_at = '$expires_at' WHERE id = ".$subscription["id"];
 			if($query->sql($sql)) {

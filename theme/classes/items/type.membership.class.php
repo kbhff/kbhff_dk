@@ -101,13 +101,25 @@ class TypeMembership extends Itemtype {
 
 	}
 
+	/**
+	 * Callback when order is shipped
+	 *
+	 * @param int $order_item_id
+	 * @param array $order The order item.
+	 * @return void
+	 */
 	function shipped($order_item_id, $order) {
 
 		// print "\n<br>###$order_item_id### shipped\n<br>";
 
 	}
 
-	// user subscribed to an item
+	/**
+	 * 	Callback when user subscribes to an item
+	 *
+	 * @param array $subscription
+	 * @return void
+	 */
 	function subscribed($subscription) {
 		// print_r($subscription);
 		
@@ -162,6 +174,12 @@ class TypeMembership extends Itemtype {
 
 	}
 
+	/**
+	 * Callback when user unsubscribes an item
+	 *
+	 * @param array $subscription
+	 * @return void
+	 */
 	function unsubscribed($subscription) {
 
 		// check for subscription error

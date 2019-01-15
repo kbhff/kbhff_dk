@@ -14,7 +14,8 @@ class Department extends Model {
 	*/
 	function __construct() {
 
-		// Construct Model class, passing the Department model as a parameter. The Model class is constructed *before* adding it to Department model (to avoid Model overwriting Department) 
+		// Construct Model class, passing the Department model as a parameter. 
+		// The Model class is constructed *before* adding values to Department model to ensure Department overwrites the standard values of Model 
 		parent::__construct(get_class());
 
 
@@ -119,7 +120,6 @@ class Department extends Model {
 	 * @param array $action REST parameters of current request
 	 * @return array|false Department id, if everything goes well
 	 */
-
 	function saveDepartment($action) {
 		
 		// Get content of $_POST array which have been "quality-assured" by Janitor 
@@ -130,7 +130,8 @@ class Department extends Model {
 			$query = new Query();
  
 			$query->checkDbExistence($this->db);
-
+			
+			// Get posted values
 			$name = $this->getProperty("name", "value");
 			$abbreviation = $this->getProperty("abbreviation", "value");
 			$address1 = $this->getProperty("address1", "value");
@@ -172,19 +173,9 @@ class Department extends Model {
 	/**
 	 * Get list of departments from database.
 	 *
-	 * @param array|boolean $_options Array containing unsorted function parameters
 	 * @return array|false Department data object (via callback to Query->results()
 	 */
-	function getDepartments($_options = false) {
-		
-		// If any parameters were passed, search through $_options to find recognized parameters (This is currently only a placeholder, which will come to use if, for example, we at some point need to query a subset of departments)
-		if($_options !== false) {
-			foreach($_options as $_option => $_value) {
-				switch($_option) {
-					// case "id"        : $id             = $_value; break;
-				}
-			}
-		}
+	function getDepartments() {
 
 		// Query database for all departments.  
 		$query = new Query();
@@ -260,11 +251,12 @@ class Department extends Model {
 			// Ask the database to update the row with the id that came from $action. Update with the values that were received from getPostedEntities(). 
 			$query = new Query();
 			$sql = "UPDATE ".$this->db." SET name='$name', abbreviation='$abbreviation',address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours',email='$email',mobilepay_id='$mobilepay_id',accepts_signup='$accepts_signup' WHERE id = '$id'";
-				// if successful, add message and return the department data object
-				if($query->sql($sql)) {
-					message()->addMessage("Department updated");
-					return $this->getDepartment(["id"=>$id]);		
-				}
+			
+			// if successful, add message and return the department data object
+			if($query->sql($sql)) {
+				message()->addMessage("Department updated");
+				return $this->getDepartment(["id"=>$id]);		
+			}
 
 		}
 
