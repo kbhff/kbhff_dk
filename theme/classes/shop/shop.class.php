@@ -8,7 +8,7 @@
 class Shop extends ShopCore {
 
 	/**
-	* Defines order-statues in danish. 
+	* Defines order-statuses in danish. 
 	*/
 	function __construct() {
 
