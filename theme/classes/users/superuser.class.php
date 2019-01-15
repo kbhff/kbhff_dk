@@ -27,7 +27,7 @@ class SuperUser extends SuperUserCore {
 
 
 	/**
-	 * Save user department after saving user
+	 * Callback that saves user department after saving user
 	 *
 	 * @param integer $user_id
 	 * @return void
