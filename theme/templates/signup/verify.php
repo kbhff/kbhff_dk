@@ -18,7 +18,7 @@ if($page_item) {
 
 	<?= $model->formStart("bekraeft", ["class" => "verify_code"]) ?>
 
-<?	// show any error messages 
+<?	// show error messages 
 if(message()->hasMessages(array("type" => "error"))): ?>
 	<p class="errormessage">
 <?		$messages = message()->getMessages(array("type" => "error"));

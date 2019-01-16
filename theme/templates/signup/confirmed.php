@@ -8,20 +8,14 @@ if($page_item) {
 	$this->sharingMetaData($page_item);
 }
 
-// $type = session()->value("signup_type");
-// session()->reset("signup_type");
-
-// $username = session()->value("signup_username");
-// session()->reset("signup_username");
-// get specific username
+// get signup email
 $username = session()->value("signup_email");
 session()->reset("signup_email");
 
 ?>
 <div class="scene signup i:scene">
 
-<?  // if page is created in backend, add it to html output
-if($page_item && $page_item["status"]):
+<? if($page_item && $page_item["status"]):
 	$media = $IC->sliceMedia($page_item); ?>
 	<div class="article i:article id:<?= $page_item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
 
@@ -49,7 +43,7 @@ if($page_item && $page_item["status"]):
 
 		<? if($page_item["html"]): ?>
 		<div class="articlebody" itemprop="articleBody">
-			<?= preg_replace("/{type}/", $type, preg_replace("/{username}/", $username, $page_item["html"])) ?>
+			<?= preg_replace("/{username}/", $username, $page_item["html"])) ?>
 		</div>
 		<? endif; ?>
 	</div>

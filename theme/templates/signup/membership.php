@@ -25,7 +25,7 @@ if($item) {
 	$related_pattern["limit"] = 3;
 	$related_pattern["extend"] = array("tags" => true, "user" => true, "mediae" => true, "prices" => true, "subscription_method" => true, "readstate" => true);
 
-	// get related items
+	// get related memberships
 	$related_items = $IC->getRelatedItems($related_pattern);
 }
 
@@ -34,8 +34,7 @@ if($item) {
 <div class="scene membership i:membership">
 
 
-<? // show specific membership page
-if($item):
+<? if($item):
 	$media = $IC->sliceMedia($item); ?>
 
 	<div class="article i:article id:<?= $item["item_id"] ?> service" itemscope itemtype="http://schema.org/Article"data-csrf-token="<?= session()->value("csrf") ?>">
@@ -94,17 +93,15 @@ if($item):
 	</div>
 
 
-	<? // show other memberships if there are any
+	<? // list of other memberships
 	if($related_items): ?>
 		<div class="related">
 			<h2>Andre medlemskaber <a href="/bliv-medlem">(oversigt)</a></h2>
 
 			<ul class="items membership">
-	<?		foreach($related_items as $item):
+			<?	foreach($related_items as $item):
 				$media = $IC->sliceMedia($item); ?>
-				<li class="item membership item_id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle"
-					data-readstate="<?= $item["readstate"] ?>"
-					>
+				<li class="item membership item_id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle"data-readstate="<?= $item["readstate"] ?>">
 
 					<h3 itemprop="headline"><a href="/bliv-medlem/medlemskaber/<?= $item["sindex"] ?>"><?= strip_tags($item["name"]) ?></a></h3>
 
@@ -124,17 +121,17 @@ if($item):
 					<? endif; ?>
 
 				</li>
-		<?	endforeach; ?>
+			<?	endforeach; ?>
 			</ul>
 		</div>
-	<? endif; ?>
+<? endif; ?>
 
 <? else: ?>
 
 
-	<h1>Technology clearly doesn't solve everything on it's own.</h1>
-	<h2>Technology needs humanity.</h2>
-	<p>We could not find the specified service.</p>
+		<h1>Hov!</h1>
+		<h2>Der skete en fejl.</h2>
+		<p>Vi kunne ikke finde den ønskede side.</p>
 
 
 <? endif; ?>

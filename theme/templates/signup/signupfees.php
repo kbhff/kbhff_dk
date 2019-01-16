@@ -14,8 +14,7 @@ $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "positio
 
 <div class="scene signupfees i:signupfees">
 
-<? // show page created in backend
-if($page_item && $page_item["status"]):
+<? if($page_item && $page_item["status"]):
 	$media = $IC->sliceMedia($page_item); ?>
 	<div class="article i:article id:<?= $page_item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
 
@@ -56,12 +55,11 @@ if($page_item && $page_item["status"]):
 	<div class="signupfees">
 
 
-		<? // add any stored messages to html output
+		<? // print stored messages 
 		print $HTML->serverMessages() ?>
 
 		<ul class="signupfees">
 		<? // loop through signupfees and add them to html output
-		// Misspelling in 2 * <li class="suscribtion_price"> - has to be corrected here and in css 
 		foreach($signupfees as $i => $signupfee): ?>
 			<li class="signupfee<?= $signupfee["classname"] ? " ".$signupfee["classname"] : "" ?>">
 				<h3><?= $signupfee["name"] ?></h3>
@@ -72,71 +70,53 @@ if($page_item && $page_item["status"]):
 				<ul class="offer" itemscope itemtype="http://schema.org/Offer">
 					<li class="name" itemprop="name" content="<?= $signupfee["name"] ?>"></li>
 					<li class="currency" itemprop="priceCurrency" content="<?= $this->currency() ?>"></li>
-					<li class="suscribtion_price"><p>Indmeldelsesgebyr:</p></li>
-				<? // if signupfee has an offer, show the price, else show the default price. If neither is true show 'free'.
+					<li class="subscription_price"><p>Indmeldelsesgebyr:</p></li>
+				<? // if signupfee has an offer, show the price, else show the default price or 'free'.
 				if($signupfee["prices"]) {
 						$offer_key = arrayKeyValue($signupfee["prices"], "type", "offer");
 						$default_key = arrayKeyValue($signupfee["prices"], "type", "default");
 
-							if($offer_key !== false) { ?>
+					if($offer_key !== false) { ?>
 					<li class="price default"><?= formatPrice($signupfee["prices"][$default_key]).(isset($signupfee["subscription_method"]) && $signupfee["subscription_method"] && $signupfee["prices"][$default_key]["price"] ? ' / '.$signupfee["subscription_method"]["name"] : '') ?></li>
 					<li class="price offer" itemprop="price" content="<?= $signupfee["prices"][$offer_key]["price"]?>"><?= formatPrice($signupfee["prices"][$offer_key]).(isset($signupfee["subscription_method"]) && $signupfee["subscription_method"] && $signupfee["prices"][$default_key]["price"] ? ' / '.$signupfee["subscription_method"]["name"] : '') ?></li>
-<?
-							}
-							else if($signupfee["prices"][$default_key]["price"]) { ?>
+				<? }
+					else if($signupfee["prices"][$default_key]["price"]) { ?>
 					<li class="price" itemprop="price" content="<?= $signupfee["prices"][$default_key]["price"]?>"><?= formatPrice($signupfee["prices"][$default_key]).(isset($signupfee["subscription_method"]) && $signupfee["subscription_method"] && $signupfee["prices"][$default_key]["price"] ? ' / '.$signupfee["subscription_method"]["name"] : '') ?></li>
-<?
-							}
-							else { ?>
+				<? }
+					else { ?>
 					<li class="price" itemprop="price" content="<?= $signupfee["prices"][$default_key]["price"] ?>">Free</li>
-<?
-							}
-?>
+				<? } ?>
 					<li class="url" itemprop="url" content="<?$url?>"></li>
-<?
-						}
-
-					// show description of signupfee
-					if($signupfee["html"]) { ?>
+			<? }
+						
+				if($signupfee["html"]) { ?>
 					<li class="description" itemprop="description"><?=$signupfee["html"]?></li>
-<? 				}
-
-?>
+			<? } ?>
+			
 				</ul>
-
-
-
 
 				<ul class="offer" itemscope itemtype="http://schema.org/Offer">
 					<li class="name" itemprop="name" content="<?= $membership_item["name"] ?>"></li>
 					<li class="currency" itemprop="priceCurrency" content="<?= $this->currency() ?>"></li>
-					<li class="suscribtion_price"><p>Årligt kontingent:</p></li>
-				<? // show price of membership. If it has an offer, show this, else show default price. If none, show free. 
+					<li class="subscription_price"><p>Årligt kontingent:</p></li>
+				<? // If membership has an offer, show the price, else show default price or 'free'. 
 				if($membership_item["prices"]) {
-						$offer_key = arrayKeyValue($membership_item["prices"], "type", "offer");
-						$default_key = arrayKeyValue($membership_item["prices"], "type", "default");
+					$offer_key = arrayKeyValue($membership_item["prices"], "type", "offer");
+					$default_key = arrayKeyValue($membership_item["prices"], "type", "default");
 
-							if($offer_key !== false) { ?>
+					if($offer_key !== false) { ?>
 					<li class="price default"><?= formatPrice($membership_item["prices"][$default_key]).(isset($membership_item["subscription_method"]) && $membership_item["subscription_method"] && $membership_item["prices"][$default_key]["price"] ? ' / '.$membership_item["subscription_method"]["name"] : '') ?></li>
 					<li class="price offer" itemprop="price" content="<?= $membership_item["prices"][$offer_key]["price"]?>"><?= formatPrice($membership_item["prices"][$offer_key]).(isset($membership_item["subscription_method"]) && $membership_item["subscription_method"] && $membership_item["prices"][$default_key]["price"] ? ' / '.$membership_item["subscription_method"]["name"] : '') ?></li>
-<?
-							}
-							else if($membership_item["prices"][$default_key]["price"]) { ?>
+				<? }
+					else if($membership_item["prices"][$default_key]["price"]) { ?>
 					<li class="price" itemprop="price" content="<?= $membership_item["prices"][$default_key]["price"]?>"><?= formatPrice($membership_item["prices"][$default_key]).(isset($membership_item["subscription_method"]) && $membership_item["subscription_method"] && $membership_item["prices"][$default_key]["price"] ? ' / '.$membership_item["subscription_method"]["name"] : '') ?></li>
-<?
-							}
-							else { ?>
+				<? }
+					else { ?>
 					<li class="price" itemprop="price" content="<?= $membership_item["prices"][$default_key]["price"] ?>">Free</li>
-<?
-							}
-?>
+				<? } ?>
 					<li class="url" itemprop="url" content="<?$url?>"></li>
-<?
-							}
-?>
-
+				<? } ?>
 				</ul>
-
 
 					<?= $model->formStart("/bliv-medlem/addToCart", array("class" => "signup labelstyle:inject")) ?>
 					<?= $model->input("quantity", array("value" => 1, "type" => "hidden", "id" => "input_quantity_$i")); ?>
@@ -149,7 +129,7 @@ if($page_item && $page_item["status"]):
 					<?= $model->formEnd() ?>
 
 			</li>
-		<? endforeach; ?>
+	<? endforeach; ?>
 		</ul>
 	</div>
 
