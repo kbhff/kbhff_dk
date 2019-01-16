@@ -20,7 +20,7 @@ $page->pageTitle("Bliv medlem");
 if($action) {
 
 
-	// /bliv-medlem/addToCart (submitted from /bliv-medlem)
+	// bliv-medlem/addToCart
 	if($action[0] == "addToCart" && $page->validateCsrfToken()) {
 
 		// Check if user is already a user and then check if user is a member with a subscription
@@ -52,7 +52,8 @@ if($action) {
 		}
 	}
 
-	// user is already a member with a subsription (submitted from /bliv-medlem/allerede-medlem)
+	// user is already a member with a subsription 
+	// bliv-medlem/allerece-medlem
 	else if($action[0] == "allerede-medlem") {
 
 		$page->page(array(
@@ -63,7 +64,8 @@ if($action) {
 	}
 
 
-	// membership was successfully added to cart (submitted from /bliv-medlem/tilmelding)
+	// membership was successfully added to cart
+	// bliv-medlem/tilmelding
 	else if($action[0] == "tilmelding") {
 
 		$page->page(array(
@@ -74,7 +76,7 @@ if($action) {
 		}
 
 
-	// /bliv-medlem/save (submitted from /bliv-medlem/tilmelding)
+	// bliv-medlem/save
 	else if($action[0] == "save" && $page->validateCsrfToken()) {
 
 		// create new user
@@ -110,7 +112,7 @@ if($action) {
 
 	}
 
-	//bliv-medlem/verificer (submitted from bliv-medlem/save)
+	// bliv-medlem/verificer
 	else if($action[0] == "verificer") {
 
 		$page->page(array(
@@ -120,7 +122,7 @@ if($action) {
 
 	}
 	
-	// bliv-medlem/spring-over (submitted from bliv-medlem/verificer)
+	// bliv-medlem/spring-over 
 	else if($action[0] == "spring-over") {
 
 		// Converts cart to order and updates cookie with cart-reference. 
@@ -144,7 +146,7 @@ if($action) {
 
 	}
 
-	// bliv-medlem/bekraeft (submitted from bliv-medlem/verificer)
+	// bliv-medlem/bekraeft
 	else if($action[0] == "bekraeft") {
 
 		if (count($action) == 1 && $page->validateCsrfToken()) {
@@ -197,10 +199,6 @@ if($action) {
 		// /bliv-medlem/bekraeft/#email|#verification_code# (submitted from link in email)
 		else if(count($action) == 3) {
 
-			// session()->value("signup_type", $action[1]);
-			// session()->value("signup_username", $action[2]);
-
-			// Confirm user returns either true, false or an object
 			// Check if user is already verified. If not, verify and enable user
 			$result = $model->confirmUser($action);
 
@@ -213,7 +211,7 @@ if($action) {
 				exit();
 			}
 
-			// code is valid and user is veriffied and enabled
+			// code is valid and user is verified and enabled
 			else if($result) {
 				// redirect to leave POST state
 				header("Location: /bliv-medlem/bekraeft/kvittering");
@@ -228,7 +226,7 @@ if($action) {
 			}
 		}
 		
-		// bliv-medlem/bekreaft/fejl (submitted from bliv-medlem/bekraeft/#email|#verification_code#)
+		// /bliv-medlem/bekraeft/fejl 
 		else if($action[1] == "fejl") {
 
 			$page->page(array(
@@ -237,7 +235,7 @@ if($action) {
 			exit();
 		}
 
-		// bliv/medlem/bekraeft/kvittering (submitted from /bliv-medlem/bekraeft/#email|#verification_code#)
+		// /bliv/medlem/bekraeft/kvittering
 		else if($action[1] == "kvittering") {
 
 			$page->page(array(
