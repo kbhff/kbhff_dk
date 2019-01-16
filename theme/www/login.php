@@ -15,7 +15,7 @@ $page->bodyClass("login");
 $page->pageTitle("Login");
 
 
-if(is_array($action) && count($action)) {
+if($action) {
 
 
 
@@ -175,7 +175,7 @@ if(is_array($action) && count($action)) {
 
 	// CONFIRM ACCOUNT
 
-	// Confirm account / code form
+	// login/bekraeft-konto
 	else if(count($action) == 1 && $action[0] == "bekraeft-konto") {
 
 		// No confirm without a username
@@ -195,7 +195,7 @@ if(is_array($action) && count($action)) {
 		}
 
 	}
-	// Create password
+	// login/opret-password
 	else if(count($action) == 1 && $action[0] == "opret-password") {
 
 		$page->page(array(
@@ -268,31 +268,34 @@ if(is_array($action) && count($action)) {
 
 
 	// RESET PASSWORD
+	else if($action[0] == "glemt") {
 
-	// login/glemt
-	else if(count($action) == 1 && $action[0] == "glemt") {
+		// login/glemt
+		if(count($action) == 1) {
+			$page->page(array(
+				"templates" => "pages/forgot_password.php"
+			));
+			exit();
+		}
 
-		$page->page(array(
-			"templates" => "pages/forgot_password.php"
-		));
-		exit();
+		// login/glemt/nulstilling
+		else if(count($action) == 2 && $action[1] == "nulstilling") {
+			$page->page(array(
+				"templates" => "pages/forgot_password_code.php"
+			));
+			exit();
+		}
+
+		// login/glemt/nyt-password
+		else if(count($action) == 2 && $action[1] == "nyt-password") {
+			$page->page(array(
+				"templates" => "pages/forgot_password_set_new_password.php"
+			));
+			exit();
+		}
+
 	}
-	// login/glemt/nulstilling
-	else if(count($action) == 2 && $action[0] == "glemt" && $action[1] == "nulstilling") {
 
-		$page->page(array(
-			"templates" => "pages/forgot_password_code.php"
-		));
-		exit();
-	}
-	// login/glemt/nyt-password
-	else if(count($action) == 2 && $action[0] == "glemt" && $action[1] == "nyt-password") {
-
-		$page->page(array(
-			"templates" => "pages/forgot_password_set_new_password.php"
-		));
-		exit();
-	}
 	// login/requestReset
 	else if(count($action) == 1 && $action[0] == "requestReset" && $page->validateCsrfToken()) {
 
