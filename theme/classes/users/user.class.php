@@ -49,6 +49,7 @@ class User extends UserCore {
 
 		parent::__construct(get_class());
 
+		// Reset token, used in "user forgot password" flow
 		$this->addToModel("reset-token", array(
 			"type" => "string",
 			"label" => "Kode",
@@ -57,6 +58,8 @@ class User extends UserCore {
 			"hint_message" => "Din verificerings kode",
 			"error_message" => "Ugyldig kode. Kunne der være mellemrum i enden af din indtastede kode?"
 		));
+
+		// Department ID, in order to change users department
 		$this->addToModel("department_id", array(
 			"type" => "string",
 			"label" => "Afdeling",
@@ -67,12 +70,22 @@ class User extends UserCore {
 		
 	}
 
-	// save user department on save user
+	/**
+	 * Callback that saves user department after saving user
+	 *
+	 * @param integer $user_id
+	 * @return void
+	 */
 	function saved($user_id) {
 		$this->updateUserDepartment(["updateUserDepartment"]);
 	}
 
-	// Validate reset token
+	/**
+	 * Check if reset-token is correct
+	 *
+	 * @param $action REST parameters
+	 * @return string|false 
+	 */
 	function validateCode($action) {
 		// get posted variables
 		$this->getPostedEntities();
@@ -201,7 +214,12 @@ class User extends UserCore {
 	}
 
 
-	// Update users profile data
+	/**
+	 * Update user account information
+	 *
+	 * @param [array] $action REST parameters
+	 * @return void
+	 */
 	function updateUserInformation($action) {
 		// Get posted values from form
 		$this->getPostedEntities();
@@ -225,7 +243,12 @@ class User extends UserCore {
 		return true;
 	}
 
-	// Update password
+	/**
+	 * Update user password
+	 *
+	 * @param [array] $action REST parameters
+	 * @return boolean
+	 */
 	function updateUserPassword($action) {
 		// Get posted values to make them available for models
 		$this->getPostedEntities();
@@ -277,7 +300,12 @@ class User extends UserCore {
 		return false;
 	}
 
-	// Delete account
+	/**
+	 * Delete kbhff account
+	 *
+	 * @param [array] $action REST parameters
+	 * @return boolean
+	 */
 	function deleteUserInformation($action) {
 
 		$user = $this->getKbhffUser();
