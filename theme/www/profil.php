@@ -17,15 +17,16 @@ $page->pageTitle("Min side");
 
 
 // Allow accept terms
-if(is_array($action) && count($action) == 1 && $action[0] == "accept" && $page->validateCsrfToken()) {
+if($action && count($action) == 1 && $action[0] == "accept" && $page->validateCsrfToken()) {
 
 	$UC->acceptedTerms();
 
 }
 
 // Need to be able to delete account before user has accepted terms
-else if (is_array($action) && count($action)) {
-	// ../profil/opsig lead to template
+else if ($action) {
+
+	// profil/opsig
 	if($action[0] == "opsig") {
 		$page->page(array(
 			"templates" => "pages/delete_user_information.php"
@@ -33,10 +34,10 @@ else if (is_array($action) && count($action)) {
 		exit();
 	}
 
-	// Cancel membership
+	// profil/deleteUserInformation
 	else if($action[0] == "deleteUserInformation" && $page->validateCsrfToken()) {
 
-		// Method returns true
+		// Method returns true and deletes user
 		if($UC->deleteUserInformation($action)) {
 			header("Location: /");
 			exit();
@@ -44,7 +45,6 @@ else if (is_array($action) && count($action)) {
 
 		// Method fails
 		else {
-			// message()->addMessage("Fejl!", array("type" => "error"));
 			$page->page([
 				"templates" => "pages/delete_user_information.php"
 			]);
@@ -67,7 +67,7 @@ if(!$UC->hasAcceptedTerms()) {
 
 
 
-if(is_array($action) && count($action)) {
+if($action) {
 
 	// Allow update
 	if($action[0] == "update" && $page->validateCsrfToken()) {
@@ -116,7 +116,7 @@ if(is_array($action) && count($action)) {
 		}
 	}
 
-	// Handling updateUserInformation method, specified in user.class.php
+	// profil/updateUserInformation
 	else if($action[0] == "updateUserInformation" && $page->validateCsrfToken()) {
 
 		//Method returns true
@@ -126,7 +126,6 @@ if(is_array($action) && count($action)) {
 		}
 		//Method returns false
 		else {
-			// message()->addMessage("Fejl!", array("type" => "error"));
 			$page->page([
 				"templates" => "pages/update_user_information.php"
 			]);
@@ -134,7 +133,7 @@ if(is_array($action) && count($action)) {
 		}
 	}
 
-	// Handling updateUserPassword method, specified in user.class.php
+	// profil/updateUserPassword
 	else if($action[0] == "updateUserPassword" && $page->validateCsrfToken()) {
 
 		//Method returns true
@@ -144,7 +143,6 @@ if(is_array($action) && count($action)) {
 		}
 		//Method returns false
 		else {
-			// message()->addMessage("Fejl!", array("type" => "error"));
 			$page->page([
 				"templates" => "pages/update_user_password.php"
 			]);
@@ -153,6 +151,7 @@ if(is_array($action) && count($action)) {
 	}
 
 	// Unaccept terms, for testing purposes
+	// profil/unaccept
 	else if($action[0] == "unaccept") {
 
 		// Method returns true
@@ -170,7 +169,7 @@ if(is_array($action) && count($action)) {
 }
 
 
-// Fallback
+// Default template
 $page->page(array(
 	"templates" => "profile/index.php"
 ));
