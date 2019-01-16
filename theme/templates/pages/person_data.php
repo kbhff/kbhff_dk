@@ -11,18 +11,16 @@ if($item) {
 
 <div class="scene post i:generic">
 
-<? // print the page-article created in the backend
-	if($item):
+	<?	if($item):
 	$media = $IC->sliceMedia($item); ?>
 
 	<div class="article i:article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle">
 
-<? // print media if uploaded
-	if($media): ?>
+	<? if($media): ?>
 		<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">
 			<p>Image: <a href="/images/<?= $item["item_id"] ?>/<?= $media["variant"] ?>/500x.<?= $media["format"] ?>"><?= $media["name"] ?></a></p>
 		</div>
-		<? endif; ?>
+	<? endif; ?>
 
 
 		<h1 itemprop="headline"><?= $item["name"] ?></h1>
@@ -31,8 +29,7 @@ if($item) {
 			<?= $item["html"]?>
 		</div>
 
-<? // print all mediae uploaded
-	if($item["mediae"]): ?>
+		<? if($item["mediae"]): ?>
 			<? foreach($item["mediae"] as $media): ?>
 		<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">
 			<p>Image: <a href="/images/<?= $item["item_id"] ?>/<?= $media["variant"] ?>/500x.<?= $media["format"] ?>"><?= $media["name"] ?></a></p>
@@ -48,9 +45,9 @@ if($item) {
 <? else: ?>
 
 
-	<h1>Technology clearly doesn't solve everything on it's own.</h1>
-	<h2>Technology needs humanity.</h2>
-	<p>We could not find the specified post.</p>
+	<h1>Hov!</h1>
+	<h2>Der skete en fejl.</h2>
+	<p>Vi kunne ikke finde den ønskede side.</p>
 
 
 <? endif; ?>
