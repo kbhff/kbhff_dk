@@ -31,7 +31,8 @@ class SuperUser extends SuperUserCore {
 	 *
 	 * @param integer $user_id
 	 * @return void
-	 */	function saved($user_id) {
+	 */	
+	function saved($user_id) {
 		
 		// Call updateUserDepartment with a "fake" $action array
 		$this->updateUserDepartment(["updateUserDepartment", $user_id]);
