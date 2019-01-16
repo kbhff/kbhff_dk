@@ -4,13 +4,14 @@
 */
 class HTML extends HTMLCore {
 
-/** 
- * Generate a contaginated string with metadata, comments and information. 
- * 
- * @param String $item 
- * @param String $add_path
- * @return String 
-*/
+	/** 
+	 * Generate a contaginated string with metadata, comments and information. 
+	 * 
+	 * @param String $item 
+	 * @param String $add_path
+	 * @return String 
+	*/
+
 	function frontendComments($item, $add_path) {
 		global $page;
 
@@ -45,14 +46,15 @@ class HTML extends HTMLCore {
 	}
 
 
-/** 
-* Generate a contaginated string with price and description of item
-* 
-* @param String $item
-* @param String $_url 
-* @param String $description optional
-* @return String
-*/
+	/** 
+	* Generate a contaginated string with price and description of item
+	* 
+	* @param String $item
+	* @param String $_url 
+	* @param String $description optional
+	* @return String
+	*/
+
 	function frontendOffer($item, $url, $description = false) {
 	
 		$_ = '';
@@ -93,16 +95,17 @@ class HTML extends HTMLCore {
 		return $_;
 	}
 
-/**
-* 
-* Generate a contaginated string with meta-data and article-info suitable for SEO
-* 
-* @param String $item
-* @param String $url 
-* @param ARRAY $options 
-* $media BOOLEAN
-* $sharing BOOLEAN
-*/ 
+	/**
+	* 
+	* Generate a contaginated string with meta-data and article-info suitable for SEO
+	* 
+	* @param String $item
+	* @param String $url 
+	* @param ARRAY $options 
+	* $media BOOLEAN
+	* $sharing BOOLEAN
+	*/ 
+
 	function articleInfo($item, $url, $_options) {
 
 		$media = false;
@@ -179,6 +182,7 @@ class HTML extends HTMLCore {
 	* @return STRING 
 	*
 	*/
+
 	function articleTags($item, $_options = false) {
 
 		$context = false;
