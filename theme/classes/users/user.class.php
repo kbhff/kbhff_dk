@@ -83,7 +83,7 @@ class User extends UserCore {
 	/**
 	 * Check if reset-token is correct
 	 *
-	 * @param $action REST parameters
+	 * @param array $action REST parameters
 	 * @return string|false 
 	 */
 	function validateCode($action) {
@@ -217,7 +217,7 @@ class User extends UserCore {
 	/**
 	 * Update user account information
 	 *
-	 * @param [array] $action REST parameters
+	 * @param array $action REST parameters
 	 * @return void
 	 */
 	function updateUserInformation($action) {
@@ -246,7 +246,7 @@ class User extends UserCore {
 	/**
 	 * Update user password
 	 *
-	 * @param [array] $action REST parameters
+	 * @param array $action REST parameters
 	 * @return boolean
 	 */
 	function updateUserPassword($action) {
@@ -303,7 +303,7 @@ class User extends UserCore {
 	/**
 	 * Delete kbhff account
 	 *
-	 * @param [array] $action REST parameters
+	 * @param array $action REST parameters
 	 * @return boolean
 	 */
 	function deleteUserInformation($action) {
