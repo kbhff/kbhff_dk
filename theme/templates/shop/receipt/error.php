@@ -6,6 +6,6 @@ global $model;
 
 	<h1>Fejl</h1>
 	<h2>Hov.</h2>
-	<p>Noget gik galt. Vi undskylder meget. Vi vil hurtigst muligt prøve at finde ud af, hvad der gik galt, og så hører du fra os.</p>
+	<p>Noget gik galt. Vi undskylder meget. Vi vil hurtigst muligt prøve at finde ud af, hvad der gik galt.</p>
 
 </div>

@@ -13,7 +13,7 @@ $payment_date = false;
 $active_account = false;
 
 
-// get current user id
+// get current user
 $user_id = session()->value("user_id");
 $user = $UC->getUser();
 // has account been activated
@@ -40,12 +40,13 @@ if(count($action) == 4) {
 
 			$payment_id = $action[3];
 			$payment = $model->getPayments(["payment_id" => $payment_id]);
-
+			
+			// is the users membership related to this order?
 			if($membership && $membership["order"]) {
-				// is the users membership related to this order?
 				$is_membership = ($membership["order"] && $order["id"] == $membership["order"]["id"]) ? true : false;
 			}
-
+			
+			// does the membership have a duration of subscription?
 			if($membership && $membership["item"] && $membership["item"]["subscription_method"] && $membership["item"]["subscription_method"]["duration"]) {
 				$subscription_method = $membership["item"]["subscription_method"];
 				$payment_date = $membership["renewed_at"] ? date("jS", strtotime($membership["renewed_at"])) : date("jS", strtotime($membership["created_at"]));
@@ -71,12 +72,12 @@ if(count($action) == 4) {
 		
 		
 		<? if($is_membership): ?>
-			<p>Du er medlem, og du kan begynde at bestille dine grøntsager.</p>
+			<p>Dit medlemskab er oprettet, og du kan bestille dine grøntsager.</p>
 		<? endif; ?>
 		
 		
 		<? if(!$active_account): ?>
-			<p>Husk at aktivere din konto ved at verificere din email, hvis du ikke har gjort det endnu. Ellers kan du ikke modtage nyhedsbreve eller bestille grøntsager. Kig i din indbakke efter aktiveringsemailen.</p>
+			<p>Husk at aktivere din konto ved at verificere din email. Ellers kan du ikke bestille grøntsager. Kig i din indbakke efter aktiveringsemailen.</p>
 		<? else: ?>
 			<ul class="actions">
 				<li><a class="button primary clickable" href="/">Log ind</a></li>

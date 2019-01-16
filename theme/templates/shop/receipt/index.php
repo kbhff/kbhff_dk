@@ -14,7 +14,7 @@ $payment_date = false;
 $active_account = false;
 
 
-// get current user id
+// get current user
 $user_id = session()->value("user_id");
 $user = $UC->getUser();
 // has account been activated
@@ -25,7 +25,7 @@ if($user) {
 
 // order no indicated in url
 if(isset($action[1])) {
-	// get order no
+	// get order from order no
 	$order_no = $action[1];
 	if($order_no) {
 		$order = $model->getOrders(array("order_no" => $order_no));
@@ -39,12 +39,12 @@ if(isset($action[1])) {
 			$total_order_price = $model->getTotalOrderPrice($order["id"]);
 			$remaining_order_price = $model->getRemainingOrderPrice($order["id"]);
 
-
+			// is the users membership related to this order?
 			if($membership && $membership["order"]) {
-				// is the users membership related to this order?
+				
 				$is_membership = ($membership["order"] && $order["id"] == $membership["order"]["id"]) ? true : false;
 			}
-
+			// does membership have a duration of subscription?
 			if($membership && $membership["item"] && $membership["item"]["subscription_method"] && $membership["item"]["subscription_method"]["duration"]) {
 				$subscription_method = $membership["item"]["subscription_method"];
 				$payment_date = $membership["renewed_at"] ? date("jS", strtotime($membership["renewed_at"])) : date("jS", strtotime($membership["created_at"]));
@@ -68,7 +68,7 @@ if(isset($action[2])) {
 
 <? if($order): ?>
 
-	<h1>Tak for det</h1>
+	<h1>Tak for din ordre!</h1>
 
 
 <?	if($receipt_type == "cash"): ?>
@@ -84,18 +84,20 @@ if(isset($action[2])) {
 <? else: ?>
 
 
-	<h2>Tillykke med at du nu er en del af Københavns Fødevarefælleskab!</h2>
+	<h2>Din ordre er gået igennem!</h2>
 
 
 <? endif; ?>
 
 
-<? if($is_membership): ?>
-	<p>Nu kan du endelig bestille grøntsager!</p>
+<? // membership is related to order
+	if($is_membership): ?>
+	<p>Tillykke med, at du nu er en del af Københavns Fødevarefælleskab! </p>
 <? endif; ?>
 
 
-<? if(!$active_account): ?>
+<? // account has not been activated
+	if(!$active_account): ?>
 	<p>Husk at aktivere din konto. Tjek din email for aktiveringskoden.</p>
 <? endif; ?>
 
