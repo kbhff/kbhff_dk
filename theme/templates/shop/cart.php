@@ -4,10 +4,6 @@ global $model;
 
 $user_id = session()->value("user_id");
 
-//$UC = new User();
-//$username = stringOr(getPost("username"));
-
-
 // if cart reference was passed to cart controller
 
 if(count($action) > 1) {
@@ -21,13 +17,13 @@ $IC = new Items();
 
 ?>
 <div class="scene cart i:cart">
-	<h1>Your cart</h1>
+	<h1>Din kurv</h1>
 	<?
-	//print all stored messages if any
+	//print all stored messages
 	print $HTML->serverMessages();
 	?>
-<? 
-	// if cart has items, add action of checkout button to html output
+	<? 
+	// Generate checkout button
 	if($cart["items"]) :
 	?>
 	<div class="checkout">
@@ -45,11 +41,11 @@ $IC = new Items();
 <? endif; ?>
 
 	<div class="all_items">
-		<h2>Cart contents</h2>
+		<h2>Kurven indeholder</h2>
 		<? if($cart["items"]): ?>
 		<ul class="items">
 			<? 
-			// if cart has items, loop through all cart items and show each specific item and its price, quantity and editing options(delete and update quantity)
+			// Loop through all cart items and show information and editing options of each item.
 			foreach($cart["items"] as $cart_item):
 				$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true)));
 				$price = $model->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
@@ -75,7 +71,7 @@ $IC = new Items();
 					<span class="a">á </span>
 					<span class="unit_price"><?= formatPrice($price) ?></span>
 					<span class="total_price">
-						<? // add total price and vat to item 
+						<? // generate total price and vat to item 
 						print formatPrice(array(
 								"price" => $price["price"]*$cart_item["quantity"],
 								"vat" => $price["vat"]*$cart_item["quantity"],
@@ -86,20 +82,22 @@ $IC = new Items();
 						) ?>
 					</span>
 				</h3>
-				<? if($item["subscription_method"] && $price["price"]): ?>
+				<? // print subscription information 
+				if($item["subscription_method"] && $price["price"]): ?>
 				<p class="subscription_method">
-					Re-occuring payment every <?= strtolower($item["subscription_method"]["name"]) ?>.
+					Betaling gentages hver <?= strtolower($item["subscription_method"]["name"]) ?>.
 				</p>
 				<? endif; ?>
 
-				<? if($item["itemtype"] == "membership"): ?>
+				<? // print membership information
+				if($item["itemtype"] == "membership"): ?>
 				<p class="membership">
-					This purchase includes a membership.
+					Dit køb indkluderer et medlemskab.
 				</p>
 				<? endif; ?>
 
 				<ul class="actions">
-					<? // add action of delete button to item 
+					<? // generate delete button to item 
 					print $JML->oneButtonForm("Delete", "/shop/deleteFromCart/".$cart["cart_reference"]."/".$cart_item["id"], array(
 						"wrapper" => "li.delete",
 						"static" => true
@@ -112,14 +110,14 @@ $IC = new Items();
 				<h3>
 					<span class="name">Total</span>
 					<span class="total_price">
-						<? // add total price of cart to html output
+						<? // generate total price of cart
 						print formatPrice($model->getTotalCartPrice($cart["id"]), array("vat" => true)) ?>
 					</span>
 				</h3>
 			</li>
 		</ul>
 		<? else: ?>
-		<p>You don't have any items in your cart yet. <br />Check out our <a href="/bliv-medlem">memberships</a> now.</p>
+		<p>Din indkøbskurv er tom. <br />Gå til <a href="/bliv-medlem">medlemskaber </a>for at se, hvad vi tilbyder.</p>
 		<ul class="items">
 			<li class="total">
 				<h3>
@@ -133,7 +131,7 @@ $IC = new Items();
 		<? endif; ?>
 	</div>
 
-	<? // if cart has items, add action of checkout button to html output
+	<? // Generate checkout button
 	if($cart["items"]) :?>
 	<div class="checkout">
 		<ul class="actions">

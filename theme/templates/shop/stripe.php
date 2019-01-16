@@ -5,7 +5,7 @@ global $model;
 $UC = new User();
 $IC = new Items();
 
-// get current user id
+// get user and order information 
 $user_id = session()->value("user_id");
 $order_no = $action[1];
 $amount = "";
@@ -29,22 +29,20 @@ if($order) {
 		$is_membership = ($membership["order"] && $order["id"] == $membership["order"]["id"]) ? true : false;
 	}
 
-// if membership has subscription method and duration of subsription, save variables with information
+// does the membership have a subscription duration?
 	if($membership && $membership["item"] && $membership["item"]["subscription_method"] && $membership["item"]["subscription_method"]["duration"]) {
 		$subscription_method = $membership["item"]["subscription_method"];
 		$payment_date = $membership["renewed_at"] ? date("jS", strtotime($membership["renewed_at"])) : date("jS", strtotime($membership["created_at"]));
 	}
 
 }
-// save membership references 
+
 if($is_membership) {
 	$reference = "Member ".$membership["id"];
 }
 else {
 	$reference = $order_no;
 }
-
-//$this->headerIncludes(["https://checkout.stripe.com/checkout.js"]);
 
 ?>
 <div class="scene shopPayment stripe <?= $order ? "i:stripe" : "i:scene" ?>">
@@ -63,8 +61,6 @@ else {
 			
 
 	<?= $model->formStart("/butik/betaling/".$order_no."/stripe/process", array("class" => "card")) ?>
-		<? //= $model->input("reference", array("type" => "hidden", "value" => $reference)); ?>
-		<? //= $model->input("email", array("type" => "hidden", "value" => $user["email"])); ?>
 
 	<fieldset>
 		<?= $model->input("card_number", array("type" => "tel", "label" => "Kortnummer", "hint_message" => "Indtast dit kortnummer", "error_message" => "Ugyldigt kortnummer")); ?>
@@ -80,7 +76,6 @@ else {
 	</ul>
 	<?= $model->formEnd() ?>
 
-	<p></p>
 	<p class="note">
 		Betalingsreference: <?= $reference ?>. <br />
 		Vi bruger <a href="https://stripe.com" target="_blank">Stripe</a> til at behandle betalingen. <br />
