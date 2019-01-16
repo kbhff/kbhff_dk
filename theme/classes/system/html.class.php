@@ -5,13 +5,12 @@
 class HTML extends HTMLCore {
 
 	/** 
-	 * Generate a contaginated string with metadata, comments and information. 
+	 * Compiles a html list with comments and information. 
 	 * 
-	 * @param String $item 
-	 * @param String $add_path
-	 * @return String 
+	 * @param array $item 
+	 * @param string $add_path
+	 * @return string 
 	*/
-
 	function frontendComments($item, $add_path) {
 		global $page;
 
@@ -24,8 +23,8 @@ class HTML extends HTMLCore {
 		$_ .= '	<h2 class="comments">Comments</h2>';
 		// Check if item has comments.
 		if($item["comments"]):
+			//  Loop through the comments and concatenate them, along with their corresponding information (published_at and author),  into an html-string. 
 			$_ .= '<ul class="comments">';
-			//  Loop through the comments and contaginate them in a string together with their corresponding information (published-at and author).
 			foreach($item["comments"] as $comment):
 			$_ .= '<li class="comment comment_id:'.$comment["id"].'" itemprop="comment" itemscope itemtype="https://schema.org/Comment">';
 				$_ .= '<ul class="info">';
