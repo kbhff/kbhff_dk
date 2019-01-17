@@ -18,8 +18,6 @@ Util.Objects["signupfees"] = new function() {
 			for (var i = 0; i < signupfees.length; i++) {
 				if (u.actualHeight(signupfees[i]) > largestHeight) {
 					var largestHeight = u.actualHeight(signupfees[i]);
-					console.log(largestHeight)
-					console.log(i)
 				}
 			}
 			// adds the largest height to all of the signupfees-descriptions
@@ -27,14 +25,12 @@ Util.Objects["signupfees"] = new function() {
 			while (j--) {
 				u.ass(signupfees[j], {"height":largestHeight+"px"})
 			}
-			console.log("bloa");
 	
 			var bg1 = u.ae(scene, "div", {class:"bg volunteer"});
 			var bg2 = u.ae(scene, "div", {class:"bg supporter"});
 
 			page.resized();
-			// adds height and width to bg-divs
-//			console.log("shoo:", page.offsetHeight);
+			// adds height and width to bg images 
 			u.ass(bg1, {
 				height: page.offsetHeight + "px",
 				top: -(u.absY(scene)) + "px",
