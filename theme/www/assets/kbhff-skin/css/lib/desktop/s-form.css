@@ -69,6 +69,11 @@ div.field.radiobuttons .item input.focus:checked + label {
 	background-image: url(../../../img/gx_radiobutton_checked_focus.svg);
 }
 
+div.field.checkbox.focus input,
+div.field.radiobuttons .item input.focus {
+	width: 20px;
+}
+
 
 /* ERROR STATE */
 div.field.error input,
@@ -76,6 +81,10 @@ div.field.error select,
 div.field.error textarea {margin: 0; width: 100%; border: 3px solid #C22414;}
 div.field.error textarea:not(.autoexpand) {height: 104px;}
 
+div.field.checkbox.error input,
+div.field.radiobuttons.error .item input {
+	width: 20px;
+}
 
 /* VALIDATION */
 div.field .indicator {display: inline-block; vertical-align: top; width: 12px; height: 12px; margin-left: 4px;}
@@ -110,12 +119,12 @@ div.field div.hint {opacity: 0; position: absolute; top: 0; left: 0; font-size: 
 }
 
 /* HELP - ERRORS */
-div.field div.error {color: #C22414;}
+div.field div.error {color: #C22414; z-index: -10;}
 div.field.error div.error {opacity: 1;
 	transform: translate(0, 0);
 }
 /* HELP - HINTS */
-div.field div.hint {color: #999999;}
+div.field div.hint {color: #999999; z-index: -10;}
 div.field.focus div.hint {opacity: 1; transform: translate(0, 0);}
 div.field.error div.hint {opacity: 0; transform: translate(0, -10px);}
 
