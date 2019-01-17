@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-20 23:45:52
+asset-builder @ 2019-01-17 14:13:36
 */
 
 /*seg_desktop_include.js*/
@@ -5043,8 +5043,8 @@ Util.Objects["accept_terms"] = new function() {
 				var ul_actions = u.ae(overlay.div_content, "ul", {
 					class:"actions"
 				})
-				var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"button delete_me","value":"Meld mig ud af KBHFF"});
-				var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"button regret primary", "value":"Fortryd udmelding"});
+				var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"button","value":"Meld mig ud af KBHFF"});
+				var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"button primary", "value":"Fortryd udmelding"});
 				u.e.click(delete_me)
 				delete_me.clicked = function () {
 					this.delete_me_callback = function(response) {
@@ -5188,7 +5188,9 @@ Util.Objects["delete_user_information"] = new function() {
 		}
 		scene.ready = function() {
 			var confirm_cancellation = u.qs("form.confirm_cancellation", this);
-			u.f.init(confirm_cancellation);
+			if (confirm_cancellation) {
+				u.f.init(confirm_cancellation);
+			}
 		}
 		scene.ready();
 	}
@@ -5209,15 +5211,12 @@ Util.Objects["signupfees"] = new function() {
 			for (var i = 0; i < signupfees.length; i++) {
 				if (u.actualHeight(signupfees[i]) > largestHeight) {
 					var largestHeight = u.actualHeight(signupfees[i]);
-					console.log(largestHeight)
-					console.log(i)
 				}
 			}
 			var j = signupfees.length;
 			while (j--) {
 				u.ass(signupfees[j], {"height":largestHeight+"px"})
 			}
-			console.log("bloa");
 			var bg1 = u.ae(scene, "div", {class:"bg volunteer"});
 			var bg2 = u.ae(scene, "div", {class:"bg supporter"});
 			page.resized();
@@ -5521,21 +5520,21 @@ Util.Objects["member_help_payment"] = new function() {
 			if(cash_form) {
 				u.f.init(cash_form);
 			}
-			var cash_fan = u.insertElement(payment_options, "h4", {"class":"fan cash_fan","html":"Kontant"});
-			var mobilepay_fan = u.ie(payment_options, "h4", {"class":"fan mobilepay_fan","html":"MobilePay"});
-			u.e.click(mobilepay_fan);
-			mobilepay_fan.clicked = function () {
+			var cash_tab = u.insertElement(payment_options, "h4", {"class":"tab cash_tab","html":"Kontant"});
+			var mobilepay_tab = u.ie(payment_options, "h4", {"class":"tab mobilepay_tab","html":"MobilePay"});
+			u.e.click(mobilepay_tab);
+			mobilepay_tab.clicked = function () {
 				u.as(cash_form, "display", "none");
 				u.as(mobilepay_form, "display", "block");
-				u.as(cash_fan, "backgroundColor", "#BBBBBB");
-				u.as(mobilepay_fan, "backgroundColor", "#f2f2f2f2");
+				u.as(cash_tab, "backgroundColor", "#BBBBBB");
+				u.as(mobilepay_tab, "backgroundColor", "#f2f2f2f2");
 			}
-			u.e.click(cash_fan);
-			cash_fan.clicked = function () {
+			u.e.click(cash_tab);
+			cash_tab.clicked = function () {
 				u.as(mobilepay_form, "display", "none");
 				u.as(cash_form, "display", "block");
-				u.as(mobilepay_fan, "backgroundColor", "#BBBBBB");
-				u.as(cash_fan, "backgroundColor", "#f2f2f2f2")
+				u.as(mobilepay_tab, "backgroundColor", "#BBBBBB");
+				u.as(cash_tab, "backgroundColor", "#f2f2f2f2")
 			}
 		}
 		scene.ready();

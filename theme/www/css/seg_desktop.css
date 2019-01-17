@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-20 23:45:52
+asset-builder @ 2019-01-17 14:13:37
 */
 
 /*seg_desktop_include.css*/
@@ -126,10 +126,18 @@ div.field.checkbox.focus input:checked + label {
 div.field.radiobuttons .item input.focus:checked + label {
 	background-image: url(../img/gx_radiobutton_checked_focus.svg);
 }
+div.field.checkbox.focus input,
+div.field.radiobuttons .item input.focus {
+	width: 20px;
+}
 div.field.error input,
 div.field.error select,
 div.field.error textarea {margin: 0; width: 100%; border: 3px solid #C22414;}
 div.field.error textarea:not(.autoexpand) {height: 104px;}
+div.field.checkbox.error input,
+div.field.radiobuttons.error .item input {
+	width: 20px;
+}
 div.field .indicator {display: inline-block; vertical-align: top; width: 12px; height: 12px; margin-left: 4px;}
 div.field.required .indicator {
 	background: transparent url(../img/gx_required.svg) no-repeat center 1px;
@@ -151,11 +159,11 @@ div.field div.hint {opacity: 0; position: absolute; top: 0; left: 0; font-size: 
 	transform: translate(0, -10px);
 	transition: 0.3s all ease-out;
 }
-div.field div.error {color: #C22414;}
+div.field div.error {color: #C22414; z-index: -10;}
 div.field.error div.error {opacity: 1;
 	transform: translate(0, 0);
 }
-div.field div.hint {color: #999999;}
+div.field div.hint {color: #999999; z-index: -10;}
 div.field.focus div.hint {opacity: 1; transform: translate(0, 0);}
 div.field.error div.hint {opacity: 0; transform: translate(0, -10px);}
 ul.actions,
@@ -654,7 +662,6 @@ body > div.overlay .close:after {
 #content .scene.login h2 {text-align: center;}
 
 /*s-accept_terms.css*/
-#content .scene.accept_terms form {padding-top: 50px; text-align: center;}
 
 
 /*s-profile.css*/
@@ -666,39 +673,27 @@ body > div.overlay .close:after {
 	margin-bottom: 22px;
 	border-bottom: 2px solid #808080;
 }
-#content div.profile .c-box,
-#content div.profile .fields {
-	font-size: 0;
-}
-#content div.profile .c-box > h3 {
-	padding-left: 0;
-	padding-right: 0;
-	padding-bottom: 0;
-	margin-left: 12px;
-	margin-right: 12px;
-	margin-bottom: 12px;
-	border-bottom: 1px solid #000000;
-}
-#content div.profile .c-box > form > fieldset {
-	padding-top: 6px;
-}
-#content div.profile .c-box > form > fieldset .field {
+#content div.profile ul.actions {
 	width: 100%;
 	box-sizing: border-box;
+	padding-top: 20px;
 }
-#content div.profile .c-box ul.actions {
-	padding-top: 5px;
-	padding-bottom: 0;
+#content div.profile ul.actions li {
+	box-sizing: border-box;
 }
-#content div.profile .membership fieldset {
-	float: right;
+#content div.profile ul.actions .full-width {
+	width: 100%;
+	text-align: center;
+	padding-left: 0;
+	padding-right: 0;
+}
+#content div.profile ul.actions .half-width {
 	width: 50%;
+	text-align: center;
 }
-#content div.profile .membership .field {
-	padding: 0;
-	padding-top: 5px;
-	padding-left: 12px;
-	padding-right: 12px;
+#content div.profile ul.actions .third-width {
+	width: 33.3333%;
+	text-align: center;
 }
 #content div.profile .orders,
 #content div.profile .order-headings,
@@ -724,24 +719,6 @@ body > div.overlay .close:after {
 	box-sizing: border-box;
 	width: 25%;
 }
-#content div.profile .department-info,
-#content div.profile .membership-info,
-#content div.profile .user-info {
-	padding-bottom: 25px;
-}
-#content div.profile .password p.under {
-	font-size: 26px;
-	padding-bottom: 25px;
-}
-#content div.profile p.over {
-	font-size: 11px;
-	padding-bottom: 0;
-	text-transform: uppercase;
-}
-#content div.profile p.under {
-	font-size: 18px;
-	padding-bottom: 0;
-}
 #content div.profile p.change-untill {
 	width: 17%;
 	padding-right: 0;
@@ -766,30 +743,57 @@ body > div.overlay .close:after {
 	padding-right: 8px;
 	font-size: 12px;
 }
-#content div.profile ul.actions {
-	width: 100%;
-	box-sizing: border-box;
-	padding-top: 20px;
+#content div.profile .c-box,
+#content div.profile .fields {
+	font-size: 0;
 }
-#content div.profile ul.actions li {
-	box-sizing: border-box;
+#content div.profile .c-box ul.actions {
+	padding-top: 5px;
+	padding-bottom: 0;
 }
-#content div.profile ul.actions .full-width {
-	width: 100%;
-	text-align: center;
+#content div.profile .c-box > h3 {
 	padding-left: 0;
 	padding-right: 0;
+	padding-bottom: 0;
+	margin-left: 12px;
+	margin-right: 12px;
+	margin-bottom: 12px;
+	border-bottom: 1px solid #000000;
 }
-#content div.profile ul.actions .half-width {
+#content div.profile p.over {
+	font-size: 11px;
+	padding-bottom: 0;
+	text-transform: uppercase;
+}
+#content div.profile p.under {
+	font-size: 18px;
+	padding-bottom: 0;
+}
+#content div.profile .c-box > form > fieldset {
+	padding-top: 6px;
+}
+#content div.profile .c-box > form > fieldset .field {
+	width: 100%;
+	box-sizing: border-box;
+}
+#content div.profile .membership fieldset {
+	float: right;
 	width: 50%;
-	text-align: center;
 }
-#content div.profile ul.actions .third-width {
-	width: 33.3333%;
-	text-align: center;
+#content div.profile .membership .field {
+	padding: 0;
+	padding-top: 5px;
+	padding-left: 12px;
+	padding-right: 12px;
 }
-body.profil > div.overlay div.field.password {
-	padding-bottom: 20px;
+#content div.profile .department-info,
+#content div.profile .membership-info,
+#content div.profile .user-info {
+	padding-bottom: 25px;
+}
+#content div.profile .password p.under {
+	font-size: 26px;
+	padding-bottom: 25px;
 }
 
 
@@ -804,7 +808,7 @@ body.profil > div.overlay div.field.password {
 #content .scene.signupfees ul.actions input {margin: 0 auto;}
 #content .scene.signupfees ul.actions li {display: block; width: 100%; padding-left: 0;}
 #content .scene.signupfees ul.actions li.readmore {padding-bottom: 20px;}
-#content .scene.signupfees ul.offer li.suscribtion_price > p {padding: 0; font-size: 20px;}
+#content .scene.signupfees ul.offer li.subscription_price > p {padding: 0; font-size: 20px;}
 #content .scene.signupfees div.article ul.info {display: none;}
 #content .scene.signup form {width: 380px; margin: 0 auto; padding-top: 20px;}
 #content .scene.signup ul.actions li { padding: 0 2.5px 10px 2.5px; }
@@ -823,13 +827,14 @@ body.profil > div.overlay div.field.password {
 #content .scene.membership .c-wrapper,
 #content .scene.membership .c-two-thirds,
 #content .scene.membership .c-one-third {min-height: 0;}
-#content .scene.membership .c-wrapper {text-align: center; padding-top: 46px;}
+#content .scene.membership .c-wrapper {padding-top: 46px;}
 #content .scene.membership div.article .c-wrapper p {padding-top: 0;}
 #content .scene.membership div.article ul.offer li.description {display: none;}
 #content .scene.membership div.article ul.offer li {font-size: 22px; padding: 0;}
 #content .scene.membership div.article ul.offer {padding: 0 12px 24px 12px;}
 #content .scene.membership div.article ul.actions {text-align: center; padding-bottom: 22px}
 #content .scene.membership div.article ul.actions li {padding: 0;}
+#content .scene.membership div.article .c-box {text-align: center;}
 #content .scene.membership div.related {padding-top: 34px;}
 #content .scene.membership div.related h2 {padding-top: 12px;}
 #content .scene.membership div.related ul.items.membership {padding: 0; margin: 0; list-style-type: none;}
@@ -875,28 +880,36 @@ body.profil > div.overlay div.field.password {
 
 
 /*s-member_help.css*/
-#content .scene.member_help ul.actions {text-align:center}
+#content .scene.member_help_signup p.metatext {
+	font-style: italic;
+	font-size: 12px;
+} 
+#content .scene.member_help_signup p.terms_summary {
+	font-weight: 700;
+}
 #content .scene.member_help_payment > p {font-size: 12px; line-height: 12px; padding-bottom: 0;}
 #content .scene.member_help_payment > h1 + p {padding: 12px; font-size: 14px;}
+#content .scene.member_help_payment ul.orders {padding-top: 50px; margin: 0 auto; width: 450px; padding-bottom: 0;}
+#content .scene.member_help_payment ul.orders > li {list-style-type: none; padding-left: 0; font-size: 16px;}
+#content .scene.member_help_payment ul.orders > li span.price {float: right;}
+#content .scene.member_help_payment ul.orders > li.total_price {font-size: 18px; font-weight: 700; border-top: 1px solid #000000; padding-top: 12px; margin-top: 12px;}
 #content .scene.member_help_payment div.payment_options {
 	margin: 0 auto;
 	margin-top: 32px; 
 	width: 40%;
 }
-#content .scene.member_help_payment div.payment_options h4.fan {
+#content .scene.member_help_payment div.payment_options h4.tab {
 	display: inline-block; 
 	background-color: #f2f2f2f2; 
 	padding: 6px calc(2.5% + 10px); 
 	margin-right: 12px; 
 	cursor:pointer;
 }
-#content .scene.member_help_payment div.payment_options h4.cash_fan {
+#content .scene.member_help_payment div.payment_options h4.cash_tab {
 	background-color: #bbbbbb;
 }
 #content .scene.member_help_payment form.cash {display:none;}
 #content .scene.member_help_payment form fieldset {background-color: #f2f2f2; position: relative; padding-bottom: 40px} 
-#content .scene.member_help_payment form ul.actions {width: 100%; margin-left: 0; padding-left: 0; margin-top: 12px;}
-#content .scene.member_help_payment ul.actions li.forgot {line-height: 22px;}
 #content .scene.member_help_payment form.mobilepay .qr {float: right; position: relative;}
 #content .scene.member_help_payment form.mobilepay .qr::before {
 	content: "";
@@ -930,24 +943,11 @@ body.profil > div.overlay div.field.password {
 	font-size: 24px;
 	padding-bottom: 8px;
 }
-#content .scene.member_help_payment form .checkbox {
-	padding: 12px 10px;
-	position: absolute;
-	bottom: 0;
-}
 #content .scene.member_help_payment form div.cash.instructions p {
 	font-size: 16px;
 	padding: 12px 12px 12px;
 }
-#content .scene.member_help_signup p.metatext {
-	font-style: italic;
-	font-size: 12px;
-} 
-#content .scene.member_help_signup p.terms_summary {
-	font-weight: 700;
-}
-#content .scene.member_help_payment ul.orders {padding-top: 50px; margin: 0 auto; width: 450px; padding-bottom: 0;}
-#content .scene.member_help_payment ul.orders > li {list-style-type: none; padding-left: 0; font-size: 16px;}
-#content .scene.member_help_payment ul.orders > li span.price {float: right;}
-#content .scene.member_help_payment ul.orders > li.total_price {font-size: 18px; font-weight: 700; border-top: 1px solid #000000; padding-top: 12px; margin-top: 12px;}
+#content .scene.member_help_payment form .checkbox {padding: 12px 10px; position: absolute; bottom: 0;}
+#content .scene.member_help_payment form ul.actions {width: 100%; margin-left: 0; padding-left: 0; margin-top: 12px;}
+#content .scene.member_help ul.actions {text-align:center}
 
