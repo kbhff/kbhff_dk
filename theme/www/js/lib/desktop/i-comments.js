@@ -10,11 +10,12 @@ Util.Objects["comments"] = new function() {
 
 		div.header = u.qs("h2", div);
 		div.header.div = div;
+		// Add checkmark to h2 
 		u.addExpandArrow(div.header);
-		// Make header clickable and add click event 
+		// Make h2 clickable and add click event 
 		u.ce(div.header);
 		div.header.clicked = function() {
-			// if header is open, close it, add expand arrow and save cookie.
+			// if div is open, close it, add checkmark and save cookie.
 			if(u.hc(this.div, "open")) {
 
 				u.rc(this.div, "open");
@@ -22,14 +23,13 @@ Util.Objects["comments"] = new function() {
 				u.saveCookie("comments_open_state", 0, {"path":"/"});
 			}
 			else {
-			// if header is not open, open it, add collapse arrow and save cookie.
+			// if div is closed, open it, remove checkmark and save cookie.
 				u.ac(this.div, "open");
 				u.addCollapseArrow(this);
 				u.saveCookie("comments_open_state", 1, {"path":"/"});
 			}
 		}
-		// get cookies and initialize click event if cookie == 1
-		// that is if header is open, has added collapse arrow and saved cookie 
+		// get cookies and initialize click event if div is open, does not have a checkmark but has a saved cookie 
 		div.comments_open_state = u.getCookie("comments_open_state", {"path":"/"});
 		if(div.comments_open_state == 1) {
 			div.header.clicked();
@@ -48,10 +48,10 @@ Util.Objects["comments"] = new function() {
 		div.csrf_token = div.getAttribute("data-csrf-token");
 		div.add_comment_url = div.getAttribute("data-comment-add");
 
-		// if interaction data available
+		// If interaction data available
 		if(div.add_comment_url && div.csrf_token) {
 
-			// add initial add comment button
+			// Add initial add comment button
 			div.actions = u.ae(div, "ul", {"class":"actions"});
 			div.bn_comment = u.ae(u.ae(div.actions, "li", {"class":"add"}), "a", {"html":u.txt["add_comment"], "class":"button primary comment"});
 			div.bn_comment.div = div;
@@ -61,10 +61,10 @@ Util.Objects["comments"] = new function() {
 
 				var actions, bn_add, bn_cancel;
 
-				// hide original add button
+				// Hide original add button
 				u.as(this.div.actions, "display", "none");
 
-				// add comment form specific to interaction data
+				// Add comment form 
 				this.div.form = u.f.addForm(this.div, {"action":this.div.add_comment_url+"/"+this.div.item_id, "class":"add labelstyle:inject"});
 				this.div.form.div = div;
 
@@ -80,7 +80,7 @@ Util.Objects["comments"] = new function() {
 
 				u.f.init(this.div.form);
 
-				// handle form submit
+				// Handle form submit
 			
 				this.div.form.submitted = function() {
 
@@ -105,10 +105,10 @@ Util.Objects["comments"] = new function() {
 
 							this.div.initComment(comment_li);
 
-							// remove add comment form
+							// Remove add comment form
 							this.parentNode.removeChild(this);
 
-							// show original add button
+							// Show original add button
 							u.as(this.div.actions, "display", "");
 						}
 					}
@@ -116,13 +116,13 @@ Util.Objects["comments"] = new function() {
 
 				}
 
-				// handle cancel
+				// Handle cancel
 				u.ce(bn_cancel);
 				bn_cancel.clicked = function(event) {
 					u.e.kill(event);
 					this.div.form.parentNode.removeChild(this.div.form);
 
-					// show original add button
+					// Show original add button
 					u.as(this.div.actions, "display", "");
 				}
 			}
@@ -132,7 +132,7 @@ Util.Objects["comments"] = new function() {
 		}
 
 
-		// initalize existing comments
+		// Initalize existing comments
 		var i, node;
 		for(i = 0; node = div.comments[i]; i++) {
 			div.initComment(node);

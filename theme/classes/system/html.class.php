@@ -5,7 +5,7 @@
 class HTML extends HTMLCore {
 
 	/** 
-	 * Compiles a html list with comments and information. 
+	 * Compile a html list with comments and information. 
 	 * 
 	 * @param array $item 
 	 * @param string $add_path
@@ -46,7 +46,7 @@ class HTML extends HTMLCore {
 
 
 	/** 
-	* Generate a contaginated string with price and description of item
+	* Compile a html list with price and description of item
 	* 
 	* @param Array $item
 	* @param String $_url 
@@ -96,7 +96,7 @@ class HTML extends HTMLCore {
 
 	/**
 	* 
-	* Generate a contaginated string with meta-data and article-info suitable for SEO
+	* Compile a html list with meta-data and article-info suitable for SEO
 	* 
 	* @param Array $item
 	* @param String $url 
@@ -169,7 +169,7 @@ class HTML extends HTMLCore {
 
 	
 	/**
-	* Generate a contaginated string with a list of tags. 
+	* Compile a html list of tags. 
 	* 
 	* @param Array $item
 	* @param Array $options 

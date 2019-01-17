@@ -11,14 +11,14 @@ Util.Objects["accept_terms"] = new function() {
 
 		scene.ready = function() {
 			u.bug("scene.ready:" + u.nodeId(this));
-			// query and initialize form
+			// Query and initialize form
 			var form_accept = u.qs("form.accept", this);
 			u.f.init(form_accept);
-			// update text for checkbox label and hint messages
+			// Update text for checkbox label and hint messages
 			u.qs("div.field.checkbox label").innerHTML = "Jeg accepterer <a href='/terms' target='_blank'>retningslinjerne</a>."
 			u.qs("div.field.checkbox .error").innerHTML = "Du skal acceptere retningslinjerne for at fortsætte."
 			u.qs("div.field.checkbox .hint").innerHTML = ""
-			// add click event to reject-button. Creates overlay with information text and action ul
+			// Add click event to reject-button and create overlay 
 			form_accept.actions["reject"].clicked = function() {
 				var overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600, class:"confirm_cancel_membership"});
 				var p_warning = u.ae(overlay.div_content, "p", {
@@ -29,9 +29,8 @@ Util.Objects["accept_terms"] = new function() {
 				})
 
 				// Add action buttons to cancel and confirm
-				// Should we change the css-classes of the buttons so they are compliant with the skin?
-				var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"button delete_me","value":"Meld mig ud af KBHFF"});
-				var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"button regret primary", "value":"Fortryd udmelding"});
+				var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"button","value":"Meld mig ud af KBHFF"});
+				var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"button primary", "value":"Fortryd udmelding"});
 				
 				// Add click event to go to password confirmation
 				u.e.click(delete_me)
@@ -48,7 +47,6 @@ Util.Objects["accept_terms"] = new function() {
 						// Append form and initialize it
 						u.ae(overlay.div_content, form_confirm_cancellation);
 						u.f.init(form_confirm_cancellation);
-						//u.f.addAction(overlay.div_content, {"type":"button", "name":"regret", "class":"action regret primary", "value":"Fortryd udmelding"});
 						
 						// Go to login when confirm_cancellation is submitted. Else hide form and show error message.
 						form_confirm_cancellation.submitted = function () {
@@ -69,6 +67,8 @@ Util.Objects["accept_terms"] = new function() {
 									var ul_actions = u.ae(overlay.div_content, "ul", {
 										class:"actions"
 									});
+									
+									// Generate a clickable close-button 
 									var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
 
 									u.e.click(button_close)

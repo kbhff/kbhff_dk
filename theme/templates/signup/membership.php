@@ -15,7 +15,7 @@ $item = $IC->getItem(array("sindex" => $sindex, "extend" => array("tags" => true
 if($item) {
 	$this->sharingMetaData($item);
 
-	// generate pagination
+	// find previous and next items 
 	$next = $IC->getNext($item["item_id"], array("itemtype" => $item["itemtype"], "tags" => $item["tags"], "order" => "position ASC", "status" => 1, "extend" => true));
 	$prev = $IC->getPrev($item["item_id"], array("itemtype" => $item["itemtype"], "tags" => $item["tags"], "order" => "position ASC", "status" => 1, "extend" => true));
 
