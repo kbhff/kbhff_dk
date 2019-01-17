@@ -7,8 +7,8 @@ $page_item = $IC->getItem(array("tags" => "page:signup-confirm-failed", "extend"
 if($page_item) {
 	$this->sharingMetaData($page_item);
 }
-// get signup email
 
+// get signup email
 $username = session()->value("signup_email");
 session()->reset("signup_email");
 
@@ -44,7 +44,7 @@ session()->reset("signup_email");
 
 		<? if($page_item["html"]): ?>
 		<div class="articlebody" itemprop="articleBody">
-			<?= preg_replace("/{username}/", $username, $page_item["html"])) ?>
+			<?= preg_replace("/{username}/", $username, $page_item["html"]) ?>
 		</div>
 		<? endif; ?>
 	</div>
