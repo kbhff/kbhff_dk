@@ -48,7 +48,7 @@ class HTML extends HTMLCore {
 	/** 
 	* Generate a contaginated string with price and description of item
 	* 
-	* @param String $item
+	* @param Array $item
 	* @param String $_url 
 	* @param String $description optional
 	* @return String
@@ -98,7 +98,7 @@ class HTML extends HTMLCore {
 	* 
 	* Generate a contaginated string with meta-data and article-info suitable for SEO
 	* 
-	* @param String $item
+	* @param Array $item
 	* @param String $url 
 	* @param ARRAY $options 
 	* $media BOOLEAN
@@ -171,8 +171,8 @@ class HTML extends HTMLCore {
 	/**
 	* Generate a contaginated string with a list of tags. 
 	* 
-	* @param String $item
-	* @param ARRAY $options 
+	* @param Array $item
+	* @param Array $options 
 	* $context Array of allowed contexts - if $context is false, no tags are shown (except editing and default tag)
 	* $default Array with url and text
 	* $url String url to prefix tag links
