@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2018-12-20 17:57:54
+asset-builder @ 2019-01-17 14:11:39
 */
 
 /*seg_desktop_include.css*/
@@ -135,10 +135,18 @@ div.field.checkbox.focus input:checked + label {
 div.field.radiobuttons .item input.focus:checked + label {
 	background-image: url(../img/gx_radiobutton_checked_focus.svg);
 }
+div.field.checkbox.focus input,
+div.field.radiobuttons .item input.focus {
+	width: 20px;
+}
 div.field.error input,
 div.field.error select,
 div.field.error textarea {margin: 0; width: 100%; border: 3px solid #C22414;}
 div.field.error textarea:not(.autoexpand) {height: 104px;}
+div.field.checkbox.error input,
+div.field.radiobuttons.error .item input {
+	width: 20px;
+}
 div.field .indicator {display: inline-block; vertical-align: top; width: 12px; height: 12px; margin-left: 4px;}
 div.field.required .indicator {
 	background: transparent url(../img/gx_required.svg) no-repeat center 1px;
@@ -160,11 +168,11 @@ div.field div.hint {opacity: 0; position: absolute; top: 0; left: 0; font-size: 
 	transform: translate(0, -10px);
 	transition: 0.3s all ease-out;
 }
-div.field div.error {color: #C22414;}
+div.field div.error {color: #C22414; z-index: -10;}
 div.field.error div.error {opacity: 1;
 	transform: translate(0, 0);
 }
-div.field div.hint {color: #999999;}
+div.field div.hint {color: #999999; z-index: -10;}
 div.field.focus div.hint {opacity: 1; transform: translate(0, 0);}
 div.field.error div.hint {opacity: 0; transform: translate(0, -10px);}
 ul.actions,
