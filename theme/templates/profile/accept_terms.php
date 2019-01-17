@@ -22,7 +22,7 @@ global $UC;
 	<?= $UC->formStart("accept", array("class" => "accept")) ?>
 
 		<fieldset>
-			<?= $UC->input("terms") ?>
+			<?= $UC->input("terms", ["label"=>"Hello", "hint_message"=>"blah", "error_message"=>"Blah"]) ?>
 		</fieldset>
 
 		<ul class="actions">

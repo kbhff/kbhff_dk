@@ -13,18 +13,20 @@ Util.Objects["accept_terms"] = new function() {
 			u.bug("scene.ready:" + u.nodeId(this));
 			// Query and initialize form
 			var form_accept = u.qs("form.accept", this);
+			form_accept.scene = this;
 			u.f.init(form_accept);
 			// Update text for checkbox label and hint messages
 			u.qs("div.field.checkbox label").innerHTML = "Jeg accepterer <a href='/terms' target='_blank'>retningslinjerne</a>."
 			u.qs("div.field.checkbox .error").innerHTML = "Du skal acceptere retningslinjerne for at fortsætte."
 			u.qs("div.field.checkbox .hint").innerHTML = ""
+			
 			// Add click event to reject-button and create overlay 
 			form_accept.actions["reject"].clicked = function() {
-				var overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600, class:"confirm_cancel_membership"});
-				var p_warning = u.ae(overlay.div_content, "p", {
+				this._form.scene.overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600, class:"confirm_cancel_membership"});
+				var p_warning = u.ae(this._form.scene.overlay.div_content, "p", {
 					html:"Du er ved at melde dig ud af KBHFF. Pga. lovgivning og hensyn til persondata kan du ikke være medlem af KBHFF uden at acceptere vores vilkår. Vi håber du vil genoverveje."
 				});
-				var ul_actions = u.ae(overlay.div_content, "ul", {
+				var ul_actions = u.ae(this._form.scene.overlay.div_content, "ul", {
 					class:"actions"
 				})
 
@@ -36,7 +38,7 @@ Util.Objects["accept_terms"] = new function() {
 				u.e.click(delete_me)
 				delete_me.clicked = function () {
 					// Inject 'confirm cancellation' form
-					this.delete_me_callback = function(response) {
+					this.response = function(response) {
 					
 						// Query form to inject
 						var form_confirm_cancellation = u.qs(".confirm_cancellation", response);
@@ -85,14 +87,13 @@ Util.Objects["accept_terms"] = new function() {
 						}
 					}
 	
-					u.request(this, "/profil/opsig", {
-						"callback":"delete_me_callback"
-					});
+					u.request(this, "/profil/opsig");
 				}
 				// Add click event to cancel and close overlay
-				u.e.click(regret)
+				u.e.click(regret);
+				regret.scene = this._form.scene;
 				regret.clicked = function () {
-						overlay.close ();
+					this.scene.overlay.close ();
 				}
 			}
 		}
