@@ -7,9 +7,9 @@ class HTML extends HTMLCore {
 	/** 
 	 * Compile a html list with comments and information. 
 	 * 
-	 * @param array $item 
-	 * @param string $add_path
-	 * @return string 
+	 * @param Array $item 
+	 * @param String $add_path
+	 * @return String 
 	*/
 	function frontendComments($item, $add_path) {
 		global $page;
@@ -101,8 +101,8 @@ class HTML extends HTMLCore {
 	* @param Array $item
 	* @param String $url 
 	* @param ARRAY $options 
-	* $media BOOLEAN
-	* $sharing BOOLEAN
+	* @param Bollean $media 
+	* @param Boolean $sharing
 	*/ 
 
 	function articleInfo($item, $url, $_options) {
@@ -173,11 +173,11 @@ class HTML extends HTMLCore {
 	* 
 	* @param Array $item
 	* @param Array $options 
-	* $context Array of allowed contexts - if $context is false, no tags are shown (except editing and default tag)
-	* $default Array with url and text
-	* $url String url to prefix tag links
-	* $editing BOOLEAN defines if editing link is shown
-	* $schema String
+	* @param Array $context Array of allowed contexts - if $context is false, no tags are shown (except editing and default tag)
+	* @param Array $default Array with url and text
+	* @param String $url url to prefix tag links
+	* @param Boolean $editing defines if editing link is shown
+	* @param String $schema
 	* @return STRING 
 	*
 	*/
