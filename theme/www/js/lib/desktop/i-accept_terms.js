@@ -15,11 +15,7 @@ Util.Objects["accept_terms"] = new function() {
 			var form_accept = u.qs("form.accept", this);
 			form_accept.scene = this;
 			u.f.init(form_accept);
-			// Update text for checkbox label and hint messages
-			u.qs("div.field.checkbox label").innerHTML = "Jeg accepterer <a href='/terms' target='_blank'>retningslinjerne</a>."
-			u.qs("div.field.checkbox .error").innerHTML = "Du skal acceptere retningslinjerne for at fortsætte."
-			u.qs("div.field.checkbox .hint").innerHTML = ""
-			
+	
 			// Add click event to reject-button and create overlay 
 			form_accept.actions["reject"].clicked = function() {
 				this._form.scene.overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600, class:"confirm_cancel_membership"});
