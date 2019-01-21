@@ -40,8 +40,6 @@ Util.Objects["accept_terms"] = new function() {
 						// Query form to inject
 						var form_confirm_cancellation = u.qs(".confirm_cancellation", response);
 						form_confirm_cancellation.scene = this.scene;
-						// console.log(this.scene.overlay);
-						// console.log(this.scene);
 						
 						// Hide elements to be replaced
 						u.ass(p_warning, {"display":"none"});
@@ -52,30 +50,27 @@ Util.Objects["accept_terms"] = new function() {
 						
 						// Go to login when confirm_cancellation is submitted. Else hide form and show error message.
 						form_confirm_cancellation.submitted = function () {
-							// console.log(this.scene);
 							var data = u.f.getParams(this);
 							this.response = function(response) {
-								// console.log(response);
 								var div_scene_login = u.qs("div.scene.login", response);
-								console.log(div_scene_login);
 								if (div_scene_login) {
 									location.href = "/";
 								}
 								else {
 									var error_message = u.qs("p.errormessage", response);
-									console.log(error_message);
-							
 									u.ass(this, {"display":"none"})
-									
-									// console.log(this);
-									// console.log(this.scene.overlay);
 									u.ae(this.scene.overlay.div_content, error_message);
-									
 									var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
 										class:"actions"
 									});
 									
-								
+									// Generate a clickable close-button 
+									var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
+									u.e.click(button_close);
+									button_close.scene = form_confirm_cancellation.scene;
+									button_close.clicked = function () {
+										this.scene.overlay.close ();
+									}
 								}
 							}
 							

@@ -11,6 +11,7 @@ Util.Objects["signupfees"] = new function() {
 
 		scene.ready = function() {
 			// u.bug("scene.ready 1:", this);
+			
 			// finds the largest height of the signupfees-descriptions 
 			var signupfees = u.qsa("ul.offer li.description");
 			var largestHeight = 0;
