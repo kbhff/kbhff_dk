@@ -13,7 +13,6 @@ Util.Objects["signupfees"] = new function() {
 			// u.bug("scene.ready 1:", this);
 			// finds the largest height of the signupfees-descriptions 
 			var signupfees = u.qsa("ul.offer li.description");
-			console.log(signupfees)
 			var largestHeight = 0;
 			for (var i = 0; i < signupfees.length; i++) {
 				if (u.actualHeight(signupfees[i]) > largestHeight) {

@@ -32,25 +32,30 @@ Util.Objects["accept_terms"] = new function() {
 				
 				// Add click event to go to password confirmation
 				u.e.click(delete_me)
+				delete_me.scene = this._form.scene;
 				delete_me.clicked = function () {
 					// Inject 'confirm cancellation' form
 					this.response = function(response) {
 					
 						// Query form to inject
 						var form_confirm_cancellation = u.qs(".confirm_cancellation", response);
-
+						form_confirm_cancellation.scene = this.scene;
+						// console.log(this.scene.overlay);
+						// console.log(this.scene);
+						
 						// Hide elements to be replaced
 						u.ass(p_warning, {"display":"none"});
 						u.ass(ul_actions, {"display":"none"});
 						// Append form and initialize it
-						u.ae(overlay.div_content, form_confirm_cancellation);
+						u.ae(this.scene.overlay.div_content, form_confirm_cancellation);
 						u.f.init(form_confirm_cancellation);
 						
 						// Go to login when confirm_cancellation is submitted. Else hide form and show error message.
 						form_confirm_cancellation.submitted = function () {
+							// console.log(this.scene);
 							var data = u.f.getParams(this);
 							this.response = function(response) {
-								console.log(response);
+								// console.log(response);
 								var div_scene_login = u.qs("div.scene.login", response);
 								console.log(div_scene_login);
 								if (div_scene_login) {
@@ -58,21 +63,19 @@ Util.Objects["accept_terms"] = new function() {
 								}
 								else {
 									var error_message = u.qs("p.errormessage", response);
-									u.ass(form_confirm_cancellation, {"display":"none"})
+									console.log(error_message);
+							
+									u.ass(this, {"display":"none"})
 									
+									// console.log(this);
+									// console.log(this.scene.overlay);
+									u.ae(this.scene.overlay.div_content, error_message);
 									
-									u.ae(overlay.div_content, error_message);
-									var ul_actions = u.ae(overlay.div_content, "ul", {
+									var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
 										class:"actions"
 									});
 									
-									// Generate a clickable close-button 
-									var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
-
-									u.e.click(button_close)
-									button_close.clicked = function () {
-										overlay.close ();
-									}
+								
 								}
 							}
 							
