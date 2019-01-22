@@ -39,17 +39,17 @@ Util.Objects["profile"] = new function() {
 					this.is_requesting = false;
 					u.rc(this, "loading");
 
-					// Query form to inject
+					// Query form to inject and create a reference to scene on it
 					var form_department = u.qs(".form_department", response);
-					form_department.scene = this.scene; // Create reference to scene
+					form_department.scene = this.scene;
 
-					var form_fieldset = u.qs("fieldset", form_department);
 					// Query elements to use
+					var form_fieldset = u.qs("fieldset", form_department);
 					var div_fields = u.qs("div.fields", box_membership);
 					var divs_membership = u.qsa(".membership-info", div_fields);
 					var ul_buttons = u.qs("ul.actions", div_fields);
 
-					// Hide fields to be replaced
+					// Hide department field and buttons
 					u.ass(divs_membership[3], {"display":"none"});
 					u.ass(ul_buttons, {"display":"none"});
 
@@ -103,9 +103,12 @@ Util.Objects["profile"] = new function() {
 							this.is_requesting = false;
 							u.rc(this, "loading");
 
+							// Query membershipbox and replace form
 							var div_membership = u.qs(".membership .fields", response);
-							box_membership.replaceChild(div_membership, form_department);
-							// "this" is the cancel button, which has a "form" property that refers to it's form (_form in manipulator).
+							box_membership.replaceChild(div_membership, this._form);
+
+							// "this" is the cancel button.
+							//  the "_form" property refers to the inputs form even though its not in HTML form scope.
 							this._form.scene.initMembershipBox();
 						}
 
@@ -141,11 +144,13 @@ Util.Objects["profile"] = new function() {
 				});
 				var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
 					class:"actions"
-				})
+				});
 
 				// Add action buttons to cancel and confirm
 				var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"button delete_me","value":"Meld mig ud af KBHFF"});
 				var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"button regret primary", "value":"Fortryd udmelding"});
+
+				// Give references to scene on each button
 				delete_me.scene = this.scene;
 				regret.scene = this.scene;
 
@@ -249,11 +254,15 @@ Util.Objects["profile"] = new function() {
 					this.is_requesting = false;
 					u.rc(this, "loading");
 
+					// Query form and create scene reference on it
 					var form_userinfo = u.qs(".form_user", response);
 					form_userinfo.scene = this.scene;
-					var div_fields = u.qs("div.fields", box_userinfo);
 
+					// Query current userinfo content and replace with form
+					var div_fields = u.qs("div.fields", box_userinfo);
 					box_userinfo.replaceChild(form_userinfo, div_fields);
+
+					// Init form
 					u.f.init(form_userinfo);
 
 					// Update button
@@ -269,7 +278,7 @@ Util.Objects["profile"] = new function() {
 							var div_userinfo = u.qs(".user .fields", response);
 							box_userinfo.replaceChild(div_userinfo, form_userinfo);
 
-							//sync name update
+							// Sync new name in headline
 							var new_name = u.qs("span.name", response);
 							intro_header.replaceChild(new_name, span_name);
 
@@ -293,9 +302,10 @@ Util.Objects["profile"] = new function() {
 							this.is_requesting = false;
 							u.rc(this, "loading");
 
-							// Replace form with box
+							// Replace form with current content
 							var div_userinfo = u.qs(".user .fields", response);
 							box_userinfo.replaceChild(div_userinfo, form_userinfo);
+
 							// "this" is the cancel button, which has a "form" property that refers to it's form (_form in manipulator).
 							this._form.scene.initUserinfoBox();
 						}
@@ -323,6 +333,7 @@ Util.Objects["profile"] = new function() {
 
 		// Kodeord box
 		scene.initPasswordBox = function() {
+
 			var box_password = u.qs(".password > .c-box", this);
 			var button_password = u.qs(".password li", this);
 			button_password.scene = this;
@@ -335,11 +346,15 @@ Util.Objects["profile"] = new function() {
 					this.is_requesting = false;
 					u.rc(this, "loading");
 
+					// Query form and create reference to scene
 					var form_password = u.qs(".form_password", response);
 					form_password.scene = this.scene;
-					var div_fields = u.qs("div.fields", box_password);
 
+					// Query current static content and replace with form
+					var div_fields = u.qs("div.fields", box_password);
 					box_password.replaceChild(form_password, div_fields);
+
+					// Init form
 					u.f.init(form_password);
 
 					// Update button
@@ -350,8 +365,11 @@ Util.Objects["profile"] = new function() {
 							this.is_requesting = false;
 							u.rc(this, "loading");
 
+							// Query new static content and replace with current form
 							var div_password = u.qs(".password .fields", response);
-							box_password.replaceChild(div_password, form_password);
+							box_password.replaceChild(div_password, this);
+
+							// Initialize the new passwordbox
 							this.scene.initPasswordBox();
 						}
 
@@ -372,8 +390,13 @@ Util.Objects["profile"] = new function() {
 							this.is_requesting = false;
 							u.rc(this, "loading");
 
+							// Get div containing static content
 							var div_userinfo = u.qs(".password .fields", response);
-							box_password.replaceChild(div_userinfo, form_password);
+
+							// Replace form with static content
+							box_password.replaceChild(div_userinfo, this._form);
+
+							// Initialize the new passwordbox
 							this._form.scene.initPasswordBox();
 						}
 

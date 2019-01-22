@@ -176,7 +176,7 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 						</div>
 
 						<div class="membership-info">
-							<p class="over">Lokalafdeling</p>
+							<p class="over">Afdeling</p>
 							<p class="under"><?= $department["name"] ? $department["name"] : "(ingen)" ?></p>
 						</div>
 
