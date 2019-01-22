@@ -10,15 +10,18 @@ Util.Objects["forgot"] = new function() {
 		}
 
 		scene.ready = function() {
-			// u.bug("scene.ready:", this);
-
+			// Assign form to scene
 			this.form = u.qs("form.request_password", this);
+
+			// Initialize form
 			u.f.init(this.form);
+
+			// Create a scene property on "this.form" that refers to scene
 			this.form.scene = this;
 
 			this.form.submitted = function() {
-				var data = u.f.getParams(this); // Gets returned form input
-				console.log(data);
+				// Gets form input values
+				var data = u.f.getParams(this);
 
 				this.response = function(response) {
 					// Submit goes through and gets "nulstilling" page
@@ -42,16 +45,17 @@ Util.Objects["forgot"] = new function() {
 			this.form_code = u.qs("form.verify_code", response);
 			var p_code = u.qs("div.login p", response);
 
-			// Remove current form from HTML DOM, insert new one and initialize it
+			// Remove current form from HTML DOM, insert new form and initialize it
 			this.form.parentNode.replaceChild(this.form_code, this.form);
 			u.ie(this.form_code, p_code);
 			u.f.init(this.form_code);
+
+			// Create reference to scene on "form_code"
 			this.form_code.scene = this;
 
 			// Using the new verify form
 			this.form_code.submitted = function() {
 				data = u.f.getParams(this);
-				console.log(data);
 
 				this.response = function(response) {
 					if (u.qs("form.reset_password", response)) {
