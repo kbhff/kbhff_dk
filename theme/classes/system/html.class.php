@@ -7,9 +7,9 @@ class HTML extends HTMLCore {
 	/** 
 	 * Compile a html list with comments and information. 
 	 * 
-	 * @param Array $item 
-	 * @param String $add_path
-	 * @return String 
+	 * @param Array $item array containing data of a single item.
+	 * @param String $add_path string containing action / controller path
+	 * @return String compiled html list 
 	*/
 	function frontendComments($item, $add_path) {
 		global $page;
@@ -48,10 +48,10 @@ class HTML extends HTMLCore {
 	/** 
 	* Compile a html list with price and description of item
 	* 
-	* @param Array $item
-	* @param String $_url 
-	* @param String $description optional
-	* @return String
+	* @param Array $item array containing data of a single item.
+	* @param String $_url is the url associated to the item.
+	* @param String $description contains an optional description of the item. 
+	* @return String compiled html list.
 	*/
 
 	function frontendOffer($item, $url, $description = false) {
@@ -70,21 +70,21 @@ class HTML extends HTMLCore {
 				$_ .= '<li class="currency" itemprop="priceCurrency" content="'.$page->currency().'"></li>';
 				// Generate offer price, if relevant 
 				if($offer_key !== false) {
-					$_ .= '<li class="price default">'.formatPrice($item["prices"][$default_key]).(isset($item["subscription_method"]) && $item["subscription_method"] && $item["prices"][$default_key]["price"] ? ' / '.$item["subscription_method"]["name"] : '').'</li>';
-					$_ .= '<li class="price offer" itemprop="price" content="'.$item["prices"][$offer_key]["price"].'">'.formatPrice($item["prices"][$offer_key]).(isset($item["subscription_method"]) && $item["subscription_method"] && $item["prices"][$default_key]["price"] ? ' / '.$item["subscription_method"]["name"] : '').'</li>';
+				$_ .= '<li class="price default">'.formatPrice($item["prices"][$default_key]).(isset($item["subscription_method"]) && $item["subscription_method"] && $item["prices"][$default_key]["price"] ? ' / '.$item["subscription_method"]["name"] : '').'</li>';
+				$_ .= '<li class="price offer" itemprop="price" content="'.$item["prices"][$offer_key]["price"].'">'.formatPrice($item["prices"][$offer_key]).(isset($item["subscription_method"]) && $item["subscription_method"] && $item["prices"][$default_key]["price"] ? ' / '.$item["subscription_method"]["name"] : '').'</li>';
 				}
 				// Generate default price 
 				else if($item["prices"][$default_key]["price"]) {
-					$_ .= '<li class="price" itemprop="price" content="'.$item["prices"][$default_key]["price"].'">'.formatPrice($item["prices"][$default_key]).(isset($item["subscription_method"]) && $item["subscription_method"] && $item["prices"][$default_key]["price"] ? ' / '.$item["subscription_method"]["name"] : '').'</li>';
+				$_ .= '<li class="price" itemprop="price" content="'.$item["prices"][$default_key]["price"].'">'.formatPrice($item["prices"][$default_key]).(isset($item["subscription_method"]) && $item["subscription_method"] && $item["prices"][$default_key]["price"] ? ' / '.$item["subscription_method"]["name"] : '').'</li>';
 				}
 				// No price, so item is free 
 				else {
-					$_ .= '<li class="price" itemprop="price" content="'.$item["prices"][$default_key]["price"].'">Free</li>';
+				$_ .= '<li class="price" itemprop="price" content="'.$item["prices"][$default_key]["price"].'">Free</li>';
 				}
 				// Does the item have a description?
 				$_ .= '<li class="url" itemprop="url" content="'.$url.'"></li>';
 				if($description) {
-					$_ .= '<li class="description" itemprop="description">'.$description.'</li>';
+				$_ .= '<li class="description" itemprop="description">'.$description.'</li>';
 				}
 
 			$_ .= '</ul>';
@@ -98,11 +98,11 @@ class HTML extends HTMLCore {
 	* 
 	* Compile a html list with meta-data and article-info suitable for SEO
 	* 
-	* @param Array $item
-	* @param String $url 
-	* @param ARRAY $options 
-	* @param Bollean $media 
-	* @param Boolean $sharing
+	* @param Array $item array containing data of a single item.
+	* @param String $_url is the url associated to the item.
+	* @param ARRAY $options is an associative array containing the option to extend the item. 
+	* @param Bollean $media is the option to extend the item with a media property.
+	* @param Boolean $sharing contain the option to extend the item with a sharing property.
 	*/ 
 
 	function articleInfo($item, $url, $_options) {
@@ -169,16 +169,16 @@ class HTML extends HTMLCore {
 
 	
 	/**
-	* Compile a html list of tags. 
+	* Compile a html list containing tags. 
 	* 
-	* @param Array $item
-	* @param Array $options 
-	* @param Array $context Array of allowed contexts - if $context is false, no tags are shown (except editing and default tag)
-	* @param Array $default Array with url and text
+	* @param Array $item array containing data of a single item.
+	* @param Array $options is an associative array containing the option to extend the item. 
+	* @param Array $context Array is the option of allowed contexts - if $context is false, no tags are shown (except editing and default tag)
+	* @param Array $default Array containing url and text
 	* @param String $url url to prefix tag links
 	* @param Boolean $editing defines if editing link is shown
 	* @param String $schema
-	* @return STRING 
+	* @return STRING compiled html list 
 	*
 	*/
 
