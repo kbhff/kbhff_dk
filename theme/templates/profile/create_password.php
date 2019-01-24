@@ -6,9 +6,8 @@ global $model;
 ?>
 
 <div class="scene login i:create_password">
-	<h1>Opret password</h1>
 
-<? // if($model->checkResetToken($reset_token)): ?>
+	<h1>Opret password</h1>
 
 	<div class="password">
 		<h2>Password</h2>
@@ -24,11 +23,5 @@ global $model;
 			</ul>
 		<?= $model->formEnd() ?>
 	</div>
-
-<? /* else: ?>
-
-	<p>Your request is invalid. Resetting your password must be completed within 15 minutes.</p>
-
-<? endif; */ ?>
 
 </div>
