@@ -1,5 +1,5 @@
 <?php
-// TODO: Explain where we get $action and $model from
+// Get variables from the controller
 global $action;
 global $model;
 

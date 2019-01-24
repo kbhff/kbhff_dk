@@ -1,10 +1,10 @@
 <?php
+// Get variables from the controller
 global $action;
 global $model;
 
-
-
 ?>
+
 <div class="scene login i:create_password">
 	<h1>Opret password</h1>
 
