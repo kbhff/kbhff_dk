@@ -198,32 +198,71 @@ if($action) {
 
 		// /bliv-medlem/bekraeft/#email|#verification_code# (submitted from link in email)
 		else if(count($action) == 3) {
-
-			// Check if user is already verified. If not, verify and enable user
-			$result = $model->confirmUser($action);
-
-			// user han already been verified
-			if($result && isset($result["status"]) && $result["status"] == "USER_VERIFIED") {
-				message()->addMessage("Du er allerede verificeret. Prøv at logge ind.", array("type" => "error"));
+			
+			// Infer user_id from username and verification_code
+			$user_id = $model->inferUserId($action);
+			if($user_id) {
 				
-				// redirect to leave POST state
-				header("Location: /login");
-				exit();
+				// add session values 
+				session()->value("user_id", $user_id);
+				session()->value("username", $action[1]);
+				session()->value("verification_code", $action[2]);
+				
+				// user has password
+				if($model->hasPassword()) {
+					$result = $model->confirmUser($action);
+					
+					// user is already verified
+					if($result && isset($result["status"]) && $result["status"] == "USER_VERIFIED") {
+						message()->addMessage("Du er allerede verificeret. Pøv at logge ind.", array("type" => "error"));
+						
+						// redirect to leave POST state
+						header("Location: /login");
+						exit();
+					}
+
+					// verification code is valid -> receipt
+					else if($result) {
+						
+						// redirect to leave POST state
+						header("Location: /bliv-medlem/bekraeft/kvittering");
+						exit();
+					
+
+					}
+
+					// verification code is not valid -> error
+					else {
+						// redirect to leave POST state
+						header("Location: /bliv-medlem/bekraeft/fejl");
+						exit();
+					}
+			
+					
+				} 
+				// user has no password
+				else {
+					// redirect to leave POST state
+					header("Location: /login/opret-password");
+					exit();
+				}
+
 			}
 
-			// code is valid and user is verified and enabled
-			else if($result) {
-				// redirect to leave POST state
-				header("Location: /bliv-medlem/bekraeft/kvittering");
-				exit();
-
-			}
-			// code is not valid and user is not verified and enabled.
+			// no such user
 			else {
+				message()->addMessage("Bruger eksisterer ikke.", array("type" => "error"));
+				
 				// redirect to leave POST state
 				header("Location: /bliv-medlem/bekraeft/fejl");
 				exit();
 			}
+
+
+
+			
+
+
 		}
 		
 		// /bliv-medlem/bekraeft/fejl 
@@ -243,6 +282,7 @@ if($action) {
 			));
 			exit();
 		}
+
 	}
 
 	// view specific membership

@@ -191,7 +191,9 @@ class Department extends Model {
 	 * Get a single department from database.
 	 *
 	 * @param array|boolean $_options Associative array containing unsorted function parameters.
-	 * @return array|false Department data object (via callback to Query->result(0))
+	 * 		$id		int		Department id
+	 * 
+	 * @return array|false Department item (via callback to Query->result(0))
 	 */
 	function getDepartment($_options = false) {
 
