@@ -145,9 +145,9 @@ if($action) {
 	}
 	
 	
-	// /medlemshjaelp/betaling/#order_no#
 	else if($action[0] == "betaling") {
 		
+		// /medlemshjaelp/betaling/#order_no#
 		if(count($action) === 2) {
 			$page->page(array(
 				"templates" => "member-help/payment.php"

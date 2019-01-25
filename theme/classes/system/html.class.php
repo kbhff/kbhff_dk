@@ -98,11 +98,12 @@ class HTML extends HTMLCore {
 	* 
 	* Compile a html list with meta-data and article-info suitable for SEO
 	* 
-	* @param Array $item
-	* @param String $url 
-	* @param ARRAY $options 
-	* @param Bollean $media 
-	* @param Boolean $sharing
+	* @param array $item
+	* @param string $url 
+	* @param array $options Associative array containing unsorted function parameters.
+	* 		$media 		boolean
+	*		$sharing	boolean
+	* 
 	*/ 
 
 	function articleInfo($item, $url, $_options) {

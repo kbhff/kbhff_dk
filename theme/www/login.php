@@ -114,7 +114,7 @@ if($action) {
 			exit();
 
 		}
-		// User could not log in because user is not verified
+		// User could not log in because user has no password
 		else if ($login_status && isset($login_status["status"]) && $login_status["status"] == "NO_PASSWORD") {
 
 			session()->value("temp-username", $login_status["email"]);
@@ -195,6 +195,7 @@ if($action) {
 		}
 
 	}
+
 	// login/opret-password
 	else if(count($action) == 1 && $action[0] == "opret-password") {
 
@@ -203,6 +204,7 @@ if($action) {
 		));
 		exit();
 	}
+
 	// login/confirmAccount
 	else if(count($action) == 1 && $action[0] == "confirmAccount" && $page->validateCsrfToken()) {
 
@@ -245,22 +247,38 @@ if($action) {
 		}
 
 	}
-	// login/setPassword
-	else if(count($action) == 1 && $action[0] == "setPassword" && $page->validateCsrfToken()) {
+	// login/setPasswordAndConfirmAccount
+	else if(count($action) == 1 && $action[0] == "setPasswordAndConfirmAccount" && $page->validateCsrfToken()) {
 
-		if($model->setPassword($action)) {
+		$result = $model->setPasswordAndConfirmAccount($action);
+		
+		// already verified
+		if($result && isset($result["status"]) && $result["status"] == "USER_VERIFIED") {
+			message()->addMessage("Din konto er allerede aktiveret! Prøv at logge ind.", array("type" => "error"));
+			header("Location: /login");
+			exit();	
+		}
 
+		// already has password
+		else if($result && isset($result["status"]) && $result["status"] == "HAS_PASSWORD") {
+			message()->addMessage("Din konto har allerede et password! Prøv at logge ind.", array("type" => "error"));
+			header("Location: /login");
+			exit();			
+		}
+
+		// password created and verification ok
+		else if($result) {
 			message()->addMessage("Din konto er nu aktiveret og du kan logge ind.");
 			header("Location: /login");
 			exit();
-
 		}
+		
+		// error saving password
 		else {
 
 			message()->addMessage("Koden kunne ikke gemmes", array("type" => "error"));
 			header("Location: /login/opret-password");
 			exit();
-
 		}
 
 	}

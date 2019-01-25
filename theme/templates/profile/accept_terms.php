@@ -22,7 +22,7 @@ global $UC;
 	<?= $UC->formStart("accept", array("class" => "accept")) ?>
 
 		<fieldset>
-			<?= $UC->input("terms", ["label"=>"Hello", "hint_message"=>"blah", "error_message"=>"Blah"]) ?>
+			<?= $UC->input("terms", ["label"=>"Jeg accepterer <a href='/persondata' target='_blank'>retningslinjerne</a>.", "hint_message"=>"", "error_message"=>"Du skal acceptere retningslinjerne for at fortsætte."]) ?>
 		</fieldset>
 
 		<ul class="actions">

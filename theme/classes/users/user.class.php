@@ -346,6 +346,84 @@ class User extends UserCore {
 
 	}
 
+	/**
+	 * Infer user_id from username and verification_code
+	 *
+	 * @param array $action
+	 * @return int|false $user_id
+	 */
+	function inferUserId($action) {
+
+		$query = new Query();
+
+		$username = $action[1];
+		$verification_code = $action[2];
+	
+		// Infer user_id from username and verification_code
+		$sql = "SELECT user_id FROM ".$this->db_usernames." WHERE username = '$username' AND verification_code = '$verification_code'";
+		if($query->sql($sql)) {
+
+			$user_id = $query->result(0, "user_id");
+			return $user_id;
+
+		}
+
+		// no user found
+		return false;
+	}
+
+	/**
+	 * Set password for new user created from memberhelp, and then verify user
+	 * 
+	 * @param array $action
+	 *
+	 * @return array|false via callback to confirmUser()
+	 */
+	function setPasswordAndConfirmAccount() {
+		// Get posted values and session values to make them available for models
+		$this->getPostedEntities();
+		$user_id = session()->value("user_id");
+		$username = session()->value("username");
+		$verification_code = session()->value("verification_code");
+		
+
+		if(count($action) == 1 && $user_id) {
+
+			// user already has a password
+			if($this->hasPassword()) {
+
+				return array("status" => "HAS_PASSWORD");
+
+			}
+			// user does not have a password
+			else {
+
+				// does values validate
+				if($this->validateList(array("new_password"))) {
+
+					$query = new Query();
+
+					// make sure type tables exist
+					$query->checkDbExistence($this->db_passwords);
+
+					// create hash to inject
+					$new_password = password_hash($this->getProperty("new_password", "value"), PASSWORD_DEFAULT);
+
+					// save new password
+					$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$new_password'";
+					if($query->sql($sql)) {
+
+						return $this->confirmUser(["bekraeft", $username, $verification_code]);
+					}
+				}
+
+			}
+
+		}
+
+		return false;
+	}
+
 }
 
 ?>
