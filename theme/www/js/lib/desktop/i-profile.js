@@ -21,8 +21,11 @@ Util.Objects["profile"] = new function() {
 			// Query needed elements
 			var box_membership = u.qs(".membership > .c-box", this);
 			var button_membership = u.qs(".membership li.change-info", this);
-			button_membership.scene = this; // Create reference to scene
 			var button_cancel = u.qs(".membership li.cancel-membership", this);
+			// Create references to scene
+			button_membership.scene = this;
+			button_cancel.scene = this; 
+			
 			// Query elements for syncing
 			var right_panel = u.qs(".c-one-third", this);
 			var box_department = u.qs(".department", this);
@@ -36,17 +39,17 @@ Util.Objects["profile"] = new function() {
 					this.is_requesting = false;
 					u.rc(this, "loading");
 
-					// Query form to inject
+					// Query form to inject and create a reference to scene on it
 					var form_department = u.qs(".form_department", response);
-					form_department.scene = this.scene; // Create reference to scene
+					form_department.scene = this.scene;
 
-					var form_fieldset = u.qs("fieldset", form_department);
 					// Query elements to use
+					var form_fieldset = u.qs("fieldset", form_department);
 					var div_fields = u.qs("div.fields", box_membership);
 					var divs_membership = u.qsa(".membership-info", div_fields);
 					var ul_buttons = u.qs("ul.actions", div_fields);
 
-					// Hide fields to be replaced
+					// Hide department field and buttons
 					u.ass(divs_membership[3], {"display":"none"});
 					u.ass(ul_buttons, {"display":"none"});
 
@@ -81,10 +84,12 @@ Util.Objects["profile"] = new function() {
 							this.scene.initMembershipBox();
 						}
 
-						// Prevent double requesting
+						// Prevent making the request more than once
 						if (!this.is_requesting) {
+							// Update request state
 							this.is_requesting = true;
 							u.ac(this, "loading");
+							// Make request
 							u.request(this, this.action, {"data":data, "method":"POST"});
 						}
 
@@ -98,25 +103,33 @@ Util.Objects["profile"] = new function() {
 							this.is_requesting = false;
 							u.rc(this, "loading");
 
+							// Query membershipbox and replace form
 							var div_membership = u.qs(".membership .fields", response);
-							box_membership.replaceChild(div_membership, form_department);
-							form_department.scene.initMembershipBox(); // this.scene not working from here?
+							box_membership.replaceChild(div_membership, this._form);
+
+							// "this" is the cancel button.
+							//  the "_form" property refers to the inputs form even though its not in HTML form scope.
+							this._form.scene.initMembershipBox();
 						}
 
-						// Prevent double requesting
+						// Prevent making the request more than once
 						if (!this.is_requesting) {
+							// Update request state
 							this.is_requesting = true;
 							u.ac(this, "loading");
+							// Make request
 							u.request(this, "/profil");
 						}
 
 					}
 				}
 
-				// Prevent double requesting
+				// Prevent making the request more than once
 				if (!this.is_requesting) {
+					// Update request state
 					this.is_requesting = true;
 					u.ac(this, "loading");
+					// Make request
 					u.request(this, "/profil/afdeling");
 				}
 
@@ -125,47 +138,53 @@ Util.Objects["profile"] = new function() {
 			// "Opsig" button
 			u.clickableElement(button_cancel);
 			button_cancel.clicked = function() {
-				var overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600, class:"confirm_cancel_membership"});
-				var p_warning = u.ae(overlay.div_content, "p", {
+				this.scene.overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600, class:"confirm_cancel_membership"});
+				var p_warning = u.ae(this.scene.overlay.div_content, "p", {
 					html:"Du er ved at melde dig ud af KBHFF. Er du sikker?"
 				});
-				var ul_actions = u.ae(overlay.div_content, "ul", {
+				var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
 					class:"actions"
-				})
+				});
 
 				// Add action buttons to cancel and confirm
 				var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"button delete_me","value":"Meld mig ud af KBHFF"});
 				var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"button regret primary", "value":"Fortryd udmelding"});
-				
+
+				// Give references to scene on each button
+				delete_me.scene = this.scene;
+				regret.scene = this.scene;
+
 				// Add click event to go to password confirmation
 				u.e.click(delete_me)
 				delete_me.clicked = function () {
 
 					// Inject 'confirm cancellation' form
 					this.response = function(response) {
+						// Update request state
 						this.is_requesting = false;
 						u.rc(this, "loading");
 
 						// Query form to inject
 						var form_confirm_cancellation = u.qs(".confirm_cancellation", response);
+						form_confirm_cancellation.scene = this.scene;
 
 						// Hide elements to be replaced
 						u.ass(p_warning, {"display":"none"});
 						u.ass(ul_actions, {"display":"none"});
 						// Append form and initialize it
-						u.ae(overlay.div_content, form_confirm_cancellation);
+						u.ae(this.scene.overlay.div_content, form_confirm_cancellation);
 						u.f.init(form_confirm_cancellation);
-						//u.f.addAction(overlay.div_content, {"type":"button", "name":"regret", "class":"action regret primary", "value":"Fortryd udmelding"});
 
 						form_confirm_cancellation.submitted = function () {
 							var data = u.f.getParams(this);
 
 							this.response = function(response) {
+								// Update request state
 								this.is_requesting = false;
 								u.rc(this, "loading");
 
 								var div_scene_login = u.qs("div.scene.login", response);
-								console.log(div_scene_login);
+
 								if (div_scene_login) {
 									location.href = "/";
 								}
@@ -174,39 +193,46 @@ Util.Objects["profile"] = new function() {
 									u.ass(form_confirm_cancellation, {"display":"none"})
 									
 									
-									u.ae(overlay.div_content, error_message);
-									var ul_actions = u.ae(overlay.div_content, "ul", {
+									u.ae(this.scene.overlay.div_content, error_message);
+									var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
 										class:"actions"
 									});
 									var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
 
 									u.e.click(button_close)
 									button_close.clicked = function () {
-										overlay.close ();
+										this.scene.overlay.close ();
 									}
 								}
 							}
 							
+							// Prevent making the request more than once
 							if (!this.is_requesting) {
+								// Update request state
 								this.is_requesting = true;
 								u.ac(this, "loading");
+								// Make request
 								u.request(this, this.action, {"data":data, "method":"POST"});
 							}
 
 						}
 					}
 
+					// Prevent making the request more than once
 					if (!this.is_requesting) {
+						// Update request state
 						this.is_requesting = true;
 						u.ac(this, "loading");
+						// Make the request
 						u.request(this, "/profil/opsig");
 					}
 
 				}
-				// Add click event to cancel and close overlay
+
+				// Close overlay on regret button
 				u.e.click(regret)
 				regret.clicked = function () {
-					overlay.close ();
+					this.scene.overlay.close ();
 				}
 			}
 
@@ -224,14 +250,19 @@ Util.Objects["profile"] = new function() {
 			button_userinfo.clicked = function() {
 
 				this.response = function(response) {
+					// Update request state
 					this.is_requesting = false;
 					u.rc(this, "loading");
 
+					// Query form and create scene reference on it
 					var form_userinfo = u.qs(".form_user", response);
 					form_userinfo.scene = this.scene;
-					var div_fields = u.qs("div.fields", box_userinfo);
 
+					// Query current userinfo content and replace with form
+					var div_fields = u.qs("div.fields", box_userinfo);
 					box_userinfo.replaceChild(form_userinfo, div_fields);
+
+					// Init form
 					u.f.init(form_userinfo);
 
 					// Update button
@@ -239,6 +270,7 @@ Util.Objects["profile"] = new function() {
 						var data = u.f.getParams(this);
 
 						this.response = function(response) {
+							// Update request state
 							this.is_requesting = false;
 							u.rc(this, "loading");
 
@@ -246,19 +278,19 @@ Util.Objects["profile"] = new function() {
 							var div_userinfo = u.qs(".user .fields", response);
 							box_userinfo.replaceChild(div_userinfo, form_userinfo);
 
-							//sync name update
+							// Sync new name in headline
 							var new_name = u.qs("span.name", response);
 							intro_header.replaceChild(new_name, span_name);
 
 							// Init new box
-							form_userinfo.scene.initUserinfoBox();
+							this.scene.initUserinfoBox();
 						}
 
+						// Prevent making the request more than once
 						if (!this.is_requesting) {
 							this.is_requesting = true;
 							u.ac(this, "loading");
 							u.request(this, this.action, {"data":data, "method":"POST"});
-
 						}
 
 					}
@@ -266,15 +298,19 @@ Util.Objects["profile"] = new function() {
 					// Cancel button
 					form_userinfo.actions["cancel"].clicked = function() {
 						this.response = function(response) {
+							// Update request state
 							this.is_requesting = false;
 							u.rc(this, "loading");
 
-							// Replace form with box
+							// Replace form with current content
 							var div_userinfo = u.qs(".user .fields", response);
 							box_userinfo.replaceChild(div_userinfo, form_userinfo);
-							form_userinfo.scene.initUserinfoBox();
+
+							// "this" is the cancel button, which has a "form" property that refers to it's form (_form in manipulator).
+							this._form.scene.initUserinfoBox();
 						}
 
+						// Prevent making the request more than once
 						if (!this.is_requesting) {
 							this.is_requesting = true;
 							u.ac(this, "loading");
@@ -284,6 +320,7 @@ Util.Objects["profile"] = new function() {
 					}
 				}
 
+				// Prevent making the request more than once
 				if (!this.is_requesting) {
 					this.is_requesting = true;
 					u.ac(this, "loading");
@@ -296,6 +333,7 @@ Util.Objects["profile"] = new function() {
 
 		// Kodeord box
 		scene.initPasswordBox = function() {
+
 			var box_password = u.qs(".password > .c-box", this);
 			var button_password = u.qs(".password li", this);
 			button_password.scene = this;
@@ -304,29 +342,38 @@ Util.Objects["profile"] = new function() {
 			button_password.clicked = function() {
 
 				this.response = function(response) {
+					// Update request state
 					this.is_requesting = false;
 					u.rc(this, "loading");
 
+					// Query form and create reference to scene
 					var form_password = u.qs(".form_password", response);
 					form_password.scene = this.scene;
-					var div_fields = u.qs("div.fields", box_password);
 
+					// Query current static content and replace with form
+					var div_fields = u.qs("div.fields", box_password);
 					box_password.replaceChild(form_password, div_fields);
+
+					// Init form
 					u.f.init(form_password);
 
 					// Update button
 					form_password.submitted = function() {
 						var data = u.f.getParams(this);
-
 						this.response = function(response) {
+							// Update request state
 							this.is_requesting = false;
 							u.rc(this, "loading");
 
+							// Query new static content and replace with current form
 							var div_password = u.qs(".password .fields", response);
-							box_password.replaceChild(div_password, form_password);
+							box_password.replaceChild(div_password, this);
+
+							// Initialize the new passwordbox
 							this.scene.initPasswordBox();
 						}
 
+						// Prevent making the request more than once
 						if (!this.is_requesting) {
 							this.is_requesting = true;
 							u.ac(this, "loading");
@@ -339,14 +386,21 @@ Util.Objects["profile"] = new function() {
 					form_password.actions["cancel"].clicked = function() {
 
 						this.response = function(response) {
+							// Update request state
 							this.is_requesting = false;
 							u.rc(this, "loading");
 
+							// Get div containing static content
 							var div_userinfo = u.qs(".password .fields", response);
-							box_password.replaceChild(div_userinfo, form_password);
-							form_password.scene.initPasswordBox();
+
+							// Replace form with static content
+							box_password.replaceChild(div_userinfo, this._form);
+
+							// Initialize the new passwordbox
+							this._form.scene.initPasswordBox();
 						}
 
+						// Prevent making the request more than once
 						if (!this.is_requesting) {
 							this.is_requesting = true;
 							u.ac(this, "loading");
@@ -357,6 +411,7 @@ Util.Objects["profile"] = new function() {
 
 				}
 
+				// Prevent making the request more than once
 				if (!this.is_requesting) {
 					this.is_requesting = true;
 					u.ac(this, "loading");

@@ -28,3 +28,5 @@
 #content .scene.signupfees div.bg {z-index: 10; position: absolute; top: 63px; width: calc(50% - 12px); background-repeat: no-repeat; background-color: transparent; background-position: left top; background-size: cover; height: calc(100% - 63px);}
 #content .scene.signupfees div.bg.supporter {left: 12px; background-image: url(/img/signup/bg_supporter.jpg);}
 #content .scene.signupfees div.bg.volunteer {right: 12px; background-image: url(/img/signup/bg_volunteer.jpg);}
+
+#content .scene.signup fieldset p.terms_summary {font-weight: 700;}

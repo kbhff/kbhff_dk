@@ -108,7 +108,7 @@ class TypeMembership extends Itemtype {
 	 * @param array $order The order item.
 	 * @return void
 	 */
-	function shipped($order_item_id, $order) {
+	function shipped($order_item, $order) {
 
 		// print "\n<br>###$order_item_id### shipped\n<br>";
 

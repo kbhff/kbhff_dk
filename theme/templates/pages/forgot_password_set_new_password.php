@@ -1,5 +1,5 @@
 <?php
-// TODO: Explain where we get $action and $model from
+// Get variables from the controller
 global $action;
 global $model;
 
@@ -7,7 +7,7 @@ global $model;
 $reset_token = session()->value("temp-reset-token");
 
 ?>
-<div class="scene i:scene defaultEdit userEdit profileEdit">
+<div class="scene i:scene">
 	<h1>Reset password</h1>
 
 	<div class="password">

@@ -1,16 +1,13 @@
 <?php
+// Get variables from the controller
 global $action;
 global $model;
 
-
-print "user ".session()->value("user_id");; exit;
-
 ?>
+
 <div class="scene login i:create_password">
 
 	<h1>Opret adgangskode</h1>
-
-<? // if($model->checkResetToken($reset_token)): ?>
 
 	<div class="password">
 		<h2>Adgangskode</h2>
@@ -28,11 +25,5 @@ print "user ".session()->value("user_id");; exit;
 			</ul>
 		<?= $model->formEnd() ?>
 	</div>
-
-<? /* else: ?>
-
-	<p>Your request is invalid. Resetting your password must be completed within 15 minutes.</p>
-
-<? endif; */ ?>
 
 </div>

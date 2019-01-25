@@ -1,6 +1,8 @@
 <?php
-	
+// Get variables from the controller
 global $model;
+
+// Get username we want to verify from session
 $username = session()->value("temp-username");
 
 

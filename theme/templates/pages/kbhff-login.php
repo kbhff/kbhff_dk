@@ -1,19 +1,24 @@
 <?php
+// Get variables from the controller
 global $action;
 global $model;
 
+// Create instance of class
 $IC = new Items();
+
+// Get the assotiated Janitor page
 $page_item = $IC->getItem(array("tags" => "page:login", "extend" => array("user" => true, "tags" => true, "mediae" => true)));
 if($page_item) {
 	$this->sharingMetaData($page_item);
 }
 
+// If forward_url exists in session or post, save it in the session
 $forward_url = getVar("forward_url");
 if($forward_url) {
 	session()->value("login_forward", $forward_url);
 }
 
-
+// Get username and save it in a variable
 $username = stringOr(getPost("username"), session()->value("temp-username"));
 session()->reset("temp-username");
 ?>
