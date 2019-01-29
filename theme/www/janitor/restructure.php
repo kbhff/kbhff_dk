@@ -68,16 +68,16 @@ if(is_array($action) && count($action)) {
 		$UC->dropTable(SITE_DB.".ff_xfer");
 
 		// fornavne
-		$UC->dropTable(SITE_DB.".fornavne");
+		$UC->dropTable(SITE_DB.".ff_fornavne");
 
 		// piger
-		$UC->dropTable(SITE_DB.".piger");
+		$UC->dropTable(SITE_DB.".ff_piger");
 
 		// unisex
-		$UC->dropTable(SITE_DB.".unisex");
+		$UC->dropTable(SITE_DB.".ff_unisex");
 
 		// drenge
-		$UC->dropTable(SITE_DB.".drenge");
+		$UC->dropTable(SITE_DB.".ff_drenge");
 
 
 
@@ -838,11 +838,14 @@ if(is_array($action) && count($action)) {
 		}
 
 
+		// ORDER HELPERS
+
 		function getAllOrders() {
 			$orders = [];
 
 			$query = new Query();
-			$sql = "SELECT uid, orderkey, orderno, puid FROM kbhff_dk.ff_orderhead LIMIT 81380,850000";
+			// $sql = "SELECT uid, orderkey, orderno, puid FROM kbhff_dk.ff_orderhead LIMIT 81380,850000";
+			$sql = "SELECT uid, orderkey, orderno, puid FROM kbhff_dk.ff_orderhead";
 			if($query->sql($sql)) {
 
 				$orders = $query->results();
@@ -883,7 +886,7 @@ if(is_array($action) && count($action)) {
 
 			$query = new Query();
 
-			$sql = "SELECT uid FROM kbhff_dk.ff_orderhead WHERE created < '".date("Y-m-d H:i:s", time() - (60 * 60 * 24 * 365 * 5))."'";
+			$sql = "SELECT uid, orderno, created FROM kbhff_dk.ff_orderhead WHERE created < '".date("Y-m-d H:i:s", time() - (60 * 60 * 24 * 365 * 5))."'";
 			if($query->sql($sql)) {
 
 				$orders = $query->results();
@@ -894,91 +897,107 @@ if(is_array($action) && count($action)) {
 			return $orders;
 		}
 
-
-		function getAllCompleteOrders() {
-
-			$orders = [];
+		function deleteOrder($orderno) {
 
 			$query = new Query();
 
+			$sql = "DELETE FROM kbhff_dk.ff_orderhead WHERE orderno = $orderno";
+			$query->sql($sql);
 
-			// DELETE 
+			$sql = "DELETE FROM kbhff_dk.ff_orderlines WHERE orderno = $orderno";
+			$query->sql($sql);
 
+			$sql = "DELETE FROM kbhff_dk.ff_transactions WHERE orderno = $orderno";
+			$query->sql($sql);
 
-			// FIRST CHECK ORDERS FOR USER 11762 (Martin) TO IDENTIFY OVERALL ORDER RELATION
-			
-			
-			// CHECK IF THERE IS ORDERS WITHOUT LINES OR TRANSACTIONS
-			// CHECK IF THERE IS LINES OR TRANSACTIONS WITHOUT ORDERS
-
-			$sql = "SELECT orderno FROM kbhff_dk.ff_orderhead WHERE orderno NOT IN(SELECT orderno FROM kbhff_dk.ff_orderlines) OR orderno NOT IN(SELECT orderno FROM kbhff_dk.ff_transactions)";
-			if($query->sql($sql)) {
-
-				$orders = $query->results();
-				foreach($orders as $key => $order) {
-				}
-			}
-
-			$sql = "SELECT * FROM kbhff_dk.ff_orderhead WHERE puid = 11762";
-			if($query->sql($sql)) {
-
-				$orders = $query->results();
-				foreach($orders as $key => $order) {
-					$puid = $order["puid"];
-					$orderno = $order["orderno"];
-					$orderkey = $order["orderkey"];
-
-					print "<p>";
-
-					print $puid.", $orderno, $orderkey<br>";
-
-					$sql = "SELECT * FROM kbhff_dk.ff_orderlines WHERE puid = $puid AND (orderno = '$orderno' OR orderkey = '$orderkey')";
-					if($query->sql($sql)) {
-
-						$orders[$key]["lines"] = $query->results();
-
-					}
-					$sql = "SELECT * FROM kbhff_dk.ff_transactions WHERE puid = $puid OR orderno = '$orderno'";
-					if($query->sql($sql)) {
-
-						$orders[$key]["transactions"] = $query->results();
-
-					}
-
-					print "</p>";
-				}
-			}
-
-			// print "<pre>";
-			// print_r($orders);
-			// print "</pre>";
-			exit();
-
-			// FIND ANY DUPLET ORDERHEADS
-			$sql = "SELECT  FROM kbhff_dk.ff_orderhead";
-
-
-			$sql = "SELECT * FROM kbhff_dk.ff_orderhead";
-			if($query->sql($sql)) {
-			
-				$orders = $query->results();
-				foreach($orders as $key => $order) {
-					$puid = $order["puid"];
-					$orderno = $order["orderno"];
-					$orderkey = $order["orderkey"];
-
-					$sql = "SELECT * FROM kbhff_dk.ff_orderlines WHERE puid = $puid OR orderno = '$orderno' OR orderkey = '$orderkey'";
-					if($query->sql($sql)) {
-
-						$orders[$key]["lines"] = $query->results();
-
-					}
-				}
-
-			}
-//			return $should_be_deleted;
-			
 		}
+
+
+// 		// TEMP
+// 		function getAllCompleteOrders() {
+//
+// 			$orders = [];
+//
+// 			$query = new Query();
+//
+//
+// 			// DELETE
+//
+//
+// 			// FIRST CHECK ORDERS FOR USER 11762 (Martin) TO IDENTIFY OVERALL ORDER RELATION
+//
+//
+// 			// CHECK IF THERE IS ORDERS WITHOUT LINES OR TRANSACTIONS
+// 			// CHECK IF THERE IS LINES OR TRANSACTIONS WITHOUT ORDERS
+//
+// 			$sql = "SELECT orderno FROM kbhff_dk.ff_orderhead WHERE orderno NOT IN(SELECT orderno FROM kbhff_dk.ff_orderlines) OR orderno NOT IN(SELECT orderno FROM kbhff_dk.ff_transactions)";
+// 			if($query->sql($sql)) {
+//
+// 				$orders = $query->results();
+// 				foreach($orders as $key => $order) {
+// 				}
+// 			}
+//
+// 			$sql = "SELECT * FROM kbhff_dk.ff_orderhead WHERE puid = 11762";
+// 			if($query->sql($sql)) {
+//
+// 				$orders = $query->results();
+// 				foreach($orders as $key => $order) {
+// 					$puid = $order["puid"];
+// 					$orderno = $order["orderno"];
+// 					$orderkey = $order["orderkey"];
+//
+// 					print "<p>";
+//
+// 					print $puid.", $orderno, $orderkey<br>";
+//
+// 					$sql = "SELECT * FROM kbhff_dk.ff_orderlines WHERE puid = $puid AND (orderno = '$orderno' OR orderkey = '$orderkey')";
+// 					if($query->sql($sql)) {
+//
+// 						$orders[$key]["lines"] = $query->results();
+//
+// 					}
+// 					$sql = "SELECT * FROM kbhff_dk.ff_transactions WHERE puid = $puid OR orderno = '$orderno'";
+// 					if($query->sql($sql)) {
+//
+// 						$orders[$key]["transactions"] = $query->results();
+//
+// 					}
+//
+// 					print "</p>";
+// 				}
+// 			}
+//
+// 			// print "<pre>";
+// 			// print_r($orders);
+// 			// print "</pre>";
+// 			exit();
+//
+// 			// FIND ANY DUPLET ORDERHEADS
+// 			$sql = "SELECT  FROM kbhff_dk.ff_orderhead";
+//
+//
+// 			$sql = "SELECT * FROM kbhff_dk.ff_orderhead";
+// 			if($query->sql($sql)) {
+//
+// 				$orders = $query->results();
+// 				foreach($orders as $key => $order) {
+// 					$puid = $order["puid"];
+// 					$orderno = $order["orderno"];
+// 					$orderkey = $order["orderkey"];
+//
+// 					$sql = "SELECT * FROM kbhff_dk.ff_orderlines WHERE puid = $puid OR orderno = '$orderno' OR orderkey = '$orderkey'";
+// 					if($query->sql($sql)) {
+//
+// 						$orders[$key]["lines"] = $query->results();
+//
+// 					}
+// 				}
+//
+// 			}
+// //			return $should_be_deleted;
+//
+// 		}
 
 
 		// FIND AND DELETE READYLY "DELETABLE" USERS 
@@ -1007,14 +1026,33 @@ if(is_array($action) && count($action)) {
 
 
 
+		// PRE USER IMPORT OPERATIONS (CREATE DEPARTMENT, MAILLIST, ETC)
+		$pre_user_operations = false;
+
+
+
 		// TRANSFER ACCOUNTS TO NEW SYSTEM
 		$user_operations_transfer = false;
 
 
-		// FIND AND INVESTIGATE ALL EXISTING ORDERS 
+
+		// ORDERS
+
+		// CROSSREFERENCE ORDERNO / ORDERKEY
 		$order_operations_1 = false;
 
+		// LOOK FOR UNUSED PRODUCTS
 		$order_operations_2 = false;
+
+
+
+		$order_operations_3 = false;
+
+
+
+		$order_operations_4 = false;
+
+		$order_operations_5 = true;
 
 
 
@@ -1033,6 +1071,8 @@ if(is_array($action) && count($action)) {
 
 		// DELETE ANY MATCHES 
 		if($user_operations_1) {
+
+			output("REPEAT UNTIL NO MATCHES ARE FOUND");
 
 			$members = getDeletableMembers();
 			output("DELETABLE MEMBERS: " . count($members));
@@ -1055,6 +1095,8 @@ if(is_array($action) && count($action)) {
 		// DELETE ANY MATCHES 
 		if($user_operations_2) {
 
+			output("REPEAT UNTIL NO MATCHES ARE FOUND");
+
 			$members = getProbablyDeletableMembers();
 			output("OTHER DELETABLE MEMBERS: " . count($members));
 			foreach($members as $puid) {
@@ -1074,6 +1116,8 @@ if(is_array($action) && count($action)) {
 
 		// MERGE WITH ACTIVE OR LATEST ENTRY PASSIVE OR LATEST ENTRY (IN THAT ORDER)
 		if($user_operations_3) {
+
+			output("REPEAT UNTIL NO MATCHES ARE FOUND");
 
 			$members = getAnonymizableMembersWithDoubleEntries();
 			output("ANONYMIZABLE MEMBERS WITH DOUBLE ENTRIES - MERGE WITH VALID PROFILES: " . count($members) . " possibilities");
@@ -1161,6 +1205,8 @@ if(is_array($action) && count($action)) {
 		// ANONYMIZE ALL MATCHING
 		if($user_operations_4) {
 
+			output("REPEAT UNTIL NO MATCHES ARE FOUND");
+
 			$members = getAnonymizableMembers();
 			output("ANONYMIZABLE MEMBERS: " . count($members));
 			foreach($members as $puid) {
@@ -1183,6 +1229,8 @@ if(is_array($action) && count($action)) {
 
 		// MERGE WITH ACTIVE OR LATEST ENTRY PASSIVE (IN THAT ORDER)
 		if($user_operations_5) {
+
+			output("REPEAT UNTIL NO MATCHES ARE FOUND");
 
 			$members = getPassiveMembersWithDoubleEntries();
 			$merged = [];
@@ -1322,6 +1370,8 @@ if(is_array($action) && count($action)) {
 			// INVALID EMAIL OR PHONE - FIX
 		if($user_operations_7) {
 
+			output("REPEAT UNTIL NO MATCHES ARE FOUND");
+
 			$members = getInvalidUsers();
 			output("INVALID USERS: " . count($members));
 			foreach($members as $puid) {
@@ -1394,6 +1444,9 @@ if(is_array($action) && count($action)) {
 		// MERGE WITH APPROPRIATE MATCHES
 		if($user_operations_8) {
 
+			output("REPEAT UNTIL NO MATCHES ARE FOUND");
+			output("THIS MIGHT PRODUCE UNRESOLVABLE MATCHES DUE TO tel AND tel2 OVERLAP – THIS IS OK");
+
 			$members = getMembersWithDoubleEntries();
 			$merged = [];
 			output("MEMBERS WITH DOUBLE ENTRIES: " . count($members));
@@ -1401,10 +1454,12 @@ if(is_array($action) && count($action)) {
 
 				$user = getUser($puid);
 
+				// showMember($user);
+
 				// Only check active = yes (merge paid subscriptions later)
 				if(isset($entries["members"]) && $user["active"] == "yes" && array_search($user["uid"], $merged) === false) {
 
-	//				showMember($user);
+					// showMember($user);
 				//
 					$has_unpaid_id = 0;
 
@@ -1718,158 +1773,430 @@ if(is_array($action) && count($action)) {
 
 
 
-		if($user_operations_transfer) {
+		// CREATE DEPENDENCIES BEFORE IMPORTING ALL REMAINING USERS
+		if($pre_user_operations) {
 
+			$query->checkDbExistence(SITE_DB.".system_departments");
+			$query->checkDbExistence(SITE_DB.".system_maillists");
 
 			$query->checkDbExistence(SITE_DB.".user_item_subscriptions");
 			$query->checkDbExistence(SITE_DB.".user_members");
+			$query->checkDbExistence(SITE_DB.".user_department");
+			$query->checkDbExistence(SITE_DB.".user_maillists");
 
-			// Get all paid users
-			// $sql = "SELECT * FROM ".SITE_DB.".ff_persons WHERE active = 'paid'";
 
-			// Get all remaining users
-			$sql = "SELECT * FROM ".SITE_DB.".ff_persons WHERE";
+			// MAILLIST
+			// Create general newletter if it does not exist
+			$sql = "SELECT * FROM ".SITE_DB.".system_maillists WHERE name = 'Nyheder'";
+			if(!$query->sql($sql)) {
+
+				$sql = "INSERT INTO ".SITE_DB.".system_maillists SET name = 'Nyheder', description = 'Generelt nyhedsbrev'";
+				$query->sql($sql);
+				output("CREATED MAILLIST");
+
+			}
+			else {
+				output("MAILLIST EXISTS");
+			}
+
+
+			// DEPARTMENTS
+			// cross-reference divisions to make sure they are relevant
+			$sql = "SELECT * FROM ".SITE_DB.".ff_divisions";
 			if($query->sql($sql)) {
-				$results = $query->results();
+				$divisions = $query->results();
 
-				foreach($results as $result) {
+				foreach($divisions as $division) {
 
-					if($result["firstname"] != "KBHFF Superadministrator") {
+					if($division["shortname"] == "IB" && $division["name"] == "Islands Brygge") {
+						$sql = "UPDATE ".SITE_DB.".ff_divisions SET shortname = 'ISB' WHERE uid = ".$division["uid"];
+						$query->sql($sql);
 
-						// get membership number
-						$member_no = $result["uid"];
-
-						// check if membership number already exists
-						$sql = "SELECT * FROM ".SITE_DB.".user_members WHERE id = '$member_no'";
-						if(!$query->sql($sql)) {
-
-
-							$firstname = $result["firstname"] . (trim($result["middlename"]) ? " " .$result["middlename"] : "");
-							$lastname = $result["lastname"];
-							$nickname = $firstname . ($lastname ? ($firstname ? " " : "").$lastname : "");
-
-
-
-							$mobile = $result["tel"];
-							$email = $result["email"];
-
-							$active = $result["active"];
-							$created = $result["created"];
-
-					
-							// BUILD USER
-							$sql = "INSERT INTO ".SITE_DB.".users SET ";
-							$sql .= "user_group_id = 2";
-							$sql .= ", firstname = '".$firstname."'"; 
-							$sql .= ", lastname = '".$lastname."'"; 
-							$sql .= ", nickname = '".$nickname."'"; 
-
-							if($active == "yes" || $active == "paid") {
-								$sql .= ", status = 1"; 
-							}
-							else {
-								$sql .= ", status = 2";
-							}
-							$sql .= ", created_at = " . ($created ? "'".$created."'" : ""); 
-//							output($sql);
-
-							if($query->sql($sql)) {
-								$user_id = $query->lastInsertId();
-	
-								// MEMBERSHIP
-								$sql = "INSERT INTO ".SITE_DB.".user_members SET id = $member_no, user_id = $user_id";
-//								output($sql);
-								$query->sql($sql);
-
-								// Add member number as username
-								$sql = "INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '$member_no', type = 'member_no', verified=1, verification_code = '".randomKey(8)."'";
-								$query->sql($sql);
-
-								// USERNAMES
-								
-								// EMAIL
-								if($email) {
-									$sql = "SELECT * FROM ".SITE_DB.".user_usernames WHERE email = '$email'";
-									if(!$query->sql($sql)) {
-										$sql = "INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '$email', type = 'email', verified=0, verification_code = '".randomKey(8)."'";
-										$query->sql($sql);
-									}
-								}
-
-								// MOBILE
-								if($mobile) {
-									$sql = "SELECT * FROM ".SITE_DB.".user_usernames WHERE mobile = '$mobile'";
-									if(!$query->sql($sql)) {
-										$sql = "INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '$mobile', type = 'mobile', verified=0, verification_code = '".randomKey(8)."'";
-										$query->sql($sql);
-									}
-								}
-
-							}
-
-
-//							exit();
-
-
-						}
-
+						$division["shortname"] = "ISB";
 					}
 
-//					output($sql);
+					if($division["shortname"] == "IB" && $division["name"] == "Indre by") {
+						$sql = "UPDATE ".SITE_DB.".ff_divisions SET shortname = 'INB' WHERE uid = ".$division["uid"];
+						$query->sql($sql);
+
+						$division["shortname"] = "INB";
+					}
+
+
+					// Division has either members or products (and does not already exist)
+					$sql_members = "SELECT * FROM ".SITE_DB.".ff_divisions_members";
+					$sql_items = "SELECT * FROM ".SITE_DB.".ff_items";
+					$sql_exists = "SELECT * FROM ".SITE_DB.".system_departments WHERE abbreviation = '".$division["shortname"]."'";
+					if(($query->sql($sql_members) || $query->sql($sql_items)) && !$query->sql($sql_exists)) {
+
+						// CREATE DEPARTMENT IN NEW TABLE
+						$sql = "INSERT INTO ".SITE_DB.".system_departments SET name = '".$division["name"]."', abbreviation = '".$division["shortname"]."', email = '".$division["kontakt"]."'";
+						$query->sql($sql);
+						output("CREATED DIVISION:". $division["shortname"]);
+
+					}
+					else {
+						output("DIVISION EXISTS:". $division["shortname"]);
+					}
+
 				}
 
 			}
-			
 
 
-			// Check if user exists
-			
-			// Create user data (firstname, etc)
-			// Set appropriate status - 0 - 1 on first login/handout (we have to delete user )
-			// Create usernames (email, phone)
+			// UPDATE OLD DEPARTMENT FALLBACK VALUES (stored in status1)
+			$sql = "UPDATE ".SITE_DB.".ff_persons SET status1 = 'ØB' WHERE status1 = 'OES'";
+			$query->sql($sql);
+
+			$sql = "UPDATE ".SITE_DB.".ff_persons SET status1 = 'VBR' WHERE status1 = 'VES'";
+			$query->sql($sql);
+
+			$sql = "UPDATE ".SITE_DB.".ff_persons SET status1 = 'NBR' WHERE status1 = 'NØR'";
+			$query->sql($sql);
+
+			$sql = "UPDATE ".SITE_DB.".ff_persons SET status1 = 'YN' WHERE status1 = 'YNB'";
+			$query->sql($sql);
+
+			$sql = "UPDATE ".SITE_DB.".ff_persons SET status1 = 'AM' WHERE status1 = 'AMA'";
+			$query->sql($sql);
+
+			output("FALLBACK DEPARTMENT STRINGS UPDATED (status1)");
 
 
-			// Create member
-			// Assign member_no as username
+			// CHECK MEMBERSHIP 
+			$sql = "SELECT * FROM ".SITE_DB.".item_membership WHERE classname='volunteer'";
+			if($query->sql($sql)) {
+				output("NEW MEMBERSHIP EXISTS – OK TO PROCEED");
+			}
+			else {
+				output("NO MEMBERSHIP – CREATE (OR UPDATE) NEW volunteer MEMBERSHIP TO CONTINUE");
+			}
 
 
-			// Check that createpassword on login works
+			if(!$query->sql("SELECT DISTINCT TABLE_NAME, COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE column_name = 'new_user_id' AND TABLE_NAME = 'ff_persons' AND TABLE_SCHEMA = 'kbhff_dk'")) {
+
+				// ADD new_user_id COLUMN TO ff_persons (to keep track of user-relation)
+				$sql = "ALTER TABLE ".SITE_DB.".ff_persons ADD new_user_id int(11) AFTER uid";
+				$query->sql($sql);
+				output("ADDED new_user_id MAPPING COLUMN");
+
+			}
+			else {
+				output("new_user_id EXISTS");
+			}
 
 		}
 
 
 
-		// TODO's
-		// Create maillist
-		// Create simple membership model
-		// Create two memberships
-		// Create departments and affiliation
-		// - check if department has members
-		// - check if a department has orders (via ff_order_lines.item -> items.devision)
+
+		// TRANSFER ALL REMAINING USERS
+		// - MAP NEW user_id TO ff_persons
+		if($user_operations_transfer) {
+
+
+			// Get required base data
+
+
+			// Maillist id
+			$sql = "SELECT * FROM ".SITE_DB.".system_maillists WHERE name = 'Nyheder'";
+			$query->sql($sql);
+			$maillist_id = $query->result(0, "id");
+
+			output("MAILLIST ID: " . $maillist_id);
+
+
+			// departments?
+			$sql = "SELECT * FROM ".SITE_DB.".system_departments";
+			if($query->sql($sql)) {
+
+				$department_index = [];
+
+				$departments = $query->results();
+				foreach($departments as $department) {
+					$department_index[$department["abbreviation"]] = $department["id"];
+				}
+
+				output("DEPARTMENT INDEX CREATED");
+				// print_r($department_index);
+			}
+			else {
+				output("NO DEPARTMENTS – CREATE DEPARTMENTS TO CONTINUE");
+				exit();
+			}
+
+
+			// Membership ID
+			// CHECK MEMBERSHIP 
+			$sql = "SELECT * FROM ".SITE_DB.".item_membership WHERE classname='volunteer'";
+			if($query->sql($sql)) {
+				$membership_id = $query->result(0, "item_id");
+				output("MEMBERSHIP ID: " . $membership_id);
+			}
+			else {
+				output("NO MEMBERSHIP – CREATE (OR UPDATE) NEW volunteer MEMBERSHIP TO CONTINUE");
+				exit();
+			}
 
 
 
-		// Transfer orders
+
+
+
+			// Get all paid users
+			// $sql = "SELECT * FROM ".SITE_DB.".ff_persons WHERE active = 'paid'";
+
+			// Get all remaining users
+			$sql = "SELECT * FROM ".SITE_DB.".ff_persons ORDER BY uid ASC";
+			$sql = "SELECT * FROM ".SITE_DB.".ff_persons ORDER BY uid ASC LIMIT 25";
+			if($query->sql($sql)) {
+				$results = $query->results();
+
+				foreach($results as $result) {
+
+					// Do no transfer superuser (uid = 0 or special firstname)
+					if($result["uid"] && $result["firstname"] != "KBHFF Superadministrator") {
+
+						// Transfer anonymized users separately
+						if(preg_match("/yes|no|paid/", $result["active"])) {
+
+							// get membership number
+							$member_no = $result["uid"];
+
+							// check if new_user_id or membership number already exists
+							$sql = "SELECT * FROM ".SITE_DB.".user_members WHERE id = '$member_no'";
+							if(!$result["new_user_id"] && !$query->sql($sql)) {
+
+
+								$firstname = $result["firstname"] . (trim($result["middlename"]) ? " " .$result["middlename"] : "");
+								$lastname = $result["lastname"];
+								$nickname = $firstname . ($lastname ? ($firstname ? " " : "").$lastname : "");
+
+
+								$mobile = $result["tel"];
+								$email = $result["email"];
+
+								$active = $result["active"];
+								$created = $result["created"];
+
+					
+								// BUILD USER
+								$sql = "INSERT INTO ".SITE_DB.".users SET ";
+								$sql .= "user_group_id = 2";
+								$sql .= ", firstname = '".$firstname."'"; 
+								$sql .= ", lastname = '".$lastname."'"; 
+								$sql .= ", nickname = '".$nickname."'"; 
+
+								$sql .= ", status = 1"; 
+
+								$sql .= ", created_at = " . ($created ? "'".$created."'" : ""); 
+
+
+								if($query->sql($sql)) {
+									$user_id = $query->lastInsertId();
+
+
+									output("CREATED MEMBER:" . $member_no . " (".$nickname.")");
+
+
+									// ADD new_user_id to ff_persons
+									$sql = "UPDATE ".SITE_DB.".ff_persons SET new_user_id = $user_id WHERE uid = $member_no";
+									$query->sql($sql);
+
+
+									// Only add subscription for active members
+									if($active == "yes" || $active == "paid") {
+
+										// ADD MEMBERSHIP SUBSCRIPTION
+										$sql = "INSERT INTO ".SITE_DB.".user_item_subscriptions SET user_id = $user_id, item_id = $membership_id, created_at = '".$result["created"]."', renewed_at = '2018-05-01', expires_at = '2019-05-01'";
+			//								output($sql);
+										$query->sql($sql);
+										$subscription_id = $query->lastInsertId();
+
+
+										// ADD MEMBERSHIP
+										$sql = "INSERT INTO ".SITE_DB.".user_members SET id = $member_no, user_id = $user_id, subscription_id = $subscription_id, created_at = '".$result["created"]."'";
+			//								output($sql);
+										$query->sql($sql);
+
+									}
+									// Add passive membership for passive members
+									else {
+
+										// ADD MEMBERSHIP
+										$sql = "INSERT INTO ".SITE_DB.".user_members SET id = $member_no, user_id = $user_id, created_at = '".$result["created"]."'";
+			//								output($sql);
+										$query->sql($sql);
+
+									}
+
+									// USERNAMES
+
+									// Add member number as username
+									$sql = "INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '$member_no', type = 'member_no', verified=1, verification_code = '".randomKey(8)."'";
+									$query->sql($sql);
+
+
+									// EMAIL
+									if($email) {
+										$sql = "SELECT * FROM ".SITE_DB.".user_usernames WHERE email = '$email'";
+										if(!$query->sql($sql)) {
+											$sql = "INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '$email', type = 'email', verified=0, verification_code = '".randomKey(8)."'";
+											$query->sql($sql);
+										}
+									}
+
+									// MOBILE
+									if($mobile) {
+										$sql = "SELECT * FROM ".SITE_DB.".user_usernames WHERE mobile = '$mobile'";
+										if(!$query->sql($sql)) {
+											$sql = "INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '$mobile', type = 'mobile', verified=0, verification_code = '".randomKey(8)."'";
+											$query->sql($sql);
+										}
+									}
+
+
+									// Look up department info
+									// $member_no -> ff_division_members.member
+									// ff_division_members.division -> ff_divisions.uid
+
+									// DEPARTMENT
+									$sql = "SELECT shortname FROM ".SITE_DB.".ff_division_members as assoc, ".SITE_DB.".ff_divisions as divis WHERE assoc.member = $member_no AND assoc.division = divis.uid";
+									if($query->sql($sql)) {
+
+										$dep_abbr = $query->result(0, "shortname");
+
+										// Add user to department
+										$sql = "INSERT INTO ".SITE_DB.".user_department SET user_id = $user_id, department_id = ".$department_index[$dep_abbr];
+										$query->sql($sql);
+
+									}
+									// CHECK OLD REGISTRATION IN 'status1'
+									else if($result["status1"] && isset($department_index[$result["status1"]])) {
+
+										// Add user to department
+										$sql = "INSERT INTO ".SITE_DB.".user_department SET user_id = $user_id, department_id = ".$department_index[$result["status1"]];
+										$query->sql($sql);
+
+									}
+									else {
+
+										output("MEMBER HAS NO DEPARTMENT?? – " . $member_no);
+
+									}
+
+
+
+									// Maillist
+									// ff_persons.privacy = Y
+									if($result["privacy"] === "Y") {
+									
+										// Add user to maillist
+										$sql = "INSERT INTO ".SITE_DB.".user_maillists SET user_id = $user_id, maillist_id = ".$maillist_id;
+									
+										$query->sql($sql);
+									
+										output("MEMBER ADDED TO MAILLIST");
+									
+									}
+
+								}
+
+							}
+							else {
+
+								$firstname = $result["firstname"] . (trim($result["middlename"]) ? " " .$result["middlename"] : "");
+								$lastname = $result["lastname"];
+								$nickname = $firstname . ($lastname ? ($firstname ? " " : "").$lastname : "");
+								
+								output("MEMBER EXISTS:" . $member_no . " (".$nickname.")");
+							}
+
+						}
+
+						// TRANSFER ANONYMIZED USERS
+						else {
+
+							// get membership number
+							$member_no = $result["uid"];
+
+
+							if(!$result["new_user_id"]) {
+
+
+								$nickname = "Anonymous";
+								$created = $result["created"];
+
+					
+								// BUILD USER
+								$sql = "INSERT INTO ".SITE_DB.".users SET ";
+								$sql .= "nickname = '".$nickname."'"; 
+
+								$sql .= ", status = -1"; 
+
+								$sql .= ", created_at = " . ($created ? "'".$created."'" : ""); 
+
+								if($query->sql($sql)) {
+									$user_id = $query->lastInsertId();
+
+
+									output("CREATED ANONYMOUS MEMBER:" . $member_no);
+
+
+									// ADD new_user_id to ff_persons
+									$sql = "UPDATE ".SITE_DB.".ff_persons SET new_user_id = $user_id WHERE uid = $member_no";
+									$query->sql($sql);
+
+								}
+
+							}
+							else {
+
+								output("ANONYMIZED MEMBER EXISTS:" . $member_no);
+								
+							}
+
+						}
+
+
+					}
+
+				}
+
+			}
+
+		}
+
+
+
+
+		// CHECK ORDER NO INTEGRITY
+		// - so far none was found – but check again before doing final import
 		if($order_operations_1) {
 
 			$orders = getAllOrders();
 			output("TOTAL ORDERS: " . count($orders));
+
 			foreach($orders as $order) {
 
+//				debug("Is orderno used in other orders");
 				// Is orderno used in other orders
-				
 				$sql = "SELECT uid FROM kbhff_dk.ff_orderhead WHERE orderno = '".$order["orderno"]."' AND uid != '".$order["uid"]."'";
-				print $sql;
+				// debug($sql);
+
 				if($query->sql($sql)) {
-					output("DUPLET ORDERNO: " . $order["orderno"] .", " . $order["uid"]." = ");
 
 					$matches = $query->results();
 					foreach($matches as $match) {
 						output("DUPLET ORDERNO: " . $order["orderno"] .", " . $order["uid"]." = ". implode($match, ","));
 					}
 				}
+
+//				debug("Is orderkey used in other orders");
 				// Is orderkey used in other orders
 				$sql = "SELECT uid FROM kbhff_dk.ff_orderhead WHERE orderkey = '".$order["orderkey"]."' AND  uid != '".$order["uid"]."'";
+//				debug($sql);
+
 				if($query->sql($sql)) {
 
 					$matches = $query->results();
@@ -1878,20 +2205,266 @@ if(is_array($action) && count($action)) {
 					}
 				}
 
-//				deleteOrder($uid);
+			}
+
+		}
+
+
+		// FIX MISSING ITEM IN ORDER LINES
+		if($order_operations_2) {
+
+			$sql = "SELECT * FROM kbhff_dk.ff_orderlines WHERE item = '' OR item IS NULL AND puid != 1";
+			if($query->sql($sql)) {
+				$lines = $query->results();
+
+				output("BROKEN LINES:" . count($lines));
+				// print_r($lines);
+
+				foreach($lines as $line) {
+					
+					// Check if order has more lines
+					$sql = "SELECT * FROM kbhff_dk.ff_orderlines WHERE orderno = '".$line["orderno"]."' AND uid != ".$line["uid"];
+					if($query->sql($sql)) {
+						$alllines = $query->results();
+
+						// output("ORDER HAS MORE LINES");
+						// print_r($line);
+
+
+						// Check order head
+						$sql = "SELECT * FROM kbhff_dk.ff_orderhead WHERE orderno = '".$line["orderno"]."'";
+						if($query->sql($sql)) {
+							$head = $query->result(0);
+							// output("ORDER PRICE:" . $head["cc_trans_amount"]);
+						}
+
+						// print_r($alllines);
+
+						$total = 0;
+						foreach($alllines as $allline) {
+							$total += $allline["amount"];
+							
+						}
+
+						// ORDER HAS OTHER LINES – THIS ONE ISN'T NEEDED TO MAINTAIN INTEGITY
+						if($line["amount"] == 0 && $total == $head["cc_trans_amount"]) {
+
+							$sql = "DELETE FROM kbhff_dk.ff_orderlines WHERE uid = ".$line["uid"];
+							if($query->sql($sql)) {
+								output("DELETE FLAWED ORDER LINE");
+							}
+
+
+						}
+						// MUST ASSIGN ITEM TO ORDER
+						else {
+
+							// REGISTER AS STOFPOSE (119)
+							$sql = "UPDATE kbhff_dk.ff_orderlines SET item = 119 WHERE uid = ".$line["uid"];
+							if($query->sql($sql)) {
+								output("FIXED MISSING ITEM");
+							}
+
+						}
+
+
+					}
+					// LINE REQUIRED FOR ORDER – FIX WITH BEST OPTION
+					else {
+
+						// REGISTER AS STOFPOSE (119)
+						$sql = "UPDATE kbhff_dk.ff_orderlines SET item = 119 WHERE uid = ".$line["uid"];
+						if($query->sql($sql)) {
+							output("FIXED MISSING ITEM");
+						}
+
+					}
+
+				}
 
 			}
 
 		}
 
 
-		$sql = "SELECT uid, orderkey, orderno, puid FROM kbhff_dk.ff_orderlines WHERE orderno NOT IN(SELECT orderno FROM kbhff_dk.ff_orderhead)";
+		// DELETE UNUSED PRODUCTS (EXIST IN PRODUCTTYPES, BUT NOT USED)
+		if($order_operations_3) {
 
+
+			// DELETE UNUSED PRODUCT TYPES
+			$sql = "SELECT * FROM kbhff_dk.ff_producttypes WHERE id NOT IN(SELECT producttype_id FROM kbhff_dk.ff_items)";
+			if($query->sql($sql)) {
+				$items = $query->results();
+
+				foreach($items as $item) {
+
+					$sql = "DELETE FROM kbhff_dk.ff_producttypes WHERE id = ".$item["id"];
+					if($query->sql($sql)) {
+						output("DELETED:".$item["explained"]);
+					}
+				}
+			}
+			else {
+				output("NO UNUSED PRODUCTS");
+			}
+
+		}
+
+
+		// DELETE EXPIRED ORDERS (MORE THAN 5 YEARS OLD)
+		if($order_operations_4) {
+
+			$orders = getExpiredOrders();
+			output("EXPIRED ORDERS: " . count($orders));
+			foreach($orders as $order) {
+
+				// output($order["created"]);
+				deleteOrder($order["orderno"]);
+
+			}
+
+		}
+
+
+		// DELETE ORDERS WITHOUT LINES
+		if($order_operations_5) {
+
+			$sql = "SELECT orderno FROM kbhff_dk.ff_orderhead WHERE puid != 0 AND puid != 1 AND orderno NOT IN(SELECT orderno FROM kbhff_dk.ff_orderlines)";
+			if($query->sql($sql)) {
+
+				$orders = $query->results();
+				foreach($orders as $order) {
+
+					$sql = "SELECT orderno FROM kbhff_dk.ff_orderlines WHERE orderno = ".$order["orderno"];
+					if(!$query->sql($sql)) {
+
+						$sql = "SELECT * FROM kbhff_dk.ff_transactions WHERE orderno = ".$order["orderno"];
+						if(!$query->sql($sql)) {
+							
+							$sql = "DELETE FROM kbhff_dk.ff_orderhead WHERE orderno = ".$order["orderno"];
+							$query->sql($sql);
+
+							output("EMPTY ORDER DELETED");
+						}
+						else {
+							output("TRANS EXISTS");
+						}
+
+					}
+					else {
+						output("LINE EXISTS");
+					}
+
+				}
+
+			}
+			else {
+				output("NO EMPTY ORDERS");
+			}
+
+		}
+
+
+
+		// READY TO TRANSFER ORDERS??
+		// DELETE ORDER WITHOUT LINES
+		if($order_operations_6) {
+
+			$orders = getAllOrders();
+			output("TOTAL ORDERS: " . count($orders));
+
+			foreach($orders as $order) {
+
+
+				$order_lines = false;
+				$order_transactions = false;
+
+
+				$sql = "SELECT * FROM kbhff_dk.ff_orderlines WHERE orderno = ".$order["orderno"];
+				if($query->sql($sql)) {
+
+					$order_lines = $query->results();
+
+					$sql = "SELECT * FROM kbhff_dk.ff_orderlines WHERE orderno = ".$order["orderno"];
+					if($query->sql($sql)) {
+						$order_transactions = $query->results();
+					}
+
+				}
+				// THIS SHOULD NOT HAPPEN, SO EXIT IF IT DOES
+				else {
+
+					output("NO ORDER LINES??? (".$order["orderno"].")");
+					exit();
+
+				}
+
+
+				if($order_lines && $order_transactions) {
+
+					// TODO: FINAL ORDER PROCESS (AWAIT VAT RULES)
+
+					// Check that payment, orderlines and orderhead amounts add up
+
+					// IDENTIFY PRODUCT/SIGNUP/MEMBERSHIP (EQUIVALENT MUST BE CREATED IN NEW SYSTEM)
+
+					// INSERT INTO shop_order, shop_order_items AND shop_payments
+
+				}
+
+				// NO TRANSACTIONS - CANCELLED ORDER (NO NEED TO TRANSFER TO NEW SYSTEM)
+				else if($order_lines) {
+
+					output("CANCELLED ORDER - IGNORED");
+
+				}
+
+			}
+
+		}
+
+
+
+		// FINAL ORDER OPERATION
+		// MAP ORDER TO SUBSCRIPTION FOR EACH USER (FIND THE ORDER THAT MATCHES THE LAST KONTINGENT PAYMENT)
+
+
+
+		// TODO's
+		// Clean ff_persons, so only password remains
+		// Remove other ff_ tables (unless they are good for something)
+
+		// $UC->dropTable(SITE_DB.".ff_unisex");
+		// $UC->dropColumn(SITE_DB.".ff_persons", "birthday");
+
+
+
+		exit();
+
+
+
+		// OLD NOTES
+		
+		
+		// price differs on head, lines or transaction
+		
+		// Order head without order lines
+		// Order head without user
+
+		// Order lines without order head
+		// Order lines without user
+
+		// Order lines where user differs from order head
+
+		// Order head without transactions
+		// transactions without order head
+
+		// Order transactions where user differs from order head
 
 		$orders = [];
 
-		$query = new Query();
-		$sql = "SELECT uid, orderkey, orderno, puid FROM kbhff_dk.ff_orderlines WHERE puid NOT IN(SELECT uid as puid FROM kbhff_dk.ff_persons)";
+		// Order lines without order head
+		$sql = "SELECT uid, orderkey, orderno, puid FROM kbhff_dk.ff_orderlines WHERE orderno NOT IN(SELECT orderno FROM kbhff_dk.ff_orderhead)";
 		if($query->sql($sql)) {
 
 			$orders = $query->results();
@@ -1900,92 +2473,113 @@ if(is_array($action) && count($action)) {
 		print "COUNT:" . count($orders);
 
 
-		// Expired orders (more than 5 years, maybe delete)
-		if($order_operations_2) {
 
-			$orders = getExpiredOrders();
-			output("EXPIRED ORDERS: " . count($orders));
-			// foreach($orders as $uid) {
-			//
-			// 	deleteOrder($uid);
-			//
-			// }
+		$query = new Query();
+
+
+		// Order lines without user
+		$sql = "SELECT uid, orderkey, orderno, puid FROM kbhff_dk.ff_orderlines WHERE puid NOT IN(SELECT uid as puid FROM kbhff_dk.ff_persons)";
+		if($query->sql($sql)) {
+
+			$orders = $query->results();
+			print "COUNT:" . count($orders);
 
 		}
 
-		exit();
 
+			$sql = "SELECT * FROM kbhff_dk.ff_items";
+			if($query->sql($sql)) {
+				$items = $query->results();
 
-		// FIND "DELETABLE" USERS WITH WRONG ACTIVE STATE
-			// ACTIVE = 'no'
-			// INVALID EMAIL, PHONE, FIRSTNAME, LASTNAME
+				foreach($items as $item) {
 
-
-		$members = getInvalidUsers();
-
-		print "DELETABLE MEMBERS WITH DOUBLE ENTRIES:" . count($members)."<br>\n";
-		foreach($members as $puid => $entries) {
-
-			$user = getUser($puid);
-
-			showMember($user);
-			if(isset($entries["members"])) {
-				foreach($entries["members"] as $match) {
-					if(isActive($match["uid"])) {
-						mergeUserIntoUser($puid, $match["uid"]);
-
-						print "ACTIVE:" . $match["uid"]."<br>\n";
-//						print_r($match);
+					$sql = "SELECT * FROM kbhff_dk.ff_orderlines WHERE item = ".$item["id"];
+					if(!$query->sql($sql)) {
+						output("PROBLEM");
+						print_r($item);
 					}
 					else {
-						print "NOT ACTIVE:" . $match["uid"]."<br>\n";
-//						print_r($match);
+						output("OK");
 					}
 				}
-				
 			}
 
-//			print_r($entries);
 
 
-		}
+			// $sql = "SELECT * FROM kbhff_dk.ff_items WHERE id NOT IN(SELECT item as id FROM kbhff_dk.ff_orderlines WHERE PUID != 1 GROUP BY item)";
+			// if($query->sql($sql)) {
+			// 	$items = $query->results();
+			//
+			// 	foreach($items as $item) {
+			//
+			// 		$sql = "DELETE FROM kbhff_dk.ff_producttypes WHERE id = ".$item["id"];
+			// 		if($query->sql($sql)) {
+			// 			output("DELETED:".$item["explained"]);
+			// 		}
+			// 	}
+			// }
+			//
+			//
+			// $sql = "SELECT * FROM kbhff_dk.ff_orderlines WHERE puid != 1 GROUP BY item";
+
+// 			$sql = "SELECT item FROM kbhff_dk.ff_orderlines WHERE item NOT IN(SELECT id as item FROM kbhff_dk.ff_items)";
+//
+// 			$sql = "SELECT * FROM kbhff_dk.ff_producttypes";
+// 			if($query->sql($sql)) {
+// 				$unused_products = $query->results();
+//
+//
+// 			" WHERE id NOT IN(SELECT item as id FROM kbhff_dk.ff_orderlines GROUP BY id)";
+// //				debug($sql);
+//
+// 			if($query->sql($sql)) {
+// 				$unused_products = $query->results();
+//
+// 				print_r($unused_products);
+// 			}
+// 			else {
+// 				output("All good");
+// 			}
+//
 
 
-		// FIND DOUBLE ENTRIES AND CHECK POSSIBILITY FOR MERGING
 
-			// IF ONLY ONE IS ACTIVE – MERGE INTO THAT
-			
-			// IF TWO ARE ACTIVE – FLAG FOR MANUAL DECISION
-			
-			// IF NONE ARE ACTIVE - MERGE TO NEWEST
+// // Check order head
+// $sql = "SELECT * FROM kbhff_dk.ff_orderhead WHERE orderno = '".$line["orderno"]."'";
+// if($query->sql($sql)) {
+// 	$head = $query->result(0);
+// 	output("ORDER PRICE:" . $head["cc_trans_amount"]);
+// }
+//
+// // Check order head
+// $sql = "SELECT * FROM kbhff_dk.ff_transactions WHERE orderno = '".$line["orderno"]."'";
+// if($query->sql($sql)) {
+// 	$trans = $query->result(0);
+// 	output("TRANS AMOUNT:" . $trans["amount"]);
+// }
+//
 
-		//
+
+// $sql = "SELECT * FROM kbhff_dk.ff_orderlines as ol, kbhff_dk.ff_items as it, kbhff_dk.ff_producttypes as pt WHERE ol.puid = ".$line["puid"]." AND it.id = ol.item AND pt.id = it.producttype_id";
+// if($query->sql($sql)) {
+// 	$trans = $query->results();
+//
+// 	foreach($trans as $tran) {
+// 		output($tran["explained"]);
+// 	}
+// 	// print_r($trans);
+// }
+
+// print_r($line);
+
+
+
+
 
 
 
 		exit();
 
-
-
-		// INSERT DATA IN JANITOR STRUCTURE
-		// NAME DATA -> users
-		// ADDRESS DATA -> user_addresses - SKIP
-
-		// EMAIL + TEL -> user_usernames
-
-		// PRIVACY -> user_maillists
-		// UID -> user_members
-
-
-		// DO NOT INSERT PASSWORDS
-
-		// DELETE COLUMNS WITH OLD/MOVED DATA
-
-
-
-
-
-		exit();
 
 	}
 
