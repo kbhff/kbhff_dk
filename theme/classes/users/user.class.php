@@ -386,8 +386,8 @@ class User extends UserCore {
 		$username = session()->value("username");
 		$verification_code = session()->value("verification_code");
 		
-
-		if(count($action) == 1 && $user_id) {
+		
+		if($user_id) {
 
 			// user already has a password
 			if($this->hasPassword()) {
@@ -401,6 +401,7 @@ class User extends UserCore {
 				// does values validate
 				if($this->validateList(array("new_password"))) {
 
+
 					$query = new Query();
 
 					// make sure type tables exist
@@ -412,7 +413,6 @@ class User extends UserCore {
 					// save new password
 					$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$new_password'";
 					if($query->sql($sql)) {
-
 						return $this->confirmUser(["bekraeft", $username, $verification_code]);
 					}
 				}
