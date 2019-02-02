@@ -352,8 +352,96 @@ class SuperUser extends SuperUserCore {
 		$page->addLog("user->newUserFromMemberHelp failed: (missing info)");
 		return false;
 	}
+	function getUsersByDepartment($action) {
+		// Log that the method has been started
+		global $page;
+		$page->addLog("result->getUsersByDepartment: initiated");
 
 
+		// Get content of $_POST array which have been "quality-assured" by Janitor 
+		$this->getPostedEntities();
+		
+		if($this->validateList(array("department_id", "active_member", "user_id"))) {
+			
+			$department_id= $this->getProperty("department_id", "value");
+			// $active = $this->getProperty("active_member", "value");
+			$user_id = $this->getProperty("user_id", "value");
+			$query = new Query();
+			
+			if($department_id) {
+			
+			
+				// filtrates users by department and current user
+				$sql = "SELECT user_id FROM ".SITE_DB.".user_department WHERE department_id = $department_id AND NOT ".SITE_DB.".user_department.user_id = $user_id";
+				
+				// query to get correct information from different tables but only with mobilenr as username and not email 
+				// $sql = "SELECT ".SITE_DB.".user_usernames.username as Mobilnr, ".SITE_DB.".user_usernames.username as Email, ".SITE_DB.".user_usernames.username as Medlemsnr, ".SITE_DB.".users.nickname as Navn, ".SITE_DB.".user_usernames.user_id, ".SITE_DB.".system_departments.name as Afdeling
+				// from ".SITE_DB.".user_usernames
+				// JOIN ".SITE_DB.".users
+				// ON ".SITE_DB.".user_usernames.user_id = ".SITE_DB.".users.id
+				// JOIN ".SITE_DB.".user_department
+				// ON ".SITE_DB.".user_department.user_id = ".SITE_DB.".users.id
+				// JOIN ".SITE_DB.".system_departments
+				// ON ".SITE_DB.".system_departments.id = ".SITE_DB.".user_department.department_id
+				// WHERE ".SITE_DB.".user_department.department_id = $department_id
+				// AND NOT ".SITE_DB.".users.id = $user_id
+				// AND ".SITE_DB.".user_usernames.type = 'mobile'
+				// or ".SITE_DB.".user_usernames.type = 'email'
+				// group by Navn";
+				
+		
+				// query to get email and mobile as keys, but they can only get either mobile or email as values. 
+				// $sql = "select count(*) as repetitions, ".SITE_DB.".user_usernames.username as Email, ".SITE_DB.".user_usernames.username as Mobilnr
+				// FROM ".SITE_DB.".user_usernames
+				// WHERE  ".SITE_DB.".user_usernames.type = 'email'
+				// AND ".SITE_DB.".user_usernames.type = 'mobile'					
+				// group by user_id ";
+				
+				// query to get email and mobile as keys, but they can only get either mobile or email as values. 
+				// $sql = "SELECT ".SITE_DB.".user_usernames.username as Email, ".SITE_DB.".user_usernames.username as Mobilnr
+				// from ".SITE_DB.".user_usernames 
+				// where ".SITE_DB.".user_usernames.type IN ('email', 'mobile')";
+				
+				
+				// finds duplicates and counts them 
+				// $sql = "select count(*) as repetitions, username as email, username as mobile, user_id
+				// from ".SITE_DB.".user_usernames 
+				// group by user_id
+				// having repetitions > 1";
+				
+				if($query->sql($sql)) {
+					$users = $query->results();
+					// print_r($users);
+					if($users) {
+						
+						// loops over $result and convert the values (user_id) to a comma seperated string
+						 foreach($users as $u => $user) {
+						 // 	$str = "".implode("', '", $user).", ";
+					 		$sql = "SELECT ".SITE_DB.".user_usernames.username as Mobilnr, ".SITE_DB.".user_usernames.username as Email, ".SITE_DB.".user_usernames.username as Medlemsnr, ".SITE_DB.".users.nickname as Navn, ".SITE_DB.".user_usernames.user_id, ".SITE_DB.".system_departments.name as Afdeling
+							from ".SITE_DB.".user_usernames
+							JOIN ".SITE_DB.".users
+							ON ".SITE_DB.".user_usernames.user_id = ".SITE_DB.".users.id
+							JOIN ".SITE_DB.".user_department
+							ON ".SITE_DB.".user_department.user_id = ".SITE_DB.".users.id
+							JOIN ".SITE_DB.".system_departments
+							ON ".SITE_DB.".system_departments.id = ".SITE_DB.".user_department.department_id
+							WHERE department_id = $department_id 
+							AND NOT ".SITE_DB.".user_department.user_id = $user_id
+							AND ".SITE_DB.".user_usernames.type = 'mobile'
+							OR ".SITE_DB.".user_usernames.type = 'email'
+							OR ".SITE_DB.".user_usernames.type = 'member_no'
+							Group By username
+							LIMIT 200";
+							
+							if($query->sql($sql)) {
+								$users = $query->results();
+								return $users;
+							}
+						}
+					}
+				}
+			} return false;
+		}
+	}
 }
-
 ?>
