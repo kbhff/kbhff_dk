@@ -249,7 +249,7 @@ class SuperUser extends SuperUserCore {
 								return false;
 							}
 						}
-						
+
 						// store signup email for receipt page
 						session()->value("signup_email", $email);
 	
@@ -315,24 +315,23 @@ class SuperUser extends SuperUserCore {
 	
 						// MAILLIST
 	
-						// maillist subscription sent as string
+						// maillist subscription sent as integer
 						$maillist = getPost("maillist");
-						if($maillist) {	
-							// check if maillist exists
+						if($maillist == 1) {	
+							// check if Nyheder maillist exists
 							$maillists = $page->maillists();
-							$maillist_match = arrayKeyValue($maillists, "name", $maillist);
+							$maillist_match = arrayKeyValue($maillists, "name", "Nyheder");
 							if($maillist_match !== false) {
 								$maillist_id = $maillists[$maillist_match]["id"];
 								$_POST["maillist_id"] = $maillist_id;
-	
+								
 								// add maillist for current user
-								$this->addMaillist(array("addMaillist"));
+								$this->addMaillist(array("addMaillist", $user_id));
 							}
 	
 							// ignore subscription if maillist does not exist
 	
 						}
-	
 						// itemtype post save handler
 						// TODO: Consider if failed postSave should have consequences
 						if(method_exists($this, "saved")) {
