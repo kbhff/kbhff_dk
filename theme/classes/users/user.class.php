@@ -55,7 +55,7 @@ class User extends UserCore {
 			"label" => "Kode",
 			"required" => true,
 			"pattern" => "^[0-9A-Za-z]{24}$",
-			"hint_message" => "Din verificerings kode",
+			"hint_message" => "Din verificeringskode",
 			"error_message" => "Ugyldig kode. Kunne der være mellemrum i enden af din indtastede kode?"
 		));
 
@@ -67,6 +67,7 @@ class User extends UserCore {
 			"hint_message" => "Vælg en afdeling",
 			"error_message" => "Du skal vælge en afdeling."
 		));
+		
 		
 	}
 
