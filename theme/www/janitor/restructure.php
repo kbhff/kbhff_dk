@@ -845,7 +845,7 @@ if(is_array($action) && count($action)) {
 
 			$query = new Query();
 			// $sql = "SELECT uid, orderkey, orderno, puid FROM kbhff_dk.ff_orderhead LIMIT 81380,850000";
-			$sql = "SELECT uid, orderkey, orderno, puid FROM kbhff_dk.ff_orderhead";
+			$sql = "SELECT * FROM kbhff_dk.ff_orderhead";
 			if($query->sql($sql)) {
 
 				$orders = $query->results();
@@ -1044,15 +1044,22 @@ if(is_array($action) && count($action)) {
 		// LOOK FOR UNUSED PRODUCTS
 		$order_operations_2 = false;
 
-
-
+		// DELETE UNUSED PRODUCTS
 		$order_operations_3 = false;
 
-
-
+		// DELETE EXPIRED ORDERS (MORE THAN 5 YEARS OLD)
 		$order_operations_4 = false;
 
-		$order_operations_5 = true;
+		// DELETE ORDERS WITHOUT LINES
+		$order_operations_5 = false;
+
+
+
+		// Transfer orders?
+		$order_operations_6 = true;
+
+
+		$order_operations_7 = false;
 
 
 
@@ -2366,6 +2373,8 @@ if(is_array($action) && count($action)) {
 
 
 
+
+
 		// READY TO TRANSFER ORDERS??
 		// DELETE ORDER WITHOUT LINES
 		if($order_operations_6) {
@@ -2373,11 +2382,17 @@ if(is_array($action) && count($action)) {
 			$orders = getAllOrders();
 			output("TOTAL ORDERS: " . count($orders));
 
+			$delete_count = 0;
+
 			foreach($orders as $order) {
 
-
+				
 				$order_lines = false;
 				$order_transactions = false;
+
+
+				$order_transaction_user_issue = false;
+				$order_amount_issue = false;
 
 
 				$sql = "SELECT * FROM kbhff_dk.ff_orderlines WHERE orderno = ".$order["orderno"];
@@ -2385,24 +2400,242 @@ if(is_array($action) && count($action)) {
 
 					$order_lines = $query->results();
 
-					$sql = "SELECT * FROM kbhff_dk.ff_orderlines WHERE orderno = ".$order["orderno"];
+					$sql = "SELECT * FROM kbhff_dk.ff_transactions WHERE orderno = ".$order["orderno"];
 					if($query->sql($sql)) {
 						$order_transactions = $query->results();
 					}
 
 				}
-				// THIS SHOULD NOT HAPPEN, SO EXIT IF IT DOES
-				else {
-
-					output("NO ORDER LINES??? (".$order["orderno"].")");
-					exit();
-
-				}
 
 
+				// Do we have overlines and order transactions
 				if($order_lines && $order_transactions) {
 
-					// TODO: FINAL ORDER PROCESS (AWAIT VAT RULES)
+					$order_lines_total = 0;
+
+
+					// Check order lines
+					foreach($order_lines as $index => $order_line) {
+
+						if($order_line["amount"] == "0") {
+							output("ORDERLINE ZERO");
+
+							$sql = "SELECT amount FROM kbhff_dk.ff_items WHERE id = ".$order_line["item"];
+							$query->sql($sql);
+							$correct_amount = $query->result(0, "amount");
+
+							// print_r($order_line);
+							output("SET CORRECT AMOUNT:" . $correct_amount);
+
+							$sql = "UPDATE kbhff_dk.ff_orderlines set amount = $correct_amount WHERE uid = ".$order_line["uid"];
+							$query->sql($sql);
+
+							$order_line["amount"] = $correct_amount;
+							$order_lines[$index]["amount"] = $correct_amount;
+
+						}
+
+
+						$order_lines_total += $order_line["amount"];
+
+
+
+						// Check if user information can be made useful – or delete order
+						if($order["puid"] != $order_line["puid"] && $order["puid"] != $order_line["status1"]) {
+
+							$sql = "DELETE FROM kbhff_dk.ff_orderhead WHERE orderno = ".$order["orderno"];
+							$query->sql($sql);
+
+							$sql = "DELETE FROM kbhff_dk.ff_orderlines WHERE orderno = ".$order["orderno"];
+							$query->sql($sql);
+
+							$sql = "DELETE FROM kbhff_dk.ff_transactions WHERE orderno = ".$order["orderno"];
+							$query->sql($sql);
+
+							output("INVALID ORDER DELETED");
+
+							// Stop evaluating current order and continue order loop
+							continue 2;
+
+						}
+
+						// Normalize order line to correct puid
+						else if($order["puid"] != $order_line["puid"] && $order["puid"] == $order_line["status1"]) {
+
+							output("NORMALIZE ORDERLINE PUID");
+
+							$sql = "UPDATE kbhff_dk.ff_orderlines set puid = ".$order["puid"]." WHERE orderno = ".$order["orderno"];
+							$query->sql($sql);
+
+						}
+
+					}
+
+
+					$order_transactions_total = 0;
+
+					// Check transaction lines
+					foreach($order_transactions as $order_transaction) {
+
+
+						$order_transactions_total += $order_transaction["amount"];
+
+						if($order["puid"] != $order_transaction["puid"] && $order["puid"] != $order_transaction["authorized_by"] && $order_transaction["puid"] !== "0" && $order_transaction["puid"] !== 1) {
+
+							// output("USER ISSUE (TRANS)???");
+							$order_transaction_user_issue = true;
+
+						}
+
+					}
+
+
+					// Compare amounts of order, lines and transactions
+					if($order_lines_total != $order["cc_trans_amount"]) {
+
+						output("ORDERLINE AMOUNT ISSUE (".$order["orderno"].") - DELETED");
+						$orderline_amount_issue = true;
+
+
+						$sql = "DELETE FROM kbhff_dk.ff_orderhead WHERE orderno = ".$order["orderno"];
+						$query->sql($sql);
+
+						$sql = "DELETE FROM kbhff_dk.ff_orderlines WHERE orderno = ".$order["orderno"];
+						$query->sql($sql);
+
+						$sql = "DELETE FROM kbhff_dk.ff_transactions WHERE orderno = ".$order["orderno"];
+						$query->sql($sql);
+
+					}
+
+
+					// Compare amounts of order, lines and transactions
+					if($order_lines_total != $order["cc_trans_amount"] || $order_lines_total != $order_transactions_total) {
+
+						// output("AMOUNT ISSUE???");
+						$order_amount_issue = true;
+
+					}
+
+
+
+					if($order_amount_issue && count($order_transactions) > 1) {
+
+						output("TRANSACTIONS ISSUE???");
+
+						if($order["status1"] == $order_transactions[0]["method"] && $order_lines_total == $order["cc_trans_amount"] && $order_lines_total == $order_transactions[0]["amount"]) {
+
+							output("PAYMENTS REGISTERED WRONG");
+
+
+							for($i = 1; $i < count($order_transactions); $i++) {
+
+								output("REMOVE PAYMENT FROM ORDER");
+
+								$sql = "UPDATE kbhff_dk.ff_transactions set orderno = 0 WHERE uid = ".$order_transactions[$i]["uid"];
+								$query->sql($sql);
+
+								$order_amount_issue = false;
+							}
+
+						}
+						else if($order["status1"] == $order_transactions[1]["method"] && $order_lines_total == $order["cc_trans_amount"] && $order_lines_total == $order_transactions[1]["amount"]) {
+
+							output("PAYMENTS REGISTERED WRONG");
+
+							$sql = "UPDATE kbhff_dk.ff_transactions set orderno = 0 WHERE uid = ".$order_transactions[0]["uid"];
+							$query->sql($sql);
+
+							$order_amount_issue = false;
+
+						}
+
+					}
+
+
+
+
+
+					// If transaction has wrong user, but amounts otherwise adds up, 
+					// then set correct usre for transaction
+					if($order_transaction_user_issue && !$order_amount_issue) {
+						
+						output("USER BAD – AMOUNT OK");
+
+						$sql = "UPDATE kbhff_dk.ff_transactions set puid = ".$order["puid"]." WHERE orderno = ".$order["orderno"];
+						$query->sql($sql);
+
+					}
+
+					else if($order_transaction_user_issue && $order_amount_issue) {
+
+						output("TRANSACTION USER AND AMOUNT ISSUE");
+
+						print_r($order);
+						print_r($order_lines);
+
+						print_r($order_transactions);
+
+
+						$sql = "SELECT * FROM kbhff_dk.ff_transactions WHERE (puid = ".$order["puid"]." OR authorized_by = ".$order["puid"]. ") AND (amount = ".number_format($order_lines_total,2)." OR amount = ".number_format($order_lines_total-$order_transactions_total,2).") AND created > '".$order["created"]."' AND orderno = 0";
+						output($sql);
+						if($query->sql($sql)) {
+
+							$match = $query->results();
+							output("BEST MATCH");
+							print_r($match);
+
+						}
+
+						$sql = "SELECT * FROM kbhff_dk.ff_transactions WHERE (amount = ".number_format($order_lines_total,2)." OR amount = ".number_format($order_lines_total-$order_transactions_total,2).") AND created > '".$order["created"]."' AND orderno = 0";
+						if($query->sql($sql)) {
+
+							$match = $query->results();
+							output("POTENTIAL MATCH");
+							print_r($match);
+
+						}
+
+
+
+						// exit();
+
+					}
+					else if($order_amount_issue) {
+
+
+						output("AMOUNT ISSUE");
+
+
+
+					}
+
+
+					if($order["cc_trans_amount"] == "0") {
+
+						output("ZERO ORDER");
+
+						print_r($order);
+						print_r($order_lines);
+
+						print_r($order_transactions);
+
+					}
+
+					// if($order_transaction_user_issue) {
+					//
+					// 	output("TRANSACTIONS USER ISSUE");
+					//
+					// }
+
+					// if($order_amount_issue) {
+					//
+					// 	output("AMOUNT ISSUE");
+					//
+					// }
+
+
+
 
 					// Check that payment, orderlines and orderhead amounts add up
 
@@ -2412,10 +2645,46 @@ if(is_array($action) && count($action)) {
 
 				}
 
-				// NO TRANSACTIONS - CANCELLED ORDER (NO NEED TO TRANSFER TO NEW SYSTEM)
-				else if($order_lines) {
+				// Incomplete or invalid order – delete it
+				else {
 
-					output("CANCELLED ORDER - IGNORED");
+					$delete_count++;
+					// output("INVALID OR INCOMPLETE ORDER (".$order["orderno"].") - DELETED");
+
+					// print_r($order);
+					// print_r($order_lines);
+					//
+					// print_r($order_transactions);
+
+					// if($order_lines) {
+					//
+					// 	$order_lines_total = 0;
+					//
+					// 	foreach($order_lines as $order_line) {
+					//
+					// 		$order_lines_total += $order_line["amount"];
+					//
+					// 	}
+					//
+					// 	// Look for transaction
+					// 	$sql = "SELECT * FROM kbhff_dk.ff_transactions WHERE puid = ".$order["puid"]." OR authorized_by = ".$order["puid"]. " AND amount = $order_lines_total AND created > '".$order["created"]."'";
+					// 	if($query->sql($sql)) {
+					//
+					// 		$match = $query->results();
+					// 		print_r($match);
+					//
+					// 	}
+					//
+					// }
+					//
+					// $sql = "DELETE FROM kbhff_dk.ff_orderlines WHERE orderno = ".$order["orderno"];
+					// $query->sql($sql);
+					//
+					// $sql = "DELETE FROM kbhff_dk.ff_transactions WHERE orderno = ".$order["orderno"];
+					// $query->sql($sql);
+
+
+					// exit();
 
 				}
 
@@ -2423,6 +2692,7 @@ if(is_array($action) && count($action)) {
 
 		}
 
+		output("TOTAL DELETED:" . $delete_count);
 
 
 		// FINAL ORDER OPERATION
@@ -2460,6 +2730,31 @@ if(is_array($action) && count($action)) {
 		// transactions without order head
 
 		// Order transactions where user differs from order head
+
+		if($order_operations_7) {
+
+			// Order lines without order head
+			$sql = "SELECT uid, orderno FROM kbhff_dk.ff_orderlines WHERE orderno NOT IN(SELECT orderno FROM kbhff_dk.ff_orderhead)";
+			if($query->sql($sql)) {
+
+				$orders = $query->results();
+
+			}
+			print "COUNT:" . count($orders);
+
+
+			// Order lines without order head
+			$sql = "SELECT uid, orderno FROM kbhff_dk.ff_transactions WHERE orderno NOT IN(SELECT orderno FROM kbhff_dk.ff_orderhead)";
+			if($query->sql($sql)) {
+
+				$orders = $query->results();
+
+			}
+			print "COUNT:" . count($orders);
+
+
+		}
+
 
 		$orders = [];
 
