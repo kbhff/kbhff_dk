@@ -21,6 +21,21 @@ $page->bodyClass("member_help");
 $page->pageTitle("Medlemshjælp");
 
 if($action) {
+	
+	 if($action[0] == "soeg") {
+	 	$users = $model->getUsersByDepartment("GetUsersByDepartment");
+	 
+	 	if($users) {
+	 
+	 	}
+	 	else {
+	 		message()->resetMessages();
+	 		message()->addMessage("Det lykkedes ikke at finde et søgeresultat", array("type" => "error"));
+	 	}
+	 }
+	 
+	
+	
 	// /medlemshjaelp/tilmelding
 	if($action[0] == "tilmelding") {
 		// signup page

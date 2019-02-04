@@ -68,6 +68,13 @@ class User extends UserCore {
 			"error_message" => "Du skal vælge en afdeling."
 		));
 		
+		// $this->addToModel("active_member", array(
+		// 	"type" => "integer",
+		// 	"label" => "Bruger status", 
+		// 	"hint_message" => "Hvornår har brugeren sidst været aktiv?",
+		// 	"error_message" => "Er brugeren aktiv."
+		// ));
+		// 
 	}
 
 	/**
