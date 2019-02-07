@@ -36,7 +36,7 @@ $this->pageTitle("Brugeroplysninger");
 					"label" => "Kaldenavn",
 					"value" => $user["nickname"],
 					"required" => false,
-					"hint_message" => "Skriv dit kaldenavn (kan også bare være dit navn)",
+					"hint_message" => "Skriv dit kaldenavn (det kan også bare være dit navn)",
 					"error_message" => "",
 				]),
 			
@@ -46,7 +46,7 @@ $this->pageTitle("Brugeroplysninger");
 					"value" => $user["firstname"],
 					"required" => true,
 					"hint_message" => "Skriv dit fornavn",
-					"error_message" => "Du skal angive et fornavn.",
+					"error_message" => "Fornavn er påkrævet",
 				]),
 
 				$UC->input("lastname", [
@@ -55,7 +55,7 @@ $this->pageTitle("Brugeroplysninger");
 					"value" => $user["lastname"],
 					"required" => true,
 					"hint_message" => "Skriv dit efternavn",
-					"error_message" => "Du skal angive et efternavn.",
+					"error_message" => "Efternavn er påkrævet",
 				]),
 
 				$UC->input("email", [
@@ -63,15 +63,15 @@ $this->pageTitle("Brugeroplysninger");
 					"label" => "Email",
 					"value" => $user["email"],
 					"required" => true,
-					"hint_message" => "Den e-mail du bruger til at logge ind med, og få e-mails fra",
-					"error_message" => "Ugyldig email",
+					"hint_message" => "Den e-mailadresse, som vi kan kontakte dig på.",
+					"error_message" => "Ugyldig e-mail",
 				]),
 
 				$UC->input("mobile", [
 					"type" => "string",
 					"label" => "Mobil",
 					"value" => $user["mobile"],
-					"hint_message" => "Skriv dit mobiltelefonnummer, så vi kan sende dig beskeder",
+					"hint_message" => "Skriv dit mobiltelefonnummer, hvis vi må sende dig påmindelser pr. SMS",
 					"error_message" => "Ugyldigt nummer",
 				]);
 			?>
