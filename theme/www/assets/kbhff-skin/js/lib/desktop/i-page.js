@@ -97,7 +97,7 @@ Util.Objects["page"] = new function() {
 		// initialize navigation
 		page.initNavigation = function() {
 
-			page.nN_nodes = u.qsa("li.nav-node-primary", page.nN);
+			page.nN_nodes = u.qsa("li.indent0", page.nN);
 			
 			var z_index_counter = 100;
 
