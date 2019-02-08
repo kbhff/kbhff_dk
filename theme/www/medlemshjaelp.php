@@ -22,18 +22,18 @@ $page->pageTitle("Medlemshjælp");
 
 if($action) {
 	
-	// if($action[0] == "soeg") {
-	// 	$users = $model->getUsersByDepartment("GetUsersByDepartment");
-	// 
-	// 	if($users) {
-	// 		// print_r($users);
-	// 	}
-	// 	else {
-	// 		message()->resetMessages();
-	// 		message()->addMessage("det lykkedes ikke at vise søgeresultatet", array("type" => "error"));
-	// 	}
-	// }
-	// 
+	 if($action[0] == "soeg") {
+	 	$users = $model->getUsersByDepartment("GetUsersByDepartment");
+	 
+	 	if($users) {
+	 
+	 	}
+	 	else {
+	 		message()->resetMessages();
+	 		message()->addMessage("Det lykkedes ikke at finde et søgeresultat", array("type" => "error"));
+	 	}
+	 }
+	 
 	
 	
 	// /medlemshjaelp/tilmelding
