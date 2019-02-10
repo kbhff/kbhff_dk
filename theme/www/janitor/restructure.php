@@ -845,7 +845,8 @@ if(is_array($action) && count($action)) {
 
 			$query = new Query();
 			// $sql = "SELECT uid, orderkey, orderno, puid FROM kbhff_dk.ff_orderhead LIMIT 81380,850000";
-			$sql = "SELECT * FROM kbhff_dk.ff_orderhead";
+			// $sql = "SELECT * FROM kbhff_dk.ff_orderhead ORDER BY uid ASC LIMIT 1000";
+			$sql = "SELECT * FROM kbhff_dk.ff_orderhead ORDER BY uid ASC";
 			if($query->sql($sql)) {
 
 				$orders = $query->results();
@@ -1053,13 +1054,25 @@ if(is_array($action) && count($action)) {
 		// DELETE ORDERS WITHOUT LINES
 		$order_operations_5 = false;
 
+		// CROSS-REFERENCE ALL ORDERS AND CHECK VALIDITY
+		$order_operations_6 = false;
 
-
-		// Transfer orders?
-		$order_operations_6 = true;
-
-
+		// DELETE LOST ORDER LINES AND TRANSACTIONS, ADMIN ORDERS AND CANCELLED ORDERS
 		$order_operations_7 = false;
+
+
+
+		// CREATE REQUIRED LEGACY PRODUCTS
+		$pre_order_operations = false;
+
+
+
+		// TRANSFER ALL ORDERS
+		$order_operations_transfer = false;
+
+
+		// REMOVE DEPRECATED TABLES AND COLUMNS
+		$cleanup_operation = true;
 
 
 
@@ -1955,7 +1968,8 @@ if(is_array($action) && count($action)) {
 
 			// Get all remaining users
 			$sql = "SELECT * FROM ".SITE_DB.".ff_persons ORDER BY uid ASC";
-			$sql = "SELECT * FROM ".SITE_DB.".ff_persons ORDER BY uid ASC LIMIT 25";
+			$sql = "SELECT * FROM ".SITE_DB.".ff_persons WHERE email = 'martin@think.dk' ORDER BY uid ASC";
+			// $sql = "SELECT * FROM ".SITE_DB.".ff_persons ORDER BY uid ASC LIMIT 250";
 			if($query->sql($sql)) {
 				$results = $query->results();
 
@@ -1990,9 +2004,9 @@ if(is_array($action) && count($action)) {
 								// BUILD USER
 								$sql = "INSERT INTO ".SITE_DB.".users SET ";
 								$sql .= "user_group_id = 2";
-								$sql .= ", firstname = '".$firstname."'"; 
-								$sql .= ", lastname = '".$lastname."'"; 
-								$sql .= ", nickname = '".$nickname."'"; 
+								$sql .= ", firstname = '".prepareForDB($firstname)."'"; 
+								$sql .= ", lastname = '".prepareForDB($lastname)."'"; 
+								$sql .= ", nickname = '".prepareForDB($nickname)."'"; 
 
 								$sql .= ", status = 1"; 
 
@@ -2372,17 +2386,16 @@ if(is_array($action) && count($action)) {
 		}
 
 
-
-
-
-		// READY TO TRANSFER ORDERS??
-		// DELETE ORDER WITHOUT LINES
+		// CROSS-REFERENCE ALL ORDERS AND CHECK VALIDITY
+		// - CHECK THAT PAYMENT, ORDERLINES AND ORDERHEAD AMOUNTS ADD UP
+		// - FIX BROKEN USER ASSIGNMENT
+		// - DELETE ALL INVALID OR INCOMPLETE ORDERS
 		if($order_operations_6) {
 
 			$orders = getAllOrders();
 			output("TOTAL ORDERS: " . count($orders));
 
-			$delete_count = 0;
+			// $delete_count = 0;
 
 			foreach($orders as $order) {
 
@@ -2569,36 +2582,18 @@ if(is_array($action) && count($action)) {
 
 					else if($order_transaction_user_issue && $order_amount_issue) {
 
-						output("TRANSACTION USER AND AMOUNT ISSUE");
-
-						print_r($order);
-						print_r($order_lines);
-
-						print_r($order_transactions);
+						output("TRANSACTION USER AND AMOUNT ISSUE (".$order["orderno"].") - DELETED");
 
 
-						$sql = "SELECT * FROM kbhff_dk.ff_transactions WHERE (puid = ".$order["puid"]." OR authorized_by = ".$order["puid"]. ") AND (amount = ".number_format($order_lines_total,2)." OR amount = ".number_format($order_lines_total-$order_transactions_total,2).") AND created > '".$order["created"]."' AND orderno = 0";
-						output($sql);
-						if($query->sql($sql)) {
+						$sql = "DELETE FROM kbhff_dk.ff_orderhead WHERE orderno = ".$order["orderno"];
+						$query->sql($sql);
 
-							$match = $query->results();
-							output("BEST MATCH");
-							print_r($match);
+						$sql = "DELETE FROM kbhff_dk.ff_orderlines WHERE orderno = ".$order["orderno"];
+						$query->sql($sql);
 
-						}
+						$sql = "DELETE FROM kbhff_dk.ff_transactions WHERE orderno = ".$order["orderno"];
+						$query->sql($sql);
 
-						$sql = "SELECT * FROM kbhff_dk.ff_transactions WHERE (amount = ".number_format($order_lines_total,2)." OR amount = ".number_format($order_lines_total-$order_transactions_total,2).") AND created > '".$order["created"]."' AND orderno = 0";
-						if($query->sql($sql)) {
-
-							$match = $query->results();
-							output("POTENTIAL MATCH");
-							print_r($match);
-
-						}
-
-
-
-						// exit();
 
 					}
 					else if($order_amount_issue) {
@@ -2615,76 +2610,32 @@ if(is_array($action) && count($action)) {
 
 						output("ZERO ORDER");
 
-						print_r($order);
-						print_r($order_lines);
-
-						print_r($order_transactions);
+						// print_r($order);
+						// print_r($order_lines);
+						//
+						// print_r($order_transactions);
 
 					}
 
-					// if($order_transaction_user_issue) {
-					//
-					// 	output("TRANSACTIONS USER ISSUE");
-					//
-					// }
-
-					// if($order_amount_issue) {
-					//
-					// 	output("AMOUNT ISSUE");
-					//
-					// }
-
-
-
-
-					// Check that payment, orderlines and orderhead amounts add up
-
-					// IDENTIFY PRODUCT/SIGNUP/MEMBERSHIP (EQUIVALENT MUST BE CREATED IN NEW SYSTEM)
-
-					// INSERT INTO shop_order, shop_order_items AND shop_payments
 
 				}
 
 				// Incomplete or invalid order – delete it
 				else {
 
-					$delete_count++;
-					// output("INVALID OR INCOMPLETE ORDER (".$order["orderno"].") - DELETED");
-
-					// print_r($order);
-					// print_r($order_lines);
-					//
-					// print_r($order_transactions);
-
-					// if($order_lines) {
-					//
-					// 	$order_lines_total = 0;
-					//
-					// 	foreach($order_lines as $order_line) {
-					//
-					// 		$order_lines_total += $order_line["amount"];
-					//
-					// 	}
-					//
-					// 	// Look for transaction
-					// 	$sql = "SELECT * FROM kbhff_dk.ff_transactions WHERE puid = ".$order["puid"]." OR authorized_by = ".$order["puid"]. " AND amount = $order_lines_total AND created > '".$order["created"]."'";
-					// 	if($query->sql($sql)) {
-					//
-					// 		$match = $query->results();
-					// 		print_r($match);
-					//
-					// 	}
-					//
-					// }
-					//
-					// $sql = "DELETE FROM kbhff_dk.ff_orderlines WHERE orderno = ".$order["orderno"];
-					// $query->sql($sql);
-					//
-					// $sql = "DELETE FROM kbhff_dk.ff_transactions WHERE orderno = ".$order["orderno"];
-					// $query->sql($sql);
+					// $delete_count++;
+					output("INVALID OR INCOMPLETE ORDER (".$order["orderno"].") - DELETED");
 
 
-					// exit();
+					$sql = "DELETE FROM kbhff_dk.ff_orderhead WHERE orderno = ".$order["orderno"];
+					$query->sql($sql);
+
+					$sql = "DELETE FROM kbhff_dk.ff_orderlines WHERE orderno = ".$order["orderno"];
+					$query->sql($sql);
+
+					$sql = "DELETE FROM kbhff_dk.ff_transactions WHERE orderno = ".$order["orderno"];
+					$query->sql($sql);
+
 
 				}
 
@@ -2692,184 +2643,472 @@ if(is_array($action) && count($action)) {
 
 		}
 
-		output("TOTAL DELETED:" . $delete_count);
 
-
-		// FINAL ORDER OPERATION
-		// MAP ORDER TO SUBSCRIPTION FOR EACH USER (FIND THE ORDER THAT MATCHES THE LAST KONTINGENT PAYMENT)
-
-
-
-		// TODO's
-		// Clean ff_persons, so only password remains
-		// Remove other ff_ tables (unless they are good for something)
-
-		// $UC->dropTable(SITE_DB.".ff_unisex");
-		// $UC->dropColumn(SITE_DB.".ff_persons", "birthday");
-
-
-
-		exit();
-
-
-
-		// OLD NOTES
-		
-		
-		// price differs on head, lines or transaction
-		
-		// Order head without order lines
-		// Order head without user
-
-		// Order lines without order head
-		// Order lines without user
-
-		// Order lines where user differs from order head
-
-		// Order head without transactions
-		// transactions without order head
-
-		// Order transactions where user differs from order head
-
+		// REMOVE LAST EXCEESS ORDERS 
+		// - LOST ORDER LINES AND TRANSACTIONS
+		// – ADMIN ORDERS
+		// - ORDERS WITH 'annulleret' AS status1
 		if($order_operations_7) {
+
+			output("LAST CLEAN OUT");
 
 			// Order lines without order head
 			$sql = "SELECT uid, orderno FROM kbhff_dk.ff_orderlines WHERE orderno NOT IN(SELECT orderno FROM kbhff_dk.ff_orderhead)";
 			if($query->sql($sql)) {
 
 				$orders = $query->results();
+				output("LOST ORDERLINES:" . count($orders));
+
+				foreach($orders as $order) {
+					$sql = "DELETE FROM kbhff_dk.ff_orderlines WHERE uid = ".$order["uid"];
+					$query->sql($sql);					
+				}
 
 			}
-			print "COUNT:" . count($orders);
 
 
-			// Order lines without order head
+			// Order transactions without order head
 			$sql = "SELECT uid, orderno FROM kbhff_dk.ff_transactions WHERE orderno NOT IN(SELECT orderno FROM kbhff_dk.ff_orderhead)";
 			if($query->sql($sql)) {
 
 				$orders = $query->results();
+				output("LOST TRANSACTIONS:" . count($orders));
+
+				foreach($orders as $order) {
+					$sql = "DELETE FROM kbhff_dk.ff_transactions WHERE uid = ".$order["uid"];
+					$query->sql($sql);
+				}
 
 			}
-			print "COUNT:" . count($orders);
 
 
-		}
-
-
-		$orders = [];
-
-		// Order lines without order head
-		$sql = "SELECT uid, orderkey, orderno, puid FROM kbhff_dk.ff_orderlines WHERE orderno NOT IN(SELECT orderno FROM kbhff_dk.ff_orderhead)";
-		if($query->sql($sql)) {
-
-			$orders = $query->results();
-
-		}
-		print "COUNT:" . count($orders);
-
-
-
-		$query = new Query();
-
-
-		// Order lines without user
-		$sql = "SELECT uid, orderkey, orderno, puid FROM kbhff_dk.ff_orderlines WHERE puid NOT IN(SELECT uid as puid FROM kbhff_dk.ff_persons)";
-		if($query->sql($sql)) {
-
-			$orders = $query->results();
-			print "COUNT:" . count($orders);
-
-		}
-
-
-			$sql = "SELECT * FROM kbhff_dk.ff_items";
+			// Admin orders or 'annulleret' orders
+			$sql = "SELECT uid, orderno FROM kbhff_dk.ff_orderhead WHERE puid = 1";
 			if($query->sql($sql)) {
-				$items = $query->results();
 
-				foreach($items as $item) {
+				$orders = $query->results();
+				output("ADMIN ORDERS:" . count($orders));
 
-					$sql = "SELECT * FROM kbhff_dk.ff_orderlines WHERE item = ".$item["id"];
-					if(!$query->sql($sql)) {
-						output("PROBLEM");
-						print_r($item);
+				foreach($orders as $order) {
+					$sql = "DELETE FROM kbhff_dk.ff_orderhead WHERE orderno = ".$order["orderno"];
+					$query->sql($sql);
+
+					$sql = "DELETE FROM kbhff_dk.ff_orderlines WHERE orderno = ".$order["orderno"];
+					$query->sql($sql);
+
+					$sql = "DELETE FROM kbhff_dk.ff_transactions WHERE orderno = ".$order["orderno"];
+					$query->sql($sql);
+				}
+
+			}
+
+			// Admin orders or 'annulleret' orders
+			$sql = "SELECT uid, orderno FROM kbhff_dk.ff_orderhead WHERE status1 = 'annulleret' OR status1 = 'anulleret'";
+			if($query->sql($sql)) {
+
+				$orders = $query->results();
+				output("CANCELLED ORDERS:" . count($orders));
+
+				foreach($orders as $order) {
+					$sql = "DELETE FROM kbhff_dk.ff_orderhead WHERE orderno = ".$order["orderno"];
+					$query->sql($sql);
+
+					$sql = "DELETE FROM kbhff_dk.ff_orderlines WHERE orderno = ".$order["orderno"];
+					$query->sql($sql);
+
+					$sql = "DELETE FROM kbhff_dk.ff_transactions WHERE orderno = ".$order["orderno"];
+					$query->sql($sql);
+				}
+
+			}
+
+
+		}
+
+
+
+
+		// IDENTIFY PRODUCT/SIGNUP/MEMBERSHIP (EQUIVALENT MUST BE CREATED IN NEW SYSTEM)
+		if($pre_order_operations) {
+
+			output("ORDER IMPORT PREREQUISITES");
+
+			$query = new Query();
+			$IC = new Items();
+			$model = $IC->typeObject("legacyproduct");
+
+			$sql = "SELECT * FROM kbhff_dk.ff_producttypes";
+
+			if($query->sql($sql)) {
+
+				$products = $query->results();
+
+				foreach($products as $product) {
+
+					if(!preg_match("/medlemskab|Kontingent/", $product["explained"])) {
+
+						// Does product exist
+						$matches = $IC->getItems(["itemtype" => "legacyproduct", "where" => "name = '".$product["explained"]."'", "limit" => 1]);
+						if(!$matches) {
+
+							$_POST["name"] = $product["explained"];
+							$model->save(["save"]);
+
+							output($product["explained"] . " CREATED");
+						}
+
+					}
+
+				}
+
+			}
+
+
+			$payment_method_index = [];
+			$payment_methods = $page->paymentMethods();
+
+			foreach($payment_methods as $payment_method) {
+
+				$payment_method_index[$payment_method["classname"]] = $payment_method;
+
+			}
+
+			$error = false;
+
+			if(!isset($payment_method_index["kontant"])) {
+				output("kontant PAYMENT OPTION MISSING");
+				$error = true;
+			}
+			if(!isset($payment_method_index["nets"])) {
+				output("nets PAYMENT OPTION MISSING");
+				$error = true;
+			}
+			if(!isset($payment_method_index["mobilepay"])) {
+				output("mobilepay PAYMENT OPTION MISSING");
+				$error = true;
+			}
+
+			if($error) {
+				exit();
+			}
+
+
+//			print_r($payment_methods);
+
+		}
+
+
+		// FINAL ORDER OPERATION
+		// MAP ORDER TO SUBSCRIPTION FOR EACH USER (FIND THE ORDER THAT MATCHES THE LAST KONTINGENT PAYMENT)
+		if($order_operations_transfer) {
+
+			$orders = getAllOrders();
+			output("TOTAL ORDERS TO IMPORT: " . count($orders));
+			$SC = new Shop();
+
+
+			// Membership ID
+			// CHECK MEMBERSHIP 
+			$sql = "SELECT * FROM ".SITE_DB.".item_membership WHERE classname='volunteer'";
+			if($query->sql($sql)) {
+				$membership_id = $query->result(0, "item_id");
+				output("MEMBERSHIP ID: " . $membership_id);
+			}
+			else {
+				output("NO MEMBERSHIP – CREATE (OR UPDATE) NEW volunteer MEMBERSHIP TO CONTINUE");
+				exit();
+			}
+
+
+
+			// New products
+			$legacy_products = $IC->getItems(["itemtype" => "legacyproduct", "extend" => true]);
+			$legacy_products_index = [];
+			foreach($legacy_products as $legacy_product) {
+				$legacy_products_index[$legacy_product["name"]] = $legacy_product;
+			}
+
+			// print_r($legacy_products_index);
+
+			// GET LEGACY PRODUCT INDEX
+			$sql = "SELECT items.id as id, products.id as product_id, products.explained FROM kbhff_dk.ff_producttypes as products, kbhff_dk.ff_items as items WHERE items.producttype_id = products.id";
+			$query->sql($sql);
+
+			$product_index = [];
+			$products = $query->results();
+			foreach($products as $product) {
+
+
+
+
+				// $matches = $IC->getItems(["itemtype" => "legacyproduct", "where" => "name = '".$product["explained"]."'", "limit" => 1]);
+				if(isset($legacy_products_index[trim($product["explained"])])) {
+					$product["item_id"] = $legacy_products_index[trim($product["explained"])]["item_id"];
+					// $product["item_id"] = $legacy_products_index[$product["explained"]];
+				}
+				else if(preg_match("/medlemskab|Kontingent/", $product["explained"])) {
+
+					$product["item_id"] = $membership_id;
+				}
+				// else {
+				// 	output("SHIT:" . $product["explained"] . ", " . $legacy_products_index["støttepose (grøntsager)"]);
+				// 	exit;
+				// }
+
+
+				$product_index[$product["id"]] = $product;
+
+			}
+
+
+
+			$payment_method_index = [];
+			$payment_methods = $page->paymentMethods();
+
+			foreach($payment_methods as $payment_method) {
+
+				$payment_method_index[$payment_method["classname"]] = $payment_method;
+
+			}
+
+
+			// print_r($product_index);
+			// exit();
+
+
+			foreach($orders as $order) {
+
+				
+				$order_lines = false;
+				$order_transactions = false;
+				$order_no = false;
+				$user_id = false;
+
+				$sql = "SELECT * FROM kbhff_dk.ff_orderlines WHERE orderno = ".$order["orderno"];
+				$query->sql($sql);
+				$order_lines = $query->results();
+
+				$sql = "SELECT * FROM kbhff_dk.ff_transactions WHERE orderno = ".$order["orderno"];
+				$query->sql($sql);
+				$order_transactions = $query->results();
+
+				// Everything looks good
+				if($order_lines && $order_transactions) {
+
+					// Get some additional details
+					$sql = "SELECT new_user_id FROM kbhff_dk.ff_persons WHERE uid = ".$order["puid"];
+					if($query->sql($sql)) {
+
+						$user_id = $query->result(0, "new_user_id");
+
+						$order_no = $SC->getNewOrderNumber();
+						
+						$sql = "SELECT id FROM kbhff_dk.shop_orders WHERE order_no = '$order_no'";
+						$query->sql($sql);
+						$order_id = $query->result(0, "id");
+
+					}
+
+
+					if($order_no && $user_id) {
+
+						// GET USER NICKNAME
+						$sql = "SELECT nickname FROM kbhff_dk.users WHERE id = $user_id";
+						$query->sql($sql);
+						$nickname = $query->result(0, "nickname");
+
+
+						// INSERT ORDER
+						$sql = "UPDATE kbhff_dk.shop_orders SET ";
+						
+						$sql .= "user_id = $user_id, ";
+						$sql .= "country = 'DK', ";
+						$sql .= "currency = 'DKK', ";
+						$sql .= "status = 2, ";
+						$sql .= "payment_status = 2, ";
+						$sql .= "shipping_status = 2, ";
+
+						$sql .= "billing_name = '$nickname', ";
+						$sql .= "comment = 'Transferred from old system', ";
+						$sql .= "created_at = '".$order["created"]."', ";
+						$sql .= "modified_at = '".date("Y-m-d H:i:s")."' ";
+
+						$sql .= "WHERE order_no = '$order_no'";
+					
+						output($sql);
+
+						$query->sql($sql);
+
+
+						// INSERT ORDERLINES
+						foreach($order_lines as $order_line) {
+
+							$item_id = $product_index[$order_line["item"]]["item_id"];
+
+							$sql = "INSERT INTO kbhff_dk.shop_order_items SET ";
+							$sql .= "order_id = $order_id, ";
+							$sql .= "quantity = ".$order_line["quant"].", ";
+
+							$sql .= "item_id = ".$item_id.", ";
+
+							$sql .= "name = '".$product_index[$order_line["item"]]["explained"]."', ";
+
+							$sql .= "unit_price = ".($order_line["amount"] / $order_line["quant"]).", ";
+							$sql .= "unit_vat = ".(($order_line["amount"] / $order_line["quant"]) * 0.2).", ";
+							$sql .= "total_price = ".$order_line["amount"].", ";
+							$sql .= "total_vat = ".$order_line["amount"] * 0.2;
+
+							$query->sql($sql);
+
+							output($sql);
+
+							// IF PRODUCT (medlemskab/kontingent) UPDATE SUBSCRIPTION ORDER
+							if($item_id == $membership_id) {
+
+								$sql = "UPDATE kbhff_dk.user_item_subscriptions SET order_id = $order_id WHERE user_id = $user_id AND item_id = $membership_id";
+								output($sql);
+
+								$query->sql($sql);
+
+							}
+
+						}
+
+
+					
+						// INSERT TRANSACTIONS
+						foreach($order_transactions as $order_transaction) {
+
+							$sql = "INSERT INTO kbhff_dk.shop_payments SET ";
+							$sql .= "order_id = $order_id, ";
+							$sql .= "currency = 'DKK', ";
+							$sql .= "payment_amount = ".$order_transaction["amount"].", ";
+							$sql .= "transaction_id = '".($order_transaction["trans_id"] ? $order_transaction["trans_id"] : (date("Y-m-d", strtotime($order_transaction["created"])) . "(".$order_transaction["method"].")"))."', ";
+
+							$sql .= "payment_method = ".$payment_method_index[$order_transaction["method"]]["id"].", ";
+
+							$sql .= "created_at = '".$order_transaction["created"]."'";
+
+							output($sql);
+
+							$query->sql($sql);
+
+
+						}
+
+
+						// ALL ORDER PARTS TRANSFERRED - DELETE ORDER
+						$sql = "DELETE FROM kbhff_dk.ff_orderhead WHERE orderno = ".$order["orderno"];
+						$query->sql($sql);
+
+						$sql = "DELETE FROM kbhff_dk.ff_orderlines WHERE orderno = ".$order["orderno"];
+						$query->sql($sql);
+
+						$sql = "DELETE FROM kbhff_dk.ff_transactions WHERE orderno = ".$order["orderno"];
+						$query->sql($sql);
+
+
 					}
 					else {
-						output("OK");
+						output("UNEXPECTED ERROR – MISSING USER");
+						print_r($order);
+						print_r($order_lines);
+						print_r($order_transactions);
+
+						exit();
 					}
+
+
+
 				}
+				else {
+					output("UNEXPECTED ERROR");
+					print_r($order);
+					print_r($order_lines);
+					print_r($order_transactions);
+
+					exit();
+				}
+
+
 			}
 
 
-
-			// $sql = "SELECT * FROM kbhff_dk.ff_items WHERE id NOT IN(SELECT item as id FROM kbhff_dk.ff_orderlines WHERE PUID != 1 GROUP BY item)";
-			// if($query->sql($sql)) {
-			// 	$items = $query->results();
-			//
-			// 	foreach($items as $item) {
-			//
-			// 		$sql = "DELETE FROM kbhff_dk.ff_producttypes WHERE id = ".$item["id"];
-			// 		if($query->sql($sql)) {
-			// 			output("DELETED:".$item["explained"]);
-			// 		}
-			// 	}
-			// }
-			//
-			//
-			// $sql = "SELECT * FROM kbhff_dk.ff_orderlines WHERE puid != 1 GROUP BY item";
-
-// 			$sql = "SELECT item FROM kbhff_dk.ff_orderlines WHERE item NOT IN(SELECT id as item FROM kbhff_dk.ff_items)";
-//
-// 			$sql = "SELECT * FROM kbhff_dk.ff_producttypes";
-// 			if($query->sql($sql)) {
-// 				$unused_products = $query->results();
-//
-//
-// 			" WHERE id NOT IN(SELECT item as id FROM kbhff_dk.ff_orderlines GROUP BY id)";
-// //				debug($sql);
-//
-// 			if($query->sql($sql)) {
-// 				$unused_products = $query->results();
-//
-// 				print_r($unused_products);
-// 			}
-// 			else {
-// 				output("All good");
-// 			}
-//
+		}
 
 
 
-// // Check order head
-// $sql = "SELECT * FROM kbhff_dk.ff_orderhead WHERE orderno = '".$line["orderno"]."'";
-// if($query->sql($sql)) {
-// 	$head = $query->result(0);
-// 	output("ORDER PRICE:" . $head["cc_trans_amount"]);
-// }
-//
-// // Check order head
-// $sql = "SELECT * FROM kbhff_dk.ff_transactions WHERE orderno = '".$line["orderno"]."'";
-// if($query->sql($sql)) {
-// 	$trans = $query->result(0);
-// 	output("TRANS AMOUNT:" . $trans["amount"]);
-// }
-//
+		// CLEAN FF_PERSONS, SO ONLY PASSWORD REMAINS
+		// REMOVE OTHER FF_ TABLES (UNLESS THEY ARE GOOD FOR SOMETHING)
+		if($cleanup_operation) {
+
+			$UC->dropTable(SITE_DB.".ff_teams");
+			$UC->dropTable(SITE_DB.".ff_statistics_log");
+			$UC->dropTable(SITE_DB.".ff_reportfields");
+			$UC->dropTable(SITE_DB.".ff_report_data");
+			$UC->dropTable(SITE_DB.".ff_producttypes");
+			$UC->dropTable(SITE_DB.".ff_pickupdates");
+			$UC->dropTable(SITE_DB.".ff_personsjan19");
+			$UC->dropTable(SITE_DB.".ff_persons_info");
+			$UC->dropTable(SITE_DB.".ff_massmail_log");
+			$UC->dropTable(SITE_DB.".ff_log");
+			$UC->dropTable(SITE_DB.".ff_items");
+			$UC->dropTable(SITE_DB.".ff_itemdays");
+			$UC->dropTable(SITE_DB.".ff_division_newmemberinfo");
+			$UC->dropTable(SITE_DB.".ff_division_members");
+			$UC->dropTable(SITE_DB.".ff_division_chores");
+
+			// Required to login via CI
+			// $UC->dropTable(SITE_DB.".ff_roles");
+			// $UC->dropTable(SITE_DB.".ff_membernote");
+			// $UC->dropTable(SITE_DB.".ff_groups");
+			// $UC->dropTable(SITE_DB.".ff_groupmembers");
+			// $UC->dropTable(SITE_DB.".ff_divisions");
+			// $UC->dropTable(SITE_DB.".ff_chore_types");
 
 
-// $sql = "SELECT * FROM kbhff_dk.ff_orderlines as ol, kbhff_dk.ff_items as it, kbhff_dk.ff_producttypes as pt WHERE ol.puid = ".$line["puid"]." AND it.id = ol.item AND pt.id = it.producttype_id";
-// if($query->sql($sql)) {
-// 	$trans = $query->results();
-//
-// 	foreach($trans as $tran) {
-// 		output($tran["explained"]);
-// 	}
-// 	// print_r($trans);
-// }
-
-// print_r($line);
+			$UC->dropTable(SITE_DB.".ff_orderhead");
+			$UC->dropTable(SITE_DB.".ff_orderlines");
+			$UC->dropTable(SITE_DB.".ff_transactions");
 
 
+			// CLEAN UP ff_persons
+			// $UC->dropColumn(SITE_DB.".ff_persons", "firstname");
+			// $UC->dropColumn(SITE_DB.".ff_persons", "middlename");
+			// $UC->dropColumn(SITE_DB.".ff_persons", "lastname");
+
+			$UC->dropColumn(SITE_DB.".ff_persons", "sex");
+			$UC->dropColumn(SITE_DB.".ff_persons", "adr1");
+			$UC->dropColumn(SITE_DB.".ff_persons", "adr2");
+			$UC->dropColumn(SITE_DB.".ff_persons", "streetno");
+			$UC->dropColumn(SITE_DB.".ff_persons", "floor");
+			$UC->dropColumn(SITE_DB.".ff_persons", "door");
+			$UC->dropColumn(SITE_DB.".ff_persons", "adr3");
+
+			$UC->dropColumn(SITE_DB.".ff_persons", "zip");
+			$UC->dropColumn(SITE_DB.".ff_persons", "city");
+			$UC->dropColumn(SITE_DB.".ff_persons", "country");
+
+			$UC->dropColumn(SITE_DB.".ff_persons", "languagepref");
+
+			$UC->dropColumn(SITE_DB.".ff_persons", "tel");
+			$UC->dropColumn(SITE_DB.".ff_persons", "tel2");
+
+			$UC->dropColumn(SITE_DB.".ff_persons", "birthday");
+			$UC->dropColumn(SITE_DB.".ff_persons", "user_activation_key");
+
+			$UC->dropColumn(SITE_DB.".ff_persons", "status1");
+			$UC->dropColumn(SITE_DB.".ff_persons", "status2");
+			$UC->dropColumn(SITE_DB.".ff_persons", "status3");
+
+			$UC->dropColumn(SITE_DB.".ff_persons", "rights");
+			$UC->dropColumn(SITE_DB.".ff_persons", "privacy");
+			$UC->dropColumn(SITE_DB.".ff_persons", "ownupdate");
+			
 
 
+			output("REMOVED ALL DEPRECATED TABLES");
+		}
 
 
 
