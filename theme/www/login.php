@@ -275,7 +275,6 @@ if($action) {
 		
 		// error saving password
 		else {
-
 			message()->addMessage("Koden kunne ikke gemmes", array("type" => "error"));
 			header("Location: /login/opret-password");
 			exit();

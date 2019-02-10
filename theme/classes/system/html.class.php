@@ -174,11 +174,12 @@ class HTML extends HTMLCore {
 	* 
 	* @param Array $item array containing data of a single item.
 	* @param Array $options is an associative array containing the option to extend the item. 
-	* @param Array $context Array is the option of allowed contexts - if $context is false, no tags are shown (except editing and default tag)
-	* @param Array $default Array containing url and text
-	* @param String $url url to prefix tag links
-	* @param Boolean $editing defines if editing link is shown
-	* @param String $schema
+	* 	$context Array is the option of allowed contexts - if $context is false, no tags are shown (except editing and default tag)
+	* 	$default Array containing url and text
+	* 	$url url to prefix tag links
+	* 	$editing defines if editing link is shown
+	* 	$schema
+	* 
 	* @return STRING compiled html list 
 	*
 	*/

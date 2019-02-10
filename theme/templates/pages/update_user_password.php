@@ -35,15 +35,15 @@ $this->pageTitle("Adgangskode");
 				$UC->input("new_password", [
 					"label" => "Din nye adgangskode",
 					"required" => true,
-					"hint_message" => "Din nye adgangskode",
+					"hint_message" => "Indtast din nye adgangskode på 8-20 anslag",
 					"error_message" => "",
 				]),
 
 				$UC->input("confirm_password", [
 					"label" => "Gentag din nye adgangskode",
 					"required" => true,
-					"hint_message" => "Din nye adgangskode",
-					"error_message" => "",
+					"hint_message" => "Indtast din nye adgangskode igen for at bekræfte",
+					"error_message" => "Adgangskoderne er ikke ens",
 				]);
 			?>
 		</fieldset>

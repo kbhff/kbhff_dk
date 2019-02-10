@@ -241,107 +241,108 @@ class SuperUser extends SuperUserCore {
 						$mail_password = "******** (password is encrypted)";
 
 						// encrypt password
-						$password = password_hash($raw_password, PASSWORD_DEFAULT);
-						$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$password'";
-						
-						// password added successfully
-						if($query->sql($sql)) {
-
-							// store signup email for receipt page
-							session()->value("signup_email", $email);
-
-
-
-							// VERIFICATION EMAIL
-
-							// add log
-							$page->addLog("user->newUserFromMemberHelp: created: " . $email . ", user_id:$user_id");
-
-							// verification code success
-							// send activation email
-							if($verification_code) {
-
-								// send verification email to user
-								mailer()->send(array(
-									"values" => array(
-										"NICKNAME" => $nickname,
-										"EMAIL" => $email,
-										"VERIFICATION" => $verification_code,
-										"PASSWORD" => $mail_password
-									),
-									"track_clicks" => false,
-									"recipients" => $email,
-									"template" => "signup"
-								));
-
-								// send notification email to admin
-								mailer()->send(array(
-									"subject" => SITE_URL . " - New User: " . $email,
-									"message" => "Check out the new user: " . SITE_URL . "/janitor/admin/user/edit/" . $user_id,
-									"tracking" => false
-									// "template" => "system"
-								));
-							}							
-							// verification code error
-							else {
-								// send error email notification
-								mailer()->send(array(
-									"recipients" => $email,
-									"template" => "signup_error"
-								));
-
-								// send notification email to admin
-								mailer()->send(array(
-									"subject" => "New User created ERROR: " . $email,
-									"message" => "Check out the new user: " . SITE_URL . "/janitor/admin/user/edit/" . $user_id,
-									"tracking" => false
-									// "template" => "system"
-								));
+						if($raw_password) {
+							$password = password_hash($raw_password, PASSWORD_DEFAULT);
+							$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$password'";
+							if(!$query->sql($sql)) {
+								$page->addLog("user->newUserFromMemberHelp failed: (couldn't write password to db)");
+								return false;
 							}
-
-
-
-							// TERMS
-
-							// Add terms agreement
-							$query->checkDbExistence(SITE_DB.".user_log_agreements");
-							$sql = "INSERT INTO ".SITE_DB.".user_log_agreements SET user_id = $user_id, name = 'terms'";
-							$query->sql($sql);
-
-
-							// MAILLIST
-
-							// maillist subscription sent as string
-							$maillist = getPost("maillist");
-							if($maillist) {	
-								// check if maillist exists
-								$maillists = $page->maillists();
-								$maillist_match = arrayKeyValue($maillists, "name", $maillist);
-								if($maillist_match !== false) {
-									$maillist_id = $maillists[$maillist_match]["id"];
-									$_POST["maillist_id"] = $maillist_id;
-
-									// add maillist for current user
-									$this->addMaillist(array("addMaillist"));
-								}
-
-								// ignore subscription if maillist does not exist
-
-							}
-
-							// itemtype post save handler
-							// TODO: Consider if failed postSave should have consequences
-							if(method_exists($this, "saved")) {
-								$this->saved($user_id);
-							}
-
-
-							message()->resetMessages();
-
-							// return enough information to the frontend
-							return array("user_id" => $user_id, "nickname" => $nickname, "email" => $email);
-
 						}
+
+						// store signup email for receipt page
+						session()->value("signup_email", $email);
+	
+	
+	
+						// VERIFICATION EMAIL
+	
+						// add log
+						$page->addLog("user->newUserFromMemberHelp: created: " . $email . ", user_id:$user_id");
+	
+						// verification code success
+						// send activation email
+						if($verification_code) {
+	
+							// send verification email to user
+							mailer()->send(array(
+								"values" => array(
+									"NICKNAME" => $nickname,
+									"EMAIL" => $email,
+									"VERIFICATION" => $verification_code,
+									"PASSWORD" => $mail_password
+								),
+								"track_clicks" => false,
+								"recipients" => $email,
+								"template" => "signup"
+							));
+	
+							// send notification email to admin
+							mailer()->send(array(
+								"subject" => SITE_URL . " - New User: " . $email,
+								"message" => "Check out the new user: " . SITE_URL . "/janitor/admin/user/edit/" . $user_id,
+								"tracking" => false
+								// "template" => "system"
+							));
+						}							
+						// verification code error
+						else {
+							// send error email notification
+							mailer()->send(array(
+								"recipients" => $email,
+								"template" => "signup_error"
+							));
+	
+							// send notification email to admin
+							mailer()->send(array(
+								"subject" => "New User created ERROR: " . $email,
+								"message" => "Check out the new user: " . SITE_URL . "/janitor/admin/user/edit/" . $user_id,
+								"tracking" => false
+								// "template" => "system"
+							));
+						}
+					
+	
+	
+	
+						// TERMS
+	
+						// Add terms agreement
+						$query->checkDbExistence(SITE_DB.".user_log_agreements");
+						$sql = "INSERT INTO ".SITE_DB.".user_log_agreements SET user_id = $user_id, name = 'terms'";
+						$query->sql($sql);
+	
+	
+						// MAILLIST
+	
+						// maillist subscription sent as integer
+						$maillist = getPost("maillist");
+						if($maillist == 1) {	
+							// check if Nyheder maillist exists
+							$maillists = $page->maillists();
+							$maillist_match = arrayKeyValue($maillists, "name", "Nyheder");
+							if($maillist_match !== false) {
+								$maillist_id = $maillists[$maillist_match]["id"];
+								$_POST["maillist_id"] = $maillist_id;
+								
+								// add maillist for current user
+								$this->addMaillist(array("addMaillist", $user_id));
+							}
+	
+							// ignore subscription if maillist does not exist
+	
+						}
+						// itemtype post save handler
+						// TODO: Consider if failed postSave should have consequences
+						if(method_exists($this, "saved")) {
+							$this->saved($user_id);
+						}
+	
+	
+						message()->resetMessages();
+	
+						// return enough information to the frontend
+						return array("user_id" => $user_id, "nickname" => $nickname, "email" => $email);
 					}
 
 				}
