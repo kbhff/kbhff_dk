@@ -351,157 +351,84 @@ class SuperUser extends SuperUserCore {
 		$page->addLog("user->newUserFromMemberHelp failed: (missing info)");
 		return false;
 	}
-	function getUsersByDepartment($action) {
-		// Log that the method has been started
-		global $page;
-		$page->addLog("result->getUsersByDepartment: initiated");
-
-
+	function searchUsers($action) {
+	
 		// Get content of $_POST array which have been "quality-assured" by Janitor 
 		$this->getPostedEntities();
 		
-		if($this->validateList(array("department_id", "active_member", "user_id"))) {
+		
+		if($this->validateList(array("department_id", "search_member"))) {
 			
 			$department_id= $this->getProperty("department_id", "value");
-			// $active = $this->getProperty("active_member", "value");
-			$user_id = $this->getProperty("user_id", "value");
+			$search_value = $this->getProperty("search_member", "value");
+		
+			$user_id = session()->value("user_id");
+		
 			$query = new Query();
-			if($department_id) {
 			
+			if ((strlen($search_value)>3)) {
+				$sql = "select u.nickname as name, ud.department_id as department, u.id as user_id,
+				(select un.username
+				from ".SITE_DB.".user_usernames as un
+				where un.user_id = u.id 
+				and un.type = 'email') as email, 
+				(select un.username
+				from ".SITE_DB.".user_usernames as un
+				where un.user_id = u.id 
+				and un.type = 'mobile') as mobile,
+				(select un.username
+				from ".SITE_DB.".user_usernames as un
+				where un.user_id = u.id 
+				and un.type = 'member_no') as member_no
+				from ".SITE_DB.".users u
+				LEFT OUTER JOIN ".SITE_DB.".user_department ud
+				ON u.id = ud.user_id
+				LEFT JOIN ".SITE_DB.".user_usernames un
+				ON un.user_id = u.id
+				WHERE (un.username like '%$search_value%'
+				OR u.nickname like '%$search_value%')";
+				
+				if ($department_id != 0) {
+					$sql .= " and ud.department_id = $department_id";
+				}
+				
+				$sql .= " and u.id <> $user_id";
+				
+				$sql .= " group by u.id";
+				
+				
+				include_once("classes/system/department.class.php");
+ 				$DC = new Department();
+ 				$departments = $DC->getDepartments();
 			
-				// filtrates users by department and current user
-				// $sql = "SELECT user_id FROM ".SITE_DB.".user_department WHERE department_id = $department_id AND NOT ".SITE_DB.".user_department.user_id = $user_id";
 				
-				// query to get correct information from different tables but only with mobilenr as username and not email 
-			 	$sql = "SELECT ".SITE_DB.".user_usernames.username as mobilnr, ".SITE_DB.".users.nickname as navn, ".SITE_DB.".user_usernames.user_id, ".SITE_DB.".system_departments.name as afdeling
-			 	from ".SITE_DB.".user_usernames
-			 	JOIN ".SITE_DB.".users
-			 	ON ".SITE_DB.".user_usernames.user_id = ".SITE_DB.".users.id
-			 	JOIN ".SITE_DB.".user_department
-			 	ON ".SITE_DB.".user_department.user_id = ".SITE_DB.".users.id
-			 	JOIN ".SITE_DB.".system_departments
-			 	ON ".SITE_DB.".system_departments.id = ".SITE_DB.".user_department.department_id
-			 	WHERE ".SITE_DB.".user_department.department_id = $department_id
-			 	AND NOT ".SITE_DB.".users.id = $user_id
-			 	AND ".SITE_DB.".user_usernames.type = 'mobile' 
-			 	group by user_id
-				limit 200";
-				
-				if($query->sql($sql)) {
+				if ($query->sql($sql)) {
 					$users = $query->results();
-				}
-				else {
-					return false;
-				}
-				
-				$sql = "select ".SITE_DB.".user_usernames.username as email, ".SITE_DB.".user_usernames.user_id
-				from ".SITE_DB.".user_usernames
-				where ".SITE_DB.".user_usernames.type = 'email'";
-				
-				if($query->sql($sql)) {
-					$user_email = $query->results();
-					// print_r($user_email);
-				}
-				else {
-					return false;
-				}
-				// selects username by member_no. However, this should be asked for in the first query, since every member has a member_no but every members has a mobile or email.
-				// $sql = "select ".SITE_DB.".user_usernames.username as Medlemsnr, ".SITE_DB.".user_usernames.user_id
-				// from ".SITE_DB.".user_usernames
-				// where ".SITE_DB.".user_usernames.type = 'member_no'";
-				// 
-				// if($query->sql($sql)) {
-				// 	$user_no = $query->results();
-				// 	print_r($user_no);
-				// }
-				// should also contain mobile
-			
-				if ($users & $user_email) {
-					$kv = [];
-					foreach($users as $k => $v) {
-						$kv[ $v["user_id"] ] = $k;
-					}
-					foreach ($user_email as $k => $v) {
-						if (array_key_exists( $v["user_id"] , $kv ) ) {
-							$users[ $kv [$v["user_id"]] ] = array_merge( $users[$kv[$v["user_id"]]] , $user_email[$k] );
-						}
-					}
 					
-					// print_r($users);
+					if ($users):
+						foreach($users as $u => $user):
+							// print_r($user);
+						
+								foreach ($departments as $d => $department): 
+									
+									if ($department["id"] == $user["department"]) :
+				
+										$users[$u]["department"] = $department["name"];
+							
+									endif;
+								endforeach;
+						
+						endforeach;
+					endif;
+					
 					return $users;
 				}
-				 else if ($users) {
-					 return $users;
-				 }
-				 else {
-					 return false;
-				 }
+				
+				
 			}
-			return false; 	
 		}
+		
+		
 	}
-				// query to get email and mobile as keys, but they can only get either mobile or email as values. 
-				// $sql = "select count(*) as repetitions, ".SITE_DB.".user_usernames.username as Email, ".SITE_DB.".user_usernames.username as Mobilnr
-				// FROM ".SITE_DB.".user_usernames
-				// WHERE  ".SITE_DB.".user_usernames.type = 'email'
-				// AND ".SITE_DB.".user_usernames.type = 'mobile'					
-				// group by user_id ";
-				
-				// query to get email and mobile as keys, but they can only get either mobile or email as values. 
-				// $sql = "SELECT ".SITE_DB.".user_usernames.username as Email, ".SITE_DB.".user_usernames.username as Mobilnr
-				// from ".SITE_DB.".user_usernames 
-				// where ".SITE_DB.".user_usernames.type IN ('email', 'mobile')";
-				
-				
-				// finds duplicates and counts them 
-				// $sql = "select count(*) as repetitions, username as email, username as mobile, user_id
-				// from ".SITE_DB.".user_usernames 
-				// group by user_id
-				// having repetitions > 1";
-				
-				// if($query->sql($sql)) {
-				// 	$users = $query->results();
-				// 	// print_r($users);
-				// 	if($users) {
-				// 
-				// 		// loops over $result and convert the values (user_id) to a comma seperated string
-				// 		 foreach($users as $u => $user) {
-				// 		 // 	$str = "".implode("', '", $user).", ";
-				// 	 		$sql = "SELECT ".SITE_DB.".user_usernames.username as Mobilnr, ".SITE_DB.".users.nickname as Navn, ".SITE_DB.".user_usernames.user_id, ".SITE_DB.".system_departments.name as Afdeling
-				// 			from ".SITE_DB.".user_usernames
-				// 			JOIN ".SITE_DB.".users
-				// 			ON ".SITE_DB.".user_usernames.user_id = ".SITE_DB.".users.id
-				// 			JOIN ".SITE_DB.".user_department
-				// 			ON ".SITE_DB.".user_department.user_id = ".SITE_DB.".users.id
-				// 			JOIN ".SITE_DB.".system_departments
-				// 			ON ".SITE_DB.".system_departments.id = ".SITE_DB.".user_department.department_id
-				// 			WHERE department_id = $department_id 
-				// 			AND NOT ".SITE_DB.".user_department.user_id = $user_id
-				// 			AND ".SITE_DB.".user_usernames.type = 'mobile'
-				// 			Group By username
-				// 			LIMIT 200";
-				// 
-				// 			if($query->sql($sql)) {
-				// 				$users = $query->results();
-				// 				print_r($users);
-				// 			}
-				// 			$sql = "select ".SITE_DB.".user_usernames.username as Email, ".SITE_DB.".user_usernames.user_id
-				// 			from ".SITE_DB.".user_usernames
-				// 			where ".SITE_DB.".user_usernames.type = 'email'";
-				// 
-				// 			if($query->sql($sql)) {
-				// 				$user_email = $query->results();
-				// 				print_r($user_email);
-				// 			}
-				// 
-				// 			$sql = "select ".SITE_DB.".user_usernames.username as Medlemsnr, ".SITE_DB.".user_usernames.user_id
-				// 			from ".SITE_DB.".user_usernames
-				// 			where ".SITE_DB.".user_usernames.type = 'member_no'";
-				// 
-				// 			if($query->sql($sql)) {
-				// 				$user_no = $query->results();
-				// 				print_r($user_no);
-				// 			}
-						// }
 }
 ?>
