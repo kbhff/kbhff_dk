@@ -60,6 +60,17 @@ session()->reset("temp-username");
 	</div>
 <? else:?>
 	<h1>Log ind</h1>
+
+<? if(message()->hasMessages()): ?>
+	<? $all_messages = message()->getMessages();
+	message()->resetMessages();
+	foreach($all_messages as $type => $messages):
+	foreach($messages as $message): ?>
+	<p class="<?= $type ?>"><?= $message ?></p>
+	<? endforeach;?>
+<? endforeach;?>
+<? endif; ?>
+
 	<p>
 		I medlemssystemet kan du bestille varer, booke vagter og administrere dit medlemskab.
 		Du kan bruge e-mailadresse, telefonnummer eller medlemsnummer som brugernavn til at logge ind.
@@ -69,18 +80,7 @@ session()->reset("temp-username");
 
 	<?= $model->formStart("dual", array("class" => "login labelstyle:inject")) ?>
 
-		<? if(message()->hasMessages()): ?>
-		<div class="messages">
-		<?
-		$all_messages = message()->getMessages();
-		message()->resetMessages();
-		foreach($all_messages as $type => $messages):
-			foreach($messages as $message): ?>
-			<p class="<?= $type ?>"><?= $message ?></p>
-			<? endforeach;?>
-		<? endforeach;?>
-		</div>
-		<? endif; ?>
+	
 
 		<fieldset>
 			<?= $model->input("username", array(

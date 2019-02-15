@@ -145,7 +145,7 @@ if($action) {
 	
 	// /medlemshjaelp/brugerprofil/#user_id#
 	// else if($action[0] == "brugerprofil" && $action[1] == $user["user_id"]) {
-	else if($action[0] == "brugerprofil") {
+	else if(count($action) == 2 && $action[0] == "brugerprofil") {
 		
 		$page->page(array(
 			"templates" => "member-help/user-profile.php"

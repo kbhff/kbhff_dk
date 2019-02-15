@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-01-23 21:00:09
+asset-builder @ 2019-02-08 16:07:26
 */
 
 /*seg_desktop_include.js*/
@@ -4683,7 +4683,7 @@ Util.Objects["page"] = new function() {
 			}
 		}
 		page.initNavigation = function() {
-			page.nN_nodes = u.qsa("li.nav-node-primary", page.nN);
+			page.nN_nodes = u.qsa("li.indent0", page.nN);
 			var z_index_counter = 100;
 			for (var i = 0; i < page.nN_nodes.length; i++) {
 				var nav_node = page.nN_nodes[i];
@@ -5533,6 +5533,27 @@ Util.Objects["member_help_payment"] = new function() {
 				u.as(mobilepay_tab, "backgroundColor", "#BBBBBB");
 				u.as(cash_tab, "backgroundColor", "#f2f2f2f2")
 			}
+		}
+		scene.ready();
+	}
+}
+
+
+/*i-member_help_index.js*/
+Util.Objects["member_help"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			page.cN.scene = this;
+			var search_form = u.qs("form.search_user", this);
+			search_form.scene = this;
+			if(search_form) {
+				u.f.init(search_form);
+			}
+			page.resized();
 		}
 		scene.ready();
 	}

@@ -92,7 +92,7 @@ if(isset($action[2])) {
 
 <? // membership is related to order
 	if($is_membership): ?>
-	<p>Tillykke med, at du nu er en del af Københavns Fødevarefælleskab! </p>
+	<p>Tillykke med, at du nu er en del af Københavns Fødevarefællesskab! </p>
 <? endif; ?>
 
 
