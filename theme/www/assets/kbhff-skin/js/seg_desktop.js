@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-01-17 14:11:39
+asset-builder @ 2019-02-05 16:42:24
 */
 
 /*seg_desktop_include.js*/
@@ -4686,7 +4686,7 @@ Util.Objects["page"] = new function() {
 			}
 		}
 		page.initNavigation = function() {
-			page.nN_nodes = u.qsa("li.nav-node-primary", page.nN);
+			page.nN_nodes = u.qsa("li.indent0", page.nN);
 			var z_index_counter = 100;
 			for (var i = 0; i < page.nN_nodes.length; i++) {
 				var nav_node = page.nN_nodes[i];

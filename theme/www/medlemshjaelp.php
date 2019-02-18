@@ -22,18 +22,13 @@ $page->pageTitle("Medlemshjælp");
 
 if($action) {
 	
-	 if($action[0] == "soeg") {
-	 	$users = $model->getUsersByDepartment("GetUsersByDepartment");
-	 
-	 	if($users) {
-	 
-	 	}
-	 	else {
-	 		message()->resetMessages();
-	 		message()->addMessage("Det lykkedes ikke at finde et søgeresultat", array("type" => "error"));
-	 	}
-	 }
-	 
+	if($action[0] == "soeg") {
+		$users = $model->searchUsers("searchUsers");
+		$output = new Output();
+		$output->screen($users);
+		exit();
+	}
+	
 	
 	
 	// /medlemshjaelp/tilmelding
@@ -150,7 +145,7 @@ if($action) {
 	
 	// /medlemshjaelp/brugerprofil/#user_id#
 	// else if($action[0] == "brugerprofil" && $action[1] == $user["user_id"]) {
-	else if($action[0] == "brugerprofil") {
+	else if(count($action) == 2 && $action[0] == "brugerprofil") {
 		
 		$page->page(array(
 			"templates" => "member-help/user-profile.php"

@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-01-17 14:11:39
+asset-builder @ 2019-02-05 16:42:24
 */
 
 /*seg_desktop_include.css*/
@@ -266,7 +266,7 @@ input[type="submit"] {
 
 /*s-navigation.css*/
 #navigation {
-	position: relative;
+position: relative;
 	width: 936px;
 	margin: 0 auto;
 }
@@ -280,7 +280,7 @@ input[type="submit"] {
 	opacity: 0;
 	display: none;
 	background-color: #fff;
-	left: -9px;
+	left: -5px;
 	white-space: nowrap;	
 }
 #navigation ul.navigation li {
@@ -290,8 +290,9 @@ input[type="submit"] {
 }
 #navigation ul.navigation ul li {
 	display: block;
-	margin: 6px 9px;
+	margin: 6px 5px;
 }
+#navigation ul.navigation h5,
 #navigation ul.navigation a {
 	font-family: 'voresfont';
 	text-transform: uppercase;
@@ -302,11 +303,16 @@ input[type="submit"] {
 	color: #ffffff;
 	background-color: #000000;
 }
+#navigation ul.navigation ul li h5,
 #navigation ul.navigation ul li a{
 	background-color: #666;
 }
+#navigation ul.navigation h5:hover,
 #navigation ul.navigation a:hover {
 	background-color: #3e8e17;
+}
+#navigation ul.navigation h5:hover {
+	cursor: pointer;
 }
 
 
