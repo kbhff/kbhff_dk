@@ -16,8 +16,7 @@ $page->pageTitle("Persondata");
 // /persondata
 // show person-data directly 
 $page->page(array(
-	"templates" => "pages/person_data.php",
-	"type" => "login"
+	"templates" => "pages/person_data.php"
 	)
 );
 exit();

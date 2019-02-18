@@ -431,41 +431,6 @@ class User extends UserCore {
 		return false;
 	}
 
-	/**
-	 * Search users based on pattern on firstname, lastname, nickname FROM users 
-	 *  and user_usernames.username (regardless of type).
-	 *
-	 * @param string $search_pattern
-	 * @return array|false user ids matching the search.
-	 */
-	function usersSearch($_options=false) {
-
-		$user_ids = false;
-		$search_pattern = "";
-print("search_pattern _options".$_options);
-print_r($_options);	
-		if($_options !== false) {
-			foreach($_options as $_option => $_value) {
-				switch($_option) {
-					case "search_pattern"      : $search_pattern        = $_value; break;
-				}
-			}
-		}
-
-		$query = new Query();
-		$sql = "SELECT id from users u, user_usernames un WHERE 
-				u.firstname LIKE '%$search_pattern%' OR
-				u.lastname LIKE '%$search_pattern%' OR
-				u.nickname LIKE '%$search_pattern%' OR
-				un.nickname LIKE '%$search_pattern%'
-				";
-		if($query->sql($sql)) {
-			$user_ids = $query->results();
-			print_r($user_id);
-		}
-		return $user_ids;
-	}
-
 }
 
 ?>
