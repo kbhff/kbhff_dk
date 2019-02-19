@@ -8,13 +8,21 @@ $departments = $DC->getDepartments();
 
 $UC = new User();
 $user_department = $UC->getUserDepartment();
-$users = $model->searchUsers("searchUsers");
+$search_users = $model->searchUsers($action);
+
+$search_value = $search_users["search_value"];
+$users = $search_users["users"];
+$department_id = $search_users["department_id"];
+if (!$department_id) {
+	$department_id = $user_department["id"];
+}
+	
+
 ?>
 
 <div class="scene member_help i:member_help i:scene" itemscope itemtype="http://schema.org/NewsArticle">
 	<div class="banner i:banner variant:1 format:jpg"></div>
-	
-		
+
 
 	<h1>Medlemshjælp</h1>	
 	<h2>Find medlem</h2>
@@ -25,7 +33,7 @@ $users = $model->searchUsers("searchUsers");
 		<div class="c-three-quarters">
 			<fieldset>
 				<?= $model->input("search_member", array("label" => "Navn, email, mobilnr eller medlemsnr")) ?>
-				<?= $model->input("department_id", array("type" => "select", "hint_message" => "Du kan søge et medlem frem ved at indtaste vedkommendes lokalafdeling.", "error_message" => "Du kan søge på den enkelte afdeling eller vælge 'alle afdelinger'.", "options" => $HTML->toOptions($departments, "id", "name",  array(["1" => [$user_department["name"]], "0" => "Alle afdelinger"])))); ?>
+				<?= $model->input("department_id", array("type" => "select", "hint_message" => "Du kan søge et medlem frem ved at indtaste vedkommendes lokalafdeling.", "error_message" => "Du kan søge på den enkelte afdeling eller vælge 'alle afdelinger'.", "value" => $department_id, "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["all" => "Alle afdelinger"]]),)); ?>
 			</fieldset>
 		</div>
 		<div class="c-one-quarter">
@@ -43,7 +51,6 @@ $users = $model->searchUsers("searchUsers");
 if(message()->hasMessages(array("type" => "error"))): ?>
 	<p class="errormessage">
 <?	$messages = message()->getMessages(array("type" => "error"));
-		message()->resetMessages();
 		foreach($messages as $message): ?>
 		<?= $message ?><br>
 <?	endforeach;?>
@@ -58,53 +65,50 @@ if(message()->hasMessages(array("type" => "error"))): ?>
 <?	endif; ?>
 <?= $model->formEnd() ?>
 
-	<div class="c-wrapper">
-		<h3 class="hidden">
-			<span class="user_name">Navn</span><span class="user_email">Mail</span><span class="user_mobile">Mobilnr</span><span class="user_member_no">Medl.nr</span><span class="user_department">Lokalafd.</span>
+
+	<div class="c-wrapper users">
+		<h3>
+			<span class="name">Navn</span><span class="email">Mail</span><span class="mobile">Mobilnr</span><span class="member_no">Medl.nr</span><span class="department">Lokalafd.</span>
 		</h3>
 		<ul class="users">
-			<li class="template">
+			<li class="user template">
 				<ul class=user_info>
-					<li class="user_name">{name}</li>
-					<li class="user_email">{email}</li>
-					<li class="user_mobile">{mobile}</li>
-					<li class="user_member_no">{member_no}</li>
-					<li class="user_department">{department}</li>
-					<li class="user_profile">
+					<li class="name search">{name}</li>
+					<li class="email search">{email}</li>
+					<li class="mobile search">{mobile}</li>
+					<li class="member_no search">{member_no}</li>
+					<li class="department">{department}</li>
+					<li class="profile">
 						<ul class="actions">
-							<li><a class="button clickable" href="/medlemshjaelp/brugerprofil/{user_id}">Åbn</a></li>
+							<li><a class="button" href="/medlemshjaelp/brugerprofil/{user_id}">Åbn</a></li>
 						</ul>
 					</li>
 				</ul>
 			</li>
+		<? if($users): 
+			foreach($users as $u => $user): ?>
+			<li class="user">
+				<ul class="user_info">
+					<?= '<li class="name search">'.preg_replace("/$search_value/i", "<span class=highlight_string>$0</span>", $user["name"]).'</li>' ?>
+					<?= '<li class="email search">'.preg_replace("/$search_value/i", "<span class=highlight_string>$0</span>", $user["email"]).'</li>' ?>
+					<?= '<li class="mobile search">'.preg_replace("/$search_value/i", "<span class=highlight_string>$0</span>", $user["mobile"]).'</li>'?>
+					<?= '<li class="member_no search">'.preg_replace("/$search_value/i", "<span class=highlight_string>$0</span>", $user["member_no"]).'</li>' ?>
+					<?= '<li class="department">'.$user["department"].'</li>' ?>
+					<li class="profile">
+						<ul class="actions">
+							<li><a class="button" href="/medlemshjaelp/brugerprofil/<?=$user["user_id"]?>">Åbn</a></li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<? endforeach;
+			endif; ?>
 		</ul>
-	
-		
-		
-	<? if($users):  ?>
-		<div class="users">
-			<h3>
-				<span class="user_name">Navn</span><span class="user_email">Mail</span><span class="user_mobile">Mobilnr</span><span class="user_member_no">Medl.nr</span><span class="user_department">Lokalafd.</span>
-			</h3>
-			<ul class="users">
-			<? foreach($users as $u => $user): ?>
-				<li>
-					<ul class="user_info">
-						<? print '<li class="user_name">'.$user["name"].'</li>' ?>
-						<? print '<li class="user_email">'.$user["email"].'</li>' ?>
-						<? print '<li class="user_mobile">'.$user["mobile"].'</li>'?>
-						<? print '<li class="user_member_no">'.$user["member_no"].'</li>' ?>
-						<? print '<li class="user_department">'.$user["department"].'</li>' ?>
-						<li class="user_profile">
-							<ul class="actions">
-								<li><a class="button clickable" href="/medlemshjaelp/brugerprofil">Åbn</a></li>
-							</ul>
-						</li>
-					</ul>
-				</li>
-		<? endforeach; ?>
-			</ul> 
-		</div>
-	<?	endif; ?>		
+		<p class ="<?=$users? "invisible": ""?>">
+			Her på siden kan du som kassemester søger efter medlemmer. 
+		Du søger et medlem frem ved at indtaste enten navn, mail, mobilnr eller medlemsnr på det pågældende medlem. 
+		Når du har søgt et medlem frem, har du mulighed for at åbne medlemmets brugerprofil. 
+		Her kan du handle på vejne af medlemmet og hjælpe med at bestille grøntsager, betale kontigent eller redigere brugeroplysninger eller medlemsskabsinfo. 
+		</p>
 	</div>
 </div>

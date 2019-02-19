@@ -23,7 +23,7 @@ $page->pageTitle("Medlemshjælp");
 if($action) {
 	
 	if($action[0] == "soeg") {
-		$users = $model->searchUsers("searchUsers");
+		$users = $model->searchUsers($action);
 		$output = new Output();
 		$output->screen($users);
 		exit();

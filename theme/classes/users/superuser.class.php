@@ -358,11 +358,11 @@ class SuperUser extends SuperUserCore {
 		$this->getPostedEntities();
 		
 		
-		if($this->validateList(array("department_id", "search_member"))) {
+		if($this->validateList(array("search_member"))) {
 			
 			$department_id= $this->getProperty("department_id", "value");
 			$search_value = $this->getProperty("search_member", "value");
-		
+			
 			$user_id = session()->value("user_id");
 		
 			$query = new Query();
@@ -386,50 +386,51 @@ class SuperUser extends SuperUserCore {
 				ON u.id = ud.user_id
 				LEFT JOIN ".SITE_DB.".user_usernames un
 				ON un.user_id = u.id
-				WHERE (un.username like '%$search_value%'
+				WHERE u.id <> $user_id AND 
+				(un.username like '%$search_value%'
 				OR u.nickname like '%$search_value%')";
 				
-				if ($department_id != 0) {
+				if ($department_id != "all") {
 					$sql .= " and ud.department_id = $department_id";
 				}
 				
-				$sql .= " and u.id <> $user_id";
-				
 				$sql .= " group by u.id";
+				
+				
+				
+				
+				
 				
 				
 				include_once("classes/system/department.class.php");
  				$DC = new Department();
  				$departments = $DC->getDepartments();
-			
+				// print_r($departments);
+				foreach ($departments as $d => $department): 
+					
+					$department = array_column($departments, "name", "id");
+				endforeach;
 				
 				if ($query->sql($sql)) {
 					$users = $query->results();
-					
 					if ($users):
 						foreach($users as $u => $user):
-							// print_r($user);
-						
-								foreach ($departments as $d => $department): 
-									
-									if ($department["id"] == $user["department"]) :
-				
-										$users[$u]["department"] = $department["name"];
-							
-									endif;
-								endforeach;
-						
+							if (key($department) == $user["department"]) :
+								$users[$u]["department"] = key(array_flip($department));
+							endif;
 						endforeach;
+		
 					endif;
+				
+					return array("users" => $users, "search_value" => $search_value, "department_id" => $department_id);
 					
-					return $users;
 				}
 				
 				
 			}
 		}
 		
-		
+		return false;
 	}
 }
 ?>
