@@ -2,7 +2,7 @@ document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/seg_de
 
 document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/v0_9_2/src/beta-u-overlay.js"></script>');
 document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/v0_9_2/src/beta-u-paymentcards.js"></script>');
-
+document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/v0_9_2/src/u-template.js"></script>');
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-login.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-accept_terms.js"></script>');
@@ -19,6 +19,7 @@ document.write('<script type="text/javascript" src="/js/lib/desktop/i-stripe.js"
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-member_help_signup.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-member_help_payment.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-member_help_index.js"></script>');
+
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-profile.js"></script>');
 
