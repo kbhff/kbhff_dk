@@ -65,7 +65,8 @@
 
 #content h1 + p,
 #content h1 + h3,
-#content h1 + .c-wrapper {
+#content h1 + .c-wrapper,
+#content h1 + div.messages {
 	padding-top: 46px;
 }
 
