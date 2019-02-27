@@ -20,7 +20,6 @@ if($forward_url) {
 
 // Get username and save it in a variable
 $username = stringOr(getPost("username"), session()->value("temp-username"));
-session()->reset("temp-username");
 ?>
 
 

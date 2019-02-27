@@ -79,6 +79,9 @@ if($action) {
 	// bliv-medlem/save
 	else if($action[0] == "save" && $page->validateCsrfToken()) {
 
+		// overwrite the value of 'maillist' field, which is posted as integer
+		$_POST["maillist"] = "Nyheder";
+		
 		// create new user
 		$user = $model->newUser(array("newUser"));
 
@@ -151,8 +154,11 @@ if($action) {
 
 		if (count($action) == 1 && $page->validateCsrfToken()) {
 
+			$username = session()->value("signup_email");
+			$verification_code = getPost("verification_code");
+
 			// Check if user is already verified. If not, verify and enable user
-			$result = $model->confirmUser($action);
+			$result = $model->confirmUsername($username, $verification_code);
 
 			// user has already been verified
 			if($result && isset($result["status"]) && $result["status"] == "USER_VERIFIED") {
@@ -199,53 +205,80 @@ if($action) {
 		// /bliv-medlem/bekraeft/#email|#verification_code# (submitted from link in email)
 		else if(count($action) == 3) {
 			
-			// Infer user_id from username and verification_code
-			$user_id = $model->inferUserId($action);
-			if($user_id) {
+			$username = $action[1];
+			$verification_code = $action[2];
+			
+			// Infer user_id from username 
+			$user_id = $model->getLoginUserId($username);
+			
+			if($user_id) {			
+
+				session()->value("temp-username", $username);				
+				$has_password = $model->loginUserHasPassword($user_id);
+
+
+				$result = $model->confirmUsername($username, $verification_code);
 				
-				// add session values 
-				session()->value("user_id", $user_id);
-				session()->value("username", $action[1]);
-				session()->value("verification_code", $action[2]);
-				
-				// user has password
-				if($model->hasPassword()) {
-					$result = $model->confirmUser($action);
+				// user is already verified
+				if($result && isset($result["status"]) && $result["status"] == "USER_VERIFIED") {
 					
-					// user is already verified
-					if($result && isset($result["status"]) && $result["status"] == "USER_VERIFIED") {
-						message()->addMessage("Du er allerede verificeret. Pøv at logge ind.", array("type" => "error"));
+					// user has password
+					if($has_password) {
+						
+						message()->addMessage("Du er allerede verificeret. Prøv at logge ind.", array("type" => "error"));
 						
 						// redirect to leave POST state
 						header("Location: /login");
 						exit();
+
 					}
 
-					// verification code is valid -> receipt
-					else if($result) {
+					// user has no password
+					else {
+
+						// redirect to leave POST state
+						header("Location: /login/opret-password");
+						exit();
+
+					}
+				}
+
+				// verification code is valid -> receipt
+				else if($result) {
+				
+					// user has password
+					if($has_password) {
 						
+						message()->addMessage("Din profil er aktiveret.");
+
 						// redirect to leave POST state
 						header("Location: /bliv-medlem/bekraeft/kvittering");
 						exit();
-					
-
-					}
-
-					// verification code is not valid -> error
+							
+					} 
+					// user has no password
 					else {
+						
+					
+	
 						// redirect to leave POST state
-						header("Location: /bliv-medlem/bekraeft/fejl");
+						header("Location: /login/opret-password");
 						exit();
 					}
-			
 					
-				} 
-				// user has no password
+				
+				
+
+				}
+
+				// verification code is not valid -> error
 				else {
 					// redirect to leave POST state
-					header("Location: /login/opret-password");
+					header("Location: /bliv-medlem/bekraeft/fejl");
 					exit();
 				}
+
+				
 
 			}
 

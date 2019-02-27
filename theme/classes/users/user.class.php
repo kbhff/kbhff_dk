@@ -101,6 +101,85 @@ class User extends UserCore {
 		return false;
 	}
 
+	// reset password using reset-token
+	function resetPassword($action) {
+
+		// perform cleanup routine
+		$this->cleanUpResetRequests();
+
+		// get posted variables
+		$this->getPostedEntities();
+
+		$reset_token = getPost("reset-token");
+		$new_password = password_hash($this->getProperty("new_password", "value"), PASSWORD_DEFAULT);
+
+		// correct information available
+		if(count($action) == 1 && $new_password && $this->checkResetToken($reset_token)) {
+
+			$query = new Query();
+
+			// get user_id for reset token
+			$sql = "SELECT user_id FROM ".$this->db_password_reset_tokens." WHERE token = '$reset_token'";
+			if($query->sql($sql)) {
+
+				// get user id
+				$user_id = $query->result(0, "user_id");
+				session()->value("user_id", $user_id);
+
+				if(!$this->hasPassword()) {
+					
+					// SAVE NEW PASSWORD
+					$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$new_password'";
+					if($query->sql($sql)) {
+
+						// send notification email to admin
+						// TODO: consider disabling this once it has proved itself worthy
+						mailer()->send(array(
+							"subject" => "Password was created: " . $user_id,
+							"message" => "Check out the user: " . SITE_URL . "/janitor/admin/user/edit/" . $user_id
+						));
+
+						message()->addMessage("Password created");
+						return true;
+					}
+
+				}
+
+
+
+				// delete token (a token can only be used once)
+				$sql = "DELETE FROM ".$this->db_password_reset_tokens." WHERE token = '$reset_token'";
+				$query->sql($sql);
+
+
+				// DELETE OLD PASSWORD
+				$sql = "DELETE FROM ".$this->db_passwords." WHERE user_id = $user_id";
+				if($query->sql($sql)) {
+
+					// SAVE NEW PASSWORD
+					$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$new_password'";
+					if($query->sql($sql)) {
+
+						// send notification email to admin
+						// TODO: consider disabling this once it has proved itself worthy
+						mailer()->send(array(
+							"subject" => "Password was resat: " . $user_id,
+							"message" => "Check out the user: " . SITE_URL . "/janitor/admin/user/edit/" . $user_id
+						));
+
+						message()->addMessage("Password updated");
+						return true;
+					}
+				}
+
+			}
+
+		}
+
+		return false;
+	}
+	
+
 	/**
 	 * Get the current user, including associated department.
 	 *
@@ -348,20 +427,18 @@ class User extends UserCore {
 	}
 
 	/**
-	 * Infer user_id from username and verification_code
+	 * Infer user_id from username for user that is not yet fully logged in.
 	 *
-	 * @param array $action
+	 * @param string $username
 	 * @return int|false $user_id
 	 */
-	function inferUserId($action) {
+	function getLoginUserId($username) {
 
 		$query = new Query();
 
-		$username = $action[1];
-		$verification_code = $action[2];
 	
-		// Infer user_id from username and verification_code
-		$sql = "SELECT user_id FROM ".$this->db_usernames." WHERE username = '$username' AND verification_code = '$verification_code'";
+		// Infer user_id from username
+		$sql = "SELECT user_id FROM ".$this->db_usernames." WHERE username = '$username'";
 		if($query->sql($sql)) {
 
 			$user_id = $query->result(0, "user_id");
@@ -374,54 +451,116 @@ class User extends UserCore {
 	}
 
 	/**
-	 * Set password for new user created from memberhelp, and then verify user
+	 * Check if username is verified for user that is not yet fully logged in.
+	 *
+	 * @param string $username
+	 * @return boolean
+	 */
+	function loginUserIsVerified($user_id) {		
+		
+		$query = new Query();
+
+		// user is not a guest user
+		if($user_id != 1) {
+			$sql = "SELECT user_id FROM ".SITE_DB.".user_usernames WHERE user_id = '$user_id' AND verified = 1";
+			
+			// user is verified
+			if($query->sql($sql)) {
+				return true;
+			}
+		}
+
+		// user is not verified
+		return false;
+
+	}
+
+	/**
+	 * Check if not-yet-fully-logged-in user has a password
+	 *
+	 * @param string $user_id
+	 * @param array $_options
+	 * 
+	 * @return boolean
+	 */
+	function loginUserHasPassword($user_id, $_options = false) {
+
+		$include_empty = false;
+
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+					case "include_empty"     : $include_empty       = $_value; break;
+				}
+			}
+		}
+
+		$query = new Query();
+
+		// user is not a guest user
+		if($user_id != 1) {
+						
+			// user has password
+			$sql = "SELECT id FROM ".$this->db_passwords." WHERE user_id = $user_id" . ($include_empty ? " AND (password != '' OR upgrade_password != '')" : "");
+			if($query->sql($sql)) {
+				return true;
+			}
+		}
+
+		// user has no password
+		return false;
+
+	}
+
+
+	
+
+	/**
+	 * Set password for verified user that does not yet have a password (e.g. was signed up via member-help)
 	 * 
 	 * @param array $action
 	 *
-	 * @return array|false via callback to confirmUser()
+	 * @return array|false via callback to confirmUsername()
 	 */
-	function setPasswordAndConfirmAccount() {
+	function setFirstPassword() {
+	
 		// Get posted values and session values to make them available for models
 		$this->getPostedEntities();
-		$user_id = session()->value("user_id");
-		$username = session()->value("username");
-		$verification_code = session()->value("verification_code");
-		
-		
-		if($user_id) {
+		$username = session()->value("temp-username");
+		$user_id = $this->getLoginUserId($username);
 
-			// user already has a password
-			if($this->hasPassword()) {
+		// user already has a password
+		if($this->loginUserHasPassword($user_id)) {
 
-				return array("status" => "HAS_PASSWORD");
+			return array("status" => "HAS_PASSWORD");
 
-			}
-			// user does not have a password
-			else {
+		}
 
-				// does values validate
-				if($this->validateList(array("new_password"))) {
+		// user does not have a password
+		else {
+
+			// does values validate
+			if($this->validateList(array("new_password"))) {
 
 
-					$query = new Query();
+				$query = new Query();
 
-					// make sure type tables exist
-					$query->checkDbExistence($this->db_passwords);
+				// make sure type tables exist
+				$query->checkDbExistence($this->db_passwords);
 
-					// create hash to inject
-					$new_password = password_hash($this->getProperty("new_password", "value"), PASSWORD_DEFAULT);
+				// create hash to inject
+				$new_password = password_hash($this->getProperty("new_password", "value"), PASSWORD_DEFAULT);
 
-					// save new password
-					$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$new_password'";
-					if($query->sql($sql)) {
-						return $this->confirmUser(["bekraeft", $username, $verification_code]);
-					}
+				// save new password
+				$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$new_password'";
+				if($query->sql($sql)) {
+					return true;
 				}
-
 			}
 
 		}
 
+		// error
 		return false;
 	}
 
