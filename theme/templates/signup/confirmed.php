@@ -51,8 +51,20 @@ session()->reset("signup_email");
 <? else:?>
 
 	<h1>Tak!</h1>
-	<p><em><?= $username ?></em> er verificeret.</p>
-	<p>Du kan nu <a href="/login">logge ind</a>.</p>
+
+<?	// Display any backend generated messages
+if(message()->hasMessages()): ?>
+
+	<p class="message">
+<?	$messages = message()->getMessages(array("type" => "message"));
+	foreach($messages as $message): ?>
+		<?= $message ?><br>
+<?	endforeach; ?>
+	</p>
+
+	<? message()->resetMessages(); ?>
+<?	endif; ?>
+		<p>Du kan nu <a href="/login">logge ind</a>.</p>
 
 <? endif; ?>
 

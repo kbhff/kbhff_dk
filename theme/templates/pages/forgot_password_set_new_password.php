@@ -8,10 +8,10 @@ $reset_token = session()->value("temp-reset-token");
 
 ?>
 <div class="scene i:scene">
-	<h1>Reset password</h1>
+	<h1>Opdatér adgangskode</h1>
 
 	<div class="password">
-		<h2>Password</h2>
+		<h2>Adgangskode</h2>
 
 		<?= $model->formStart("resetPassword", array("class" => "reset_password")) ?>
 			<?

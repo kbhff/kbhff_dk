@@ -126,7 +126,7 @@ if($action) {
 		else {
 
 			session()->value("temp-username", getPost("username"));
-			message()->addMessage("Du har indtastet et forkert brugernavn eller password.", ["type"=>"error"]);
+			message()->addMessage("Ugyldig adgangskode", ["type"=>"error"]);
 			header("Location: /login");
 			exit();
 
@@ -189,7 +189,7 @@ if($action) {
 		// return to login page
 		else {
 
-			message()->addMessage("Der skete en ukendt fejl. Prøv igen.");
+			message()->addMessage("Der skete en ukendt fejl. Prøv igen.", array("type" => "error"));
 			header("Location: /login");
 			exit();
 		}
@@ -355,15 +355,15 @@ if($action) {
 		// creating new password
 		if($model->resetPassword($action)) {
 			message()->resetMessages();
-			message()->addMessage("Dit password blev opdateret.");
+			message()->addMessage("Din adgangskode blev opdateret.");
 			header("Location: /login");
 			exit();
 		}
 
-		// could not create new password
+		// could not create new 
 		else {
 			message()->resetMessages();
-			message()->addMessage("Du kan ikke bruge dette password!", array("type" => "error"));
+			message()->addMessage("Ugyldig adgangskode", array("type" => "error"));
 			header("Location: glemt/nyt-password");
 			exit();
 		}

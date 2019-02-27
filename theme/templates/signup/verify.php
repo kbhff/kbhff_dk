@@ -13,7 +13,7 @@ if($page_item) {
 
 	<h1>Du har nu oprettet en konto hos KBHFF!</h1>
 	<h2>Vi har sendt dig en aktiveringsmail</h2>
-	<p>E-mailen indeholder en verifikationskode, som du kan indsætte i feltet nedenfor.</p>
+	<p>E-mailen indeholder en verificeringskode, som du kan indsætte i feltet nedenfor.</p>
 	<p>Alternativt kan du springe verificeringen over nu og verificere senere gennem et link fra aktiveringsmailen.</p>
 
 	<?= $model->formStart("bekraeft", ["class" => "verify_code"]) ?>
@@ -30,12 +30,12 @@ if(message()->hasMessages(array("type" => "error"))): ?>
 <?	endif; ?>
 
 	<fieldset>
-		<?= $model->input("verification_code", array("label" => "Verifikationskode", "hint_message" => "Indtast verifikationskoden som blev sendt til din email.", "error_message" => "Forkert verifikationskode")); ?>
+		<?= $model->input("verification_code", array("label" => "Verificeringskode", "hint_message" => "Indtast verificeringskoden som blev sendt til din email.", "error_message" => "Forkert verificeringskode")); ?>
 	</fieldset>
 
 	<ul class="actions">
 		<li class="skip"><a href="spring-over" class="button">Spring over</a></li>
-		<?= $model->submit("Verificer email", array("class" => "primary", "wrapper" => "li.reset")) ?>
+		<?= $model->submit("Verificér email", array("class" => "primary", "wrapper" => "li.reset")) ?>
 	</ul>
 	<?= $model->formEnd() ?>
 

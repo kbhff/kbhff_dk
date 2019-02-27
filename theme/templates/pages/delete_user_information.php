@@ -27,8 +27,8 @@ $this->pageTitle("Udmeldelse");
 			<?= $UC->input("password", [
 				"min" => 1,
 				"required" => true, 
-				"hint_message" => "Skriv dit password for at bekræfte din udmeldelse.", 
-				"error_message" => "Ugyldigt password"
+				"hint_message" => "Skriv din adgangskode for at bekræfte din udmeldelse.", 
+				"error_message" => "Ugyldig adgangskode"
 			]) ?>
 		</fieldset>
 		

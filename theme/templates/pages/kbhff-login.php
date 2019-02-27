@@ -6,7 +6,7 @@ global $model;
 // Create instance of class
 $IC = new Items();
 
-// Get the assotiated Janitor page
+// Get the associated Janitor page
 $page_item = $IC->getItem(array("tags" => "page:login", "extend" => array("user" => true, "tags" => true, "mediae" => true)));
 if($page_item) {
 	$this->sharingMetaData($page_item);

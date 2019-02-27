@@ -3,14 +3,14 @@
 $model = new Model();
 
 // Title which is displayed in the browser tab/titlebar
-$this->pageTitle("Glemt password");
+$this->pageTitle("Glemt adgangskode");
 ?>
 <div class="scene login i:forgot">
 	<h1>Glemt adgangskode?</h1>
 
 	<p>
 		Har du glemt din adgangskode? Indtast din e-mailadresse nedenfor,
-		så vi sender dig en mail med en ny kode til at nulstille dit password.
+		så vi sender dig en mail med en ny kode til at nulstille din adgangskode.
 	</p>
 
 	<?= $model->formStart("requestReset", ["class" => "request_password"]) ?>
