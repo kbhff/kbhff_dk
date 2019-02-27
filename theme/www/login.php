@@ -247,7 +247,6 @@ if($action) {
 		
 		// user is verified and logged in (is not a guest user)
 		if($model->loginUserIsVerified($user_id)) {
-			// print "ja"; exit;
 			// user has no password
 			if(!$model->loginUserHasPassword($user_id)) {
 				$page->page(array(
@@ -265,7 +264,6 @@ if($action) {
 			}		
 			
 		}
-		// print "nej";exit;
 
 		message()->addMessage("Du prøvede at tilgå en side, du ikke har adgang til. Prøv at logge ind.", array("type" => "error"));
 		header("Location: /login");
