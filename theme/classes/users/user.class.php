@@ -67,8 +67,14 @@ class User extends UserCore {
 			"hint_message" => "Vælg en afdeling",
 			"error_message" => "Du skal vælge en afdeling."
 		));
-		
-		
+		// Search field in order to search for members
+		 $this->addToModel("search_member", array(
+		 	"type" => "string",
+		 	"label" => "Søg blandt medlemmer her", 
+		 	"hint_message" => "Navn, email, mobilnr eller medlemsnr",
+		 	"error_message" => "Du skal som minimum angive 4 tegn."
+		 ));
+		 
 	}
 
 	/**

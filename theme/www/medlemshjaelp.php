@@ -22,18 +22,13 @@ $page->pageTitle("Medlemshjælp");
 
 if($action) {
 	
-	 if($action[0] == "soeg") {
-	 	$users = $model->getUsersByDepartment("GetUsersByDepartment");
-	 
-	 	if($users) {
-	 
-	 	}
-	 	else {
-	 		message()->resetMessages();
-	 		message()->addMessage("Det lykkedes ikke at finde et søgeresultat", array("type" => "error"));
-	 	}
-	 }
-	 
+	if($action[0] == "soeg") {
+		$users = $model->searchUsers($action);
+		$output = new Output();
+		$output->screen($users);
+		exit();
+	}
+	
 	
 	
 	// /medlemshjaelp/tilmelding

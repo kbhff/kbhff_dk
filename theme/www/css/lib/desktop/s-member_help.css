@@ -91,3 +91,59 @@
 #content .scene.member_help_payment form ul.actions {width: 100%; margin-left: 0; padding-left: 0; margin-top: 12px;}
 #content .scene.member_help ul.actions {text-align:center}
 
+
+
+/* Search for members */ 
+
+#content .scene.member_help > h2 {padding: 0; margin-left: 12px; margin-right: 12px; margin-top: 20px; margin-bottom: 12px; border-bottom: 2px solid #808080;}
+
+#content .scene.member_help > h1 {display: none;}
+
+
+/* Search fields and buttons */ 
+#content .scene.member_help form.search_user div.c-wrapper,
+#content .scene.member_help form.search_user div.c-three-quarters,
+#content .scene.member_help form.search_user div.c-one-quarter {min-height: 0;}
+#content .scene.member_help form.search_user div.field label {display: none;}
+#content .scene.member_help form.search_user div.field {box-sizing: border-box; display: inline-block; padding-right: 0;}
+#content .scene.member_help form.search_user div.field.string {width: calc(60% - 10px)}
+#content .scene.member_help form.search_user div.field.select {padding-left: 0; width: calc(40%);} 
+
+#content .scene.member_help form.search_user ul.actions li {width: 100%; padding-left: 0;}
+#content .scene.member_help form.search_user ul.actions {box-sizing: border-box; padding-left: 0; padding-right: 12px; margin-top: -45px;} 
+#content .scene.member_help form.search_user ul.actions li.new_member {margin-bottom: 10px;}
+#content .scene.member_help form.search_user ul.actions input.button, 
+#content .scene.member_help form.search_user ul.actions a.button {padding-top: 5px; padding-bottom: 5px; width: 100%; box-sizing: border-box;}
+
+/* User list */
+
+#content .scene.member_help div.users {margin-bottom: 22px;}
+#content .scene.member_help ul.users li.template {display: none;}
+#content .scene.member_help ul.users li {padding-top: 6px; padding-bottom: 6px;}
+#content .scene.member_help ul.users li.user:nth-last-of-type(even) {background-color: #dddddd;}
+
+#content .scene.member_help li span.highlight_string {font-weight: 700;}
+
+#content .scene.member_help ul.users {padding: 0; margin-left: 12px; margin-right: 12px;}
+#content .scene.member_help ul.users ul {padding: 0; margin: 0; font-size: 0;}
+#content .scene.member_help ul.users li {list-style-type: none; padding-left: 0;}
+
+#content .scene.member_help h3 {padding-right: 0; padding-left: 0; padding-bottom: 0; border-bottom: 2px solid #808080; margin-bottom: 22px; margin-left: 12px; margin-right: 12px;}
+#content .scene.member_help ul.users li ul li, 
+#content .scene.member_help h3 span {padding: 0; display: inline-block; vertical-align: bottom;}
+
+#content .scene.member_help ul.users li ul li.mobile,
+#content .scene.member_help ul.users li ul li.member_no,
+#content .scene.member_help ul.users li ul li.profile,
+#content .scene.member_help ul.users li ul li.department,
+#content .scene.member_help h3 span {width: 12.5%;}
+
+#content .scene.member_help ul.users li ul li.name, 
+#content .scene.member_help ul.users li ul li.email,
+#content .scene.member_help h3 span.email,
+#content .scene.member_help h3 span.name {width: 25%;}
+
+#content .scene.member_help ul.users li ul.actions {text-align: right;}
+#content .scene.member_help ul.users li.profile a.button {padding: 1px 17px;}
+#content .scene.member_help div.users p.invisible {display: none;}
+
