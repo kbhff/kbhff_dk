@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-02-08 16:07:26
+asset-builder @ 2019-02-27 16:34:32
 */
 
 /*seg_desktop_include.js*/
@@ -5004,6 +5004,185 @@ u.paymentCards = new function() {
 }
 
 
+/*u-template.js*/
+u.template = function(template, json, _options) {
+	var string = "";
+	var template_string = "";
+	var clone, container, item_template, dom, node_list, type_template, type_parent;
+	var append_to_node = false;
+	if (obj(_options)) {
+		var _argument;
+		for (_argument in _options) {
+			switch (_argument) {
+				case "append": 	append_to_node = _options[_argument];			break;
+			}
+		}
+	}
+	if(obj(template) && typeof(template.nodeName) != "undefined") {
+		type_template = "HTML";
+	}
+	else if(obj(template) && JSON.stringify(template)) {
+		type_template = "JSON";
+	}
+	else if(str(template) && template.match(/^(\{|\[)/)) {
+		type_template = "JSON_STRING";
+	}
+	else if(str(template) && template.match(/^<.+>$/)) {
+		type_template = "HTML_STRING";
+	}
+	else if(str(template)) {
+		type_template = "STRING";
+	}
+	if(type_template == "HTML_STRING" || type_template == "HTML") {
+		if(type_template == "HTML") {
+			clone = template.cloneNode(true);
+			u.rc(clone, "template");
+			if(template.nodeName == "LI") {
+				type_parent = "ul";
+				container = document.createElement(type_parent);
+			}
+			else if(template.nodeName == "TR") {
+				type_parent = "table";
+				container = document.createElement("table").appendChild(document.createElement("tbody"));
+			}
+			else {
+				type_parent = "div";
+				container = document.createElement("div");
+			}
+			container.appendChild(clone);
+			template_string = container.innerHTML;
+			template_string = template_string.replace(/href\=\"([^\"]+)\"/g, function(string) {return decodeURIComponent(string);});
+			template_string = template_string.replace(/src\=\"([^\"]+)\"/g, function(string) {return decodeURIComponent(string);});
+		}
+		else {
+			if(template.match(/^<li/i)) {
+				type_parent = "ul";
+			}
+			else if(template.match(/^<tr/i)) {
+				type_parent = "table";
+			}
+			else {
+				type_parent = "div";
+			}
+			template_string = template;
+		}
+	}
+	else if(type_template == "JSON") {
+		template_string = JSON.stringify(template).replace(/^{/g, "MAN_JSON_START").replace(/}$/g, "MAN_JSON_END");
+	}
+	else if(type_template == "JSON_STRING") {
+		template_string = template.replace(/^{/g, "MAN_JSON_START").replace(/}$/g, "MAN_JSON_END");
+	}
+	else if(type_template == "STRING") {
+		template_string = template;
+	}
+	if(obj(json) && ((json.length == undefined && Object.keys(json).length) || json.length)) {
+		if(json.length) {
+			for(_item in json) {
+				if(json.hasOwnProperty(_item)) {
+					item_template = template_string;
+	// 					
+	// 
+	// 
+	// 
+	// 					
+	// 
+	// 
+					string += item_template.replace(/\{(.+?)\}/g, function(string) {
+						var key = string.toString().replace(/[\{\}]/g, "");
+						if(str(json[_item][key]) && json[_item][key]) {
+							return json[_item][key].toString().replace(/(\\|\"|\')/g, "\\$1").replace(/\n/, "\\n");
+						}
+						else if(typeof(json[_item][key]) == "number") {
+							return "MAN_NUM" + json[_item][key] + "MAN_NUM";
+						}
+						else if(typeof(json[_item][key]) == "boolean") {
+							return "MAN_BOOL" + json[_item][key] + "MAN_BOOL";
+						}
+						else if(json[_item][key] === null) {
+							return "MAN_NULL";
+						}
+						else if(obj(json[_item][key])) {
+							return "MAN_OBJ" + JSON.stringify(json[_item][key]).replace(/(\"|\')/g, "\\$1") + "MAN_OBJ";
+						}
+						else {
+							return "";
+						}
+					});
+				}
+			}
+		}
+		else {
+			string += template_string.replace(/\{(.+?)\}/g, function(string) {
+				var key = string.toString().replace(/[\{\}]/g, "");
+				if(str(json[key]) && json[key]) {
+					return json[key].replace(/(\\|\"|\')/g, "\\$1").replace(/\n/, "\\n");
+				}
+				else if(typeof(json[key]) == "number") {
+					return "MAN_NUM" + json[key] + "MAN_NUM";
+				}
+				else if(typeof(json[key]) == "boolean") {
+					return "MAN_BOOL" + json[key] + "MAN_BOOL";
+				}
+				else if(json[key] === null) {
+					return "MAN_NULL";
+				}
+				else if(obj(json[key])) {
+					return "MAN_OBJ" + JSON.stringify(json[key]).replace(/(\"|\')/g, "\\$1") + "MAN_OBJ";
+				}
+				else {
+					return "";
+				}
+			});
+		}
+	}
+	if(type_template == "HTML_STRING" || type_template == "HTML") {
+		string = string.replace(/MAN_(BOOL|NUM)(.+?(?=MAN_(BOOL|NUM)))MAN_(BOOL|NUM)/g, "$2");
+		string = string.replace(/MAN_NULL/g, "");
+		string = string.replace(/MAN_OBJ(.+?(?=MAN_OBJ))MAN_OBJ/g, function(string) {
+			string = string.replace(/MAN_OBJ(.+?(?=MAN_OBJ))MAN_OBJ/g, "$1");
+			return string.replace(/\\(\\|"|')/g, "$1");
+		});
+		string = string.replace(/\\(\\|"|')/g, "$1");
+		if(type_parent == "table") {
+			dom = document.createElement("div");
+			dom.innerHTML = "<table><tbody>"+string+"</tbody></table>";
+			dom = u.qs("tbody", dom);
+		}
+		else {
+			dom = document.createElement(type_parent);
+			dom.innerHTML = string;
+		}
+		if(append_to_node) {
+			node_list = [];
+			while(dom.childNodes.length) {
+				node_list.push(u.ae(append_to_node, dom.childNodes[0]));
+			}
+			return node_list;
+		}
+		return dom.childNodes;
+	}
+	else if(type_template == "JSON_STRING" || type_template == "JSON") {
+		string = string.replace(/[\"]?MAN_(BOOL|NUM)(.+?(?=MAN_(BOOL|NUM)))MAN_(BOOL|NUM)[\"]?/g, "$2");
+		string = string.replace(/[\"]?MAN_NULL[\"]?/g, "null");
+		string = string.replace(/[\"]?MAN_OBJ(.+?(?=MAN_OBJ))MAN_OBJ[\"]?/g, function(string) {
+			string = string.replace(/[\"]?MAN_OBJ(.+?(?=MAN_OBJ))MAN_OBJ[\"]?/g, "$1");
+			return string.replace(/\\("|')/g, "$1");
+		});
+		return eval("["+string.replace(/MAN_JSON_START/g, "{").replace(/MAN_JSON_END/g, "},")+"]");
+	}
+	else if(type_template == "STRING") {
+		string = string.replace(/MAN_(BOOL|NUM)(.+?(?=MAN_(BOOL|NUM)))MAN_(BOOL|NUM)/g, "$2");
+		string = string.replace(/MAN_NULL/g, "");
+		string = string.replace(/MAN_OBJ(.+?(?=MAN_OBJ))MAN_OBJ/g, function(string) {
+			string = string.replace(/MAN_OBJ(.+?(?=MAN_OBJ))MAN_OBJ/g, "$1");
+			return string.replace(/\\(\\|"|')/g, "$1");
+		});
+		return string.replace(/\\(\\|"|')/g, "$1");
+	}
+}
+
+
 /*i-login.js*/
 Util.Objects["login"] = new function() {
 	this.init = function(scene) {
@@ -5503,9 +5682,13 @@ Util.Objects["member_help_payment"] = new function() {
 			var payment_options = u.qs("div.payment_options", this);
 			var mobilepay_form = u.qs("form.mobilepay", payment_options);
 			var mobilepay_fieldset = u.qs("fieldset", mobilepay_form);
+			var mobilepay_checkbox_field = u.qs(".field.checkbox", mobilepay_fieldset);
+			var mobilepay_checkbox = u.qs("input[type=checkbox]", mobilepay_checkbox_field);
 			var mobilepay_code_div = u.qs("div.code", mobilepay_fieldset);
 			var cash_form = u.qs("form.cash", payment_options);
 			var cash_fieldset = u.qs("fieldset", cash_form);
+			var cash_checkbox_field = u.qs(".field.checkbox", cash_fieldset);
+			var cash_checkbox = u.qs("input[type=checkbox]", cash_checkbox_field);
 			var cash_instructions = u.qs("div.instructions", cash_fieldset);
 			var fieldset_height = u.actualHeight(mobilepay_fieldset);
 			var mobilepay_code_div_height = u.actualHeight(mobilepay_code_div);
@@ -5516,6 +5699,26 @@ Util.Objects["member_help_payment"] = new function() {
 			}
 			if(cash_form) {
 				u.f.init(cash_form);
+			}
+			if(mobilepay_form && cash_form) {
+				u.e.addEvent(mobilepay_checkbox_field, "change", function() {
+					if(u.hc(mobilepay_checkbox_field, "checked")) {
+						if(u.hc(cash_checkbox_field, "checked")) {
+							u.rc(cash_checkbox_field, "checked")
+							cash_checkbox.checked = false;
+							u.f.validate(cash_checkbox);
+						}
+					}
+				});
+				u.e.addEvent(cash_checkbox_field, "change", function() {
+					if(u.hc(cash_checkbox_field, "checked")) {
+						if(u.hc(mobilepay_checkbox_field, "checked")) {
+							u.rc(mobilepay_checkbox_field, "checked")
+							mobilepay_checkbox.checked = false;
+							u.f.validate(mobilepay_checkbox);
+						}
+					}
+				});
 			}
 			var cash_tab = u.insertElement(payment_options, "h4", {"class":"tab cash_tab","html":"Kontant"});
 			var mobilepay_tab = u.ie(payment_options, "h4", {"class":"tab mobilepay_tab","html":"MobilePay"});
@@ -5549,11 +5752,51 @@ Util.Objects["member_help"] = new function() {
 		scene.ready = function() {
 			page.cN.scene = this;
 			var search_form = u.qs("form.search_user", this);
-			search_form.scene = this;
+			search_form.users_ul = u.qs("ul.users", this);
+			search_form.template = u.qs("li.template", this);
+			var i = 0;
+			search_form.visible_p = u.qs("p.visible");
 			if(search_form) {
+				search_form.scene = this;
+				search_form.timeOut = 300
 				u.f.init(search_form);
-			}
-			page.resized();
+				search_form.updated = function () {
+					this.search_input = this.fields.search_member;
+					if (this.search_input.val().length > 3) {
+						this.readyToSearch()
+					}
+					if (this.search_input.val().length < 3) {
+						this.users_ul.innerHTML = "";
+						if (this.visible_p.style.display = "none") {
+							u.as(this.visible_p, "display", "block");
+						}
+					}	
+				}
+				search_form.readyToSearch = function () {
+					u.t.resetTimer(this.t_search);
+					this.t_search = u.t.setTimer(this, this.search, this.timeOut)
+				}
+				search_form.search = function () {
+					this.response = function(response) {
+						this.users_ul.innerHTML = "";
+						u.as(this.visible_p, "display", "none");
+						this.users = u.template(this.template, response.cms_object);
+						while (this.users.length) {		
+							this.user_info = u.qsa("ul.user_info li.search", this.users[0]);
+							for (var j = 0; j < (this.user_info.length); j++) {
+								var match = this.search_input.val();
+								var re = new RegExp(match, 'i');
+								if (this.user_info[j].innerHTML.match(re)) {
+									this.user_info[j].innerHTML = this.user_info[j].innerHTML.replace(re, "<span class=\"highlight_string\">$&</span>");
+								}
+							}
+						 u.ae(this.users_ul, this.users[0]); 
+						}
+					}
+					u.request(this, this.action+"soeg", {"method":"post", "data":u.f.getParams(this)});
+				}
+			}	
+				page.resized();
 		}
 		scene.ready();
 	}
