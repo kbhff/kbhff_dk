@@ -59,16 +59,18 @@ $username = stringOr(getPost("username"), session()->value("temp-username"));
 	</div>
 <? else:?>
 	<h1>Log ind</h1>
-
-<? if(message()->hasMessages()): ?>
-	<? $all_messages = message()->getMessages();
-	message()->resetMessages();
-	foreach($all_messages as $type => $messages):
-	foreach($messages as $message): ?>
-	<p class="<?= $type ?>"><?= $message ?></p>
+	<div class="messages">
+	<? if(message()->hasMessages()): ?>
+		<? $all_messages = message()->getMessages();
+		message()->resetMessages();
+		foreach($all_messages as $type => $messages):
+		foreach($messages as $message): ?>
+		<p class="<?= $type ?>"><?= $message ?></p>
+		<? endforeach;?>
 	<? endforeach;?>
-<? endforeach;?>
-<? endif; ?>
+	<? endif; ?>
+	</div>
+
 
 	<p>
 		I medlemssystemet kan du bestille varer, booke vagter og administrere dit medlemskab.
