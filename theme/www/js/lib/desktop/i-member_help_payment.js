@@ -15,9 +15,13 @@ Util.Objects["member_help_payment"] = new function() {
 			var payment_options = u.qs("div.payment_options", this);
 			var mobilepay_form = u.qs("form.mobilepay", payment_options);
 			var mobilepay_fieldset = u.qs("fieldset", mobilepay_form);
+			var mobilepay_checkbox_field = u.qs(".field.checkbox", mobilepay_fieldset);
+			var mobilepay_checkbox = u.qs("input[type=checkbox]", mobilepay_checkbox_field);
 			var mobilepay_code_div = u.qs("div.code", mobilepay_fieldset);
 			var cash_form = u.qs("form.cash", payment_options);
 			var cash_fieldset = u.qs("fieldset", cash_form);
+			var cash_checkbox_field = u.qs(".field.checkbox", cash_fieldset);
+			var cash_checkbox = u.qs("input[type=checkbox]", cash_checkbox_field);
 			var cash_instructions = u.qs("div.instructions", cash_fieldset);
 			
 			// adjust mobile and cash forms to the same height
@@ -34,6 +38,35 @@ Util.Objects["member_help_payment"] = new function() {
 				u.f.init(cash_form);
 			}
 
+			// make checkboxes mutually exclusive
+			if(mobilepay_form && cash_form) {
+				u.e.addEvent(mobilepay_checkbox_field, "change", function() {
+					if(u.hc(mobilepay_checkbox_field, "checked")) {
+						if(u.hc(cash_checkbox_field, "checked")) {
+							u.rc(cash_checkbox_field, "checked")
+							cash_checkbox.checked = false;
+							u.f.validate(cash_checkbox);
+						}
+					}
+
+				});
+
+				u.e.addEvent(cash_checkbox_field, "change", function() {
+					if(u.hc(cash_checkbox_field, "checked")) {
+						if(u.hc(mobilepay_checkbox_field, "checked")) {
+							u.rc(mobilepay_checkbox_field, "checked")
+							mobilepay_checkbox.checked = false;
+							u.f.validate(mobilepay_checkbox);
+						}
+					}
+
+				});
+
+			}
+
+
+
+			
 			// add clickable tabs for mobilepay/cash
 			var cash_tab = u.insertElement(payment_options, "h4", {"class":"tab cash_tab","html":"Kontant"});
 			var mobilepay_tab = u.ie(payment_options, "h4", {"class":"tab mobilepay_tab","html":"MobilePay"});
