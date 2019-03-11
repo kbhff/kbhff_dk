@@ -181,7 +181,7 @@ class User extends UserCore {
 				$sql = "UPDATE ".SITE_DB.".user_department SET department_id = $department_id WHERE user_id = $user_id";
 
 				if($query->sql($sql)) {
-					message()->addMessage("Department updated");
+					message()->addMessage("Afdeling blev opdateret.");
 					return true;
 				}
 			}
@@ -189,7 +189,7 @@ class User extends UserCore {
 				// Set department
 				$sql = "INSERT INTO ".SITE_DB.".user_department SET department_id = $department_id, user_id = $user_id";
 				if($query->sql($sql)) {
-					message()->addMessage("Department assigned");
+					message()->addMessage("Afdeling blev tildelt.");
 					return true;
 				}
 			}
@@ -265,7 +265,7 @@ class User extends UserCore {
 			// If user already has a password
 			if($this->hasPassword()) {
 				// does values validate
-				if($this->validateList(array("new_password"))) {
+				if($this->validateList(array("new_password", "old_password"))) {
 					$query = new Query();
 
 					// make sure type tables exist
@@ -282,6 +282,10 @@ class User extends UserCore {
 							return true;
 						}
 					}
+				}
+				else {
+					message()->addMessage("Forkert password", array("type" => "error"));
+					return false;
 				}
 			}
 			// user does not have a password
@@ -333,7 +337,7 @@ class User extends UserCore {
 		}
 		// Cannot cancel account due to unpaid orders
 		else if(isset($cancel_result["error"]) && $cancel_result["error"] == "unpaid_orders") {
-			message()->addMessage("Du kan ikke udmelde dig, da du har ubetalte ordrer.", array("type" => "error"));
+			message()->addMessage("Du kan ikke udmelde dig, da du har ubetalte ordrer. Du er velkommen til at kontakte it@kbhff.dk, der altid står klar til at hjælpe.", array("type" => "error"));
 			return false;
 
 		}
