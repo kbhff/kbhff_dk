@@ -13,7 +13,7 @@ include_once("classes/system/department.class.php");
 $DC = new Department();
 $departments = $DC->getDepartments();
 
-$signupfees = $IC->getItems(array("itemtype" => "signupfee", "status" => 1, "extend" => true));
+// $signupfees = $IC->getItems(array("itemtype" => "signupfee", "status" => 1, "extend" => true));
 $email = $model->getProperty("email", "value");
 ?>
 <div class="scene member_help_signup i:member_help_signup">

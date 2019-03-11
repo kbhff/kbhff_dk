@@ -33,26 +33,45 @@ else if ($action) {
 		));
 		exit();
 	}
+	
 
 	// profil/deleteUserInformation
 	else if($action[0] == "deleteUserInformation" && $page->validateCsrfToken()) {
-
-		// Method returns true and deletes user
-		if($UC->deleteUserInformation($action)) {
-			header("Location: /");
-			exit();
+		// If the method is requested by JavaScript
+		if($_SERVER["HTTP_X_REQUESTED_WITH"]) {
+			// Method returns true and deletes user
+			if ($UC->deleteUserInformation($action)) {
+				$JSrequest = "JS-request";
+				$output = new Output();
+				$output->screen($JSrequest, ["message" => true]);
+				exit();	
+			}
+			// Method fails
+			else {
+				$page->page([
+					"templates" => "pages/delete_user_information.php"
+				]);
+				exit();
+			}
 		}
-
-		// Method fails
+		// If the method is requested by default HTML
 		else {
-			$page->page([
-				"templates" => "pages/delete_user_information.php"
-			]);
-			exit();
+			// Method returns true and deletes user
+			if($UC->deleteUserInformation($action)) {
+				header("Location: /");
+				exit();
+			}
+			
+			// Method fails
+			else {
+				$page->page([
+					"templates" => "pages/delete_user_information.php"
+				]);
+				exit();
+			}
 		}
 	}
 }
-
 
 // User must always accept terms - force dialogue if user has not accepted the terms
 if(!$UC->hasAcceptedTerms()) {
@@ -137,15 +156,17 @@ if($action) {
 	else if($action[0] == "updateUserPassword" && $page->validateCsrfToken()) {
 
 		//Method returns true
-		if($UC->updateUserPassword($action)) {
+		if($UC->setPassword($action)) {
+			message()->resetMessages();
+			message()->addMessage("Adgangskoden blev opdateret.");
 			header("Location: /profil");
 			exit();
 		}
 		//Method returns false
 		else {
-			$page->page([
-				"templates" => "pages/update_user_password.php"
-			]);
+		
+			message()->addMessage("Der skete en fejl.", array("type" => "error"));
+			header("Location: /profil");
 			exit();
 		}
 	}

@@ -45,25 +45,21 @@ if (!$department_id) {
 
 	
 	</div>
-	
+	<?= $model->formEnd() ?>
 <? // show error messages 
 
-if(message()->hasMessages(array("type" => "error"))): ?>
-	<p class="errormessage">
-<?	$messages = message()->getMessages(array("type" => "error"));
-		foreach($messages as $message): ?>
-		<?= $message ?><br>
-<?	endforeach;?>
-	</p>
-	<p class="message">
-<?	$messages = message()->getMessages(array("type" => "message"));
+if(message()->hasMessages()): ?>
+<div class="messages">
+<?
+$all_messages = message()->getMessages();
+message()->resetMessages();
+foreach($all_messages as $type => $messages):
 	foreach($messages as $message): ?>
-		<?= $message ?><br>
-<?	endforeach; ?>
-	</p>
-	<? message()->resetMessages(); ?>
-<?	endif; ?>
-<?= $model->formEnd() ?>
+	<p class="<?= $type ?>"><?= $message ?></p>
+	<? endforeach;?>
+<? endforeach;?>
+</div>
+<? endif; ?>
 
 
 	<div class="c-wrapper users">
@@ -104,7 +100,7 @@ if(message()->hasMessages(array("type" => "error"))): ?>
 			<? endforeach;
 			endif; ?>
 		</ul>
-		<p class ="<?=$users? "invisible": ""?>">
+		<p class ="visible <?=$users? "invisible": ""?>">
 			Her på siden kan du som kassemester søger efter medlemmer. 
 		Du søger et medlem frem ved at indtaste enten navn, mail, mobilnr eller medlemsnr på det pågældende medlem. 
 		Når du har søgt et medlem frem, har du mulighed for at åbne medlemmets brugerprofil. 

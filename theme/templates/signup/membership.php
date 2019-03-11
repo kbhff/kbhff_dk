@@ -7,11 +7,22 @@ global $model;
 
 $IC = new Items();
 
-$sindex = $action[1];
 $related_items = false;
 
+// Use special property, fixed_url_identifier to identify topic
+$fixed_url_identifier = $action[1];
+$sql = "SELECT item_id FROM ".$model->db." WHERE fixed_url_identifier = '$fixed_url_identifier' LIMIT 1";
+$query = new Query;
+if($query->sql($sql)) {
+	$item_id = $query->result(0, "item_id");
+	$item = $IC->getItem(array("id" => $item_id, "extend" => array("tags" => true, "user" => true, "comments" => true, "readstate" => true)));
+}
+// attempt look up by sindex, for fallback purposes
+else {
+	$item = $IC->getItem(array("sindex" => $action[1], "extend" => array("tags" => true, "user" => true, "mediae" => true, "readstate" => true, "prices" => true, "subscription_method" => true)));
+}
 
-$item = $IC->getItem(array("sindex" => $sindex, "extend" => array("tags" => true, "user" => true, "mediae" => true, "readstate" => true, "prices" => true, "subscription_method" => true)));
+
 if($item) {
 	$this->sharingMetaData($item);
 

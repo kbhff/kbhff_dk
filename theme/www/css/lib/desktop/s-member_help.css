@@ -145,5 +145,33 @@
 
 #content .scene.member_help ul.users li ul.actions {text-align: right;}
 #content .scene.member_help ul.users li.profile a.button {padding: 1px 17px;}
-#content .scene.member_help div.users p.invisible {display: none;}
+#content .scene.member_help div.users p.invisible, 
+#content .scene.user_profile div.c-box.invisible {display: none;}
 
+/* user profile */ 
+#content .scene.user-profile div.section.orders {font-size: 0;}
+#content .scene.user_profile ul.actions.new-order {display: inline-block; width: 20%; vertical-align: top; float: right; padding: 0; margin-top: 0;}
+#content .scene.user_profile ul.actions.new-order li {padding-left: 0; width: 100%;}
+#content .scene.user_profile div.section.orders h2 {display: inline-block; width: 80%; margin-right: 0; margin-top: 0; margin-left: 0;}
+
+#content .scene.user_profile p.view-orders {float: right; text-decoration: underline #3e8e17;}
+#content .scene.user_profile p.view-orders a.button:hover {color: #357914;}
+#content .scene.user_profile ul.actions.new-order a.button {padding-top: 5px; padding-bottom: 5px;}
+
+#content .scene.user_profile div.c-wrapper div.c-box.obs h2.obs 
+#content .scene.user_profile div.c-wrapper div.c-box.obs {background-color: #DDDDDD}
+
+/* #content .scene.user_profile form.form_department fieldset div.field {display: inline-block; width: 50%; padding-right: 0; box-sizing: border-box;}
+#content .scene.user_profile form.form_department fieldset {float: left; width: 100%; font-size: 0;} */
+#content .scene.user_profile form.form_membership fieldset {float:left;}
+
+/* #content div.profile ul.actions .quarter-width {width: 25%; text-align: center;}*/
+#content div.profile ul.actions li.change-department {padding-left: 0;}
+#content div.profile ul.actions .quarter-width a.button {font-size: 10px;}
+
+/* Udmeld medlem overlay */
+
+ div.overlay .scene.delete_user_information ul.actions {margin-top: 36px;}
+ 
+div.overlay div.messages p.error,
+div.overlay p.errormessage {color: #C22414;}

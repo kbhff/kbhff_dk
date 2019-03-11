@@ -1,13 +1,20 @@
 <?php
-$UC = new User();
-$user = $UC->getKbhffUser();
+global $action;
+
+$UC = new SuperUser();
+$user_id = $action[1];
+
+$user = $UC->getKbhffUser(["user_id" => $user_id]);
 
 $this->pageTitle("Adgangskode");
 ?>
 
 <div class="scene user_password i:user_password">
 	<h1>Adgangskode</h1>
-	<h2>Her kan du ændre din adgangskode.</h2>
+	<h2>Her kan medlemmet ændre sin adgangskode.</h2>
+
+
+	<?= $UC->formStart("updateUserPassword/$action[1]", ["class" => "form_password"]) ?>
 
 	<? if(message()->hasMessages()): ?>
 	<div class="messages">
@@ -21,19 +28,9 @@ $this->pageTitle("Adgangskode");
 	<? endforeach;?>
 	</div>
 	<? endif; ?>
-		
-	<?= $UC->formStart("updateUserPassword", ["class" => "form_password password i:resetPassword"]) ?>
 
 		<fieldset>
 			<?=
-			
-				$UC->input("old_password", [
-					"label" => "Din nuværende adgangskode",
-					"required" => true,
-					"hint_message" => "Indtast din nuværende adgangskode på 8-20 anslag",
-					"error_message" => "",
-				]),
-				
 				$UC->input("new_password", [
 					"label" => "Din nye adgangskode",
 					"required" => true,
@@ -51,7 +48,7 @@ $this->pageTitle("Adgangskode");
 		</fieldset>
 
 		<ul class="actions">
-			<li class="cancel"><a href="/" class="button">Annullér</a></li>
+			<li class="cancel"><a href="/medlemshjaelp/brugerprofil/<?=$action[1]?>" class="button">Annullér</a></li>
 			<?= $UC->submit("Gem", array("class" => "primary", "wrapper" => "li.save")) ?>
 		</ul>
 

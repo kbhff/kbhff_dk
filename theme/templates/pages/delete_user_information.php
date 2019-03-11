@@ -11,17 +11,18 @@ $this->pageTitle("Udmeldelse");
 
 	<?= $UC->formStart("deleteUserInformation", array("class" => "confirm_cancellation")) ?>
 
-<?	// print error messages
-	if(message()->hasMessages(array("type" => "error"))): ?>
-		<p class="errormessage">
-<?		$messages = message()->getMessages(array("type" => "error"));
+	<? if(message()->hasMessages()): ?>
+	<div class="messages">
+	<?
+	$all_messages = message()->getMessages();
+	message()->resetMessages();
+	foreach($all_messages as $type => $messages):
 		foreach($messages as $message): ?>
-			<?= $message ?><br>
-<?		endforeach;?>
-		</p>
-<?	message()->resetMessages(); ?>
-
-<?	endif; ?>
+		<p class="<?= $type ?>"><?= $message ?></p>
+		<? endforeach;?>
+	<? endforeach;?>
+	</div>
+	<? endif; ?>
 	
 		<fieldset>
 			<?= $UC->input("password", [
