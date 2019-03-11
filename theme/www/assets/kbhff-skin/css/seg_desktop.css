@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-02-05 16:42:24
+asset-builder @ 2019-03-01 10:44:32
 */
 
 /*seg_desktop_include.css*/
@@ -95,8 +95,8 @@ div.field select {width: calc(100% - 4px); padding: 2px 3px 2px 2px;
 	-webkit-appearance: none;
 	-moz-appearance: none;
 }
-@media all and (-webkit-min-device-pixel-ratio:0) {
-	div.field select {padding: 3px 3px 3px 6px;}
+div.field select:not(*:root) {
+	padding: 3px 3px 3px 6px;
 }
 div.field select option {height: 24px;}
 div.field textarea {width: calc(100% - 4px); height: 100px; resize: none; overflow: auto; padding: 3px 0 2px 6px;}
@@ -147,6 +147,12 @@ div.field.checkbox.error input,
 div.field.radiobuttons.error .item input {
 	width: 20px;
 }
+div.field.error.focus .help .error,
+div.field.error.focus .help .error,
+div.field.error.focus .help .error {opacity: 0; transform: translate(0, -10px); }
+div.field.error.focus .help .hint,
+div.field.error.focus .help .hint,
+div.field.error.focus .help .hint {opacity: 1; transform: translate(0, 0);}
 div.field .indicator {display: inline-block; vertical-align: top; width: 12px; height: 12px; margin-left: 4px;}
 div.field.required .indicator {
 	background: transparent url(../img/gx_required.svg) no-repeat center 1px;
@@ -366,7 +372,8 @@ position: relative;
 }
 #content h1 + p,
 #content h1 + h3,
-#content h1 + .c-wrapper {
+#content h1 + .c-wrapper,
+#content h1 + div.messages {
 	padding-top: 46px;
 }
 #content h4 + ul,

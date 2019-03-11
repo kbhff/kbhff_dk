@@ -6,7 +6,7 @@ global $model;
 // Create instance of class
 $IC = new Items();
 
-// Get the assotiated Janitor page
+// Get the associated Janitor page
 $page_item = $IC->getItem(array("tags" => "page:login", "extend" => array("user" => true, "tags" => true, "mediae" => true)));
 if($page_item) {
 	$this->sharingMetaData($page_item);
@@ -20,7 +20,6 @@ if($forward_url) {
 
 // Get username and save it in a variable
 $username = stringOr(getPost("username"), session()->value("temp-username"));
-session()->reset("temp-username");
 ?>
 
 
@@ -60,26 +59,19 @@ session()->reset("temp-username");
 	</div>
 <? else:?>
 	<h1>Log ind</h1>
+	<div class="messages">
+	<? if(message()->hasMessages()): ?>
+		<? $all_messages = message()->getMessages();
+		message()->resetMessages();
+		foreach($all_messages as $type => $messages):
+		foreach($messages as $message): ?>
+		<p class="<?= $type ?>"><?= $message ?></p>
+		<? endforeach;?>
+	<? endforeach;?>
+	<? endif; ?>
+	</div>
 
-	<?	// Display any backend generated messages
-		if(message()->hasMessages()): ?>
-		
-			<p class="errormessage">
-		<?	$messages = message()->getMessages(array("type" => "error"));
-			foreach($messages as $message): ?>
-				<?= $message ?><br>
-		<?	endforeach;?>
-			</p>
 
-			<p class="message">
-		<?	$messages = message()->getMessages(array("type" => "message"));
-			foreach($messages as $message): ?>
-				<?= $message ?><br>
-		<?	endforeach; ?>
-			</p>
-
-			<? message()->resetMessages(); ?>
-	<?	endif; ?>
 	<p>
 		I medlemssystemet kan du bestille varer, booke vagter og administrere dit medlemskab.
 		Du kan bruge e-mailadresse, telefonnummer eller medlemsnummer som brugernavn til at logge ind.

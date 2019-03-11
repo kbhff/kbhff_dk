@@ -8,12 +8,12 @@ $this->pageTitle("Verificering");
 ?>
 
 <div class="scene login i:forgot">
-	<h1>Nulstil password</h1>
-	<h2>Verificér at du vil nulstille dit password</h2>
+	<h1>Nulstil adgangskode</h1>
+	<h2>Bekræft at du vil nulstille din adgangskode</h2>
 	<p class="validateParagraph">
 		<span class='highlight'>TAK.</span> 
 		Vi har nu sendt dig en mail. I mailen er en kode, 
-		som du kan indtaste her og hvorefter du vil blive bedt om at vælge et nyt password.
+		som du kan indtaste her og hvorefter du vil blive bedt om at vælge en ny adgangskode.
 	</p>
 
 	<?= $model->formStart("validateCode", ["class" => "verify_code"]) ?>
@@ -34,7 +34,7 @@ $this->pageTitle("Verificering");
 		</fieldset>
 
 		<ul class="actions">
-			<?= $model->submit("Vælg nyt password", array("class" => "primary", "wrapper" => "li.reset")) ?>
+			<?= $model->submit("Vælg ny adgangskode", array("class" => "primary", "wrapper" => "li.reset")) ?>
 		</ul>
 
 	<?= $model->formEnd() ?>

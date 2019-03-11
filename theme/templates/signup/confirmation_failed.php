@@ -49,7 +49,7 @@ session()->reset("signup_email");
 		<? endif; ?>
 	</div>
 <? else:?>
-	<h1>Der skete en fejl.</h1>
+	<h1>Der skete en fejl</h1>
 	<p>Du kunne ikke verificeres.</p>
 <? endif; ?>
 

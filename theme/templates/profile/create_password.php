@@ -31,14 +31,14 @@ global $model;
 
 	<div class="password">
 		<h2>Adgangskode</h2>
-		<p>Som ny bruger skal du oprette en adgangskode. Dette vil også verificere din konto.</p>
+		<p>Som ny bruger skal du oprette en adgangskode.</p>
 		
 
-		<?= $model->formStart("setPasswordAndConfirmAccount", ["class" => "create_password"]) ?>
+		<?= $model->formStart("setPassword", ["class" => "create_password"]) ?>
 
 			<fieldset>
-				<?= $model->input("new_password", array("required" => true, "label" => "Ny adgangskode", "hint" => "Indtast din nye adgangskode på 8-20 anslag", "error" => "Ugyldig adgangskode")) ?>
-				<?= $model->input("confirm_password", array("required" => true, "label" => "Bekræft adgangskode", "hint" => "Indtast din nye adgangskode igen for at bekræfte", "error" => "Adgangskoderne er ikke ens")) ?>
+				<?= $model->input("new_password", array("required" => true, "label" => "Ny adgangskode", "hint_message" => "Indtast din nye adgangskode på 8-20 anslag", "error_message" => "Ugyldig adgangskode")) ?>
+				<?= $model->input("confirm_password", array("required" => true, "label" => "Bekræft adgangskode", "hint_message" => "Indtast din nye adgangskode igen for at bekræfte", "error_message" => "Adgangskoderne er ikke ens")) ?>
 			</fieldset>
 			<ul class="actions">
 				<?= $model->submit("Gem", array("class" => "primary", "wrapper" => "li.save")) ?>

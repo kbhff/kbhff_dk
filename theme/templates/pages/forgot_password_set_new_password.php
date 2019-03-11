@@ -8,10 +8,10 @@ $reset_token = session()->value("temp-reset-token");
 
 ?>
 <div class="scene i:scene">
-	<h1>Reset password</h1>
+	<h1>Opdatér adgangskode</h1>
 
 	<div class="password">
-		<h2>Password</h2>
+		<h2>Adgangskode</h2>
 
 		<?= $model->formStart("resetPassword", array("class" => "reset_password")) ?>
 			<?
@@ -21,7 +21,7 @@ $reset_token = session()->value("temp-reset-token");
 
 			<fieldset>
 				<?= $model->input("new_password", array("required" => true, "label" => "Ny adgangskode", "hint_message" => "Skriv dit nye adgangskode – 8-20 tegn", "error_message" => "Ugyldig adgangskode")) ?>
-				<?= $model->input("confirm_password", array("required" => true, "label" => "Gentag ny adgangskode", "hint_message" => "Skriv dit nye password igen for at bekræfte", "error_message" => "Dine adgangskoder stemmer ikke overens.")) ?>
+				<?= $model->input("confirm_password", array("required" => true, "label" => "Gentag ny adgangskode", "hint_message" => "Skriv din nye adgangskode igen for at bekræfte", "error_message" => "Dine adgangskoder stemmer ikke overens.")) ?>
 			</fieldset>
 
 			<ul class="actions">
