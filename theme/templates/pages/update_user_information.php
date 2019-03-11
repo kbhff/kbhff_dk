@@ -12,22 +12,18 @@ $this->pageTitle("Brugeroplysninger");
 	<?= $UC->formStart("updateUserInformation", ["class" => "form_user"]) ?>
 
 		
-<?	// print messages
-	if(message()->hasMessages()): ?>
-		<p class="errormessage">
-<?		$messages = message()->getMessages(array("type" => "error"));
+	<? if(message()->hasMessages()): ?>
+	<div class="messages">
+	<?
+	$all_messages = message()->getMessages();
+	message()->resetMessages();
+	foreach($all_messages as $type => $messages):
 		foreach($messages as $message): ?>
-			<?= $message ?><br>
-<?		endforeach;?>
-		</p>
-		<p class="message">
-<?		$messages = message()->getMessages(array("type" => "message"));
-		foreach($messages as $message): ?>
-			<?= $message ?><br>
-<?		endforeach;?>
-		</p>
-<?	message()->resetMessages(); ?>
-<?	endif; ?>
+		<p class="<?= $type ?>"><?= $message ?></p>
+		<? endforeach;?>
+	<? endforeach;?>
+	</div>
+	<? endif; ?>
 
 		<fieldset>
 			<?= 
@@ -78,7 +74,7 @@ $this->pageTitle("Brugeroplysninger");
 		</fieldset>
 
 		<ul class="actions">
-			<li class="cancel"><a href="/" class="button">Anullér</a></li>
+			<li class="cancel"><a href="/" class="button">Annullér</a></li>
 			<?= $UC->submit("Opdater", array("class" => "primary", "wrapper" => "li.save")) ?>
 		</ul>
 
