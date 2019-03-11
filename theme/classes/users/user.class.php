@@ -466,14 +466,13 @@ class User extends UserCore {
 	 * @param string $username
 	 * @return boolean
 	 */
-	function loginUserIsVerified($user_id) {		
+	function loginUserIsVerified($username, $user_id) {		
 		
 		$query = new Query();
-
+		
 		// user is not a guest user
 		if($user_id != 1) {
-			$sql = "SELECT user_id FROM ".SITE_DB.".user_usernames WHERE user_id = '$user_id' AND verified = 1";
-			
+			$sql = "SELECT user_id FROM ".SITE_DB.".user_usernames WHERE user_id = $user_id AND username = '$username' AND verified = 1";			
 			// user is verified
 			if($query->sql($sql)) {
 				return true;
