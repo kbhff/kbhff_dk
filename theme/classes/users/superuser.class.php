@@ -196,14 +196,12 @@ class SuperUser extends SuperUserCore {
 			$member = $this->getMembers(array("user_id" => $user_id));
 		
 			if($member) {
-				if($member["item_id"] != $item_id) {
-					$sql = "UPDATE ".SITE_DB.".user_item_subscriptions SET item_id = $item_id WHERE user_id = $user_id";
-					
-					if($query->sql($sql)) {
-						message()->resetMessages();
-						message()->addMessage("Medlemsskab er opdateret");
-						return true;
-					}
+				$sql = "UPDATE ".SITE_DB.".user_item_subscriptions SET item_id = $item_id WHERE user_id = $user_id";
+				
+				if($query->sql($sql)) {
+					message()->resetMessages();
+					message()->addMessage("Medlemsskab er opdateret");
+					return true;
 				}
 				else {
 					return false;
@@ -369,19 +367,15 @@ class SuperUser extends SuperUserCore {
 			// Check if the user is associated with a department and adjust query accordingly
 			$user_department = $this->getUserDepartment(array("user_id" => $user_id));
 			
-			
-			// print_r($user_department["id"]);
-			// print_r($department_id);exit();
+		
 			if ($user_department) {
-				if($department_id != $user_department["id"]) {
 					// Update department
-					$sql = "UPDATE ".SITE_DB.".user_department SET department_id = $department_id WHERE user_id = $user_id";
+				$sql = "UPDATE ".SITE_DB.".user_department SET department_id = $department_id WHERE user_id = $user_id";
 
-					if($query->sql($sql)) {
-						message()->resetMessages();
-						message()->addMessage("Afdeling er opdateret");
-						return true;
-					}
+				if($query->sql($sql)) {
+					message()->resetMessages();
+					message()->addMessage("Afdeling er opdateret");
+					return true;
 				}
 				else {
 					return false;
