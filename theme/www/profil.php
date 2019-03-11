@@ -43,7 +43,7 @@ else if ($action) {
 			if ($UC->deleteUserInformation($action)) {
 				$JSrequest = "JS-request";
 				$output = new Output();
-				$output->screen($JSrequest, ["message" => true]);
+				$output->screen($JSrequest, ["reset_messages" => false]);
 				exit();	
 			}
 			// Method fails
@@ -166,7 +166,7 @@ if($action) {
 		else {
 		
 			message()->addMessage("Der skete en fejl.", array("type" => "error"));
-			header("Location: /profil");
+			header("Location: /profil/kodeord");
 			exit();
 		}
 	}

@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-02-27 17:41:39
+asset-builder @ 2019-03-11 14:54:40
 */
 
 /*seg_desktop_include.css*/
@@ -86,8 +86,8 @@ div.field select {width: calc(100% - 4px); padding: 2px 3px 2px 2px;
 	-webkit-appearance: none;
 	-moz-appearance: none;
 }
-@media all and (-webkit-min-device-pixel-ratio:0) {
-	div.field select {padding: 3px 3px 3px 6px;}
+div.field select:not(*:root) {
+	padding: 3px 3px 3px 6px;
 }
 div.field select option {height: 24px;}
 div.field textarea {width: calc(100% - 4px); height: 100px; resize: none; overflow: auto; padding: 3px 0 2px 6px;}
@@ -138,6 +138,12 @@ div.field.checkbox.error input,
 div.field.radiobuttons.error .item input {
 	width: 20px;
 }
+div.field.error.focus .help .error,
+div.field.error.focus .help .error,
+div.field.error.focus .help .error {opacity: 0; transform: translate(0, -10px); }
+div.field.error.focus .help .hint,
+div.field.error.focus .help .hint,
+div.field.error.focus .help .hint {opacity: 1; transform: translate(0, 0);}
 div.field .indicator {display: inline-block; vertical-align: top; width: 12px; height: 12px; margin-left: 4px;}
 div.field.required .indicator {
 	background: transparent url(../img/gx_required.svg) no-repeat center 1px;
@@ -994,5 +1000,20 @@ body > div.overlay .close:after {
 #content .scene.member_help h3 span.name {width: 25%;}
 #content .scene.member_help ul.users li ul.actions {text-align: right;}
 #content .scene.member_help ul.users li.profile a.button {padding: 1px 17px;}
-#content .scene.member_help div.users p.invisible {display: none;}
-
+#content .scene.member_help div.users p.invisible, 
+#content .scene.user_profile div.c-box.invisible {display: none;}
+#content .scene.user-profile div.section.orders {font-size: 0;}
+#content .scene.user_profile ul.actions.new-order {display: inline-block; width: 20%; vertical-align: top; float: right; padding: 0; margin-top: 0;}
+#content .scene.user_profile ul.actions.new-order li {padding-left: 0; width: 100%;}
+#content .scene.user_profile div.section.orders h2 {display: inline-block; width: 80%; margin-right: 0; margin-top: 0; margin-left: 0;}
+#content .scene.user_profile p.view-orders {float: right; text-decoration: underline #3e8e17;}
+#content .scene.user_profile p.view-orders a.button:hover {color: #357914;}
+#content .scene.user_profile ul.actions.new-order a.button {padding-top: 5px; padding-bottom: 5px;}
+#content .scene.user_profile div.c-wrapper div.c-box.obs h2.obs 
+#content .scene.user_profile div.c-wrapper div.c-box.obs {background-color: #DDDDDD}
+#content .scene.user_profile form.form_membership fieldset {float:left;}
+#content div.profile ul.actions li.change-department {padding-left: 0;}
+#content div.profile ul.actions .quarter-width a.button {font-size: 10px;}
+ div.overlay .scene.delete_user_information ul.actions {margin-top: 36px;}
+div.overlay div.messages p.error,
+div.overlay p.errormessage {color: #C22414;}

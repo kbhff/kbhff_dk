@@ -57,7 +57,7 @@ Util.Objects["member_help"] = new function() {
 				search_form.search = function () {
 					
 					this.response = function(response) {
-						
+						console.log(response);
 						this.users_ul.innerHTML = "";
 						u.as(this.visible_p, "display", "none");
 						// parses user object and returns it as html node lists

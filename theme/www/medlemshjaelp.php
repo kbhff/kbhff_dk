@@ -273,7 +273,7 @@ if($action) {
 			if ($model->deleteUserInformation(["user_id" => $action[1]])) {
 				$JSrequest = "JS-request";
 				$output = new Output();
-				$output->screen($JSrequest, ["message" => true]);
+				$output->screen($JSrequest, ["reset_messages" => false]);
 				exit();	
 			}
 			// Method fails
