@@ -268,8 +268,8 @@ Util.Objects["user_profile"] = new function() {
 			
 			button_cancel.clicked = function() {
 				
-				this.scene.action_url = this.url;
-				console.log(this.scene.action_url);
+				this.scene.url = this.url;
+				console.log(this.scene.url);
 				this.scene.overlay = u.overlay({title:"Du er ved at udmelde et medlem.", height:200,width:600, class:"confirm_cancel_membership"});
 				var p_warning = u.ae(this.scene.overlay.div_content, "p", {
 					html:"Du er ved at melde et medlem ud af KBHFF. Er du sikker?"
@@ -365,7 +365,7 @@ Util.Objects["user_profile"] = new function() {
 						this.is_requesting = true;
 						u.ac(this, "loading");
 						// Make the request
-						u.request(this, this.scene.action_url);
+						u.request(this, this.scene.url);
 					}
 
 				}
