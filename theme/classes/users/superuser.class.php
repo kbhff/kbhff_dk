@@ -540,12 +540,14 @@ class SuperUser extends SuperUserCore {
 				$page->addLog("user->newUserFromMemberHelp: missing terms agreement");
 				return array("status" => "MISSING_TERMS");
 			}
-
-
+			
+			
 			// if user already exists, return error
-			if($this->userExists(array("email" => $email))) {
+			$user_id = $this->getLoginUserId($email);
+			if($user_id) {
+				// print_r($user_id[0]["user_id"]);exit();
 				$page->addLog("user->newUserFromMemberHelp: user exists ($email)");
-				return array("status" => "USER_EXISTS");
+				return array("status" => "USER_EXISTS", "existing_user_id" => $user_id);
 			}
 
 

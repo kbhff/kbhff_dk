@@ -61,7 +61,7 @@ if($action) {
 		
 		// create new user (with a "fake" $action-array)
 		$user = $model->newUserFromMemberHelp(array("newUserFromMemberHelp"));
-		
+	
 		// successful creation
 		if(isset($user["user_id"])) {
 			
@@ -117,7 +117,7 @@ if($action) {
 		else if(isset($user["status"]) && $user["status"] == "USER_EXISTS") {
 			message()->addMessage("Du forsøgte at oprette en bruger, der allerede findes i systemet. Du er derfor blevet videredirigeret til denne brugers profilside, hvorfra du kan opdatere brugerdata, oprette et medlemskab for brugeren m.m.", array("type" => "error"));
 			
-			header("Location: brugerprofil/".$user["user_id"]);
+			header("Location: brugerprofil/".$user["existing_user_id"]);
 			exit();
 		}
 		
