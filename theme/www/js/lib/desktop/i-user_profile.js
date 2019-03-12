@@ -12,7 +12,6 @@ Util.Objects["user_profile"] = new function() {
 //			u.bug("scene.ready:" + u.nodeId(this));
 			this.initMembershipBox();
 			this.initUserinfoBox();
-			this.initPasswordBox();
 		}
 		
 		// Medlemskab box
@@ -270,7 +269,7 @@ Util.Objects["user_profile"] = new function() {
 			button_cancel.clicked = function() {
 				
 				this.scene.action_url = this.url;
-				
+				console.log(this.scene.action_url);
 				this.scene.overlay = u.overlay({title:"Du er ved at udmelde et medlem.", height:200,width:600, class:"confirm_cancel_membership"});
 				var p_warning = u.ae(this.scene.overlay.div_content, "p", {
 					html:"Du er ved at melde et medlem ud af KBHFF. Er du sikker?"
@@ -296,11 +295,11 @@ Util.Objects["user_profile"] = new function() {
 						// Update request state
 						this.is_requesting = false;
 						u.rc(this, "loading");
-
+						
 						// Query form to inject
 						var confirm_cancellation = u.qs(".scene.delete_user_information", response);
 						confirm_cancellation.scene = this.scene;
-
+					
 						// Hide elements to be replaced
 						u.ass(this.scene.overlay.div_header.h2, {"display":"none"});
 						u.ass(p_warning, {"display":"none"});
@@ -359,7 +358,7 @@ Util.Objects["user_profile"] = new function() {
 						
 						}
 					}
-					
+				
 					// Prevent making the request more than once
 					if (!this.is_requesting) {
 						// Update request state

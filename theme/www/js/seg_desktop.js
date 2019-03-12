@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-03-11 14:54:39
+asset-builder @ 2019-03-12 11:35:00
 */
 
 /*seg_desktop_include.js*/
@@ -5815,7 +5815,6 @@ Util.Objects["user_profile"] = new function() {
 		scene.ready = function() {
 			this.initMembershipBox();
 			this.initUserinfoBox();
-			this.initPasswordBox();
 		}
 		scene.initMembershipBox = function() {
 			var box_membership = u.qs(".membership > .c-box", this);
@@ -5951,6 +5950,7 @@ Util.Objects["user_profile"] = new function() {
 			u.clickableElement(button_cancel);
 			button_cancel.clicked = function() {
 				this.scene.action_url = this.url;
+				console.log(this.scene.action_url);
 				this.scene.overlay = u.overlay({title:"Du er ved at udmelde et medlem.", height:200,width:600, class:"confirm_cancel_membership"});
 				var p_warning = u.ae(this.scene.overlay.div_content, "p", {
 					html:"Du er ved at melde et medlem ud af KBHFF. Er du sikker?"
