@@ -399,20 +399,28 @@ Util.Objects["profile"] = new function() {
 							// Update request state
 							this.is_requesting = false;
 							u.rc(this, "loading");
+						
+							// in case of error, the message needs to show in the form_password. 
+							if (message = u.qs("div.messages > p.error", response)) {
+								u.ie(this, message);
+								message.transitioned = function() {
+									message.style.display = "none";
+								}
+								u.a.transition(message, "all 4s ease-in");
+								u.a.opacity(message, 0.5);	
+							}
 
 							// Query new static content and replace with current form
 							var div_password = u.qs(".password .fields", response);
 							box_password.replaceChild(div_password, this);
 
-							
-							if (message = u.qs("div.messages", response)) {
+							// Message needs to show when form_password is replaced with box_password.
+							if (message = u.qs("p.message", response)) {
 								
 								u.ie(box_password, message);
-								
 								message.transitioned = function() {
-									message.innerHTML = "";
+									message.style.display = "none";
 								}
-
 								u.a.transition(message, "all 4s ease-in");
 								u.a.opacity(message, 0.5);	
 							}

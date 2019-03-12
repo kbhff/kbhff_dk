@@ -164,8 +164,8 @@ if($action) {
 		}
 		//Method returns false
 		else {
-		
 			message()->addMessage("Der skete en fejl.", array("type" => "error"));
+			
 			header("Location: /profil/kodeord");
 			exit();
 		}
