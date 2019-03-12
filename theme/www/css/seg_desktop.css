@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-03-12 16:52:24
+asset-builder @ 2019-03-12 17:02:39
 */
 
 /*seg_desktop_include.css*/
@@ -808,7 +808,8 @@ body > div.overlay .close:after {
 	font-size: 26px;
 	padding-bottom: 25px;
 }
-
+#content p.error,
+#content p.errormessage {color: #C22414;}
 
 /*s-signup.css*/
 #content .scene.signupfees h1 {color: #ffffff; box-shadow: 0px -5px white inset;}
