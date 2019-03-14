@@ -479,7 +479,7 @@ class User extends UserCore {
 			}
 		}
 
-		// user is not verified
+		// user is guest or not verified
 		return false;
 
 	}

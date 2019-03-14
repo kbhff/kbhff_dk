@@ -243,10 +243,9 @@ if($action) {
 	// login/opret-password
 	else if(count($action) == 1 && $action[0] == "opret-password") {
 
-		$user_id = session()->value("user_id");
 		$username = session()->value("temp-username");
+		$user_id = $model->getLoginUserId($username);
 
-		
 		// user is verified and logged in (is not a guest user)
 		if($model->loginUserIsVerified($username, $user_id)) {
 
