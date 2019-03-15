@@ -42,8 +42,10 @@ $has_accepted_terms = $UC->hasAcceptedTerms(["user_id" => $user_id]);
 		<div class="c-box obs">
 			<h2 class="obs"><span class="highlight">OBS! </span>Handler på vegne af <span class="highlight"><?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?></span></h2>
 		</div>
+		
 		<div class="c-two-thirds">
-			<div class="c-box<?=$has_accepted_terms ? " invisible" : ""?>">
+			<? if(!$has_accepted_terms):?>
+			<div class="c-box">
 				<h3><span class="highlight">OBS! </span><?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?> har ikke accepteret betingelserne.</h3>
 				<?= $model->formStart("brugerprofil/$action[1]/accepter", array("class" => "accept_terms labelstyle:inject")) ?>
 				<fieldset>
@@ -66,12 +68,15 @@ $has_accepted_terms = $UC->hasAcceptedTerms(["user_id" => $user_id]);
 				<?= $model->formEnd() ?>
 			
 			</div>
-			<div class="c-box<?=$is_membership_paid ? " invisible" : ""?>">
+			<? endif; ?>
+			<? if(!$is_membership_paid): ?>
+			<div class="c-box">
 				<p>
 					<span class="highlight">OBS! </span><?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?> mangler at betale kontingent.
 					Kontingentet skal betales før man kan lave nye bestillinger.<a href="/medlemshjaelp/betaling/<?=$user["membership"]["order"]["order_no"]?>" class="button primary"> Betal kontingent nu.</a>
 				</p>
 			</div>
+			<? endif; ?>
 			<div class="section orders">
 				<h2>Eksisterende bestillinger</h2>
 				<ul class="actions new-order">

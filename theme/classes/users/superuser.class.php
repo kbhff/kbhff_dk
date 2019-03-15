@@ -660,7 +660,7 @@ class SuperUser extends SuperUserCore {
 								),
 								"track_clicks" => false,
 								"recipients" => $email,
-								"template" => "signup"
+								"template" => "signup_memberhelp"
 							));
 	
 							// send notification email to admin
