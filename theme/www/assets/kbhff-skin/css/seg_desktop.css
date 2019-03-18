@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-03-18 15:11:04
+asset-builder @ 2019-03-18 15:31:02
 */
 
 /*seg_desktop_include.css*/
@@ -16,9 +16,12 @@ body {
 	color: #000000;
 }
 #page {}
+body span.highlight,
 #page span.highlight {color: #3e8e17;}
-p.error,
-p.errormessage {color: #C22414;}
+body p.error,
+body p.errormessage,
+#page p.error,
+#page p.errormessage {color: #C22414;}
 h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dd, dt {padding: 0; margin: 0;}
 h1, h2, h3, h4, h5, h6, p, li, dd, dt, span, a {line-height: 1em; font-weight: 400;}
 ul {list-style: none;}
@@ -581,78 +584,6 @@ position: relative;
 #content div.c-three-quarters > div.c-box.c-one-half,
 #content div.c-three-quarters > div.c-primary-box.c-one-half {
 	width: calc(66.6666% - 24px);
-}
-body > div.overlay_protection {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(0, 0, 0, 0.4);
-	z-index: 101; }
-body > div.overlay {
-	position: fixed;
-	z-index: 102;
-	background: #DDDDDD;
-	border: 1px solid #BBBBBB;
-	margin: 0 auto;
-	text-align: center;
-	outline: none;
-}
-body > div.overlay p {
-	line-height: 24px;
-	font-family: 'Arial';
-	font-size: 14px;
-	color: #000000;
-	padding: 0 24px 24px;
-	text-align: center;
-}
-body > div.overlay h2 {
-	font-family: 'voresfont', Arial, Helvetica, sans-serif;
-	text-transform: uppercase;
-	font-size: 28px;
-	line-height: 30px;
-	padding-bottom: 22px;
-	padding-top: 17px;
-	text-align: center;
-}
-body > div.overlay .header {
-	cursor: move;
-}
-body > div.overlay fieldset {
-	margin: 0 auto;
-}
-body > div.overlay fieldset label {
-	text-align: left;
-}
-body > div.overlay .close {
-	position: absolute;
-	right: 17px;
-	top: 17px;
-	width: 32px;
-	height: 32px;
-	opacity: 0.3;
-}
-body > div.overlay ul.actions {
-	width: 100%;
-	text-align: center;
-}
-body > div.overlay .close:hover {
-	opacity: 1;
-}
-body > div.overlay .close:before, body > div.overlay .close:after {
-	position: absolute;
-	left: 15px;
-	content: ' ';
-	height: 28px;
-	width: 2px;
-	background-color: #333;
-}
-body > div.overlay .close:before {
-	transform: rotate(45deg);
-}
-body > div.overlay .close:after {
-	transform: rotate(-45deg);
 }
 #content .banner {position: relative;}
 #content .banner > img {padding-top: 5px;}

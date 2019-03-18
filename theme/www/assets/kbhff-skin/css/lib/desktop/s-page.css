@@ -13,10 +13,13 @@ body {
 
 #page {}
 
+body span.highlight,
 #page span.highlight {color: #3e8e17;}
 
-p.error,
-p.errormessage {color: #C22414;}
+body p.error,
+body p.errormessage,
+#page p.error,
+#page p.errormessage {color: #C22414;}
 
 
 /* BASE */
