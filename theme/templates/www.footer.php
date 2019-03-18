@@ -91,6 +91,7 @@ function recurseNodes($nodes, $_parent_path) {
 $nested_navigation = recurseNodes($navigation["nodes"],	 "/");
 
 ?>
+	</div>
 
 	<div id="navigation">
 		<? if($navigation): ?>
