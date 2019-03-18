@@ -1,11 +1,11 @@
 /*
-asset-builder @ 2019-03-18 15:05:49
+asset-builder @ 2019-03-18 15:11:04
 */
 
 /*seg_desktop_include.css*/
 
 /*s-page.css*/
-	body {
+body {
 	background: #ffffff;
 	margin: 0;
 }
@@ -17,9 +17,8 @@ asset-builder @ 2019-03-18 15:05:49
 }
 #page {}
 #page span.highlight {color: #3e8e17;}
-#page p.error,
-#page div.messages p.error,
-#page p.errormessage {color: #C22414;}
+p.error,
+p.errormessage {color: #C22414;}
 h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dd, dt {padding: 0; margin: 0;}
 h1, h2, h3, h4, h5, h6, p, li, dd, dt, span, a {line-height: 1em; font-weight: 400;}
 ul {list-style: none;}

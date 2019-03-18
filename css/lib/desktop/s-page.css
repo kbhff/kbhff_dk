@@ -1,4 +1,4 @@
-	body {
+body {
 	background: #ffffff;
 	margin: 0;
 }
@@ -15,9 +15,8 @@
 
 #page span.highlight {color: #3e8e17;}
 
-#page p.error,
-#page div.messages p.error,
-#page p.errormessage {color: #C22414;}
+p.error,
+p.errormessage {color: #C22414;}
 
 
 /* BASE */
