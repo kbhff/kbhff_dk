@@ -170,8 +170,4 @@
 #content div.profile ul.actions .quarter-width a.button {font-size: 10px;}
 
 /* Udmeld medlem overlay */
-
  div.overlay .scene.delete_user_information ul.actions {margin-top: 36px;}
- 
-div.overlay div.messages p.error,
-div.overlay p.errormessage {color: #C22414;}
