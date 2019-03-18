@@ -1,11 +1,11 @@
 /*
-asset-builder @ 2019-03-14 15:32:34
+asset-builder @ 2019-03-18 15:35:24
 */
 
 /*seg_desktop_include.css*/
 
 /*seg_desktop.css*/
-	body {
+body {
 	background: #ffffff;
 	margin: 0;
 }
@@ -15,8 +15,13 @@ asset-builder @ 2019-03-14 15:32:34
 	line-height: 24px;
 	color: #000000;
 }
-#page span.highlight {color: #3e8e17;}
 #page {}
+body span.highlight,
+#page span.highlight {color: #3e8e17;}
+body p.error,
+body p.errormessage,
+#page p.error,
+#page p.errormessage {color: #C22414;}
 h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dd, dt {padding: 0; margin: 0;}
 h1, h2, h3, h4, h5, h6, p, li, dd, dt, span, a {line-height: 1em; font-weight: 400;}
 ul {list-style: none;}
@@ -43,10 +48,11 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 #content .scene .article .articlebody > h3:first-child,
 #content .scene .article .articlebody > .c-wrapper:first-child {padding-top: 46px;}
 #content .scene .article h1 {}
-#content .scene .article ul.tags {display: none;}
 #content .scene .article > ul.info {width: 100%; margin: 0 auto; padding-top: 10px; padding-left: 12px; padding-right: 12px; box-sizing: border-box;}
 #content .scene .article > ul.info li {padding-left: 0}
 #content .scene > .article > .articlebody {width: 600px; margin: 0 auto;} 
+#content .scene .article ul.tags {display: none;}
+#content .scene ul.info {display: none;}
 #content .scene ul.info {position: relative; z-index: 1; padding-right: 0; padding-bottom: 0; vertical-align: top; width: auto; font-size: 0; line-height: 1em;}
 #content .scene ul.info li {width: auto; font-size: 12px; line-height: 12px; display: inline-block; vertical-align: top;}
 #content .scene ul.info > li.author:before,
@@ -398,9 +404,6 @@ position: relative;
 	line-height: 24px;
 	padding-left: 8px;
 }
-#content ul.info {
-	display: none;
-}
 #content ul.richtext {
 	list-style: none;
 	margin-left: 0;
@@ -564,80 +567,6 @@ position: relative;
 #content div.c-three-quarters > div.c-primary-box.c-one-half {
 	width: calc(66.6666% - 24px);
 }
-body > div.overlay_protection {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(0, 0, 0, 0.4);
-	z-index: 101; }
-body > div.overlay {
-	position: fixed;
-	z-index: 102;
-	background: #DDDDDD;
-	border: 1px solid #BBBBBB;
-	margin: 0 auto;
-	text-align: center;
-	outline: none;
-}
-body > div.overlay p {
-	line-height: 24px;
-	font-family: 'Arial';
-	font-size: 14px;
-	color: #000000;
-	padding: 0 24px 24px;
-	text-align: center;
-}
-body > div.overlay h2 {
-	font-family: 'voresfont', Arial, Helvetica, sans-serif;
-	text-transform: uppercase;
-	font-size: 28px;
-	line-height: 30px;
-	padding-bottom: 22px;
-	padding-top: 17px;
-	text-align: center;
-}
-body > div.overlay .header {
-	cursor: move;
-}
-body > div.overlay fieldset {
-	margin: 0 auto;
-}
-body > div.overlay fieldset label {
-	text-align: left;
-}
-body > div.overlay .close {
-	position: absolute;
-	right: 17px;
-	top: 17px;
-	width: 32px;
-	height: 32px;
-	opacity: 0.3;
-}
-body > div.overlay ul.actions {
-	width: 100%;
-	text-align: center;
-}
-body > div.overlay .close:hover {
-	opacity: 1;
-}
-body > div.overlay .close:before, body > div.overlay .close:after {
-	position: absolute;
-	left: 15px;
-	content: ' ';
-	height: 28px;
-	width: 2px;
-	background-color: #333;
-}
-body > div.overlay .close:before {
-	transform: rotate(45deg);
-}
-body > div.overlay .close:after {
-	transform: rotate(-45deg);
-}
-#content div.messages p.error,
-#content p.errormessage {color: #C22414;}
 #content .banner {position: relative;}
 #content .banner > img {padding-top: 5px;}
 #content .banner > div.logo {position: absolute; top: 5px; left: 25px; width: 318px; height: 206px;
@@ -651,7 +580,7 @@ body > div.overlay .close:after {
 #footer ul.servicenavigation {
 	margin: 0 auto;
 	position: relative;
-    width: 936px;
+	width: 936px;
 	text-align: right;
 }
 #footer ul.servicenavigation li {
@@ -808,8 +737,6 @@ body > div.overlay .close:after {
 	font-size: 26px;
 	padding-bottom: 25px;
 }
-#content p.error,
-#content p.errormessage {color: #C22414;}
 
 /*s-signup.css*/
 #content .scene.signupfees h1 {color: #ffffff; box-shadow: 0px -5px white inset;}
@@ -1016,5 +943,76 @@ body > div.overlay .close:after {
 #content div.profile ul.actions li.change-department {padding-left: 0;}
 #content div.profile ul.actions .quarter-width a.button {font-size: 10px;}
  div.overlay .scene.delete_user_information ul.actions {margin-top: 36px;}
-div.overlay div.messages p.error,
-div.overlay p.errormessage {color: #C22414;}
+
+/*s-overlay.css*/
+div.overlay_protection {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.4);
+	z-index: 101; }
+div.overlay {
+	position: fixed;
+	z-index: 102;
+	background: #DDDDDD;
+	border: 1px solid #BBBBBB;
+	margin: 0 auto;
+	text-align: center;
+	outline: none;
+}
+div.overlay p {
+	line-height: 24px;
+	font-family: 'Arial';
+	font-size: 14px;
+	padding: 0 24px 24px;
+	text-align: center;
+}
+div.overlay h2 {
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	font-size: 28px;
+	line-height: 30px;
+	padding-bottom: 22px;
+	padding-top: 17px;
+	text-align: center;
+}
+div.overlay .header {
+	cursor: move;
+}
+div.overlay fieldset {
+	margin: 0 auto;
+}
+div.overlay fieldset label {
+	text-align: left;
+}
+div.overlay .close {
+	position: absolute;
+	right: 17px;
+	top: 17px;
+	width: 32px;
+	height: 32px;
+	opacity: 0.3;
+}
+div.overlay ul.actions {
+	width: 100%;
+	text-align: center;
+}
+div.overlay .close:hover {
+	opacity: 1;
+}
+div.overlay .close:before, div.overlay .close:after {
+	position: absolute;
+	left: 15px;
+	content: ' ';
+	height: 28px;
+	width: 2px;
+	background-color: #333;
+}
+div.overlay .close:before {
+	transform: rotate(45deg);
+}
+div.overlay .close:after {
+	transform: rotate(-45deg);
+}
