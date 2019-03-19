@@ -22,14 +22,24 @@ if (!$department_id) {
 
 <div class="scene member_help i:member_help i:scene" itemscope itemtype="http://schema.org/NewsArticle">
 	<div class="banner i:banner variant:1 format:jpg"></div>
+	<h1>Medlemshjælp</h1>
+
+	<div class="c-wrapper find-member">
+		<div class="c-three-quarters">
+			<h2>Find medlem</h2>
+		</div>
+
+		<div class="c-one-quarter">
+			<ul class="actions">
+				<li class = "new_member"><a class="button primary clickable" href="/medlemshjaelp/tilmelding">Opret nyt medlem</a></li>
+			</ul>
+		</div>
+	</div>
 
 
-	<h1>Medlemshjælp</h1>	
-	<h2>Find medlem</h2>
 	
 	<?= $model->formStart("", array("class" => "search_user labelstyle:inject")) ?>
-	<div class="c-wrapper">
-	
+	<div class="c-wrapper search">
 		<div class="c-three-quarters">
 			<fieldset>
 				<?= $model->input("search_member", array("label" => "Navn, email, mobilnr eller medlemsnr")) ?>
@@ -38,16 +48,13 @@ if (!$department_id) {
 		</div>
 		<div class="c-one-quarter">
 			<ul class="actions">
-				<li class = "new_member"><a class="button primary clickable" href="/medlemshjaelp/tilmelding">Opret nyt medlem</a></li>
 				<?= $model->submit("Søg", array("class" => "primary", "wrapper" => "li.search")) ?>
 			</ul>
 		</div>
-
-	
 	</div>
 	<?= $model->formEnd() ?>
-<? // show error messages 
 
+<? // show error messages 
 if(message()->hasMessages()): ?>
 <div class="messages">
 <?
