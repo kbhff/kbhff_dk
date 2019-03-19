@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-03-19 16:55:40
+asset-builder @ 2019-03-19 17:06:07
 */
 
 /*seg_desktop_include.css*/
@@ -820,7 +820,7 @@ position: relative;
 #content .member_help div.c-wrapper div.field {box-sizing: border-box; display: inline-block; padding-right: 0;}
 #content .member_help div.c-wrapper div.field.string {width: calc(60% - 10px)}
 #content .member_help div.c-wrapper div.field.select {padding-left: 0; width: calc(40%);} 
-#content .member_help div.c-wrapper ul.actions {box-sizing: border-box; padding: 0;} 
+#content .member_help div.c-wrapper ul.actions {box-sizing: border-box; padding: 0 12px 0 12px;} 
 #content .member_help div.c-wrapper ul.actions li {width: 100%; padding-left: 0; padding-right: 0;}
 #content .member_help div.c-wrapper ul.actions input.button, 
 #content .member_help div.c-wrapper ul.actions a.button {padding-top: 5px; padding-bottom: 5px; width: 100%; box-sizing: border-box;}
