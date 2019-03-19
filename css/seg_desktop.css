@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-03-18 15:31:02
+asset-builder @ 2019-03-19 14:26:20
 */
 
 /*seg_desktop_include.css*/
@@ -71,16 +71,6 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 #content .scene ul.info li.latitude,
 #content .scene ul.info li.longitude {display: none;}
 #content .scene ul.info li + li {padding-top: 0;}
-#content .scene ul.offer,
-#content .scene .articlebody ul.offer {font-size: 0; padding: 0; margin: 0; list-style: none;}
-#content .scene ul.offer li.name,
-#content .scene ul.offer li.currency,
-#content .scene ul.offer li.url {display: none;}
-#content .scene ul.offer li {font-size: 14px; width: auto; display: inline-block; vertical-align: top; padding: 0 5px 0 12px;}
-#content .scene ul.offer li.default {text-decoration: line-through;}
-#content .scene ul.offer li.description {padding-top: 4px; display: block;}
-#content .scene ul.offer li.description ul {list-style: disc;}
-#content .scene ul.offer li.description ul li {display: list-item; padding: 0 0 3px; font-size: 13px;}
 
 
 /*s-form.css*/
