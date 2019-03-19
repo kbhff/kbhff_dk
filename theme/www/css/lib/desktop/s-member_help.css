@@ -113,9 +113,9 @@
 #content .user_profile div.c-wrapper div.c-box.obs h2.obs 
 #content .user_profile div.c-wrapper div.c-box.obs {background-color: #DDDDDD}
 
-
 #content div.profile ul.actions li.change-department {padding-left: 0;}
 #content div.profile ul.actions .quarter-width a.button {font-size: 10px;}
 
+#content .scene.user_profile form.form_membership fieldset {float:left;}
 /* OVERLAY */
 div.overlay .delete_user_information ul.actions {margin-top: 36px;}
