@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-03-19 17:06:07
+asset-builder @ 2019-03-22 09:32:48
 */
 
 /*seg_desktop_include.js*/
@@ -6324,13 +6324,8 @@ Util.Objects["profile"] = new function() {
 							this.is_requesting = false;
 							u.rc(this, "loading");
 							if (message = u.qs("div.messages > p.error", response)) {
-								u.ie(this, message);
-								message.transitioned = function() {
-									message.style.display = "none";
-								}
-								u.a.transition(message, "all 4s ease-in");
-								u.a.opacity(message, 0.5);	
-							}
+							 	u.ie(this, message);
+							 }
 							var div_password = u.qs(".password .fields", response);
 							box_password.replaceChild(div_password, this);
 							if (message = u.qs("p.message", response)) {

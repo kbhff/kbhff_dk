@@ -658,6 +658,88 @@ class User extends UserCore {
 		return false;
 	}
 
+	// set new password for current user
+	// /janitor/admin/profile/setPassword
+	function setPassword($action) {
+
+		// Get posted values to make them available for models
+		$this->getPostedEntities();
+		$user_id = session()->value("user_id");
+
+		if(count($action) == 1 && $user_id) {
+
+			// If user already has a password
+			if($this->hasPassword()) {
+
+				// does values validate
+				if($this->validateList(array("new_password", "old_password"))) {
+
+					$query = new Query();
+
+					// make sure type tables exist
+					$query->checkDbExistence($this->db_passwords);
+
+					// Needed for comparison
+					$old_password = $this->getProperty("old_password", "value");
+					// Hash to inject if old password comparison is successful
+					$new_password = password_hash($this->getProperty("new_password", "value"), PASSWORD_DEFAULT);
+
+
+					$sql = "SELECT password FROM ".$this->db_passwords." WHERE user_id = $user_id";
+					if($query->sql($sql)) {
+						// print $old_password . "," . $query->result(0, "password")."<br>\n";
+						// print "::".password_verify($old_password, $query->result(0, "password"))."<br>\n";
+						if(password_verify($old_password, $query->result(0, "password"))) {
+
+							// DELETE OLD PASSWORD
+							$sql = "DELETE FROM ".$this->db_passwords." WHERE user_id = $user_id";
+							if($query->sql($sql)) {
+
+								// SAVE NEW PASSWORD
+								$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$new_password'";
+								if($query->sql($sql)) {
+
+									return true;
+								}
+							}
+
+						}
+						message()->addMessage("Du har tastet en forkert adgangskode", array("type" => "error"));
+						return false;
+					}
+
+				}
+
+			}
+			// user does not have a password
+			else {
+
+				// does values validate
+				if($this->validateList(array("new_password"))) {
+
+					$query = new Query();
+
+					// make sure type tables exist
+					$query->checkDbExistence($this->db_passwords);
+
+					// Hash to inject
+					$new_password = password_hash($this->getProperty("new_password", "value"), PASSWORD_DEFAULT);
+
+
+					// SAVE NEW PASSWORD
+					$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$new_password'";
+					if($query->sql($sql)) {
+
+						return true;
+					}
+				}
+
+			}
+
+		}
+
+		return false;
+	}
 
 
 }

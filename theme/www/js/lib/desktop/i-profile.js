@@ -402,13 +402,8 @@ Util.Objects["profile"] = new function() {
 						
 							// in case of error, the message needs to show in the form_password. 
 							if (message = u.qs("div.messages > p.error", response)) {
-								u.ie(this, message);
-								message.transitioned = function() {
-									message.style.display = "none";
-								}
-								u.a.transition(message, "all 4s ease-in");
-								u.a.opacity(message, 0.5);	
-							}
+							 	u.ie(this, message);
+							 }
 
 							// Query new static content and replace with current form
 							var div_password = u.qs(".password .fields", response);
