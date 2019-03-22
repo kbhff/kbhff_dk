@@ -10237,3 +10237,15 @@ Util.Objects["generic"] = new function() {
 	}
 }
 
+function ofuscate(element) {
+
+	var controls = element;
+	for(I = 0; I < controls.length; I++) {
+		if (controls[I].type == 'text') {
+			var Value = controls[I].value;
+			controls[I].value = '+++'+window.btoa(Value)+'+++';
+		}
+	}
+	return true;
+}
+
