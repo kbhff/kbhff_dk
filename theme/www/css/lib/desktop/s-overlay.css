@@ -1,0 +1,80 @@
+
+/* OVERLAY */
+div.overlay_protection {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.4);
+	z-index: 101; }
+
+
+div.overlay {
+	position: fixed;
+	z-index: 102;
+	background: #DDDDDD;
+	border: 1px solid #BBBBBB;
+	margin: 0 auto;
+	text-align: center;
+	outline: none;
+}
+
+div.overlay p {
+	line-height: 24px;
+	font-family: 'Arial';
+	font-size: 14px;
+	padding: 0 24px 24px;
+	text-align: center;
+}
+
+div.overlay h2 {
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	font-size: 28px;
+	line-height: 30px;
+	padding-bottom: 22px;
+	padding-top: 17px;
+	text-align: center;
+}
+div.overlay .header {
+	cursor: move;
+}
+div.overlay fieldset {
+	margin: 0 auto;
+}
+
+div.overlay fieldset label {
+	text-align: left;
+}
+
+div.overlay .close {
+	position: absolute;
+	right: 17px;
+	top: 17px;
+	width: 32px;
+	height: 32px;
+	opacity: 0.3;
+}
+div.overlay ul.actions {
+	width: 100%;
+	text-align: center;
+}
+
+div.overlay .close:hover {
+	opacity: 1;
+}
+div.overlay .close:before, div.overlay .close:after {
+	position: absolute;
+	left: 15px;
+	content: ' ';
+	height: 28px;
+	width: 2px;
+	background-color: #333;
+}
+div.overlay .close:before {
+	transform: rotate(45deg);
+}
+div.overlay .close:after {
+	transform: rotate(-45deg);
+}

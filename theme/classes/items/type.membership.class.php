@@ -98,6 +98,14 @@ class TypeMembership extends Itemtype {
 			"hint_message" => "Write a full description of the membership.",
 			"error_message" => "A full description without any words? How weird."
 		));
+		
+		// Fixed url id (to allow for prettier and fixed url's – because sindex must be unique, and signupfees and memberships have identical names)
+		$this->addToModel("fixed_url_identifier", array(
+			"type" => "string",
+			"label" => "Fixed URL identifier",
+			"hint_message" => "The URL identifier is used for linking to topics. If left empty, this will be based on Topic name.", 
+			"error_message" => "Fixed URL identifier has invalid value."
+		));
 
 	}
 
@@ -188,6 +196,34 @@ class TypeMembership extends Itemtype {
 			global $page;
 			$page->addLog("membership->unsubscribed: item_id:".$subscription["item_id"].", user_id:".$subscription["user_id"]);
 
+		}
+
+	}
+	
+	
+	// update fixed_url_identifier based on sindex (if not defined)
+	function saved($item_id) {
+
+		$IC = new Items();
+		$item = $IC->getItem(["id" => $item_id, "extend" => true]);
+
+		if(!$item["fixed_url_identifier"]) {
+			$_POST["fixed_url_identifier"] = $item["sindex"];
+			$this->update(["update", $item_id]);			
+		}
+
+	}
+
+	// update fixed_url_identifier based on sindex (if not defined)
+	function updated($item_id) {
+
+		$IC = new Items();
+		$item = $IC->getItem(["id" => $item_id, "extend" => true]);
+
+		if(!$item["fixed_url_identifier"]) {
+			$_POST["fixed_url_identifier"] = $item["sindex"];
+			// TODO: risky - can cause endless loop
+			$this->update(["update", $item_id]);
 		}
 
 	}

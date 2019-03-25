@@ -260,7 +260,7 @@ class User extends UserCore {
 				$sql = "UPDATE ".SITE_DB.".user_department SET department_id = $department_id WHERE user_id = $user_id";
 
 				if($query->sql($sql)) {
-					message()->addMessage("Department updated");
+					message()->addMessage("Afdeling blev opdateret.");
 					return true;
 				}
 			}
@@ -268,7 +268,7 @@ class User extends UserCore {
 				// Set department
 				$sql = "INSERT INTO ".SITE_DB.".user_department SET department_id = $department_id, user_id = $user_id";
 				if($query->sql($sql)) {
-					message()->addMessage("Department assigned");
+					message()->addMessage("Afdeling blev tildelt.");
 					return true;
 				}
 			}
@@ -344,7 +344,7 @@ class User extends UserCore {
 			// If user already has a password
 			if($this->hasPassword()) {
 				// does values validate
-				if($this->validateList(array("new_password"))) {
+				if($this->validateList(array("new_password", "old_password"))) {
 					$query = new Query();
 
 					// make sure type tables exist
@@ -361,6 +361,10 @@ class User extends UserCore {
 							return true;
 						}
 					}
+				}
+				else {
+					message()->addMessage("Forkert password", array("type" => "error"));
+					return false;
 				}
 			}
 			// user does not have a password
@@ -412,7 +416,7 @@ class User extends UserCore {
 		}
 		// Cannot cancel account due to unpaid orders
 		else if(isset($cancel_result["error"]) && $cancel_result["error"] == "unpaid_orders") {
-			message()->addMessage("Du kan ikke udmelde dig, da du har ubetalte ordrer.", array("type" => "error"));
+			message()->addMessage("Du kan ikke udmelde dig, da du har ubetalte ordrer. Du er velkommen til at kontakte it@kbhff.dk, der altid står klar til at hjælpe.", array("type" => "error"));
 			return false;
 
 		}
@@ -462,21 +466,20 @@ class User extends UserCore {
 	 * @param string $username
 	 * @return boolean
 	 */
-	function loginUserIsVerified($user_id) {		
+	function loginUserIsVerified($username, $user_id) {		
 		
 		$query = new Query();
-
+		
 		// user is not a guest user
 		if($user_id != 1) {
-			$sql = "SELECT user_id FROM ".SITE_DB.".user_usernames WHERE user_id = '$user_id' AND verified = 1";
-			
+			$sql = "SELECT user_id FROM ".SITE_DB.".user_usernames WHERE user_id = $user_id AND username = '$username' AND verified = 1";			
 			// user is verified
 			if($query->sql($sql)) {
 				return true;
 			}
 		}
 
-		// user is not verified
+		// user is guest or not verified
 		return false;
 
 	}
@@ -569,6 +572,175 @@ class User extends UserCore {
 		// error
 		return false;
 	}
+
+	// start reset password procedure
+	function requestPasswordReset($action) {
+
+		// perform cleanup routine
+		$this->cleanUpResetRequests();
+
+		// get posted variables
+		$this->getPostedEntities();
+		$username = $this->getProperty("username", "value");
+
+		// correct information available
+		if(count($action) == 1 && $username) {
+
+			$query = new Query();
+
+			// make sure type tables exist
+			$query->checkDbExistence($this->db_password_reset_tokens);
+
+
+			// find the user with specified username
+			$sql = "SELECT user_id FROM ".$this->db_usernames." WHERE username = '$username'";
+			if($query->sql($sql)) {
+
+				// user_id
+				$user_id = $query->result(0, "user_id");
+
+
+				// find email for this user
+				$sql = "SELECT username FROM ".$this->db_usernames." WHERE user_id = '$user_id' AND type = 'email'";
+				if($query->sql($sql)) {
+
+					// email
+					$email = $query->result(0, "username");
+
+					// create reset token
+					$reset_token = randomKey(24);
+					
+
+					// insert reset token
+					$sql = "INSERT INTO ".$this->db_password_reset_tokens." VALUES(DEFAULT, $user_id, '$reset_token', '".date("Y-m-d H:i:s")."')";
+					if($query->sql($sql)) {
+						
+						$sql = "SELECT nickname FROM ".$this->db." WHERE id = '$user_id'";
+						
+						if($query->sql($sql)) {
+							
+							// nickname 
+							$nickname = $query->result(0, "nickname");
+						
+
+							// send email
+							mailer()->send(array(
+								"values" => array(
+									"TOKEN" => $reset_token,
+									"NICKNAME" => $nickname
+								),
+								"track_clicks" => false,
+								"recipients" => $email,
+								"template" => "reset_password"
+							));
+
+							// send notification email to admin
+							// TODO: consider disabling this once it has proved itself worthy
+							mailer()->send(array(
+								"subject" => "Password reset requested: " . $email,
+								"message" => "Check out the user: " . SITE_URL . "/janitor/admin/user/edit/" . $user_id,
+								"template" => "system"
+							));
+
+							return true;
+						}
+					}
+
+				}
+
+			}
+
+		}
+
+		// user could not be found or reset request could not be satisfied
+		// - but this is not reflected towards to user to avoid revealing user existence
+		// - standard error message created in login-controller
+		return false;
+	}
+
+	// set new password for current user
+	// /janitor/admin/profile/setPassword
+	function setPassword($action) {
+
+		// Get posted values to make them available for models
+		$this->getPostedEntities();
+		$user_id = session()->value("user_id");
+
+		if(count($action) == 1 && $user_id) {
+
+			// If user already has a password
+			if($this->hasPassword()) {
+
+				// does values validate
+				if($this->validateList(array("new_password", "old_password"))) {
+
+					$query = new Query();
+
+					// make sure type tables exist
+					$query->checkDbExistence($this->db_passwords);
+
+					// Needed for comparison
+					$old_password = $this->getProperty("old_password", "value");
+					// Hash to inject if old password comparison is successful
+					$new_password = password_hash($this->getProperty("new_password", "value"), PASSWORD_DEFAULT);
+
+
+					$sql = "SELECT password FROM ".$this->db_passwords." WHERE user_id = $user_id";
+					if($query->sql($sql)) {
+						// print $old_password . "," . $query->result(0, "password")."<br>\n";
+						// print "::".password_verify($old_password, $query->result(0, "password"))."<br>\n";
+						if(password_verify($old_password, $query->result(0, "password"))) {
+
+							// DELETE OLD PASSWORD
+							$sql = "DELETE FROM ".$this->db_passwords." WHERE user_id = $user_id";
+							if($query->sql($sql)) {
+
+								// SAVE NEW PASSWORD
+								$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$new_password'";
+								if($query->sql($sql)) {
+
+									return true;
+								}
+							}
+
+						}
+						message()->addMessage("Du har tastet en forkert adgangskode", array("type" => "error"));
+						return false;
+					}
+
+				}
+
+			}
+			// user does not have a password
+			else {
+
+				// does values validate
+				if($this->validateList(array("new_password"))) {
+
+					$query = new Query();
+
+					// make sure type tables exist
+					$query->checkDbExistence($this->db_passwords);
+
+					// Hash to inject
+					$new_password = password_hash($this->getProperty("new_password", "value"), PASSWORD_DEFAULT);
+
+
+					// SAVE NEW PASSWORD
+					$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$new_password'";
+					if($query->sql($sql)) {
+
+						return true;
+					}
+				}
+
+			}
+
+		}
+
+		return false;
+	}
+
 
 }
 

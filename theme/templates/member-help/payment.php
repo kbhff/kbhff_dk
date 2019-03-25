@@ -76,18 +76,19 @@ else {
 	$transaction_id = $order["order_no"]; 
 ?>
 
-	<h1>Opret nyt medlem</h1>
+	<h1>Betaling</h1>
 
 	<?	if(message()->hasMessages()): ?>
-		<p class="errormessage">
+	<p class="errormessage">
 	<?		$messages = message()->getMessages(array("type" => "error"));
 		foreach($messages as $message): ?>
 			<?= $message ?><br>
 	<?		endforeach;?>
-		</p>
+	</p>
 	<?	message()->resetMessages(); ?>
 	<?	endif; ?>
-
+	
+	
 	<ul class="orders">
 	<? foreach($order["items"] as $i => $item): ?>
 		<li class="unit_price"> <?= $item["quantity"]." x ".$item["name"]." a ". formatPrice(array("price" => $item["unit_price"], "currency" => $order["currency"])) ?> <span class="price"><?= formatPrice(array("price" => $item["total_price"], "currency" => $order["currency"]))?></span></li> 

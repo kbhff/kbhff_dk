@@ -22,14 +22,24 @@ if (!$department_id) {
 
 <div class="scene member_help i:member_help i:scene" itemscope itemtype="http://schema.org/NewsArticle">
 	<div class="banner i:banner variant:1 format:jpg"></div>
+	<h1>Medlemshjælp</h1>
+
+	<div class="c-wrapper find-member">
+		<div class="c-three-quarters">
+			<h2>Find medlem</h2>
+		</div>
+
+		<div class="c-one-quarter">
+			<ul class="actions">
+				<li class = "new_member"><a class="button primary clickable" href="/medlemshjaelp/tilmelding">Opret nyt medlem</a></li>
+			</ul>
+		</div>
+	</div>
 
 
-	<h1>Medlemshjælp</h1>	
-	<h2>Find medlem</h2>
 	
 	<?= $model->formStart("", array("class" => "search_user labelstyle:inject")) ?>
-	<div class="c-wrapper">
-	
+	<div class="c-wrapper search">
 		<div class="c-three-quarters">
 			<fieldset>
 				<?= $model->input("search_member", array("label" => "Navn, email, mobilnr eller medlemsnr")) ?>
@@ -38,32 +48,25 @@ if (!$department_id) {
 		</div>
 		<div class="c-one-quarter">
 			<ul class="actions">
-				<li class = "new_member"><a class="button primary clickable" href="/medlemshjaelp/tilmelding">Opret nyt medlem</a></li>
 				<?= $model->submit("Søg", array("class" => "primary", "wrapper" => "li.search")) ?>
 			</ul>
 		</div>
-
-	
 	</div>
-	
-<? // show error messages 
+	<?= $model->formEnd() ?>
 
-if(message()->hasMessages(array("type" => "error"))): ?>
-	<p class="errormessage">
-<?	$messages = message()->getMessages(array("type" => "error"));
-		foreach($messages as $message): ?>
-		<?= $message ?><br>
-<?	endforeach;?>
-	</p>
-	<p class="message">
-<?	$messages = message()->getMessages(array("type" => "message"));
+<? // show error messages 
+if(message()->hasMessages()): ?>
+<div class="messages">
+<?
+$all_messages = message()->getMessages();
+message()->resetMessages();
+foreach($all_messages as $type => $messages):
 	foreach($messages as $message): ?>
-		<?= $message ?><br>
-<?	endforeach; ?>
-	</p>
-	<? message()->resetMessages(); ?>
-<?	endif; ?>
-<?= $model->formEnd() ?>
+	<p class="<?= $type ?>"><?= $message ?></p>
+	<? endforeach;?>
+<? endforeach;?>
+</div>
+<? endif; ?>
 
 
 	<div class="c-wrapper users">
@@ -104,7 +107,7 @@ if(message()->hasMessages(array("type" => "error"))): ?>
 			<? endforeach;
 			endif; ?>
 		</ul>
-		<p class ="<?=$users? "invisible": ""?>">
+		<p class ="visible <?=$users? "invisible": ""?>">
 			Her på siden kan du som kassemester søger efter medlemmer. 
 		Du søger et medlem frem ved at indtaste enten navn, mail, mobilnr eller medlemsnr på det pågældende medlem. 
 		Når du har søgt et medlem frem, har du mulighed for at åbne medlemmets brugerprofil. 

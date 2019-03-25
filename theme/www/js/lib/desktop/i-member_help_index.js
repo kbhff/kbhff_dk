@@ -57,11 +57,12 @@ Util.Objects["member_help"] = new function() {
 				search_form.search = function () {
 					
 					this.response = function(response) {
-						
+						console.log(response);
 						this.users_ul.innerHTML = "";
 						u.as(this.visible_p, "display", "none");
 						// parses user object and returns it as html node lists
-						this.users = u.template(this.template, response.cms_object);
+						this.users = u.template(this.template, response.cms_object.users);
+						console.log(response);
 						while (this.users.length) {		
 						
 							this.user_info = u.qsa("ul.user_info li.search", this.users[0]);

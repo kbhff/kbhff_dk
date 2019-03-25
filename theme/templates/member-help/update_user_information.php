@@ -1,15 +1,20 @@
 <?php
-$UC = new User();
-$user = $UC->getKbhffUser();
+
+global $action;
+
+$UC = new SuperUser();
+$user_id = $action[1];
+
+$user = $UC->getKbhffUser(["user_id" => $user_id]);
 
 $this->pageTitle("Brugeroplysninger");
 ?>
 
 <div class="scene user_information i:user_information">
 	<h1>Brugeroplysninger</h1>
-	<h2>Her kan du rette i dine brugeroplysninger.</h2>
+	<h2>Her kan du rette i medlemmets brugeroplysninger.</h2>
 
-	<?= $UC->formStart("updateUserInformation", ["class" => "form_user"]) ?>
+	<?= $UC->formStart("updateUserInformation/$action[1]", ["class" => "form_user"]) ?>
 
 		
 	<? if(message()->hasMessages()): ?>
@@ -24,7 +29,8 @@ $this->pageTitle("Brugeroplysninger");
 	<? endforeach;?>
 	</div>
 	<? endif; ?>
-
+	
+	
 		<fieldset>
 			<?= 
 				$UC->input("nickname", [
@@ -74,7 +80,7 @@ $this->pageTitle("Brugeroplysninger");
 		</fieldset>
 
 		<ul class="actions">
-			<li class="cancel"><a href="/" class="button">Annullér</a></li>
+				<li class="cancel"><a href="/medlemshjaelp/brugerprofil/<?=$action[1]?>" class="button">Anullér</a></li>
 			<?= $UC->submit("Opdater", array("class" => "primary", "wrapper" => "li.save")) ?>
 		</ul>
 

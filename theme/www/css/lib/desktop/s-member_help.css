@@ -1,149 +1,121 @@
-/* Signup */
-#content .scene.member_help_signup p.metatext {
-	font-style: italic;
-	font-size: 12px;
-} 
+/* GENERAL */
+#content .member_help h1 {display: none;}
 
-#content .scene.member_help_signup p.terms_summary {
-	font-weight: 700;
-}
+/* SEARCH */ 
+#content .member_help h2 {padding: 0; margin-left: 12px; margin-right: 12px; margin-top: 20px; margin-bottom: 12px; border-bottom: 2px solid #808080;}
 
-/* Payment */
-#content .scene.member_help_payment > p {font-size: 12px; line-height: 12px; padding-bottom: 0;}
-#content .scene.member_help_payment > h1 + p {padding: 12px; font-size: 14px;}
+#content .member_help div.c-wrapper,
+#content .member_help div.c-wrapper > div {min-height: 0px;}
 
-/* Payment – Order summary */
-#content .scene.member_help_payment ul.orders {padding-top: 50px; margin: 0 auto; width: 450px; padding-bottom: 0;}
-#content .scene.member_help_payment ul.orders > li {list-style-type: none; padding-left: 0; font-size: 16px;}
-#content .scene.member_help_payment ul.orders > li span.price {float: right;}
-#content .scene.member_help_payment ul.orders > li.total_price {font-size: 18px; font-weight: 700; border-top: 1px solid #000000; padding-top: 12px; margin-top: 12px;}
+#content .member_help div.c-wrapper div.field label {display: none;}
+#content .member_help div.c-wrapper div.field {box-sizing: border-box; display: inline-block; padding-right: 0;}
+#content .member_help div.c-wrapper div.field.string {width: calc(60% - 10px)}
+#content .member_help div.c-wrapper div.field.select {padding-left: 0; width: calc(40%);} 
 
-/* Payment – tabs */
-#content .scene.member_help_payment div.payment_options {
-	margin: 0 auto;
-	margin-top: 32px; 
-	width: 40%;
-}
-#content .scene.member_help_payment div.payment_options h4.tab {
-	display: inline-block; 
-	background-color: #f2f2f2f2; 
-	padding: 6px calc(2.5% + 10px); 
-	margin-right: 12px; 
-	cursor:pointer;
-}
-#content .scene.member_help_payment div.payment_options h4.cash_tab {
-	background-color: #bbbbbb;
-}
-#content .scene.member_help_payment form.cash {display:none;}
+#content .member_help div.c-wrapper ul.actions {box-sizing: border-box; padding: 0 12px 0 12px;} 
+#content .member_help div.c-wrapper ul.actions li {width: 100%; padding-left: 0; padding-right: 0;}
+#content .member_help div.c-wrapper ul.actions input.button, 
+#content .member_help div.c-wrapper ul.actions a.button {padding-top: 5px; padding-bottom: 5px; width: 100%; box-sizing: border-box;}
 
-#content .scene.member_help_payment form fieldset {background-color: #f2f2f2; position: relative; padding-bottom: 40px} 
-
-/* Payment – MobilePay */
-#content .scene.member_help_payment form.mobilepay .qr {float: right; position: relative;}
-#content .scene.member_help_payment form.mobilepay .qr::before {
-	content: "";
-    display: block;
-    position: absolute;
-    z-index: 1;
-    top: 12px;
-    bottom: 12px;
-    border: 1px solid #999;
-    border-width: 0 0 0 1px;
-}
-
-#content .scene.member_help_payment form.mobilepay .qr img {
-	width: 158px;
-	padding: 0;
-	border: 8px solid white;
-	margin: 14px;
-}
-
-#content .scene.member_help_payment form.mobilepay  h5 {
-	padding: 14px 12px 0px; 
-	font-size: 16px; 
-	line-height: 24px;
-}
-
-#content .scene.member_help_payment form.mobilepay .qr h5 {
-	text-align: center;}
+#content .member_help div.c-wrapper ul.actions li.new_member {margin-top: 20px;}
+#content .member_help div.c-wrapper ul.actions li.search {margin-top: 7px;}
 
 
-#content .scene.member_help_payment form.mobilepay .code p {
-	width: 50%;
-	margin-top: -5px;
-	padding-bottom: 12px;
-}
+/* USER LIST */
+#content .member_help div.users {margin-bottom: 22px;}
+#content .member_help ul.users li.template {display: none;}
+#content .member_help ul.users li {padding-top: 6px; padding-bottom: 6px;}
+#content .member_help ul.users li.user:nth-last-of-type(even) {background-color: #dddddd;}
 
-#content .scene.member_help_payment form.mobilepay .code p.payment_info {
-	font-size: 24px;
-	padding-bottom: 8px;
-}
+#content .member_help li span.highlight_string {font-weight: 700;}
 
-/* Payment – Cash */
-#content .scene.member_help_payment form div.cash.instructions p {
-	font-size: 16px;
-	padding: 12px 12px 12px;
-}
+#content .member_help ul.users {padding: 0; margin-left: 12px; margin-right: 12px;}
+#content .member_help ul.users ul {padding: 0; margin: 0; font-size: 0;}
+#content .member_help ul.users li {list-style-type: none; padding-left: 0;}
 
-/* Payment – checkboxes and buttons */
-#content .scene.member_help_payment form .checkbox {padding: 12px 10px; position: absolute; bottom: 0;}
+#content .member_help h3 {padding-right: 0; padding-left: 0; padding-bottom: 0; border-bottom: 2px solid #808080; margin-bottom: 22px; margin-left: 12px; margin-right: 12px;}
+#content .member_help ul.users li ul li, 
+#content .member_help h3 span {padding: 0; display: inline-block; vertical-align: bottom;}
 
-#content .scene.member_help_payment form ul.actions {width: 100%; margin-left: 0; padding-left: 0; margin-top: 12px;}
-#content .scene.member_help ul.actions {text-align:center}
+#content .member_help ul.users li ul li.mobile,
+#content .member_help ul.users li ul li.member_no,
+#content .member_help ul.users li ul li.profile,
+#content .member_help ul.users li ul li.department,
+#content .member_help h3 span {width: 12.5%;}
+
+#content .member_help ul.users li ul li.name, 
+#content .member_help ul.users li ul li.email,
+#content .member_help h3 span.email,
+#content .member_help h3 span.name {width: 25%;}
+
+#content .member_help ul.users li ul.actions {}
+#content .member_help ul.users li ul.actions li {width: initial;}
+#content .member_help ul.users li.profile a.button {padding: 1px 17px;}
+#content .member_help div.users p.invisible, 
+#content .user_profile div.c-box.invisible {display: none;}
 
 
 
-/* Search for members */ 
+/* SIGNUP */
+#content .member_help_signup p.metatext {font-style: italic; font-size: 12px;}
+#content .member_help_signup p.terms_summary {font-weight: 700;}
 
-#content .scene.member_help > h2 {padding: 0; margin-left: 12px; margin-right: 12px; margin-top: 20px; margin-bottom: 12px; border-bottom: 2px solid #808080;}
+/* PAYMENT */
+#content .member_help_payment > p {font-size: 12px; line-height: 12px; padding-bottom: 0;}
+#content .member_help_payment > h1 + p {padding: 12px; font-size: 14px;}
 
-#content .scene.member_help > h1 {display: none;}
+/* PAYMENT – Order summary */
+#content .member_help_payment ul.orders {padding-top: 50px; margin: 0 auto; width: 450px; padding-bottom: 0;}
+#content .member_help_payment ul.orders > li {list-style-type: none; padding-left: 0; font-size: 16px;}
+#content .member_help_payment ul.orders > li span.price {float: right;}
+#content .member_help_payment ul.orders > li.total_price {font-size: 18px; font-weight: 700; border-top: 1px solid #000000; padding-top: 12px; margin-top: 12px;}
 
+/* PAYMENT – tabs */
+#content .member_help_payment div.payment_options {margin: 0 auto; margin-top: 32px; width: 40%;}
+#content .member_help_payment div.payment_options h4.tab {display: inline-block; background-color: #f2f2f2f2; padding: 6px calc(2.5% + 10px); margin-right: 12px; cursor:pointer;}
+#content .member_help_payment div.payment_options h4.cash_tab {background-color: #bbbbbb;}
+#content .member_help_payment form.cash {display:none;}
 
-/* Search fields and buttons */ 
-#content .scene.member_help form.search_user div.c-wrapper,
-#content .scene.member_help form.search_user div.c-three-quarters,
-#content .scene.member_help form.search_user div.c-one-quarter {min-height: 0;}
-#content .scene.member_help form.search_user div.field label {display: none;}
-#content .scene.member_help form.search_user div.field {box-sizing: border-box; display: inline-block; padding-right: 0;}
-#content .scene.member_help form.search_user div.field.string {width: calc(60% - 10px)}
-#content .scene.member_help form.search_user div.field.select {padding-left: 0; width: calc(40%);} 
+#content .member_help_payment form fieldset {background-color: #f2f2f2; position: relative; padding-bottom: 40px} 
 
-#content .scene.member_help form.search_user ul.actions li {width: 100%; padding-left: 0;}
-#content .scene.member_help form.search_user ul.actions {box-sizing: border-box; padding-left: 0; padding-right: 12px; margin-top: -45px;} 
-#content .scene.member_help form.search_user ul.actions li.new_member {margin-bottom: 10px;}
-#content .scene.member_help form.search_user ul.actions input.button, 
-#content .scene.member_help form.search_user ul.actions a.button {padding-top: 5px; padding-bottom: 5px; width: 100%; box-sizing: border-box;}
+/* PAYMENT – MobilePay */
+#content .member_help_payment form.mobilepay .qr {float: right; position: relative;}
+#content .member_help_payment form.mobilepay .qr::before {z-index: 1; content: ""; display: block; position: absolute; top: 12px; bottom: 12px; border: 1px solid #999; border-width: 0 0 0 1px;}
 
-/* User list */
+#content .member_help_payment form.mobilepay .qr img {width: 158px; padding: 0; border: 8px solid white; margin: 14px;}
 
-#content .scene.member_help div.users {margin-bottom: 22px;}
-#content .scene.member_help ul.users li.template {display: none;}
-#content .scene.member_help ul.users li {padding-top: 6px; padding-bottom: 6px;}
-#content .scene.member_help ul.users li.user:nth-last-of-type(even) {background-color: #dddddd;}
+#content .member_help_payment form.mobilepay  h5 {padding: 14px 12px 0px; font-size: 16px; line-height: 24px;}
+#content .member_help_payment form.mobilepay .qr h5 {text-align: center;}
 
-#content .scene.member_help li span.highlight_string {font-weight: 700;}
+#content .member_help_payment form.mobilepay .code p {width: 50%; margin-top: -5px; padding-bottom: 12px;}
+#content .member_help_payment form.mobilepay .code p.payment_info {font-size: 24px; padding-bottom: 8px;}
 
-#content .scene.member_help ul.users {padding: 0; margin-left: 12px; margin-right: 12px;}
-#content .scene.member_help ul.users ul {padding: 0; margin: 0; font-size: 0;}
-#content .scene.member_help ul.users li {list-style-type: none; padding-left: 0;}
+/* PAYMENT – Cash */
+#content .member_help_payment form div.cash.instructions p {font-size: 16px; padding: 12px 12px 12px;}
 
-#content .scene.member_help h3 {padding-right: 0; padding-left: 0; padding-bottom: 0; border-bottom: 2px solid #808080; margin-bottom: 22px; margin-left: 12px; margin-right: 12px;}
-#content .scene.member_help ul.users li ul li, 
-#content .scene.member_help h3 span {padding: 0; display: inline-block; vertical-align: bottom;}
+/* PAYMENT – checkboxes and buttons */
+#content .member_help_payment form .checkbox {padding: 12px 10px; position: absolute; bottom: 0;}
 
-#content .scene.member_help ul.users li ul li.mobile,
-#content .scene.member_help ul.users li ul li.member_no,
-#content .scene.member_help ul.users li ul li.profile,
-#content .scene.member_help ul.users li ul li.department,
-#content .scene.member_help h3 span {width: 12.5%;}
+#content .member_help_payment form ul.actions {width: 100%; margin-left: 0; padding-left: 0; margin-top: 12px;}
+#content .member_help ul.actions {text-align:center}
 
-#content .scene.member_help ul.users li ul li.name, 
-#content .scene.member_help ul.users li ul li.email,
-#content .scene.member_help h3 span.email,
-#content .scene.member_help h3 span.name {width: 25%;}
+/* USER PROFILE */ 
+#content .profile div.c-box.obs {margin-top: 5px;}
+#content .user-profile div.section.orders {font-size: 0;}
+#content .user_profile ul.actions.new-order {display: inline-block; width: 20%; vertical-align: top; float: right; padding: 0; margin-top: 0;}
+#content .user_profile ul.actions.new-order li {padding-left: 0; width: 100%;}
+#content .user_profile div.section.orders h2 {display: inline-block; width: 78%; margin-right: 0; margin-top: 0; margin-left: 0;}
 
-#content .scene.member_help ul.users li ul.actions {text-align: right;}
-#content .scene.member_help ul.users li.profile a.button {padding: 1px 17px;}
-#content .scene.member_help div.users p.invisible {display: none;}
+#content .user_profile p.view-orders {float: right; text-decoration: underline #3e8e17;}
+#content .user_profile p.view-orders a.button:hover {color: #357914;}
+#content .user_profile ul.actions.new-order a.button {padding-top: 5px; padding-bottom: 5px;}
 
+#content .user_profile div.c-wrapper div.c-box.obs h2.obs 
+#content .user_profile div.c-wrapper div.c-box.obs {background-color: #DDDDDD}
+
+#content div.profile ul.actions li.change-department {padding-left: 0;}
+#content div.profile ul.actions .quarter-width a.button {font-size: 10px;}
+
+#content .scene.user_profile form.form_membership fieldset {float:left;}
+/* OVERLAY */
+div.overlay .delete_user_information ul.actions {margin-top: 36px;}

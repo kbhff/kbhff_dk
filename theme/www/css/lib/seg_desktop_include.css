@@ -2,11 +2,11 @@
 
 
 @import url(desktop/s-login.css);
-@import url(desktop/s-accept_terms.css);
 @import url(desktop/s-profile.css);
 @import url(desktop/s-signup.css);
 @import url(desktop/s-memberships.css);
 @import url(desktop/s-posts.css);
 @import url(desktop/s-shop.css);
-@import url(desktop/s-cart.css);
 @import url(desktop/s-member_help.css);
+@import url(desktop/s-overlay.css);
+

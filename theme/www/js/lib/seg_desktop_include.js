@@ -20,7 +20,7 @@ document.write('<script type="text/javascript" src="/js/lib/desktop/i-member_hel
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-member_help_payment.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-member_help_index.js"></script>');
 
-
+document.write('<script type="text/javascript" src="/js/lib/desktop/i-user_profile.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-profile.js"></script>');
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-forgot.js"></script>');

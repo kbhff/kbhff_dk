@@ -9,7 +9,7 @@ $department = $UC->getUserDepartment();
 
 // Get membership status
 $is_member = $user["membership"]["id"];
-$is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"]["payment_status"] < 2 ? true : false;
+$is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"]["payment_status"] == 2 ? true : false;
 
 ?>
 
@@ -19,26 +19,18 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 
 	<div class="banner i:banner variant:1 format:jpg"></div>
 
-	<?	// Display any backend generated messages
-		if(message()->hasMessages()): ?>
-		
-			<p class="errormessage">
-		<?	$messages = message()->getMessages(array("type" => "error"));
-			foreach($messages as $message): ?>
-				<?= $message ?><br>
-		<?	endforeach;?>
-			</p>
-
-			<p class="message">
-		<?	$messages = message()->getMessages(array("type" => "message"));
-			foreach($messages as $message): ?>
-				<?= $message ?><br>
-		<?	endforeach; ?>
-			</p>
-
-			<? message()->resetMessages(); ?>
-	<?	endif; ?>
-
+	<? if(message()->hasMessages()): ?>
+	<div class="messages">
+	<?
+	$all_messages = message()->getMessages();
+	message()->resetMessages();
+	foreach($all_messages as $type => $messages):
+		foreach($messages as $message): ?>
+		<p class="<?= $type ?>"><?= $message ?></p>
+		<? endforeach;?>
+	<? endforeach;?>
+	</div>
+	<? endif; ?>
 
 	<div class="c-wrapper">
 
@@ -183,7 +175,7 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 						<ul class="actions">
 							<li class="change-info third-width"><a href="/profil/afdeling" class="button">Ret</a></li>
 							<li class="cancel-membership third-width"><a href="/profil/opsig" class="button warning">Opsig</a></li>
-							<li class="pay-membership third-width"><a href="/profil/mine-ordrer<?= $is_membership_paid ? "" : "/".$user["membership"]["order"]["order_no"] ?>" class="button<?= $is_member && !$is_membership_paid ? " primary" : "" ?>"><?= $is_member && !$is_membership_paid ? "Betal" : "Ordrer" ?></a></li>
+							<li class="pay-membership third-width"><a href="/butik/betaling<?= $is_membership_paid ? "" : "/".$user["membership"]["order"]["order_no"] ?>" class="button<?= $is_member && !$is_membership_paid ? " primary" : "" ?>"><?= $is_member && !$is_membership_paid ? "Betal" : "Ordrer" ?></a></li>
 						</ul>
 					</div>
 

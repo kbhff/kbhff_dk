@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-02-27 17:41:39
+asset-builder @ 2019-03-22 09:32:48
 */
 
 /*seg_desktop_include.js*/
@@ -5778,9 +5778,11 @@ Util.Objects["member_help"] = new function() {
 				}
 				search_form.search = function () {
 					this.response = function(response) {
+						console.log(response);
 						this.users_ul.innerHTML = "";
 						u.as(this.visible_p, "display", "none");
-						this.users = u.template(this.template, response.cms_object);
+						this.users = u.template(this.template, response.cms_object.users);
+						console.log(response);
 						while (this.users.length) {		
 							this.user_info = u.qsa("ul.user_info li.search", this.users[0]);
 							for (var j = 0; j < (this.user_info.length); j++) {
@@ -5797,6 +5799,287 @@ Util.Objects["member_help"] = new function() {
 				}
 			}	
 				page.resized();
+		}
+		scene.ready();
+	}
+}
+
+
+/*i-user_profile.js*/
+Util.Objects["user_profile"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			this.initMembershipBox();
+			this.initUserinfoBox();
+		}
+		scene.initMembershipBox = function() {
+			var box_membership = u.qs(".membership > .c-box", this);
+			var button_membership = u.qs(".membership li.change-membership", this);
+			var button_cancel = u.qs(".membership li.cancel-membership", this);
+			var button_department = u.qs(".membership li.change-department", this);
+			button_membership.scene = this;
+			button_cancel.scene = this; 
+			button_department.scene = this;
+			var right_panel = u.qs(".c-one-third", this);
+			u.clickableElement(button_department); 
+			button_department.clicked = function() {
+				this.response = function(response) {
+					this.is_requesting = false;
+					u.rc(this, "loading");
+					var form_department = u.qs(".form_department", response);
+					form_department.scene = this.scene;
+					var form_fieldset = u.qs("fieldset", form_department);
+					var div_fields = u.qs("div.fields", box_membership);
+					var divs_membership = u.qsa(".membership-info", div_fields)	;
+					var ul_buttons = u.qs("ul.actions", div_fields);
+					u.ass(divs_membership[3], {"display":"none"});
+					u.ass(ul_buttons, {"display":"none"});
+					u.ae(box_membership, form_department);
+					u.f.init(form_department);
+					u.ie(form_department, div_fields);
+					u.ae(div_fields, form_fieldset);
+					form_department.submitted = function() {
+						var data = u.f.getParams(this);
+						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
+							var div_membership = u.qs(".membership .fields", response);
+							box_membership.replaceChild(div_membership, form_department);
+							if (message = u.qs("div.messages", response)) {
+								u.ie(box_membership, message);
+								message.transitioned = function() {
+									message.innerHTML = "";
+								}
+								u.a.transition(message, "all 4s ease-in");
+								u.a.opacity(message, 0.5);	
+							}
+							this.scene.initMembershipBox();
+						}
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, this.action, {"data":data, "method":"POST"});
+						}
+					}
+					form_department.actions["cancel"].clicked = function() {
+						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
+							var div_membership = u.qs(".membership .fields", response);
+							box_membership.replaceChild(div_membership, this._form);
+							this._form.scene.initMembershipBox();
+						}
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, this.baseURI);
+						}
+					}
+				}
+				if (!this.is_requesting) {
+					this.is_requesting = true;
+					u.ac(this, "loading");
+					u.request(this, this.url);
+				}
+			}
+			u.clickableElement(button_membership); 
+			button_membership.clicked = function() {
+				this.response = function(response) {
+					this.is_requesting = false;
+					u.rc(this, "loading");
+					var form_membership = u.qs(".form_membership", response);
+					form_membership.scene = this.scene;
+					var form_fieldset = u.qs("fieldset", form_membership);
+					var div_fields = u.qs("div.fields", box_membership);
+					var divs_membership = u.qsa(".membership-info", div_fields)	;
+					var ul_buttons = u.qs("ul.actions", div_fields);
+					u.ass(divs_membership[2], {"display":"none"});
+					u.ass(ul_buttons, {"display":"none"});
+					u.ae(box_membership, form_membership);
+					u.f.init(form_membership);
+					u.ie(form_membership, div_fields);
+					div_fields.insertBefore(form_fieldset, divs_membership[1].nextSibling);
+					form_membership.submitted = function() {
+						var data = u.f.getParams(this);
+						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
+							var div_membership = u.qs(".membership .fields", response);
+							box_membership.replaceChild(div_membership, form_membership);
+							if (message = u.qs("div.messages", response)) {
+								u.ie(box_membership, message);
+								message.transitioned = function() {
+									message.innerHTML = "";
+								}
+								u.a.transition(message, "all 4s ease-in");
+								u.a.opacity(message, 0.5);	
+							}
+							this.scene.initMembershipBox();
+						}
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, this.action, {"data":data, "method":"POST"});
+						}
+					}
+					form_membership.actions["cancel"].clicked = function() {
+						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
+							var div_membership = u.qs(".membership .fields", response);
+							box_membership.replaceChild(div_membership, this._form);
+							this._form.scene.initMembershipBox();
+						}
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, this.baseURI);
+						}
+					}
+				}
+				if (!this.is_requesting) {
+					this.is_requesting = true;
+					u.ac(this, "loading");
+					u.request(this, this.url);
+				}
+			}
+			u.clickableElement(button_cancel);
+			button_cancel.clicked = function() {
+				this.scene.url = this.url;
+				console.log(this.scene.url);
+				this.scene.overlay = u.overlay({title:"Du er ved at udmelde et medlem.", height:200,width:600, class:"confirm_cancel_membership"});
+				var p_warning = u.ae(this.scene.overlay.div_content, "p", {
+					html:"Du er ved at melde et medlem ud af KBHFF. Er du sikker?"
+				});
+				var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
+					class:"actions"
+				});
+				var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"button delete_me","value":"Meld medlemmet ud af KBHFF"});
+				var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"button regret primary", "value":"Fortryd udmelding"});
+				delete_me.scene = this.scene;
+				regret.scene = this.scene;
+				u.e.click(delete_me)
+				delete_me.clicked = function () {
+					this.response = function(response) {
+						this.is_requesting = false;
+						u.rc(this, "loading");
+						var confirm_cancellation = u.qs(".scene.delete_user_information", response);
+						confirm_cancellation.scene = this.scene;
+						u.ass(this.scene.overlay.div_header.h2, {"display":"none"});
+						u.ass(p_warning, {"display":"none"});
+						u.ass(ul_actions, {"display":"none"});
+						u.ae(this.scene.overlay.div_content, confirm_cancellation);
+						var form_confirm_cancellation = u.qs("form.confirm_cancellation");
+						form_confirm_cancellation.scene = this.scene;
+						u.f.init(form_confirm_cancellation);
+						form_confirm_cancellation.submitted = function () {
+							var data = u.f.getParams(this);
+							this.response = function(response) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								if (response.cms_object == "JS-request") {
+									location.href = "/medlemshjaelp";
+								}
+								else if (response.cms_object != "JS-request") {
+									if (message = u.qs("div.messages", response)) {
+										u.ass(this, {"display":"none"})
+										u.ae(this.scene.overlay.div_content, message);
+										var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
+											class:"actions"
+										});
+										var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
+										button_close.scene = this.scene;
+										u.e.click(button_close)
+										button_close.clicked = function () {
+											this.scene.overlay.close ();
+										}
+									}
+									else {
+										location.href = "/medlemshjaelp";
+									}
+								}
+							}
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.action, {"data":data, "method":"POST", "headers":{"X-Requested-With":"XMLHttpRequest"}});
+							}
+						}
+					}
+					if (!this.is_requesting) {
+						this.is_requesting = true;
+						u.ac(this, "loading");
+						u.request(this, this.scene.url);
+					}
+				}
+				u.e.click(regret)
+				regret.clicked = function () {
+					this.scene.overlay.close ();
+				}
+			}
+		}
+		scene.initUserinfoBox = function() {
+			var box_userinfo = u.qs(".user > .c-box", this);
+			var button_userinfo = u.qs(".user li", this);
+			button_userinfo.scene = this;
+			u.clickableElement(button_userinfo);
+			button_userinfo.clicked = function() {
+				this.response = function(response) {
+					this.is_requesting = false;
+					u.rc(this, "loading");
+					var form_userinfo = u.qs(".form_user", response);
+					form_userinfo.scene = this.scene;
+					var div_fields = u.qs("div.fields", box_userinfo);
+					box_userinfo.replaceChild(form_userinfo, div_fields);
+					u.f.init(form_userinfo);
+					form_userinfo.submitted = function() {
+						var data = u.f.getParams(this);
+						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
+							var div_userinfo = u.qs(".user .fields", response);
+							box_userinfo.replaceChild(div_userinfo, form_userinfo);
+							if (message = u.qs("div.messages", response)) {
+								u.ie(box_userinfo, message);
+								message.transitioned = function() {
+									message.innerHTML = "";
+								}
+								u.a.transition(message, "all 4s ease-in");
+								u.a.opacity(message, 0.5);	
+							}
+							this.scene.initUserinfoBox();
+						}
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, this.action, {"data":data, "method":"POST"});
+						}
+					}
+					form_userinfo.actions["cancel"].clicked = function() {
+						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
+							var div_userinfo = u.qs(".user .fields", response);
+							box_userinfo.replaceChild(div_userinfo, form_userinfo);
+							this._form.scene.initUserinfoBox();
+						}
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, this.url);
+						}
+					}
+				}
+				if (!this.is_requesting) {
+					this.is_requesting = true;
+					u.ac(this, "loading");
+					u.request(this, this.url);
+				}
+			}
 		}
 		scene.ready();
 	}
@@ -5849,6 +6132,14 @@ Util.Objects["profile"] = new function() {
 							box_membership.replaceChild(div_membership, form_department);
 							var new_department_box = u.qs(".department", response);
 							right_panel.replaceChild(new_department_box, box_department);
+							if (message = u.qs("div.messages", response)) {
+								u.ie(box_membership, message);
+								message.transitioned = function() {
+									message.innerHTML = "";
+								}
+								u.a.transition(message, "all 4s ease-in");
+								u.a.opacity(message, 0.5);	
+							}
 							this.scene.initMembershipBox();
 						}
 						if (!this.is_requesting) {
@@ -5907,28 +6198,34 @@ Util.Objects["profile"] = new function() {
 							this.response = function(response) {
 								this.is_requesting = false;
 								u.rc(this, "loading");
-								var div_scene_login = u.qs("div.scene.login", response);
-								if (div_scene_login) {
+								if (response.cms_object == "JS-request") {
+									console.log(response);
 									location.href = "/";
 								}
-								else {
-									var error_message = u.qs("p.errormessage", response);
-									u.ass(form_confirm_cancellation, {"display":"none"})
-									u.ae(this.scene.overlay.div_content, error_message);
-									var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
-										class:"actions"
-									});
-									var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
-									u.e.click(button_close)
-									button_close.clicked = function () {
-										this.scene.overlay.close ();
+								else if (response != "JS-request") {
+									if (message = u.qs("div.messages", response)) {
+										u.ass(this, {"display":"none"})
+										console.log(this);
+										u.ae(this.scene.overlay.div_content, message);
+										var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
+											class:"actions"
+										});
+										var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
+										button_close.scene = this.scene;
+										u.e.click(button_close)
+										button_close.clicked = function () {
+											this.scene.overlay.close ();
+										}
+									}
+									else {
+										location.href = "/";
 									}
 								}
 							}
 							if (!this.is_requesting) {
 								this.is_requesting = true;
 								u.ac(this, "loading");
-								u.request(this, this.action, {"data":data, "method":"POST"});
+								u.request(this, this.action, {"data":data, "method":"POST", "headers":{"X-Requested-With":"XMLHttpRequest"}});
 							}
 						}
 					}
@@ -5969,6 +6266,14 @@ Util.Objects["profile"] = new function() {
 							box_userinfo.replaceChild(div_userinfo, form_userinfo);
 							var new_name = u.qs("span.name", response);
 							intro_header.replaceChild(new_name, span_name);
+							if (message = u.qs("div.messages", response)) {
+								u.ie(box_userinfo, message);
+								message.transitioned = function() {
+									message.innerHTML = "";
+								}
+								u.a.transition(message, "all 4s ease-in");
+								u.a.opacity(message, 0.5);	
+							}
 							this.scene.initUserinfoBox();
 						}
 						if (!this.is_requesting) {
@@ -6018,8 +6323,19 @@ Util.Objects["profile"] = new function() {
 						this.response = function(response) {
 							this.is_requesting = false;
 							u.rc(this, "loading");
+							if (message = u.qs("div.messages > p.error", response)) {
+							 	u.ie(this, message);
+							 }
 							var div_password = u.qs(".password .fields", response);
 							box_password.replaceChild(div_password, this);
+							if (message = u.qs("p.message", response)) {
+								u.ie(box_password, message);
+								message.transitioned = function() {
+									message.style.display = "none";
+								}
+								u.a.transition(message, "all 4s ease-in");
+								u.a.opacity(message, 0.5);	
+							}
 							this.scene.initPasswordBox();
 						}
 						if (!this.is_requesting) {
