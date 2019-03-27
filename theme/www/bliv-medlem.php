@@ -166,7 +166,7 @@ if($action) {
 
 			// user has already been verified
 			if($result && isset($result["status"]) && $result["status"] == "USER_VERIFIED") {
-				message()->addMessage("Du er allerede verificeret! Prøv at logge ind.", array("type" => "error"));
+				message()->addMessage("Du er allerede verificeret!", array("type" => "error"));
 				
 				// redirect to leave POST state
 				header("Location: /login");
