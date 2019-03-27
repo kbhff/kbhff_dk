@@ -29,7 +29,8 @@ else if ($action) {
 	// profil/opsig
 	if($action[0] == "opsig") {
 		$page->page(array(
-			"templates" => "pages/delete_user_information.php"
+			"templates" => "profile/delete_user_information.php",
+			"type" => "member"
 		));
 		exit();
 	}
@@ -49,7 +50,8 @@ else if ($action) {
 			// Method fails
 			else {
 				$page->page([
-					"templates" => "pages/delete_user_information.php"
+					"templates" => "profile/delete_user_information.php",
+					"type" => "member"
 				]);
 				exit();
 			}
@@ -61,11 +63,12 @@ else if ($action) {
 				header("Location: /");
 				exit();
 			}
-			
+
 			// Method fails
 			else {
 				$page->page([
-					"templates" => "pages/delete_user_information.php"
+					"templates" => "profile/delete_user_information.php",
+					"type" => "member"
 				]);
 				exit();
 			}
@@ -78,7 +81,8 @@ if(!$UC->hasAcceptedTerms()) {
 
 	$page->page(array(
 		"templates" => "profile/accept_terms.php",
-		"type" => "terms"
+		"type" => "login",
+		"page_title" => "Samtykke"
 	));
 	exit();
 
@@ -96,7 +100,8 @@ if($action) {
 	// ../profil/afdeling lead to template
 	else if($action[0] == "afdeling") {
 		$page->page(array(
-			"templates" => "pages/update_user_department.php"
+			"templates" => "profile/update_user_department.php",
+			"type" => "member"
 		));
 		exit();
 	}
@@ -104,7 +109,8 @@ if($action) {
 	// ../profil/bruger lead to template
 	else if($action[0] == "bruger") {
 		$page->page(array(
-			"templates" => "pages/update_user_information.php"
+			"templates" => "profile/update_user_information.php",
+			"type" => "member"
 		));
 		exit();
 	}
@@ -112,7 +118,8 @@ if($action) {
 	// ../profil/kodeord lead to template
 	else if($action[0] == "kodeord") {
 		$page->page(array(
-			"templates" => "pages/update_user_password.php"
+			"templates" => "profile/update_user_password.php",
+			"type" => "member"
 		));
 		exit();
 	}
@@ -129,7 +136,8 @@ if($action) {
 		else {
 			message()->addMessage("Fejl!", array("type" => "error"));
 			$page->page(array(
-				"templates" => "pages/update_user_department.php"
+				"templates" => "profile/update_user_department.php",
+				"type" => "member"
 			));
 			exit();
 		}
@@ -146,7 +154,8 @@ if($action) {
 		//Method returns false
 		else {
 			$page->page([
-				"templates" => "pages/update_user_information.php"
+				"templates" => "profile/update_user_information.php",
+				"type" => "member"
 			]);
 			exit();
 		}
@@ -178,7 +187,8 @@ if($action) {
 		// Method returns true
 		if($UC->unacceptTerms()) {
 			$page->page(array(
-				"templates" => "pages/unaccept_terms.php"
+				"templates" => "pages/unaccept_terms.php",
+				"type" => "member"
 			));
 			exit();
 		}
@@ -192,7 +202,8 @@ if($action) {
 
 // Default template
 $page->page(array(
-	"templates" => "profile/index.php"
+	"templates" => "profile/index.php",
+	"type" => "member"
 ));
 exit();
 

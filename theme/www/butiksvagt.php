@@ -18,9 +18,9 @@ $page->pageTitle("Butiksvagt");
 
 // standard template
 $page->page(array(
-	"templates" => "shop-shift/index.php"
-	)
-);
+	"templates" => "shop-shift/index.php",
+	"type" => "admin"
+));
 exit();
 
 
