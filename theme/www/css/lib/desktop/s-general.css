@@ -1,38 +1,3 @@
 /* THIS CSS SHOULD PROBABLY BE MOVED TO THE SKIN – OR BE DISTRIBUTED TO OTHER CSS FILES */
 /* CONSIDER THIS A TEMP CSS FILE */
 
-
-/* SELECTED STATE FOR NAVIGATION ITEMS */
-#navigation ul.navigation li.path > h4,
-#navigation ul.navigation li.path > h5,
-#navigation ul.navigation li.path > a,
-#navigation ul.navigation li.selected > h4,
-#navigation ul.navigation li.selected > h5,
-#navigation ul.navigation li.selected > a {
-	background-color: #3e8e17;
-}
-
-/* NAVIGATION ITEMS CAN ALSO BE H4 - only A and H5 covered by skin */
-#navigation ul.navigation h4 {
-	font-family: 'voresfont';
-	text-transform: uppercase;
-	font-size: 14px;
-	line-height: 22px;
-
-	padding: 7px 14px;
-	display: block;
-	color: #ffffff;
-	background-color: #000000;
-}
-#navigation ul.navigation ul li h4 {
-	background-color: #666;
-}
-
-/* PUSH VOLUNTEER BUTTON TO THE RIGHT */
-#navigation.member ul.navigation > li.volunteer {float: right; margin-right: 0; margin-left: 5px;}
-
-/* PUSH VOLUNTEER BUTTON TO THE RIGHT */
-#navigation.admin ul.navigation > li.profile {float: right; margin-right: 0; margin-left: 5px;}
-
-/* PUSH VOLUNTEER BUTTON TO THE RIGHT */
-#navigation.public ul.navigation > li.profile {float: right; margin-right: 0; margin-left: 5px;}
