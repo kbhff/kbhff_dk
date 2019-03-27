@@ -2,7 +2,7 @@
 include_once("classes/system/department.class.php");
 $DC = new Department();
 $UC = new User();
-$departments = $DC->getDepartments();
+$departments = $DC->getDepartmentsAcceptSignups();
 $user_department = $UC->getUserDepartment();
 
 $this->pageTitle("Afdelinger");

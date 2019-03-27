@@ -12,7 +12,6 @@ if(count($action) > 1) {
 $cart = $model->getCart();
 
 
-
 $IC = new Items();
 
 ?>
@@ -28,10 +27,10 @@ $IC = new Items();
 	?>
 	<div class="checkout">
 		<ul class="actions">
-			<?= $JML->oneButtonForm("Checkout", "/shop/checkout", array(
+			<?= $JML->oneButtonForm("Checkout", "/butik/checkout", array(
 				"confirm-value" => false,
 				"dom-submit" => true,
-				"success-location" => "/shop/checkout",
+				"success-location" => "/butik/checkout",
 				"class" => "primary",
 				"name" => "continue",
 				"wrapper" => "li.continue",
@@ -90,7 +89,7 @@ $IC = new Items();
 				<? endif; ?>
 
 				<? // print membership information
-				if($item["itemtype"] == "membership"): ?>
+				if($item["itemtype"] == "signupfee"): ?>
 				<p class="membership">
 					Dit køb indkluderer et medlemskab.
 				</p>
@@ -135,7 +134,7 @@ $IC = new Items();
 	if($cart["items"]) :?>
 	<div class="checkout">
 		<ul class="actions">
-			<?= $JML->oneButtonForm("Checkout", "/shop/checkout", array(
+			<?= $JML->oneButtonForm("Checkout", "/butik/checkout", array(
 				"confirm-value" => false,
 				"dom-submit" => true,
 				"class" => "primary",
