@@ -86,12 +86,6 @@ Util.Objects["page"] = new function() {
 		page.initHeader = function() {
 			var logo = u.ie(this.hN, "a", {"class":"logo", "href":"/","html": 'KBHFF <span class="highlight">' + document.title + '</span>'});
 			u.ce(logo, {"type":"link"});
-			
-			var frontpage_link = u.qs("li.front a", this.nN);
-			if(frontpage_link) {
-				frontpage_link.parentNode.remove();
-			}
-
 		}
 
 		// initialize navigation
