@@ -49,7 +49,7 @@ if($item) {
 <? if($item):
 	$media = $IC->sliceMedia($item); ?>
 
-	<div class="article i:article id:<?= $item["item_id"] ?> service" itemscope itemtype="http://schema.org/Article"data-csrf-token="<?= session()->value("csrf") ?>">
+	<div class="article i:article id:<?= $item["item_id"] ?> service" itemscope itemtype="http://schema.org/Article" data-csrf-token="<?= session()->value("csrf") ?>">
 
 		<? if($media): ?>
 		<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>"></div>
@@ -144,22 +144,51 @@ if($item) {
 	if($related_items): ?>
 		<div class="related">
 			<h2>Andre medlemskaber <a href="/bliv-medlem">(oversigt)</a></h2>
-
 			<ul class="items membership">
 			<?	foreach($related_items as $item):
 				$media = $IC->sliceMedia($item); ?>
-				<li class="item membership item_id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle"data-readstate="<?= $item["readstate"] ?>">
+				<li class="item membership item_id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle" data-readstate="<?= $item["readstate"] ?>">
 			
 					<h3 itemprop="headline"><a href="/bliv-medlem/medlemskaber/<?= $item["fixed_url_identifier"] ?>"><?= strip_tags($item["name"]) ?></a></h3>
 
-
+					<h4>Årligt kontingent:</h4>
 					<?= $HTML->frontendOffer($item, SITE_URL."/bliv-medlem") ?>
 
 
 					<?= $HTML->articleInfo($item, "/bliv-medlem/medlemskaber/".$item["fixed_url_identifier"], [
 						"media" => $media
 					]) ?>
+					
+					<h4>Indmeldelsesgebyr:</h4>
+					<?foreach($signupfees as $i => $signupfee):
+						if($signupfee["associated_membership_id"] == $item["id"]): ?>
+					<ul class="offer" itemscope itemtype="http://schema.org/Offer">
+						<li class="name" itemprop="name" content="<?= $signupfee["name"] ?>"></li>
+						<li class="currency" itemprop="priceCurrency" content="<?= $this->currency() ?>"></li>
+						
+					<? // if signupfee has an offer, show the price, else show the default price or 'free'.
+					if($signupfee["prices"]) {
+							$offer_key = arrayKeyValue($signupfee["prices"], "type", "offer");
+							$default_key = arrayKeyValue($signupfee["prices"], "type", "default");
 
+						if($offer_key !== false) { ?>
+						<li class="price default"><?= formatPrice($signupfee["prices"][$default_key]).(isset($signupfee["subscription_method"]) && $signupfee["subscription_method"] && $signupfee["prices"][$default_key]["price"] ? ' / '.$signupfee["subscription_method"]["name"] : '') ?></li>
+						<li class="price offer" itemprop="price" content="<?= $signupfee["prices"][$offer_key]["price"]?>"><?= formatPrice($signupfee["prices"][$offer_key]).(isset($signupfee["subscription_method"]) && $signupfee["subscription_method"] && $signupfee["prices"][$default_key]["price"] ? ' / '.$signupfee["subscription_method"]["name"] : '') ?></li>
+					<? }
+						else if($signupfee["prices"][$default_key]["price"]) { ?>
+						<li class="price" itemprop="price" content="<?= $signupfee["prices"][$default_key]["price"]?>"><?= formatPrice($signupfee["prices"][$default_key]).(isset($signupfee["subscription_method"]) && $signupfee["subscription_method"] && $signupfee["prices"][$default_key]["price"] ? ' / '.$signupfee["subscription_method"]["name"] : '') ?></li>
+					<? }
+						else { ?>
+						<li class="price" itemprop="price" content="<?= $signupfee["prices"][$default_key]["price"] ?>">Free</li>
+					<? } ?>
+						<li class="url" itemprop="url" content="<?$url?>"></li>
+					<? }
+							
+					 ?>
+
+					</ul>
+					<? endif;
+				endforeach;?>
 
 					<? if($item["description"]): ?>
 					<div class="description" itemprop="description">
