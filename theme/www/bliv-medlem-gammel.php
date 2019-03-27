@@ -18,7 +18,8 @@ $page->pageTitle("Bliv medlem");
 
 
 if($action) {
-	
+
+
 	// bliv-medlem/addToCart
 	if($action[0] == "addToCart" && $page->validateCsrfToken()) {
 
@@ -41,30 +42,15 @@ if($action) {
 		// if successful creation
 		if($cart) {
 			// redirect to leave POST state
-			header("Location: /bliv-medlem/tilmelding/");
+			header("Location: tilmelding");
 			exit();
-			
-			}
-			// Something went wrong
-		else {
-			message()->addMessage("Det ser ud til at der er sket en fejl.", array("type" => "error"));
 
-			// redirect to leave POST state
-			header("Location: /butik/kurv");
-			exit();
+		}
+		// something went wrong
+		else {
+			message()->addMessage("Der skete en fejl! Prøv igen senere.", array("type" => "error"));
 		}
 	}
-	
-	// membership was successfully converted to order
-	// bliv-medlem/tilmelding
-	else if($action[0] == "tilmelding") {
-
-		$page->page(array(
-			"templates" => "signup/signup.php"
-		));
-		exit();
-
-		}
 
 	// user is already a member with a subsription 
 	// bliv-medlem/allerece-medlem
@@ -78,6 +64,16 @@ if($action) {
 	}
 
 
+	// membership was successfully added to cart
+	// bliv-medlem/tilmelding
+	else if($action[0] == "tilmelding") {
+
+		$page->page(array(
+			"templates" => "signup/signup.php"
+		));
+		exit();
+
+		}
 
 
 	// bliv-medlem/save
@@ -91,36 +87,21 @@ if($action) {
 
 		// if successful creation
 		if(isset($user["user_id"])) {
-			// Converts cart to order and updates cookie with cart-reference. 
-			$order = $SC->newOrderFromCart(array("newOrderFromCart", $_COOKIE["cart_reference"]));
-			// if successful order creation
-			if($order) {
-				// redirect to leave POST state
-				header("Location: verificer/".$order["order_no"]);
-				exit(); 
-			}
-			// Something went wrong
-			else {
-				message()->addMessage("Der skete en fejl, og ordren blev ikke oprettet.", array("type" => "error"));
-				// redirect to leave POST state
-				header("Location: /butik/kurv");
-				exit();
-			}
-			
+
+			// redirect to leave POST state
+			header("Location: verificer");
+			exit();
 		}
 
 		// if user exists
 		else if(isset($user["status"]) && $user["status"] == "USER_EXISTS") {
+
+		
+			message()->addMessage("Det ser ud til at du allerede er registreret som bruger. Prøv at logge ind.", array("type" => "error"));
 			
-			if($SC->deleteSignupfeesAndMembershipsFromCart($cart_reference)) {
-				message()->addMessage("Det ser ud til at du allerede er registreret som bruger. Prøv at logge ind.", array("type" => "error"));
-				// redirect to leave POST state
-				header("Location: /login");
-				exit(); 
-			}
-			// if($SC->deleteItemtypeFromCart(array("signupfee", $_COOKIE["cart_reference"]))) {
-			// 
-			// }	
+			// redirect to leave POST state
+			header("Location: /login");
+			exit(); 
 		}
 		// something went wrong
 		else {
@@ -147,16 +128,31 @@ if($action) {
 	// bliv-medlem/spring-over 
 	else if($action[0] == "spring-over") {
 
-		// redirect to leave POST state
-		header("Location: /butik/betaling/".$action[1]);
-		exit();
-	}
+		// Converts cart to order and updates cookie with cart-reference. 
+		$order = $SC->newOrderFromCart(array("newOrderFromCart", $_COOKIE["cart_reference"]));
 		
+		// if successful order creation
+		if($order) {
+
+			// redirect to leave POST state
+			header("Location: /butik/betaling/".$order["order_no"]);
+			exit();
+		}
+		// Something went wrong
+		else {
+			message()->addMessage("Det ser ud til at der er sket en fejl.", array("type" => "error"));
+
+			// redirect to leave POST state
+			header("Location: /butik/kurv");
+			exit();
+		}
+
+	}
 
 	// bliv-medlem/bekraeft
 	else if($action[0] == "bekraeft") {
 
-		if (count($action) == 2 && $page->validateCsrfToken()) {
+		if (count($action) == 1 && $page->validateCsrfToken()) {
 
 			$username = session()->value("signup_email");
 			$verification_code = getPost("verification_code");
@@ -174,11 +170,26 @@ if($action) {
 			}
 
 			// code is valid and user is verified and enabled.
-			else if($result) {	
-			
-				// redirect to leave POST state
-				header("Location: /butik/betaling/".$action[1]);
-				exit();
+			else if($result) {
+				// convert cart to order and update cookies with cart-refernce
+				$order = $SC->newOrderFromCart(array("newOrderFromCart", $_COOKIE["cart_reference"]));
+				// if successful order creation
+				if($order) {
+
+					// redirect to leave POST state
+					header("Location: /butik/betaling/".$order["order_no"]);
+					exit();
+				}
+
+				else {
+					
+					// something went wrong
+					message()->addMessage("Det ser ud til at der er sket en fejl.", array("type" => "error"));
+					// redirect to leave POST state
+					header("Location: /butik/kurv");
+					exit();
+				}
+
 			}
 
 			// code is not valid and user is not verified and enabled.

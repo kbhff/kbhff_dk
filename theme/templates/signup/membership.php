@@ -6,23 +6,24 @@ global $model;
 
 
 $IC = new Items();
-
 $related_items = false;
 
 // Use special property, fixed_url_identifier to identify topic
 $fixed_url_identifier = $action[1];
-$sql = "SELECT item_id FROM ".$model->db." WHERE fixed_url_identifier = '$fixed_url_identifier' LIMIT 1";
+$sql = "SELECT item_id FROM ".SITE_DB.".item_membership WHERE fixed_url_identifier = '$fixed_url_identifier' LIMIT 1";
+
 $query = new Query;
 if($query->sql($sql)) {
 	$item_id = $query->result(0, "item_id");
-	$item = $IC->getItem(array("id" => $item_id, "extend" => array("tags" => true, "user" => true, "comments" => true, "readstate" => true)));
+	$item = $IC->getItem(array("id" => $item_id, "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true, "prices" => true, "readstate" => true, "subscription_method" => true)));
 }
+
 // attempt look up by sindex, for fallback purposes
 else {
 	$item = $IC->getItem(array("sindex" => $action[1], "extend" => array("tags" => true, "user" => true, "mediae" => true, "readstate" => true, "prices" => true, "subscription_method" => true)));
 }
 
-
+	
 if($item) {
 	$this->sharingMetaData($item);
 
@@ -87,7 +88,7 @@ if($item) {
 				<h2>Meld dig ind</h2>
 
 				<?= $HTML->frontendOffer($item, SITE_URL."/bliv-medlem", $item["description"]) ?>
-		
+	
 				<?= $model->formStart("/bliv-medlem/addToCart", array("class" => "signup labelstyle:inject")) ?>
 					<?= $model->input("quantity", array("value" => 1, "type" => "hidden")); ?>
 					<?= $model->input("item_id", array("value" => $item["item_id"], "type" => "hidden")); ?>
@@ -113,14 +114,14 @@ if($item) {
 			<?	foreach($related_items as $item):
 				$media = $IC->sliceMedia($item); ?>
 				<li class="item membership item_id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle"data-readstate="<?= $item["readstate"] ?>">
-
-					<h3 itemprop="headline"><a href="/bliv-medlem/medlemskaber/<?= $item["sindex"] ?>"><?= strip_tags($item["name"]) ?></a></h3>
+			<? print_r($item["description"]);exit();?>
+					<h3 itemprop="headline"><a href="/bliv-medlem/medlemskaber/<?= $item["fixed_url_identifier"] ?>"><?= strip_tags($item["name"]) ?></a></h3>
 
 
 					<?= $HTML->frontendOffer($item, SITE_URL."/bliv-medlem") ?>
 
 
-					<?= $HTML->articleInfo($item, "/bliv-medlem/medlemskaber/".$item["sindex"], [
+					<?= $HTML->articleInfo($item, "/bliv-medlem/medlemskaber/".$item["fixed_url_identifier"], [
 						"media" => $media
 					]) ?>
 

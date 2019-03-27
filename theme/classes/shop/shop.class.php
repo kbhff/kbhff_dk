@@ -117,6 +117,39 @@ class Shop extends ShopCore {
 		return false;
 	}
 	
+	function deleteSignupfeesAndMembershipsFromCart($cart_reference) {
+		
+			if($cart = $this->deleteItemtypeFromCart("signupfee", $_COOKIE["cart_reference"])) {
+				
+				if($cart = $this->deleteItemtypeFromCart("signupfee", $_COOKIE["cart_reference"])) {
+					return $cart;
+				}		
+			}
+			
+		return false;	
+	}
+	
+	
+	// Delete itemtypes from cart
+	// #controller#/deleteItemtypeFromCart
+	function deleteItemtypeFromCart($itemtype, $cart_reference) {
+		
+		$cart = $this->getCarts(array("cart_reference" => $cart_reference));
+		
+		if($cart) {
+			
+			$IC = new Items();
+			foreach($cart["items"] as $key => $cart_item) {
+				$existing_item = $IC->getItem(array("id" => $cart_item["item_id"]));
+				if($existing_item["itemtype"] == $itemtype) {
+					$cart = $this->deleteFromCart(array("deleteFromCart", $cart_reference, $cart_item["id"]));
+				}
+			}
+			return $cart;
+		}
+		return false;	
+	}
+			
 }
 
 ?>
