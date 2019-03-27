@@ -33,3 +33,6 @@
 
 /* PUSH VOLUNTEER BUTTON TO THE RIGHT */
 #navigation.admin ul.navigation > li.profile {float: right; margin-right: 0; margin-left: 5px;}
+
+/* PUSH VOLUNTEER BUTTON TO THE RIGHT */
+#navigation.public ul.navigation > li.profile {float: right; margin-right: 0; margin-left: 5px;}
