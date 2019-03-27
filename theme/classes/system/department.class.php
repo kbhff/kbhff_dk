@@ -247,7 +247,7 @@ class Department extends Model {
 	 * @return array|false Updated Department data object (via callback to getDepartment())
 	 */
 	function updateDepartment($action) {
-		
+
 		// Get content of $_POST array which have been "quality-assured" by Janitor 
 		$this->getPostedEntities();
 		
@@ -297,6 +297,14 @@ class Department extends Model {
 			// Ask the database to delete the row with the id that came from $action. 
 			$id = $action[1];
 			$query = new Query();
+			
+			$sql = "SELECT * FROM ".SITE_DB.".user_department as u WHERE u.department_id = $id";
+			// print_r($sql);exit();
+			if($query->sql($sql)) {
+				message()->addMessage("Department could not be deleted due to its users.", array("type" => "error"));
+				return false;
+			}
+			
 			$sql = "DELETE FROM ".$this->db." WHERE id = '$id'";
 			if($query->sql($sql)) {
 				message()->addMessage("Department deleted");
@@ -304,7 +312,7 @@ class Department extends Model {
 			}
 
 		}
-
+		message()->addMessage("Department could not be deleted.", array("type" => "error"));
 		return false;
 	}
 }

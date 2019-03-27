@@ -214,7 +214,7 @@ if($action) {
 					// user has password
 					if($has_password) {
 						
-						message()->addMessage("Du er allerede verificeret. Prøv at logge ind.", array("type" => "error"));
+						message()->addMessage("Du er allerede verificeret.", array("type" => "error"));
 						
 						// redirect to leave POST state
 						header("Location: /login");
