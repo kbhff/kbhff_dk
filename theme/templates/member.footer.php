@@ -1,5 +1,5 @@
 <?
-$navigation = $this->navigation("main-public"); 
+$navigation = $this->navigation("main-member"); 
 
 
 // use global vars to keep track of path and indenting
@@ -98,12 +98,12 @@ function recurseNodes($nodes, $_parent_path) {
 	return $_;
 }
 
-$nested_navigation = recurseNodes($navigation["nodes"], "/");
+$nested_navigation = recurseNodes($navigation["nodes"],	 "/");
 
 ?>
 	</div>
 
-	<div id="navigation" class="public">
+	<div id="navigation" class="member">
 		<? if($navigation): ?>
 			<?= $nested_navigation ?> 
 	 	<? endif; ?>

@@ -48,11 +48,11 @@
 	<link rel="icon" href="/favicon.png">
 
 <? if(session()->value("dev")) { ?>
-	<link type="text/css" rel="stylesheet" media="all" href="/css/lib/seg_<?= $this->segment() ?>_include.css" />
-	<script type="text/javascript" src="/js/lib/seg_<?= $this->segment() ?>_include.js"></script>
+	<link type="text/css" rel="stylesheet" media="all" href="/css/lib/seg_<?= $this->segment() ?>_include.css?cb=<?=randomKey(4); ?>" />
+	<script type="text/javascript" src="/js/lib/seg_<?= $this->segment() ?>_include.js?cb=<?=randomKey(4); ?>"></script>
 <? } else { ?>
-	<link type="text/css" rel="stylesheet" media="all" href="/css/seg_<?= $this->segment() ?>.css" />
-	<script type="text/javascript" src="/js/seg_<?= $this->segment() ?>.js"></script>
+	<link type="text/css" rel="stylesheet" media="all" href="/css/seg_<?= $this->segment() ?>.css?cb=<?=randomKey(4); ?>" />
+	<script type="text/javascript" src="/js/seg_<?= $this->segment() ?>.js?cb=<?=randomKey(4); ?>"></script>
 <? } ?>
 
 	<?= $this->headerIncludes() ?>
@@ -65,6 +65,12 @@
 	<div id="header">
 		<ul class="servicenavigation">
 			<li class="keynav navigation nofollow"><a href="#navigation">To navigation</a></li>
+<?		if(session()->value("user_id") && session()->value("user_group_id") > 1): ?>
+			<?= $HTML->link("Janitor", "/janitor", ["wrapper" => "li.keynav.front"]) ?>
+			<li class="keynav user nofollow"><a href="/login/logoff">Logoff</a></li>
+<?		else: ?>
+			<li class="keynav user nofollow"><a href="/login">Login</a></li>
+<?		endif; ?>
 		</ul>
 	</div>
 

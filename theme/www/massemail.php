@@ -18,9 +18,9 @@ $page->pageTitle("Massemail");
 
 // standard template
 $page->page(array(
-	"templates" => "mass-mail/index.php"
-	)
-);
+	"templates" => "mass-mail/index.php",
+	"type" => "admin"
+));
 exit();
 
 
