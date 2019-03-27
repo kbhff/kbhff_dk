@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-03-27 15:01:05
+asset-builder @ 2019-03-27 17:55:08
 */
 
 /*seg_desktop_include.css*/
@@ -962,3 +962,28 @@ div.overlay .close:before {
 div.overlay .close:after {
 	transform: rotate(-45deg);
 }
+
+/*s-general.css*/
+#navigation ul.navigation li.path > h4,
+#navigation ul.navigation li.path > h5,
+#navigation ul.navigation li.path > a,
+#navigation ul.navigation li.selected > h4,
+#navigation ul.navigation li.selected > h5,
+#navigation ul.navigation li.selected > a {
+	background-color: #3e8e17;
+}
+#navigation ul.navigation h4 {
+	font-family: 'voresfont';
+	text-transform: uppercase;
+	font-size: 14px;
+	line-height: 22px;
+	padding: 7px 14px;
+	display: block;
+	color: #ffffff;
+	background-color: #000000;
+}
+#navigation ul.navigation ul li h4 {
+	background-color: #666;
+}
+#navigation.member ul.navigation > li.volunteer {float: right; margin-right: 0; margin-left: 5px;}
+#navigation.admin ul.navigation > li.profile {float: right; margin-right: 0; margin-left: 5px;}
