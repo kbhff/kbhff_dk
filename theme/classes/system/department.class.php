@@ -224,6 +224,23 @@ class Department extends Model {
 
 
 	/**
+	 * Get list of departments that accept signups from database.
+	 *
+	 * @return array|false Department data object (via callback to Query->results()
+	 */
+	function getDepartmentsAcceptSignups() {
+
+		// Query database for all departments.
+		$query = new Query();
+		$sql = "SELECT * FROM ".$this->db." WHERE accepts_signup = 1";
+		if($query->sql($sql)) {
+			return $query->results();
+		}
+
+		return false;
+	}
+
+	/**
 	 * Update a single department.
 	 *
 	 * @param array $action REST parameters of current request

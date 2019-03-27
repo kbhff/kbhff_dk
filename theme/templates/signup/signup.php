@@ -11,7 +11,7 @@ if($page_item) {
 
 include_once("classes/system/department.class.php");
 $DC = new Department();
-$departments = $DC->getDepartments();
+$departments = $DC->getDepartmentsAcceptSignups();
 
 $email = $model->getProperty("email", "value");
 
