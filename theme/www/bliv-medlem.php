@@ -166,11 +166,20 @@ if($action) {
 
 			// user has already been verified
 			if($result && isset($result["status"]) && $result["status"] == "USER_VERIFIED") {
-				message()->addMessage("Du er allerede verificeret!", array("type" => "error"));
 				
-				// redirect to leave POST state
-				header("Location: /login");
-				exit();
+				if(session()->value("user_id") > 1) {
+					message()->addMessage("Du er allerede verificeret!");
+					header("Location: /profil");
+					exit();
+				}
+				else {
+					message()->addMessage("Du er allerede verificeret! Prøv at logge ind", array("type" => "error"));
+					// redirect to leave POST state
+					header("Location: /login");
+					exit();
+				}
+				
+				
 			}
 
 			// code is valid and user is verified and enabled.
@@ -214,12 +223,19 @@ if($action) {
 					// user has password
 					if($has_password) {
 						
-						message()->addMessage("Du er allerede verificeret.", array("type" => "error"));
+						if(session()->value("user_id") > 1) {
+							
+							message()->addMessage("Du er allerede verificeret!");
+							header("Location: /profil");
+							exit();
+						}
+						else {
+							message()->addMessage("Du er allerede verificeret! Prøv at logge ind", array("type" => "error"));
+							// redirect to leave POST state
+							header("Location: /login");
+							exit();
+						}
 						
-						// redirect to leave POST state
-						header("Location: /login");
-						exit();
-
 					}
 
 					// user has no password
