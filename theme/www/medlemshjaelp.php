@@ -37,7 +37,8 @@ if($action) {
 		// signup page
 		if(count($action) === 1) {
 			$page->page(array(
-				"templates" => "member-help/signup.php"
+				"templates" => "member-help/signup.php",
+				"type" => "admin"
 			));
 			exit();
 		}
@@ -47,7 +48,8 @@ if($action) {
 		else if($action[1] == "fejl") {
 			
 			$page->page(array(
-				"templates" => "member-help/signup-error.php"
+				"templates" => "member-help/signup-error.php",
+				"type" => "admin"
 			));
 			exit();
 			
@@ -126,7 +128,8 @@ if($action) {
 			message()->addMessage("Brugeren skal acceptere betingelserne.", array("type" => "error"));
 			
 			$page->page(array(
-				"templates" => "member-help/signup.php"
+				"templates" => "member-help/signup.php",
+				"type" => "admin"
 			));
 			exit();
 		}
@@ -136,7 +139,8 @@ if($action) {
 			message()->addMessage("Beklager! Noget gik galt.", array("type" => "error"));
 			
 			$page->page(array(
-				"templates" => "member-help/signup.php"
+				"templates" => "member-help/signup.php",
+				"type" => "admin"
 			));
 			exit();
 		}
@@ -150,7 +154,8 @@ if($action) {
 		//	/medlemshjaelp/brugerprofil/#user_id#
 		if(count($action) == 2) {
 			$page->page(array(
-				"templates" => "member-help/user-profile.php"
+				"templates" => "member-help/user-profile.php",
+				"type" => "admin"
 			));
 			exit();
 		}
@@ -160,14 +165,16 @@ if($action) {
 			// /medlemshjaelp/brugerprofil/#user_id#/afdeling
 			if($action[2] == "afdeling") {
 				$page->page(array(
-				   "templates" => "member-help/update_user_department.php"
-			   ));
-			   exit();
+					"templates" => "member-help/update_user_department.php",
+					"type" => "admin"
+				));
+				exit();
 			}
 			// /medlemshjaelp/brugerprofil/#user_id#/opsig
 			elseif($action[2] == "opsig") {
 				$page->page(array(
-					"templates" => "member-help/delete_user_information.php"
+					"templates" => "member-help/delete_user_information.php",
+					"type" => "admin"
 				));
 				exit();
 			}
@@ -175,7 +182,8 @@ if($action) {
 			// /medlemshjaelp/brugerprofil/#user_id#/medlemsskab
 			elseif($action[2] == "medlemsskab") {
 				$page->page(array(
-					"templates" => "member-help/update_user_membership.php"
+					"templates" => "member-help/update_user_membership.php",
+					"type" => "admin"
 				));
 				exit();
 			}
@@ -183,14 +191,16 @@ if($action) {
 			// /medlemshjaelp/brugerprofil/#user_id#/oplysninger lead to template
 			else if($action[2] == "oplysninger") {
 				$page->page(array(
-					"templates" => "member-help/update_user_information.php"
+					"templates" => "member-help/update_user_information.php",
+					"type" => "admin"
 				));
 				exit();
 			}
 			// medlemshjaelp/brugerprofil/#user_id#/kodeord lead to template
 			else if($action[2] == "kodeord") {
 				$page->page(array(
-					"templates" => "member-help/update_user_password.php"
+					"templates" => "member-help/update_user_password.php",
+					"type" => "admin"
 				));
 				exit();
 			}
@@ -279,7 +289,8 @@ if($action) {
 			// Method fails
 			else {
 				$page->page([
-					"templates" => "member-help/delete_user_information.php"
+					"templates" => "member-help/delete_user_information.php",
+					"type" => "admin"
 				]);
 				exit();
 			}
@@ -325,7 +336,8 @@ if($action) {
 		// /medlemshjaelp/betaling/#order_no#
 		if(count($action) === 2) {
 			$page->page(array(
-				"templates" => "member-help/payment.php"
+				"templates" => "member-help/payment.php",
+				"type" => "admin"
 			));
 			exit();
 		}
@@ -333,7 +345,8 @@ if($action) {
 		// /medlemshjaelp/betaling/spring-over/kvittering
 		else if(count($action) === 3 && $action[1] == "spring-over") {
 			$page->page(array(
-				"templates" => "member-help/receipt/skipped.php"
+				"templates" => "member-help/receipt/skipped.php",
+				"type" => "admin"
 			));
 			exit();
 		} 
@@ -341,7 +354,8 @@ if($action) {
 		// /medlemshjaelp/betaling/#payment_id#/kvittering
 		else if(count($action) === 4 && $action[3] == "kvittering") {
 			$page->page(array(
-				"templates" => "member-help/receipt/index.php"
+				"templates" => "member-help/receipt/index.php",
+				"type" => "admin"
 			));
 			exit();
 		}
@@ -378,7 +392,8 @@ if($action) {
 	// /medlemshjaelp/paymentError
 	else if($action[0] == "paymentError") {
 		$page->page(array(
-			"templates" => "member-help/payment.php"
+			"templates" => "member-help/payment.php",
+			"type" => "admin"
 		));
 		exit();
 	}
@@ -388,7 +403,8 @@ if($action) {
 // member-help start page
 // /member-help
 $page->page(array(
-	"templates" => "member-help/index.php"
+	"templates" => "member-help/index.php",
+	"type" => "admin"
 ));
 
 ?>

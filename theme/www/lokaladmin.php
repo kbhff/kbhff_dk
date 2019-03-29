@@ -20,9 +20,9 @@ $page->pageTitle("Local admin");
 
 // standard template
 $page->page(array(
-	"templates" => "local-admin/index.php"
-	)
-);
+	"templates" => "local-admin/index.php",
+	"type" => "admin"
+));
 exit();
 
 

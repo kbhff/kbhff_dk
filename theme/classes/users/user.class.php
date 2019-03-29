@@ -740,8 +740,35 @@ class User extends UserCore {
 
 		return false;
 	}
+	
+	function removeExcessMembershipFromCart($username) {
 
-
+		// get user_id from username
+		$sql = "SELECT user_id FROM ".SITE_DB.".user_usernames as u where u.username = '$username'";
+		$query = new Query();
+		if($query->sql($sql)) {
+			$user_id = $query->result(0,"user_id");
+			
+			if($user_id) {
+				include_once("classes/users/superuser.class.php");
+				$UC = new SuperUser();
+				$member = $UC->getMembers(["user_id" => $user_id]);
+				if($member && $member["subscription_id"]) {
+					// look in session for cart reference
+					$cart_reference = session()->value("cart_reference");
+					// no luck, then look in cookie
+					if(!$cart_reference) {
+						$cart_reference = isset($_COOKIE["cart_reference"]) ? $_COOKIE["cart_reference"] : false;
+					}
+				
+					if($cart_reference) {
+						$SC = new Shop();
+						$cart = $SC->deleteSignupfeesAndMembershipsFromCart($cart_reference);
+					}
+				}
+			}
+		}
+	}
 }
 
 ?>

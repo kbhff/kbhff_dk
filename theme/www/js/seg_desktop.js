@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-03-22 09:32:48
+asset-builder @ 2019-03-27 20:38:07
 */
 
 /*seg_desktop_include.js*/
@@ -4677,10 +4677,6 @@ Util.Objects["page"] = new function() {
 		page.initHeader = function() {
 			var logo = u.ie(this.hN, "a", {"class":"logo", "href":"/","html": 'KBHFF <span class="highlight">' + document.title + '</span>'});
 			u.ce(logo, {"type":"link"});
-			var frontpage_link = u.qs("li.front a", this.nN);
-			if(frontpage_link) {
-				frontpage_link.parentNode.remove();
-			}
 		}
 		page.initNavigation = function() {
 			page.nN_nodes = u.qsa("li.indent0", page.nN);

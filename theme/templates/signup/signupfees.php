@@ -66,7 +66,7 @@ $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "positio
 
 			<? $membership_item = $IC->getItem(array("id" => $signupfee["associated_membership_id"], "extend" => array("prices" => true))); ?>
 
-
+			
 				<ul class="offer" itemscope itemtype="http://schema.org/Offer">
 					<li class="name" itemprop="name" content="<?= $signupfee["name"] ?>"></li>
 					<li class="currency" itemprop="priceCurrency" content="<?= $this->currency() ?>"></li>

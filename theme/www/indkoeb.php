@@ -78,9 +78,9 @@ if(is_array($action) && count($action)) {
 }
 // standard template
 $page->page(array(
-	"templates" => "purchasing/index.php"
-	)
-);
+	"templates" => "purchasing/index.php",
+	"type" => "admin"
+));
 exit();
 
 

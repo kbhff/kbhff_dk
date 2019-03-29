@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-03-19 14:26:20
+asset-builder @ 2019-03-27 20:36:49
 */
 
 /*seg_desktop_include.css*/
@@ -290,11 +290,20 @@ position: relative;
 	margin-right: 5px;
 	position: relative;
 }
+#navigation ul.navigation li.path > h4,
+#navigation ul.navigation li.path > h5,
+#navigation ul.navigation li.path > a,
+#navigation ul.navigation li.selected > h4,
+#navigation ul.navigation li.selected > h5,
+#navigation ul.navigation li.selected > a {
+	background-color: #3e8e17;
+}
 #navigation ul.navigation ul li {
 	display: block;
 	margin: 6px 5px;
 }
 #navigation ul.navigation h5,
+#navigation ul.navigation h4,
 #navigation ul.navigation a {
 	font-family: 'voresfont';
 	text-transform: uppercase;
@@ -306,6 +315,7 @@ position: relative;
 	background-color: #000000;
 }
 #navigation ul.navigation ul li h5,
+#navigation ul.navigation ul li h4,
 #navigation ul.navigation ul li a{
 	background-color: #666;
 }
@@ -316,6 +326,9 @@ position: relative;
 #navigation ul.navigation h5:hover {
 	cursor: pointer;
 }
+#navigation.member ul.navigation > li.volunteer,
+#navigation.admin ul.navigation > li.profile,
+#navigation.public ul.navigation > li.profile {float: right; margin-right: 0; margin-left: 5px;}
 
 
 /*s-content.css*/
