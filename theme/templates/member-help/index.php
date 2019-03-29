@@ -76,7 +76,7 @@ foreach($all_messages as $type => $messages):
 		<ul class="users">
 			<li class="user template">
 				<ul class=user_info>
-					<li class="name search">{name}</li>
+					<li class="name search">{firstname} {lastname}</li>
 					<li class="email search">{email}</li>
 					<li class="mobile search">{mobile}</li>
 					<li class="member_no search">{member_no}</li>
@@ -92,7 +92,7 @@ foreach($all_messages as $type => $messages):
 			foreach($users as $u => $user): ?>
 			<li class="user">
 				<ul class="user_info">
-					<?= '<li class="name search">'.preg_replace("/$search_value/i", "<span class=highlight_string>$0</span>", $user["name"]).'</li>' ?>
+					<?= '<li class="name search">'.preg_replace("/$search_value/i", "<span class=highlight_string>$0</span>", $user["firstname"]." ".$user["lastname"]).'</li>' ?>
 					<?= '<li class="email search">'.preg_replace("/$search_value/i", "<span class=highlight_string>$0</span>", $user["email"]).'</li>' ?>
 					<?= '<li class="mobile search">'.preg_replace("/$search_value/i", "<span class=highlight_string>$0</span>", $user["mobile"]).'</li>'?>
 					<?= '<li class="member_no search">'.preg_replace("/$search_value/i", "<span class=highlight_string>$0</span>", $user["member_no"]).'</li>' ?>
