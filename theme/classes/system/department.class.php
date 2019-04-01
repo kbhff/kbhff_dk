@@ -175,16 +175,39 @@ class Department extends Model {
 	 *
 	 * @return array|false Department data object (via callback to Query->results()
 	 */
-	function getDepartments() {
+	function getDepartments($_options=false) {
 
-		// Query database for all departments.  
-		$query = new Query();
-		$sql = "SELECT * FROM ".$this->db;		
-		if($query->sql($sql)) {
-			return $query->results();
+		$departments = array();
+
+		$item_id = false;
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+					case "item_id"     : $item_id        = $_value; break;
+				}
+			}
 		}
+
+		$query = new Query();
+
+		if($item_id) {
+			// Query database for all departments bdelonging to an item
+
+			$sql = "SELECT * FROM ".UT_ITEM_DEPARTMENT." as department 
+					WHERE department.item_id = $item_id"; 
+			
+		} else {
+
+			// Query database for all departments.  
+			$query = new Query();
+			$sql = "SELECT * FROM ".$this->db;		
+		}
+		if($query->sql($sql)) {
+			$departments = $query->results();
+		}
+
 		
-		return false;
+		return $departments;
 	}
 
 	/**
