@@ -112,7 +112,7 @@ if($action) {
 		// if user exists
 		else if(isset($user["status"]) && $user["status"] == "USER_EXISTS") {
 			
-			if($SC->deleteSignupfeesAndMembershipsFromCart($cart_reference)) {
+			if($SC->deleteSignupfeesAndMembershipsFromCart()) {
 				message()->addMessage("Det ser ud til at du allerede er registreret som bruger. Prøv at logge ind.", array("type" => "error"));
 				// redirect to leave POST state
 				header("Location: /login");
