@@ -138,7 +138,6 @@ if($action) {
 
 		}
 
-		$model->removeExcessMembershipFromCart($username);
 		
 		// Perform Janitor login and redirect to /profil
 		session()->value("login_forward", "/profil");

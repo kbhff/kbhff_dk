@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-03-27 18:55:55
+asset-builder @ 2019-04-02 12:59:51
 */
 
 /*seg_smartphone_include.js*/
@@ -7278,9 +7278,24 @@ u.f.textEditor = function(field) {
 		var form = u.f.addForm(this.selection_options, {"class":"labelstyle:inject"});
 		u.ae(form, "h3", {"html":"Link options"});
 		var fieldset = u.f.addFieldset(form);
-		var input_url = u.f.addField(fieldset, {"label":"url", "name":"url", "value":a.href.replace(location.protocol + "//" + document.domain, ""), "error_message":""});
-		var input_target = u.f.addField(fieldset, {"type":"checkbox", "label":"Open in new window?", "checked":(a.target ? "checked" : false), "name":"target", "error_message":""});
-		var bn_save = u.f.addAction(form, {"value":"Save link", "class":"button"});
+		var input_url = u.f.addField(fieldset, {
+			"label":"url", 
+			"name":"url", 
+			"value":a.href.replace(location.protocol + "//" + document.domain, ""), 
+			"pattern":"((http[s]?:\\/)?\\/|mailto:|tel:)[^$]+",
+			"error_message":"Must start with /, http:// or https://, mailto: or tel:"
+		});
+		var input_target = u.f.addField(fieldset, {
+			"type":"checkbox", 
+			"label":"Open in new window?", 
+			"checked":(a.target ? "checked" : false), 
+			"name":"target", 
+			"error_message":""
+		});
+		var bn_save = u.f.addAction(form, {
+			"value":"Save link", 
+			"class":"button"
+		});
 		u.f.init(form);
 		form.a = a;
 		form.field = this;
