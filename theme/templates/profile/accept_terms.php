@@ -15,6 +15,8 @@ global $UC;
 	<p>Afviser du dette samtykke, vil det medføre ophør af dit medlemskab, og
 		persondata vi har om dig slettes fra vores server i overensstemmelse med vore retningslinjer.</p>
 
+	<p>Vi gør opmærksom på at, at du selv er ansvarlig for eventuelle persondata du skriver på wikisider, eller lignende offentligt tilgængelige sider, som bliver brugt i foreningens arbejde.</p>
+
 	<p>Læs mere i vore <a href="/persondata">retningslinjer for behandling og opbevaring af persondata</a></p>
 
 
