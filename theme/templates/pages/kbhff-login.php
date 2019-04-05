@@ -96,7 +96,7 @@ $username = stringOr(getPost("username"), session()->value("temp-username"));
 				"required" => true,
 				"min" => 1,
 				"label" => "Adgangskode",
-				"hint_message" => "Skriv din adgangskode (8-20 tegn)",
+				"hint_message" => "Skriv din adgangskode",
 				"error_message" => "Ugyldig adgangskode",
 			)); ?>
 		</fieldset>
