@@ -156,7 +156,7 @@ ul.actions li,
 /* DEFAULT BUTTON */
 ul.actions input.button,
 ul.actions a.button,
-#content ul.actions a.button {font-size: 14px; display: block; padding: 7px 14px; line-height: 22px; background-color: #bbbbbb; color: #ffffff; border: none; cursor: pointer;
+#content ul.actions a.button {font-size: 14px; display: block; padding: 7px 14px; line-height: 22px; background-color: #999999; color: #ffffff; border: none; cursor: pointer;
 	font-weight: 400;
 	text-transform: uppercase;
 	font-family: "voresfont";
@@ -168,7 +168,7 @@ ul.actions a.button,
 
 ul.actions input.button:hover,
 ul.actions a.button:hover,
-#content ul.actions a.button:hover {background-color: #999999;}
+#content ul.actions a.button:hover {background-color: #666666;}
 
 /* PRIMARY BUTTON */
 ul.actions input.button.primary,
