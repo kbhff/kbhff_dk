@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-04-02 12:59:48
+asset-builder @ 2019-04-08 16:14:09
 */
 
 /*seg_desktop_include.css*/
@@ -178,7 +178,7 @@ ul.actions li,
 }
 ul.actions input.button,
 ul.actions a.button,
-#content ul.actions a.button {font-size: 14px; display: block; padding: 7px 14px; line-height: 22px; background-color: #bbbbbb; color: #ffffff; border: none; cursor: pointer;
+#content ul.actions a.button {font-size: 14px; display: block; padding: 7px 14px; line-height: 22px; background-color: #999999; color: #ffffff; border: none; cursor: pointer;
 	font-weight: 400;
 	text-transform: uppercase;
 	font-family: "voresfont";
@@ -188,7 +188,7 @@ ul.actions a.button,
 #content ul.actions a.button {text-decoration: none;}
 ul.actions input.button:hover,
 ul.actions a.button:hover,
-#content ul.actions a.button:hover {background-color: #999999;}
+#content ul.actions a.button:hover {background-color: #666666;}
 ul.actions input.button.primary,
 ul.actions a.button.primary,
 #content ul.actions a.button.primary {background-color: #3e8e17; color: #ffffff;}
