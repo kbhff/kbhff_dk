@@ -156,7 +156,7 @@ class SuperUser extends SuperUserCore {
 			// Cannot cancel account due to unpaid orders
 			else if(isset($cancel_result["error"]) && $cancel_result["error"] == "unpaid_orders") {
 				message()->resetMessages();
-				message()->addMessage("Brugeren blev ikke udmeldt grundet ubetalte ordrer.", array("type" => "error"));
+				message()->addMessage("Brugeren blev ikke udmeldt grundet ubetalte ordrer. Du er velkommen til at kontakte it@kbhff.dk, der altid står klar til at hjælpe.", array("type" => "error"));
 			
 				return false;
 			
