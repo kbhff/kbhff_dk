@@ -47,11 +47,10 @@
 	margin-right: 12px;
 }
 
-#content div.profile .opening-times,
 #content div.profile .membership-info {
 	display: inline-block;
 	vertical-align: top;
-	width: 50%;
+	width: 100%;
 }
 
 #content div.profile .pickup-date,
@@ -124,24 +123,18 @@
 	padding-bottom: 0;
 }
 
-#content div.profile .c-box > form > fieldset {
+#content div.profile .c-box form > fieldset {
 	padding-top: 6px;
 }
-#content div.profile .c-box > form > fieldset .field {
+#content div.profile form > fieldset .field {
 	width: 100%;
 	box-sizing: border-box;
 }
 
-#content div.profile .membership fieldset {
-	float: right;
-	width: 50%;
-}
 #content div.profile .membership .field {
-	padding: 0;
-	padding-top: 5px;
-	padding-left: 12px;
-	padding-right: 12px;
+	padding-bottom: 19px;
 }
+
 
 #content div.profile .department-info,
 #content div.profile .membership-info,
