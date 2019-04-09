@@ -164,17 +164,22 @@ if($action) {
 	// profil/updateUserPassword
 	else if($action[0] == "updateUserPassword" && $page->validateCsrfToken()) {
 
+		$result = $UC->setPassword($action);
 		//Method returns true
-		if($UC->setPassword($action)) {
+		if($result === true) {
 			message()->resetMessages();
 			message()->addMessage("Adgangskoden blev opdateret.");
 			header("Location: /profil");
 			exit();
 		}
+		else if(isset($result["error"]) && $result["error"] == "wrong_password") {
+			message()->addMessage("Du har tastet en forkert adgangskode, så din adgangskode blev ikke opdateret.", array("type" => "error"));
+			header("Location: /profil/kodeord");
+			exit();
+		}
 		//Method returns false
 		else {
 			message()->addMessage("Der skete en fejl.", array("type" => "error"));
-			
 			header("Location: /profil/kodeord");
 			exit();
 		}
