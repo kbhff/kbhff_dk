@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-04-08 16:14:08
+asset-builder @ 2019-04-09 13:35:52
 */
 
 /*seg_desktop_include.js*/
@@ -5231,32 +5231,44 @@ Util.Objects["accept_terms"] = new function() {
 						form_confirm_cancellation.submitted = function () {
 							var data = u.f.getParams(this);
 							this.response = function(response) {
-								var div_scene_login = u.qs("div.scene.login", response);
-								if (div_scene_login) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								if (response.cms_object == "JS-request") {
+									console.log(response);
 									location.href = "/";
 								}
-								else {
-									var error_message = u.qs("p.errormessage", response);
-									u.ass(this, {"display":"none"})
-									u.ae(this.scene.overlay.div_content, error_message);
-									var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
-										class:"actions"
-									});
-									var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
-									u.e.click(button_close);
-									button_close.scene = form_confirm_cancellation.scene;
-									button_close.clicked = function () {
-										this.scene.overlay.close ();
+								else if (response != "JS-request") {
+									if (message = u.qs("div.messages", response)) {
+										u.ass(this, {"display":"none"})
+										console.log(this);
+										u.ae(this.scene.overlay.div_content, message);
+										var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
+											class:"actions"
+										});
+										var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
+										button_close.scene = this.scene;
+										u.e.click(button_close)
+										button_close.clicked = function () {
+											this.scene.overlay.close ();
+										}
+									}
+									else {
+										location.href = "/";
 									}
 								}
 							}
-							u.request(this, this.action, {
-								"data":data,
-								"method":"POST"
-							})
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.action, {"data":data, "method":"POST", "headers":{"X-Requested-With":"XMLHttpRequest"}});
+							}
 						}
 					}
-					u.request(this, "/profil/opsig");
+					if (!this.is_requesting) {
+						this.is_requesting = true;
+						u.ac(this, "loading");
+						u.request(this, "/profil/opsig");
+					}
 				}
 				u.e.click(regret);
 				regret.scene = this._form.scene;
