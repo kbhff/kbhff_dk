@@ -64,6 +64,10 @@ div.overlay ul.actions {
 	text-align: center;
 }
 
+div.overlay .close {
+	cursor: pointer;
+}
+
 div.overlay .close:hover {
 	opacity: 1;
 }
