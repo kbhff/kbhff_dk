@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-04-09 13:35:52
+asset-builder @ 2019-04-10 11:09:12
 */
 
 /*seg_desktop_include.js*/
@@ -6121,7 +6121,6 @@ Util.Objects["profile"] = new function() {
 					u.rc(this, "loading");
 					var form_department = u.qs(".form_department", response);
 					form_department.scene = this.scene;
-					var form_fieldset = u.qs("fieldset", form_department);
 					var div_fields = u.qs("div.fields", box_membership);
 					var divs_membership = u.qsa(".membership-info", div_fields);
 					var ul_buttons = u.qs("ul.actions", div_fields);
@@ -6129,24 +6128,46 @@ Util.Objects["profile"] = new function() {
 					u.ass(ul_buttons, {"display":"none"});
 					u.ae(box_membership, form_department);
 					u.f.init(form_department);
-					u.ie(form_department, div_fields);
-					u.ae(div_fields, form_fieldset);
+					u.ae(div_fields, form_department);
 					form_department.submitted = function() {
 						var data = u.f.getParams(this);
 						this.response = function(response) {
 							this.is_requesting = false;
 							u.rc(this, "loading");
-							var div_membership = u.qs(".membership .fields", response);
-							box_membership.replaceChild(div_membership, form_department);
+							var new_fields = u.qs(".membership .fields", response);
+							box_membership.replaceChild(new_fields, div_fields);
 							var new_department_box = u.qs(".department", response);
 							right_panel.replaceChild(new_department_box, box_department);
-							if (message = u.qs("div.messages", response)) {
-								u.ie(box_membership, message);
-								message.transitioned = function() {
-									message.innerHTML = "";
+							if (message = u.qs("p.message", response)) {
+								var fields = u.qs("div.fields", box_membership)
+								u.ie(fields, message);
+								if (message.t_done) {
+									u.t.resetTimer(t_done);
 								}
-								u.a.transition(message, "all 4s ease-in");
-								u.a.opacity(message, 0.5);	
+								message.done = function() {
+									u.ass(this, {
+										"transition":"all .5s ease",
+										"transform":"translate3d(0px, -10px, 0px)",
+										"opacity":"0"
+									});
+									u.t.setTimer(this, function() {
+										this.parentNode.removeChild(this);
+									}, 500);
+								}
+								message.transitioned = function() {
+									this.t_done = u.t.setTimer(this, this.done, 2400);
+								}
+								u.ass(message, {
+									"color":"#3e8e17",
+									"padding-bottom":"5px",
+									"transform":"translate3d(0px, -10px, 0px)",
+									"opacity":"0"
+								});
+								u.a.transition(message, "all .5s ease");
+								u.ass(message, {
+									"transform":"translate3d(0px, 0, 0px)",
+									"opacity":"1"
+								});
 							}
 							this.scene.initMembershipBox();
 						}
@@ -6160,8 +6181,8 @@ Util.Objects["profile"] = new function() {
 						this.response = function(response) {
 							this.is_requesting = false;
 							u.rc(this, "loading");
-							var div_membership = u.qs(".membership .fields", response);
-							box_membership.replaceChild(div_membership, this._form);
+							var new_fields = u.qs(".membership .fields", response);
+							box_membership.replaceChild(new_fields, div_fields);
 							this._form.scene.initMembershipBox();
 						}
 						if (!this.is_requesting) {
@@ -6274,13 +6295,36 @@ Util.Objects["profile"] = new function() {
 							box_userinfo.replaceChild(div_userinfo, form_userinfo);
 							var new_name = u.qs("span.name", response);
 							intro_header.replaceChild(new_name, span_name);
-							if (message = u.qs("div.messages", response)) {
-								u.ie(box_userinfo, message);
-								message.transitioned = function() {
-									message.innerHTML = "";
+							if (message = u.qs("p.message", response)) {
+								var fields = u.qs("div.fields", box_userinfo);
+								u.ie(fields, message);
+								if (message.t_done) {
+									u.t.resetTimer(t_done);
 								}
-								u.a.transition(message, "all 4s ease-in");
-								u.a.opacity(message, 0.5);	
+								message.done = function() {
+									u.ass(this, {
+										"transition":"all .5s ease",
+										"transform":"translate3d(0px, -10px, 0px)",
+										"opacity":"0"
+									});
+									u.t.setTimer(this, function() {
+										this.parentNode.removeChild(this);
+									}, 500);
+								}
+								message.transitioned = function() {
+									this.t_done = u.t.setTimer(this, this.done, 2400);
+								}
+								u.ass(message, {
+									"color":"#3e8e17",
+									"padding-bottom":"5px",
+									"transform":"translate3d(0px, -10px, 0px)",
+									"opacity":"0"
+								});
+								u.a.transition(message, "all .5s ease");
+								u.ass(message, {
+									"transform":"translate3d(0px, 0, 0px)",
+									"opacity":"1"
+								});
 							}
 							this.scene.initUserinfoBox();
 						}
@@ -6331,18 +6375,54 @@ Util.Objects["profile"] = new function() {
 						this.response = function(response) {
 							this.is_requesting = false;
 							u.rc(this, "loading");
+							if (message = u.qs("p.error", this)) {
+								message.parentNode.removeChild(message);
+							}
 							if (message = u.qs("div.messages > p.error", response)) {
-							 	u.ie(this, message);
-							 }
+								u.ass(message, {
+									"padding-bottom":"5px",
+									"transform":"translate3d(0px, -10px, 0px)",
+									"opacity":"0"
+								});
+								u.ie(this, message);	
+								u.a.transition(message, "all .5s ease");
+								u.ass(message, {
+									"transform":"translate3d(0px, 0, 0px)",
+									"opacity":"1"
+								});
+							}
 							var div_password = u.qs(".password .fields", response);
 							box_password.replaceChild(div_password, this);
 							if (message = u.qs("p.message", response)) {
-								u.ie(box_password, message);
-								message.transitioned = function() {
-									message.style.display = "none";
+								var fields = u.qs("div.fields", box_password);
+								u.ie(fields, message);
+								if (message.t_done) {
+									u.t.resetTimer(t_done);
 								}
-								u.a.transition(message, "all 4s ease-in");
-								u.a.opacity(message, 0.5);	
+								message.done = function() {
+									u.ass(this, {
+										"transition":"all .5s ease",
+										"transform":"translate3d(0px, -10px, 0px)",
+										"opacity":"0"
+									});
+									u.t.setTimer(this, function() {
+										this.parentNode.removeChild(this);
+									}, 500);
+								}
+								message.transitioned = function() {
+									this.t_done = u.t.setTimer(this, this.done, 2400);
+								}
+								u.ass(message, {
+									"color":"#3e8e17",
+									"padding-bottom":"5px",
+									"transform":"translate3d(0px, -10px, 0px)",
+									"opacity":"0"
+								});
+								u.a.transition(message, "all 1s ease");
+								u.ass(message, {
+									"transform":"translate3d(0px, 0, 0px)",
+									"opacity":"1"
+								});
 							}
 							this.scene.initPasswordBox();
 						}

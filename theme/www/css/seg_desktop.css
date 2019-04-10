@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-04-09 13:35:52
+asset-builder @ 2019-04-10 11:09:12
 */
 
 /*seg_desktop_include.css*/
@@ -646,11 +646,10 @@ position: relative;
 	margin-left: 12px;
 	margin-right: 12px;
 }
-#content div.profile .opening-times,
 #content div.profile .membership-info {
 	display: inline-block;
 	vertical-align: top;
-	width: 50%;
+	width: 100%;
 }
 #content div.profile .pickup-date,
 #content div.profile .order-place,
@@ -711,22 +710,15 @@ position: relative;
 	font-size: 18px;
 	padding-bottom: 0;
 }
-#content div.profile .c-box > form > fieldset {
+#content div.profile .c-box form > fieldset {
 	padding-top: 6px;
 }
-#content div.profile .c-box > form > fieldset .field {
+#content div.profile form > fieldset .field {
 	width: 100%;
 	box-sizing: border-box;
 }
-#content div.profile .membership fieldset {
-	float: right;
-	width: 50%;
-}
 #content div.profile .membership .field {
-	padding: 0;
-	padding-top: 5px;
-	padding-left: 12px;
-	padding-right: 12px;
+	padding-bottom: 19px;
 }
 #content div.profile .department-info,
 #content div.profile .membership-info,
@@ -948,6 +940,9 @@ div.overlay h2 {
 	padding-top: 17px;
 	text-align: center;
 }
+div.overlay .error{
+	padding: 10px 0;
+}
 div.overlay .header {
 	cursor: move;
 }
@@ -968,6 +963,9 @@ div.overlay .close {
 div.overlay ul.actions {
 	width: 100%;
 	text-align: center;
+}
+div.overlay .close {
+	cursor: pointer;
 }
 div.overlay .close:hover {
 	opacity: 1;
