@@ -52,37 +52,66 @@ Util.Objects["accept_terms"] = new function() {
 						form_confirm_cancellation.submitted = function () {
 							var data = u.f.getParams(this);
 							this.response = function(response) {
-								var div_scene_login = u.qs("div.scene.login", response);
-								if (div_scene_login) {
+								// Update request state
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								
+								if (response.cms_object == "JS-request") {
+									console.log(response);
 									location.href = "/";
+								
 								}
-								else {
-									var error_message = u.qs("p.errormessage", response);
-									u.ass(this, {"display":"none"})
-									u.ae(this.scene.overlay.div_content, error_message);
-									var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
-										class:"actions"
-									});
+								
+								else if (response != "JS-request") {
 									
-									// Generate a clickable close-button 
-									var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
-									u.e.click(button_close);
-									button_close.scene = form_confirm_cancellation.scene;
-									button_close.clicked = function () {
-										this.scene.overlay.close ();
+									if (message = u.qs("div.messages", response)) {
+										u.ass(this, {"display":"none"})
+										console.log(this);
+										u.ae(this.scene.overlay.div_content, message);
+										var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
+											class:"actions"
+										});
+										
+										var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
+										button_close.scene = this.scene;
+										u.e.click(button_close)
+										button_close.clicked = function () {
+											this.scene.overlay.close ();
+										}
 									}
+									else {
+										location.href = "/";
+									}
+									
 								}
+								
 							}
 							
-							u.request(this, this.action, {
-								"data":data,
-								"method":"POST"
-							})
+							// Prevent making the request more than once
+							if (!this.is_requesting) {
+								// Update request state
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								// Make request
+						
+								u.request(this, this.action, {"data":data, "method":"POST", "headers":{"X-Requested-With":"XMLHttpRequest"}});
+							}
+
 						}
 					}
-	
-					u.request(this, "/profil/opsig");
+
+					// Prevent making the request more than once
+					if (!this.is_requesting) {
+						// Update request state
+						this.is_requesting = true;
+						u.ac(this, "loading");
+						// Make the request
+						
+						u.request(this, "/profil/opsig");
+					}
+
 				}
+				
 				// Add click event to cancel and close overlay
 				u.e.click(regret);
 				regret.scene = this._form.scene;

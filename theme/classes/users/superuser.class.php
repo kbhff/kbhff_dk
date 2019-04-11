@@ -153,25 +153,22 @@ class SuperUser extends SuperUserCore {
 
 				return true;
 			}
-			 // Cannot cancel account due to unpaid orders
-			 else if(isset($cancel_result["error"]) && $cancel_result["error"] == "unpaid_orders") {
+			// Cannot cancel account due to unpaid orders
+			else if(isset($cancel_result["error"]) && $cancel_result["error"] == "unpaid_orders") {
 				message()->resetMessages();
-			 	message()->addMessage("Brugeren blev ikke udmeldt grundet ubetalte ordrer.", array("type" => "error"));
-			 
-			 	return false;
-			 
-			 }
-	
+				message()->addMessage("Brugeren blev ikke udmeldt grundet ubetalte ordrer. Du er velkommen til at kontakte it@kbhff.dk, der altid står klar til at hjælpe.", array("type" => "error"));
+			
+				return false;
+			
+			}
 			// Any unknown error
 			else {
 				message()->resetMessages();
 				message()->addMessage("Udmeldelsen slog fejl", ["type" => "error"]);
-			
 				return false;
 			}
-
+			
 			//PERHAPS TODO: delete department affiliation
-
 		}
 	}
 
@@ -224,6 +221,8 @@ class SuperUser extends SuperUserCore {
 		// Get posted values from form
 		$this->getPostedEntities();
 		$user_id = $action[1];
+		$email = $this->getProperty("email", "value");
+		$mobile = $this->getProperty("mobile", "value");
 		// Prevent "nickname not assigned" error
 		$nickname = $this->getProperty("nickname", "value");
 		if (!$nickname) {
@@ -234,67 +233,30 @@ class SuperUser extends SuperUserCore {
 
 		// Updates and checks if it went true(good) or false(bad)
 		if ($this->update(["update", $user_id])) {
-			message()->resetMessages();
-			message()->addMessage("Dine oplysninger blev opdateret");
-			return true;
+			
+			if($email) {
+				if($this->updateEmail(["updateEmail", $user_id])) {
+					if($mobile) {
+						if($this->updateMobile(["updateMobile", $user_id])) {
+							message()->resetMessages();
+							message()->addMessage("Dine oplysninger blev opdateret");
+						}
+					}
+				}
+			}
+			else {
+				message()->resetMessages();
+				message()->addMessage("En del af opdateringen slog fejl. Opdater venligst browseren for at tjekke opdateringen.", ["type" => "error"]);
+				return false;	
+			}
 		}
+		
 		else {
 			message()->resetMessages();
 			message()->addMessage("Opdateringen slog fejl", ["type" => "error"]);
 			return false;
 		}
 	}
-
-	// update user
-	// /janitor/admin/user/update/#user_id# (values in POST)
-	function update($action) {
-
-		// Get posted values to make them available for models
-		$this->getPostedEntities();
-
-		if(count($action) == 2) {
-			$user_id = $action[1];
-			$query = new Query();
-
-			$entities = $this->getModel();
-			$names = array();
-			$values = array();
-
-			foreach($entities as $name => $entity) {
-				if($entity["value"] !== false && preg_match("/^(user_group_id|firstname|lastname|nickname|language)$/", $name)) {
-					$names[] = $name;
-					$values[] = $name."='".$entity["value"]."'";
-				}
-			}
-
-			if($this->validateList($names, $user_id)) {
-				if($values) {
-					$sql = "UPDATE ".$this->db." SET ".implode(",", $values).",modified_at=CURRENT_TIMESTAMP WHERE id = ".$user_id;
-	//					print $sql;
-				}
-				
-				if(!$values || $query->sql($sql)) {
-
-					// update username and mobile if these were also sent
-					$email = $this->getProperty("email", "value");
-					if($email) {
-						$this->updateEmail(array("updateEmail", $user_id));
-					}
-
-					$mobile = $this->getProperty("mobile", "value");
-					if($email) {
-						$this->updateMobile(array("updateMobile", $user_id));
-					}
-
-					return true;
-				}
-				
-			}
-		}
-		message()->addMessage("Brugeren blev ikke opdateret", array("type" => "error"));
-		return false;
-	}
-
 
 	/**
 	 * Get a user's associated department.

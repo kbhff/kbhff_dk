@@ -20,7 +20,7 @@ $reset_token = session()->value("temp-reset-token");
 			?>
 
 			<fieldset>
-				<?= $model->input("new_password", array("required" => true, "label" => "Ny adgangskode", "hint_message" => "Skriv dit nye adgangskode – 8-20 tegn", "error_message" => "Ugyldig adgangskode")) ?>
+				<?= $model->input("new_password", array("required" => true, "label" => "Ny adgangskode", "hint_message" => "Skriv dit nye adgangskode – mere end 8 tegn", "error_message" => "Ugyldig adgangskode")) ?>
 				<?= $model->input("confirm_password", array("required" => true, "label" => "Gentag ny adgangskode", "hint_message" => "Skriv din nye adgangskode igen for at bekræfte", "error_message" => "Dine adgangskoder stemmer ikke overens.")) ?>
 			</fieldset>
 

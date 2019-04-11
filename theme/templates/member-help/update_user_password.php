@@ -34,7 +34,7 @@ $this->pageTitle("Adgangskode");
 				$UC->input("new_password", [
 					"label" => "Din nye adgangskode",
 					"required" => true,
-					"hint_message" => "Indtast din nye adgangskode på 8-20 anslag",
+					"hint_message" => "Indtast din nye adgangskode på mere end 8 anslag",
 					"error_message" => "",
 				]),
 

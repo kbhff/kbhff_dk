@@ -37,7 +37,7 @@ global $model;
 		<?= $model->formStart("setPassword", ["class" => "create_password"]) ?>
 
 			<fieldset>
-				<?= $model->input("new_password", array("required" => true, "label" => "Ny adgangskode", "hint_message" => "Indtast din nye adgangskode på 8-20 anslag", "error_message" => "Ugyldig adgangskode")) ?>
+				<?= $model->input("new_password", array("required" => true, "label" => "Ny adgangskode", "hint_message" => "Indtast din nye adgangskode på mindst 8 anslag", "error_message" => "Ugyldig adgangskode")) ?>
 				<?= $model->input("confirm_password", array("required" => true, "label" => "Bekræft adgangskode", "hint_message" => "Indtast din nye adgangskode igen for at bekræfte", "error_message" => "Adgangskoderne er ikke ens")) ?>
 			</fieldset>
 			<ul class="actions">

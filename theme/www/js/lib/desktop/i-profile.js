@@ -44,7 +44,6 @@ Util.Objects["profile"] = new function() {
 					form_department.scene = this.scene;
 
 					// Query elements to use
-					var form_fieldset = u.qs("fieldset", form_department);
 					var div_fields = u.qs("div.fields", box_membership);
 					var divs_membership = u.qsa(".membership-info", div_fields);
 					var ul_buttons = u.qs("ul.actions", div_fields);
@@ -57,11 +56,8 @@ Util.Objects["profile"] = new function() {
 					u.ae(box_membership, form_department);
 					u.f.init(form_department);
 
-					// Insert fields into form
-					u.ie(form_department, div_fields);
-
-					// Move select into leftover field spot
-					u.ae(div_fields, form_fieldset);
+					// Insert form into fields
+					u.ae(div_fields, form_department);
 
 					// Update button
 					form_department.submitted = function() {
@@ -71,26 +67,56 @@ Util.Objects["profile"] = new function() {
 							// Update request state
 							this.is_requesting = false;
 							u.rc(this, "loading");
-							// Replace form
-							var div_membership = u.qs(".membership .fields", response);
-							box_membership.replaceChild(div_membership, form_department);
+							
+							// Replace current fields div with the updated one
+							var new_fields = u.qs(".membership .fields", response);
+							box_membership.replaceChild(new_fields, div_fields);
 
 							// Replace department box with updated box
 							var new_department_box = u.qs(".department", response);
 							right_panel.replaceChild(new_department_box, box_department);
 
-							if (message = u.qs("div.messages", response)) {
 
-								u.ie(box_membership, message);
+							if (message = u.qs("p.message", response)) {
+								var fields = u.qs("div.fields", box_membership)
+								u.ie(fields, message);
 								
-								message.transitioned = function() {
-									message.innerHTML = "";
+								// If previous message didn't finnish deleting
+								if (message.t_done) {
+									u.t.resetTimer(t_done);
 								}
 
-								u.a.transition(message, "all 4s ease-in");
-								u.a.opacity(message, 0.5);	
-							}
+								message.done = function() {
+									u.ass(this, {
+										"transition":"all .5s ease",
+										"transform":"translate3d(0px, -10px, 0px)",
+										"opacity":"0"
+									});
 
+									u.t.setTimer(this, function() {
+										this.parentNode.removeChild(this);
+									}, 500);
+								}
+
+								message.transitioned = function() {
+									this.t_done = u.t.setTimer(this, this.done, 2400);
+								}
+
+								// State before animation
+								u.ass(message, {
+									"color":"#3e8e17",
+									"padding-bottom":"5px",
+									"transform":"translate3d(0px, -10px, 0px)",
+									"opacity":"0"
+								});
+
+								// Animate
+								u.a.transition(message, "all .5s ease");
+								u.ass(message, {
+									"transform":"translate3d(0px, 0, 0px)",
+									"opacity":"1"
+								});
+							}
 
 							// Init new box on scene
 							this.scene.initMembershipBox();
@@ -115,9 +141,9 @@ Util.Objects["profile"] = new function() {
 							this.is_requesting = false;
 							u.rc(this, "loading");
 
-							// Query membershipbox and replace form
-							var div_membership = u.qs(".membership .fields", response);
-							box_membership.replaceChild(div_membership, this._form);
+							// Replce with non-updated fields
+							var new_fields = u.qs(".membership .fields", response);
+							box_membership.replaceChild(new_fields, div_fields);
 
 							// "this" is the cancel button.
 							//  the "_form" property refers to the inputs form even though its not in HTML form scope.
@@ -304,17 +330,47 @@ Util.Objects["profile"] = new function() {
 							var new_name = u.qs("span.name", response);
 							intro_header.replaceChild(new_name, span_name);
 
+							// Message
+							if (message = u.qs("p.message", response)) {
+								// Insert message
+								var fields = u.qs("div.fields", box_userinfo);
+								u.ie(fields, message);
 
-							if (message = u.qs("div.messages", response)) {
-
-								u.ie(box_userinfo, message);
-								
-								message.transitioned = function() {
-									message.innerHTML = "";
+								// If previous message didn't finnish deleting
+								if (message.t_done) {
+									u.t.resetTimer(t_done);
 								}
 
-								u.a.transition(message, "all 4s ease-in");
-								u.a.opacity(message, 0.5);	
+								message.done = function() {
+									u.ass(this, {
+										"transition":"all .5s ease",
+										"transform":"translate3d(0px, -10px, 0px)",
+										"opacity":"0"
+									});
+
+									u.t.setTimer(this, function() {
+										this.parentNode.removeChild(this);
+									}, 500);
+								}
+
+								message.transitioned = function() {
+									this.t_done = u.t.setTimer(this, this.done, 2400);
+								}
+
+								// State before animation
+								u.ass(message, {
+									"color":"#3e8e17",
+									"padding-bottom":"5px",
+									"transform":"translate3d(0px, -10px, 0px)",
+									"opacity":"0"
+								});
+
+								// Animate
+								u.a.transition(message, "all .5s ease");
+								u.ass(message, {
+									"transform":"translate3d(0px, 0, 0px)",
+									"opacity":"1"
+								});
 							}
 							
 							// Init new box
@@ -399,11 +455,31 @@ Util.Objects["profile"] = new function() {
 							// Update request state
 							this.is_requesting = false;
 							u.rc(this, "loading");
-						
+							
+							// Prevent multiple errors
+							if (message = u.qs("p.error", this)) {
+								message.parentNode.removeChild(message);
+							}
+
 							// in case of error, the message needs to show in the form_password. 
 							if (message = u.qs("div.messages > p.error", response)) {
-							 	u.ie(this, message);
-							 }
+							
+								// State before animation
+								u.ass(message, {
+									"padding-bottom":"5px",
+									"transform":"translate3d(0px, -10px, 0px)",
+									"opacity":"0"
+								});
+								// Insert message
+								u.ie(this, message);	
+							
+								// Animate
+								u.a.transition(message, "all .5s ease");
+								u.ass(message, {
+									"transform":"translate3d(0px, 0, 0px)",
+									"opacity":"1"
+								});
+							}
 
 							// Query new static content and replace with current form
 							var div_password = u.qs(".password .fields", response);
@@ -412,12 +488,45 @@ Util.Objects["profile"] = new function() {
 							// Message needs to show when form_password is replaced with box_password.
 							if (message = u.qs("p.message", response)) {
 								
-								u.ie(box_password, message);
-								message.transitioned = function() {
-									message.style.display = "none";
+								// Insert
+								var fields = u.qs("div.fields", box_password);
+								u.ie(fields, message);
+
+								// If previous message didn't finnish deleting
+								if (message.t_done) {
+									u.t.resetTimer(t_done);
 								}
-								u.a.transition(message, "all 4s ease-in");
-								u.a.opacity(message, 0.5);	
+
+								message.done = function() {
+									u.ass(this, {
+										"transition":"all .5s ease",
+										"transform":"translate3d(0px, -10px, 0px)",
+										"opacity":"0"
+									});
+
+									u.t.setTimer(this, function() {
+										this.parentNode.removeChild(this);
+									}, 500);
+								}
+
+								message.transitioned = function() {
+									this.t_done = u.t.setTimer(this, this.done, 2400);
+								}
+
+								// State before animation
+								u.ass(message, {
+									"color":"#3e8e17",
+									"padding-bottom":"5px",
+									"transform":"translate3d(0px, -10px, 0px)",
+									"opacity":"0"
+								});
+
+								// Animate
+								u.a.transition(message, "all 1s ease");
+								u.ass(message, {
+									"transform":"translate3d(0px, 0, 0px)",
+									"opacity":"1"
+								});
 							}
 							
 							
