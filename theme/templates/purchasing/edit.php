@@ -126,7 +126,7 @@ $productTypes = array(
 				<li class="reject"><a href="/indkoeb" class="button">Annuller</a></li>
 				<?= $model->submit("Opret som kladde", array("class" => "primary", "wrapper" => "li.product_new")) ?>
 				<!-- allow to activate if it's not active or active is "false", that is in case we come from new and "Opret som kladde" was pressed. -->
-				<?= ((!$product["status"] || $product["status"] == "false") ? $model->button("Opret og aktivér", array("class" => "primary", "wrapper" => "li.product_new", "script" => array("onClick","ofuscate(this.form);document.getElementById('input_status').value=1;this.form.submit();"))) : "") ?>
+				<?= ((!$product["status"] || $product["status"] == "false") ? $model->button("Opret og aktivér", array("class" => "primary", "wrapper" => "li.product_new", "script" => array("onClick","document.getElementById('input_status').value=1;this.form.submit();"))) : "") ?>
 			</ul>				
 		</div>
 	<?= $model->formEnd() ?>

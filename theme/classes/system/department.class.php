@@ -21,6 +21,7 @@ class Department extends Model {
 
 		// Define the name of departments table in database
 		$this->db = SITE_DB.".system_departments";
+		$this->item_department_db = SITE_DB.".item_department";
 
 
 		// Name
@@ -193,7 +194,7 @@ class Department extends Model {
 		if($item_id) {
 			// Query database for all departments bdelonging to an item
 
-			$sql = "SELECT * FROM ".UT_ITEM_DEPARTMENT." as department 
+			$sql = "SELECT * FROM ".$this->item_department_db." as department 
 					WHERE department.item_id = $item_id"; 
 			
 		} else {
@@ -202,6 +203,7 @@ class Department extends Model {
 			$query = new Query();
 			$sql = "SELECT * FROM ".$this->db;		
 		}
+		
 		if($query->sql($sql)) {
 			$departments = $query->results();
 		}

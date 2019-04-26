@@ -1,5 +1,5 @@
 <?php
-$access_item["/"] = true;
+$access_item["/"] = false;
 if(isset($read_access) && $read_access) {
 	return;
 }
@@ -7,6 +7,7 @@ if(isset($read_access) && $read_access) {
 include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 
 include_once("classes/items/type.product.class.php");
+include_once("classes/system/department.class.php");
 
 $model = new Model();
 $IPC = new TypeProduct();
@@ -24,14 +25,14 @@ if(is_array($action) && count($action)) {
 	if(preg_match("/^(new)$/", $action[0])) {
 
 		$page->page(array(
-			"type" => "terms",
+			"type" => "member",
 			"templates" => "/purchasing/new.php"
 		));
 		exit();
 	} elseif(preg_match("/^(edit)$/", $action[0])) {
 
 		$page->page(array(
-			"type" => "terms",
+			"type" => "member",
 			"templates" => "/purchasing/edit.php"
 		));
 		exit();
@@ -58,13 +59,13 @@ if(is_array($action) && count($action)) {
 			if (count($action) == 1) {
 				# header("Location: /indkoeb/edit?");
 				$page->page(array(
-					"type" => "terms",
+					"type" => "member",
 					"templates" => "/purchasing/edit.php"
 				));
 
 			} else {
 				$page->page(array(
-					"type" => "terms",
+					"type" => "member",
 					"templates" => "/purchasing/edit.php"
 				));
 
@@ -79,7 +80,7 @@ if(is_array($action) && count($action)) {
 // standard template
 $page->page(array(
 	"templates" => "purchasing/index.php",
-	"type" => "admin"
+	"type" => "member"
 ));
 exit();
 

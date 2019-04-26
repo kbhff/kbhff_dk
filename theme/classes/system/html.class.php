@@ -280,6 +280,30 @@ class HTML extends HTMLCore {
 
 		return $_;
 	}
+	function button($name = false, $_options = false) {
+		$rtv = parent::button($name, $_options);
+
+		print_r($_options);
+		$script = "";
+		// overwrite defaults
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+					case "script": 
+						$script           = $_value[0].'="'.$_value[1].'"'; 
+						break;
+				}
+			}
+		}	
+
+		if ($script != "") { 
+			$rtv = str_replace(" />", " $script/>", $rtv);
+			
+		}
+		
+		return $rtv;
+
+	}	
 }
 
 // create standalone instance to make HTML available without model
