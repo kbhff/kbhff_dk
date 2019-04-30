@@ -79,7 +79,7 @@ $productTypes = array(
 				<li class="reject"><a href="/indkoeb" class="button">Annuller</a></li>
 				
 				<?= $model->submit("Opret som kladde", array("class" => "primary", "wrapper" => "li.product_new")) ?>
-				<?= $model->button("Opret og aktivér", array("class" => "primary", "wrapper" => "li.product_new", "script" => array("onClick","ofuscate(this.form);document.getElementById('input_status').value=1;this.form.submit();"))); ?>
+				<?= $model->button("Opret og aktivér", array("class" => "primary", "wrapper" => "li.product_new", "script" => array("onClick","document.getElementById('input_status').value=1;this.form.submit();"))); ?>
 			</ul>				
 		</div>
 	<?= $model->formEnd() ?>
