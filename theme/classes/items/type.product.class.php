@@ -154,7 +154,6 @@ class TypeProduct extends Itemtype {
 	 * @return array|false Success: array with user Item created / mdified. Error: false or array with error message. 
 	 */
 	function saveItemFromIndkoeb($action) {
-print "sex";
 		// Log that the method has been started
 		global $page;
 		$user_id = session()->value("user_id");
