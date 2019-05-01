@@ -78,6 +78,13 @@ class Items extends ItemsCore {
 		return $this->DC;
 	}
 
+	function getMemberships() {
+		$IC = new Items();
+		$itemtype = "membership";
+		$items = $IC->getItems(array("itemtype" => $itemtype, "order" => "position ASC, status DESC", "extend" => array("tags" => true, "mediae" => true)));
+		return $items;
+	}
+
 
 
 }

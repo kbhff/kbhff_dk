@@ -53,7 +53,20 @@ class TypeProduct extends Itemtype {
 		$this->db_itemtype = SITE_DB.".item_product";
 		$this->db_item_dept = SITE_DB.".item_department";
 		$this->db_item_prices = SITE_DB.".items_prices";
-
+		
+		// PRIS according to membership options
+		$IC = new Items();
+		foreach ($IC->getMemberships() as $p) {
+			$price_key = "price_".$p["item_id"];
+			$this->addToModel($price_key, array(
+				"type" => "string",
+				"label" => $p["name"],
+				"required" => true,
+				"hint_message" => "",
+				"error_message" => $p["name"]." is required."
+			));
+		}
+						
 
 		// Name
 		$this->addToModel("name", array(
@@ -62,24 +75,6 @@ class TypeProduct extends Itemtype {
 			"required" => true,
 			"hint_message" => "Product name",
 			"error_message" => "Product needs a name."
-		));
-
-		// PRIS (ALM MEDLEM)
-		$this->addToModel("price_default", array(
-			"type" => "string",
-			"label" => "Pris (ALM MEDLEM)",
-			"required" => true,
-			"hint_message" => "",
-			"error_message" => "PRIS (ALM MEDLEM) is required."
-		));
-
-		// PRIS (STØTTEMEDLEM)
-		$this->addToModel("price_offer", array(
-			"type" => "string",
-			"label" => "Pris (STØTTEMEDLEM)",
-			"required" => false,
-			"hint_message" => "",
-			"error_message" => ""
 		));
 
 		// PRODUKTBILLEDE
@@ -162,7 +157,6 @@ class TypeProduct extends Itemtype {
 		// Get content of $_POST array which have been "quality-assured" by Janitor 
 		$this->getPostedEntities();
 		$entities = $this->getModel();
-
 		$name = $this->getProperty("name", "value");
 
 		// Check if values validate – minimum is name and price_default
@@ -181,10 +175,11 @@ class TypeProduct extends Itemtype {
 		foreach($entities as $name => $entity) {
 			if($entity["value"] !== false) {
 				$names[] = $name;
+
 				if(preg_match("/^(name|description|producttype|supplier|productAvailability)$/", $name)) {
 					# item_product
 					$values[] = $name."='".$entity["value"]."'";
-				} elseif(preg_match("/^(price_offer|price_default)$/", $name)) {
+				} elseif(preg_match("/^price_(.*)$/", $name)) {
 					# items_prices
 					$price_type = explode("_", $name)[1];
 					$price_values[$price_type] = $entity["value"];
@@ -285,6 +280,7 @@ class TypeProduct extends Itemtype {
 			}
 			
 			// add prices for the item
+
 			foreach ($price_values as $type => $price) {
 				$price = preg_replace("/,/", ".", $price);
 				if ($price != "") {

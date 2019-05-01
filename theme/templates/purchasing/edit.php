@@ -51,8 +51,9 @@ if (!count($_POST)) {
 	}
 
 	foreach ($product['departments'] as $department_id => $selected) {
-		if ($selected)
+		if ($selected) {
 			$product_department_ids[] = $department_id;
+		}
 	}
 }
 
@@ -75,7 +76,9 @@ $productTypes = array(
 	"1" => array("id" => "2", "name" => "Sæson-poser"), 
 	"2" => array("id" => "3", "name" => "Løssalg")
 	);
+
 ?>
+
 <div class="scene product_new i:product_new">
 
 	<h1>Opret nyt produkt</h1>
@@ -97,8 +100,13 @@ $productTypes = array(
 			
 				<fieldset>
 					<?= $model->input("name", array("value" => $product["name"], "required" => true, "label" => "Navn", "hint_message" => "Skriv produkts navn her", "error_message" => "Navn er obligatorisk. Det kan kun indeholde bogstaver.")) ?>
-					<?= $model->input("price_default", array("value" => $product["price_default"], "required" => true, "label" => "Pris (alm medlem)", "hint_message" => "Skriv medlemmets efternavn her", "error_message" => "Pris er obligatorisk.")) ?>
-					<?= $model->input("price_offer", array("value" => $product["price_offer"], "required" => false, "label" => "Pris 2 (støttemedlem)", "hint_message" => "Pris for støttemedlem.", "error_message" => "")); ?>
+					<? foreach ($IC->getMemberships() as $p) {
+						$price_key = "price_".$p["item_id"];
+						$price_name = "Pris ".$p["name"];
+						print $model->input($price_key, array("value" => (isset($product[$price_key]) ? $product[$price_key]:""), "required" => true, "label" => $price_name, "hint_message" => "Skriv medlemmets efternavn her", "error_message" => "Pris er obligatorisk."));
+					}
+					?>
+					
 					<?= $model->input("image", array("type" => "files", "required" => false, "label" => "Produktbillede", "hint_message" => "", "error_message" => "")); ?>
 		
 		<?= $model->input("mediae"); ?>

@@ -7,6 +7,11 @@ $IC = new Items();
 $user = $UC->getKbhffUser();
 $department = $UC->getUserDepartment();
 
+foreach ($IC->getMemberships() as $p) {
+	$memberships[$p["item_id"]] = "Pris ".$p["name"];
+
+}
+
 $products = $IC->GetItems(["itemtype" => "product", "extend" => ["prices" => true, "mediae" => true]]);
 
 $productAvailabilityOptions = array(
@@ -77,20 +82,15 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum
 	if ($products) :
 		$status_text[0] = "Aktivér";
 		$status_text[1] = "DeAktivér";
+
 		foreach ($products as $product) :
 			if (!isset($product['id'])) {
 				continue;
 			}
 			$price_string = "";
-			if (isset($product['prices']['0']['price'])) {
-				$price_string = $product['prices']['0']['price'];
-			} 
-			if (isset($product['prices']['1']['price'])) {
-				if ($price_string != "") {
-					$price_string .= " / ";
-				}
-				$price_string .= $product['prices']['1']['price'];
-			} 
+			foreach ($product['prices'] as $price) {
+				$price_string .= $memberships[$price['type']]." - ".$price['price_without_vat']." ".$price['currency']."<br>";
+			}
 
 			$new_status = ($product['status'] ? 0:1);
 			
@@ -108,7 +108,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum
 			</p>
 			<p class="order-products">(<?=$product['id'];?>)<?=htmlentities($product['name'], ENT_COMPAT, "UTF-8");?></p>
 			<p class="order-products"><?=$productAvailabilityOptions[$product["productAvailability"]]['name'];?></p>
-			<p class="order-products"><?=$price_string;?> kr</p>
+			<p class="order-products"><?=$price_string;?></p>
 			<p class="order-products"><?= ($product['status'])? "Aktiv":"Ikke Aktiv";?></p>
 			<p class="order-products"><ul class="actions change">
 				<li class="change"><a href="/indkoeb/edit/<?=$product['id'];?>" class="button primary">Rediger</a></li>
@@ -130,7 +130,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum
 				<li class="new-order full-width">
 
 
-					TODO: (Note from dev: this should be an exception, not an prdinary date. Ordinary dates are asumed.)
+					TODO: (Note from dev: this should be an exception, not an ordinary date. Ordinary dates are asumed.)
 					<a href="/indkoeb/new_dep_pickup_date" class="button primary">+  Tilføj ny afhentningsdag</a></li>
 			</ul>
 		</div>
