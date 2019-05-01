@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-04-10 16:42:31
+asset-builder @ 2019-04-25 11:43:39
 */
 
 /*seg_desktop_include.css*/
@@ -35,12 +35,12 @@ em, strong {font-size: inherit; font-family: inherit; line-height: inherit; colo
 sup {line-height: 1em; font-family: inherit; color: inherit;}
 @font-face {
 	font-family: 'voresfont';
-	src: url('fonts/vores_font/voresfont.eot');
-	src: url('fonts/vores_font/voresfont.eot?#iefix') format('embedded-opentype'),
-		 url('fonts/vores_font/voresfont.woff2') format('woff2'),
-		 url('fonts/vores_font/voresfont.woff') format('woff'),
-		 url('fonts/vores_font/voresfont.svg#alte_din_1451_mittelschriftRg') format('svg'),
-		 url('fonts/vores_font/voresfont.ttf') format('truetype');
+	src: url('../assets/kbhff-skin/css/fonts/vores_font/voresfont.eot');
+	src: url('../assets/kbhff-skin/css/fonts/vores_font/voresfont.eot?#iefix') format('embedded-opentype'),
+		 url('../assets/kbhff-skin/css/fonts/vores_font/voresfont.woff2') format('woff2'),
+		 url('../assets/kbhff-skin/css/fonts/vores_font/voresfont.woff') format('woff'),
+		 url('../assets/kbhff-skin/css/fonts/vores_font/voresfont.svg#alte_din_1451_mittelschriftRg') format('svg'),
+		 url('../assets/kbhff-skin/css/fonts/vores_font/voresfont.ttf') format('truetype');
 	font-weight: 400;
 	font-style: normal;
 }
@@ -77,7 +77,7 @@ div.field select,
 div.field textarea {box-shadow: inset 0 1px 2px #dedede; box-sizing: border-box; border-radius: 0; background: #ffffff; border: 1px solid #999999; display: inline-block; vertical-align: top; margin: 2px; position: relative; z-index: 1;}
 div.field input {width: calc(100% - 4px); padding: 3px 5px 3px 6px;}
 div.field select {width: calc(100% - 4px); padding: 2px 3px 2px 2px;
-	background: #ffffff url(../img/gx_select.svg) no-repeat right 7px;
+	background: #ffffff url(../assets/kbhff-skin/img/gx_select.svg) no-repeat right 7px;
 	background-size: 20px 20px;
 	-webkit-appearance: none;
 	-moz-appearance: none;
@@ -90,20 +90,20 @@ div.field textarea {width: calc(100% - 4px); height: 100px; resize: none; overfl
 div.field textarea.autoexpand {width: calc(100% - 4px); padding: 3px 6px 2px; overflow: hidden;}
 div.field.checkbox {}
 div.field.checkbox label {display: inline-block; vertical-align: top; text-transform: none; font-size: 14px; line-height: 24px; padding: 0 0 0 28px;
-	background: transparent url(../img/gx_checkbox_unchecked.svg) no-repeat left center;
+	background: transparent url(../assets/kbhff-skin/img/gx_checkbox_unchecked.svg) no-repeat left center;
 	background-size: 20px 20px;
 }
 div.field.checkbox input:checked + label {
-	background-image: url(../img/gx_checkbox_checked.svg);
+	background-image: url(../assets/kbhff-skin/img/gx_checkbox_checked.svg);
 }
 div.field.checkbox input {z-index: 2; position: absolute; top: 0; left: 0; width: 20px; height: 20px; opacity: 0;}
 div.field.radiobuttons .item {padding: 3px 0 0; position: relative;}
 div.field.radiobuttons .item label {display: block; text-transform: none; font-size: 14px; line-height: 24px;  padding: 0 0 0 28px;
-	background: transparent url(../img/gx_radiobutton_unchecked.svg) no-repeat left center;
+	background: transparent url(../assets/kbhff-skin/img/gx_radiobutton_unchecked.svg) no-repeat left center;
 	background-size: 20px 20px;
 }
 div.field.radiobuttons .item input:checked + label {
-	background-image: url(../img/gx_radiobutton_checked.svg);
+	background-image: url(../assets/kbhff-skin/img/gx_radiobutton_checked.svg);
 }
 div.field.radiobuttons .item input {z-index: 2; position: absolute; top: 0; left: 0; width: 20px; height: 20px; opacity: 0;}
 div.field.focus input,
@@ -111,16 +111,16 @@ div.field.focus select,
 div.field.focus textarea {margin: 0; width: 100%; border: 3px solid #3E8E17;}
 div.field.focus textarea:not(.autoexpand) {height: 104px;}
 div.field.checkbox.focus label {
-	background-image: url(../img/gx_checkbox_unchecked_focus.svg);
+	background-image: url(../assets/kbhff-skin/img/gx_checkbox_unchecked_focus.svg);
 }
 div.field.radiobuttons .item input.focus + label {
-	background-image: url(../img/gx_radiobutton_unchecked_focus.svg);
+	background-image: url(../assets/kbhff-skin/img/gx_radiobutton_unchecked_focus.svg);
 }
 div.field.checkbox.focus input:checked + label {
-	background-image: url(../img/gx_checkbox_checked_focus.svg);
+	background-image: url(../assets/kbhff-skin/img/gx_checkbox_checked_focus.svg);
 }
 div.field.radiobuttons .item input.focus:checked + label {
-	background-image: url(../img/gx_radiobutton_checked_focus.svg);
+	background-image: url(../assets/kbhff-skin/img/gx_radiobutton_checked_focus.svg);
 }
 div.field.checkbox.focus input,
 div.field.radiobuttons .item input.focus {
@@ -142,12 +142,12 @@ div.field.error.focus .help .hint,
 div.field.error.focus .help .hint {opacity: 1; transform: translate(0, 0);}
 div.field .indicator {display: inline-block; vertical-align: top; width: 12px; height: 12px; margin-left: 4px;}
 div.field.required .indicator {
-	background: transparent url(../img/gx_required.svg) no-repeat center 1px;
+	background: transparent url(../assets/kbhff-skin/img/gx_required.svg) no-repeat center 1px;
 	background-size: 9px 9px;
 }
 div.field.checkbox .indicator {margin-top: 7px;}
 div.field.correct .indicator {
-	background-image: url(../img/gx_correct.svg);
+	background-image: url(../assets/kbhff-skin/img/gx_correct.svg);
 	background-position: center -2px;
 	background-size: 14px 14px;
 }
@@ -225,7 +225,7 @@ input[type="submit"] {
 	height: 48px;
 	padding: 8px 0 0 54px;
 	display: inline-block;
-	background: transparent url(../img/logos/logo-stempel_sort_lille_gulerod.png) no-repeat top left;
+	background: transparent url(../assets/kbhff-skin/img/logos/logo-stempel_sort_lille_gulerod.png) no-repeat top left;
 	font-family: 'voresfont';
 	font-size: 28px;
 	line-height: 32px;
@@ -573,7 +573,7 @@ position: relative;
 #content .banner {position: relative;}
 #content .banner > img {padding-top: 5px;}
 #content .banner > div.logo {position: absolute; top: 5px; left: 25px; width: 318px; height: 206px;
-	background: transparent url(../img/banners/desktop/logo_layover.png) no-repeat top left;
+	background: transparent url(../assets/kbhff-skin/img/banners/desktop/logo_layover.png) no-repeat top left;
 	background-size: 100% auto;
 }
 #footer {
