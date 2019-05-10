@@ -14,6 +14,26 @@ $department = $UC->getUserDepartment();
 
 $departments = $DC->getDepartments();
 
+$PC = new TypeProduct();
+$product = array();
+// if we have _POST parameters, then it's an edit with errors
+$PC->getPostedEntities();
+$entities = $PC->getModel();
+
+$product_department_ids = array();
+
+foreach ($entities as $key => $value) {
+	$product[$key] = $value['value'];
+}
+
+if ($product['departments']) {
+	foreach ($product['departments'] as $department_id => $selected) {
+		print "$department_id => $selected<br>";
+		if ($selected) {
+			$product_department_ids[] = $department_id;
+		}
+	}
+}
 
 $productAvailabilityOptions = array(
 	"0" => array("id" => "1", "name" => "Altid"), 
@@ -40,6 +60,7 @@ $productTypes = array(
 	<h1>Opret nyt produkt</h1>
 	<h2>Produktoplysninger</h2>
 
+
 	<?= $model->formStart("save", array("class" => "product_new labelstyle:inject")) ?>
 	<?= $model->input("status", array("type" => "hidden", "value" => "false")) ?>
 		<div class="c-wrapper">				
@@ -54,31 +75,30 @@ $productTypes = array(
 			<?	endif; ?>
 			
 				<fieldset>
-					<?= $model->input("name", array("required" => true, "label" => "Navn", "hint_message" => "Skriv produkts navn her", "error_message" => "Navn er obligatorisk. Det kan kun indeholde bogstaver.")) ?>
+					<?= $model->input("name", array("value" => $product["name"],"required" => true, "label" => "Navn", "hint_message" => "Skriv produkts navn her", "error_message" => "Navn er obligatorisk. Det kan kun indeholde bogstaver.")) ?>
 					<? foreach ($IC->getMemberships() as $p) {
 						$price_key = "price_".$p["item_id"];
 						$price_name = "Pris ".$p["name"];
-						print $model->input($price_key, array("required" => true, "label" => $price_name, "hint_message" => "Skriv medlemmets efternavn her", "error_message" => "Pris er obligatorisk."));
+						print $model->input($price_key, array("value" => (isset($product[$price_key]) ? $product[$price_key]:""), "required" => true, "label" => $price_name, "hint_message" => "Skriv medlemmets efternavn her", "error_message" => "Pris er obligatorisk."));
 					}
 					?>
 					
-					<?= $model->input("image", array("type" => "files", "required" => false, "label" => "Produktbillede", "hint_message" => "", "error_message" => "")); ?>
-					<?= $model->input("description", array("label" => "Produktbeskrivelse", "required" => false, "hint_message" => ".", "error_message" => ".")); ?>
+					<?= $model->input("description", array("value" => $product["description"], "label" => "Produktbeskrivelse", "required" => false, "hint_message" => ".", "error_message" => ".")); ?>
 					
-					<?= $model->input("producttype", array("label" => "Produkttype", "type" => "select", "required" => true, "hint_message" => "", "error_message" => "", 
+					<?= $model->input("producttype", array("value" => $product["producttype"], "label" => "Produkttype", "type" => "select", "required" => true, "hint_message" => "", "error_message" => "", 
 					"options" => $HTML->toOptions($productTypes, "id", "name", ["add" => ["" => "Vælg afdeling"]]))); ?>
 					<!-- Avler/leverandør -->
-					<?= $model->input("supplier", array("label" =>'Avler/leverandør', "type" => "select", "required" => true, "hint_message" => "", "error_message" => "", 
+					<?= $model->input("supplier", array("value" => $product["supplier"], "label" =>'Avler/leverandør', "type" => "select", "required" => true, "hint_message" => "", "error_message" => "", 
 					"options" => $HTML->toOptions($supplierlist, "id", "name", ["add" => ["" => "Vælg afdeling"]]))); ?>
 
 					<h2>Bestilling og afhentning</h2>
 					
-					<?= $model->input("productAvailability", array("label" =>'Hvornår varen kan købes', "type" => "select", "required" => true, "hint_message" => "", "error_message" => "", 
+					<?= $model->input("productAvailability", array("value" => $product["productAvailability"], "label" =>'Hvornår varen kan købes', "type" => "select", "required" => true, "hint_message" => "", "error_message" => "", 
 					"options" => $HTML->toOptions($productAvailabilityOptions, "id", "name", ["add" => ["" => "Vælg afdeling"]]))); ?>
 
 					<p>Kan bestilles hos:</p>
 					<? foreach ($departments as $id => $dep) : ?>
-					<?= $model->input("departments[".$dep["id"]."]", array("type" => "checkbox", "label" => $dep["name"])) ?>
+					<?= $model->input("departments[".$dep["id"]."]", array("value" => in_array($dep["id"], $product_department_ids), "type" => "checkbox", "label" => $dep["name"])) ?>
 					<?	endforeach;?>
 				</fieldset>
 			<ul class="actions">

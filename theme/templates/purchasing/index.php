@@ -28,7 +28,6 @@ $departments = $DC->getDepartments();
 
 ?>
 
-
 <div class="scene profile i:profile">
 
 	<div class="banner i:banner variant:1 format:jpg"></div>
@@ -97,15 +96,41 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum
 
 ?>
 		<div class="order">
-			<p class="order-products">
-				<? 
-				if (is_array($product['mediae'])) {
-				?>
-					<img src="$product['mediae']">
-					<?
+			<p class="file">
+<?
+if (1) {
+?>
+<link type="text/css" rel="stylesheet" media="all" href="/janitor/css/seg_desktop.css?rev=1" />
+	<script type="text/javascript" src="/janitor/js/seg_desktop.js?rev=1"></script>
+
+					<?= $JML->editSingleMedia($product) ?>
+				<?
+} else {
+				$media = $JML->getMedia($product); 
+				$_ = "";
+				if($media) {
+					if(preg_match("/^(jpg|png)$/", $media["format"])) {
+						$_ .= '<a href="/images/'.$media["item_id"].'/'.$media["variant"].'/480x.'.$media["format"].'" target="__blank">';
+						$_ .= '<img src="/images/'.$media["item_id"].'/'.$media["variant"].'/x68.'.$media["format"].'" /><br>';
+						$_ .= $media["name"].'</a>';
+					}
+					else if(preg_match("/^(mp3|ogv)$/", $media["format"])) {
+						$_ .= '<a href="/audios/'.$item["id"].'/'.$variant.'/128.'.$media["format"].'">'.$media["name"].'</a>';
+					}
+					else if(preg_match("/^(mp4|mov)$/", $media["format"])) {
+						$_ .= '<a href="/videos/'.$item["id"].'/'.$variant.'/480x.'.$media["format"].'">'.$media["name"].'</a>';
+					}
+//					$_ .= '<p>'.$media["name"].'</p>';
+					
+				} else {
+					$_ .= '<a >Upload</a>&nbsp;';	
 				}
-				 ?>
+				
+				print "$_";
+}
+				?>
 			</p>
+			
 			<p class="order-products">(<?=$product['id'];?>)<?=htmlentities($product['name'], ENT_COMPAT, "UTF-8");?></p>
 			<p class="order-products"><?=$productAvailabilityOptions[$product["productAvailability"]]['name'];?></p>
 			<p class="order-products"><?=$price_string;?></p>

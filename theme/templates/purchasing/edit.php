@@ -24,12 +24,11 @@ if (count($action) > 1) {
 }
 
 $product_department_ids = array();
-
 if (!count($_POST)) {
 	// load the product from database
+
 	$product = $IC->getItem(array("id" => $product_id, "extend" => array("all" => true)));
 
-	// fixes:
 	// departments
 	foreach ($product['departments'] as $key => $deplist) {
 		$product_department_ids[] = $deplist["department_id"];
@@ -77,12 +76,19 @@ $productTypes = array(
 	"2" => array("id" => "3", "name" => "Løssalg")
 	);
 
+
 ?>
 
 <div class="scene product_new i:product_new">
 
 	<h1>Opret nyt produkt</h1>
 	<h2>Produktoplysninger</h2>
+
+	<link type="text/css" rel="stylesheet" media="all" href="/janitor/css/seg_desktop.css?rev=1" />
+	<script type="text/javascript" src="/janitor/js/seg_desktop.js?rev=1"></script>
+	<?= $JML->editSingleMedia($product) ?>
+
+
 
 	<?= $model->formStart("save/".$product_id, array("class" => "product_new labelstyle:inject")) ?>
 	<?= $model->input("status", array("type" => "hidden", "value" => $product["status"])) ?>
@@ -107,9 +113,10 @@ $productTypes = array(
 					}
 					?>
 					
-					<?= $model->input("image", array("type" => "files", "required" => false, "label" => "Produktbillede", "hint_message" => "", "error_message" => "")); ?>
+
+					<? //$model->input("image", array("type" => "files", "required" => false, "label" => "Produktbillede", "hint_message" => "", "error_message" => "")); ?>
 		
-		<?= $model->input("mediae"); ?>
+		<? // $model->input("mediae"); ?>
 		
 
 					<?= $model->input("description", array("value" => $product["description"], "label" => "Produktbeskrivelse", "required" => false, "hint_message" => ".", "error_message" => ".")); ?>

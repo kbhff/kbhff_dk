@@ -77,14 +77,22 @@ class TypeProduct extends Itemtype {
 			"error_message" => "Product needs a name."
 		));
 
-		// PRODUKTBILLEDE
-		$this->addToModel("image", array(
-			"type" => "file",
-			"label" => "PRODUKTBILLEDE",
-			"required" => false,
-			"hint_message" => "",
-			"error_message" => ""
-		));
+		// // PRODUKTBILLEDE
+		// $this->addToModel("image", array(
+		// 	"type" => "file",
+		// 	"label" => "PRODUKTBILLEDE",
+		// 	"required" => false,
+		// 	"hint_message" => "",
+		// 	"error_message" => ""
+		// ));
+
+		// $this->addToModel("mediae", array(
+		// 	"type" => "file",
+		// 	"label" => "PRODUKTBILLEDE",
+		// 	"required" => false,
+		// 	"hint_message" => "",
+		// 	"error_message" => ""
+		// ));
 
 		// PRODUKTBESKRIVELSE
 		$this->addToModel("description", array(
@@ -238,13 +246,14 @@ class TypeProduct extends Itemtype {
 			}
 
 				// foreach ($image_values as $name => $entity) {
-				// 	print("item $item_id >>> doing image: $name >>>> ".$entity['value'][0]."<br>");
-				// 	//print_r($this->upload($item_id, array("input_name" => $entity['value'][0], "variant" => "prdukt")));
+				// 	print("item $item_id >>> doing image: $name >>>> <br>");
+				// 	print_r($entity['value'][0]);
+				// 	print_r($this->upload($item_id, array("input_name" => $entity['value'][0], "variant" => "prdukt")));
 				// 	print("<hr>addMedia:<br>");
 				// 	print_r($this->addMedia($action));
 				// 	print("<hr>");
 				// 	print_r($entity);
-				// 	print "The end";
+				// 	print "The end<hr>";
 				// }
 
 			// add the item_id to $values array, which will define the new item 

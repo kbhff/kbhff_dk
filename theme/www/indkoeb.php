@@ -1,5 +1,5 @@
 <?php
-$access_item["/"] = false;
+$access_item["/"] = true;
 if(isset($read_access) && $read_access) {
 	return;
 }
@@ -60,7 +60,7 @@ if(is_array($action) && count($action)) {
 				# header("Location: /indkoeb/edit?");
 				$page->page(array(
 					"type" => "member",
-					"templates" => "/purchasing/edit.php"
+					"templates" => "/purchasing/new.php"
 				));
 
 			} else {
@@ -70,10 +70,20 @@ if(is_array($action) && count($action)) {
 				));
 
 			}
+			
 		}
 		exit();
-		
+	} else if($page->validateCsrfToken() && preg_match("/[a-zA-Z]+/", $action[0])) {
+		// used for addSingleMedia
+		// check if custom function exists on User class
+		if($IPC && method_exists($IPC, $action[0])) {
+
+			$output = new Output();
+			$output->screen($IPC->{$action[0]}($action));
+			exit();
+		}
 	}
+
 	
 
 }
