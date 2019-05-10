@@ -5,7 +5,7 @@
 #content .member_help h2 {padding: 0; margin-left: 12px; margin-right: 12px; margin-top: 20px; margin-bottom: 12px; border-bottom: 2px solid #808080;}
 
 #content .member_help div.c-wrapper,
-#content .member_help div.c-wrapper > div {min-height: 0px;}
+#content .member_help div.c-wrapper > div {min-height: 0px; padding: 0;}
 
 #content .member_help div.c-wrapper div.field label {display: none;}
 #content .member_help div.c-wrapper div.field {box-sizing: border-box; display: inline-block; padding-right: 0;}
