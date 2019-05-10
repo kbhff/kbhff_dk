@@ -283,7 +283,7 @@ class HTML extends HTMLCore {
 	function button($name = false, $_options = false) {
 		$rtv = parent::button($name, $_options);
 
-		print_r($_options);
+		
 		$script = "";
 		// overwrite defaults
 		if($_options !== false) {

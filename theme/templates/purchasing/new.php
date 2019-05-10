@@ -28,7 +28,7 @@ foreach ($entities as $key => $value) {
 
 if ($product['departments']) {
 	foreach ($product['departments'] as $department_id => $selected) {
-		print "$department_id => $selected<br>";
+		
 		if ($selected) {
 			$product_department_ids[] = $department_id;
 		}
