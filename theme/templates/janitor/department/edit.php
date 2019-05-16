@@ -5,6 +5,11 @@ global $model;
 
 $department_id = $action[1];
 $department = $model->getDepartment(array("id" => $department_id));
+$weekdays = array();
+for ($i = 1;$i <= 7; $i++) {
+	$weekdays[] = array("id" => $i, "name" => date('D', strtotime("Sunday +{$i} days")));
+}
+
 ?>
 <div class="scene i:scene defaultEdit departmentEdit">
 	<h1>Edit department</h1>
@@ -27,6 +32,8 @@ $department = $model->getDepartment(array("id" => $department_id));
 				<?= $model->input("city", array("value" => $department["city"])) ?>
 				<?= $model->input("email", array("value" => $department["email"])) ?>
 				<?= $model->input("opening_hours", array("class" => "autoexpand short", "value" => $department["opening_hours"])) ?>
+				<?= $model->input("opening_weekday", array("value" => $department["opening_weekday"], "type" => "select",
+				"options" => $HTML->toOptions($weekdays, "id", "name", ["add" => ["" => "Select Week Day"]]))) ?>
 				<?= $model->input("mobilepay_id", array("value" => $department["mobilepay_id"])) ?>
 				<?= $model->input("accepts_signup", array("checked" => "true", "value" => $department["accepts_signup"])) ?>
 			</fieldset>

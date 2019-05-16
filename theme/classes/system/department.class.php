@@ -98,6 +98,15 @@ class Department extends Model {
 			"error_message" => "Invalid opening hours"
 		));
 
+		// Opening hours
+		$this->addToModel("opening_weekday", array(
+			"type" => "string",
+			"label" => "Opening Week Day",
+			"required" => true,
+			"hint_message" => "The department's normal opening weekeday",
+			"error_message" => "Invalid opening day"
+		));
+
 		// MobilePay number for signup in shop
 		$this->addToModel("mobilepay_id", array(
 			"type" => "string",
@@ -126,7 +135,7 @@ class Department extends Model {
 		// Get content of $_POST array which have been "quality-assured" by Janitor 
 		$this->getPostedEntities();
 
-		if(count($action) == 1 && $this->validateList(array("name", "abbreviation", "address1", "address2", "city", "postal", "email", "opening_hours", "mobilepay_id", "accepts_signup"))) {
+		if(count($action) == 1 && $this->validateList(array("name", "abbreviation", "address1", "address2", "city", "postal", "email", "opening_hours", "opening_weekday", "mobilepay_id", "accepts_signup"))) {
 
 			$query = new Query();
  
@@ -141,6 +150,7 @@ class Department extends Model {
 			$city = $this->getProperty("city", "value");
 			$email = $this->getProperty("email", "value");
 			$opening_hours = $this->getProperty("opening_hours", "value");
+			$opening_weekday = $this->getProperty("opening_weekday", "value");
 			$mobilepay_id = $this->getProperty("mobilepay_id", "value");
 			$accepts_signup = $this->getProperty("accepts_signup", "value");
 			
@@ -150,7 +160,7 @@ class Department extends Model {
 			$sql = "SELECT * FROM ".$this->db." WHERE name = '$name'";
 			if(!$query->sql($sql)) {
 				// enter the department into the database
-				$sql = "INSERT INTO ".$this->db." SET name='$name', abbreviation='$abbreviation', address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours',email='$email',mobilepay_id='$mobilepay_id',accepts_signup='$accepts_signup' ";
+				$sql = "INSERT INTO ".$this->db." SET name='$name', abbreviation='$abbreviation', address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours', opening_weekday='$opening_weekday', email='$email',mobilepay_id='$mobilepay_id',accepts_signup='$accepts_signup' ";
 				
 				// if successful, add message and return department id
 				if($query->sql($sql)) {
@@ -181,10 +191,12 @@ class Department extends Model {
 		$departments = array();
 
 		$item_id = false;
+		$schedule_period_weeks = false;
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
 					case "item_id"     : $item_id        = $_value; break;
+					case "schedule_period_weeks"    : $schedule_period_weeks       = $_value; break;
 				}
 			}
 		}
@@ -206,6 +218,17 @@ class Department extends Model {
 		
 		if($query->sql($sql)) {
 			$departments = $query->results();
+		}
+
+		if ($schedule_period_weeks) {
+			$tmp = array();
+			foreach ($departments as $key => $dep) {
+				$AC = new Afhentningsdage();
+				$dep["schedules"] = $AC->getDepartmentScheduleList(array("department_id" => $dep["id"], "schedule_period_weeks" => $schedule_period_weeks));
+				$tmp[$key] = $dep;
+			}
+			
+			$departments = $tmp;
 		}
 
 		
@@ -278,7 +301,7 @@ class Department extends Model {
 		
 
 		// Check that the number of REST parameters is as expected and that the listed entries are valid.
-		if(count($action) == 2 && $this->validateList(array("name", "abbreviation", "address1", "address2", "city", "postal", "email", "opening_hours", "mobilepay_id", "accepts_signup"))) {
+		if(count($action) == 2 && $this->validateList(array("name", "abbreviation", "address1", "address2", "city", "postal", "email", "opening_hours","opening_weekday", "mobilepay_id", "accepts_signup"))) {
 			
 			$id = $action[1];
 			$name = $this->getProperty("name", "value");
@@ -289,12 +312,13 @@ class Department extends Model {
 			$city = $this->getProperty("city", "value");
 			$email = $this->getProperty("email", "value");
 			$opening_hours = $this->getProperty("opening_hours", "value");
+			$opening_weekday = $this->getProperty("opening_weekday", "value");
 			$mobilepay_id = $this->getProperty("mobilepay_id", "value");
 			$accepts_signup = $this->getProperty("accepts_signup", "value");
 			
 			// Ask the database to update the row with the id that came from $action. Update with the values that were received from getPostedEntities(). 
 			$query = new Query();
-			$sql = "UPDATE ".$this->db." SET name='$name', abbreviation='$abbreviation',address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours',email='$email',mobilepay_id='$mobilepay_id',accepts_signup='$accepts_signup' WHERE id = '$id'";
+			$sql = "UPDATE ".$this->db." SET name='$name', abbreviation='$abbreviation',address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours', opening_weekday='$opening_weekday', email='$email',mobilepay_id='$mobilepay_id',accepts_signup='$accepts_signup' WHERE id = '$id'";
 			
 			// if successful, add message and return the department data object
 			if($query->sql($sql)) {
@@ -340,6 +364,9 @@ class Department extends Model {
 		message()->addMessage("Department could not be deleted.", array("type" => "error"));
 		return false;
 	}
+
+
 }
+
 
 ?>
