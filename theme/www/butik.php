@@ -24,7 +24,8 @@ if($action) {
 		if(count($action) == 2) {
 
 			$page->page(array(
-				"templates" => "shop/stripe.php"
+				"templates" => "shop/stripe.php",
+				"type" => "login"
 			));
 			exit();
 		}

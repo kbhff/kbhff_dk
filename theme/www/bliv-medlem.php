@@ -138,7 +138,8 @@ if($action) {
 	else if($action[0] == "verificer") {
 
 		$page->page(array(
-			"templates" => "signup/verify.php"
+			"templates" => "signup/verify.php",
+			"type" => "login"
 		));
 		exit();
 
@@ -328,7 +329,8 @@ if($action) {
 	else if(count($action) == 2 && $action[0] == "medlemskaber") {
 
 		$page->page(array(
-			"templates" => "signup/membership.php"
+			"templates" => "signup/membership.php",
+			"type" => "login"
 		));
 		exit();
 	}
