@@ -143,37 +143,6 @@ if (1) {
 	 endif; ?>
 		</div>
 
-		// Afhentningsdage og lokale åbningsdage
-		<div class="c-two-thirds">
-
-			<div class="section intro">
-				<h2>Afhentningsdage og lokale åbningsdage</h2>
-			</div>
-		</div>
-		<div class="c-one-third">
-			<ul class="actions">
-				<li class="new-order full-width">
-
-
-					TODO: (Note from dev: this should be an exception, not an ordinary date. Ordinary dates are asumed.)
-					<a href="/indkoeb/new_dep_pickup_date" class="button primary">+  Tilføj ny afhentningsdag</a></li>
-			</ul>
-		</div>
-		<p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar sic tempor. Sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus pronin sapien nunc accuan eget.
-		</p>
-		<p>
-			<ul>
-				<li>AFHENTNINGSDAGE</li>
-<?
-		foreach ($departments as $key => $value) {
-			print "<li>";
-			print $value['name']." - ".$value['abbreviation']." - ".$value['opening_hours']." - ";
-			print_r($value);
-			print "</li>";
-		}		
-?>
-	</p>
 	</div>
 
 </div>
