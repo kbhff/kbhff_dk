@@ -158,7 +158,7 @@ $department = $UC->getUserDepartment();
 						</div>
 
 						<div class="membership-info">
-							<p class="over">Medlemstype</p>
+							<p class="over"><a href="/bliv-medlem">Medlemstype</a></p>
 							<p class="under">Frivillig</p>
 						</div>
 
