@@ -163,7 +163,7 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 						</div>
 
 						<div class="membership-info">
-							<p class="over">Medlemstype</p>
+							<p class="over"><a href="/bliv-medlem">Medlemstype</a></p>
 							<p class="under"><?= $is_member ? $user["membership"]["item"]["name"] : "(ingen)" ?></p>
 						</div>
 
