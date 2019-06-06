@@ -87,7 +87,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum
 		print "</tr>\n\n";
 		for ($i = 0; $i < (7*$schedule_period_weeks); $i+=7) {
 			$week_time = $monday+(24*60*60*$i);
-			print "<tr>";
+			print "\n<tr>\n";
 			print "<td>".date("d.m.Y", $week_time)." (UGE ".date("W", ($week_time)).")</td>";
 			
 			foreach ($departments as $key => $department) {
@@ -117,15 +117,16 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum
 					}
 				}
 				if ($day_text == "") {
-					$tmp = $monday+(24*60*60*($i+$department['opening_weekday']));
-					$day_text .= "<a href='/afhentningsdage/new_dep_pickup_date/".$department["id"]."/".$tmp."'>";
-					$day_text .= "<font color='FF00CC'>N. Open!<br>".date("D d.m.Y", $tmp)."<br>".$department["opening_hours"]."</font>";
+					# week starts on sunday in the system. we store in 
+					$opening_date = $monday+(24*60*60*($i-1+$department['opening_weekday']));
+					$day_text .= "<a href='/afhentningsdage/new_dep_pickup_date/".$department["id"]."/".$opening_date."'>";
+					$day_text .= "<font color='FF00CC'>N. Open!<br>".date("D d.m.Y", $opening_date)."<br>".$department["opening_hours"]."</font>";
 					$day_text .= "<a/>";
 				}
 				print $day_text."<br>";
 				print "</td>";
 			}
-			print "</tr>\n\n";
+			print "\n</tr>\n";
 		}
 		print "</table>";
 

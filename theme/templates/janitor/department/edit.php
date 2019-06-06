@@ -6,7 +6,7 @@ global $model;
 $department_id = $action[1];
 $department = $model->getDepartment(array("id" => $department_id));
 $weekdays = array();
-for ($i = 1;$i <= 7; $i++) {
+for ($i = 0;$i < 7; $i++) {
 	$weekdays[] = array("id" => $i, "name" => date('D', strtotime("Sunday +{$i} days")));
 }
 
