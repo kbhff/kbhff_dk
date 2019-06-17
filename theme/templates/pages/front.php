@@ -50,7 +50,7 @@ $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage"
 
 <? if($post_items): ?>
 	<div class="news">
-		<h2>Latest news</h2>
+		<h2>Seneste artikler</h2>
 		<ul class="items articles">
 		<? foreach($post_items as $item): 
 			$media = $IC->sliceMedia($item); ?>
