@@ -14,7 +14,7 @@ class Login extends CI_Controller {
 
     function index() {
 		// Redirect to Janitor login
-		redirect("login");
+		redirect("forside");
 
 //         $data = array();
 //
