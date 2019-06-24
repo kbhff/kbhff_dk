@@ -17,7 +17,18 @@ Util.Objects["front"] = new function() {
 			var i, node
 			if(nodes) {
 				for(i = 0; node = nodes[i]; i++) {
+					// Init article (inject image)
 					u.o.article.init(node);
+
+					// Reference on node to article link
+					node.link = u.qs("h3 > a", node).href;
+
+					// Redirect to post anchor link
+					u.ce(node);
+					node.clicked = function() {
+						location.href = this.link;
+					}
+
 				}
 			}
 

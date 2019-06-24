@@ -58,46 +58,46 @@ Util.Objects["article"] = new function() {
 					}
 
 
-					// apply full-width option
-					u.ce(this._image);
-					this._image.clicked = function() {
-						// go back to normal size
-						if(u.hc(this.image, "fullsize")) {
+					// // apply full-width option
+					// u.ce(this._image);
+					// this._image.clicked = function() {
+					// 	// go back to normal size
+					// 	if(u.hc(this.image, "fullsize")) {
 
-							u.a.transition(this, "all 0.3s ease-in-out");
-							u.rc(this.image, "fullsize");
-							this.src = this.image._image_src;
-						}
-						// switch to fullsize
-						else {
-							// full size image, might exceed autoconversion limit
-							// test server response
+					// 		u.a.transition(this, "all 0.3s ease-in-out");
+					// 		u.rc(this.image, "fullsize");
+					// 		this.src = this.image._image_src;
+					// 	}
+					// 	// switch to fullsize
+					// 	else {
+					// 		// full size image, might exceed autoconversion limit
+					// 		// test server response
 
-							u.a.transition(this, "all 0.3s ease-in-out");
-							u.ac(this.image, "fullsize");
+					// 		u.a.transition(this, "all 0.3s ease-in-out");
+					// 		u.ac(this.image, "fullsize");
 
-							// fullsize already defined and tested
-							if(this._fullsize_src) {
-								this.src = this._fullsize_src;
-							}
-							else {
-								this._fullsize_width = 1300;
-								this._fullsize_src = "/images/" + this.image._id + "/" + (this.image._variant ? this.image._variant+"/" : "") + this._fullsize_width + "x." + this.image._format;
+					// 		// fullsize already defined and tested
+					// 		if(this._fullsize_src) {
+					// 			this.src = this._fullsize_src;
+					// 		}
+					// 		else {
+					// 			this._fullsize_width = 1300;
+					// 			this._fullsize_src = "/images/" + this.image._id + "/" + (this.image._variant ? this.image._variant+"/" : "") + this._fullsize_width + "x." + this.image._format;
 
-								// valid response - set new src
-								this.response = function() {
-									this.src = this._fullsize_src;
-								}
-								// 404 - reduce size and try again
-								this.responseError = function() {
-									this._fullsize_width = this._fullsize_width-200;
-									this._fullsize_src = "/images/" + this._id + "/" + (this.image._variant ? this.image._variant+"/" : "") + this._fullsize_width + "x." + this.image._format;
-									u.request(this, this._fullsize_src);
-								}
-								u.request(this, this._fullsize_src);
-							}
-						}
-					}
+					// 			// valid response - set new src
+					// 			this.response = function() {
+					// 				this.src = this._fullsize_src;
+					// 			}
+					// 			// 404 - reduce size and try again
+					// 			this.responseError = function() {
+					// 				this._fullsize_width = this._fullsize_width-200;
+					// 				this._fullsize_src = "/images/" + this._id + "/" + (this.image._variant ? this.image._variant+"/" : "") + this._fullsize_width + "x." + this.image._format;
+					// 				u.request(this, this._fullsize_src);
+					// 			}
+					// 			u.request(this, this._fullsize_src);
+					// 		}
+					// 	}
+					// }
 
 					u.a.transition(this, "all 0.5s ease-in-out");
 					u.ass(this, {
@@ -110,13 +110,13 @@ Util.Objects["article"] = new function() {
 		}
 
 
-		// INIT GEOLOCATION MAP
-		article.geolocation = u.qs("ul.geo", article);
-		if(article.geolocation && typeof(u.injectGeolocation) == "function") {
+		// // INIT GEOLOCATION MAP
+		// article.geolocation = u.qs("ul.geo", article);
+		// if(article.geolocation && typeof(u.injectGeolocation) == "function") {
 
-			u.injectGeolocation(article);
+		// 	u.injectGeolocation(article);
 
-		}
+		// }
 
 	}
 }
