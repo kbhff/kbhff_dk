@@ -31,8 +31,6 @@ $item = $IC->getItem(array("id" => $item_id, "extend" => array("tags" => true, "
 		<?= $model->formEnd() ?>
 	</div>
 
-	<?= $JML->editOwner($item) ?>
-
 	<?= $JML->editTags($item) ?>
 
 	<?= $JML->editMedia($item) ?>
