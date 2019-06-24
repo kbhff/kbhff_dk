@@ -48,45 +48,57 @@ $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage"
 <? endif; ?>
 
 
-<? if($post_items): ?>
-	<div class="news">
-		<h2>Seneste artikler</h2>
-		<ul class="items articles">
-		<? foreach($post_items as $item): 
-			$media = $IC->sliceMedia($item); ?>
-			<li class="item article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle"
-				data-readstate="<?= $item["readstate"] ?>"
-				>
+	<div class="c-wrapper">
+
+		<div class="c-two-thirds">
+			<h2>Seneste artikler</h2>
+
+			<? if($post_items): ?>
+			<div class="news">
+				<ul class="items articles">
+				<? foreach($post_items as $item): 
+					$media = $IC->sliceMedia($item); ?>
+					<li class="item article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle"
+						data-readstate="<?= $item["readstate"] ?>"
+						>
 
 
-				<?= $HTML->articleTags($item, [
-					"context" => ["post"],
-					"url" => "/artikel/tag",
-					"default" => ["/artikel", "Posts"]
-				]) ?>
+						<?= $HTML->articleTags($item, [
+							"context" => ["post"],
+							"url" => "/artikel/tag",
+							"default" => ["/artikel", "Posts"]
+						]) ?>
 
 
-				<h3 itemprop="headline"><a href="/artikel/<?= $item["sindex"] ?>"><?= preg_replace("/<br>|<br \/>/", "", $item["name"]) ?></a></h3>
+						<h3 itemprop="headline"><a href="/artikel/<?= $item["sindex"] ?>"><?= preg_replace("/<br>|<br \/>/", "", $item["name"]) ?></a></h3>
 
 
-				<?= $HTML->articleInfo($item, "/artikel/".$item["sindex"], [
-					"media" => $media, 
-					"sharing" => true
-				]) ?>
+						<?= $HTML->articleInfo($item, "/artikel/".$item["sindex"], [
+							"media" => $media, 
+							"sharing" => true
+						]) ?>
 
 
-				<? if($item["description"]): ?>
-				<div class="description" itemprop="description">
-					<p><?= nl2br($item["description"]) ?></p>
-				</div>
-				<? endif; ?>
+						<? if($item["description"]): ?>
+						<div class="description" itemprop="description">
+							<p><?= nl2br($item["description"]) ?></p>
+						</div>
+						<? endif; ?>
 
-			</li>
-		<? endforeach; ?>
-		</ul>
+					</li>
+				<? endforeach; ?>
+				</ul>
+			</div>
+			<?	else: ?>
+				<p>Ingen nye artikler.</p>
+			<? endif ?>
+		</div>
+
+		<div class="c-one-third">
+		</div>
 
 	</div>
-<?	endif; ?>
+
 
 
 </div>

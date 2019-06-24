@@ -1,0 +1,8 @@
+#content .front div.news ul.items {font-size: 0;}
+
+#content .front div.news ul.items li.item {
+	display: inline-block;
+	width: 50%;
+	padding: 10px;
+	box-sizing: border-box;
+}
