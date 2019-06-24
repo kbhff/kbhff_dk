@@ -99,6 +99,13 @@ $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage"
 				<h3>Example box</h3>
 				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
 			</div>
+
+			<div class="c-box">
+				<h3>Example box</h3>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+			</div>
 		</div>
 
 	</div>
