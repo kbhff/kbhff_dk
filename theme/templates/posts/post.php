@@ -74,10 +74,6 @@ $related_items = $IC->getRelatedItems($related_pattern);
 			<? endforeach; ?>
 		<? endif; ?>
 
-
-		<?= $HTML->frontendComments($item, "/janitor/admin/post/addComment") ?>
-
-
 	</div>
 
 
