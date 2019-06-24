@@ -3,6 +3,7 @@
 #content .front div.news ul.items li.item {
 	display: inline-block;
 	width: 50%;
+	height: 300px;
 	padding: 10px;
 	box-sizing: border-box;
 }

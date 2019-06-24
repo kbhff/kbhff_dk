@@ -51,16 +51,16 @@ $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage"
 	<div class="c-wrapper">
 
 		<div class="c-two-thirds">
-			<h2>Seneste artikler</h2>
-
 			<? if($post_items): ?>
 			<div class="news">
 				<ul class="items articles">
 				<? foreach($post_items as $item): 
 					$media = $IC->sliceMedia($item); ?>
-					<li class="item article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle"
-						data-readstate="<?= $item["readstate"] ?>"
-						>
+					<li class="item article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle" data-readstate="<?= $item["readstate"] ?>">
+
+						<? if($media): ?>
+						<div class="image item_id:<?= $media["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>"></div>
+						<? endif; ?>
 
 
 						<?= $HTML->articleTags($item, [
@@ -90,7 +90,7 @@ $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage"
 				</ul>
 			</div>
 			<?	else: ?>
-				<p>Ingen nye artikler.</p>
+				<p>Ingen artikler.</p>
 			<? endif ?>
 		</div>
 

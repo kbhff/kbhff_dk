@@ -4,6 +4,8 @@ document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipu
 document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/src/beta-u-paymentcards.js"></script>');
 document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/src/u-template.js"></script>');
 
+document.write('<script type="text/javascript" src="/js/lib/desktop/i-article.js"></script>');
+document.write('<script type="text/javascript" src="/js/lib/desktop/i-front.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-login.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-accept_terms.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-confirm_account.js"></script>');
