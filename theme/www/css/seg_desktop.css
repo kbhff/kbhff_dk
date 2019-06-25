@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-06-02 19:47:58
+asset-builder @ 2019-06-25 18:31:21
 */
 
 /*seg_desktop_include.css*/
@@ -50,7 +50,7 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 #content .scene .article h1 {}
 #content .scene .article > ul.info {width: 100%; margin: 0 auto; padding-top: 10px; padding-left: 12px; padding-right: 12px; box-sizing: border-box;}
 #content .scene .article > ul.info li {padding-left: 0}
-#content .scene > .article > .articlebody {width: 600px; margin: 0 auto;} 
+#content .scene > .article > .articlebody {} 
 #content .scene .article ul.tags {display: none;}
 #content .scene ul.info {display: none;}
 #content .scene ul.info {position: relative; z-index: 1; padding-right: 0; padding-bottom: 0; vertical-align: top; width: auto; font-size: 0; line-height: 1em;}
@@ -763,6 +763,52 @@ position: relative;
 #content .signupfees div.bg.supporter {left: 12px; background-image: url(../img/signup/bg_supporter.jpg);}
 #content .signupfees div.bg.volunteer {right: 12px; background-image: url(../img/signup/bg_volunteer.jpg);}
 #content .signup fieldset p.terms_summary {font-weight: 700;}
+
+/*s-front.css*/
+#content .front div.news ul.items {font-size: 0; padding: 0;}
+#content .front div.news ul.items li.item {
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
+	width: calc(50% - 24px);
+	height: 300px;
+	margin: 12px;
+	padding: 0;
+	box-sizing: border-box;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+#content .front div.news ul.items li.item h3 {margin-top: 150px;}
+#content .front div.news ul.items li.item h3 > a {color: #000000;}
+#content .front div.news ul.items li.item:hover {cursor: pointer; background: #DDDDDD;}
+#content .front div.news ul.items li.item:hover h3 > a {color: #3e8e17;}
+#content .front div.news ul.items li.item:hover > .image {opacity: 0.8;}
+#content .front div.news ul.items li.item .image {
+	width: 100%;
+	height: 150px;
+	min-height: 150px;
+	overflow: hidden;	
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+#content .front div.news ul.items li.item .image img {
+	width: 100%;
+	padding: 0;
+}
+#content .front div.c-one-third {
+	padding-top: 12px;
+}
+
+/*s-post.css*/
+#content .post {}
+#content .post .image,
+#content .post .media > p {display: none;}
+#content .post .youtube,
+#content .post .vimeo {margin: 0 12px 24px;}
+#content .post .c-one-third .c-box {margin-top: 12px;}
+#content .post .related {padding: 50px 0; width: 66.666%;}
+#content .post .related li.item .description p {padding: 0;}
 
 /*s-memberships.css*/
 #content .membership h1 {margin-bottom: 22px;}
