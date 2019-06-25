@@ -39,10 +39,9 @@ Util.Objects["article"] = new function() {
 
 				// add image
 				image._image_src = "/images/" + image._id + "/" + (image._variant ? image._variant+"/" : "") + "540x." + image._format;
-				u.ass(image, {
-					// "height": image.wrapper_height,
-					"opacity": 0
-				});
+				// u.ass(image, {
+				// 	"opacity": 0
+				// });
 
 				image.loaded = function(queue) {
 
@@ -99,11 +98,11 @@ Util.Objects["article"] = new function() {
 					// 	}
 					// }
 
-					u.a.transition(this, "all 0.5s ease-in-out");
-					u.ass(this, {
-						//"height": (this._image.offsetHeight + this.wrapper_height) +"px",
-						"opacity": 1
-					});
+					// u.a.transition(this, "all 0.5s ease-in-out");
+					// u.ass(this, {
+					// 	//"height": (this._image.offsetHeight + this.wrapper_height) +"px",
+					// 	"opacity": 1
+					// });
 				}
 				u.preloader(image, [image._image_src]);
 			}
