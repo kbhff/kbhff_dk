@@ -7,7 +7,7 @@
 #content .scene .article h1 {}
 #content .scene .article > ul.info {width: 100%; margin: 0 auto; padding-top: 10px; padding-left: 12px; padding-right: 12px; box-sizing: border-box;}
 #content .scene .article > ul.info li {padding-left: 0}
-#content .scene > .article > .articlebody {width: 600px; margin: 0 auto;} /* Only 600px width if article stands alone (no grid) */
+#content .scene > .article > .articlebody {/* width: 600px; margin: 0 auto; */} /* Only 600px width if article stands alone (no grid) */
 
 /* TAGS */
 #content .scene .article ul.tags {display: none;}
