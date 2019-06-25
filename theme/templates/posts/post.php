@@ -33,6 +33,7 @@ $related_items = $IC->getRelatedItems($related_pattern);
 	$media = $IC->sliceMedia($item); ?>
 
 	<div class="c-wrapper">
+		
 		<div class="c-two-thirds article i:article id:<?= $item["item_id"] ?><?= $item["classname"] ? " ".$item["classname"] : "" ?>" itemscope itemtype="http://schema.org/NewsArticle"
 			data-csrf-token="<?= session()->value("csrf") ?>"
 			data-readstate="<?= $item["readstate"] ?>"

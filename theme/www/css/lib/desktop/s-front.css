@@ -4,6 +4,7 @@
 #content .front div.news ul.items li.item {
 	display: inline-block;
 	vertical-align: top;
+	position: relative;
 	width: calc(50% - 24px);
 	height: 300px;
 	margin: 12px;
@@ -12,6 +13,11 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+
+/* In case no div.image */
+#content .front div.news ul.items li.item h3 {margin-top: 150px;}
+
+
 #content .front div.news ul.items li.item h3 > a {color: #000000;}
 #content .front div.news ul.items li.item:hover {cursor: pointer; background: #DDDDDD;}
 #content .front div.news ul.items li.item:hover h3 > a {color: #3e8e17;}
@@ -23,6 +29,11 @@
 	height: 150px;
 	min-height: 150px;
 	overflow: hidden;	
+
+	/* In canse no div.image */
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 
 #content .front div.news ul.items li.item .image img {

@@ -1,7 +1,16 @@
 #content .post {}
 
-#content .post .image {display: none;}
+#content .post .image,
+#content .post .media > p {display: none;}
 
-#content .post .c-one-third .c-box {
-	margin-top: 12px;
-}
+/* LEFT COLUMN */
+#content .post .youtube,
+#content .post .vimeo {margin: 0 12px 24px;}
+
+/* RIGHT COLUMN */
+#content .post .c-one-third .c-box {margin-top: 12px;}
+
+/* RELATED POSTS */
+#content .post .related {padding: 50px 0; width: 66.666%;}
+
+#content .post .related li.item .description p {padding: 0;}
