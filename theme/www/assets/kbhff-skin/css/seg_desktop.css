@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-04-09 18:36:24
+asset-builder @ 2019-06-25 15:13:58
 */
 
 /*seg_desktop_include.css*/
@@ -56,7 +56,7 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 #content .scene .article h1 {}
 #content .scene .article > ul.info {width: 100%; margin: 0 auto; padding-top: 10px; padding-left: 12px; padding-right: 12px; box-sizing: border-box;}
 #content .scene .article > ul.info li {padding-left: 0}
-#content .scene > .article > .articlebody {width: 600px; margin: 0 auto;} 
+#content .scene > .article > .articlebody {} 
 #content .scene .article ul.tags {display: none;}
 #content .scene ul.info {display: none;}
 #content .scene ul.info {position: relative; z-index: 1; padding-right: 0; padding-bottom: 0; vertical-align: top; width: auto; font-size: 0; line-height: 1em;}
