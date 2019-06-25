@@ -4,6 +4,8 @@
 #content .post .media > p {display: none;}
 
 /* LEFT COLUMN */
+#content .post .media {padding-bottom: 24px;}
+
 #content .post .youtube,
 #content .post .vimeo {margin: 0 12px 24px;}
 
