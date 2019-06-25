@@ -32,47 +32,78 @@ $related_items = $IC->getRelatedItems($related_pattern);
 <? if($item):
 	$media = $IC->sliceMedia($item); ?>
 
-	<div class="article i:article id:<?= $item["item_id"] ?><?= $item["classname"] ? " ".$item["classname"] : "" ?>" itemscope itemtype="http://schema.org/NewsArticle"
-		data-csrf-token="<?= session()->value("csrf") ?>"
-		data-readstate="<?= $item["readstate"] ?>"
-		data-readstate-add="<?= $this->validPath("/janitor/admin/profile/addReadstate/".$item["item_id"]) ?>" 
-		data-readstate-delete="<?= $this->validPath("/janitor/admin/profile/deleteReadstate/".$item["item_id"]) ?>" 
-		>
-
-		<? if($media): ?>
-		<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">
-			<p>Image: <a href="/images/<?= $item["item_id"] ?>/<?= $media["variant"] ?>/500x.<?= $media["format"] ?>"><?= $media["name"] ?></a></p>
+	<div class="c-wrapper">
+		<div class="c-two-thirds article i:article id:<?= $item["item_id"] ?><?= $item["classname"] ? " ".$item["classname"] : "" ?>" itemscope itemtype="http://schema.org/NewsArticle"
+			data-csrf-token="<?= session()->value("csrf") ?>"
+			data-readstate="<?= $item["readstate"] ?>"
+			data-readstate-add="<?= $this->validPath("/janitor/admin/profile/addReadstate/".$item["item_id"]) ?>" 
+			data-readstate-delete="<?= $this->validPath("/janitor/admin/profile/deleteReadstate/".$item["item_id"]) ?>" 
+			>
+	
+			<? if($media): ?>
+			<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">
+				<p>Image: <a href="/images/<?= $item["item_id"] ?>/<?= $media["variant"] ?>/500x.<?= $media["format"] ?>"><?= $media["name"] ?></a></p>
+			</div>
+			<? endif; ?>
+	
+	
+			<?= $HTML->articleTags($item, [
+				"context" => [$itemtype],
+				"url" => "/artikel/tag",
+				"default" => ["/artikel", "Posts"]
+			]) ?>
+	
+	
+			<h1 itemprop="headline"><?= $item["name"] ?></h1>
+	
+	
+			<?= $HTML->articleInfo($item, "/artikel/".$item["sindex"], [
+				"media" => $media, 
+				"sharing" => true
+			]) ?>
+	
+	
+			<div class="articlebody" itemprop="articleBody">
+				<?= $item["html"] ?>
+			</div>
+	
+			<? if($item["mediae"]): ?>
+				<? foreach($item["mediae"] as $media): ?>
+			<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">
+				<p>Image: <a href="/images/<?= $item["item_id"] ?>/<?= $media["variant"] ?>/500x.<?= $media["format"] ?>"><?= $media["name"] ?></a></p>
+			</div>
+				<? endforeach; ?>
+			<? endif; ?>
+	
 		</div>
-		<? endif; ?>
 
+		<div class="c-one-third">
+				<div class="c-box">
+					<h3>Example box</h3>
 
-		<?= $HTML->articleTags($item, [
-			"context" => [$itemtype],
-			"url" => "/artikel/tag",
-			"default" => ["/artikel", "Posts"]
-		]) ?>
+					<ul>
+						<li>Lorem ipsum</li>
+						<li>Lorem ipsum</li>
+						<li>Lorem ipsum</li>
+						<li>Lorem ipsum</li>
+						<li>Lorem ipsum</li>
+					</ul>
 
+				</div>
 
-		<h1 itemprop="headline"><?= $item["name"] ?></h1>
+				<div class="c-box">
+					<h3>Example box</h3>
 
+					<ul>
+						<li>Lorem ipsum</li>
+						<li>Lorem ipsum</li>
+						<li>Lorem ipsum</li>
+						<li>Lorem ipsum</li>
+						<li>Lorem ipsum</li>
+					</ul>
 
-		<?= $HTML->articleInfo($item, "/artikel/".$item["sindex"], [
-			"media" => $media, 
-			"sharing" => true
-		]) ?>
-
-
-		<div class="articlebody" itemprop="articleBody">
-			<?= $item["html"] ?>
+				</div>
 		</div>
-
-		<? if($item["mediae"]): ?>
-			<? foreach($item["mediae"] as $media): ?>
-		<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">
-			<p>Image: <a href="/images/<?= $item["item_id"] ?>/<?= $media["variant"] ?>/500x.<?= $media["format"] ?>"><?= $media["name"] ?></a></p>
-		</div>
-			<? endforeach; ?>
-		<? endif; ?>
 
 	</div>
 

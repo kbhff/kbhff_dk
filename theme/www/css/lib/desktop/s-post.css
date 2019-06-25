@@ -1,3 +1,7 @@
 #content .post {}
 
 #content .post .image {display: none;}
+
+#content .post .c-one-third .c-box {
+	margin-top: 12px;
+}
