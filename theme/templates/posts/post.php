@@ -27,7 +27,7 @@ $related_items = $IC->getRelatedItems($related_pattern);
 ?>
 
 <div class="scene post i:scene">
-
+	<div class="banner i:banner variant:random format:jpg"></div>
 
 <? if($item):
 	$media = $IC->sliceMedia($item); ?>
