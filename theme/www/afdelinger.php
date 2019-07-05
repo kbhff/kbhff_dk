@@ -13,9 +13,22 @@ $action = $page->actions();
 $page->bodyClass("departments");
 $page->pageTitle("Afdelinger");
 
+
+// view specific post 
+// /afdelinger/#name#
+if(count($action) == 1) {
+
+	$page->page(array(
+		"templates" => "departments/departments-view.php"
+	));
+	exit();
+
+}
+
+
 // standard template
 $page->page(array(
-	"templates" => "pages/departments.php"
+	"templates" => "departments/departments.php"
 	)
 );
 exit();

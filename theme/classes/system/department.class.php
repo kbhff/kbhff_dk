@@ -112,6 +112,40 @@ class Department extends Model {
 			"hint_message" => "A few departments do not accept new members. If this department is one of them, uncheck this box.",
 		));
 
+		// Location
+		$this->addToModel("geolocation", array(
+			"type" => "string",
+			"label" => "Location",
+			"required" => true,
+			"hint_message" => "Name and Geo coordinates of location",
+			"error_message" => "Name and Geo coordinates must be filled out"
+		));
+		// latitude
+		$this->addToModel("latitude", array(
+			"type" => "number",
+			"label" => "Latitude"
+		));
+		// longitude
+		$this->addToModel("longitude", array(
+			"type" => "number",
+			"label" => "Longitude"
+		));
+
+		// description
+		$this->addToModel("description", array(
+			"type" => "html",
+			"label" => "Short description",
+			"hint_message" => "Write a short description of the department – this will be shown on the department list.",
+			"error_message" => "A short description without any words? How weird."
+		));
+
+		// HTML
+		$this->addToModel("html", array(
+			"label" => "Full description",
+			"hint_message" => "Write the full department description",
+			"allowed_tags" => "p,h2,h3,h4,ul,ol,download,jpg,png,vimeo,youtube", //,mp4,code",
+		));
+
 	}
 	
 	/**
@@ -125,7 +159,7 @@ class Department extends Model {
 		// Get content of $_POST array which have been "quality-assured" by Janitor 
 		$this->getPostedEntities();
 
-		if(count($action) == 1 && $this->validateList(array("name", "abbreviation", "address1", "address2", "city", "postal", "email", "opening_hours", "mobilepay_id", "accepts_signup"))) {
+		if(count($action) == 1 && $this->validateList(array("name", "abbreviation", "address1", "address2", "city", "postal", "email", "opening_hours", "mobilepay_id", "accepts_signup", "geolocation", "latitude", "longitude", "description", "html"))) {
 
 			$query = new Query();
  
@@ -142,19 +176,25 @@ class Department extends Model {
 			$opening_hours = $this->getProperty("opening_hours", "value");
 			$mobilepay_id = $this->getProperty("mobilepay_id", "value");
 			$accepts_signup = $this->getProperty("accepts_signup", "value");
-			
+
+			$geolocation = $this->getProperty("geolocation", "value");
+			$latitude = $this->getProperty("latitude", "value");
+			$longitude = $this->getProperty("longitude", "value");
+
+			$description = $this->getProperty("description", "value");
+			$html = $this->getProperty("html", "value");
 
 
 			// Check if the department is already created (to avoid faulty double entries)  
 			$sql = "SELECT * FROM ".$this->db." WHERE name = '$name'";
 			if(!$query->sql($sql)) {
 				// enter the department into the database
-				$sql = "INSERT INTO ".$this->db." SET name='$name', abbreviation='$abbreviation', address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours',email='$email',mobilepay_id='$mobilepay_id',accepts_signup='$accepts_signup' ";
+				$sql = "INSERT INTO ".$this->db." SET name='$name', abbreviation='$abbreviation', address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours',email='$email',mobilepay_id='$mobilepay_id',accepts_signup='$accepts_signup',geolocation='$geolocation',latitude='$latitude',longitude='$longitude',description='$description',html='$html' ";
 				
 				// if successful, add message and return department id
 				if($query->sql($sql)) {
 					message()->addMessage("Department created");
-					return array("item_id" => $query->lastInsertId());		
+					return array("item_id" => $query->lastInsertId());
 				}
 			}
 			else {
@@ -175,11 +215,24 @@ class Department extends Model {
 	 *
 	 * @return array|false Department data object (via callback to Query->results()
 	 */
-	function getDepartments() {
+	function getDepartments($_options = false) {
+
+		// Define default values
+		$order = "name ASC";
+
+
+		// Search through $_options to find recognized parameters
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+					case "order"        : $order             = $_value; break;
+				}
+			}
+		}
 
 		// Query database for all departments.  
 		$query = new Query();
-		$sql = "SELECT * FROM ".$this->db;		
+		$sql = "SELECT * FROM ".$this->db . " ORDER BY $order";		
 		if($query->sql($sql)) {
 			return $query->results();
 		}
@@ -199,13 +252,14 @@ class Department extends Model {
 
 		// Define default values
 		$id = false;
-		
+		$name = false;
 		
 		// Search through $_options to find recognized parameters
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
 					case "id"        : $id             = $_value; break;
+					case "name"      : $name           = $_value; break;
 				}
 			}
 		}
@@ -219,6 +273,14 @@ class Department extends Model {
 				return $query->result(0);
 			}
 		}
+		else if($name) {
+			$query = new Query();
+			$sql = "SELECT * FROM ".$this->db." WHERE name = '$name'";
+			if($query->sql($sql)) {
+				return $query->result(0);
+			}
+		}
+
 		return false;
 	}
 
@@ -250,10 +312,9 @@ class Department extends Model {
 
 		// Get content of $_POST array which have been "quality-assured" by Janitor 
 		$this->getPostedEntities();
-		
 
 		// Check that the number of REST parameters is as expected and that the listed entries are valid.
-		if(count($action) == 2 && $this->validateList(array("name", "abbreviation", "address1", "address2", "city", "postal", "email", "opening_hours", "mobilepay_id", "accepts_signup"))) {
+		if(count($action) == 2 && $this->validateList(array("name", "abbreviation", "address1", "address2", "city", "postal", "email", "opening_hours", "mobilepay_id", "accepts_signup", "geolocation", "latitude", "longitude", "description", "html"))) {
 			
 			$id = $action[1];
 			$name = $this->getProperty("name", "value");
@@ -266,15 +327,22 @@ class Department extends Model {
 			$opening_hours = $this->getProperty("opening_hours", "value");
 			$mobilepay_id = $this->getProperty("mobilepay_id", "value");
 			$accepts_signup = $this->getProperty("accepts_signup", "value");
-			
+
+			$geolocation = $this->getProperty("geolocation", "value");
+			$latitude = $this->getProperty("latitude", "value");
+			$longitude = $this->getProperty("longitude", "value");
+
+			$description = $this->getProperty("description", "value");
+			$html = $this->getProperty("html", "value");
+
 			// Ask the database to update the row with the id that came from $action. Update with the values that were received from getPostedEntities(). 
 			$query = new Query();
-			$sql = "UPDATE ".$this->db." SET name='$name', abbreviation='$abbreviation',address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours',email='$email',mobilepay_id='$mobilepay_id',accepts_signup='$accepts_signup' WHERE id = '$id'";
-			
+			$sql = "UPDATE ".$this->db." SET name='$name', abbreviation='$abbreviation',address1='$address1',address2='$address2',postal='$postal',city='$city',opening_hours='$opening_hours',email='$email',mobilepay_id='$mobilepay_id',accepts_signup='$accepts_signup',geolocation='$geolocation',latitude='$latitude',longitude='$longitude',description='$description',html='$html' WHERE id = '$id'";
+			// debug($sql);
 			// if successful, add message and return the department data object
 			if($query->sql($sql)) {
 				message()->addMessage("Department updated");
-				return $this->getDepartment(["id"=>$id]);		
+				return $this->getDepartment(["id"=>$id]);
 			}
 
 		}

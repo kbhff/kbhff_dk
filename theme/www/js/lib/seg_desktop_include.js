@@ -1,8 +1,11 @@
 document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/seg_desktop.js"></script>');
 
+document.write('<script type="text/javascript" src="/js/lib/u-settings.js"></script>');
+
 document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/src/beta-u-overlay.js"></script>');
 document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/src/beta-u-paymentcards.js"></script>');
 document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/src/u-template.js"></script>');
+document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/src/u-googlemaps.js"></script>');
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-article.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-front.js"></script>');
@@ -21,6 +24,9 @@ document.write('<script type="text/javascript" src="/js/lib/desktop/i-stripe.js"
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-member_help_signup.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-member_help_payment.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-member_help_index.js"></script>');
+
+document.write('<script type="text/javascript" src="/js/lib/desktop/i-departments.js"></script>');
+document.write('<script type="text/javascript" src="/js/lib/desktop/i-department_view.js"></script>');
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-user_profile.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-profile.js"></script>');

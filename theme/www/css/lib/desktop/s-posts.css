@@ -1,7 +1,7 @@
 /* li item article */
-#content .scene ul.items.articles li.item.article h3 {padding-left: 8px;}
+/*#content .scene ul.items.articles li.item.article h3 {padding-left: 8px;}
 #content .scene ul.items.articles li.item.article p {padding-left: 8px;}
-#content .scene ul.items.articles li.item.article > ul.info {display: none;}
+*/#content .scene ul.items.articles li.item.article > ul.info {display: none;}
 
 /* ul tags */
 #content .scene div.categories ul.tags li {list-style-type: none; padding: 0;}

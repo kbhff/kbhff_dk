@@ -22,7 +22,15 @@ global $model;
 			<?= $model->input("opening_hours", array("class" => "autoexpand short")) ?>
 			<?= $model->input("mobilepay_id") ?>
 			<?= $model->input("accepts_signup", array("value" => 1)) ?>
+		</fieldset>
 
+		<fieldset>
+			<?= $model->inputLocation("geolocation", "latitude", "longitude") ?>
+		</fieldset>
+
+		<fieldset>
+			<?= $model->inputHTML("description") ?>
+			<?= $model->inputHTML("html") ?>
 		</fieldset>
 
 		<?= $JML->newActions() ?>
