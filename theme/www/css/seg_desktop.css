@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-06-25 18:31:21
+asset-builder @ 2019-07-05 17:17:15
 */
 
 /*seg_desktop_include.css*/
@@ -804,6 +804,7 @@ position: relative;
 #content .post {}
 #content .post .image,
 #content .post .media > p {display: none;}
+#content .post .media {padding-bottom: 24px;}
 #content .post .youtube,
 #content .post .vimeo {margin: 0 12px 24px;}
 #content .post .c-one-third .c-box {margin-top: 12px;}
@@ -842,8 +843,6 @@ position: relative;
 #content .membership div.related ul.offer li {font-size: 16px; padding: 0; padding-left: 12px;}
 
 /*s-posts.css*/
-#content .scene ul.items.articles li.item.article h3 {padding-left: 8px;}
-#content .scene ul.items.articles li.item.article p {padding-left: 8px;}
 #content .scene ul.items.articles li.item.article > ul.info {display: none;}
 #content .scene div.categories ul.tags li {list-style-type: none; padding: 0;}
 #content .scene div.categories ul.tags {padding: 0;}
@@ -1031,5 +1030,43 @@ div.overlay .close:after {
 	transform: rotate(-45deg);
 }
 
+/*s-departments.css*/
+#content .scene.departments ul.departments {list-style: none; margin: 0; padding: 0 0 50px; font-size: 0;}
+#content .scene.departments ul.departments li {padding: 0; font-size: 14px; line-height: 24px;}
+#content .scene.departments ul.departments > li {display: inline-block; vertical-align: top; width: 33.333%; padding-bottom: 20px;}
+#content .scene.departments ul.departments li ul.info {display: block; margin: 0; padding: 0;}
+#content .scene.departments ul.departments li ul.info > li {display: block;}
+#content .scene.departments ul.departments li ul.address {margin: 0; padding-bottom: 0;}
+#content .scene.departments ul.departments li ul.address > li {display: block;}
+#content .scene.departments ul.departments li ul.info > li.location {display: none;}
+#content .scene.departments ul.departments li ul.contact {margin: 0; padding-bottom: 10px;}
+#content .scene.departments ul.departments li ul.info > li.pricerange {display: none;}
+#content .scene.departments > div.map {height: 400px; margin: 0 12px 50px;}
+#content .scene.departments .c-one-third .c-box {margin-top: 12px;}
+#content .scene.departments .c-one-third .c-box ul.info {display: block; margin: 0; padding: 0;}
+#content .scene.departments .c-one-third .c-box ul.info li {padding: 0; font-size: 14px; line-height: 24px; display: block;}
+#content .scene.departments .c-one-third .c-box ul.info ul.address {margin: 0; padding-bottom: 0;}
+#content .scene.departments .c-one-third .c-box ul.info ul.address > li {display: block; padding: 0;}
+#content .scene.departments .c-one-third .c-box ul.info ul.contact {margin: 0; padding-bottom: 10px;}
+#content .scene.departments .c-one-third .c-box ul.info > li.location {display: none;}
+#content .scene.departments .c-one-third .c-box ul.info > li.pricerange {display: none;}
+
+
 /*s-general.css*/
+#navigation ul.navigation li.path > h4, 
+#navigation ul.navigation li.path > h5, 
+#navigation ul.navigation li.path > a, 
+#navigation ul.navigation li.selected > h4, 
+#navigation ul.navigation li.selected > h5, 
+#navigation ul.navigation li.selected > a {
+	background-color: #fff;
+	border: 2px solid #3e8e17;
+	padding: 5px 12px;
+	color: #3e8e17;
+}
+#navigation ul.navigation h5:hover, 
+#navigation ul.navigation li:not(.selected) a:hover {
+	background-color: #357914;
+}
+#content .scene div.media p a {font-weight: normal; font-size: 12px; font-style: italic; color: #aaaaaa; cursor: pointer;}
 
