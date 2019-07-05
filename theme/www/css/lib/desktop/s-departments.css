@@ -13,6 +13,8 @@
 
 
 #content .scene.departments .c-one-third .c-box {margin-top: 12px;}
+#content .scene.departments .c-one-third .c-box:first-child {margin-top: 58px; border-top: 5px solid #000;}
+
 #content .scene.departments .c-one-third .c-box ul.info {display: block; margin: 0; padding: 0;}
 #content .scene.departments .c-one-third .c-box ul.info li {padding: 0; font-size: 14px; line-height: 24px; display: block;}
 #content .scene.departments .c-one-third .c-box ul.info ul.address {margin: 0; padding-bottom: 0;}

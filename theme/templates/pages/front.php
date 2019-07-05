@@ -65,8 +65,7 @@ $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage"
 
 						<?= $HTML->articleTags($item, [
 							"context" => ["post"],
-							"url" => "/artikel/tag",
-							"default" => ["/artikel", "Posts"]
+							"url" => "/artikler/tag"
 						]) ?>
 
 
@@ -96,7 +95,7 @@ $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage"
 
 		<div class="c-one-third">
 			<div class="c-box">
-				<h3>Example box</h3>
+				<h3>Ugens pose</h3>
 				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
 			</div>
 

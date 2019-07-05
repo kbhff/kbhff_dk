@@ -1,18 +1,22 @@
 #content .post {}
 
-#content .post .image,
+#content .post .image > p,
 #content .post .media > p {display: none;}
-
 /* LEFT COLUMN */
 #content .post .media {padding-bottom: 24px;}
+
+#content .scene.post div.article > .image:first-child {margin-top: 58px;}
 
 #content .post .youtube,
 #content .post .vimeo {margin: 0 12px 24px;}
 
 /* RIGHT COLUMN */
 #content .post .c-one-third .c-box {margin-top: 12px;}
+#content .post .c-one-third .c-box:first-child {margin-top: 58px; border-top: 5px solid #000;}
 
 /* RELATED POSTS */
 #content .post .related {padding: 50px 0; width: 66.666%;}
 
 #content .post .related li.item .description p {padding: 0;}
+
+#content .post .image img {width: 100%;}

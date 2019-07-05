@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-07-05 21:16:12
+asset-builder @ 2019-07-06 00:04:03
 */
 
 /*seg_desktop_include.js*/
@@ -5562,6 +5562,48 @@ Util.Objects["article"] = new function() {
 }
 
 
+/*i-articles.js*/
+Util.Objects["articles"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			u.bug("scene.ready:", this);
+			page.cN.scene = this;
+			var nodes = u.qsa("div.posts ul.items li.item", this);
+			u.bug(nodes)
+			var i, node
+			if(nodes) {
+				for(i = 0; node = nodes[i]; i++) {
+					node.image = u.qs("div.image", node);
+					if(node.image) {
+						// 
+						node.image._id = u.cv(node.image, "item_id");
+						node.image._format = u.cv(node.image, "format");
+						node.image._variant = u.cv(node.image, "variant");
+						if(node.image._id && node.image._format) {
+							node.image._image_src = "/images/" + node.image._id + "/" + (node.image._variant ? node.image._variant+"/" : "") + "300x200." + node.image._format;
+							node.image.loaded = function(queue) {
+								u.ac(this, "loaded");
+								u.ass(this, {
+									"backgroundImage": "url("+queue[0].image.src+")"
+								})
+								// 	
+							}
+							u.preloader(node.image, [node.image._image_src]);
+						}
+					}
+					u.ce(node, {type:"link", use: "h3 a"});
+				}
+			}
+		}
+		scene.ready();
+	}
+}
+
+
 /*i-front.js*/
 Util.Objects["front"] = new function() {
 	this.init = function(scene) {
@@ -5593,11 +5635,7 @@ Util.Objects["front"] = new function() {
 							u.preloader(node.image, [node.image._image_src]);
 						}
 					}
-					node.link = u.qs("h3 > a", node).href;
-					u.ce(node);
-					node.clicked = function() {
-						location.href = this.link;
-					}
+					u.ce(node, {type:"link", use: "h3 a"});
 				}
 			}
 		}

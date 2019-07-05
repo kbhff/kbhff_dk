@@ -1,4 +1,4 @@
-Util.Objects["front"] = new function() {
+Util.Objects["articles"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 			// u.bug("scene.resized:", this);
@@ -9,11 +9,12 @@ Util.Objects["front"] = new function() {
 		}
 
 		scene.ready = function() {
-			// u.bug("scene.ready:", this);
+			u.bug("scene.ready:", this);
 
 			page.cN.scene = this;
 
-			var nodes = u.qsa("div.news ul.items li.item", scene);
+			var nodes = u.qsa("div.posts ul.items li.item", this);
+			u.bug(nodes)
 			var i, node
 			if(nodes) {
 				for(i = 0; node = nodes[i]; i++) {

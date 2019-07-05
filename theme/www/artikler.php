@@ -12,22 +12,23 @@ $IC = new Items();
 $itemtype = "post";
 
 
-$page->bodyClass("article");
-$page->pageTitle("Artikel");
+$page->bodyClass("posts");
+$page->pageTitle("Artikler");
 
 
-
-// news list for tags
-// /artikel/#sindex#
-if(count($action) == 1) {
+// /artikler/tag/#tag#
+// /artikler/tag/#tag#/#sindex#/prev|next
+if(count($action) >= 2 && $action[0] == "tag") {
 
 	$page->page(array(
-		"templates" => "posts/post.php"
+		"templates" => "posts/posts_tag.php"
 	));
 	exit();
 
 }
 
+// /artikler
+// overview of posts
 $page->page(array(
 	"templates" => "posts/posts.php"
 ));
@@ -35,4 +36,3 @@ exit();
 
 
 ?>
- 
