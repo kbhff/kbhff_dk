@@ -1,0 +1,23 @@
+#content .scene.departments ul.departments {list-style: none; margin: 0; padding: 0 0 50px; font-size: 0;}
+#content .scene.departments ul.departments li {padding: 0; font-size: 14px; line-height: 24px;}
+#content .scene.departments ul.departments > li {display: inline-block; vertical-align: top; width: 33.333%; padding-bottom: 20px;}
+#content .scene.departments ul.departments li ul.info {display: block; margin: 0; padding: 0;}
+#content .scene.departments ul.departments li ul.info > li {display: block;}
+#content .scene.departments ul.departments li ul.address {margin: 0; padding-bottom: 0;}
+#content .scene.departments ul.departments li ul.address > li {display: block;}
+#content .scene.departments ul.departments li ul.info > li.location {display: none;}
+#content .scene.departments ul.departments li ul.contact {margin: 0; padding-bottom: 10px;}
+#content .scene.departments ul.departments li ul.info > li.pricerange {display: none;}
+
+#content .scene.departments > div.map {height: 400px; margin: 0 12px 50px;}
+
+
+#content .scene.departments .c-one-third .c-box {margin-top: 12px;}
+#content .scene.departments .c-one-third .c-box ul.info {display: block; margin: 0; padding: 0;}
+#content .scene.departments .c-one-third .c-box ul.info li {padding: 0; font-size: 14px; line-height: 24px; display: block;}
+#content .scene.departments .c-one-third .c-box ul.info ul.address {margin: 0; padding-bottom: 0;}
+#content .scene.departments .c-one-third .c-box ul.info ul.address > li {display: block; padding: 0;}
+#content .scene.departments .c-one-third .c-box ul.info ul.contact {margin: 0; padding-bottom: 10px;}
+
+#content .scene.departments .c-one-third .c-box ul.info > li.location {display: none;}
+#content .scene.departments .c-one-third .c-box ul.info > li.pricerange {display: none;}

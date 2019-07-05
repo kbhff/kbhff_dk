@@ -1,3 +1,42 @@
 /* THIS CSS SHOULD PROBABLY BE MOVED TO THE SKIN – OR BE DISTRIBUTED TO OTHER CSS FILES */
 /* CONSIDER THIS A TEMP CSS FILE */
 
+#navigation ul.navigation li.path > h4, 
+#navigation ul.navigation li.path > h5, 
+#navigation ul.navigation li.path > a, 
+#navigation ul.navigation li.selected > h4, 
+#navigation ul.navigation li.selected > h5, 
+#navigation ul.navigation li.selected > a {
+	background-color: #fff;
+	border: 2px solid #3e8e17;
+	padding: 5px 12px;
+	color: #3e8e17;
+/*	background-color: #3e8e17;
+*/
+}
+
+#navigation ul.navigation h5:hover, 
+#navigation ul.navigation li:not(.selected) a:hover {
+	background-color: #357914;
+}
+
+
+
+#content .scene div.media p a {font-weight: normal; font-size: 12px; font-style: italic; color: #aaaaaa; cursor: pointer;}
+
+
+
+/* Small exiperiment – needs better graphics
+#content .banner > div.logo {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 960px;
+	height: 206px;
+	background-color: transparent;
+	background-image: url(../../../img/banners/desktop/logo_layover.png), url(../../../img/effects/gx_left.png), url(../../../img/effects/gx_right.png), url(../../../img/effects/gx_top.png), url(../../../img/effects/gx_bottom.png);
+	background-repeat: no-repeat, repeat-y, repeat-y, repeat-x, repeat-x;
+	background-position: 25px 5px, 12px top, right 12px top, left 5px, left bottom;
+	background-size: auto;
+}
+*/

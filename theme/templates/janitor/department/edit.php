@@ -25,10 +25,23 @@ $department = $model->getDepartment(array("id" => $department_id));
 				<?= $model->input("address2", array("class" => "autoexpand short", "value" => $department["address2"])) ?>
 				<?= $model->input("postal", array("value" => $department["postal"])) ?>
 				<?= $model->input("city", array("value" => $department["city"])) ?>
+
+				<?= $model->inputLocation("geolocation", "latitude", "longitude", array("value_loc" => $department["geolocation"], "value_lat" => $department["latitude"], "value_lon" => $department["longitude"])) ?>
+			</fieldset>
+
+			<fieldset>
 				<?= $model->input("email", array("value" => $department["email"])) ?>
-				<?= $model->input("opening_hours", array("class" => "autoexpand short", "value" => $department["opening_hours"])) ?>
 				<?= $model->input("mobilepay_id", array("value" => $department["mobilepay_id"])) ?>
+				<?= $model->input("opening_hours", array("class" => "autoexpand short", "value" => $department["opening_hours"])) ?>
+			</fieldset>
+
+			<fieldset>
 				<?= $model->input("accepts_signup", array("checked" => "true", "value" => $department["accepts_signup"])) ?>
+			</fieldset>
+
+			<fieldset>
+				<?= $model->inputHTML("description", array("value" => $department["description"])) ?>
+				<?= $model->inputHTML("html", array("value" => $department["html"])) ?>
 			</fieldset>
 
 			<?= $JML->editActions($department) ?>

@@ -11,7 +11,12 @@ CREATE TABLE `SITE_DB`.`system_departments` (
   `mobilepay_id` varchar(50) DEFAULT NULL,
   `accepts_signup` int(1) NOT NULL DEFAULT 1,
 
+  `geolocation` varchar(255) NOT NULL DEFAULT '',
+  `latitude` double NOT NULL DEFAULT 0,
+  `longitude` double NOT NULL DEFAULT 0,
 
+  `description` text NOT NULL DEFAULT '',
+  `html` text NOT NULL DEFAULT '',
 
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
