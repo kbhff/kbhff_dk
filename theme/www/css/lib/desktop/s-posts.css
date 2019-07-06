@@ -22,7 +22,7 @@
 #content .scene.posts .c-one-third .c-box {margin-top: 12px;}
 #content .scene.posts .c-one-third .c-box:first-child {margin-top: 58px; border-top: 5px solid #000;}
 
-#content .scene div.posts ul.items {font-size: 0; padding: 0;}
+#content .scene div.posts ul.items {font-size: 0; padding: 0; list-style: none; margin: 0;}
 
 #content .scene div.posts ul.items li.item {
 	display: inline-block;

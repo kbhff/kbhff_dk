@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-07-06 00:04:03
+asset-builder @ 2019-07-06 12:54:34
 */
 
 /*seg_desktop_include.css*/
@@ -765,7 +765,7 @@ position: relative;
 #content .signup fieldset p.terms_summary {font-weight: 700;}
 
 /*s-front.css*/
-#content .front div.news ul.items {font-size: 0; padding: 0;}
+#content .front div.news ul.items {font-size: 0; padding: 0; margin: 0; list-style: none;}
 #content .front div.news ul.items li.item {
 	display: inline-block;
 	vertical-align: top;
@@ -860,7 +860,7 @@ position: relative;
 #content .scene ul.items.articles ul.tags li:last-child::after {content: "";} 
 #content .scene.posts .c-one-third .c-box {margin-top: 12px;}
 #content .scene.posts .c-one-third .c-box:first-child {margin-top: 58px; border-top: 5px solid #000;}
-#content .scene div.posts ul.items {font-size: 0; padding: 0;}
+#content .scene div.posts ul.items {font-size: 0; padding: 0; list-style: none; margin: 0;}
 #content .scene div.posts ul.items li.item {
 	display: inline-block;
 	vertical-align: top;
@@ -1108,4 +1108,6 @@ div.overlay .close:after {
 	background-color: #357914;
 }
 #content .scene div.media p a {font-weight: normal; font-size: 12px; font-style: italic; color: #aaaaaa; cursor: pointer;}
+#content .scene h3 a,
+#content .scene h2 a {font-weight: normal;}
 

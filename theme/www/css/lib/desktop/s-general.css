@@ -24,7 +24,8 @@
 
 #content .scene div.media p a {font-weight: normal; font-size: 12px; font-style: italic; color: #aaaaaa; cursor: pointer;}
 
-
+#content .scene h3 a,
+#content .scene h2 a {font-weight: normal;}
 
 /* Small exiperiment – needs better graphics
 #content .banner > div.logo {
