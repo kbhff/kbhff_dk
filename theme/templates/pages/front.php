@@ -5,6 +5,9 @@ $page_item = $IC->getItem(array("tags" => "page:front", "extend" => array("user"
 if($page_item) {
 	$this->sharingMetaData($page_item);
 }
+$WBC = $IC->typeObject("weeklybag");
+
+$weeklybag_item = $WBC->getWeeklyBag();
 
 $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage", "status" => 1, "extend" => array("tags" => true, "readstate" => true, "user" => true, "mediae" => true)));
 ?>
@@ -94,16 +97,43 @@ $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage"
 		</div>
 
 		<div class="c-one-third">
-			<div class="c-box">
-				<h3>Ugens pose</h3>
-				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+
+			<div class="c-box actions">
+				<h3>Genveje</h3>
+				<ul class="actions">
+					<li><a href="http://kbhffwiki.org/tiki-index.php?page=Vagtplaner" class="shift">Ta' en vagt</a></li>
+					<li><a href="https://medlem.kbhff.dk" class="order">Bestil en pose</a></li>
+					<li><a href="http://kbhff.dk/for-medlemmer-2/bliv-medlem/" class="member">Bliv medlem</a></li>
+				</ul>
 			</div>
 
-			<div class="c-box">
-				<h3>Example box</h3>
-				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+
+			<div class="c-box weeklybag">
+				
+			<? if($weeklybag_item): ?>
+				<h3>Ugens pose - <?= $weeklybag_item["name"] ?></h3>
+				<?= $weeklybag_item["html"] ?>
+			<? else: ?>
+				<h3>Ugens pose</h3>
+				<p>Ugens pose er endnu ikke oprettet.</p>
+			<? endif; ?>
+			</div>
+
+			<div class="c-box newsletter i:newsletter">
+				<h3>Nyhedsbrev</h3>
+		
+				<form action="//kbhff.us15.list-manage.com/subscribe/post?u=d2a926649ebcf316af87a05bb&amp;id=141ae6f59f" method="post" target="_blank">
+					<input type="hidden" name="b_d2a926649ebcf316af87a05bb_141ae6f59f" value="">
+					<div class="field email required">
+						<label for="input_email">E-mail</label>
+						<input type="email" value="" name="EMAIL" id="input_email" />
+					</div>
+
+					<ul class="actions">
+						<li class="submit"><input type="submit" value="Tilmeld" name="subscribe" class="button" /></li>
+					</ul>
+				</form>
+
 			</div>
 		</div>
 
