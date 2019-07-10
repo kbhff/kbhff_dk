@@ -94,11 +94,11 @@ class TypeWeeklybag extends Itemtype {
 	function getWeeklyBag($week = false, $year = false) {
 		
 		if(!$week) {
-			$week = date("W", strtotime("FIRST WEDNESDAY"));
+			$week = date("W", strtotime("WEDNESDAY"));
 		}
 
 		if(!$year) {
-			$year = date("Y", strtotime("FIRST WEDNESDAY"));
+			$year = date("Y", strtotime("WEDNESDAY"));
 		}
 
 		$query = new Query();

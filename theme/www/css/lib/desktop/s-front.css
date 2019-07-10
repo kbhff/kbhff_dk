@@ -53,24 +53,15 @@
 }
 
 
-#content .front .c-box.actions ul.actions li {
-	display: block;
-	text-align: left;
-}	
-#content .front .c-box.actions ul.actions li a {
-	position: relative;
-	display: inline-block;
-	vertical-align: top;
-	padding: 8px 20px;
-	line-height: 16px;
-	font-size: 16px;
-	height: 18px;
-	background-color: #3e8e17; 
-	background-repeat: no-repeat;
-	background-position: top left;
-	color: #ffffff;
-	
+
+/* FRONT C-BOXES */
+#content .front .c-box.weeklybag li {
+	padding-top: 0;
 }
+
+
+#content .front .c-box.actions ul.actions li {display: block; text-align: left; padding-left: 0;}	
+#content .front .c-box.actions ul.actions li a {position: relative; display: inline-block; vertical-align: top; padding: 8px 20px; line-height: 16px; font-size: 16px; height: 18px; background-color: #3e8e17; background-repeat: no-repeat; background-position: top left; color: #ffffff;}
 
 #content .front .c-box.actions ul.actions li a:after {
 	content: " ";

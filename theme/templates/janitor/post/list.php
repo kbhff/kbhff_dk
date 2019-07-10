@@ -22,7 +22,7 @@ $items = $IC->getItems(array("itemtype" => $itemtype, "order" => "status DESC, p
 			<li class="item item_id:<?= $item["id"] ?><?= $JML->jsMedia($item) ?>">
 				<h3><?= strip_tags($item["name"]) ?></h3>
 
-				<?= $JML->tagList($item["tags"]) ?>
+				<?= $JML->tagList($item["tags"], ["context" => "post,on"]) ?>
 
 				<?= $JML->listActions($item) ?>
 			 </li>
