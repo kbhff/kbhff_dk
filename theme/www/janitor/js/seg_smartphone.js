@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-07-10 10:52:48
+asset-builder @ 2019-07-10 19:00:39
 */
 
 /*seg_smartphone_include.js*/
@@ -5067,23 +5067,28 @@ u.activateTagging = function(node) {
 			used_tags[tag_node._context][tag_node._value] = tag_node;
 		}
 	}
+	node._tags_context = node._tags.getAttribute("data-context");
 	for(tag in node.data_div.all_tags) {
 		context = node.data_div.all_tags[tag].context;
-		value = node.data_div.all_tags[tag].value.replace(/ & /, " &amp; ");
-		if(used_tags && used_tags[context] && used_tags[context][value]) {
-			tag_node = used_tags[context][value];
+		if(
+			(!node._tags_context || (context.match(new RegExp("^(" + node._tags_context.split(/,|;/).join("|") + ")$"))))
+		) {
+			value = node.data_div.all_tags[tag].value.replace(/ & /, " &amp; ");
+			if(used_tags && used_tags[context] && used_tags[context][value]) {
+				tag_node = used_tags[context][value];
+			}
+			else {
+				tag_node = u.ae(node._new_tags, "li", {"class":"tag"});
+				u.ae(tag_node, "span", {"class":"context", "html":context});
+				u.ae(tag_node, document.createTextNode(":"));
+				u.ae(tag_node, "span", {"class":"value", "html":value});
+				tag_node._context = context;
+				tag_node._value = value;
+			}
+			tag_node._id = node.data_div.all_tags[tag].id;
+			tag_node.node = node;
+			u.activateTag(tag_node);
 		}
-		else {
-			tag_node = u.ae(node._new_tags, "li", {"class":"tag"});
-			u.ae(tag_node, "span", {"class":"context", "html":context});
-			u.ae(tag_node, document.createTextNode(":"));
-			u.ae(tag_node, "span", {"class":"value", "html":value});
-			tag_node._context = context;
-			tag_node._value = value;
-		}
-		tag_node._id = node.data_div.all_tags[tag].id;
-		tag_node.node = node;
-		u.activateTag(tag_node);
 	}
 }
 u.activateTag = function(tag_node) {
@@ -8752,6 +8757,12 @@ Util.Objects["defaultTags"] = new function() {
 		div.get_tags_url = div.getAttribute("data-tag-get");
 		div.data_div = div;
 		if(div.csrf_token && div.get_tags_url && div.delete_tag_url && div.add_tag_url) {
+			div._tags = u.qs("ul.tags", div);
+			if(!div._tags) {
+				div._tags = u.ae(div._tags, "ul", {"class":"tags"});
+			}
+			div._tags.div = div;
+			div._tags_context = div._tags.getAttribute("data-context");
 			div.tagsResponse = function(response) {
 				if(response.cms_status == "success" && response.cms_object) {
 					this.all_tags = response.cms_object;
@@ -8760,16 +8771,11 @@ Util.Objects["defaultTags"] = new function() {
 					page.notify(response);
 					this.all_tags = [];
 				}
-				this._tags = u.qs("ul.tags", this);
-				if(!this._tags) {
-					this._tags = u.ae(this._tags, "ul", {"class":"tags"});
-				}
-				this._tags.div = this;
 				this._bn_add = u.ae(this._tags, "li", {"class":"add","html":"+"});
 				this._bn_add.node = this;
 				u.enableTagging(this);
 			}
-			u.request(div, div.get_tags_url, {"callback":"tagsResponse", "method":"post", "params":"csrf-token=" + div.csrf_token});
+			u.request(div, div.get_tags_url + (div._tags_context ? "/"+div._tags_context : ""), {"callback":"tagsResponse", "method":"post", "params":"csrf-token=" + div.csrf_token});
 		}
 	}
 }
