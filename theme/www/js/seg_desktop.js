@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-07-06 12:54:34
+asset-builder @ 2019-07-10 10:52:36
 */
 
 /*seg_desktop_include.js*/
@@ -4900,7 +4900,7 @@ u.f.customHintPosition["radiobuttons"] = function() {}
 /*u-settings.js*/
 u.ga_account = '';
 u.ga_domain = '';
-u.gapi_key = 'AIzaSyAVqnYpqFln-qAYsp5rkEGs84mrhmGQB_I';
+u.gapi_key = 'AIzaSyAnZTViVnr4jxGyNQCCMGO0hnJ8NjsKqjo';
 
 
 /*beta-u-overlay.js*/
@@ -6277,6 +6277,23 @@ Util.Objects["member_help"] = new function() {
 	}
 }
 
+
+/*i-newsletter.js*/
+Util.Objects["newsletter"] = new function() {
+	this.init = function(div) {
+		var form = u.qs("form", div);
+		form.div = div;
+		u.f.init(form);
+		form.submitted = function() {
+			this.DOMsubmit();
+			this.reset();
+			u.ae(this.div, "p", {html:"Tak for din tilmelding – husk at bekræfte din emailadresse via den tilsendte email."})
+			u.ass(this, {
+				display: "none"
+			});
+		}
+	}
+}
 
 /*i-departments.js*/
 Util.Objects["departments"] = new function() {

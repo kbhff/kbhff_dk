@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-07-05 21:38:56
+asset-builder @ 2019-07-10 10:52:48
 */
 
 /*seg_smartphone_include.js*/
@@ -7595,7 +7595,7 @@ u.f.textEditor = function(field) {
 				}
 			}
 			else if(u.hc(node, "youtube|vimeo")) {
-				field.addExternalVideoTag(node.className.match(field.ext_video_allowed.join("|")), node);
+				field.addExternalVideoTag(node.className.match(field.ext_video_allowed.join("|")[0]), node);
 			}
 			else if(u.hc(node, "file")) {
 				field.addFileTag(node);
