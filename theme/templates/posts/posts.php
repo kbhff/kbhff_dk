@@ -37,10 +37,10 @@ $items = $IC->getItems(array("itemtype" => $itemtype, "status" => 1, "extend" =>
 					]) ?>
 
 
-					<h3 itemprop="headline"><a href="/artikel/<?= $item["sindex"] ?>"><?= $item["name"] ?></a></h3>
+					<h3 itemprop="headline"><a href="/artikler/<?= $item["sindex"] ?>"><?= $item["name"] ?></a></h3>
 
 
-					<?= $HTML->articleInfo($item, "/artikel/".$item["sindex"], [
+					<?= $HTML->articleInfo($item, "/artikler/".$item["sindex"], [
 						"media" => $media, 
 						"sharing" => true
 					]) ?>

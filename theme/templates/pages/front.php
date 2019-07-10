@@ -72,10 +72,10 @@ $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage"
 						]) ?>
 
 
-						<h3 itemprop="headline"><a href="/artikel/<?= $item["sindex"] ?>"><?= preg_replace("/<br>|<br \/>/", "", $item["name"]) ?></a></h3>
+						<h3 itemprop="headline"><a href="/artikler/<?= $item["sindex"] ?>"><?= preg_replace("/<br>|<br \/>/", "", $item["name"]) ?></a></h3>
 
 
-						<?= $HTML->articleInfo($item, "/artikel/".$item["sindex"], [
+						<?= $HTML->articleInfo($item, "/artikler/".$item["sindex"], [
 							"media" => $media, 
 							"sharing" => true
 						]) ?>

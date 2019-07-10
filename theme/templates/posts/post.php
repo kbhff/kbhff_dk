@@ -60,7 +60,7 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 			<h1 itemprop="headline"><?= $item["name"] ?></h1>
 	
 	
-			<?= $HTML->articleInfo($item, "/artikel/".$item["sindex"], [
+			<?= $HTML->articleInfo($item, "/artikler/".$item["sindex"], [
 				"media" => $media, 
 				"sharing" => true
 			]) ?>
@@ -96,18 +96,18 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 			<? endif; ?>
 			</div>
 
-				<div class="c-box">
-					<h3>Example box</h3>
+			<!--div class="c-box">
+				<h3>Example box</h3>
 
-					<ul>
-						<li>Lorem ipsum</li>
-						<li>Lorem ipsum</li>
-						<li>Lorem ipsum</li>
-						<li>Lorem ipsum</li>
-						<li>Lorem ipsum</li>
-					</ul>
+				<ul>
+					<li>Lorem ipsum</li>
+					<li>Lorem ipsum</li>
+					<li>Lorem ipsum</li>
+					<li>Lorem ipsum</li>
+					<li>Lorem ipsum</li>
+				</ul>
 
-				</div>
+			</div-->
 		</div>
 
 	</div>
@@ -143,9 +143,9 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 					"url" => "/artikler/tag"
 				]) ?>
 
-				<h3 itemprop="headline"><a href="/artikel/<?= $item["sindex"] ?>"><?= $item["name"] ?></a></h3>
+				<h3 itemprop="headline"><a href="/artikler/<?= $item["sindex"] ?>"><?= $item["name"] ?></a></h3>
 
-				<?= $HTML->articleInfo($item, "/artikel/".$item["sindex"], [
+				<?= $HTML->articleInfo($item, "/artikler/".$item["sindex"], [
 					"media" => $media, 
 					"sharing" => true
 				]) ?>

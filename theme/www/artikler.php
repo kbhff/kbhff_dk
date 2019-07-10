@@ -16,9 +16,18 @@ $page->bodyClass("posts");
 $page->pageTitle("Artikler");
 
 
+// /artikler/#sindex#
+if(count($action) == 1) {
+
+	$page->page(array(
+		"templates" => "posts/post.php"
+	));
+	exit();
+
+}
+
 // /artikler/tag/#tag#
-// /artikler/tag/#tag#/#sindex#/prev|next
-if(count($action) >= 2 && $action[0] == "tag") {
+else if(count($action) >= 2 && $action[0] == "tag") {
 
 	$page->page(array(
 		"templates" => "posts/posts_tag.php"
