@@ -96,7 +96,7 @@
 }
 
 /* RIGHT COLUMN */
-#content div.profile .c-wrapper > .c-one-third {
+#content div.profile .c-wrapper > .c-one-third > ul.actions {
 	margin-top: 36px;
 }
 

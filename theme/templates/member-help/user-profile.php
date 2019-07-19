@@ -45,7 +45,7 @@ $has_accepted_terms = $UC->hasAcceptedTerms(["user_id" => $user_id]);
 		
 		<div class="c-two-thirds">
 			<? if(!$has_accepted_terms):?>
-			<div class="c-box">
+			<div class="c-box obs">
 				<h3><span class="highlight">OBS! </span><?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?> har ikke accepteret betingelserne.</h3>
 				<?= $model->formStart("brugerprofil/$action[1]/accepter", array("class" => "accept_terms labelstyle:inject")) ?>
 				<fieldset>
@@ -70,7 +70,7 @@ $has_accepted_terms = $UC->hasAcceptedTerms(["user_id" => $user_id]);
 			</div>
 			<? endif; ?>
 			<? if(!$is_membership_paid): ?>
-			<div class="c-box">
+			<div class="c-box obs">
 				<p>
 					<span class="highlight">OBS! </span><?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?> mangler at betale kontingent.
 					Kontingentet skal betales før man kan lave nye bestillinger.<a href="/medlemshjaelp/betaling/<?=$user["membership"]["order"]["order_no"]?>" class="button primary"> Betal kontingent nu.</a>
@@ -79,9 +79,7 @@ $has_accepted_terms = $UC->hasAcceptedTerms(["user_id" => $user_id]);
 			<? endif; ?>
 			<div class="section orders">
 				<h2>Eksisterende bestillinger</h2>
-				<ul class="actions new-order">
-					<li class="new-order"> <?= !$is_membership_paid | !$has_accepted_terms ? '<a class="button disabled link">' : '<a href="/" class="button primary">'?>Ny bestilling</a></li>
-				</ul>
+
 				<div class="order-headings">
 					<h4 class="pickup-date">AFH.DATO</h4>
 					<h4 class="order-place">STED</h4>
@@ -128,7 +126,12 @@ $has_accepted_terms = $UC->hasAcceptedTerms(["user_id" => $user_id]);
 					<p class="change-untill">6/6 kl. 23.59</p>
 					<ul class="actions change"><li class="change"><a href="#" class="button">ret</a></li></ul>
 				</div>
-				<p class="view-orders"><a href="#" class="button">Se gamle bestillinger</a></p>
+
+				<ul class="actions">
+					<li class="view-orders"><a href="#" class="button">Se gamle bestillinger</a></li>
+					<li class="new-order"><?= !$is_membership_paid | !$has_accepted_terms ? '<a class="button disabled link">' : '<a href="/" class="button primary">'?>Ny bestilling</a></li>
+				</ul>
+
 			</div>
 		</div>
 

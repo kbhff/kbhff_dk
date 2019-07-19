@@ -100,11 +100,8 @@
 #content .member_help ul.actions {text-align:center}
 
 /* USER PROFILE */ 
-#content .profile div.c-box.obs {margin-top: 5px;}
-#content .user-profile div.section.orders {font-size: 0;}
-#content .user_profile ul.actions.new-order {display: inline-block; width: 20%; vertical-align: top; float: right; padding: 0; margin-top: 0;}
-#content .user_profile ul.actions.new-order li {padding-left: 0; width: 100%;}
-#content .user_profile div.section.orders h2 {display: inline-block; width: 78%; margin-right: 0; margin-top: 0; margin-left: 0;}
+#content .profile .c-wrapper > div.c-box.obs {margin-top: 5px;}
+
 
 #content .user_profile p.view-orders {float: right; text-decoration: underline #3e8e17;}
 #content .user_profile p.view-orders a.button:hover {color: #357914;}
