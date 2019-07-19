@@ -21,7 +21,7 @@ if (!$department_id) {
 ?>
 
 <div class="scene member_help i:member_help i:scene" itemscope itemtype="http://schema.org/NewsArticle">
-	<div class="banner i:banner variant:1 format:jpg"></div>
+	<div class="banner i:banner variant:random format:jpg"></div>
 	<h1>Medlemshjælp</h1>
 
 	<div class="c-wrapper find-member">

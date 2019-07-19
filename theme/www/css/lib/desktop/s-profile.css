@@ -5,7 +5,6 @@
 	margin-right: 12px;
 	margin-top: 20px;
 	margin-bottom: 22px;
-	border-bottom: 2px solid #808080;
 }
 
 #content div.profile ul.actions {
@@ -35,16 +34,21 @@
 
 
 /* LEFT COLUMN */
+#content div.profile .order,
+#content div.profile .order-headings {
+	margin-left: 12px;
+	margin-right: 12px;
+}
+
+#content div.profile .order > p,
+#content div.profile .order-headings > h4 {
+	padding: 0;
+}
 
 #content div.profile .orders,
 #content div.profile .order-headings,
 #content div.profile .order {
 	font-size: 0;
-}
-
-#content div.profile .orders {
-	margin-left: 12px;
-	margin-right: 12px;
 }
 
 #content div.profile .membership-info {
@@ -92,6 +96,9 @@
 }
 
 /* RIGHT COLUMN */
+#content div.profile .c-wrapper > .c-one-third {
+	margin-top: 36px;
+}
 
 #content div.profile .c-box,
 #content div.profile .fields {
@@ -110,7 +117,6 @@
 	margin-left: 12px;
 	margin-right: 12px;
 	margin-bottom: 12px;
-	border-bottom: 1px solid #000000;
 }
 
 #content div.profile p.over {

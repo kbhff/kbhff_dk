@@ -37,13 +37,13 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 		<div class="c-two-thirds">
 
 			<div class="section intro">
-				<h2>Velkommen <span class="name"><?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?></span></h2>
+				<h1>Velkommen <span class="name"><?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?></span></h1>
 				<p>
 					På min side kan du se og rette oplysninger om dig og dit medlemskab.
 					Du kan også se og rette dine eksisterende bestillinger og lave en ny bestilling (åbner GrøntShoppen).
 					På sigt er det desuden meningen at du her skal kunne book frivillig-vagter og se nyheder og beskeder fra din lokalafdeling.
 				</p>
-				<div class="c-box">
+				<div class="c-box obs">
 					<p>
 						<span class="highlight">OBS!</span> Østerbro lokalafdeling mangler en ny team-koordinator.
 						Kunne du have lyst til at hjælpe KBHFF med at blive endnu bedre federe at være frivillig i og være med på et helt vildt sjovt

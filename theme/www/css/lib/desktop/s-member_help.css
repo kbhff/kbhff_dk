@@ -2,7 +2,7 @@
 #content .member_help h1 {display: none;}
 
 /* SEARCH */ 
-#content .member_help h2 {padding: 0; margin-left: 12px; margin-right: 12px; margin-top: 20px; margin-bottom: 12px; border-bottom: 2px solid #808080;}
+#content .member_help h2 {padding: 0; margin-left: 12px; margin-right: 12px; margin-top: 20px; margin-bottom: 12px;}
 
 #content .member_help div.c-wrapper,
 #content .member_help div.c-wrapper > div {min-height: 0px; padding: 0;}
@@ -33,7 +33,7 @@
 #content .member_help ul.users ul {padding: 0; margin: 0; font-size: 0;}
 #content .member_help ul.users li {list-style-type: none; padding-left: 0;}
 
-#content .member_help h3 {padding-right: 0; padding-left: 0; padding-bottom: 0; border-bottom: 2px solid #808080; margin-bottom: 22px; margin-left: 12px; margin-right: 12px;}
+#content .member_help h3 {padding-right: 0; padding-left: 0; padding-bottom: 0; margin-bottom: 22px; margin-left: 12px; margin-right: 12px;}
 #content .member_help ul.users li ul li, 
 #content .member_help h3 span {padding: 0; display: inline-block; vertical-align: bottom;}
 

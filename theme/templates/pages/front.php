@@ -12,7 +12,7 @@ $weeklybag_item = $WBC->getWeeklyBag();
 $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage", "status" => 1, "extend" => array("tags" => true, "readstate" => true, "user" => true, "mediae" => true)));
 ?>
 <div class="scene front i:scene i:front">
-	<div class="banner i:banner variant:1 format:jpg"></div>
+	<div class="banner i:banner variant:random format:jpg"></div>
 
 
 <? if($page_item && $page_item["status"]): 
