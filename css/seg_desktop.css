@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-06-25 15:20:54
+asset-builder @ 2019-07-19 19:17:58
 */
 
 /*seg_desktop_include.css*/
@@ -515,6 +515,14 @@ position: relative;
 	margin-right: 12px;
 	margin-bottom: 24px;
 }
+#content div.c-box {
+	background: #f2f2f2;
+	border-top: 5px solid #000000;
+}
+#content div.c-box.obs {border-top: 5px solid #3e8e17;}
+#content div.c-primary-box {
+	background: #3e8e17;
+}
 #content .c-box > h2,
 #content .c-primary-box > h2 {
 	padding-top: 22px;
@@ -522,12 +530,6 @@ position: relative;
 #content div.c-box > p:first-child,
 #content div.c-primary-box > p:first-child {
 	padding-top: 12px;
-}
-#content div.c-box {
-	background: #f2f2f2;
-}
-#content div.c-primary-box {
-	background: #3e8e17;
 }
 #content div.c-primary-box h1,
 #content div.c-primary-box h2,
