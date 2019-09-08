@@ -9,7 +9,7 @@ if($item) {
 
 ?>
 
-<div class="scene post i:generic">
+<div class="scene post i:scene">
 
 	<?	if($item):
 	$media = $IC->sliceMedia($item); ?>
@@ -41,7 +41,6 @@ if($item) {
 	</div>
 
 
-
 <? else: ?>
 
 
@@ -51,6 +50,5 @@ if($item) {
 
 
 <? endif; ?>
-
 
 </div>
