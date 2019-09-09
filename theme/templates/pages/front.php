@@ -120,7 +120,7 @@ $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage"
 			</div>
 
 			<div class="c-box newsletter i:newsletter">
-				<h3>Nyhedsbrev</h3>
+				<h3>Tilmeld Nyhedsbrev</h3>
 		
 				<form action="//kbhff.us15.list-manage.com/subscribe/post?u=d2a926649ebcf316af87a05bb&amp;id=141ae6f59f" method="post" target="_blank">
 					<input type="hidden" name="b_d2a926649ebcf316af87a05bb_141ae6f59f" value="">
