@@ -76,7 +76,6 @@ if(message()->hasMessages(array("type" => "error"))): ?>
 		<?= $model->input("mobile", array("label" => "Mobilnummer", "hint_message" => "Indtast dit mobilnummer.", "error_message" => "Det skal være et dansk mobilnummer.")); ?>
 		<?= $model->input("password", array("required" => true, "label" => "Adgangskode", "hint_message" => "Indtast en adgangskode på mindst 8 karakterer.", "error_message" => "Din adgangskode skal være mere end 8 karakterer.")); ?>
 		<?= $model->input("department_id", array("type" => "select", "required" => true, "label" => "Vælg lokalafdeling", "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),)); ?>
-		<p class="terms_summary">Vi kan godt lide privatliv. Derfor indsamler vi kun de oplysninger vi skal bruge, og vi kontakter dig kun når vi vurderer at det er i din interesse.</p>
 		<?= $model->input("terms", array("label" => 'Jeg accepterer <a href="/persondata" target="_blank">KBHFF\'s retningslinjer for behandling og opbevaring af persondata</a>', "hint_message" => "Nødvendigt for at blive medlem af KBHFF.", "error_message" => "Du skal acceptere KBHFF's retningslinjer for at være medlem.")); ?>
 		<?= $model->input("maillist", array("type" => "checkbox", "label" => "Jeg vil gerne modtage KBHFF's nyhedsbrev.", "value" => "Nyheder")); ?>
 	</fieldset>
