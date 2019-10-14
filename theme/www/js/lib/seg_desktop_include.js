@@ -7,6 +7,7 @@ document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipu
 document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/src/u-template.js"></script>');
 document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/src/u-googlemaps.js"></script>');
 
+
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-article.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-articles.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-front.js"></script>');
