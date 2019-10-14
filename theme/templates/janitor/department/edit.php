@@ -40,8 +40,8 @@ $department = $model->getDepartment(array("id" => $department_id));
 			</fieldset>
 
 			<fieldset>
-				<?= $model->inputHTML("description", array("value" => $department["description"])) ?>
-				<?= $model->inputHTML("html", array("value" => $department["html"])) ?>
+				<?= $model->input("description", array("value" => $department["description"])) ?>
+				<?= $model->input("html", array("value" => $department["html"])) ?>
 			</fieldset>
 
 			<?= $JML->editActions($department) ?>

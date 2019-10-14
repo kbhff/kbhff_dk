@@ -29,8 +29,8 @@ global $model;
 		</fieldset>
 
 		<fieldset>
-			<?= $model->inputHTML("description") ?>
-			<?= $model->inputHTML("html") ?>
+			<?= $model->input("description") ?>
+			<?= $model->input("html") ?>
 		</fieldset>
 
 		<?= $JML->newActions() ?>

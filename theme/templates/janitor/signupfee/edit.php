@@ -26,7 +26,7 @@ $memberships = $IC->getItems(array("itemtype" => "membership", "extend" => true)
 				<?= $model->input("classname", array("value" => $item["classname"])) ?>
 				<?= $model->input("associated_membership_id", array("type" => "select", "options" => $HTML->toOptions($memberships, "id", "name", ["add" => ["" => "Choose associated membership type"]]), "value" => $item["associated_membership_id"])) ?>
 				<?= $model->input("description", array("class" => "autoexpand short", "value" => $item["description"])) ?>
-				<?= $model->inputHTML("html", array("value" => $item["html"])) ?>
+				<?= $model->input("html", array("value" => $item["html"])) ?>
 			</fieldset>
 
 			<?= $JML->editActions($item) ?>

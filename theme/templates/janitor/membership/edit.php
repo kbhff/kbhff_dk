@@ -27,8 +27,8 @@ $messages = $IC->getItems(array("itemtype" => "message", "extend" => true));
 				<?= $model->input("fixed_url_identifier", array("value" => $item["fixed_url_identifier"])) ?>
 				<?= $model->input("subscribed_message_id", array("type" => "select", "options" => $HTML->toOptions($messages, "id", "name", ["add" => ["" => "Choose message"]]), "value" => $item["subscribed_message_id"])) ?>
 				<?= $model->input("description", array("class" => "autoexpand short", "value" => $item["description"])) ?>
-				<?= $model->inputHTML("introduction", array("value" => $item["introduction"])) ?>
-				<?= $model->inputHTML("html", array("value" => $item["html"])) ?>
+				<?= $model->input("introduction", array("value" => $item["introduction"])) ?>
+				<?= $model->input("html", array("value" => $item["html"])) ?>
 			</fieldset>
 
 			<?= $JML->editActions($item) ?>
