@@ -52,15 +52,15 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 	
 			<?= $HTML->articleTags($item, [
 				"context" => [$itemtype],
-				"url" => "/artikler/tag",
-				"default" => ["/artikler", "Alle"]
+				"url" => "/nyheder/tag",
+				"default" => ["/nyheder", "Alle"]
 			]) ?>
 	
 	
 			<h1 itemprop="headline"><?= $item["name"] ?></h1>
 	
 	
-			<?= $HTML->articleInfo($item, "/artikler/".$item["sindex"], [
+			<?= $HTML->articleInfo($item, "/nyheder/".$item["sindex"], [
 				"media" => $media, 
 				"sharing" => true
 			]) ?>
@@ -87,9 +87,9 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 			<? if($categories): ?>
 				<div class="categories">
 					<ul class="tags">
-						<li><a href="/artikler">Alle artikler</a></li>
+						<li><a href="/nyheder">Alle artikler</a></li>
 					<? foreach($categories as $tag): ?>
-						<li><a href="/artikler/tag/<?= urlencode($tag["value"]) ?>"><?= $tag["value"] ?></a></li>
+						<li><a href="/nyheder/tag/<?= urlencode($tag["value"]) ?>"><?= $tag["value"] ?></a></li>
 						<? endforeach; ?>
 					</ul>
 				</div>
@@ -140,12 +140,12 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 
 				<?= $HTML->articleTags($item, [
 					"context" => [$itemtype],
-					"url" => "/artikler/tag"
+					"url" => "/nyheder/tag"
 				]) ?>
 
-				<h3 itemprop="headline"><a href="/artikler/<?= $item["sindex"] ?>"><?= $item["name"] ?></a></h3>
+				<h3 itemprop="headline"><a href="/nyheder/<?= $item["sindex"] ?>"><?= $item["name"] ?></a></h3>
 
-				<?= $HTML->articleInfo($item, "/artikler/".$item["sindex"], [
+				<?= $HTML->articleInfo($item, "/nyheder/".$item["sindex"], [
 					"media" => $media, 
 					"sharing" => true
 				]) ?>

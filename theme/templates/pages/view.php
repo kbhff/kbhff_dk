@@ -28,6 +28,10 @@ if($item) {
 
 		<h1 itemprop="headline"><?= $item["name"] ?></h1>
 
+		<? if($item["subheader"]): ?>
+		<h2 itemprop="alternativeHeadline"><?= $item["subheader"] ?></h2>
+		<? endif; ?>
+
 		<div class="articlebody" itemprop="articleBody">
 			<?= $item["html"]?>
 		</div>

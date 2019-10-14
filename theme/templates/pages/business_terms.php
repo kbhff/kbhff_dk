@@ -9,7 +9,7 @@ if($item) {
 
 ?>
 
-<div class="scene persondata i:scene">
+<div class="scene businessterms i:scene">
 
 	<?	if($item):
 	$media = $IC->sliceMedia($item); ?>

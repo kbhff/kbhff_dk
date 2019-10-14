@@ -12,8 +12,8 @@ $IC = new Items();
 $itemtype = "page";
 
 
-$page->bodyClass("posts");
-$page->pageTitle("Sider");
+$page->bodyClass("page");
+$page->pageTitle("Om");
 
 
 // /sider/#sindex#
@@ -28,7 +28,7 @@ if(count($action) == 1) {
 
 // /sider
 $page->page(array(
-	"templates" => "pages/404.php"
+	"templates" => "pages/about.php"
 ));
 exit();
 

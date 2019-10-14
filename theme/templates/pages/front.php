@@ -68,14 +68,14 @@ $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage"
 
 						<?= $HTML->articleTags($item, [
 							"context" => ["post"],
-							"url" => "/artikler/tag"
+							"url" => "/nyheder/tag"
 						]) ?>
 
 
-						<h3 itemprop="headline"><a href="/artikler/<?= $item["sindex"] ?>"><?= preg_replace("/<br>|<br \/>/", "", $item["name"]) ?></a></h3>
+						<h3 itemprop="headline"><a href="/nyheder/<?= $item["sindex"] ?>"><?= preg_replace("/<br>|<br \/>/", "", $item["name"]) ?></a></h3>
 
 
-						<?= $HTML->articleInfo($item, "/artikler/".$item["sindex"], [
+						<?= $HTML->articleInfo($item, "/nyheder/".$item["sindex"], [
 							"media" => $media, 
 							"sharing" => true
 						]) ?>

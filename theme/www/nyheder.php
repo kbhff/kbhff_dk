@@ -13,10 +13,10 @@ $itemtype = "post";
 
 
 $page->bodyClass("posts");
-$page->pageTitle("Artikler");
+$page->pageTitle("Nyheder");
 
 
-// /artikler/#sindex#
+// /nyheder/#sindex#
 if(count($action) == 1) {
 
 	$page->page(array(
@@ -26,7 +26,7 @@ if(count($action) == 1) {
 
 }
 
-// /artikler/tag/#tag#
+// /nyheder/tag/#tag#
 else if(count($action) >= 2 && $action[0] == "tag") {
 
 	$page->page(array(
@@ -36,7 +36,7 @@ else if(count($action) >= 2 && $action[0] == "tag") {
 
 }
 
-// /artikler
+// /nyheder
 // overview of posts
 $page->page(array(
 	"templates" => "posts/posts.php"
