@@ -13,6 +13,8 @@ $item = $IC->getItem(array("id" => $item_id, "extend" => array("tags" => true, "
 
 	<?= $JML->editGlobalActions($item) ?>
 
+	<?= $JML->editSindex($item) ?>
+
 	<div class="item i:defaultEdit">
 		<h2>Post content</h2>
 		<?= $model->formStart("update/".$item["id"], array("class" => "labelstyle:inject")) ?>
