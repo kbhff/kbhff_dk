@@ -25,6 +25,14 @@ $item = $IC->getItem(array("id" => $item_id, "extend" => true));
 				<?= $model->input("html", array("value" => $item["html"])) ?>
 			</fieldset>
 
+			<fieldset>
+				<p>
+					Add the full description of the bag, including <em>Løssalg</em>. This will be shown on the
+					details page for the weekly bag.
+				</p>
+				<?= $model->input("full_description", array("value" => $item["full_description"])) ?>
+			</fieldset>
+
 			<?= $JML->editActions($item) ?>
 
 		<?= $model->formEnd() ?>

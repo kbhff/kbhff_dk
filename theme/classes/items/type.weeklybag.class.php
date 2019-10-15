@@ -85,10 +85,39 @@ class TypeWeeklybag extends Itemtype {
 			"label" => "Content of bag",
 			"required" => true,
 			"allowed_tags" => "p,h4,ul",
-			"hint_message" => "List the content of the weekly bag. You can include a small description if needed.",
+			"hint_message" => "List the content of the weekly bag for showing in sidebar on frontpage. You can include a small description if needed.",
 			"error_message" => "A weekly bag without content? How weird."
 		));
 
+		// Full description
+		$this->addToModel("full_description", array(
+			"type" => "html",
+			"label" => "Full description",
+			"required" => true,
+			"allowed_tags" => "p,h3,h4,ul,jpg,png",
+			"hint_message" => "Full description of weekly bag and other product availability.",
+			"error_message" => "A weekly bag without a full description? How weird."
+		));
+
+	}
+
+	function getWeeklyBagDate($week = false, $year = false) {
+
+		if(!$week) {
+			$week = date("W", strtotime("WEDNESDAY"));
+		}
+
+		if(!$year) {
+			$year = date("Y", strtotime("WEDNESDAY"));
+		}
+		
+		// always use two digits in week no
+		$week = $week < 10 ? "0$week" : $week;
+
+		$time = strtotime("{$year}W{$week} +2 days");
+		$months = ["januar", "februar", "marts", "april", "maj", "juni", "juli", "august", "september", "oktober", "november", "december"];
+
+		return date ("d.", $time) . " " . $months[date("m", $time)-1] . ", " . date ("Y", $time);
 	}
 
 	function getWeeklyBag($week = false, $year = false) {
@@ -103,11 +132,12 @@ class TypeWeeklybag extends Itemtype {
 
 		$query = new Query();
 
-		$sql = "SELECT * FROM ".$this->db." WHERE week = $week AND year = $year";
+		$sql = "SELECT item_id FROM ".$this->db." WHERE week = $week AND year = $year";
 		// debug([$sql]);
 		if($query->sql($sql)) {
 
-			return $query->result(0);
+			$IC = new Items();
+			return $IC->getItem(["id" => $query->result(0, "item_id"), "extend" => true]);
 
 		}
 		

@@ -7,6 +7,7 @@ CREATE TABLE `SITE_DB`.`item_weeklybag` (
   `year` int(11) NULL DEFAULT NULL,
 
   `html` text NOT NULL DEFAULT '',
+  `full_description` text NOT NULL DEFAULT '',
 
   PRIMARY KEY (`id`),
   KEY `item_id` (`item_id`),

@@ -58,6 +58,7 @@
 #content .front .c-box.weeklybag li {
 	padding-top: 0;
 }
+#content .front .c-box.weeklybag p.readmore {padding-bottom: 12px; text-align: right;}
 
 
 #content .front .c-box.actions ul.actions li {display: block; text-align: left; padding-left: 0;}	

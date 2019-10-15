@@ -15,7 +15,7 @@ if($item) {
 <div class="scene page i:scene">
 
 	<?	if($item):
-	$media = $IC->sliceMedia($item); ?>
+	$media = $IC->sliceMediae($item); ?>
 
 	<div class="article i:article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
 

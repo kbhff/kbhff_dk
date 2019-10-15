@@ -5,8 +5,8 @@ $page_item = $IC->getItem(array("tags" => "page:front", "extend" => array("user"
 if($page_item) {
 	$this->sharingMetaData($page_item);
 }
-$WBC = $IC->typeObject("weeklybag");
 
+$WBC = $IC->typeObject("weeklybag");
 $weeklybag_item = $WBC->getWeeklyBag();
 
 $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage", "status" => 1, "extend" => array("tags" => true, "readstate" => true, "user" => true, "mediae" => true)));
@@ -16,7 +16,7 @@ $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage"
 
 
 <? if($page_item && $page_item["status"]): 
-	$media = $IC->sliceMedia($page_item); ?>
+	$media = $IC->sliceMediae($page_item); ?>
 	<div class="article i:article" itemscope itemtype="http://schema.org/Article">
 
 		<? if($media): ?>
@@ -58,7 +58,7 @@ $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage"
 			<div class="news">
 				<ul class="items articles">
 				<? foreach($post_items as $item): 
-					$media = $IC->sliceMedia($item); ?>
+					$media = $IC->sliceMediae($item); ?>
 					<li class="item article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle" data-readstate="<?= $item["readstate"] ?>">
 
 						<? if($media): ?>
@@ -109,13 +109,16 @@ $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage"
 
 
 			<div class="c-box weeklybag">
-				
 			<? if($weeklybag_item): ?>
 				<h3>Ugens pose - <?= $weeklybag_item["name"] ?></h3>
 				<?= $weeklybag_item["html"] ?>
+
+				<p class="readmore"><a href="/ugens-pose/<?= $weeklybag_item["sindex"] ?>">Læs mere om uges pose</a></p>
 			<? else: ?>
 				<h3>Ugens pose</h3>
 				<p>Ugens pose er endnu ikke oprettet.</p>
+
+				<p class="readmore"><a href="/ugens-pose">Læs mere om uges pose</a></p>
 			<? endif; ?>
 			</div>
 

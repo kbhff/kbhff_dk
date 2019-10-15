@@ -15,7 +15,7 @@ $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "positio
 <div class="scene signupfees i:signupfees">
 
 <? if($page_item && $page_item["status"]):
-	$media = $IC->sliceMedia($page_item); ?>
+	$media = $IC->sliceMediae($page_item); ?>
 	<div class="article i:article id:<?= $page_item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
 
 		<? if($media): ?>

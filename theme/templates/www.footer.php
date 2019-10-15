@@ -1,5 +1,5 @@
 <?
-$navigation = $this->navigation("main-public"); 
+$navigation = $this->navigation("main-public");
 
 
 // use global vars to keep track of path and indenting

@@ -2,19 +2,19 @@
 $IC = new Items();
 global $action;
 
-$item = $IC->getItem(array("tags" => "page:persondata", "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true, "readstate" => true)));
+$item = $IC->getItem(array("tags" => "page:member", "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true, "readstate" => true)));
 if($item) {
 	$this->sharingMetaData($item);
 }
 
 ?>
 
-<div class="scene persondata i:scene">
+<div class="scene member i:scene">
 
 	<?	if($item):
 	$media = $IC->sliceMediae($item); ?>
 
-	<div class="article i:article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
+	<div class="article i:article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle">
 
 	<? if($media): ?>
 		<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">

@@ -12,7 +12,7 @@ if($item) {
 <div class="scene contact i:scene">
 
 	<?	if($item):
-	$media = $IC->sliceMedia($item); ?>
+	$media = $IC->sliceMediae($item); ?>
 
 	<div class="article i:article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle">
 
@@ -24,6 +24,10 @@ if($item) {
 
 
 		<h1 itemprop="headline"><?= $item["name"] ?></h1>
+
+		<? if($item["subheader"]): ?>
+		<h2 itemprop="alternativeHeadline"><?= $item["subheader"] ?></h2>
+		<? endif; ?>
 
 		<div class="articlebody" itemprop="articleBody">
 			<?= $item["html"]?>

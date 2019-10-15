@@ -26,7 +26,7 @@ $username = stringOr(getPost("username"), session()->value("temp-username"));
 <div class="scene login i:login">
 
 <? if($page_item && $page_item["status"]):
-	$media = $IC->sliceMedia($page_item); ?>
+	$media = $IC->sliceMediae($page_item); ?>
 	<div class="article i:article id:<?= $page_item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
 
 		<? if($media): ?>

@@ -32,7 +32,7 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 	<div class="banner i:banner variant:random format:jpg"></div>
 
 <? if($item):
-	$media = $IC->sliceMedia($item); ?>
+	$media = $IC->sliceMediae($item); ?>
 
 	<div class="c-wrapper">
 		
@@ -131,7 +131,7 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 
 		<ul class="items articles">
 <?		foreach($related_items as $item): 
-			$media = $IC->sliceMedia($item); ?>
+			$media = $IC->sliceMediae($item); ?>
 			<li class="item article item_id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle">
 
 				<? if($media): ?>

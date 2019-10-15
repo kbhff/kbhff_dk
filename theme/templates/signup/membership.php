@@ -47,7 +47,7 @@ if($item) {
 
 
 <? if($item):
-	$media = $IC->sliceMedia($item); ?>
+	$media = $IC->sliceMediae($item); ?>
 
 	<div class="article i:article id:<?= $item["item_id"] ?> service" itemscope itemtype="http://schema.org/Article" data-csrf-token="<?= session()->value("csrf") ?>">
 
@@ -146,7 +146,7 @@ if($item) {
 			<h2>Andre medlemskaber <a href="/bliv-medlem">(oversigt)</a></h2>
 			<ul class="items membership">
 			<?	foreach($related_items as $item):
-				$media = $IC->sliceMedia($item); ?>
+				$media = $IC->sliceMediae($item); ?>
 				<li class="item membership item_id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle" data-readstate="<?= $item["readstate"] ?>">
 			
 					<h3 itemprop="headline"><a href="/bliv-medlem/medlemskaber/<?= $item["fixed_url_identifier"] ?>"><?= strip_tags($item["name"]) ?></a></h3>

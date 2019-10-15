@@ -35,6 +35,6 @@ $item = $IC->getItem(array("id" => $item_id, "extend" => array("tags" => true, "
 
 	<?= $JML->editTags($item, ["context" => "post,on"]) ?>
 
-	<?= $JML->editMedia($item) ?>
+	<?= $JML->editMediae($item) ?>
 
 </div>

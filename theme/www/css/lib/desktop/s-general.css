@@ -41,3 +41,23 @@
 	background-size: auto;
 }
 */
+
+#content .scene div.pagination {text-align: center;}
+#content .scene div.pagination ul {display: inline-block; vertical-align: top; white-space: nowrap;}
+#content .scene div.pagination ul li {display: inline-block; vertical-align: top; line-height: 34px; padding: 0 7px;}
+#content .scene div.pagination ul li.previous a,
+#content .scene div.pagination ul li.next a {font-size: 14px; display: block; padding: 7px 14px; line-height: 22px; background-color: #999999; color: #ffffff; border: none; cursor: pointer;
+	font-weight: 400;
+	text-transform: uppercase;
+	font-family: "voresfont";
+}
+
+
+#content .scene ul.subnavigation {margin: 48px 12px 24px; padding: 0; list-style: none; /*display: inline-block; vertical-align: top; white-space: nowrap;*/}
+#content .scene ul.subnavigation li {display: inline-block; vertical-align: top; line-height: 34px; padding: 0 12px 12px 0;}
+#content .scene ul.subnavigation li a {font-size: 18px; display: block; padding: 12px 24px; line-height: 22px; background-color: #999999; color: #ffffff; border: none; cursor: pointer;
+	font-weight: 400;
+	text-transform: uppercase;
+	font-family: "voresfont";
+}
+

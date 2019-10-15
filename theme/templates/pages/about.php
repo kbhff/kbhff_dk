@@ -2,19 +2,30 @@
 $IC = new Items();
 global $action;
 
-$item = $IC->getItem(array("tags" => "page:persondata", "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true, "readstate" => true)));
+$item = $IC->getItem(array("tags" => "page:about", "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true, "readstate" => true)));
 if($item) {
 	$this->sharingMetaData($item);
 }
 
+$about_navigation = $this->navigation("main-about");
+
 ?>
 
-<div class="scene persondata i:scene">
+<div class="scene about i:scene">
+
+	<? if($about_navigation && isset($about_navigation["nodes"])) { ?>
+	<ul class="subnavigation">
+		<? foreach($about_navigation["nodes"] as $node): ?>
+		<li><a href="<?= $node["link"] ?>"><?= $node["name"] ?></a></li>
+		<? endforeach;?>
+	</ul>
+	<? } ?>
+
 
 	<?	if($item):
 	$media = $IC->sliceMediae($item); ?>
 
-	<div class="article i:article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
+	<div class="article i:article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle">
 
 	<? if($media): ?>
 		<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">

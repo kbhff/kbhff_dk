@@ -5,8 +5,29 @@ global $itemtype;
 
 
 // get post tags for listing
-$categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 $items = $IC->getItems(array("itemtype" => $itemtype, "status" => 1, "extend" => array("tags" => true, "user" => true, "mediae" => true)));
+
+$sindex = isset($action[1]) ? $action[1] : false;
+$limit = 20;
+
+$items = $IC->paginate(array(
+	"limit" => $limit, 
+	"pattern" => array(
+		"itemtype" => $itemtype, 
+		// "order" => "status DESC",
+		"status" => 1,
+		"extend" => array(
+			"user" => true,
+			"tags" => true, 
+			"mediae" => true
+		)
+	),
+	"sindex" => $sindex
+));
+
+// Get categories
+$categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
+
 
 ?>
 
@@ -20,10 +41,10 @@ $items = $IC->getItems(array("itemtype" => $itemtype, "status" => 1, "extend" =>
 
 			<h1>Nyheder</h1>
 
-		<? if($items): ?>
+		<? if($items && $items["range_items"]): ?>
 			<ul class="items articles">
-				<? foreach($items as $item):
-					$media = $IC->sliceMedia($item); ?>
+				<? foreach($items["range_items"] as $item):
+					//$media = $IC->sliceMediae($item); ?>
 				<li class="item article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle">
 
 					<? if($media): ?>
@@ -55,6 +76,24 @@ $items = $IC->getItems(array("itemtype" => $itemtype, "status" => 1, "extend" =>
 				</li>
 				<? endforeach; ?>
 			</ul>
+
+			<? if($items["next"] || $items["prev"]): ?>
+			<div class="pagination">
+				<ul>
+					<? if($items["prev"]): ?>
+					<li class="previous"><a href="/nyheder/liste/<?= $items["prev"][0]["sindex"] ?>">Forrige side</a></li>
+					<? else: ?>
+					<li class="previous"><a class="disabled">Forrige side</a></li>
+					<? endif; ?>
+					<li>Side <?= $items["current_page"] ?> af <?= $items["page_count"] ?> sider</li>
+					<? if($items["next"]): ?>
+						<li class="next"><a href="/nyheder/liste/<?= $items["next"][0]["sindex"] ?>">Næste side</a></li>
+					<? else: ?>	
+					<li class="next"><a class="disabled">Næste side</a></li>
+					<? endif; ?>
+				</ul>
+			</div>
+			<? endif; ?>
 
 		<? else: ?>
 			<p>Ingen nyheder</p>

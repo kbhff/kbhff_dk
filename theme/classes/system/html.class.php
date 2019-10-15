@@ -53,7 +53,6 @@ class HTML extends HTMLCore {
 	* @param String $description contains an optional description of the item. 
 	* @return String compiled html list.
 	*/
-
 	function frontendOffer($item, $url, $description = false) {
 	
 		$_ = '';
@@ -105,8 +104,7 @@ class HTML extends HTMLCore {
 	*		$sharing	boolean
 	* 
 	*/ 
-
-	function articleInfo($item, $url, $_options) {
+	function articleInfo($item, $url, $_options = false) {
 
 		$media = false;
 		$sharing = false;
@@ -168,7 +166,7 @@ class HTML extends HTMLCore {
 
 	}
 
-	
+
 	/**
 	* Compile a html list containing tags. 
 	* 
@@ -183,7 +181,6 @@ class HTML extends HTMLCore {
 	* @return STRING compiled html list 
 	*
 	*/
-
 	function articleTags($item, $_options = false) {
 
 		$context = false;
@@ -260,7 +257,6 @@ class HTML extends HTMLCore {
 	* @param String $type message delivery type
 	* @return String messages
 	*/
-
 	function serverMessages($type = []) {
 
 		$_ = '';
@@ -280,6 +276,7 @@ class HTML extends HTMLCore {
 
 		return $_;
 	}
+
 }
 
 // create standalone instance to make HTML available without model
