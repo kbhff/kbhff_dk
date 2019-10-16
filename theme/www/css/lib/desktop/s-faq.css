@@ -1,0 +1,10 @@
+#content .scene.faq ul.questions {padding: 24px 0; list-style: none; margin: 0; font-size: 0;}
+
+#content .scene.faq ul.questions li.question {}
+	
+#content .scene.faq ul.questions li.question h2 {padding: 8px 12px 12px 28px; position: relative; font-size: 24px;}
+#content .scene.faq ul.questions li.question h2 svg {position: absolute; left: 3px; top: 17px; stroke: #999999; stroke-width: 3px;}
+
+
+#content .scene.faq ul.questions li.question .articlebody {display: none; padding-left: 16px;}
+#content .scene.faq ul.questions li.question.open .articlebody {display: block;}
