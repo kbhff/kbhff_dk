@@ -330,7 +330,7 @@ class User extends UserCore {
 	}
 
 	/**
-	 * Update user password
+	 * Update password for current user
 	 *
 	 * @param array $action REST parameters
 	 * @return boolean
@@ -584,7 +584,10 @@ class User extends UserCore {
 				$cart_reference = isset($_COOKIE["cart_reference"]) ? $_COOKIE["cart_reference"] : false;
 			}
 			if($cart_reference) {
-				$membership = $this->getMembership();
+				include_once("classes/users/member.class.php");
+				$MC = new Member();
+				
+				$membership = $MC->getMembership();
 				
 				if($membership && $membership["subscription_id"]) {
 					$SC = new Shop();

@@ -4,6 +4,8 @@ global $model;
 
 $UC = new User();
 $IC = new Items();
+include_once("classes/users/member.class.php");
+$MC = new Member();
 
 // get user and order information 
 $user_id = session()->value("user_id");
@@ -12,7 +14,7 @@ $amount = "";
 $user = $UC->getUser();
 
 $order = $model->getOrders(array("order_no" => $order_no));
-$membership = $UC->getMembership();
+$membership = $MC->getMembership();
 
 $is_membership = false;
 $subscription_method = false;

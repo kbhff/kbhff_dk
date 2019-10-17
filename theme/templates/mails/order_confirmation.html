@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Aktiver din konto hos {SITE_NAME}</title>
+	<title>Ordrebekræftelse fra Københavns Fødevarefællesskab</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 	<style type="text/css">
@@ -42,7 +42,7 @@
 <body style="color: #000000; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space; margin: 0; padding: 0;">
 
 <div class="preview ignore_text" style="display: none; font-size: 1px; color: #ffffff; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0.001; overflow: hidden">
-	Verificér din e-mail for at aktivere din konto hos KBHFF!
+	Tak for din ordre! Dit ordrenummer er <em>{ORDER_NO}</em>. Den samlede pris er {ORDER_PRICE}. 
 </div>
 
 <div style="background-color: #ffffff; text-align: center; padding: 0; margin: 0 10px;">
@@ -65,19 +65,26 @@
 			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 20px 0 30px;">
 				Hej <em>{NICKNAME}</em>,
 			</p>
+			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 20px 0 30px;">
+				Tak for din ordre!
+			</p>
 			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
-				Tillykke med at du har meldt dig ind i Københavns Fødevarefællesskab!
+				Dit ordrenummer er <em>{ORDER_NO}</em>. Den samlede pris er {ORDER_PRICE}. 
+			</p>
+			<p style="font-family: Verdana, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0;">
+				Klik på linket for at se din ordre og faktura:
 			</p>
 			<table>
 			<tr>
-				<td bgcolor="#ffffff" style="padding: 14px  0px; font-family: Arial, sans-serif; font-size: 28px; color: #3e8e17; margin: 30px 0;"><a href="{SITE_URL}/bliv-medlem/bekraeft/{EMAIL}/{VERIFICATION}">Verificér din e-mail</td>
+				<td bgcolor="#ffffff" style="padding: 14px  0px; font-family: Arial, sans-serif; font-size: 28px; color: #3e8e17; margin: 30px 0;"><a href="{SITE_URL}/bliv-medlem/bekraeft/{EMAIL}/{VERIFICATION}">Se ordre og faktura</td>
 			</tr>
 			</table>
+			
 			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
-				Når du verificerer din e-mail, skal du ved samme lejlighed vælge en personlig adgangskode til din konto, da du ikke fik oprettet et i butikken. 
+				Hvis du mener, at ovenstående ikke er korrekt, eller hvis du har spørgsmål vedrørende ordren eller betaling heraf, er du meget velkommen til at kontakte os ved at besvare denne mail. 
 			</p>
 				<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 15px 0;">
-				Grønne hilsener
+				Grønne hilsener,
 				</p>
 		</td>
 	</tr>

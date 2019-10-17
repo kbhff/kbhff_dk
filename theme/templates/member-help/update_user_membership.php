@@ -6,10 +6,12 @@ global $itemtype;
 
 $UC = new SuperUser();
 $IC = new Items();
+include_once("classes/users/supermember.class.php");
+$MC = new SuperMember();
 
 $user_id = $action[1];
 $user = $UC->getKbhffUser(["user_id" => $user_id]);
-$membership = $UC->getMembership(["user_id" => $user_id]);
+$membership = $MC->getMembers(["user_id" => $user_id]);
 $memberships = $IC->getItems(array("itemtype" => "membership", "status" => 1, "extend" => array("subscription_method" => true, "prices" => true)));
 
 // print_r($memberships);exit();

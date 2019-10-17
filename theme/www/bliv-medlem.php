@@ -26,8 +26,9 @@ if($action) {
 		$user_id = session()->value("user_id");
 		if($user_id > 1) {
 
-			$UC = new User();
-			$membership = $UC->getMembership();
+			include_once("classes/users/member.class.php");
+			$MC = new Member();
+			$membership = $MC->getMembership();
 			// user is a member with a subscription
 			if($membership && $membership["subscription_id"]) {
 				//redirect to leave POST state
