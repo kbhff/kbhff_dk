@@ -1,48 +1,58 @@
 Util.Objects["member_help"] = new function() {
 	this.init = function(scene) {
-//		u.bug("scene init:", scene);
+		// u.bug("scene init:", scene);
 
 
 		scene.resized = function() {
-//			u.bug("scene.resized:", this);
+			// u.bug("scene.resized:", this);
 		}
 
 		scene.scrolled = function() {
-//			u.bug("scrolled:", this);
+			// u.bug("scrolled:", this);
 		}
 
 		scene.ready = function() {
-//			u.bug("scene.ready:", this);
+			// u.bug("scene.ready:", this);
 
 			page.cN.scene = this;
 
-			
 			var search_form = u.qs("form.search_user", this);
-			
-			search_form.users_ul = u.qs("ul.users", this);
-			search_form.template = u.qs("li.template", this);
-		
-			var i = 0;
-			
-			search_form.visible_p = u.qs("p.visible");
-			
+
+			// Is search form available
 			if(search_form) {
-				 
+
 				search_form.scene = this;
-			
-				search_form.timeOut = 300
+
+				search_form.ul_users = u.qs("ul.users", this);
+				search_form.header = u.qs("div.users h3", this);
+
+				search_form.template = u.qs("li.template", this);
+
+				search_form.search_timeout = 300
+
+
+				// Init form
 				u.f.init(search_form);
-			
+
+
 				// function to run when user types more than 3 characters in search field.
 				search_form.updated = function () {
-					this.search_input = this.fields.search_member;
-					if (this.search_input.val().length > 3) {
+
+					u.t.resetTimer(this.t_search);
+					this.current_search = this.inputs.search_member.val();
+
+					// Ready to search
+					if (this.current_search.length > 3) {
 						this.readyToSearch()
 					}
-					if (this.search_input.val().length < 3) {
-						this.users_ul.innerHTML = "";
+
+					else {
+
+
+						this.ul_users.innerHTML = "";
+						u.as(this.visible_p, "display", "none");
+
 						if (this.visible_p.style.display = "none") {
-							u.as(this.visible_p, "display", "block");
 						}
 					}	
 				}
@@ -50,7 +60,7 @@ Util.Objects["member_help"] = new function() {
 				// function sets timer in order to control execution of search function.
 				search_form.readyToSearch = function () {
 					u.t.resetTimer(this.t_search);
-					this.t_search = u.t.setTimer(this, this.search, this.timeOut)
+					this.t_search = u.t.setTimer(this, this.search, this.search_timeout)
 				}
 		
 				// search function which executes when timer has run out.
@@ -58,7 +68,7 @@ Util.Objects["member_help"] = new function() {
 					
 					this.response = function(response) {
 						console.log(response);
-						this.users_ul.innerHTML = "";
+						this.ul_users.innerHTML = "";
 						u.as(this.visible_p, "display", "none");
 						// parses user object and returns it as html node lists
 						this.users = u.template(this.template, response.cms_object.users);
@@ -79,7 +89,7 @@ Util.Objects["member_help"] = new function() {
 								}
 							}
 							
-						 u.ae(this.users_ul, this.users[0]); 
+						 u.ae(this.ul_users, this.users[0]); 
 						}
 					}
 					u.request(this, this.action+"soeg", {"method":"post", "data":u.f.getParams(this)});
