@@ -30,9 +30,10 @@ if(isset($action[1])) {
 	if($order_no) {
 		$order = $model->getOrders(array("order_no" => $order_no));
 
-
 		// get potential user membership
-		$membership = $UC->getMembership();
+		include_once("classes/users/member.class.php");
+		$MC = new Member();
+		$membership = $MC->getMembership();
 
 		// get order prices
 		if($order) {

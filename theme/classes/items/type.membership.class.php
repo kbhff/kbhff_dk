@@ -109,6 +109,140 @@ class TypeMembership extends Itemtype {
 
 	}
 
+	function enabling($item) {
+
+		if(!$item["subscription_method"]) {
+
+			message()->addMessage("Can't enable. Membership items must have a subscription method.", ["type" => "error"]);
+			return false;
+		}
+	}
+
+	function addedToCart($added_item, $cart) {
+
+		$added_item_id = $added_item["id"];
+		// print "\n<br>###$added_item_id### added to cart (membership)\n<br>";
+		$SC = new Shop;
+		$IC = new Items;
+		$query = new Query;
+
+		foreach($cart["items"] as $cart_item) {
+			
+			$existing_item = $IC->getItem(["id" => $cart_item["item_id"]]);
+
+			// another membership type already exists in cart
+			if($existing_item["itemtype"] == "membership" && $existing_item["id"] != $added_item["id"]) {
+
+				// keep the newest membership item
+				$SC->deleteFromCart(["deleteFromCart", $cart["cart_reference"], $existing_item["id"]]);
+
+			}
+		}
+		
+		// check quantity
+		$sql = "SELECT quantity FROM ".SITE_DB.".shop_cart_items WHERE item_id = ".$added_item["id"]." AND cart_id = ".$cart["id"];
+		if($query->sql($sql) && $query->result(0, "quantity") > 1) {
+
+			// ensure that membership item has quantity of 1 
+			$sql = "UPDATE ".SITE_DB.".shop_cart_items SET quantity = 1 WHERE item_id = ".$added_item["id"]." AND cart_id = ".$cart["id"];
+			// print $sql;
+			$query->sql($sql);
+
+			message()->addMessage("Can't update quantity. A Membership can only have a quantity of 1.", ["type" => "error"]);
+		}  
+		
+
+
+
+		global $page;
+		$page->addLog("membership->addedToCart: added_item:".$added_item_id);
+
+	}
+
+
+	function ordered($order_item, $order) {
+
+		include_once("classes/shop/supersubscription.class.php");
+		include_once("classes/users/supermember.class.php");
+		$SuperSubscriptionClass = new SuperSubscription();
+		$MC = new SuperMember();
+		
+		$order_item_item_id = $order_item["item_id"];
+		$order_id = $order["id"];
+		$user_id = $order["user_id"];
+		
+		$existing_membership = $MC->getMembers(["user_id" => $user_id]);
+		
+		// user is already member (active or inactive)
+		if($existing_membership) {
+
+			// new membership item has a subscription method
+			if(SITE_SUBSCRIPTIONS && $order_item["subscription_method"]) {
+				
+				// existing membership is active
+				if($existing_membership["subscription_id"]) {
+					
+					// update subscription
+					$subscription_id = $existing_membership["subscription_id"];
+					$_POST["item_id"] = $order_item_item_id;
+					$_POST["user_id"] = $user_id;
+					$_POST["order_id"] = $order_id;
+					$subscription = $SuperSubscriptionClass->updateSubscription(["updateSubscription", $subscription_id]);
+					unset($_POST);
+				}
+				// existing membership is inactive
+				else {
+
+					// add subscription
+					$_POST["item_id"] = $order_item_item_id;
+					$_POST["user_id"] = $user_id;
+					$_POST["order_id"] = $order_id;
+					$subscription = $SuperSubscriptionClass->addSubscription(["addSubscription"]);
+					unset($_POST);
+				}
+
+				// update membership with subscription_id
+				$subscription_id = $subscription["id"];
+				$MC->updateMembership(["user_id" => $user_id, "subscription_id" => $subscription_id]);
+			}
+			
+			// new membership item has no subscription method
+			else {
+				
+				return false;
+			}
+			
+		}
+		
+		// user is not yet a member
+		else {
+
+			// new membership has a subscription method
+			if(SITE_SUBSCRIPTIONS && $order_item["subscription_method"]) {
+				
+				// add subscription
+				$_POST["item_id"] = $order_item_item_id;
+				$_POST["user_id"] = $user_id;
+				$_POST["order_id"] = $order_id;
+				$subscription = $SuperSubscriptionClass->addSubscription(["addSubscription"]);
+				$subscription_id = $subscription["id"];
+				unset($_POST);
+	
+				// add membership
+				$MC->addMembership($order_item_item_id, $subscription_id, ["user_id" => $user_id]);
+			}
+			else {
+
+				return false;
+			}
+		}
+		
+		global $page;
+		$page->addLog("membership->ordered: order_id:".$order["id"]);
+		// print "\n<br>###$order_item_item_id### ordered (membership)\n<br>";
+	}
+
+
 	/**
 	 * Callback when order is shipped
 	 *
@@ -118,12 +252,14 @@ class TypeMembership extends Itemtype {
 	 */
 	function shipped($order_item, $order) {
 
-		// print "\n<br>###$order_item_id### shipped\n<br>";
+
+		global $page;
+		$page->addLog("membership->shipped: order_id:".$order["id"]);
 
 	}
 
 	/**
-	 * 	Callback when user subscribes to an item
+	 * 	Callback when user subscribes to a membership item
 	 *
 	 * @param array $subscription
 	 * @return void
@@ -133,50 +269,58 @@ class TypeMembership extends Itemtype {
 		
 		
 		// check for subscription error
-		if($subscription && $subscription["item_id"] && $subscription["user_id"] && $subscription["order"]) {
+		if($subscription && $subscription["item_id"] && $subscription["user_id"]) {
 
 			$item_id = $subscription["item_id"];
 			$user_id = $subscription["user_id"];
-			$order = $subscription["order"];
-			$item_key = arrayKeyValue($order["items"], "item_id", $item_id);
-			$order_item = $order["items"][$item_key];
-			$message_id = $subscription["item"]["subscribed_message_id"];
-
-
-			$query = new Query();
-			// Add member number as username (if username doesn't already exist)
-			$sql = "SELECT username FROM ".SITE_DB.".user_usernames WHERE user_id = $user_id, type = 'member_no'";
-			if(!$query->sql($sql)) {
-
-				include_once("classes/users/superuser.class.php");
-				$UC = new SuperUser();
-
-				// get member no
-				$member = $UC->getMembers(["user_id" => $user_id]);
-
-				// insert as username
-				$sql = "INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '".$member["id"]."', type = 'member_no', verified=1, verification_code = '".randomKey(8)."'";
-				$query->sql($sql);
+			$order_id = NULL;
+			$price = NULL;
+			
+			if(isset($subscription["order"])) {
+				$order = $subscription["order"];
+				$item_key = arrayKeyValue($order["items"], "item_id", $item_id);
+				$order_id = $order["id"];
+				$order_item = $order["items"][$item_key];
+				
+				// variables for email
+				$price = formatPrice(["price" => $order_item["total_price"], "vat" => $order_item["total_vat"],  $order_item["total_price"], "country" => $order["country"], "currency" => $order["currency"]]);
 			}
 
+			$message_id = $subscription["item"]["subscribed_message_id"];
 
 			// Set price variable for email
 			$price = formatPrice(array("price" => $order_item["total_price"], "vat" => $order_item["total_vat"],  $order_item["total_price"], "country" => $order["country"], "currency" => $order["currency"]));
 
-
-			// send email
 			$IC = new Items();
 			$model = $IC->typeObject("message");
 
 			$model->sendMessage([
-				"item_id" => $message_id,
-				"user_id" => $user_id,
+				"item_id" => $message_id, 
+				"user_id" => $user_id, 
 				"values" => ["PRICE" => $price]
 			]);
 
-			// Add subscription to log
+
+			// set expiry date to May 1st each year
+
+			// current month is May or later
+			if(date("m") >= 05) {
+				$expiration_year = date("Y") + 1;
+			}
+			// current month is before May
+			else {
+				$expiration_year = date("Y");
+
+			}
+			$expires_at = $expiration_year."-05-01 00:00:00";
+			
+			// overwrite the automatically generated expiry date with custom value
+			$query = new Query();
+			$sql = "UPDATE ".SITE_DB.".user_item_subscriptions SET expires_at = '$expires_at' WHERE id = ".$subscription["id"];
+			$query->sql($sql);
+
 			global $page;
-			$page->addLog("membership->subscribed: item_id:$item_id, user_id:$user_id, order_id:".$order["id"]);
+			$page->addLog("membership->subscribed: item_id:$item_id, user_id:$user_id, order_id:".$order_id);
 
 		}
 

@@ -37,8 +37,10 @@ class SuperUser extends SuperUserCore {
 		// Call updateUserDepartment with a "fake" $action array
 		$this->updateUserDepartment(["updateUserDepartment", $user_id]);
 	}
+
+
 	/**
-	 * Get the current user, including associated department.
+	 * Get the specified user, including associated department.
 	 *
 	 * @return array The user object, with the department object appended as a new property.
 	 */
@@ -62,6 +64,8 @@ class SuperUser extends SuperUserCore {
 
 		return $user;
 	}
+
+
 	function getUser($_options=false) {
 		
 		// default values
@@ -103,7 +107,9 @@ class SuperUser extends SuperUserCore {
 			$user["maillists"] = $this->getMaillists();
 
 			if((defined("SITE_SHOP") && SITE_SHOP)) {
-				$user["membership"] = $this->getMembership(["user_id" => $user_id]);
+				include_once("classes/users/supermember.class.php");
+				$MC = new SuperMember();
+				$user["membership"] = $MC->getMembers(["user_id" => $user_id]);
 			}
 
 			return $user;
@@ -764,60 +770,60 @@ class SuperUser extends SuperUserCore {
 
 	// get membership for current user
 	// includes membership item and order
-	function getMembership($_options=false) {
+	// function getMembership($_options=false) {
 		
-		// default values
-		$user_id = false;
+	// 	// default values
+	// 	$user_id = false;
 
-		if($_options !== false) {
-			foreach($_options as $_option => $_value) {
-				switch($_option) {
+	// 	if($_options !== false) {
+	// 		foreach($_options as $_option => $_value) {
+	// 			switch($_option) {
 
-					case "user_id"        : $user_id          = $_value; break;
-				}
-			}
-		} 
+	// 				case "user_id"        : $user_id          = $_value; break;
+	// 			}
+	// 		}
+	// 	} 
 
 		
-		$query = new Query();
-		$IC = new Items();
-		$SC = new SuperShop();
+	// 	$query = new Query();
+	// 	$IC = new Items();
+	// 	$SC = new SuperShop();
 
 
-		// membership with subscription
-		$sql = "SELECT members.id as id, subscriptions.id as subscription_id, subscriptions.item_id as item_id, subscriptions.order_id as order_id, members.user_id as user_id, members.created_at as created_at, members.modified_at as modified_at, subscriptions.renewed_at as renewed_at, subscriptions.expires_at as expires_at FROM ".$this->db_subscriptions." as subscriptions, ".$this->db_members." as members WHERE members.user_id = $user_id AND members.subscription_id = subscriptions.id LIMIT 1";
+	// 	// membership with subscription
+	// 	$sql = "SELECT members.id as id, subscriptions.id as subscription_id, subscriptions.item_id as item_id, subscriptions.order_id as order_id, members.user_id as user_id, members.created_at as created_at, members.modified_at as modified_at, subscriptions.renewed_at as renewed_at, subscriptions.expires_at as expires_at FROM ".$this->db_subscriptions." as subscriptions, ".$this->db_members." as members WHERE members.user_id = $user_id AND members.subscription_id = subscriptions.id LIMIT 1";
 		
-		if($query->sql($sql)) {
-			$membership = $query->result(0);
-			$membership["item"] = $IC->getItem(array("id" => $membership["item_id"], "extend" => array("prices" => true, "subscription_method" => true)));
-			if($membership["order_id"]) {
-				$membership["order"] = $SC->getOrders(array("order_id" => $membership["order_id"]));
-			}
-			else {
-				$membership["order"] = false;
-			}
+	// 	if($query->sql($sql)) {
+	// 		$membership = $query->result(0);
+	// 		$membership["item"] = $IC->getItem(array("id" => $membership["item_id"], "extend" => array("prices" => true, "subscription_method" => true)));
+	// 		if($membership["order_id"]) {
+	// 			$membership["order"] = $SC->getOrders(array("order_id" => $membership["order_id"]));
+	// 		}
+	// 		else {
+	// 			$membership["order"] = false;
+	// 		}
 
-			return $membership;
-		}
-		// membership without subscription
-		else {
-			$sql = "SELECT * FROM ".$this->db_members." WHERE user_id = $user_id LIMIT 1";
-			if($query->sql($sql)) {
-				$membership = $query->result(0);
+	// 		return $membership;
+	// 	}
+	// 	// membership without subscription
+	// 	else {
+	// 		$sql = "SELECT * FROM ".$this->db_members." WHERE user_id = $user_id LIMIT 1";
+	// 		if($query->sql($sql)) {
+	// 			$membership = $query->result(0);
 
-				$membership["item"] = false;
-				$membership["order"] = false;
-				$membership["order_id"] = false;
-				$membership["item_id"] = false;
-				$membership["expires_at"] = false;
-				$membership["renewed_at"] = false;
+	// 			$membership["item"] = false;
+	// 			$membership["order"] = false;
+	// 			$membership["order_id"] = false;
+	// 			$membership["item_id"] = false;
+	// 			$membership["expires_at"] = false;
+	// 			$membership["renewed_at"] = false;
 
-				return $membership;
-			}
-		}
+	// 			return $membership;
+	// 		}
+	// 	}
 
-		return false;
-	}
+	// 	return false;
+	// }
 
 
 }

@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-07-19 19:29:10
+asset-builder @ 2019-10-17 16:51:04
 */
 
 /*seg_desktop_include.js*/
@@ -5636,6 +5636,55 @@ Util.Objects["front"] = new function() {
 						}
 					}
 					u.ce(node, {type:"link", use: "h3 a"});
+				}
+			}
+		}
+		scene.ready();
+	}
+}
+
+
+/*i-faq.js*/
+Util.Objects["faq"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			var questions = u.qsa("ul.items li.question", this);
+			var i, question, header;
+			for(i = 0; i < questions.length; i++) {
+				question = questions[i];
+				header = u.qs("h2,h3", question);
+				header.question = question;
+				u.addExpandArrow(header);
+				u.ce(header);
+				header.clicked = function() {
+					if(this.is_open) {
+						this.is_open = false;
+						u.rc(this.question, "open");
+						u.addExpandArrow(this);
+						u.deleteNodeCookie(this.question, "state");
+					}
+					else {
+						this.is_open = true;
+						u.ac(this.question, "open");
+						u.addCollapseArrow(this);
+						u.saveNodeCookie(this.question, "state", "open", {ignore_classnames:"open"});
+					}
+					if(!this.answer) {
+						this.response = function(response) {
+							if(response.isHTML) {
+								this.answer = u.qs(".scene .article .articlebody", response);
+								u.ae(this.question, this.answer);
+							}
+						}
+						u.request(this, this.url);
+					}
+				}
+				if(u.getNodeCookie(question, "state") == "open") {
+					header.clicked();
 				}
 			}
 		}

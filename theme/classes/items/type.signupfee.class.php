@@ -94,41 +94,109 @@ class TypeSignupfee extends Itemtype {
 		));
 		
 	}
+
+	function ordered($order_item, $order) {
+
+		include_once("classes/shop/supersubscription.class.php");
+		include_once("classes/users/supermember.class.php");
+		$SuperSubscriptionClass = new SuperSubscription();
+		$MC = new SuperMember();
+		$IC = new Items();
+		$query = new Query();
+
+		
+		$order_id = $order["id"];
+		$user_id = $order["user_id"];
+
+		$membership_type = $IC->getItem(["id" => $order_item["associated_membership_id"], "extend" => ["subscription_method" => true]]);
+		
+		$existing_membership = $MC->getMembers(["user_id" => $user_id]);
+		
+		// user is already member (active or inactive)
+		if($existing_membership) {
+
+			// new membership item has a subscription method
+			if(SITE_SUBSCRIPTIONS && $membership_type["subscription_method"]) {
+				
+				// existing membership is active
+				if($existing_membership["subscription_id"]) {
+					
+					// update subscription
+					$subscription_id = $existing_membership["subscription_id"];
+					$_POST["item_id"] = $membership_type["id"];
+					$_POST["user_id"] = $user_id;
+					$_POST["order_id"] = $order_id;
+					$subscription = $SuperSubscriptionClass->updateSubscription(["updateSubscription", $subscription_id]);
+					unset($_POST);
+				}
+				// existing membership is inactive
+				else {
+
+					// add subscription
+					$_POST["item_id"] = $membership_type["id"];
+					$_POST["user_id"] = $user_id;
+					$_POST["order_id"] = $order_id;
+					$subscription = $SuperSubscriptionClass->addSubscription(["addSubscription"]);
+					unset($_POST);
+				}
+
+				// update membership with subscription_id
+				$subscription_id = $subscription["id"];
+				$MC->updateMembership(["user_id" => $user_id, "subscription_id" => $subscription_id]);
+			}
+			
+			// new membership item has no subscription method
+			else {
+				
+				// subscriptionless memberships are not allowed (use non-expiring subscription in stead)
+				return false;
+			}
+			
+		}
+		
+		// user is not yet a member
+		else {
+
+			// new membership has a subscription method
+			if(SITE_SUBSCRIPTIONS && $membership_type["subscription_method"]) {
+				
+				// add subscription
+				$_POST["item_id"] = $membership_type["id"];
+				$_POST["user_id"] = $user_id;
+				$_POST["order_id"] = $order_id;
+				$subscription = $SuperSubscriptionClass->addSubscription(["addSubscription"]);
+				$subscription_id = $subscription["id"];
+				unset($_POST);
+	
+				// add membership
+				$MC->addMembership($membership_type["id"], $subscription_id, ["user_id" => $user_id]);
+			}
+			else {
+
+				return false;
+			}
+
+
+			// Add member number as username (if username doesn't already exist)
+			$sql = "SELECT username FROM ".SITE_DB.".user_usernames WHERE user_id = $user_id, type = 'member_no'";
+			if(!$query->sql($sql)) {
+				
+				// get member no
+				$member = $MC->getMembers(["user_id" => $user_id]);
+				// insert as username
+				$sql = "INSERT INTO ".SITE_DB.".user_usernames SET user_id = $user_id, username = '".$member["id"]."', type = 'member_no', verified=1, verification_code = '".randomKey(8)."'";
+				$query->sql($sql);
+			}
+		}
+
+		
+		global $page;
+		$page->addLog("signupfee->ordered: order_id:".$order["id"]);
+		// print "\n<br>###$order_item_item_id### ordered (membership)\n<br>";
+	}
 	
 	function shipped($order_item, $order) {	
 		// print "\n<br>###$order_item### shipped\n<br>";
-
-		include_once("classes/users/superuser.class.php");
-		$UC = new SuperUser();
-
-		// get the signupfee item
-		$IC = new Items();
-		$signupfee_item = $IC->getItem(array("id" => $order_item["item_id"], "extend" => true));
-
-
-		// add values to POST array. These will be used by the addSubscription method.
-		$_POST["order_id"] = $order["id"];
-		$_POST["item_id"] = $signupfee_item["associated_membership_id"];
-		$_POST["user_id"] = $order["user_id"];
-
-		
-		// create subscription
-		$subscription = $UC->addSubscription(array("addSubscription"));		
-		if ($subscription) {
-			// TODO: hardcoded expiry date – may become dynamic in the future
-			$expires_at = "2019-05-01 00:00:00";
-			
-			// overwrite the automatically generated expiry date with custom value
-			$query = new Query();
-			$sql = "UPDATE ".SITE_DB.".user_item_subscriptions SET expires_at = '$expires_at' WHERE id = ".$subscription["id"];
-			if($query->sql($sql)) {
-				return true;
-			}
-		}
-		
-		return false;
-
-
 		
 	}
 

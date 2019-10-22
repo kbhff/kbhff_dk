@@ -31,9 +31,11 @@ if(count($action) == 4) {
 	if($order_no) {
 		$order = $model->getOrders(array("order_no" => $order_no));
 
+		include_once("classes/users/member.class.php");
+		$MC = new Member();
 
 		// get potential user membership
-		$membership = $UC->getMembership();
+		$membership = $MC->getMembership();
 
 
 		if($order) {
