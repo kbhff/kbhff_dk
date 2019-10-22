@@ -1,6 +1,6 @@
 u.f.fixFieldHTML = function(field) {
-	if(field._indicator) {
-		u.ae(u.qs("label", field), field._indicator);
+	if(field.indicator && field.label) {
+		u.ae(field.label, field.indicator);
 	}
 }
 

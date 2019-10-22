@@ -1,29 +1,27 @@
-// Location custom field
+// HTML custom field
 // initializer and validator
-// Location is a multi input field
-
 
 // initializer
-Util.Form.customInit["html"] = function(_form, field) {
+Util.Form.customInit["html"] = function(field) {
 
-	field._input = u.qs("textarea", field);
-	field._input._form = _form;
-	field._input.field = field;
+	// Register field type
+	field.type = "html";
 
-	// add input to fields array
-	_form.fields[field._input.name] = field._input;
 
-	// get input label
-	field._input._label = u.qs("label[for='"+field._input.id+"']", field);
+	// Get primary input
+	field.input = u.qs("textarea", field);
+	// form is a reserved property, so we use _form
+	field.input._form = field._form;
+	// Get associated label
+	field.input.label = u.qs("label[for='"+field.input.id+"']", field);
+	// Let it know it's field
+	field.input.field = field;
 
 	// get/set value function
-	field._input.val = u.f._value;
+	field.input.val = u.f._value;
 
 	// create textEditor interface
 	u.f.textEditor(field);
-
-	// validate field now
-	u.f.validate(field._input);
 
 }
 
@@ -43,11 +41,25 @@ Util.Form.customValidate["html"] = function(iN) {
 		u.text(iN.field._viewer).length <= max && 
 		(!pattern || iN.val().match("^"+pattern+"$"))
 	) {
-		u.f.fieldCorrect(iN);
+		u.f.inputIsCorrect(iN);
 	}
 	else {
-		u.f.fieldError(iN);
+		u.f.inputHasError(iN);
 	}
+
+}
+
+
+Util.Form.customHintPosition["html"] = function(field) {
+	// u.bug("customHintPosition html", field);
+
+	// Default positioning
+	var input_middle = field._editor.offsetTop + (field._editor.offsetHeight / 2);
+	var help_top = input_middle - field.help.offsetHeight / 2;
+
+	u.ass(field.help, {
+		"top": help_top + "px"
+	});
 
 }
 
@@ -181,7 +193,7 @@ u.f.textEditor = function(field) {
 	// could be in form action (last fragment of url)
 	// TODO: should be extended to look in other places
 	field.item_id;
-	var item_id_match = field._input._form.action.match(/\/([0-9]+)(\/|$)/);
+	var item_id_match = field._form.action.match(/\/([0-9]+)(\/|$)/);
 	if(item_id_match) {
 		field.item_id = item_id_match[1];
 	}
@@ -199,6 +211,8 @@ u.f.textEditor = function(field) {
 	field._editor = u.ae(field, "div", {"class":"editor"});
 	field._editor.field = field;
 
+	u.ae(field._editor, field.indicator);
+
 	// callback after sorting list
 	field._editor.dropped = function() {
 		this.field.update();
@@ -210,15 +224,15 @@ u.f.textEditor = function(field) {
 
 
 		// allow to toggle raw HTML view
-		this.bn_show_raw = u.ae(this._input._label, "span", {"html":"(RAW HTML)"});
+		this.bn_show_raw = u.ae(this.input.label, "span", {"html":"(RAW HTML)"});
 		this.bn_show_raw.field = this;
 		u.ce(this.bn_show_raw);
 		this.bn_show_raw.clicked = function() {
-			if(u.hc(this.field._input, "show")) {
-				u.rc(this.field._input, "show");
+			if(u.hc(this.field.input, "show")) {
+				u.rc(this.field.input, "show");
 			}
 			else {
-				u.ac(this.field._input, "show");
+				u.ac(this.field.input, "show");
 			}
 		}
 
@@ -231,27 +245,38 @@ u.f.textEditor = function(field) {
 		this.bn_add = u.ae(this.options, "li", {"class":"add", "html":"+"});
 		this.bn_add.field = field;
 		u.ce(this.bn_add);
+
+		u.ce(this.options);
+		this.options.inputStarted = function(event) {
+			u.e.kill(event);
+		}
 		this.bn_add.clicked = function(event) {
 			if(u.hc(this.field.options, "show")) {
 				u.rc(this.field.options, "show");
 				u.rc(this.field, "optionsshown");
+
+				if(this.start_event_id) {
+					u.e.removeWindowStartEvent(this, this.start_event_id);
+					delete this.start_event_id;
+				}
 			}
 			else {
 				u.ac(this.field.options, "show");
 				u.ac(this.field, "optionsshown");
+
+				this.start_event_id = u.e.addWindowStartEvent(this, this.clicked);
 			}
 		}
-
 
 		// Add text tag option (if allowed)
 		if(this.text_allowed.length) {
 
 			this.bn_add_text = u.ae(this.options, "li", {"class":"text", "html":"Text ("+this.text_allowed.join(", ")+")"});
-			this.bn_add_text.field = field;
+			this.bn_add_text.field = this;
 			u.ce(this.bn_add_text);
 			this.bn_add_text.clicked = function(event) {
 				this.field.addTextTag(this.field.text_allowed[0]);
-				u.rc(this.field.options, "show");
+				this.field.bn_add.clicked();
 			}
 		}
 
@@ -260,11 +285,11 @@ u.f.textEditor = function(field) {
 		if(this.list_allowed.length) {
 
 			this.bn_add_list = u.ae(this.options, "li", {"class":"list", "html":"List ("+this.list_allowed.join(", ")+")"});
-			this.bn_add_list.field = field;
+			this.bn_add_list.field = this;
 			u.ce(this.bn_add_list);
 			this.bn_add_list.clicked = function(event) {
 				this.field.addListTag(this.field.list_allowed[0]);
-				u.rc(this.field.options, "show");
+				this.field.bn_add.clicked();
 			}
 		}
 
@@ -273,11 +298,11 @@ u.f.textEditor = function(field) {
 		if(this.code_allowed.length) {
 
 			this.bn_add_code = u.ae(this.options, "li", {"class":"code", "html":"Code"});
-			this.bn_add_code.field = field;
+			this.bn_add_code.field = this;
 			u.ce(this.bn_add_code);
 			this.bn_add_code.clicked = function(event) {
 				this.field.addCodeTag(this.field.code_allowed[0]);
-				u.rc(this.field.options, "show");
+				this.field.bn_add.clicked();
 			}
 		}
 
@@ -286,11 +311,11 @@ u.f.textEditor = function(field) {
 		if(this.media_allowed.length && this.item_id && this.media_add_action && this.media_delete_action && !u.browser("IE", "<=9")) {
 
 			this.bn_add_media = u.ae(this.options, "li", {"class":"list", "html":"Media ("+this.media_allowed.join(", ")+")"});
-			this.bn_add_media.field = field;
+			this.bn_add_media.field = this;
 			u.ce(this.bn_add_media);
 			this.bn_add_media.clicked = function(event) {
 				this.field.addMediaTag();
-				u.rc(this.field.options, "show");
+				this.field.bn_add.clicked();
 			}
 		}
 		else if(this.media_allowed.length) {
@@ -302,11 +327,11 @@ u.f.textEditor = function(field) {
 		if(this.ext_video_allowed.length) {
 
 			this.bn_add_ext_video = u.ae(this.options, "li", {"class":"video", "html":"External video ("+this.ext_video_allowed.join(", ")+")"});
-			this.bn_add_ext_video.field = field;
+			this.bn_add_ext_video.field = this;
 			u.ce(this.bn_add_ext_video);
 			this.bn_add_ext_video.clicked = function(event) {
 				this.field.addExternalVideoTag(this.field.ext_video_allowed[0]);
-				u.rc(this.field.options, "show");
+				this.field.bn_add.clicked();
 			}
 		}
 
@@ -315,11 +340,11 @@ u.f.textEditor = function(field) {
 		if(this.file_allowed.length && this.item_id && this.file_add_action && this.file_delete_action && !u.browser("IE", "<=9")) {
 
 			this.bn_add_file = u.ae(this.options, "li", {"class":"file", "html":"Downloadable file"});
-			this.bn_add_file.field = field;
+			this.bn_add_file.field = this;
 			u.ce(this.bn_add_file);
 			this.bn_add_file.clicked = function(event) {
 				this.field.addFileTag();
-				u.rc(this.field.options, "show");
+				this.field.bn_add.clicked();
 			}
 		}
 
@@ -343,22 +368,22 @@ u.f.textEditor = function(field) {
 
 		// callback to field updated
 		if(fun(this.updated)) {
-			this.updated(this._input);
+			this.updated(this.input);
 		}
 
 		// callback to field changed
 		if(fun(this.changed)) {
-			this.changed(this._input);
+			this.changed(this.input);
 		}
 
 		// callback to form updated
-		if(this._input._form && fun(this._input._form.updated)) {
-			this._input._form.updated(this._input);
+		if(this.input._form && fun(this.input._form.updated)) {
+			this.input._form.updated(this.input);
 		}
 
 		// callback to form changed
-		if(this._input._form && fun(this._input._form.changed)) {
-			this._input._form.changed(this._input);
+		if(this.input._form && fun(this.input._form.changed)) {
+			this.input._form.changed(this.input);
 		}
 	}
 
@@ -418,7 +443,7 @@ u.f.textEditor = function(field) {
 			else if(u.hc(tag, "file") && tag._variant) {
 
 				// add div with <p> and <a>
-				div = u.ae(this._viewer, "div", {"class":"file item_id:"+tag._item_id+" variant:"+tag._variant+" name:"+tag._name + " filesize:"+tag._filesize});
+				div = u.ae(this._viewer, "div", {"class":"file item_id:"+tag._item_id+" variant:"+tag._variant+" name:"+encodeURIComponent(tag._name)+" filesize:"+tag._filesize});
 				p = u.ae(div, "p");
 				a = u.ae(p, "a", {"href":"/download/"+tag._item_id+"/"+tag._variant+"/"+tag._name, "html":tag._input.val()});
 			}
@@ -427,7 +452,7 @@ u.f.textEditor = function(field) {
 			else if(u.hc(tag, "media") && tag._variant) {
 
 				// add div with <p> and <a>
-				div = u.ae(this._viewer, "div", {"class":"media item_id:"+tag._item_id+" variant:"+tag._variant+" name:"+tag._name + " filesize:"+tag._filesize + " format:"+tag._format});
+				div = u.ae(this._viewer, "div", {"class":"media item_id:"+tag._item_id+" variant:"+tag._variant+" name:"+encodeURIComponent(tag._name)+" filesize:"+tag._filesize + " format:"+tag._format});
 				p = u.ae(div, "p");
 				a = u.ae(p, "a", {"href":"/images/"+tag._item_id+"/"+tag._variant+"/480x."+tag._format, "html":tag._input.val()});
 			}
@@ -444,7 +469,7 @@ u.f.textEditor = function(field) {
 		var tags = u.qsa("div.tag", this);
 
 		// update actual textarea to be saved
-		this._input.val("");
+		this.input.val("");
 
 		var i, node, tag, type, value, j, html = "";
 
@@ -493,7 +518,7 @@ u.f.textEditor = function(field) {
 			// media node
 			else if(u.hc(tag, "media") && tag._variant) {
 
-				html += '<div class="media item_id:'+tag._item_id+' variant:'+tag._variant+' name:'+tag._name+' filesize:'+tag._filesize+' format:'+tag._format+' width:'+tag._width+' height:'+tag._height+'">'+"\n";
+				html += '<div class="media item_id:'+tag._item_id+' variant:'+tag._variant+' name:'+encodeURIComponent(tag._name)+' filesize:'+tag._filesize+' format:'+tag._format+' width:'+tag._width+' height:'+tag._height+'">'+"\n";
 				html += '\t<p><a href="/images/'+tag._item_id+'/'+tag._variant+'/480x.'+tag._format+'">'+tag._input.val()+"</a></p>";
 				html += "</div>\n";
 			}
@@ -501,7 +526,7 @@ u.f.textEditor = function(field) {
 			// file node
 			else if(u.hc(tag, "file") && tag._variant) {
 
-				html += '<div class="file item_id:'+tag._item_id+' variant:'+tag._variant+' name:'+tag._name+' filesize:'+tag._filesize+'">'+"\n";
+				html += '<div class="file item_id:'+tag._item_id+' variant:'+tag._variant+' name:'+encodeURIComponent(tag._name)+' filesize:'+tag._filesize+'">'+"\n";
 				html += '\t<p><a href="/download/'+tag._item_id+'/'+tag._variant+'/'+tag._name+'">'+tag._input.val()+"</a></p>";
 				html += "</div>\n";
 			}
@@ -509,7 +534,7 @@ u.f.textEditor = function(field) {
 		}
 
 		// save HTML in textarea
-		this._input.val(html);
+		this.input.val(html);
 
 	}
 
@@ -584,13 +609,13 @@ u.f.textEditor = function(field) {
 			tag.parentNode.removeChild(tag);
 
 			// enable dragging of html-tags
-			u.sortable(this._editor, {"draggables":"tag", "targets":"editor"});
+			u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
 
 			// global update
 			this.update();
 
 			// save - new state (delete is permanent)
-			this._input._form.submit();
+			this._form.submit();
 
 		}
 
@@ -694,7 +719,7 @@ u.f.textEditor = function(field) {
 
 			u.ce(tag._type);
 			tag._type.clicked = function(event) {
-//					u.bug("select clicked");
+				// u.bug("select clicked", this, this.tag, this.field);
 
 				// reset auto hide (just in case)
 				u.t.resetTimer(this.t_autohide);
@@ -703,6 +728,10 @@ u.f.textEditor = function(field) {
 				if(u.hc(this, "open")) {
 					u.rc(this, "open");
 					u.rc(this.tag, "focus");
+
+					u.ass(this.field, {
+						"zIndex": this.field._base_z_index
+					});
 
 					u.as(this, "top", 0);
 
@@ -726,6 +755,9 @@ u.f.textEditor = function(field) {
 				else {
 					u.ac(this, "open");
 					u.ac(this.tag, "focus");
+					u.ass(this.field, {
+						"zIndex": this.field._form._focus_z_index,
+					});
 
 					u.as(this, "top", -(this.selected_option.offsetTop) + "px");
 
@@ -738,7 +770,17 @@ u.f.textEditor = function(field) {
 			// auto hide type selector
 			tag._type.hide = function() {
 				u.rc(this, "open");
-				u.rc(this.tag, "focus");
+				if(!this.field.is_focused) {
+
+					u.rc(this.tag, "focus");
+
+					u.ass(this.field, {
+						"zIndex": this.field._base_z_index
+					});
+
+					// return add focus to input
+					this.field.returnFocus(this);
+				}
 
 				u.as(this, "top", 0);
 
@@ -747,9 +789,6 @@ u.f.textEditor = function(field) {
 				u.e.removeEvent(this, "mouseover", this.delayautohide);
 				u.t.resetTimer(this.t_autohide);
 
-
-				// return add focus to input
-				this.field.returnFocus(this);
 			}
 
 			// auto hide functions
@@ -811,7 +850,7 @@ u.f.textEditor = function(field) {
 		u.e.addEvent(tag._input, "blur", tag.field._blurred_content);
 
 		// enable dragging of html-tags
-		u.sortable(this._editor, {"draggables":"tag", "targets":"editor"});
+		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
 
 		return tag;
 		
@@ -846,7 +885,7 @@ u.f.textEditor = function(field) {
 		tag._input = u.ae(tag, "div", {"class":"text"});
 		tag._input.tag = tag;
 		tag._input.field = this;
-		tag._input._form = this._input._form;
+		tag._input._form = this._form;
 
 
 		// if we have media info
@@ -899,12 +938,13 @@ u.f.textEditor = function(field) {
 			tag._text.tag = tag;
 			tag._text.field = this;
 
+
 			// create upload input
 			tag._label = u.ae(tag._text, "label", {"html":"Drag media here"});
 			tag._input = u.ae(tag._text, "input", {"type":"file", "name":"htmleditor_media[]"});
 			tag._input.tag = tag;
 			tag._input.field = this;
-			tag._input._form = this._input._form;
+			tag._input._form = this._form;
 
 			// declare get/set value funtion
 			tag._input.val = function(value) {return false;}
@@ -924,7 +964,7 @@ u.f.textEditor = function(field) {
 		}
 
 		// enable dragging of html-tags
-		u.sortable(this._editor, {"draggables":"tag", "targets":"editor"});
+		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
 
 		return tag;
 		
@@ -937,7 +977,7 @@ u.f.textEditor = function(field) {
 		var form_data = new FormData();
 
 		// append relevant data
-		form_data.append("csrf-token", this._input._form.fields["csrf-token"].val());
+		form_data.append("csrf-token", this._form.inputs["csrf-token"].val());
 
 		// request response handler
 		tag.response = function(response) {
@@ -966,7 +1006,10 @@ u.f.textEditor = function(field) {
 
 		// append relevant data
 		form_data.append(this.name, this.files[0], this.value);
-		form_data.append("csrf-token", this._form.fields["csrf-token"].val());
+		form_data.append("csrf-token", this._form.inputs["csrf-token"].val());
+
+		// Tell backend about field relation, to be able to add input name to media variant
+		form_data.append("input-name", this.tag.field.input.name);
 
 		// response handler
 		this.response = function(response) {
@@ -1023,7 +1066,7 @@ u.f.textEditor = function(field) {
 				this.tag.field.update();
 
 				// save after upload is complete
-				this.tag.field._input._form.submit();
+				this.tag.field._form.submit();
 			}
 		}
 		u.request(this, this.field.media_add_action+"/"+this.field.item_id, {"method":"post", "params":form_data});
@@ -1058,7 +1101,7 @@ u.f.textEditor = function(field) {
 		tag._input = u.ae(tag, "div", {"class":"text"});
 		tag._input.tag = tag;
 		tag._input.field = this;
-		tag._input._form = this._input._form;
+		tag._input._form = this._form;
 
 
 		// if we have file info
@@ -1106,10 +1149,10 @@ u.f.textEditor = function(field) {
 
 			// create upload input
 			tag._label = u.ae(tag._text, "label", {"html":"Drag file here"});
-			tag._input = u.ae(tag._text, "input", {"type":"file", "name":"htmleditor_file"});
+			tag._input = u.ae(tag._text, "input", {"type":"file", "name":"htmleditor_file[]"});
 			tag._input.tag = tag;
 			tag._input.field = this;
-			tag._input._form = this._input._form;
+			tag._input._form = this._form;
 
 			// declare get/set value funtion
 			tag._input.val = function(value) {return false;}
@@ -1129,7 +1172,7 @@ u.f.textEditor = function(field) {
 		}
 
 		// enable dragging of html-tags
-		u.sortable(this._editor, {"draggables":"tag", "targets":"editor"});
+		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
 
 		return tag;
 	}
@@ -1141,7 +1184,7 @@ u.f.textEditor = function(field) {
 		var form_data = new FormData();
 
 		// append relevant data
-		form_data.append("csrf-token", this._input._form.fields["csrf-token"].val());
+		form_data.append("csrf-token", this._form.inputs["csrf-token"].val());
 
 		// request response handler
 		tag.response = function(response) {
@@ -1164,15 +1207,17 @@ u.f.textEditor = function(field) {
 
 	// attached to tag._input node for file-tags
 	field._file_updated = function(event) {
-
-		u.bug("file:", this);
+		// u.bug("file:", this);
 
 		// create data form object to upload file
 		var form_data = new FormData();
 
 		// append relevant data
 		form_data.append(this.name, this.files[0], this.value);
-		form_data.append("csrf-token", this._form.fields["csrf-token"].val());
+		form_data.append("csrf-token", this._form.inputs["csrf-token"].val());
+
+		// Tell backend about field relation, to be able to add input name to media variant
+		form_data.append("input-name", this.tag.field.input.name);
 
 		// response handler
 		this.response = function(response) {
@@ -1221,7 +1266,7 @@ u.f.textEditor = function(field) {
 				this.tag.field.update();
 
 				// save after upload is complete
-				this.tag.field._input._form.submit();
+				this.tag.field._form.submit();
 			}
 		}
 		u.request(this, this.field.file_add_action+"/"+this.field.item_id, {"method":"post", "params":form_data});
@@ -1255,7 +1300,7 @@ u.f.textEditor = function(field) {
 		tag._input = u.ae(tag, "div", {"class":"text", "contentEditable":true});
 		tag._input.tag = tag;
 		tag._input.field = this;
-		tag._input._form = this._input._form;
+		tag._input._form = this._form;
 
 		// declare get/set value funtion
 		tag._input.val = function(value) {
@@ -1296,7 +1341,7 @@ u.f.textEditor = function(field) {
 		}
 
 		// enable dragging of html-tags
-		u.sortable(this._editor, {"draggables":"tag", "targets":"editor"});
+		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
 
 		return tag;
 	}
@@ -1308,8 +1353,8 @@ u.f.textEditor = function(field) {
 	}
 
 	field._changing_code_content = function(event) {
-//		u.bug("_changing_code_content:" + u.nodeId(this) + ", val:" + this.val() + ", " + event.keyCode);
-
+		// u.bug("_changing_code_content:", this, "val:" + this.val() + ", key:" + event.keyCode);
+	
 		// [ENTER]
 		if(event.keyCode == 13 || event.keyCode == 9) {
 			u.e.kill(event);
@@ -1324,8 +1369,7 @@ u.f.textEditor = function(field) {
 
 	// attached to tag._input node for text-tags and list-tags
 	field._code_updated = function(event) {
-
-//		u.bug("_code_updated:" + u.nodeId(this) + ", key:" + event.keyCode + ", val:" + this.val());
+		// u.bug("_code_updated:", this, "val:" + this.val() + ", key: " + event.keyCode);
 
 		// do we have a valid window event listener
 		if(this._selection_event_id) {
@@ -1399,7 +1443,7 @@ u.f.textEditor = function(field) {
 
 
 				// enable dragging of html-tags
-				u.sortable(this.field._editor, {"draggables":"tag", "targets":"editor"});
+				u.sortable(this.field._editor, {"draggables":".tag", "targets":".editor"});
 
 
 			}
@@ -1482,7 +1526,7 @@ u.f.textEditor = function(field) {
 
 
 		// enable dragging of html-tags
-		u.sortable(this._editor, {"draggables":"tag", "targets":"editor"});
+		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
 
 		return tag;
 	}
@@ -1499,7 +1543,7 @@ u.f.textEditor = function(field) {
 		li._input.li = li;
 		li._input.tag = tag;
 		li._input.field = this;
-		li._input._form = this._input._form;
+		li._input._form = this._form;
 
 		// declare get/set value funtion
 		li._input.val = function(value) {
@@ -1553,7 +1597,7 @@ u.f.textEditor = function(field) {
 		tag._input = u.ae(tag, "div", {"class":"text", "contentEditable":true});
 		tag._input.tag = tag;
 		tag._input.field = this;
-		tag._input._form = this._input._form;
+		tag._input._form = this._form;
 
 		// declare get/set value funtion
 		tag._input.val = function(value) {
@@ -1595,7 +1639,7 @@ u.f.textEditor = function(field) {
 		}
 
 		// enable dragging of html-tags
-		u.sortable(this._editor, {"draggables":"tag", "targets":"editor"});
+		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
 
 		return tag;
 	}
@@ -1606,7 +1650,7 @@ u.f.textEditor = function(field) {
 	// overriding default enter action 
 	// (browser will insert <br> on [ENTER] - we want to create new paragraph)
 	field._changing_content = function(event) {
-//		u.bug("_changing_content:" + u.nodeId(this) + ", val:" + this.val() + ", " + event.keyCode);
+		// u.bug("_changing_content:", this, "val:" + this.val() + ", key:" + event.keyCode);
 
 		// [ENTER]
 		if(event.keyCode == 13) {
@@ -1628,8 +1672,7 @@ u.f.textEditor = function(field) {
 
 	// attached to tag._input node for text-tags and list-tags
 	field._changed_content = function(event) {
-
-		// u.bug("changed value:" + u.nodeId(this) + ", key:" + event.keyCode + ", val:" + this.val());
+		// u.bug("_changed_content:", this, "val:" + this.val() + ", key: " + event.keyCode);
 
 		// do we have a valid window event listener
 		if(this._selection_event_id) {
@@ -1705,7 +1748,7 @@ u.f.textEditor = function(field) {
 
 			// node in deletable state?
 			if(this.is_deletable) {
-//				u.bug("go ahead delete me")
+				// u.bug("go ahead delete me");
 
 				u.e.kill(event);
 
@@ -1713,7 +1756,7 @@ u.f.textEditor = function(field) {
 
 				// check for previous element before removing anything
 				var prev = this.field.findPreviousInput(this);
-//				u.bug("prev input:" + u.nodeId(prev))
+				// u.bug("prev input:", prev);
 
 				// list element
 				if(u.hc(this.tag, this.field.list_allowed.join("|"))) {
@@ -1752,7 +1795,7 @@ u.f.textEditor = function(field) {
 
 
 				// enable dragging of html-tags
-				u.sortable(this.field._editor, {"draggables":"tag", "targets":"editor"});
+				u.sortable(this.field._editor, {"draggables":".tag", "targets":".editor"});
 
 				// set focus on prev element
 				if(prev) {
@@ -1800,7 +1843,7 @@ u.f.textEditor = function(field) {
 			// check if
 			var node = selection.anchorNode;
 
-			u.bug("node:", node);
+			// u.bug("node:", node);
 			
 			// test u.nodeWithin for this purpose
 
@@ -1810,7 +1853,7 @@ u.f.textEditor = function(field) {
 				}
 				node = node.parentNode;
 
-				u.bug("node:", node);
+				// u.bug("node:", node);
 				
 			}
 
@@ -1849,7 +1892,7 @@ u.f.textEditor = function(field) {
 	// gained focus on individual tag._input
 	// TODO: Tabbing detection flawed
 	field._focused_content = function(event) {
-//		u.bug("field._focused_content:" + u.nodeId(this) + ", val:" + this.val());
+		// u.bug("_focused_content:", this, "val:" + this.val());
 
 		// add focus state
 		this.field.is_focused = true;
@@ -1857,7 +1900,7 @@ u.f.textEditor = function(field) {
 		u.ac(this.field, "focus");
 
 		// make sure field goes all the way in front - hint/error must be seen
-		u.as(this.field, "zIndex", this.field._input._form._focus_z_index);
+		u.as(this.field, "zIndex", this.field._form._focus_z_index);
 
 		// position hint in case there is an error
 		u.f.positionHint(this.field);
@@ -1878,7 +1921,7 @@ u.f.textEditor = function(field) {
 	}
 	// lost focus on individual tag._input
 	field._blurred_content = function() {
-//		u.bug("_blurred_content:" + u.nodeId(this) + ", val:" + this.val());
+		// u.bug("_blurred_content:", this, "val:" + this.val());
 
 		// remove focus state
 		this.field.is_focused = false;
@@ -2308,7 +2351,7 @@ u.f.textEditor = function(field) {
 			"label":"url", 
 			"name":"url", 
 			"value":a.href.replace(location.protocol + "//" + document.domain, ""), 
-			"pattern":"((http[s]?:\\/)?\\/|mailto:|tel:)[^$]+",
+			"pattern":"(http[s]?:\\/\\/|mailto:|tel:)[^$]+|\/[^$]*",
 			"error_message":"Must start with /, http:// or https://, mailto: or tel:"
 		});
 
@@ -2331,14 +2374,14 @@ u.f.textEditor = function(field) {
 
 		form.submitted = function() {
 
-			if(this.fields["url"].val()) {
-				this.a.href = this.fields["url"].val();
+			if(this.inputs["url"].val()) {
+				this.a.href = this.inputs["url"].val();
 			}
 			else {
 				this.a.removeAttribute("href");
 			}
 
-			if(this.fields["target"].val()) {
+			if(this.inputs["target"].val()) {
 				this.a.target = "_blank";
 			}
 			else {
@@ -2378,7 +2421,6 @@ u.f.textEditor = function(field) {
 		var strong = document.createElement("strong");
 		strong.field = this;
 		strong.tag = tag;
-//			u.bug("field:" + u.nodeId(this));
 
 		range = selection.getRangeAt(0);
 		try {
@@ -2507,8 +2549,8 @@ u.f.textEditor = function(field) {
 
 		form.submitted = function() {
 
-			if(this.fields["classname"].val()) {
-				this.span.className = this.fields["classname"].val();
+			if(this.inputs["classname"].val()) {
+				this.span.className = this.inputs["classname"].val();
 			}
 			else {
 				this.span.removeAttribute("class");
@@ -2526,7 +2568,7 @@ u.f.textEditor = function(field) {
 	// INDEX EXISTING CONTENT 
 
 	// inject value into viewer div, to be able to inspect for DOM content on initialization
-	field._viewer.innerHTML = field._input.val();
+	field._viewer.innerHTML = field.input.val();
 
 
 	// TODO: Consider 
@@ -2544,8 +2586,7 @@ u.f.textEditor = function(field) {
 		// loop through childNodes
 		for(i = 0; i < field._viewer.childNodes.length; i++) {
 			node = field._viewer.childNodes[i];
-
-//			u.bug("node" + u.nodeId(node) + ", " + node.nodeName + ", " + typeof(node.nodeName));
+			// u.bug("node", node);
 
 
 			// lost fragment of unspecified text
@@ -2596,7 +2637,7 @@ u.f.textEditor = function(field) {
 			// valid text node (code)
 			else if(node.nodeName.toLowerCase() == "code") {
 
-//				u.bug("found code node:" + u.nodeId(node) + ", " + field.code_allowed.join("|"))
+				//				u.bug("found code node:", node, field.code_allowed.join("|"));
 
 				// // add new text node to editor
 				tag = field.addCodeTag(node.nodeName.toLowerCase(), node.innerHTML);
@@ -2611,7 +2652,7 @@ u.f.textEditor = function(field) {
 			// valid list node (ul, ol)
 			else if(field.list_allowed.length && node.nodeName.toLowerCase().match(field.list_allowed.join("|"))) {
 
-//				u.bug("found list node:" + u.nodeId(node) + "," + field.list_allowed.join("|"))
+				//				u.bug("found list node:", node, field.list_allowed.join("|"));
 
 				// handle list node
 				var lis = u.qsa("li", node);
@@ -2649,7 +2690,7 @@ u.f.textEditor = function(field) {
 
 //				u.bug("found external video node")
 
-				field.addExternalVideoTag(node.className.match(field.ext_video_allowed.join("|")), node);
+				field.addExternalVideoTag(node.className.match(field.ext_video_allowed.join("|")[0]), node);
 			}
 
 			// FILE
@@ -2697,7 +2738,7 @@ u.f.textEditor = function(field) {
 
 			}
 			else {
-				alert("HTML contains unautorized node:" + node.nodeName + "("+u.nodeId(node)+")" + "\nIt has been altered to conform with SEO and design.");
+				alert("HTML contains unautorized node:" + node.nodeName + "\nIt has been altered to conform with SEO and design.");
 			}
 
 		}
@@ -2720,7 +2761,7 @@ u.f.textEditor = function(field) {
 
 
 	// enable dragging of html-tags
-	u.sortable(field._editor, {"draggables":"tag", "targets":"editor"});
+	u.sortable(field._editor, {"draggables":".tag", "targets":".editor"});
 
 	// update viewer after indexing
 	field.updateViewer();
