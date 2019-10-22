@@ -26,7 +26,7 @@ Util.Objects["stripe"] = new function() {
 				var card_number = iN.val().replace(/ /g, "");
 				if(u.paymentCards.validateCardNumber(card_number)) {
 					u.f.fieldCorrect(iN);
-					u.f.validate(iN._form.fields["card_cvc"]);
+					u.f.validate(iN._form.inputs["card_cvc"]);
 				}
 				else {
 					u.f.fieldError(iN);
@@ -39,7 +39,7 @@ Util.Objects["stripe"] = new function() {
 //				u.bug("local month validation: from year: " + iN.validating_year + " " + u.randomString(3));
 
 				var month = iN.val();
-				var year = iN._form.fields["card_exp_year"].val();
+				var year = iN._form.inputs["card_exp_year"].val();
 
 				if(year && parseInt(year) < 100) {
 					year = parseInt("20"+year);
@@ -57,9 +57,9 @@ Util.Objects["stripe"] = new function() {
 				// validate year - performs combined validation if year is filled out
 				// don't do it if this validation was looped from year validation (will cause endless loop)
 				if(!iN.validating_year) {
-					iN._form.fields["card_exp_year"].validating_month = true;
-					u.f.validate(iN._form.fields["card_exp_year"]);
-					iN._form.fields["card_exp_year"].validating_month = false;
+					iN._form.inputs["card_exp_year"].validating_month = true;
+					u.f.validate(iN._form.inputs["card_exp_year"]);
+					iN._form.inputs["card_exp_year"].validating_month = false;
 				}
 
 			}
@@ -69,7 +69,7 @@ Util.Objects["stripe"] = new function() {
 //				u.bug("local year validation: from month: " + iN.validating_month + " " + u.randomString(3));
 
 				var year = iN.val();
-				var month = iN._form.fields["card_exp_month"].val();
+				var month = iN._form.inputs["card_exp_month"].val();
 
 				if(year && parseInt(year) < 100) {
 					year = parseInt("20"+year);
@@ -79,9 +79,9 @@ Util.Objects["stripe"] = new function() {
 				// validate month, with new year value
 				// don't do it if this validation was looped from month validation (will cause endless loop)
 				if(!iN.validating_month) {
-					iN._form.fields["card_exp_month"].validating_year = true;
-					u.f.validate(iN._form.fields["card_exp_month"]);
-					iN._form.fields["card_exp_month"].validating_year = false;
+					iN._form.inputs["card_exp_month"].validating_year = true;
+					u.f.validate(iN._form.inputs["card_exp_month"]);
+					iN._form.inputs["card_exp_month"].validating_year = false;
 				}
 
 				if(u.paymentCards.validateExpDate(month, year)) {
@@ -96,7 +96,7 @@ Util.Objects["stripe"] = new function() {
 				// mark both fields as errors (one of them is wrong)
 				else {
 					u.f.fieldError(iN);
-					u.f.fieldError(iN._form.fields["card_exp_month"]);
+					u.f.fieldError(iN._form.inputs["card_exp_month"]);
 				}
 
 			}
@@ -106,7 +106,7 @@ Util.Objects["stripe"] = new function() {
 //				u.bug("local cvc validation");
 
 				var cvc = iN.val();
-				var card_number = iN._form.fields["card_number"].val().replace(/ /g, "");
+				var card_number = iN._form.inputs["card_number"].val().replace(/ /g, "");
 
 				if(u.paymentCards.validateCVC(cvc, card_number)) {
 					u.f.fieldCorrect(iN);
@@ -132,7 +132,7 @@ Util.Objects["stripe"] = new function() {
 
 
 			// format card as you type
-			this.card_form.fields["card_number"].updated = function(iN) {
+			this.card_form.inputs["card_number"].updated = function(iN) {
 				var value = this.val();
 				this.value = u.paymentCards.formatCardNumber(value.replace(/ /g, ""));
 
@@ -152,7 +152,7 @@ Util.Objects["stripe"] = new function() {
 			}
 
 			// remove first two digits in 2000-fullyears
-			this.card_form.fields["card_exp_year"].changed = function(iN) {
+			this.card_form.inputs["card_exp_year"].changed = function(iN) {
 				var year = parseInt(this.val());
 				if(year > 99) {
 					if(year > 2000 && year < 2100) {
@@ -162,7 +162,7 @@ Util.Objects["stripe"] = new function() {
 			}
 
 			// prefix month with "0" if less than 10
-			this.card_form.fields["card_exp_month"].changed = function(iN) {
+			this.card_form.inputs["card_exp_month"].changed = function(iN) {
 				var month = parseInt(this.val());
 				if(month < 10) {
 					this.val("0"+month);
@@ -170,7 +170,7 @@ Util.Objects["stripe"] = new function() {
 			}
 
 			// // remove first two digits in 2000-fullyears
-			// this.card_form.fields["card_cvc"].updated = function(iN) {
+			// this.card_form.inputs["card_cvc"].updated = function(iN) {
 			// 	if(this.val().length == 2) {
 			// 		this.used = true;
 			// 	}
