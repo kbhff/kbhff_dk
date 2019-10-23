@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-10-14 23:54:12
+asset-builder @ 2019-10-23 02:00:25
 */
 
 /*seg_desktop_include.js*/
@@ -3299,6 +3299,42 @@ u.f.addAction = function(node, _options) {
 	var action = u.ae(p_li, "input", {"type":action_type, "class":action_class, "value":action_value, "name":action_name})
 	return action;
 }
+Util.Form.customLabelStyle["inject"] = function(iN) {
+	if(!iN.type || !iN.type.match(/file|radio|checkbox/)) {
+		iN.default_value = u.text(iN.label);
+		u.e.addEvent(iN, "focus", u.f._changed_state);
+		u.e.addEvent(iN, "blur", u.f._changed_state);
+		if(iN.type.match(/number|integer|password|datetime|date/)) {
+			iN.pseudolabel = u.ae(iN.parentNode, "span", {"class":"pseudolabel", "html":iN.default_value});
+			iN.pseudolabel.iN = iN;
+			u.as(iN.pseudolabel, "top", iN.offsetTop+"px");
+			u.as(iN.pseudolabel, "left", iN.offsetLeft+"px");
+			u.ce(iN.pseudolabel)
+			iN.pseudolabel.inputStarted = function(event) {
+				u.e.kill(event);
+				this.iN.focus();
+			}
+		}
+		u.f.updateDefaultState(iN);
+	}
+}
+u.f._changed_state = function() {
+	u.f.updateDefaultState(this);
+}
+u.f.updateDefaultState = function(iN) {
+	if(iN.is_focused || iN.val() !== "") {
+		u.rc(iN, "default");
+		if(iN.val() === "") {
+			iN.val("");
+		}
+	}
+	else {
+		if(iN.val() === "") {
+			u.ac(iN, "default");
+			iN.val(iN.default_value);
+		}
+	}
+}
 Util.absoluteX = u.absX = function(node) {
 	if(node.offsetParent) {
 		return node.offsetLeft + u.absX(node.offsetParent);
@@ -4648,7 +4684,7 @@ Util.Objects["page"] = new function() {
 			}
 		}
 		page.ready = function() {
-			u.bug("page.ready:" + u.nodeId(this));
+			u.bug("page.ready:", this);
 			if(!this.is_ready) {
 				this.is_ready = true;
 				this.cN.scene = u.qs(".scene", this);
@@ -4726,13 +4762,13 @@ Util.Objects["scene"] = new function() {
 /*i-banner.js*/
 Util.Objects["banner"] = new function() {
 	this.init = function(div) {
-			var variant = u.cv(div, "variant");
-			var format = u.cv(div, "format");
-			if (variant == "random" || !variant) {
-				variant = u.random(1, 4);
-			}
-			u.ae(div, "img", {class:"fit-width", src:"/img/banners/desktop/pi_" + variant + "." + format});	
-			u.ae(div, "div", {class:"logo"});
+		var variant = u.cv(div, "variant");
+		var format = u.cv(div, "format");
+		if (variant == "random" || !variant) {
+			variant = u.random(1, 4);
+		}
+		u.ae(div, "img", {class:"fit-width", src:"/img/banners/desktop/pi_" + variant + "." + format});	
+		u.ae(div, "div", {class:"logo"});
 	}
 }
 
