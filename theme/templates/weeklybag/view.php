@@ -14,7 +14,7 @@ if($item) {
 $weeklybags = $IC->getItems(array("itemtype" => "weeklybag", "status" => 1, "limit" => 10, "extend" => true));
 $WBC = $IC->typeObject("weeklybag");
 
-$weeklybag_item = $WBC->getWeeklyBag();
+$weeklybag_item = $WBC->getWeeklyBag($item["week"], $item["year"]);
 
 ?>
 
