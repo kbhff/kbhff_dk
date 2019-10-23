@@ -2,15 +2,15 @@ Util.Objects["profile"] = new function() {
 	this.init = function(scene) {
 
 		scene.resized = function() {
-//			u.bug("scene.resized:" + u.nodeId(this));
+			// u.bug("scene.resized", this);
 		}
 
 		scene.scrolled = function() {
-//			u.bug("scene.scrolled:" + u.nodeId(this))
+			// u.bug("scene.scrolled", this);
 		}
 
 		scene.ready = function() {
-//			u.bug("scene.ready:" + u.nodeId(this));
+//			// u.bug("scene.ready", this);
 			this.initMembershipBox();
 			this.initUserinfoBox();
 			this.initPasswordBox();
@@ -61,7 +61,7 @@ Util.Objects["profile"] = new function() {
 
 					// Update button
 					form_department.submitted = function() {
-						var data = u.f.getParams(this);
+						var data = this.getData();
 
 						this.response = function(response) {
 							// Update request state
@@ -214,7 +214,7 @@ Util.Objects["profile"] = new function() {
 						u.f.init(form_confirm_cancellation);
 
 						form_confirm_cancellation.submitted = function () {
-							var data = u.f.getParams(this);
+							var data = this.getData();
 
 							this.response = function(response) {
 								// Update request state
@@ -315,7 +315,7 @@ Util.Objects["profile"] = new function() {
 
 					// Update button
 					form_userinfo.submitted = function() {
-						var data = u.f.getParams(this);
+						var data = this.getData();
 
 						this.response = function(response) {
 							// Update request state
@@ -450,7 +450,7 @@ Util.Objects["profile"] = new function() {
 
 					// Update button
 					form_password.submitted = function() {
-						var data = u.f.getParams(this);
+						var data = this.getData();
 						this.response = function(response) {
 							// Update request state
 							this.is_requesting = false;

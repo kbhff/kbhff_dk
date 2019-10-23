@@ -21,7 +21,7 @@ Util.Objects["forgot"] = new function() {
 
 			this.form.submitted = function() {
 				// Gets form input values
-				var data = u.f.getParams(this);
+				var data = this.getData();
 
 				this.response = function(response) {
 					// Submit goes through and gets "nulstilling" page
@@ -55,7 +55,7 @@ Util.Objects["forgot"] = new function() {
 
 			// Using the new verify form
 			this.form_code.submitted = function() {
-				data = u.f.getParams(this);
+				data = this.getData();
 
 				this.response = function(response) {
 					if (u.qs("form.reset_password", response)) {
