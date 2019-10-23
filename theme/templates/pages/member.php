@@ -7,9 +7,20 @@ if($item) {
 	$this->sharingMetaData($item);
 }
 
+$member_subnavigation = $this->navigation("sub-member");
+
 ?>
 
 <div class="scene member i:scene">
+
+	<? if($member_subnavigation && isset($member_subnavigation["nodes"])) { ?>
+	<ul class="subnavigation">
+		<? foreach($member_subnavigation["nodes"] as $node): ?>
+		<li><a href="<?= $node["link"] ?>"><?= $node["name"] ?></a></li>
+		<? endforeach;?>
+	</ul>
+	<? } ?>
+
 
 	<?	if($item):
 	$media = $IC->sliceMediae($item); ?>

@@ -7,15 +7,15 @@ if($item) {
 	$this->sharingMetaData($item);
 }
 
-$about_navigation = $this->navigation("main-about");
+$about_subnavigation = $this->navigation("sub-about");
 
 ?>
 
 <div class="scene about i:scene">
 
-	<? if($about_navigation && isset($about_navigation["nodes"])) { ?>
+	<? if($about_subnavigation && isset($about_subnavigation["nodes"])) { ?>
 	<ul class="subnavigation">
-		<? foreach($about_navigation["nodes"] as $node): ?>
+		<? foreach($about_subnavigation["nodes"] as $node): ?>
 		<li><a href="<?= $node["link"] ?>"><?= $node["name"] ?></a></li>
 		<? endforeach;?>
 	</ul>
