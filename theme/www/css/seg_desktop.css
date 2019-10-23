@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-10-23 02:08:35
+asset-builder @ 2019-10-23 20:27:57
 */
 
 /*seg_desktop_include.css*/
@@ -980,6 +980,7 @@ position: relative;
 #content .member_help ul.users li ul.actions {}
 #content .member_help ul.users li ul.actions li {width: initial;}
 #content .member_help ul.users li.profile a.button {padding: 1px 17px;}
+#content .member_help p.type_to_search.hidden, 
 #content .member_help p.no_results.hidden, 
 #content .user_profile div.c-box.invisible {display: none;}
 #content .member_help_signup p.metatext {font-style: italic; font-size: 12px;}

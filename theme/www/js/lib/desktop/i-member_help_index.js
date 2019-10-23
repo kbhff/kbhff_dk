@@ -26,6 +26,7 @@ Util.Objects["member_help"] = new function() {
 				search_form.ul_users = u.qs("ul.users", this);
 				search_form.h3_header = u.qs("div.users h3", this);
 				search_form.p_no_results = u.qs("div.users p.no_results", this);
+				search_form.p_type_to_search = u.qs("div.users p.type_to_search", this);
 
 				search_form.template = u.qs("li.template", this);
 
@@ -54,7 +55,8 @@ Util.Objects["member_help"] = new function() {
 						this.ul_users.innerHTML = "";
 
 						u.ac(this.h3_header, "hidden");
-						u.rc(this.p_no_results, "hidden");
+						u.ac(this.p_no_results, "hidden");
+						u.rc(this.p_type_to_search, "hidden");
 
 					}
 
@@ -79,10 +81,11 @@ Util.Objects["member_help"] = new function() {
 						// parses user object and returns it as html node lists
 						this.users = u.template(this.template, response.cms_object.users);
 
-						if(this.users) {
+						if(this.users.length) {
 
 							u.rc(this.h3_header, "hidden");
 							u.ac(this.p_no_results, "hidden");
+							u.ac(this.p_type_to_search, "hidden");
 
 							while (this.users.length) {
 
@@ -115,6 +118,7 @@ Util.Objects["member_help"] = new function() {
 
 							u.ac(this.h3_header, "hidden");
 							u.rc(this.p_no_results, "hidden");
+							u.rc(this.p_type_to_search, "hidden");
 
 						}
 

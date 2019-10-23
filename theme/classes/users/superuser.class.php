@@ -760,6 +760,7 @@ class SuperUser extends SuperUserCore {
 
 					return array("users" => $users, "search_value" => $search_value, "department_id" => $department_id);
 				}
+				return array("users" => false, "search_value" => $search_value, "department_id" => $department_id);
 			}
 		}
 

@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-10-23 02:08:35
+asset-builder @ 2019-10-23 20:27:57
 */
 
 /*seg_desktop_include.js*/
@@ -6170,6 +6170,7 @@ Util.Objects["member_help"] = new function() {
 				search_form.ul_users = u.qs("ul.users", this);
 				search_form.h3_header = u.qs("div.users h3", this);
 				search_form.p_no_results = u.qs("div.users p.no_results", this);
+				search_form.p_type_to_search = u.qs("div.users p.type_to_search", this);
 				search_form.template = u.qs("li.template", this);
 				search_form.search_timeout = 300
 				u.f.init(search_form);
@@ -6182,7 +6183,8 @@ Util.Objects["member_help"] = new function() {
 					else {
 						this.ul_users.innerHTML = "";
 						u.ac(this.h3_header, "hidden");
-						u.rc(this.p_no_results, "hidden");
+						u.ac(this.p_no_results, "hidden");
+						u.rc(this.p_type_to_search, "hidden");
 					}
 				}
 				search_form.readyToSearch = function () {
@@ -6193,9 +6195,10 @@ Util.Objects["member_help"] = new function() {
 						console.log(response);
 						this.ul_users.innerHTML = "";
 						this.users = u.template(this.template, response.cms_object.users);
-						if(this.users) {
+						if(this.users.length) {
 							u.rc(this.h3_header, "hidden");
 							u.ac(this.p_no_results, "hidden");
+							u.ac(this.p_type_to_search, "hidden");
 							while (this.users.length) {
 								this.user_info = u.qsa("ul.user_info li.search", this.users[0]);
 								var i, user_info;
@@ -6213,6 +6216,7 @@ Util.Objects["member_help"] = new function() {
 						else {
 							u.ac(this.h3_header, "hidden");
 							u.rc(this.p_no_results, "hidden");
+							u.rc(this.p_type_to_search, "hidden");
 						}
 					}
 					u.request(this, this.action+"soeg", {"method":"post", "data":this.getData()});

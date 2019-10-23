@@ -16,7 +16,6 @@ $department_id = $search_users["department_id"];
 if (!$department_id) {
 	$department_id = $user_department["id"];
 }
-	
 
 ?>
 
@@ -79,7 +78,8 @@ if (!$department_id) {
 			<span class="department">Lokalafd.</span>
 		</h3>
 
-		<p class="no_results<?= ($users ? " hidden" : "") ?>">Ingen resultater. Indtast mindst 4 tegn for at søge.</p>
+		<p class="type_to_search<?= ($users ? " hidden" : "") ?>">Indtast mindst 4 tegn for at søge.</p>
+		<p class="no_results<?= ($users === false ? "" : " hidden") ?>">Ingen resultater</p>
 
 		<ul class="users">
 			<li class="user template">

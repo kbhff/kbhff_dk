@@ -53,6 +53,7 @@
 #content .member_help ul.users li ul.actions {}
 #content .member_help ul.users li ul.actions li {width: initial;}
 #content .member_help ul.users li.profile a.button {padding: 1px 17px;}
+#content .member_help p.type_to_search.hidden, 
 #content .member_help p.no_results.hidden, 
 #content .user_profile div.c-box.invisible {display: none;}
 
