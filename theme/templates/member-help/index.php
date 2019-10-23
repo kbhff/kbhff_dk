@@ -79,7 +79,7 @@ if (!$department_id) {
 		</h3>
 
 		<p class="type_to_search<?= ($users ? " hidden" : "") ?>">Indtast mindst 4 tegn for at søge.</p>
-		<p class="no_results<?= ($users === false ? "" : " hidden") ?>">Ingen resultater</p>
+		<p class="no_results<?= ($users === false ? "" : " hidden") ?>">Ingen resultater.</p>
 
 		<ul class="users">
 			<li class="user template">
