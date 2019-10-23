@@ -14,6 +14,8 @@ if($item) {
 $weeklybags = $IC->getItems(array("itemtype" => "weeklybag", "status" => 1, "limit" => 10, "extend" => true));
 $WBC = $IC->typeObject("weeklybag");
 
+$weeklybag_item = $WBC->getWeeklyBag();
+
 ?>
 
 <div class="scene weeklybag i:scene">
@@ -39,6 +41,21 @@ $WBC = $IC->typeObject("weeklybag");
 		</div>
 
 		<div class="c-one-third">
+
+			<div class="c-box weeklybag">
+			<? if($weeklybag_item): ?>
+				<h3>Ugens pose - <?= $weeklybag_item["name"] ?></h3>
+				<?= $weeklybag_item["html"] ?>
+
+				<p class="readmore"><a href="/ugens-pose/<?= $weeklybag_item["sindex"] ?>">Læs mere om uges pose</a></p>
+			<? else: ?>
+				<h3>Ugens pose</h3>
+				<p>Ugens pose er endnu ikke oprettet.</p>
+
+				<p class="readmore"><a href="/ugens-pose">Læs mere om uges pose</a></p>
+			<? endif; ?>
+			</div>
+
 
 			<div class="c-box weeklybag">
 			<? if($weeklybags): ?>
