@@ -88,21 +88,28 @@ Util.Objects["member_help"] = new function() {
 
 								this.user_info = u.qsa("ul.user_info li.search", this.users[0]);
 
+								var i, user_info;
 								// loops through the relevant node lists
-								for (var j = 0; j < (this.user_info.length); j++) {
-								
+								for (i = 0; i < this.user_info.length; i++) {
+
+									user_info = this.user_info[i];
+
 									// creates a new RegExp object from the users input
-									var match = this.search_input.val();
+									var match = this.current_search;
 									var re = new RegExp(match, 'i');
+
 									// checks if there is a match between user input and string in node list
-									if (this.user_info[j].innerHTML.match(re)) {
-								
-										this.user_info[j].innerHTML = this.user_info[j].innerHTML.replace(re, "<span class=\"highlight_string\">$&</span>");
+									if (user_info.innerHTML.match(re)) {
+										user_info.innerHTML = user_info.innerHTML.replace(re, "<span class=\"highlight_string\">$&</span>");
 									}
+
 								}
 
-								 u.ae(this.ul_users, this.users[0]); 
+								// Append result to list
+								u.ae(this.ul_users, this.users[0]); 
+
 							}
+
 						}
 						else {
 

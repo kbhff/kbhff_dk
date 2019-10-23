@@ -71,14 +71,16 @@ if (!$department_id) {
 
 
 	<div class="c-wrapper users">
-		<h3>
+		<h3 class="header<?= (!$users ? " hidden" : "") ?>">
 			<span class="name">Navn</span>
 			<span class="email">Mail</span>
 			<span class="mobile">Mobilnr</span>
 			<span class="member_no">Medl.nr</span>
 			<span class="department">Lokalafd.</span>
 		</h3>
-		<p>Indtast mindst 4 tegn for at søge.</p>
+
+		<p class="no_results<?= ($users ? " hidden" : "") ?>">Ingen resultater. Indtast mindst 4 tegn for at søge.</p>
+
 		<ul class="users">
 			<li class="user template">
 				<ul class="user_info">
