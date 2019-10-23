@@ -2,11 +2,11 @@ Util.Objects["member_help_payment"] = new function() {
 	this.init = function(scene) {
 
 		scene.resized = function() {
-//			u.bug("scene.resized:" + u.nodeId(this));
+			// u.bug("scene.resized", this);
 		}
 
 		scene.scrolled = function() {
-//			u.bug("scene.scrolled:" + u.nodeId(this))
+			// u.bug("scene.scrolled", this);
 		}
 
 		scene.ready = function() {
