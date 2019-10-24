@@ -56,7 +56,7 @@ class TypeWeeklybag extends Itemtype {
 			"type" => "string",
 			"label" => "Name",
 			"required" => true,
-			"hint_message" => "Give the weekly bag a name. Preferably use Week number in Danish as name, i.e. 'Uge 21' for consistancy.",
+			"hint_message" => "Give the weekly bag a name. Preferably use Week number in Danish as name, i.e. 'Uge 21' for consistency.",
 			"error_message" => "The weekly bag needs a title."
 		));
 
