@@ -2,7 +2,7 @@
 $IC = new Items();
 global $action;
 
-$item = $IC->getItem(array("tags" => "page:member", "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true, "readstate" => true)));
+$item = $IC->getItem(array("tags" => "page:member", "status" => 1, "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true, "readstate" => true)));
 if($item) {
 	$this->sharingMetaData($item);
 }
@@ -23,7 +23,7 @@ $member_subnavigation = $this->navigation("sub-member");
 
 
 	<?	if($item):
-	$media = $IC->sliceMediae($item); ?>
+	$media = $IC->sliceMediae($item, "single_media"); ?>
 
 	<div class="article i:article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle">
 

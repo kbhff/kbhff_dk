@@ -4,7 +4,7 @@ global $model;
 global $IC;
 
 $IC = new Items();
-$page_item = $IC->getItem(array("tags" => "page:member_help_signup", "extend" => array("user" => true, "tags" => true, "mediae" => true)));
+$page_item = $IC->getItem(array("tags" => "page:member_help_signup", "status" => 1, "extend" => array("user" => true, "tags" => true, "mediae" => true)));
 if($page_item) {
 	$this->sharingMetaData($page_item);
 }
@@ -19,8 +19,8 @@ $email = $model->getProperty("email", "value");
 <div class="scene member_help_signup i:member_help_signup">
 
 
-<? if($page_item && $page_item["status"]):
-	$media = $IC->sliceMediae($page_item); ?>
+<? if($page_item):
+	$media = $IC->sliceMediae($page_item, "single_media"); ?>
 	<div class="article i:article id:<?= $page_item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
 
 		<? if($media): ?>

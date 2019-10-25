@@ -44,7 +44,7 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 		<? if($items && $items["range_items"]): ?>
 			<ul class="items articles">
 				<? foreach($items["range_items"] as $item):
-					//$media = $IC->sliceMediae($item); ?>
+						$media = $IC->sliceMediae($item, "single_media"); ?>
 				<li class="item article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle">
 
 					<? if($media): ?>

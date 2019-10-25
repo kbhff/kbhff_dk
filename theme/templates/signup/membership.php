@@ -15,12 +15,12 @@ $sql = "SELECT item_id FROM ".SITE_DB.".item_membership WHERE fixed_url_identifi
 $query = new Query;
 if($query->sql($sql)) {
 	$item_id = $query->result(0, "item_id");
-	$item = $IC->getItem(array("id" => $item_id, "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true, "prices" => true, "readstate" => true, "subscription_method" => true)));
+	$item = $IC->getItem(array("id" => $item_id, "status" => 1, "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true, "prices" => true, "readstate" => true, "subscription_method" => true)));
 }
 
 // attempt look up by sindex, for fallback purposes
 else {
-	$item = $IC->getItem(array("sindex" => $action[1], "extend" => array("tags" => true, "user" => true, "mediae" => true, "readstate" => true, "prices" => true, "subscription_method" => true)));
+	$item = $IC->getItem(array("sindex" => $action[1], "status" => 1, "extend" => array("tags" => true, "user" => true, "mediae" => true, "readstate" => true, "prices" => true, "subscription_method" => true)));
 }
 
 
@@ -47,7 +47,7 @@ if($item) {
 
 
 <? if($item):
-	$media = $IC->sliceMediae($item); ?>
+	$media = $IC->sliceMediae($item, "single_media"); ?>
 
 	<div class="article i:article id:<?= $item["item_id"] ?> service" itemscope itemtype="http://schema.org/Article" data-csrf-token="<?= session()->value("csrf") ?>">
 
@@ -146,7 +146,7 @@ if($item) {
 			<h2>Andre medlemskaber <a href="/bliv-medlem">(oversigt)</a></h2>
 			<ul class="items membership">
 			<?	foreach($related_items as $item):
-				$media = $IC->sliceMediae($item); ?>
+				$media = $IC->sliceMediae($item, "single_media"); ?>
 				<li class="item membership item_id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle" data-readstate="<?= $item["readstate"] ?>">
 			
 					<h3 itemprop="headline"><a href="/bliv-medlem/medlemskaber/<?= $item["fixed_url_identifier"] ?>"><?= strip_tags($item["name"]) ?></a></h3>

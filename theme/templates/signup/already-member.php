@@ -3,7 +3,7 @@ global $action;
 global $model;
 
 $IC = new Items();
-$page_item = $IC->getItem(array("tags" => "page:already-member", "extend" => array("user" => true, "tags" => true, "mediae" => true, "signupfee" => true)));
+$page_item = $IC->getItem(array("tags" => "page:already-member", "status" => 1, "extend" => array("user" => true, "tags" => true, "mediae" => true, "signupfee" => true)));
 if($page_item) {
 	$this->sharingMetaData($page_item);
 }
@@ -12,8 +12,8 @@ if($page_item) {
 
 <div class="scene already_member i:scene">
 
-<? if($page_item && $page_item["status"]):
-	$media = $IC->sliceMediae($page_item); ?>
+<? if($page_item):
+	$media = $IC->sliceMediae($page_item, "single_media"); ?>
 	<div class="article i:article id:<?= $page_item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
 
 		<? if($media): ?>
