@@ -12,7 +12,7 @@ if($item) {
 <div class="scene businessterms i:scene">
 
 	<?	if($item):
-	$media = $IC->sliceMediae($item); ?>
+	$media = $IC->sliceMediae($item, "single_media"); ?>
 
 	<div class="article i:article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
 
