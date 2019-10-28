@@ -17,7 +17,7 @@ Util.Objects["page"] = new function() {
 
 		// global resize handler 
 		page.resized = function() {
-//			u.bug("page.resized:" + u.nodeId(this));
+			// u.bug("page.resized", this);
 
 			// forward scroll event to current scene
 			if(page.cN && page.cN.scene && typeof(page.cN.scene.resized) == "function") {
@@ -27,7 +27,7 @@ Util.Objects["page"] = new function() {
 
 		// global scroll handler 
 		page.scrolled = function() {
-//			u.bug("page.scrolled:" + u.nodeId(this))
+			// u.bug("page.scrolled", this);
 
 			// forward scroll event to current scene
 			if(page.cN && page.cN.scene && typeof(page.cN.scene.scrolled) == "function") {
@@ -37,7 +37,7 @@ Util.Objects["page"] = new function() {
 
 		// Page is ready
 		page.ready = function() {
-			u.bug("page.ready:" + u.nodeId(this));
+			u.bug("page.ready", this);
 
 			// page is ready to be shown - only initalize if not already shown
 			if(!this.is_ready) {

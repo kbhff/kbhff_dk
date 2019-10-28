@@ -1,88 +1,129 @@
 Util.Objects["member_help"] = new function() {
 	this.init = function(scene) {
-//		u.bug("scene init:", scene);
+		// u.bug("scene init:", scene);
 
 
 		scene.resized = function() {
-//			u.bug("scene.resized:", this);
+			// u.bug("scene.resized:", this);
 		}
 
 		scene.scrolled = function() {
-//			u.bug("scrolled:", this);
+			// u.bug("scrolled:", this);
 		}
 
 		scene.ready = function() {
-//			u.bug("scene.ready:", this);
+			// u.bug("scene.ready:", this);
 
 			page.cN.scene = this;
 
-			
 			var search_form = u.qs("form.search_user", this);
-			
-			search_form.users_ul = u.qs("ul.users", this);
-			search_form.template = u.qs("li.template", this);
-		
-			var i = 0;
-			
-			search_form.visible_p = u.qs("p.visible");
-			
+
+			// Is search form available
 			if(search_form) {
-				 
+
 				search_form.scene = this;
-			
-				search_form.timeOut = 300
+
+				search_form.ul_users = u.qs("ul.users", this);
+				search_form.h3_header = u.qs("div.users h3", this);
+				search_form.p_no_results = u.qs("div.users p.no_results", this);
+				search_form.p_type_to_search = u.qs("div.users p.type_to_search", this);
+
+				search_form.template = u.qs("li.template", this);
+
+				search_form.search_timeout = 300
+
+
+				// Init form
 				u.f.init(search_form);
-			
+
+
 				// function to run when user types more than 3 characters in search field.
 				search_form.updated = function () {
-					this.search_input = this.fields.search_member;
-					if (this.search_input.val().length > 3) {
+
+					u.t.resetTimer(this.t_search);
+					this.current_search = this.inputs.search_member.val();
+
+					// Ready to search
+					if (this.current_search.length > 3) {
 						this.readyToSearch()
+
 					}
-					if (this.search_input.val().length < 3) {
-						this.users_ul.innerHTML = "";
-						if (this.visible_p.style.display = "none") {
-							u.as(this.visible_p, "display", "block");
-						}
-					}	
+
+					// Not enough input for AJAX search
+					else {
+
+						this.ul_users.innerHTML = "";
+
+						u.ac(this.h3_header, "hidden");
+						u.ac(this.p_no_results, "hidden");
+						u.rc(this.p_type_to_search, "hidden");
+
+					}
+
 				}
-				
+
+
 				// function sets timer in order to control execution of search function.
 				search_form.readyToSearch = function () {
-					u.t.resetTimer(this.t_search);
-					this.t_search = u.t.setTimer(this, this.search, this.timeOut)
+					this.t_search = u.t.setTimer(this, this.search, this.search_timeout)
 				}
 		
 				// search function which executes when timer has run out.
 				search_form.search = function () {
-					
+
+
 					this.response = function(response) {
 						console.log(response);
-						this.users_ul.innerHTML = "";
-						u.as(this.visible_p, "display", "none");
+
+						// Clear existing result set
+						this.ul_users.innerHTML = "";
+
 						// parses user object and returns it as html node lists
 						this.users = u.template(this.template, response.cms_object.users);
-						console.log(response);
-						while (this.users.length) {		
-						
-							this.user_info = u.qsa("ul.user_info li.search", this.users[0]);
-							// loops through the relevant node lists
-							for (var j = 0; j < (this.user_info.length); j++) {
-								
-								// creates a new RegExp object from the users input
-								var match = this.search_input.val();
-								var re = new RegExp(match, 'i');
-								// checks if there is a match between user input and string in node list
-								if (this.user_info[j].innerHTML.match(re)) {
-								
-									this.user_info[j].innerHTML = this.user_info[j].innerHTML.replace(re, "<span class=\"highlight_string\">$&</span>");
+
+						if(this.users.length) {
+
+							u.rc(this.h3_header, "hidden");
+							u.ac(this.p_no_results, "hidden");
+							u.ac(this.p_type_to_search, "hidden");
+
+							while (this.users.length) {
+
+								this.user_info = u.qsa("ul.user_info li.search", this.users[0]);
+
+								var i, user_info;
+								// loops through the relevant node lists
+								for (i = 0; i < this.user_info.length; i++) {
+
+									user_info = this.user_info[i];
+
+									// creates a new RegExp object from the users input
+									var match = this.current_search;
+									var re = new RegExp(match, 'i');
+
+									// checks if there is a match between user input and string in node list
+									if (user_info.innerHTML.match(re)) {
+										user_info.innerHTML = user_info.innerHTML.replace(re, "<span class=\"highlight_string\">$&</span>");
+									}
+
 								}
+
+								// Append result to list
+								u.ae(this.ul_users, this.users[0]); 
+
 							}
-							
-						 u.ae(this.users_ul, this.users[0]); 
+
 						}
+						else {
+
+							u.ac(this.h3_header, "hidden");
+							u.rc(this.p_no_results, "hidden");
+							u.rc(this.p_type_to_search, "hidden");
+
+						}
+
 					}
-					u.request(this, this.action+"soeg", {"method":"post", "data":u.f.getParams(this)});
+					u.request(this, this.action+"soeg", {"method":"post", "data":this.getData()});
 				}
 			}	
 		

@@ -70,8 +70,8 @@ class User extends UserCore {
 		// Search field in order to search for members
 		 $this->addToModel("search_member", array(
 		 	"type" => "string",
-		 	"label" => "Søg blandt medlemmer her", 
-		 	"hint_message" => "Navn, email, mobilnr eller medlemsnr",
+		 	"label" => "Søg efter medlem", 
+		 	"hint_message" => "Navn, email, mobilnr eller medlemsnr. – min. 4 tegn.",
 		 	"error_message" => "Du skal som minimum angive 4 tegn."
 		 ));
 		 

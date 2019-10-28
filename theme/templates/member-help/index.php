@@ -16,7 +16,6 @@ $department_id = $search_users["department_id"];
 if (!$department_id) {
 	$department_id = $user_department["id"];
 }
-	
 
 ?>
 
@@ -31,7 +30,7 @@ if (!$department_id) {
 
 		<div class="c-one-quarter">
 			<ul class="actions">
-				<li class = "new_member"><a class="button primary clickable" href="/medlemshjaelp/tilmelding">Opret nyt medlem</a></li>
+				<li class="new_member"><a class="button primary" href="/medlemshjaelp/tilmelding">Opret nyt medlem</a></li>
 			</ul>
 		</div>
 	</div>
@@ -42,8 +41,8 @@ if (!$department_id) {
 	<div class="c-wrapper search">
 		<div class="c-three-quarters">
 			<fieldset>
-				<?= $model->input("search_member", array("label" => "Navn, email, mobilnr eller medlemsnr")) ?>
-				<?= $model->input("department_id", array("type" => "select", "hint_message" => "Du kan søge et medlem frem ved at indtaste vedkommendes lokalafdeling.", "error_message" => "Du kan søge på den enkelte afdeling eller vælge 'alle afdelinger'.", "value" => $department_id, "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["all" => "Alle afdelinger"]]),)); ?>
+				<?= $model->input("search_member") ?>
+				<?= $model->input("department_id", array("type" => "select", "hint_message" => "Begræns din søgning til en afdeling.", "error_message" => "Du kan søge på den enkelte afdeling eller vælge 'alle afdelinger'.", "value" => $department_id, "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["all" => "Alle afdelinger"]]),)); ?>
 			</fieldset>
 		</div>
 		<div class="c-one-quarter">
@@ -54,28 +53,37 @@ if (!$department_id) {
 	</div>
 	<?= $model->formEnd() ?>
 
-<? // show error messages 
-if(message()->hasMessages()): ?>
-<div class="messages">
-<?
-$all_messages = message()->getMessages();
-message()->resetMessages();
-foreach($all_messages as $type => $messages):
-	foreach($messages as $message): ?>
-	<p class="<?= $type ?>"><?= $message ?></p>
+
+	<? // show error messages 
+	if(message()->hasMessages()): ?>
+	<div class="messages">
+	<?
+	$all_messages = message()->getMessages();
+	message()->resetMessages();
+	foreach($all_messages as $type => $messages):
+		foreach($messages as $message): ?>
+		<p class="<?= $type ?>"><?= $message ?></p>
+		<? endforeach;?>
 	<? endforeach;?>
-<? endforeach;?>
-</div>
-<? endif; ?>
+	</div>
+	<? endif; ?>
 
 
 	<div class="c-wrapper users">
-		<h3>
-			<span class="name">Navn</span><span class="email">Mail</span><span class="mobile">Mobilnr</span><span class="member_no">Medl.nr</span><span class="department">Lokalafd.</span>
+		<h3 class="header<?= (!$users ? " hidden" : "") ?>">
+			<span class="name">Navn</span>
+			<span class="email">Mail</span>
+			<span class="mobile">Mobilnr</span>
+			<span class="member_no">Medl.nr</span>
+			<span class="department">Lokalafd.</span>
 		</h3>
+
+		<p class="type_to_search<?= ($users ? " hidden" : "") ?>">Indtast mindst 4 tegn for at søge.</p>
+		<p class="no_results<?= ($users === false ? "" : " hidden") ?>">Ingen resultater.</p>
+
 		<ul class="users">
 			<li class="user template">
-				<ul class=user_info>
+				<ul class="user_info">
 					<li class="name search">{firstname} {lastname}</li>
 					<li class="email search">{email}</li>
 					<li class="mobile search">{mobile}</li>
@@ -107,11 +115,6 @@ foreach($all_messages as $type => $messages):
 			<? endforeach;
 			endif; ?>
 		</ul>
-		<p class ="visible <?=$users? "invisible": ""?>">
-			Her på siden kan du som kassemester søger efter medlemmer. 
-		Du søger et medlem frem ved at indtaste enten navn, mail, mobilnr eller medlemsnr på det pågældende medlem. 
-		Når du har søgt et medlem frem, har du mulighed for at åbne medlemmets brugerprofil. 
-		Her kan du handle på vejne af medlemmet og hjælpe med at bestille grøntsager, betale kontigent eller redigere brugeroplysninger eller medlemsskabsinfo. 
-		</p>
+
 	</div>
 </div>

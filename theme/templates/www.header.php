@@ -51,8 +51,8 @@
 	<link type="text/css" rel="stylesheet" media="all" href="/css/lib/seg_<?= $this->segment() ?>_include.css?cb=<?=randomKey(4); ?>" />
 	<script type="text/javascript" src="/js/lib/seg_<?= $this->segment() ?>_include.js?cb=<?=randomKey(4); ?>"></script>
 <? } else { ?>
-	<link type="text/css" rel="stylesheet" media="all" href="/css/seg_<?= $this->segment() ?>.css?rev=20191017-165104" />
-	<script type="text/javascript" src="/js/seg_<?= $this->segment() ?>.js?rev=20191017-165104"></script>
+	<link type="text/css" rel="stylesheet" media="all" href="/css/seg_<?= $this->segment() ?>.css?rev=20191025-023611" />
+	<script type="text/javascript" src="/js/seg_<?= $this->segment() ?>.js?rev=20191025-023611"></script>
 <? } ?>
 
 	<?= $this->headerIncludes() ?>
@@ -65,7 +65,7 @@
 	<div id="header">
 		<ul class="servicenavigation">
 			<li class="keynav navigation nofollow"><a href="#navigation">To navigation</a></li>
-			<li class="keynav wiki nofollow"><a href="http://kbhffwiki.org">WIKI</a></li>
+			<li class="keynav wiki nofollow"><a href="http://kbhffwiki.org">Wiki</a></li>
 
 <?		if(session()->value("user_id") && session()->value("user_group_id") > 1): ?>
 			<?= $HTML->link("Janitor", "/janitor", ["wrapper" => "li.keynav.front"]) ?>

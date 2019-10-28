@@ -2,20 +2,20 @@
 $IC = new Items();
 global $action;
 
-$item = $IC->getItem(array("tags" => "page:about", "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true, "readstate" => true)));
+$item = $IC->getItem(array("tags" => "page:about", "status" => 1, "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true, "readstate" => true)));
 if($item) {
 	$this->sharingMetaData($item);
 }
 
-$about_navigation = $this->navigation("main-about");
+$about_subnavigation = $this->navigation("sub-about");
 
 ?>
 
 <div class="scene about i:scene">
 
-	<? if($about_navigation && isset($about_navigation["nodes"])) { ?>
+	<? if($about_subnavigation && isset($about_subnavigation["nodes"])) { ?>
 	<ul class="subnavigation">
-		<? foreach($about_navigation["nodes"] as $node): ?>
+		<? foreach($about_subnavigation["nodes"] as $node): ?>
 		<li><a href="<?= $node["link"] ?>"><?= $node["name"] ?></a></li>
 		<? endforeach;?>
 	</ul>
@@ -23,7 +23,7 @@ $about_navigation = $this->navigation("main-about");
 
 
 	<?	if($item):
-	$media = $IC->sliceMediae($item); ?>
+	$media = $IC->sliceMediae($item, "single_media"); ?>
 
 	<div class="article i:article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle">
 

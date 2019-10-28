@@ -718,50 +718,52 @@ class SuperUser extends SuperUserCore {
 	
 		// Get content of $_POST array which have been "quality-assured" by Janitor 
 		$this->getPostedEntities();
-		
-		
+
 		if($this->validateList(array("search_member"))) {
-			
+
 			$department_id= $this->getProperty("department_id", "value");
 			$search_value = $this->getProperty("search_member", "value");
 			
 			$user_id = session()->value("user_id");
-		
+
 			$query = new Query();
-			
-			if ((strlen($search_value)>3)) {
-				$sql = "select u.nickname as nickname, u.firstname as firstname, u.lastname as lastname, ud.department_id as department, u.id as user_id, (select un.username from ".SITE_DB.".user_usernames as un where un.user_id = u.id and un.type = 'email') as email, (select un.username from ".SITE_DB.".user_usernames as un where un.user_id = u.id and un.type = 'mobile') as mobile, (select un.username from ".SITE_DB.".user_usernames as un where un.user_id = u.id and un.type = 'member_no') as member_no from ".SITE_DB.".users u LEFT OUTER JOIN ".SITE_DB.".user_department ud ON u.id = ud.user_id LEFT JOIN ".SITE_DB.".user_usernames un ON un.user_id = u.id WHERE u.id <> $user_id AND (un.username like '%$search_value%' OR u.nickname like '%$search_value%' OR u.firstname like '%$search_value%' OR u.lastname like '%$search_value%')";
+
+			if($search_value) {
+				$sql = "SELECT u.nickname AS nickname, u.firstname AS firstname, u.lastname as lastname, ud.department_id as department, u.id as user_id, (select un.username from ".SITE_DB.".user_usernames as un where un.user_id = u.id and un.type = 'email') as email, (select un.username from ".SITE_DB.".user_usernames as un where un.user_id = u.id and un.type = 'mobile') as mobile, (select un.username from ".SITE_DB.".user_usernames as un where un.user_id = u.id and un.type = 'member_no') as member_no from ".SITE_DB.".users u LEFT OUTER JOIN ".SITE_DB.".user_department ud ON u.id = ud.user_id LEFT JOIN ".SITE_DB.".user_usernames un ON un.user_id = u.id WHERE u.id <> $user_id AND (un.username like '%$search_value%' OR u.nickname like '%$search_value%' OR u.firstname like '%$search_value%' OR u.lastname like '%$search_value%')";
 				
 				if ($department_id != "all") {
 					$sql .= " and ud.department_id = $department_id";
 				}
 				
 				$sql .= " group by u.id";
-				
-				 include_once("classes/system/department.class.php");
- 				 $DC = new Department();
- 				 $departments = $DC->getDepartments();
-				 foreach ($departments as $d => $department): 
-				 	$department = array_column($departments, "name", "id");
-				 endforeach;
-				 if ($query->sql($sql)) {
-				 	$users = $query->results();
-				 
-				 	if ($users):
-				 		foreach($users as $u => $user):
-				 			foreach($department as $d => $depart):
-				 				if ($d == $user["department"]) :
-				 					$users[$u]["department"] = $depart;
-				 				endif;
-				 			endforeach;
-				 		endforeach;
-				 	endif;
-					
+
+				include_once("classes/system/department.class.php");
+ 				$DC = new Department();
+ 				$departments = $DC->getDepartments();
+
+				foreach ($departments as $d => $department): 
+					$department = array_column($departments, "name", "id");
+				endforeach;
+
+				if ($query->sql($sql)) {
+					$users = $query->results();
+
+					if ($users):
+						foreach($users as $u => $user):
+							foreach($department as $d => $depart):
+								if ($d == $user["department"]) :
+									$users[$u]["department"] = $depart;
+								endif;
+							endforeach;
+						endforeach;
+					endif;
+
 					return array("users" => $users, "search_value" => $search_value, "department_id" => $department_id);
-				}	
+				}
+				return array("users" => false, "search_value" => $search_value, "department_id" => $department_id);
 			}
 		}
-		
+
 		return false;
 	}
 	

@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-10-17 16:50:13
+asset-builder @ 2019-10-25 02:36:20
 */
 
 /*seg_smartphone_include.css*/
@@ -879,7 +879,7 @@ body.invoice #content div.scene .all_items ul.items li span.amount {float: right
 #content .scene.defaultEdit > div.media {padding: 0; border-bottom: 1px solid #bbbbbb; position: relative;}
 #content .scene.defaultEdit > div.media form.upload {text-align: left; position: relative; z-index: 2;}
 #content .scene.defaultEdit > div.media form.upload .actions {display: none;}
-#content .scene.defaultEdit > div.media form.upload div.field.files ul.filelist li.label {margin: 0; display: inline-block;}
+#content .scene.defaultEdit > div.media form.upload div.field.files ul.filelist li.label {margin-bottom: 0; display: inline-block;}
 #content .scene.defaultEdit > div.media form.upload div.field.files.loading ul.filelist {
 	background: transparent url(../assets/janitor/admin/img/gx_loader.gif) no-repeat center center;
 }

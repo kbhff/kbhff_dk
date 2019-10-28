@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-10-17 16:51:04
+asset-builder @ 2019-10-25 02:36:11
 */
 
 /*seg_desktop_include.js*/
@@ -7,7 +7,7 @@ asset-builder @ 2019-10-17 16:51:04
 /*seg_desktop.js*/
 if(!u || !Util) {
 	var u, Util = u = new function() {};
-	u.version = "0.9.2";
+	u.version = "0.9.3";
 	u.bug = u.nodeId = u.exception = function() {};
 	u.stats = new function() {this.pageView = function(){};this.event = function(){};}
 	u.txt = function(index) {return index;}
@@ -231,7 +231,7 @@ Util.Animation = u.a = new function() {
 				this.transitioned_before = this.transitioned;
 				this.transitioned(event);
 				if(this.transitioned === this.transitioned_before) {
-					this.transitioned = null;
+					delete this.transitioned;
 				}
 			}
 		}
@@ -904,6 +904,9 @@ u.containsOrIs = function(scope, node) {
 	}
 	return false;
 }
+u.elementMatches = u.em = function(node, selector) {
+	return node.matches(selector);
+}
 Util.insertAfter = u.ia = function(after_node, insert_node) {
 	var next_node = u.ns(after_node);
 	if(next_node) {
@@ -1454,8 +1457,8 @@ u.e.addWindowEvent = function(node, type, action) {
 }
 u.e.removeWindowEvent = function(node, type, id) {
 	u.e.removeEvent(window, type, window["_OnWindowEvent_callback_"+id]);
-	window["_OnWindowEvent_node_"+id] = null;
-	window["_OnWindowEvent_callback_"+id] = null;
+	delete window["_OnWindowEvent_node_"+id];
+	delete window["_OnWindowEvent_callback_"+id];
 }
 u.e.addWindowStartEvent = function(node, action) {
 	var id = u.randomString();
@@ -1471,9 +1474,9 @@ u.e.addWindowStartEvent = function(node, action) {
 }
 u.e.removeWindowStartEvent = function(node, id) {
 	u.e.removeStartEvent(window, window["_Onstart_callback_"+id]);
-	window["_Onstart_node_"+id]["_Onstart_callback_"+id] = null;
-	window["_Onstart_node_"+id] = null;
-	window["_Onstart_callback_"+id] = null;
+	delete window["_Onstart_node_"+id]["_Onstart_callback_"+id];
+	delete window["_Onstart_node_"+id];
+	delete window["_Onstart_callback_"+id];
 }
 u.e.addWindowMoveEvent = function(node, action) {
 	var id = u.randomString();
@@ -1489,9 +1492,9 @@ u.e.addWindowMoveEvent = function(node, action) {
 }
 u.e.removeWindowMoveEvent = function(node, id) {
 	u.e.removeMoveEvent(window, window["_Onmove_callback_" + id]);
-	window["_Onmove_node_"+ id]["_Onmove_callback_"+id] = null;
-	window["_Onmove_node_"+ id] = null;
-	window["_Onmove_callback_"+ id] = null;
+	delete window["_Onmove_node_"+ id]["_Onmove_callback_"+id];
+	delete window["_Onmove_node_"+ id];
+	delete window["_Onmove_callback_"+ id];
 }
 u.e.addWindowEndEvent = function(node, action) {
 	var id = u.randomString();
@@ -1507,9 +1510,9 @@ u.e.addWindowEndEvent = function(node, action) {
 }
 u.e.removeWindowEndEvent = function(node, id) {
 	u.e.removeEndEvent(window, window["_Onend_callback_" + id]);
-	window["_Onend_node_"+ id]["_Onend_callback_"+id] = null;
-	window["_Onend_node_"+ id] = null;
-	window["_Onend_callback_"+ id] = null;
+	delete window["_Onend_node_"+ id]["_Onend_callback_"+id];
+	delete window["_Onend_node_"+ id];
+	delete window["_Onend_callback_"+ id];
 }
 u.e.resetDragEvents = function(node) {
 	node._moves_pick = 0;
@@ -1595,7 +1598,7 @@ u.e.drag = function(node, boundaries, _options) {
 	u.e.setDragBoundaries(node, boundaries);
 	u.e.addStartEvent(node, this._inputStart);
 	if(fun(node[node.callback_ready])) {
-		node[node.callback_ready](event);
+		node[node.callback_ready]();
 	}
 }
 u.e._pick = function(event) {
@@ -1904,10 +1907,12 @@ u.e.swipe = function(node, boundaries, _options) {
 Util.Form = u.f = new function() {
 	this.customInit = {};
 	this.customValidate = {};
-	this.customSend = {};
+	this.customDataFormat = {};
 	this.customHintPosition = {};
+	this.customLabelStyle = {};
 	this.init = function(_form, _options) {
-		var i, j, field, action, input, hidden_field;
+		var i, j, field, action, input, hidden_input;
+		_form._bulk_operation = true;
 		if(_form.nodeName.toLowerCase() != "form") {
 			_form.native_form = u.pn(_form, {"include":"form"});
 			if(!_form.native_form) {
@@ -1919,19 +1924,41 @@ Util.Form = u.f = new function() {
 			_form.native_form = _form;
 		}
 		_form._focus_z_index = 50;
-		_form._hover_z_index = 49;
 		_form._validation = true;
-		_form._debug_init = false;
+		_form._debug = false;
+		_form._label_style = u.cv(_form, "labelstyle");
+		_form._callback_ready = "ready";
+		_form._callback_submitted = "submitted";
+		_form._callback_pre_submitted = "preSubmitted";
+		_form._callback_resat = "resat";
+		_form._callback_updated = "updated";
+		_form._callback_changed = "changed";
+		_form._callback_blurred = "blurred";
+		_form._callback_focused = "focused";
+		_form._callback_validation_failed = "validationFailed";
+		_form._callback_validation_passed = "validationPassed";
 		if(obj(_options)) {
 			var _argument;
 			for(_argument in _options) {
 				switch(_argument) {
-					case "validation"       : _form._validation      = _options[_argument]; break;
-					case "focus_z"          : _form._focus_z_index   = _options[_argument]; break;
-					case "debug"            : _form._debug_init      = _options[_argument]; break;
+					case "validation"               : _form._validation                = _options[_argument]; break;
+					case "debug"                    : _form._debug                     = _options[_argument]; break;
+					case "focus_z"                  : _form._focus_z_index             = _options[_argument]; break;
+					case "label_style"              : _form._label_style               = _options[_argument]; break;
+					case "callback_ready"           : _form._callback_ready            = _options[_argument]; break;
+					case "callback_submitted"       : _form._callback_submitted        = _options[_argument]; break;
+					case "callback_pre_submitted"   : _form._callback_pre_submitted    = _options[_argument]; break;
+					case "callback_resat"           : _form._callback_resat            = _options[_argument]; break;
+					case "callback_updated"         : _form._callback_updated          = _options[_argument]; break;
+					case "callback_changed"         : _form._callback_changed          = _options[_argument]; break;
+					case "callback_blurred"         : _form._callback_blurred          = _options[_argument]; break;
+					case "callback_focused"         : _form._callback_focused          = _options[_argument]; break;
+					case "callback_validation_failed"         : _form._callback_validation_failed          = _options[_argument]; break;
+					case "callback_validation_passed"         : _form._callback_validation_passed          = _options[_argument]; break;
 				}
 			}
 		}
+		_form._hover_z_index = _form._focus_z_index - 1;
 		_form.native_form.onsubmit = function(event) {
 			if(event.target._form) {
 				return false;
@@ -1942,266 +1969,224 @@ Util.Form = u.f = new function() {
 		_form.submit = this._submit;
 		_form.DOMreset = _form.native_form.reset;
 		_form.reset = this._reset;
-		_form.fields = {};
+		_form.getData = function(_options) {
+			return u.f.getFormData(this, _options);
+		}
+		_form.inputs = {};
 		_form.actions = {};
-		_form.error_fields = {};
-		_form.labelstyle = u.cv(_form, "labelstyle");
+		_form._error_inputs = {};
 		var fields = u.qsa(".field", _form);
 		for(i = 0; i < fields.length; i++) {
 			field = fields[i];
-			field._base_z_index = u.gcs(field, "z-index");
-			field._help = u.qs(".help", field);
-			field._hint = u.qs(".hint", field);
-			field._error = u.qs(".error", field);
-			field._indicator = u.ae(field, "div", {"class":"indicator"});
-			if(fun(u.f.fixFieldHTML)) {
-				u.f.fixFieldHTML(field);
-			}
-			field._initialized = false;
-			var custom_init;
-			for(custom_init in this.customInit) {
-				if(u.hc(field, custom_init)) {
-					this.customInit[custom_init](_form, field);
-					field._initialized = true;
-				}
-			}
-			if(!field._initialized) {
-				if(u.hc(field, "string|email|tel|number|integer|password|date|datetime")) {
-					field._input = u.qs("input", field);
-					field._input._form = _form;
-					field._input.field = field;
-					_form.fields[field._input.name] = field._input;
-					field._input._label = u.qs("label[for='"+field._input.id+"']", field);
-					field._input.val = this._value;
-					u.e.addEvent(field._input, "keyup", this._updated);
-					u.e.addEvent(field._input, "change", this._changed);
-					this.inputOnEnter(field._input);
-					this.activateInput(field._input);
-					this.validate(field._input);
-				}
-				else if(u.hc(field, "text")) {
-					field._input = u.qs("textarea", field);
-					field._input._form = _form;
-					field._input.field = field;
-					_form.fields[field._input.name] = field._input;
-					field._input._label = u.qs("label[for='"+field._input.id+"']", field);
-					field._input.val = this._value;
-					if(u.hc(field, "autoexpand")) {
-						var current_height = parseInt(u.gcs(field._input, "height"));
-						var current_value = field._input.val();
-						field._input.value = "";
-						u.as(field._input, "overflow", "hidden");
-						field._input.autoexpand_offset = 0;
-						if(parseInt(u.gcs(field._input, "height")) != field._input.scrollHeight) {
-							field._input.autoexpand_offset = field._input.scrollHeight - parseInt(u.gcs(field._input, "height"));
-						}
-						field._input.value = current_value;
-						field._input.setHeight = function() {
-							var textarea_height = parseInt(u.gcs(this, "height"));
-							if(this.val()) {
-								if(u.browser("webkit") || u.browser("firefox", ">=29")) {
-									if(this.scrollHeight - this.autoexpand_offset > textarea_height) {
-										u.a.setHeight(this, this.scrollHeight);
-									}
-								}
-								else if(u.browser("opera") || u.browser("explorer")) {
-									if(this.scrollHeight > textarea_height) {
-										u.a.setHeight(this, this.scrollHeight);
-									}
-								}
-								else {
-									u.a.setHeight(this, this.scrollHeight);
-								}
-							}
-						}
-						u.e.addEvent(field._input, "keyup", field._input.setHeight);
-						field._input.setHeight();
-					}
-					u.e.addEvent(field._input, "keyup", this._updated);
-					u.e.addEvent(field._input, "change", this._changed);
-					this.activateInput(field._input);
-					this.validate(field._input);
-				}
-				else if(u.hc(field, "select")) {
-					field._input = u.qs("select", field);
-					field._input._form = _form;
-					field._input.field = field;
-					_form.fields[field._input.name] = field._input;
-					field._input._label = u.qs("label[for='"+field._input.id+"']", field);
-					field._input.val = this._value_select;
-					u.e.addEvent(field._input, "change", this._updated);
-					u.e.addEvent(field._input, "keyup", this._updated);
-					u.e.addEvent(field._input, "change", this._changed);
-					this.activateInput(field._input);
-					this.validate(field._input);
-				}
-				else if(u.hc(field, "checkbox|boolean")) {
-					field._input = u.qs("input[type=checkbox]", field);
-					field._input._form = _form;
-					field._input.field = field;
-					field._input._label = u.qs("label[for='"+field._input.id+"']", field);
-					_form.fields[field._input.name] = field._input;
-					field._input.val = this._value_checkbox;
-					if(u.browser("explorer", "<=8")) {
-						field._input.pre_state = field._input.checked;
-						field._input._changed = this._changed;
-						field._input._updated = this._updated;
-						field._input._update_checkbox_field = this._update_checkbox_field;
-						field._input._clicked = function(event) {
-							if(this.checked != this.pre_state) {
-								this._changed(window.event);
-								this._updated(window.event);
-								this._update_checkbox_field(window.event);
-							}
-							this.pre_state = this.checked;
-						}
-						u.e.addEvent(field._input, "click", field._input._clicked);
-					}
-					else {
-						u.e.addEvent(field._input, "change", this._changed);
-						u.e.addEvent(field._input, "change", this._updated);
-						u.e.addEvent(field._input, "change", this._update_checkbox_field);
-					}
-					this.inputOnEnter(field._input);
-					this.activateInput(field._input);
-					this.validate(field._input);
-				}
-				else if(u.hc(field, "radiobuttons")) {
-					field._inputs = u.qsa("input", field);
-					field._input = field._inputs[0];
-					_form.fields[field._input.name] = field._input;
-					for(j = 0; j < field._inputs.length; j++) {
-						input = field._inputs[j];
-						input.field = field;
-						input._form = _form;
-						input._label = u.qs("label[for='"+input.id+"']", field);
-						input.val = this._value_radiobutton;
-						if(u.browser("explorer", "<=8")) {
-							input.pre_state = input.checked;
-							input._changed = this._changed;
-							input._updated = this._updated;
-							input._clicked = function(event) {
-								var i, input;
-								if(this.checked != this.pre_state) {
-									this._changed(window.event);
-									this._updated(window.event);
-								}
-								for(i = 0; i < field._input.length; i++) {
-									input = this.field._input[i];
-									input.pre_state = input.checked;
-								}
-							}
-							u.e.addEvent(input, "click", input._clicked);
-						}
-						else {
-							u.e.addEvent(input, "change", this._changed);
-							u.e.addEvent(input, "change", this._updated);
-						}
-						this.inputOnEnter(input);
-						this.activateInput(input);
-					}
-					this.validate(field._input);
-				}
-				else if(u.hc(field, "files")) {
-					field._input = u.qs("input", field);
-					field._input._form = _form;
-					field._input.field = field;
-					_form.fields[field._input.name] = field._input;
-					field._input._label = u.qs("label[for='"+field._input.id+"']", field);
-					u.e.addEvent(field._input, "change", this._updated);
-					u.e.addEvent(field._input, "change", this._changed);
-					u.e.addEvent(field._input, "focus", this._focus);
-					u.e.addEvent(field._input, "blur", this._blur);
-					if(u.e.event_pref == "mouse") {
-						u.e.addEvent(field._input, "dragenter", this._focus);
-						u.e.addEvent(field._input, "dragleave", this._blur);
-						u.e.addEvent(field._input, "mouseenter", this._mouseenter);
-						u.e.addEvent(field._input, "mouseleave", this._mouseleave);
-					}
-					u.e.addEvent(field._input, "blur", this._validate);
-					field._input.val = this._value_file;
-					this.validate(field._input);
-				}
-				else if(u.hc(field, "tags")) {
-					field._input = u.qs("input", field);
-					field._input._form = _form;
-					field._input.field = field;
-					_form.fields[field._input.name] = field._input;
-					field._input._label = u.qs("label[for='"+field._input.id+"']", field);
-					field._input.val = this._value;
-					u.e.addEvent(field._input, "keyup", this._updated);
-					u.e.addEvent(field._input, "change", this._changed);
-					this.inputOnEnter(field._input);
-					this.activateInput(field._input);
-					this.validate(field._input);
-				}
-				else if(u.hc(field, "prices")) {
-					field._input = u.qs("input", field);
-					field._input._form = _form;
-					field._input.field = field;
-					_form.fields[field._input.name] = field._input;
-					field._input._label = u.qs("label[for='"+field._input.id+"']", field);
-					field._input.val = this._value;
-					u.e.addEvent(field._input, "keyup", this._updated);
-					u.e.addEvent(field._input, "change", this._changed);
-					this.inputOnEnter(field._input);
-					this.activateInput(field._input);
-					this.validate(field._input);
-				}
-				else {
-					u.bug("UNKNOWN FIELD IN FORM INITIALIZATION:" + u.nodeId(field));
-				}
-			}
+			u.f.initField(_form, field);
 		}
-		var hidden_fields = u.qsa("input[type=hidden]", _form);
-		for(i = 0; i < hidden_fields.length; i++) {
-			hidden_field = hidden_fields[i];
-			if(!_form.fields[hidden_field.name]) {
-				_form.fields[hidden_field.name] = hidden_field;
-				hidden_field._form = _form;
-				hidden_field.val = this._value;
+		var hidden_inputs = u.qsa("input[type=hidden]", _form);
+		for(i = 0; i < hidden_inputs.length; i++) {
+			hidden_input = hidden_inputs[i];
+			if(!_form.inputs[hidden_input.name]) {
+				_form.inputs[hidden_input.name] = hidden_input;
+				hidden_input._form = _form;
+				hidden_input.val = this._value;
 			}
 		}
 		var actions = u.qsa(".actions li input[type=button],.actions li input[type=submit],.actions li input[type=reset],.actions li a.button", _form);
 		for(i = 0; i < actions.length; i++) {
 			action = actions[i];
-				action._form = _form;
-			this.activateButton(action);
+			this.initButton(_form, action);
 		}
-		if(_form._debug_init) {
-			u.bug(u.nodeId(_form) + ", fields:");
-			u.xInObject(_form.fields);
-			u.bug(u.nodeId(_form) + ", actions:");
-			u.xInObject(_form.actions);
+		u.t.setTimer(_form, function() {
+			var validate_inputs = [];
+			for(input in this.inputs) {
+				if(this.inputs[input].field) {
+					validate_inputs.push(this.inputs[input]);
+				}
+			}
+			u.f.bulkValidate(validate_inputs);
+			if(_form._debug) {
+				u.bug(_form, "inputs:", _form.inputs, "actions:", _form.actions);
+			}
+			if(fun(this[this._callback_ready])) {
+				this[this._callback_ready]();
+			}
+		}, 100);
+	}
+	this.initField = function(_form, field) {
+		field._form = _form;
+		field._base_z_index = u.gcs(field, "z-index");
+		field.help = u.qs(".help", field);
+		field.hint = u.qs(".hint", field);
+		field.error = u.qs(".error", field);
+		field.label = u.qs("label", field);
+		field.indicator = u.ae(field, "div", {"class":"indicator"});
+		if(fun(u.f.fixFieldHTML)) {
+			u.f.fixFieldHTML(field);
+		}
+		field._custom_initialized = false;
+		var custom_init;
+		for(custom_init in this.customInit) {
+			if(u.hc(field, custom_init)) {
+				this.customInit[custom_init](field);
+				field._custom_initialized = true;
+				break;
+			}
+		}
+		if(!field._custom_initialized) {
+			if(u.hc(field, "string|email|tel|number|integer|password|date|datetime")) {
+				field.type = field.className.match(/(?:^|\b)(string|email|tel|number|integer|password|date|datetime)(?:\b|$)/)[0];
+				field.input = u.qs("input", field);
+				field.input._form = _form;
+				field.input.label = u.qs("label[for='"+field.input.id+"']", field);
+				field.input.field = field;
+				field.input.val = this._value;
+				u.e.addEvent(field.input, "keyup", this._updated);
+				u.e.addEvent(field.input, "change", this._changed);
+				this.inputOnEnter(field.input);
+				this.activateInput(field.input);
+			}
+			else if(u.hc(field, "text")) {
+				field.type = "text";
+				field.input = u.qs("textarea", field);
+				field.input._form = _form;
+				field.input.label = u.qs("label[for='"+field.input.id+"']", field);
+				field.input.field = field;
+				field.input.val = this._value;
+				if(u.hc(field, "autoexpand")) {
+					u.ass(field.input, {
+						"overflow": "hidden"
+					});
+					field.input.setHeight = function() {
+						u.ass(this, {
+							height: "auto"
+						});
+						u.ass(this, {
+							height: (this.scrollHeight) + "px"
+						});
+					}
+					u.e.addEvent(field.input, "input", field.input.setHeight);
+					field.input.setHeight();
+				}
+				u.e.addEvent(field.input, "keyup", this._updated);
+				u.e.addEvent(field.input, "change", this._changed);
+				this.activateInput(field.input);
+			}
+			else if(u.hc(field, "select")) {
+				field.type = "select";
+				field.input = u.qs("select", field);
+				field.input._form = _form;
+				field.input.label = u.qs("label[for='"+field.input.id+"']", field);
+				field.input.field = field;
+				field.input.val = this._value_select;
+				u.e.addEvent(field.input, "change", this._updated);
+				u.e.addEvent(field.input, "keyup", this._updated);
+				u.e.addEvent(field.input, "change", this._changed);
+				this.activateInput(field.input);
+			}
+			else if(u.hc(field, "checkbox|boolean")) {
+				field.type = field.className.match(/(?:^|\b)(checkbox|boolean)(?:\b|$)/)[0];
+				field.input = u.qs("input[type=checkbox]", field);
+				field.input._form = _form;
+				field.input.label = u.qs("label[for='"+field.input.id+"']", field);
+				field.input.field = field;
+				field.input.val = this._value_checkbox;
+				u.f._update_checkbox_field.bind(field.input)();
+				u.e.addEvent(field.input, "change", this._changed);
+				u.e.addEvent(field.input, "change", this._updated);
+				u.e.addEvent(field.input, "change", this._update_checkbox_field);
+				this.inputOnEnter(field.input);
+				this.activateInput(field.input);
+			}
+			else if(u.hc(field, "radiobuttons")) {
+				field.type = "radiobuttons";
+				field.inputs = u.qsa("input", field);
+				field.input = field.inputs[0];
+				for(j = 0; j < field.inputs.length; j++) {
+					input = field.inputs[j];
+					input._form = _form;
+					input.label = u.qs("label[for='"+input.id+"']", field);
+					input.field = field;
+					input.val = this._value_radiobutton;
+					u.e.addEvent(input, "change", this._changed);
+					u.e.addEvent(input, "change", this._updated);
+					this.inputOnEnter(input);
+					this.activateInput(input);
+				}
+			}
+			else if(u.hc(field, "files")) {
+				field.type = "files";
+				field.input = u.qs("input", field);
+				field.input._form = _form;
+				field.input.label = u.qs("label[for='"+field.input.id+"']", field);
+				field.input.field = field;
+				field.input.val = this._value_file;
+				field.filelist = u.qs("ul.filelist", field);
+				if(!field.filelist) {
+					field.filelist = u.ae(field, "ul", {"class":"filelist"});
+					field.insertBefore(field.help, field.filelist);
+				}
+				field.filelist.field = field;
+				field.uploaded_files = u.qsa("li.uploaded", field.filelist);
+				this._update_filelist.bind(field.input)();
+				u.e.addEvent(field.input, "change", this._updated);
+				u.e.addEvent(field.input, "change", this._changed);
+				if(u.e.event_support != "touch") {
+					u.e.addEvent(field.input, "dragenter", this._focus);
+					u.e.addEvent(field.input, "dragleave", this._blur);
+					u.e.addEvent(field.input, "drop", this._blur);
+				}
+				u.e.addEvent(field.input, "change", this._update_filelist);
+				this.activateInput(field.input);
+			}
+			else {
+				u.bug("UNKNOWN FIELD IN FORM INITIALIZATION:", field);
+			}
+		}
+		if(field.input) {
+			_form.inputs[field.input.name] = field.input;
+			if(!_form._bulk_operation) {
+				this.validate(field.input);
+			}
 		}
 	}
-	this._reset = function (event, iN) {
-		for (name in this.fields) {
-			if (this.fields[name] && this.fields[name].field && this.fields[name].type != "hidden" && !this.fields[name].getAttribute("readonly")) {
-				this.fields[name].used = false;
-				this.fields[name].val("");
+	this.initButton = function(_form, action) {
+		action._form = _form;
+		this.buttonOnEnter(action);
+		this.activateButton(action);
+	}
+	this._reset = function(event, iN) {
+		for (name in this.inputs) {
+			if (this.inputs[name] && this.inputs[name].field && this.inputs[name].type != "hidden" && !this.inputs[name].getAttribute("readonly")) {
+				this.inputs[name]._used = false;
+				this.inputs[name].val("");
+				if(fun(u.f.updateDefaultState)) {
+					u.f.updateDefaultState(this.inputs[name]);
+				}
 			}
+		}
+		if(fun(this[this._callback_resat])) {
+			this[this._callback_resat](iN);
 		}
 	}
 	this._submit = function(event, iN) {
-		for(name in this.fields) {
-			if(this.fields[name] && this.fields[name].field && fun(this.fields[name].val)) {
-				this.fields[name].used = true;
-				u.f.validate(this.fields[name]);
+		var validate_inputs = [];
+		for(name in this.inputs) {
+			if(this.inputs[name] && this.inputs[name].field && fun(this.inputs[name].val)) {
+				this.inputs[name]._used = true;
+				validate_inputs.push(this.inputs[name]);
 			}
 		}
-		if(!Object.keys(this.error_fields).length) {
-			if(fun(this.preSubmitted)) {
-				this.preSubmitted(iN);
+		u.f.bulkValidate(validate_inputs);
+		if(!Object.keys(this._error_inputs).length) {
+			if(fun(this[this._callback_pre_submitted])) {
+				this[this._callback_pre_submitted](iN);
 			}
-			if(fun(this.submitted)) {
-				this.submitted(iN);
+			if(fun(this[this._callback_submitted])) {
+				this[this._callback_submitted](iN);
 			}
 			else {
-				for(name in this.fields) {
-					if(this.fields[name] && this.fields[name].default_value && fun(this.fields[name].val) && !this.fields[name].val()) {
-						if(this.fields[name].nodeName.match(/^(input|textarea)$/i)) {
-							this.fields[name].value = "";
+				for(name in this.inputs) {
+					if(this.inputs[name] && this.inputs[name].default_value && this.inputs[name].nodeName.match(/^(input|textarea)$/i)) {
+						if(fun(this.inputs[name].val) && !this.inputs[name].val()) {
+							this.inputs[name].value = "";
 						}
 					}
 				}
@@ -2214,9 +2199,6 @@ Util.Form = u.f = new function() {
 			this.value = value;
 			if(value !== this.default_value) {
 				u.rc(this, "default");
-				if(this.pseudolabel) {
-					u.as(this.pseudolabel, "display", "none");
-				}
 			}
 			u.f.validate(this);
 		}
@@ -2225,8 +2207,8 @@ Util.Form = u.f = new function() {
 	this._value_radiobutton = function(value) {
 		var i, option;
 		if(value !== undefined) {
-			for(i = 0; i < this.field._inputs.length; i++) {
-				option = this.field._inputs[i];
+			for(i = 0; i < this.field.inputs.length; i++) {
+				option = this.field.inputs[i];
 				if(option.value == value || (option.value == "true" && value) || (option.value == "false" && value === false)) {
 					option.checked = true;
 					u.f.validate(this);
@@ -2236,12 +2218,10 @@ Util.Form = u.f = new function() {
 				}
 			}
 		}
-		else {
-			for(i = 0; i < this.field._inputs.length; i++) {
-				option = this.field._inputs[i];
-				if(option.checked) {
-					return option.value;
-				}
+		for(i = 0; i < this.field.inputs.length; i++) {
+			option = this.field.inputs[i];
+			if(option.checked) {
+				return option.value;
 			}
 		}
 		return "";
@@ -2250,18 +2230,15 @@ Util.Form = u.f = new function() {
 		if(value !== undefined) {
 			if(value) {
 				this.checked = true
-				u.ac(this.field, "checked");
 			}
 			else {
 				this.checked = false;
-				u.rc(this.field, "checked");
 			}
+			u.f._update_checkbox_field.bind(this)();
 			u.f.validate(this);
 		}
-		else {
-			if(this.checked) {
-				return this.value;
-			}
+		if(this.checked) {
+			return this.value;
 		}
 		return "";
 	}
@@ -2273,44 +2250,172 @@ Util.Form = u.f = new function() {
 				if(option.value == value) {
 					this.selectedIndex = i;
 					u.f.validate(this);
-					return i;
+					return this.options[this.selectedIndex].value;
 				}
 			}
 			if (value === "") {
 				this.selectedIndex = -1;
 				u.f.validate(this);
-				return -1;
+				return "";
 			}
-			return false;
 		}
-		else {
-			return (this.selectedIndex >= 0 && this.default_value != this.options[this.selectedIndex].value) ? this.options[this.selectedIndex].value : "";
-		}
+		return (this.selectedIndex >= 0 && this.default_value != this.options[this.selectedIndex].value) ? this.options[this.selectedIndex].value : "";
 	}
 	this._value_file = function(value) {
 		if(value !== undefined) {
-			this.value = value;
-			if (value === "") {
+			if(value === "") {
 				this.value = null;
+			}
+			else {
+				u.bug('ADDING VALUES MANUALLY TO INPUT type="file" IS NOT SUPPORTED IN JAVASCRIPT');
+			}
+			u.f._update_filelist.bind(this)();
+			u.f.validate(this);
+		}
+		if(this.files && this.files.length) {
+			var i, file, files = [];
+			for(i = 0; i < this.files.length; i++) {
+				file = this.files[i];
+				files.push(file);
+			}
+			return files;
+		}
+		else if(!this.files && this.value) {
+			return this.value;
+		}
+		else if(this.field.uploaded_files && this.field.uploaded_files.length){
+			return true;
+		}
+		return "";
+	}
+	this._changed = function(event) {
+		if(fun(this[this._form._callback_changed])) {
+			this[this._form._callback_changed](this);
+		}
+		else if(fun(this.field.input[this._form._callback_changed])) {
+			this.field.input[this._form._callback_changed](this);
+		}
+		if(fun(this._form[this._form._callback_changed])) {
+			this._form[this._form._callback_changed](this);
+		}
+	}
+	this._updated = function(event) {
+		if(event.keyCode != 9 && event.keyCode != 13 && event.keyCode != 16 && event.keyCode != 17 && event.keyCode != 18) {
+			u.f.validate(this);
+			if(fun(this[this._form._callback_updated])) {
+				this[this._form._callback_updated](this);
+			}
+			else if(fun(this.field.input[this._form._callback_updated])) {
+				this.field.input[this._form._callback_updated](this);
+			}
+			if(fun(this._form[this._form._callback_updated])) {
+				this._form[this._form._callback_updated](this);
+			}
+		}
+	}
+	this._update_checkbox_field = function(event) {
+		if(this.checked) {
+			u.ac(this.field, "checked");
+		}
+		else {
+			u.rc(this.field, "checked");
+		}
+	}
+	this._update_filelist = function(event) {
+		var i;
+		var files = this.val();
+		this.field.filelist.innerHTML = "";
+		u.ae(this.field.filelist, "li", {html:this.field.hint ? u.text(this.field.hint) : u.text(this.label), class:"label"})
+		if(files && files.length) {
+			u.ac(this.field, "has_new_files");
+			var i;
+			for(i = 0; i < files.length; i++) {
+				u.ae(this.field.filelist, "li", {html:files[i].name, class:"new"})
+			}
+			if(this.multiple) {
+				for(i = 0; i < this.field.uploaded_files.length; i++) {
+					u.ae(this.field.filelist, this.field.uploaded_files[i]);
+				}
+			}
+		}
+		else if(this.field.uploaded_files && this.field.uploaded_files.length) {
+			u.rc(this.field, "has_new_files");
+			var i;
+			for(i = 0; i < this.field.uploaded_files.length; i++) {
+				u.ae(this.field.filelist, this.field.uploaded_files[i]);
 			}
 		}
 		else {
-			if(this.value && this.files && this.files.length) {
-				var i, file, files = [];
-				for(i = 0; i < this.files.length; i++) {
-					file = this.files[i];
-					files.push(file);
-				}
-				return files;
-			}
-			else if(this.value) {
-				return this.value;
-			}
-			else if(u.hc(this, "uploaded")){
-				return true;
-			}
-			return "";
+			u.rc(this.field, "has_new_files");
 		}
+	}
+	this._mouseenter = function(event) {
+		u.ac(this.field, "hover");
+		u.ac(this, "hover");
+		u.as(this.field, "zIndex", this._form._hover_z_index);
+		u.f.positionHint(this.field);
+	}
+	this._mouseleave = function(event) {
+		u.rc(this.field, "hover");
+		u.rc(this, "hover");
+		u.as(this.field, "zIndex", this.field._base_z_index);
+		u.f.positionHint(this.field);
+	}
+	this._focus = function(event) {
+		this.field.is_focused = true;
+		this.is_focused = true;
+		u.ac(this.field, "focus");
+		u.ac(this, "focus");
+		u.as(this.field, "zIndex", this._form._focus_z_index);
+		u.f.positionHint(this.field);
+		if(fun(this[this._form._callback_focused])) {
+			this[this._form._callback_focused](this);
+		}
+		else if(fun(this.field.input[this._form._callback_focused])) {
+			this.field.input[this._form._callback_focused](this);
+		}
+		if(fun(this._form[this._form._callback_focused])) {
+			this._form[this._form._callback_focused](this);
+		}
+	}
+	this._blur = function(event) {
+		this.field.is_focused = false;
+		this.is_focused = false;
+		u.rc(this.field, "focus");
+		u.rc(this, "focus");
+		u.as(this.field, "zIndex", this.field._base_z_index);
+		u.f.positionHint(this.field);
+		this._used = true;
+		if(fun(this[this._form._callback_blurred])) {
+			this[this._form._callback_blurred](this);
+		}
+		else if(fun(this.field.input[this._form._callback_blurred])) {
+			this.field.input[this._form._callback_blurred](this);
+		}
+		if(fun(this._form[this._form._callback_blurred])) {
+			this._form[this._form._callback_blurred](this);
+		}
+	}
+	this._button_focus = function(event) {
+		u.ac(this, "focus");
+		if(fun(this[this._form._callback_focused])) {
+			this[this._form._callback_focused](this);
+		}
+		if(fun(this._form[this._form._callback_focused])) {
+			this._form[this._form._callback_focused](this);
+		}
+	}
+	this._button_blur = function(event) {
+		u.rc(this, "focus");
+		if(fun(this[this._form._callback_blurred])) {
+			this[this._form._callback_blurred](this);
+		}
+		if(fun(this._form[this._form._callback_blurred])) {
+			this._form[this._form._callback_blurred](this);
+		}
+	}
+	this._validate = function(event) {
+		u.f.validate(this);
 	}
 	this.inputOnEnter = function(node) {
 		node.keyPressed = function(event) {
@@ -2347,165 +2452,16 @@ Util.Form = u.f = new function() {
 		}
 		u.e.addEvent(node, "keydown", node.keyPressed);
 	}
-	this._changed = function(event) {
-		this.used = true;
-		if(fun(this.changed)) {
-			this.changed(this);
-		}
-		else if(this.field._input && fun(this.field._input.changed)) {
-			this.field._input.changed(this);
-		}
-		if(fun(this.field.changed)) {
-			this.field.changed(this);
-		}
-		if(fun(this._form.changed)) {
-			this._form.changed(this);
-		}
-	}
-	this._updated = function(event) {
-		if(event.keyCode != 9 && event.keyCode != 13 && event.keyCode != 16 && event.keyCode != 17 && event.keyCode != 18) {
-			if(this.used || u.hc(this.field, "error")) {
-				u.f.validate(this);
-			}
-			if(fun(this.updated)) {
-				this.updated(this);
-			}
-			else if(this.field._input && fun(this.field._input.updated)) {
-				this.field._input.updated(this);
-			}
-			if(fun(this.field.updated)) {
-				this.field.updated(this);
-			}
-			if(fun(this._form.updated)) {
-				this._form.updated(this);
-			}
-		}
-	}
-	this._update_checkbox_field = function(event) {
-		if(this.checked) {
-			u.ac(this.field, "checked");
-		}
-		else {
-			u.rc(this.field, "checked");
-		}
-	}
-	this._validate = function(event) {
-		u.f.validate(this);
-	}
-	this._mouseenter = function(event) {
-		u.ac(this.field, "hover");
-		u.ac(this, "hover");
-		u.as(this.field, "zIndex", this.field._input._form._hover_z_index);
-		u.f.positionHint(this.field);
-	}
-	this._mouseleave = function(event) {
-		u.rc(this.field, "hover");
-		u.rc(this, "hover");
-		u.as(this.field, "zIndex", this.field._base_z_index);
-		u.f.positionHint(this.field);
-	}
-	this._focus = function(event) {
-		this.field.is_focused = true;
-		this.is_focused = true;
-		u.ac(this.field, "focus");
-		u.ac(this, "focus");
-		u.as(this.field, "zIndex", this._form._focus_z_index);
-		u.f.positionHint(this.field);
-		if(fun(this.focused)) {
-			this.focused();
-		}
-		else if(this.field._input && fun(this.field._input.focused)) {
-			this.field._input.focused(this);
-		}
-		if(fun(this._form.focused)) {
-			this._form.focused(this);
-		}
-	}
-	this._blur = function(event) {
-		this.field.is_focused = false;
-		this.is_focused = false;
-		u.rc(this.field, "focus");
-		u.rc(this, "focus");
-		u.as(this.field, "zIndex", this.field._base_z_index);
-		u.f.positionHint(this.field);
-		this.used = true;
-		if(fun(this.blurred)) {
-			this.blurred();
-		}
-		else if(this.field._input && fun(this.field._input.blurred)) {
-			this.field._input.blurred(this);
-		}
-		if(fun(this._form.blurred)) {
-			this._form.blurred(this);
-		}
-	}
-	this._button_focus = function(event) {
-		u.ac(this, "focus");
-		if(fun(this.focused)) {
-			this.focused();
-		}
-		if(fun(this._form.focused)) {
-			this._form.focused(this);
-		}
-	}
-	this._button_blur = function(event) {
-		u.rc(this, "focus");
-		if(fun(this.blurred)) {
-			this.blurred();
-		}
-		if(fun(this._form.blurred)) {
-			this._form.blurred(this);
-		}
-	}
-	this._changed_state = function() {
-		u.f.updateDefaultState(this);
-	}
-	this.positionHint = function(field) {
-		if(field._help) {
-			var custom_hint_position;
-			for(custom_hint_position in this.customHintPosition) {
-				if(u.hc(field, custom_hint_position)) {
-					this.customHintPosition[custom_hint_position](field._form, field);
-					return;
-				}
-			}
-			var input_middle, help_top;
- 			if(u.hc(field, "html")) {
-				input_middle = field._editor.offsetTop + (field._editor.offsetHeight / 2);
-			}
-			else {
-				input_middle = field._input.offsetTop + (field._input.offsetHeight / 2);
-			}
-			help_top = input_middle - field._help.offsetHeight / 2;
-			u.as(field._help, "top", help_top + "px");
-		}
-	}
 	this.activateInput = function(iN) {
 		u.e.addEvent(iN, "focus", this._focus);
 		u.e.addEvent(iN, "blur", this._blur);
-		if(u.e.event_pref == "mouse") {
+		if(u.e.event_support != "touch") {
 			u.e.addEvent(iN, "mouseenter", this._mouseenter);
 			u.e.addEvent(iN, "mouseleave", this._mouseleave);
 		}
 		u.e.addEvent(iN, "blur", this._validate);
-		if(iN._form.labelstyle == "inject") {
-			if(!iN.type || !iN.type.match(/file|radio|checkbox/)) {
-				iN.default_value = u.text(iN._label);
-				u.e.addEvent(iN, "focus", this._changed_state);
-				u.e.addEvent(iN, "blur", this._changed_state);
-				if(iN.type.match(/number|integer/)) {
-					iN.pseudolabel = u.ae(iN.parentNode, "span", {"class":"pseudolabel", "html":iN.default_value});
-					iN.pseudolabel.iN = iN;
-					u.as(iN.pseudolabel, "top", iN.offsetTop+"px");
-					u.as(iN.pseudolabel, "left", iN.offsetLeft+"px");
-					u.ce(iN.pseudolabel)
-					iN.pseudolabel.inputStarted = function(event) {
-						u.e.kill(event);
-						this.iN.focus();
-					}
-				}
-				u.f.updateDefaultState(iN);
-			}
+		if(iN._form._label_style && fun(this.customLabelStyle[iN._form._label_style])) {
+			this.customLabelStyle[iN._form._label_style](iN);
 		}
 		else {
 			iN.default_value = "";
@@ -2514,33 +2470,41 @@ Util.Form = u.f = new function() {
 	this.activateButton = function(action) {
 		if(action.type && action.type == "submit" || action.type == "reset") {
 			action.onclick = function(event) {
-				u.e.kill(event ? event : window.event);
+				u.e.kill(event);
 			}
 		}
 		u.ce(action);
 		if(!action.clicked) {
 			action.clicked = function(event) {
-				u.e.kill(event);
 				if(!u.hc(this, "disabled")) {
 					if(this.type && this.type.match(/submit/i)) {
 						this._form._submit_button = this;
 						this._form._submit_input = false;
 						this._form.submit(event, this);
 					}
-					else if (this.type && this.type.match(/reset/i)) {
+					else if(this.type && this.type.match(/reset/i)) {
 						this._form._submit_button = false;
 						this._form._submit_input = false;
 						this._form.reset(event, this);
 					}
-					else {
-						location.href = this.url;
+					else if(this.url) {
+						if(event && (event.metaKey || event.ctrlKey)) {
+							window.open(this.url);
+						}
+						else {
+							if(obj(u.h) && u.h.is_listening) {
+								u.h.navigate(this.url, this);
+							}
+							else {
+								location.href = this.url;
+							}
+						}
 					}
 				}
 			}
 		}
-		this.buttonOnEnter(action);
-		var action_name = action.name ? action.name : action.parentNode.className;
-		if(action_name) {
+		var action_name = action.name ? action.name : (action.parentNode.className ? u.normalize(action.parentNode.className) : (action.value ? u.normalize(action.value) : u.normalize(u.text(action))));
+		if(action_name && !action._form.actions[action_name]) {
 			action._form.actions[action_name] = action;
 		}
 		if(obj(u.k) && u.hc(action, "key:[a-z0-9]+")) {
@@ -2549,107 +2513,171 @@ Util.Form = u.f = new function() {
 		u.e.addEvent(action, "focus", this._button_focus);
 		u.e.addEvent(action, "blur", this._button_blur);
 	}
-	this.updateDefaultState = function(iN) {
-		if(iN.is_focused || iN.val() !== "") {
-			u.rc(iN, "default");
-			if(iN.val() === "") {
-				iN.val("");
+	this.positionHint = function(field) {
+		if(field.help) {
+			var custom_hint_position;
+			for(custom_hint_position in this.customHintPosition) {
+				if(u.hc(field, custom_hint_position)) {
+					this.customHintPosition[custom_hint_position](field);
+					return;
+				}
 			}
-			if(iN.pseudolabel) {
-				u.as(iN.pseudolabel, "display", "none");
-			}
+			var input_middle = field.input.offsetTop + (field.input.offsetHeight / 2);
+			var help_top = input_middle - field.help.offsetHeight / 2;
+			u.ass(field.help, {
+				"top": help_top + "px"
+			});
 		}
-		else {
-			if(iN.val() === "") {
-				u.ac(iN, "default");
-				if(iN.pseudolabel) {
-					iN.val(iN.default_value);
-					u.as(iN.pseudolabel, "display", "block");
+	}
+	this.updateFilelistStatus = function(form, response) {
+		if(form && form.inputs && response && response.cms_status == "success" && response.cms_object && response.cms_object.mediae) {
+			var mediae = JSON.parse(JSON.stringify(response.cms_object.mediae));
+			var filelists = u.qsa("div.field.files ul.filelist", form);
+			var i, j, k, filelist, old_files, old_file, new_files, new_files;
+			for(i = 0; i < filelists.length; i++) {
+				filelist = filelists[i];
+				new_files = u.qsa("li.new", filelist);
+				if(new_files.length) {
+					old_files = u.qsa("li.uploaded", filelist);
+					if(old_files.length) {
+						for(j in mediae) {
+							media = mediae[j];
+							if(media.variant.match("^" + filelist.field.input.name.replace(/\[\]$/, "") + "(\-|$)")) {
+								for(k = 0; k < old_files.length; k++) {
+									old_file = old_files[k];
+									if(u.cv(old_file, "media_id") == media.id) {
+										delete mediae[j];
+									}
+								}
+							}
+						}
+					}
+					if(Object.keys(mediae).length) {
+						for(j in mediae) {
+							media = mediae[j];
+							if(media.variant.match("^"+filelist.field.input.name.replace(/\[\]$/, "")+"(\-|$)")) {
+								for(k = 0; k < new_files.length; k++) {
+									new_file = new_files[k];
+									if(u.text(new_file) == media.name || u.text(new_file)+".zip" == media.name) {
+										new_file.innerHTML = media.name;
+										u.rc(new_file, "new");
+										u.ac(new_file, "uploaded media_id:"+media.id+" variant:"+media.variant+" format:"+media.format+" width:"+media.width+" height:"+media.height);
+										delete mediae[j];
+									}
+								}
+							}
+						}
+					}
 				}
-				else {
-					iN.val(iN.default_value);
-				}
+				filelist.field.uploaded_files = u.qsa("li.uploaded", filelist);
 			}
 		}
 	}
-	this.fieldError = function(iN) {
+	this.inputHasError = function(iN) {
 		u.rc(iN, "correct");
 		u.rc(iN.field, "correct");
-		if(iN.used || iN.val() !== "") {
+		delete iN.is_correct;
+		if(iN.val() !== "") {
+			if(!iN.has_error && (iN._used || iN._form._bulk_operation)) {
+				iN._form._error_inputs[iN.name] = true;
+				u.ac(iN, "error");
+				u.ac(iN.field, "error");
+				iN.has_error = true;
+				this.updateInputValidationState(iN);
+			 }
+		}
+		else if(!iN.has_error && iN._used) {
+			iN._form._error_inputs[iN.name] = true;
 			u.ac(iN, "error");
 			u.ac(iN.field, "error");
-			this.positionHint(iN.field);
-			iN._form.error_fields[iN.name] = true;
-			this.updateFormValidationState(iN);
+			iN.has_error = true;
+			this.updateInputValidationState(iN);
 		}
-	}
-	this.fieldCorrect = function(iN) {
-		if(iN.val() !== "") {
-			u.ac(iN, "correct");
-			u.ac(iN.field, "correct");
+		else if(!iN._used) {
+			delete iN._form._error_inputs[iN.name];
 			u.rc(iN, "error");
 			u.rc(iN.field, "error");
+			delete iN.has_error;
 		}
-		else {
+		this.positionHint(iN.field);
+	}
+	this.inputIsCorrect = function(iN) {
+		u.rc(iN, "error");
+		u.rc(iN.field, "error");
+		delete iN.has_error;
+		delete iN._form._error_inputs[iN.name];
+		if(iN.val() !== "") {
+			if(!iN.is_correct) {
+				iN._used = true;
+				u.ac(iN, "correct");
+				u.ac(iN.field, "correct");
+				iN.is_correct = true;
+				this.updateInputValidationState(iN);
+			}
+		}
+		else if(iN.is_correct || iN.has_error) {
 			u.rc(iN, "correct");
 			u.rc(iN.field, "correct");
-			u.rc(iN, "error");
-			u.rc(iN.field, "error");
+			delete iN.is_correct;
+			this.updateInputValidationState(iN);
 		}
-		delete iN._form.error_fields[iN.name];
-		this.updateFormValidationState(iN);
 	}
-	this.checkFormValidation = function(form) {
-		if(Object.keys(form.error_fields).length) {
-			return false;
+	this.updateInputValidationState = function(iN) {
+		if(iN.has_error && fun(iN[iN._form._callback_validation_failed])) {
+			iN[iN._form._callback_validation_failed]();
 		}
-		var x, field;
-		for(x in form.fields) {
-			input = form.fields[x];
-			if(input.field && u.hc(form.fields[x].field, "required") && !u.hc(form.fields[x].field, "correct")) {
-				return false;
-			}
+		else if(iN.is_correct && fun(iN[iN._form._callback_validation_passed])) {
+			iN[iN._form._callback_validation_passed]();
 		}
-		return true;
+		this.updateFormValidationState(iN._form);
 	}
-	this.updateFormValidationState = function(iN) {
-		if(this.checkFormValidation(iN._form)) {
-			if(fun(iN.validationPassed)) {
-				iN.validationPassed();
+	this.updateFormValidationState = function(_form) {
+		if(!_form._bulk_operation) {
+			if(Object.keys(_form._error_inputs).length) {
+				_form._validation_state = "error";
+				if(_form._error_inputs !== _form._reference_error_inputs) {
+					if(fun(_form[_form._callback_validation_failed])) {
+						_form[_form._callback_validation_failed](_form._error_inputs);
+					}
+				}
 			}
-			if(fun(iN.field.validationPassed)) {
-				iN.field.validationPassed();
+			else if(u.qsa(".field.required", _form).length === u.qsa(".field.required.correct", _form).length) {
+				if(fun(_form[_form._callback_validation_passed]) && _form._validation_state !== "correct") {
+					_form[_form._callback_validation_passed]();
+				}
+				_form._validation_state = "correct";
 			}
-			if(fun(iN._form.validationPassed)) {
-				iN._form.validationPassed();
+			else {
+				_form._validation_state = "void";
 			}
-			return true;
+			_form._reference_error_inputs = JSON.parse(JSON.stringify(_form._error_inputs));
 		}
-		else {
-			if(fun(iN.validationFailed)) {
-				iN.validationFailed(iN._form.error_fields);
+	}
+	this.bulkValidate = function(inputs) {
+		if(inputs && inputs.length) {
+			var _form = inputs[0]._form;
+			_form._bulk_operation = true;
+			var i;
+			for(i = 0; i < inputs.length; i++) {
+				u.f.validate(inputs[i]);
 			}
-			if(fun(iN.field.validationFailed)) {
-				iN.field.validationFailed(iN._form.error_fields);
-			}
-			if(fun(iN._form.validationFailed)) {
-				iN._form.validationFailed(iN._form.error_fields);
-			}
-			return false;
+			_form._bulk_operation = false;
+			this.updateFormValidationState(_form);
 		}
 	}
 	this.validate = function(iN) {
 		if(!iN._form._validation || !iN.field) {
 			return true;
 		}
-		var min, max, pattern, compare_to;
+		var min, max, pattern;
 		var validated = false;
-		if(!u.hc(iN.field, "required") && iN.val() === "") {
-			this.fieldCorrect(iN);
+		var compare_to = iN.getAttribute("data-compare-to");
+		if(!u.hc(iN.field, "required") && iN.val() === "" && (!compare_to || iN._form.inputs[compare_to].val() === "")) {
+			this.inputIsCorrect(iN);
 			return true;
 		}
 		else if(u.hc(iN.field, "required") && iN.val() === "") {
-			this.fieldError(iN);
+			this.inputHasError(iN);
 			return false;
 		}
 		var custom_validate;
@@ -2666,17 +2694,22 @@ Util.Form = u.f = new function() {
 				min = min ? min : 8;
 				max = max ? max : 255;
 				pattern = iN.getAttribute("pattern");
-				compare_to = iN.getAttribute("data-compare-to");
 				if(
 					iN.val().length >= min && 
 					iN.val().length <= max && 
 					(!pattern || iN.val().match("^"+pattern+"$")) &&
-					(!compare_to || iN.val() == iN._form.fields[compare_to].val())
+					(!compare_to || iN.val() == iN._form.inputs[compare_to].val())
 				) {
-					this.fieldCorrect(iN);
+					this.inputIsCorrect(iN);
+					if(compare_to) {
+						this.inputIsCorrect(iN._form.inputs[compare_to]);
+					}
 				}
 				else {
-					this.fieldError(iN);
+					this.inputHasError(iN);
+					if(compare_to) {
+						this.inputHasError(iN._form.inputs[compare_to]);
+					}
 				}
 			}
 			else if(u.hc(iN.field, "number")) {
@@ -2691,10 +2724,10 @@ Util.Form = u.f = new function() {
 					iN.val() <= max && 
 					(!pattern || iN.val().match("^"+pattern+"$"))
 				) {
-					this.fieldCorrect(iN);
+					this.inputIsCorrect(iN);
 				}
 				else {
-					this.fieldError(iN);
+					this.inputHasError(iN);
 				}
 			}
 			else if(u.hc(iN.field, "integer")) {
@@ -2710,46 +2743,56 @@ Util.Form = u.f = new function() {
 					iN.val() <= max && 
 					(!pattern || iN.val().match("^"+pattern+"$"))
 				) {
-					this.fieldCorrect(iN);
+					this.inputIsCorrect(iN);
 				}
 				else {
-					this.fieldError(iN);
+					this.inputHasError(iN);
 				}
 			}
 			else if(u.hc(iN.field, "tel")) {
 				pattern = iN.getAttribute("pattern");
-				compare_to = iN.getAttribute("data-compare-to");
 				if(
 					(
-						!pattern && iN.val().match(/^([\+0-9\-\.\s\(\)]){5,18}$/)
+						(!pattern && iN.val().match(/^([\+0-9\-\.\s\(\)]){5,18}$/))
 						||
 						(pattern && iN.val().match("^"+pattern+"$"))
 					)
 					&&
-					(!compare_to || iN.val() == iN._form.fields[compare_to].val())
+					(!compare_to || iN.val() == iN._form.inputs[compare_to].val())
 				) {
-					this.fieldCorrect(iN);
+					this.inputIsCorrect(iN);
+					if(compare_to) {
+						this.inputIsCorrect(iN._form.inputs[compare_to]);
+					}
 				}
 				else {
-					this.fieldError(iN);
+					this.inputHasError(iN);
+					if(compare_to) {
+						this.inputHasError(iN._form.inputs[compare_to]);
+					}
 				}
 			}
 			else if(u.hc(iN.field, "email")) {
-				compare_to = iN.getAttribute("data-compare-to");
 				pattern = iN.getAttribute("pattern");
 				if(
 					(
-						!pattern && iN.val().match(/^([^<>\\\/%$])+\@([^<>\\\/%$])+\.([^<>\\\/%$]{2,20})$/)
-						 ||
+						(!pattern && iN.val().match(/^([^<>\\\/%$])+\@([^<>\\\/%$])+\.([^<>\\\/%$]{2,20})$/))
+						||
 						(pattern && iN.val().match("^"+pattern+"$"))
 					)
 					&&
-					(!compare_to || iN.val() == iN._form.fields[compare_to].val())
+					(!compare_to || iN.val() == iN._form.inputs[compare_to].val())
 				) {
-					this.fieldCorrect(iN);
+					this.inputIsCorrect(iN);
+					if(compare_to) {
+						this.inputIsCorrect(iN._form.inputs[compare_to]);
+					}
 				}
 				else {
-					this.fieldError(iN);
+					this.inputHasError(iN);
+					if(compare_to) {
+						this.inputHasError(iN._form.inputs[compare_to]);
+					}
 				}
 			}
 			else if(u.hc(iN.field, "text")) {
@@ -2763,34 +2806,48 @@ Util.Form = u.f = new function() {
 					iN.val().length <= max && 
 					(!pattern || iN.val().match("^"+pattern+"$"))
 				) {
-					this.fieldCorrect(iN);
+					this.inputIsCorrect(iN);
 				}
 				else {
-					this.fieldError(iN);
+					this.inputHasError(iN);
 				}
 			}
 			else if(u.hc(iN.field, "date")) {
+				min = u.cv(iN.field, "min");
+				max = u.cv(iN.field, "max");
 				pattern = iN.getAttribute("pattern");
 				if(
-					!pattern && iN.val().match(/^([\d]{4}[\-\/\ ]{1}[\d]{2}[\-\/\ ][\d]{2})$/) ||
-					(pattern && iN.val().match("^"+pattern+"$"))
+					(!min || new Date(decodeURIComponent(min)) <= new Date(iN.val())) &&
+					(!max || new Date(decodeURIComponent(max)) >= new Date(iN.val())) &&
+					(
+						(!pattern && iN.val().match(/^([\d]{4}[\-\/\ ]{1}[\d]{2}[\-\/\ ][\d]{2})$/))
+						||
+						(pattern && iN.val().match("^"+pattern+"$"))
+					)
 				) {
-					this.fieldCorrect(iN);
+					this.inputIsCorrect(iN);
 				}
 				else {
-					this.fieldError(iN);
+					this.inputHasError(iN);
 				}
 			}
 			else if(u.hc(iN.field, "datetime")) {
+				min = u.cv(iN.field, "min");
+				max = u.cv(iN.field, "max");
 				pattern = iN.getAttribute("pattern");
 				if(
-					!pattern && iN.val().match(/^([\d]{4}[\-\/\ ]{1}[\d]{2}[\-\/\ ][\d]{2} [\d]{2}[\-\/\ \:]{1}[\d]{2}[\-\/\ \:]{0,1}[\d]{0,2})$/) ||
-					(pattern && iN.val().match(pattern))
+					(!min || new Date(decodeURIComponent(min)) <= new Date(iN.val())) &&
+					(!max || new Date(decodeURIComponent(max)) >= new Date(iN.val())) &&
+					(
+						(!pattern && iN.val().match(/^([\d]{4}[\-\/\ ]{1}[\d]{2}[\-\/\ ][\d]{2} [\d]{2}[\-\/\ \:]{1}[\d]{2}[\-\/\ \:]{0,1}[\d]{0,2})$/))
+						||
+						(pattern && iN.val().match(pattern))
+					)
 				) {
-					this.fieldCorrect(iN);
+					this.inputIsCorrect(iN);
 				}
 				else {
-					this.fieldError(iN);
+					this.inputHasError(iN);
 				}
 			}
 			else if(u.hc(iN.field, "files")) {
@@ -2798,31 +2855,43 @@ Util.Form = u.f = new function() {
 				max = Number(u.cv(iN.field, "max"));
 				min = min ? min : 1;
 				max = max ? max : 10000000;
+				pattern = iN.getAttribute("accept");
+				var i, value = iN.val(), files = [];
+				if(iN.field.uploaded_files && iN.field.uploaded_files.length) {
+					for(i = 0; i < iN.field.uploaded_files.length; i++) {
+						files.push("." + u.cv(iN.field.uploaded_files[i], "format").toLowerCase());
+					}
+				}
+				if(value && value.length) {
+					for(i = 0; i < value.length; i++) {
+						files.push(value[i].name.substring(value[i].name.lastIndexOf(".")).toLowerCase());
+					}
+				}
 				if(
-					u.hc(iN, "uploaded") ||
-					(iN.val().length >= min && 
-					iN.val().length <= max)
+					(files.length >= min && files.length <= max)
+					&&
+					(!pattern || files.every(function(v) {return pattern.split(",").indexOf(v) !== -1}))
 				) {
-					this.fieldCorrect(iN);
+					this.inputIsCorrect(iN);
 				}
 				else {
-					this.fieldError(iN);
+					this.inputHasError(iN);
 				}
 			}
 			else if(u.hc(iN.field, "select")) {
 				if(iN.val() !== "") {
-					this.fieldCorrect(iN);
+					this.inputIsCorrect(iN);
 				}
 				else {
-					this.fieldError(iN);
+					this.inputHasError(iN);
 				}
 			}
 			else if(u.hc(iN.field, "checkbox|boolean|radiobuttons")) {
 				if(iN.val() !== "") {
-					this.fieldCorrect(iN);
+					this.inputIsCorrect(iN);
 				}
 				else {
-					this.fieldError(iN);
+					this.inputHasError(iN);
 				}
 			}
 			else if(u.hc(iN.field, "string")) {
@@ -2835,32 +2904,19 @@ Util.Form = u.f = new function() {
 					iN.val().length >= min &&
 					iN.val().length <= max && 
 					(!pattern || iN.val().match("^"+pattern+"$"))
+					&&
+					(!compare_to || iN.val() == iN._form.inputs[compare_to].val())
 				) {
-					this.fieldCorrect(iN);
+					this.inputIsCorrect(iN);
+					if(compare_to) {
+						this.inputIsCorrect(iN._form.inputs[compare_to]);
+					}
 				}
 				else {
-					this.fieldError(iN);
-				}
-			}
-			else if(u.hc(iN.field, "tags")) {
-				if(
-					!pattern && iN.val().match(/\:/) ||
-					(pattern && iN.val().match("^"+pattern+"$"))
-				) {
-					this.fieldCorrect(iN);
-				}
-				else {
-					this.fieldError(iN);
-				}
-			}
-			else if(u.hc(iN.field, "prices")) {
-				if(
-					!isNaN(iN.val())
-				) {
-					this.fieldCorrect(iN);
-				}
-				else {
-					this.fieldError(iN);
+					this.inputHasError(iN);
+					if(compare_to) {
+						this.inputHasError(iN._form.inputs[compare_to]);
+					}
 				}
 			}
 		}
@@ -2871,176 +2927,115 @@ Util.Form = u.f = new function() {
 			return true;
 		}
 	}
-}
-u.f.getParams = function(_form, _options) {
-	var send_as = "params";
-	var ignore_inputs = "ignoreinput";
-	if(obj(_options)) {
-		var _argument;
-		for(_argument in _options) {
-			switch(_argument) {
-				case "ignore_inputs"    : ignore_inputs     = _options[_argument]; break;
-				case "send_as"          : send_as           = _options[_argument]; break;
-			}
-		}
-	}
-	var i, input, select, textarea, param, params;
-	if(send_as == "formdata" && (fun(window.FormData) || obj(window.FormData))) {
-		params = new FormData();
-	}
-	else {
-		if(send_as == "formdata") {
-			send_as == "params";
-		}
-		params = new Object();
-		params.append = function(name, value, filename) {
-			this[name] = value;
-		}
-	}
-	if(_form._submit_button && _form._submit_button.name) {
-		params.append(_form._submit_button.name, _form._submit_button.value);
-	}
-	var inputs = u.qsa("input", _form);
-	var selects = u.qsa("select", _form)
-	var textareas = u.qsa("textarea", _form)
-	for(i = 0; i < inputs.length; i++) {
-		input = inputs[i];
-		if(!u.hc(input, ignore_inputs)) {
-			if((input.type == "checkbox" || input.type == "radio") && input.checked) {
-				if(fun(input.val)) {
-					params.append(input.name, input.val());
-				}
-				else {
-					params.append(input.name, input.value);
-				}
-			}
-			else if(input.type == "file") {
-				var f, file, files;
-				if(fun(input.val)) {
-					files = input.val();
-				}
-				else {
-					files = input.value;
-				}
-				if(files) {
-					for(f = 0; i < files.length; f++) {
-						file = files[f];
-						params.append(input.name, file, file.name);
-					}
-				}
-				else {
-					params.append(input.name, "");
-				}
-			}
-			else if(!input.type.match(/button|submit|reset|file|checkbox|radio/i)) {
-				if(fun(input.val)) {
-					params.append(input.name, input.val());
-				}
-				else {
-					params.append(input.name, input.value);
+	this.getFormData = this.getParams = function(_form, _options) {
+		var format = "formdata";
+		var ignore_inputs = "ignoreinput";
+		if(obj(_options)) {
+			var _argument;
+			for(_argument in _options) {
+				switch(_argument) {
+					case "ignore_inputs"    : ignore_inputs     = _options[_argument]; break;
+					case "format"           : format            = _options[_argument]; break;
 				}
 			}
 		}
-	}
-	for(i = 0; i < selects.length; i++) {
-		select = selects[i];
-		if(!u.hc(select, ignore_inputs)) {
-			if(fun(select.val)) {
-				params.append(select.name, select.val());
-			}
-			else {
-				params.append(select.name, select.options[select.selectedIndex].value);
-			}
-		}
-	}
-	for(i = 0; i < textareas.length; i++) {
-		textarea = textareas[i];
-		if(!u.hc(textarea, ignore_inputs)) {
-			if(fun(textarea.val)) {
-				params.append(textarea.name, textarea.val());
-			}
-			else {
-				params.append(textarea.name, textarea.value);
-			}
-		}
-	}
-	if(send_as && fun(this.customSend[send_as])) {
-		return this.customSend[send_as](params, _form);
-	}
-	else if(send_as == "json") {
-		return u.f.convertNamesToJsonObject(params);
-	}
-	else if(send_as == "formdata") {
-		return params;
-	}
-	else if(send_as == "object") {
-		delete params.append;
-		return params;
-	}
-	else {
-		var string = "";
-		for(param in params) {
-			if(!fun(params[param])) {
-				string += (string ? "&" : "") + param + "=" + encodeURIComponent(params[param]);
-			}
-		}
-		return string;
-	}
-}
-u.f.convertNamesToJsonObject = function(params) {
- 	var indexes, root, indexes_exsists, param;
-	var object = new Object();
-	for(param in params) {
-	 	indexes_exsists = param.match(/\[/);
-		if(indexes_exsists) {
-			root = param.split("[")[0];
-			indexes = param.replace(root, "");
-			if(typeof(object[root]) == "undefined") {
-				object[root] = new Object();
-			}
-			object[root] = this.recurseName(object[root], indexes, params[param]);
+		var i, input, select, textarea, param, params;
+		if(format == "formdata") {
+			params = new FormData();
 		}
 		else {
-			object[param] = params[param];
+			params = new Object();
+			params.append = function(name, value, filename) {
+				this[name] = filename || value;
+			}
 		}
-	}
-	return object;
-}
-u.f.recurseName = function(object, indexes, value) {
-	var index = indexes.match(/\[([a-zA-Z0-9\-\_]+)\]/);
-	var current_index = index[1];
-	indexes = indexes.replace(index[0], "");
- 	if(indexes.match(/\[/)) {
-		if(object.length !== undefined) {
-			var i;
-			var added = false;
-			for(i = 0; i < object.length; i++) {
-				for(exsiting_index in object[i]) {
-					if(exsiting_index == current_index) {
-						object[i][exsiting_index] = this.recurseName(object[i][exsiting_index], indexes, value);
-						added = true;
+		if(_form._submit_button && _form._submit_button.name) {
+			params.append(_form._submit_button.name, _form._submit_button.value);
+		}
+		var inputs = u.qsa("input", _form);
+		var selects = u.qsa("select", _form)
+		var textareas = u.qsa("textarea", _form)
+		for(i = 0; i < inputs.length; i++) {
+			input = inputs[i];
+			if(!u.hc(input, ignore_inputs)) {
+				if((input.type == "checkbox" || input.type == "radio") && input.checked) {
+					if(fun(input.val)) {
+						params.append(input.name, input.val());
+					}
+					else {
+						params.append(input.name, input.value);
+					}
+				}
+				else if(input.type == "file") {
+					var f, file, files;
+					if(fun(input.val)) {
+						files = input.val();
+					}
+					else if(input.files) {
+						files = input.files;
+					}
+					if(files && files.length) {
+						for(f = 0; f < files.length; f++) {
+							file = files[f];
+							params.append(input.name, file, file.name);
+						}
+					}
+					else {
+						params.append(input.name, (input.value || ""));
+					}
+				}
+				else if(!input.type.match(/button|submit|reset|file|checkbox|radio/i)) {
+					if(fun(input.val)) {
+						params.append(input.name, input.val());
+					}
+					else {
+						params.append(input.name, input.value);
 					}
 				}
 			}
-			if(!added) {
-				temp = new Object();
-				temp[current_index] = new Object();
-				temp[current_index] = this.recurseName(temp[current_index], indexes, value);
-				object.push(temp);
+		}
+		for(i = 0; i < selects.length; i++) {
+			select = selects[i];
+			if(!u.hc(select, ignore_inputs)) {
+				if(fun(select.val)) {
+					params.append(select.name, select.val());
+				}
+				else {
+					params.append(select.name, select.options[select.selectedIndex] ? select.options[select.selectedIndex].value : "");
+				}
 			}
 		}
-		else if(typeof(object[current_index]) != "undefined") {
-			object[current_index] = this.recurseName(object[current_index], indexes, value);
+		for(i = 0; i < textareas.length; i++) {
+			textarea = textareas[i];
+			if(!u.hc(textarea, ignore_inputs)) {
+				if(fun(textarea.val)) {
+					params.append(textarea.name, textarea.val());
+				}
+				else {
+					params.append(textarea.name, textarea.value);
+				}
+			}
+		}
+		if(format && fun(this.customDataFormat[format])) {
+			return this.customDataFormat[format](params, _form);
+		}
+		else if(format == "formdata") {
+			return params;
+		}
+		else if(format == "object") {
+			delete params.append;
+			return params;
 		}
 		else {
-			object[current_index] = new Object();
-			object[current_index] = this.recurseName(object[current_index], indexes, value);
+			var string = "";
+			for(param in params) {
+				if(!fun(params[param])) {
+					string += (string ? "&" : "") + param + "=" + encodeURIComponent(params[param]);
+				}
+			}
+			return string;
 		}
 	}
-	else {
-		object[current_index] = value;
-	}
-	return object;
 }
 u.f.customBuild = {};
 u.f.addForm = function(node, _options) {
@@ -3303,6 +3298,42 @@ u.f.addAction = function(node, _options) {
 	}
 	var action = u.ae(p_li, "input", {"type":action_type, "class":action_class, "value":action_value, "name":action_name})
 	return action;
+}
+Util.Form.customLabelStyle["inject"] = function(iN) {
+	if(!iN.type || !iN.type.match(/file|radio|checkbox/)) {
+		iN.default_value = u.text(iN.label);
+		u.e.addEvent(iN, "focus", u.f._changed_state);
+		u.e.addEvent(iN, "blur", u.f._changed_state);
+		if(iN.type.match(/number|integer|password|datetime|date/)) {
+			iN.pseudolabel = u.ae(iN.parentNode, "span", {"class":"pseudolabel", "html":iN.default_value});
+			iN.pseudolabel.iN = iN;
+			u.as(iN.pseudolabel, "top", iN.offsetTop+"px");
+			u.as(iN.pseudolabel, "left", iN.offsetLeft+"px");
+			u.ce(iN.pseudolabel)
+			iN.pseudolabel.inputStarted = function(event) {
+				u.e.kill(event);
+				this.iN.focus();
+			}
+		}
+		u.f.updateDefaultState(iN);
+	}
+}
+u.f._changed_state = function() {
+	u.f.updateDefaultState(this);
+}
+u.f.updateDefaultState = function(iN) {
+	if(iN.is_focused || iN.val() !== "") {
+		u.rc(iN, "default");
+		if(iN.val() === "") {
+			iN.val("");
+		}
+	}
+	else {
+		if(iN.val() === "") {
+			u.ac(iN, "default");
+			iN.val(iN.default_value);
+		}
+	}
 }
 Util.absoluteX = u.absX = function(node) {
 	if(node.offsetParent) {
@@ -3599,7 +3630,7 @@ u.navigation = function(_options) {
 	}
 	window._man_nav_path = window._man_nav_path ? window._man_nav_path : u.h.getCleanUrl(location.href, 1);
 	navigation_node._navigate = function(url) {
-		url = u.h.getCleanUrl(url);
+		var clean_url = u.h.getCleanUrl(url);
 		u.stats.pageView(url);
 		if(
 			!window._man_nav_path || 
@@ -3607,15 +3638,15 @@ u.navigation = function(_options) {
 			(u.h.popstate && window._man_nav_path != u.h.getCleanUrl(location.href, 1))
 		) {
 			if(this.cN && fun(this.cN.navigate)) {
-				this.cN.navigate(url);
+				this.cN.navigate(clean_url, url);
 			}
 		}
 		else {
 			if(this.cN.scene && this.cN.scene.parentNode && fun(this.cN.scene.navigate)) {
-				this.cN.scene.navigate(url);
+				this.cN.scene.navigate(clean_url, url);
 			}
 			else if(this.cN && fun(this.cN.navigate)) {
-				this.cN.navigate(url);
+				this.cN.navigate(clean_url, url);
 			}
 		}
 		if(!u.h.popstate) {
@@ -3936,7 +3967,7 @@ Util.request = function(node, url, _options) {
 				this.status = 0;
 				delete this.timedOut;
 				delete this.t_timeout;
-				Util.validateResponse({node: requestee.node, request_id: requestee.request_id});
+				Util.validateResponse({node: requestee.node, request_id: requestee.request_id, status:this.status});
 			}
 			node[request_id].t_timeout = u.t.setTimer(node[request_id], "timedOut", node[request_id].request_timeout, {node: node, request_id: request_id});
 		}
@@ -4063,7 +4094,7 @@ Util.validateResponse = function(HTTPRequest){
 }
 u.scrollTo = function(node, _options) {
 	node._callback_scroll_to = "scrolledTo";
-	node._callback_scroll_cancelled = "scrolledToCancelled";
+	node._callback_scroll_cancelled = "scrollToCancelled";
 	var offset_y = 0;
 	var offset_x = 0;
 	var scroll_to_x = 0;
@@ -4541,155 +4572,6 @@ Util.vendorPrefix = function() {
 	}
 	return Util.vendor_prefix;
 }
-u.textscaler = function(node, _settings) {
-	if(typeof(_settings) != "object") {
-		_settings = {
-			"*":{
-				"unit":"rem",
-				"min_size":1,
-				"min_width":200,
-				"min_height":200,
-				"max_size":40,
-				"max_width":3000,
-				"max_height":2000
-			}
-		};
-	}
-	node.text_key = u.randomString(8);
-	u.ac(node, node.text_key);
-	node.text_settings = JSON.parse(JSON.stringify(_settings));
-	node.scaleText = function() {
-		var tag;
-		for(tag in this.text_settings) {
-			var settings = this.text_settings[tag];
-			var width_wins = false;
-			var height_wins = false;
-			if(settings.width_factor && settings.height_factor) {
-				if(window._man_text._height - settings.min_height < window._man_text._width - settings.min_width) {
-					height_wins = true;
-				}
-				else {
-					width_wins = true;
-				}
-			}
-			if(settings.width_factor && !height_wins) {
-				if(settings.min_width <= window._man_text._width && settings.max_width >= window._man_text._width) {
-					var font_size = settings.min_size + (settings.size_factor * (window._man_text._width - settings.min_width) / settings.width_factor);
-					settings.css_rule.style.setProperty("font-size", font_size + settings.unit, "important");
-				}
-				else if(settings.max_width < window._man_text._width) {
-					settings.css_rule.style.setProperty("font-size", settings.max_size + settings.unit, "important");
-				}
-				else if(settings.min_width > window._man_text._width) {
-					settings.css_rule.style.setProperty("font-size", settings.min_size + settings.unit, "important");
-				}
-			}
-			else if(settings.height_factor) {
-				if(settings.min_height <= window._man_text._height && settings.max_height >= window._man_text._height) {
-					var font_size = settings.min_size + (settings.size_factor * (window._man_text._height - settings.min_height) / settings.height_factor);
-					settings.css_rule.style.setProperty("font-size", font_size + settings.unit, "important");
-				}
-				else if(settings.max_height < window._man_text._height) {
-					settings.css_rule.style.setProperty("font-size", settings.max_size + settings.unit, "important");
-				}
-				else if(settings.min_height > window._man_text._height) {
-					settings.css_rule.style.setProperty("font-size", settings.min_size + settings.unit, "important");
-				}
-			}
-		}
-	}
-	node.cancelTextScaling = function() {
-		u.e.removeEvent(window, "resize", window._man_text.scale);
-	}
-	if(!window._man_text) {
-		var man_text = {};
-		man_text.nodes = [];
-		var style_tag = document.createElement("style");
-		style_tag.setAttribute("media", "all")
-		style_tag.setAttribute("type", "text/css")
-		man_text.style_tag = u.ae(document.head, style_tag);
-		man_text.style_tag.appendChild(document.createTextNode(""))
-		window._man_text = man_text;
-		window._man_text._width = u.browserW();
-		window._man_text._height = u.browserH();
-		window._man_text.scale = function() {
-			var _width = u.browserW();
-			var _height = u.browserH();
-			window._man_text._width = u.browserW();
-			window._man_text._height = u.browserH();
-			var i, node;
-			for(i = 0; i < window._man_text.nodes.length; i++) {
-				node = window._man_text.nodes[i];
-				if(node.parentNode) { 
-					node.scaleText();
-				}
-				else {
-					window._man_text.nodes.splice(window._man_text.nodes.indexOf(node), 1);
-					if(!window._man_text.nodes.length) {
-						u.e.removeEvent(window, "resize", window._man_text.scale);
-						window._man_text = false;
-						break;
-					}
-				}
-			}
-		}
-		u.e.addEvent(window, "resize", window._man_text.scale);
-		window._man_text.precalculate = function() {
-			var i, node, tag;
-			for(i = 0; i < window._man_text.nodes.length; i++) {
-				node = window._man_text.nodes[i];
-				if(node.parentNode) { 
-					var settings = node.text_settings;
-					for(tag in settings) {
-						if(settings[tag].max_width && settings[tag].min_width) {
-							settings[tag].width_factor = settings[tag].max_width-settings[tag].min_width;
-						}
-						else if(node._man_text.max_width && node._man_text.min_width) {
-							settings[tag].max_width = node._man_text.max_width;
-							settings[tag].min_width = node._man_text.min_width;
-							settings[tag].width_factor = node._man_text.max_width-node._man_text.min_width;
-						}
-						else {
-							settings[tag].width_factor = false;
-						}
-						if(settings[tag].max_height && settings[tag].min_height) {
-							settings[tag].height_factor = settings[tag].max_height-settings[tag].min_height;
-						}
-						else if(node._man_text.max_height && node._man_text.min_height) {
-							settings[tag].max_height = node._man_text.max_height;
-							settings[tag].min_height = node._man_text.min_height;
-							settings[tag].height_factor = node._man_text.max_height-node._man_text.min_height;
-						}
-						else {
-							settings[tag].height_factor = false;
-						}
-						settings[tag].size_factor = settings[tag].max_size-settings[tag].min_size;
-						if(!settings[tag].unit) {
-							settings[tag].unit = node._man_text.unit;
-						}
-					}
-				}
-			}
-		}
-	}
-	var tag;
-	node._man_text = {};
-	for(tag in node.text_settings) {
-		if(tag == "min_height" || tag == "max_height" || tag == "min_width" || tag == "max_width" || tag == "unit" || tag == "ref") {
-			node._man_text[tag] = node.text_settings[tag];
-			node.text_settings[tag] = null;
-			delete node.text_settings[tag];
-		}
-		else {
-			selector = "."+node.text_key + ' ' + tag + ' ';
-			node.css_rules_index = window._man_text.style_tag.sheet.insertRule(selector+'{}', 0);
-			node.text_settings[tag].css_rule = window._man_text.style_tag.sheet.cssRules[0];
-		}
-	}
-	window._man_text.nodes.push(node);
-	window._man_text.precalculate();
-	node.scaleText();
-}
 Util.Timer = u.t = new function() {
 	this._timers = new Array();
 	this.setTimer = function(node, action, timeout, param) {
@@ -4762,10 +4644,10 @@ Util.Timer = u.t = new function() {
 }
 Util.getVar = function(param, url) {
 	var string = url ? url.split("#")[0] : location.search;
-	var regexp = new RegExp("[\&\?\b]{1}"+param+"\=([^\&\b]+)");
+	var regexp = new RegExp("(?:^|\b|&|\\?)"+param.replace(/[\[\]\(\)]{1}/g, "\\$&")+"\=([^\&\b]+)");
 	var match = string.match(regexp);
 	if(match && match.length > 1) {
-		return match[1];
+		return decodeURIComponent(match[1]);
 	}
 	else {
 		return "";
@@ -4799,7 +4681,7 @@ Util.Objects["page"] = new function() {
 			}
 		}
 		page.ready = function() {
-			u.bug("page.ready:" + u.nodeId(this));
+			u.bug("page.ready:", this);
 			if(!this.is_ready) {
 				this.is_ready = true;
 				this.cN.scene = u.qs(".scene", this);
@@ -4871,18 +4753,18 @@ Util.Objects["scene"] = new function() {
 }
 Util.Objects["banner"] = new function() {
 	this.init = function(div) {
-			var variant = u.cv(div, "variant");
-			var format = u.cv(div, "format");
-			if (variant == "random") {
-				variant = u.random(1, 4);
-			}
-			u.ae(div, "img", {class:"fit-width", src:"/img/banners/desktop/pi_" + variant + "." + format});	
-			u.ae(div, "div", {class:"logo"});
+		var variant = u.cv(div, "variant");
+		var format = u.cv(div, "format");
+		if (variant == "random" || !variant) {
+			variant = u.random(1, 4);
+		}
+		u.ae(div, "img", {class:"fit-width", src:"/img/banners/desktop/pi_" + variant + "." + format});	
+		u.ae(div, "div", {class:"logo"});
 	}
 }
 u.f.fixFieldHTML = function(field) {
-	if(field._indicator) {
-		u.ae(u.qs("label", field), field._indicator);
+	if(field.indicator && field.label) {
+		u.ae(field.label, field.indicator);
 	}
 }
 u.f.customHintPosition = {};
@@ -4903,20 +4785,24 @@ u.ga_domain = '';
 u.gapi_key = 'AIzaSyAnZTViVnr4jxGyNQCCMGO0hnJ8NjsKqjo';
 
 
-/*beta-u-overlay.js*/
+/*u-overlay.js*/
 u.overlay = function (_options) {
 	var title = "Overlay";
+	var drag = true;
 	var width = 400;
 	var height = 400;
+	var content_scroll = false;
 	var classname = "";
 	if(obj(_options)) {
 		var _argument;
 		for(_argument in _options) {
 			switch(_argument) {
-				case "title"       : title       = _options[_argument]; break;
+				case "title"       : title          = _options[_argument]; break;
+				case "drag"        : drag           = _options[_argument]; break;
 				case "class"       : classname      = _options[_argument]; break;
 				case "width"       : width          = _options[_argument]; break;
 				case "height"      : height         = _options[_argument]; break;
+				case "content_scroll" : content_scroll    = _options[_argument]; break;
 			}
 		}
 	}
@@ -4925,6 +4811,9 @@ u.overlay = function (_options) {
 	}
 	else {
 		classname = " small " + classname;
+	}
+	if (content_scroll) {
+		classname += "content_scroll"
 	}
 	var overlay = u.ae(document.body, "div", {"class": "overlay" + classname, "tabindex":"-1"});
 	u.ass(overlay, {
@@ -4942,8 +4831,8 @@ u.overlay = function (_options) {
 	u.as(document.body, "overflow", "hidden");
 	overlay._resized = function (event) {
 		u.ass(this, {
-			"left": ((u.browserW() - this.offsetWidth) / 2) + "px",
-			"top": ((u.browserH() - this.offsetHeight) / 2) + "px",
+			"left": ((u.browserW() - this.w) / 2) + "px",
+			"top": ((u.browserH() - this.h) / 2) + "px",
 		});
 		u.ass(this.div_content, {
 			"height": ((this.offsetHeight - this.div_header.offsetHeight) - this.div_footer.offsetHeight) + "px"
@@ -4960,19 +4849,23 @@ u.overlay = function (_options) {
 	overlay.div_content.overlay = overlay;
 	overlay.div_footer = u.ae(overlay, "div", {class: "footer"});
 	overlay.div_footer.overlay = overlay;
-	u.e.drag(overlay.div_header, overlay.div_header);
-	overlay._x = 0;
-	overlay._y = 0;
-	overlay.div_header.moved = function (event) {
-		var new_x = this.overlay._x + this.current_x;
-		var new_y = this.overlay._y + this.current_y;
-		u.ass(this.overlay, {
-			"transform": "translate(" + new_x + "px, " + new_y + "px)",
-		});
-	}
-	overlay.div_header.dropped = function (event) {
-		this.overlay._x += this.current_x;
-		this.overlay._y += this.current_y;
+	overlay.w = width;
+	overlay.h = height;
+	if (drag) {
+		u.e.drag(overlay.div_header, overlay.div_header);
+		overlay._x = 0;
+		overlay._y = 0;
+		overlay.div_header.moved = function (event) {
+			var new_x = this.overlay._x + this.current_x;
+			var new_y = this.overlay._y + this.current_y;
+			u.ass(this.overlay, {
+				"transform": "translate(" + new_x + "px, " + new_y + "px)",
+			});
+		}
+		overlay.div_header.dropped = function (event) {
+			this.overlay._x += this.current_x;
+			this.overlay._y += this.current_y;
+		}
 	}
 	overlay.close = function (event) {
 		u.as(document.body, "overflow", "auto");
@@ -5701,7 +5594,6 @@ Util.Objects["login"] = new function() {
 		scene.scrolled = function() {
 		}
 		scene.ready = function() {
-			u.bug("scene.ready:" + u.nodeId(this));
 			var form_login = u.qs("form.login", this);
 			u.f.init(form_login);
 		}
@@ -5718,7 +5610,6 @@ Util.Objects["accept_terms"] = new function() {
 		scene.scrolled = function() {
 		}
 		scene.ready = function() {
-			u.bug("scene.ready:" + u.nodeId(this));
 			var form_accept = u.qs("form.accept", this);
 			form_accept.scene = this;
 			u.f.init(form_accept);
@@ -5743,7 +5634,7 @@ Util.Objects["accept_terms"] = new function() {
 						u.ae(this.scene.overlay.div_content, form_confirm_cancellation);
 						u.f.init(form_confirm_cancellation);
 						form_confirm_cancellation.submitted = function () {
-							var data = u.f.getParams(this);
+							var data = this.getData();
 							this.response = function(response) {
 								this.is_requesting = false;
 								u.rc(this, "loading");
@@ -6035,7 +5926,7 @@ Util.Objects["comments"] = new function() {
 							u.as(this.div.actions, "display", "");
 						}
 					}
-					u.request(this, this.action, {"method":"post", "params":u.f.getParams(this)});
+					u.request(this, this.action, {"method":"post", "data":this.getData()});
 				}
 				u.ce(bn_cancel);
 				bn_cancel.clicked = function(event) {
@@ -6070,7 +5961,7 @@ Util.Objects["stripe"] = new function() {
 				var card_number = iN.val().replace(/ /g, "");
 				if(u.paymentCards.validateCardNumber(card_number)) {
 					u.f.fieldCorrect(iN);
-					u.f.validate(iN._form.fields["card_cvc"]);
+					u.f.validate(iN._form.inputs["card_cvc"]);
 				}
 				else {
 					u.f.fieldError(iN);
@@ -6078,7 +5969,7 @@ Util.Objects["stripe"] = new function() {
 			}
 			u.f.customValidate["exp_month"] = function(iN) {
 				var month = iN.val();
-				var year = iN._form.fields["card_exp_year"].val();
+				var year = iN._form.inputs["card_exp_year"].val();
 				if(year && parseInt(year) < 100) {
 					year = parseInt("20"+year);
 				}
@@ -6089,21 +5980,21 @@ Util.Objects["stripe"] = new function() {
 					u.f.fieldError(iN);
 				}
 				if(!iN.validating_year) {
-					iN._form.fields["card_exp_year"].validating_month = true;
-					u.f.validate(iN._form.fields["card_exp_year"]);
-					iN._form.fields["card_exp_year"].validating_month = false;
+					iN._form.inputs["card_exp_year"].validating_month = true;
+					u.f.validate(iN._form.inputs["card_exp_year"]);
+					iN._form.inputs["card_exp_year"].validating_month = false;
 				}
 			}
 			u.f.customValidate["exp_year"] = function(iN) {
 				var year = iN.val();
-				var month = iN._form.fields["card_exp_month"].val();
+				var month = iN._form.inputs["card_exp_month"].val();
 				if(year && parseInt(year) < 100) {
 					year = parseInt("20"+year);
 				}
 				if(!iN.validating_month) {
-					iN._form.fields["card_exp_month"].validating_year = true;
-					u.f.validate(iN._form.fields["card_exp_month"]);
-					iN._form.fields["card_exp_month"].validating_year = false;
+					iN._form.inputs["card_exp_month"].validating_year = true;
+					u.f.validate(iN._form.inputs["card_exp_month"]);
+					iN._form.inputs["card_exp_month"].validating_year = false;
 				}
 				if(u.paymentCards.validateExpDate(month, year)) {
 					u.f.fieldCorrect(iN);
@@ -6114,12 +6005,12 @@ Util.Objects["stripe"] = new function() {
 				}
 				else {
 					u.f.fieldError(iN);
-					u.f.fieldError(iN._form.fields["card_exp_month"]);
+					u.f.fieldError(iN._form.inputs["card_exp_month"]);
 				}
 			}
 			u.f.customValidate["cvc"] = function(iN) {
 				var cvc = iN.val();
-				var card_number = iN._form.fields["card_number"].val().replace(/ /g, "");
+				var card_number = iN._form.inputs["card_number"].val().replace(/ /g, "");
 				if(u.paymentCards.validateCVC(cvc, card_number)) {
 					u.f.fieldCorrect(iN);
 				}
@@ -6134,7 +6025,7 @@ Util.Objects["stripe"] = new function() {
 					this.DOMsubmit();
 				}
 			}
-			this.card_form.fields["card_number"].updated = function(iN) {
+			this.card_form.inputs["card_number"].updated = function(iN) {
 				var value = this.val();
 				this.value = u.paymentCards.formatCardNumber(value.replace(/ /g, ""));
 				var card = u.paymentCards.getCardTypeFromNumber(value);
@@ -6151,7 +6042,7 @@ Util.Objects["stripe"] = new function() {
 					}
 				}
 			}
-			this.card_form.fields["card_exp_year"].changed = function(iN) {
+			this.card_form.inputs["card_exp_year"].changed = function(iN) {
 				var year = parseInt(this.val());
 				if(year > 99) {
 					if(year > 2000 && year < 2100) {
@@ -6159,7 +6050,7 @@ Util.Objects["stripe"] = new function() {
 					}
 				}
 			}
-			this.card_form.fields["card_exp_month"].changed = function(iN) {
+			this.card_form.inputs["card_exp_month"].changed = function(iN) {
 				var month = parseInt(this.val());
 				if(month < 10) {
 					this.val("0"+month);
@@ -6274,50 +6165,61 @@ Util.Objects["member_help"] = new function() {
 		scene.ready = function() {
 			page.cN.scene = this;
 			var search_form = u.qs("form.search_user", this);
-			search_form.users_ul = u.qs("ul.users", this);
-			search_form.template = u.qs("li.template", this);
-			var i = 0;
-			search_form.visible_p = u.qs("p.visible");
 			if(search_form) {
 				search_form.scene = this;
-				search_form.timeOut = 300
+				search_form.ul_users = u.qs("ul.users", this);
+				search_form.h3_header = u.qs("div.users h3", this);
+				search_form.p_no_results = u.qs("div.users p.no_results", this);
+				search_form.p_type_to_search = u.qs("div.users p.type_to_search", this);
+				search_form.template = u.qs("li.template", this);
+				search_form.search_timeout = 300
 				u.f.init(search_form);
 				search_form.updated = function () {
-					this.search_input = this.fields.search_member;
-					if (this.search_input.val().length > 3) {
+					u.t.resetTimer(this.t_search);
+					this.current_search = this.inputs.search_member.val();
+					if (this.current_search.length > 3) {
 						this.readyToSearch()
 					}
-					if (this.search_input.val().length < 3) {
-						this.users_ul.innerHTML = "";
-						if (this.visible_p.style.display = "none") {
-							u.as(this.visible_p, "display", "block");
-						}
-					}	
+					else {
+						this.ul_users.innerHTML = "";
+						u.ac(this.h3_header, "hidden");
+						u.ac(this.p_no_results, "hidden");
+						u.rc(this.p_type_to_search, "hidden");
+					}
 				}
 				search_form.readyToSearch = function () {
-					u.t.resetTimer(this.t_search);
-					this.t_search = u.t.setTimer(this, this.search, this.timeOut)
+					this.t_search = u.t.setTimer(this, this.search, this.search_timeout)
 				}
 				search_form.search = function () {
 					this.response = function(response) {
 						console.log(response);
-						this.users_ul.innerHTML = "";
-						u.as(this.visible_p, "display", "none");
+						this.ul_users.innerHTML = "";
 						this.users = u.template(this.template, response.cms_object.users);
-						console.log(response);
-						while (this.users.length) {		
-							this.user_info = u.qsa("ul.user_info li.search", this.users[0]);
-							for (var j = 0; j < (this.user_info.length); j++) {
-								var match = this.search_input.val();
-								var re = new RegExp(match, 'i');
-								if (this.user_info[j].innerHTML.match(re)) {
-									this.user_info[j].innerHTML = this.user_info[j].innerHTML.replace(re, "<span class=\"highlight_string\">$&</span>");
+						if(this.users.length) {
+							u.rc(this.h3_header, "hidden");
+							u.ac(this.p_no_results, "hidden");
+							u.ac(this.p_type_to_search, "hidden");
+							while (this.users.length) {
+								this.user_info = u.qsa("ul.user_info li.search", this.users[0]);
+								var i, user_info;
+								for (i = 0; i < this.user_info.length; i++) {
+									user_info = this.user_info[i];
+									var match = this.current_search;
+									var re = new RegExp(match, 'i');
+									if (user_info.innerHTML.match(re)) {
+										user_info.innerHTML = user_info.innerHTML.replace(re, "<span class=\"highlight_string\">$&</span>");
+									}
 								}
+								u.ae(this.ul_users, this.users[0]); 
 							}
-						 u.ae(this.users_ul, this.users[0]); 
+						}
+						else {
+							u.ac(this.h3_header, "hidden");
+							u.rc(this.p_no_results, "hidden");
+							u.rc(this.p_type_to_search, "hidden");
 						}
 					}
-					u.request(this, this.action+"soeg", {"method":"post", "data":u.f.getParams(this)});
+					u.request(this, this.action+"soeg", {"method":"post", "data":this.getData()});
 				}
 			}	
 				page.resized();
@@ -6440,7 +6342,7 @@ Util.Objects["user_profile"] = new function() {
 					u.ie(form_department, div_fields);
 					u.ae(div_fields, form_fieldset);
 					form_department.submitted = function() {
-						var data = u.f.getParams(this);
+						var data = this.getData();
 						this.response = function(response) {
 							this.is_requesting = false;
 							u.rc(this, "loading");
@@ -6501,7 +6403,7 @@ Util.Objects["user_profile"] = new function() {
 					u.ie(form_membership, div_fields);
 					div_fields.insertBefore(form_fieldset, divs_membership[1].nextSibling);
 					form_membership.submitted = function() {
-						var data = u.f.getParams(this);
+						var data = this.getData();
 						this.response = function(response) {
 							this.is_requesting = false;
 							u.rc(this, "loading");
@@ -6574,7 +6476,7 @@ Util.Objects["user_profile"] = new function() {
 						form_confirm_cancellation.scene = this.scene;
 						u.f.init(form_confirm_cancellation);
 						form_confirm_cancellation.submitted = function () {
-							var data = u.f.getParams(this);
+							var data = this.getData();
 							this.response = function(response) {
 								this.is_requesting = false;
 								u.rc(this, "loading");
@@ -6634,7 +6536,7 @@ Util.Objects["user_profile"] = new function() {
 					box_userinfo.replaceChild(form_userinfo, div_fields);
 					u.f.init(form_userinfo);
 					form_userinfo.submitted = function() {
-						var data = u.f.getParams(this);
+						var data = this.getData();
 						this.response = function(response) {
 							this.is_requesting = false;
 							u.rc(this, "loading");
@@ -6719,7 +6621,7 @@ Util.Objects["profile"] = new function() {
 					u.f.init(form_department);
 					u.ae(div_fields, form_department);
 					form_department.submitted = function() {
-						var data = u.f.getParams(this);
+						var data = this.getData();
 						this.response = function(response) {
 							this.is_requesting = false;
 							u.rc(this, "loading");
@@ -6812,7 +6714,7 @@ Util.Objects["profile"] = new function() {
 						u.ae(this.scene.overlay.div_content, form_confirm_cancellation);
 						u.f.init(form_confirm_cancellation);
 						form_confirm_cancellation.submitted = function () {
-							var data = u.f.getParams(this);
+							var data = this.getData();
 							this.response = function(response) {
 								this.is_requesting = false;
 								u.rc(this, "loading");
@@ -6876,7 +6778,7 @@ Util.Objects["profile"] = new function() {
 					box_userinfo.replaceChild(form_userinfo, div_fields);
 					u.f.init(form_userinfo);
 					form_userinfo.submitted = function() {
-						var data = u.f.getParams(this);
+						var data = this.getData();
 						this.response = function(response) {
 							this.is_requesting = false;
 							u.rc(this, "loading");
@@ -6960,7 +6862,7 @@ Util.Objects["profile"] = new function() {
 					box_password.replaceChild(form_password, div_fields);
 					u.f.init(form_password);
 					form_password.submitted = function() {
-						var data = u.f.getParams(this);
+						var data = this.getData();
 						this.response = function(response) {
 							this.is_requesting = false;
 							u.rc(this, "loading");
@@ -7060,7 +6962,7 @@ Util.Objects["forgot"] = new function() {
 			u.f.init(this.form);
 			this.form.scene = this;
 			this.form.submitted = function() {
-				var data = u.f.getParams(this);
+				var data = this.getData();
 				this.response = function(response) {
 					if (u.qs("form.verify_code", response)) {
 						this.scene.verifyForm(response);
@@ -7080,7 +6982,7 @@ Util.Objects["forgot"] = new function() {
 			u.f.init(this.form_code);
 			this.form_code.scene = this;
 			this.form_code.submitted = function() {
-				data = u.f.getParams(this);
+				data = this.getData();
 				this.response = function(response) {
 					if (u.qs("form.reset_password", response)) {
 						this.scene.resetForm(response);

@@ -2,20 +2,20 @@
 $IC = new Items();
 global $action;
 
-$item = $IC->getItem(array("tags" => "page:member", "status" => 1, "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true, "readstate" => true)));
+$item = $IC->getItem(array("tags" => "page:english", "status" => 1, "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true, "readstate" => true)));
 if($item) {
 	$this->sharingMetaData($item);
 }
 
-$member_subnavigation = $this->navigation("sub-member");
+$english_subnavigation = $this->navigation("sub-english");
 
 ?>
 
 <div class="scene member i:scene">
 
-	<? if($member_subnavigation && isset($member_subnavigation["nodes"])) { ?>
+	<? if($english_subnavigation && isset($english_subnavigation["nodes"])) { ?>
 	<ul class="subnavigation">
-		<? foreach($member_subnavigation["nodes"] as $node): ?>
+		<? foreach($english_subnavigation["nodes"] as $node): ?>
 		<li><a href="<?= $node["link"] ?>"><?= $node["name"] ?></a></li>
 		<? endforeach;?>
 	</ul>

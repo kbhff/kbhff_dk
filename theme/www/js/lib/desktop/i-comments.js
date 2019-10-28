@@ -112,7 +112,7 @@ Util.Objects["comments"] = new function() {
 							u.as(this.div.actions, "display", "");
 						}
 					}
-					u.request(this, this.action, {"method":"post", "params":u.f.getParams(this)});
+					u.request(this, this.action, {"method":"post", "data":this.getData()});
 
 				}
 

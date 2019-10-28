@@ -2,7 +2,7 @@ document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/seg_de
 
 document.write('<script type="text/javascript" src="/js/lib/u-settings.js"></script>');
 
-document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/src/beta-u-overlay.js"></script>');
+document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/src/u-overlay.js"></script>');
 document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/src/beta-u-paymentcards.js"></script>');
 document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/src/u-template.js"></script>');
 document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/src/u-googlemaps.js"></script>');

@@ -4,28 +4,28 @@
 
 
 // initializer
-Util.Form.customInit["location"] = function(_form, field) {
+Util.Form.customInit["location"] = function(field) {
+
+	// Register field type
+	field.type = "location";
 
 	// location, latitude and longitude
 
 	// get all inputs
-	field._inputs = u.qsa("input", field);
+	field.inputs = u.qsa("input", field);
 
 	// use first input as field input 
-	field._input = field._inputs[0];
+	field.input = field.inputs[0];
 
-	for(j = 0; j < field._inputs.length; j++) {
-		input = field._inputs[j];
+	for(j = 0; j < field.inputs.length; j++) {
+		input = field.inputs[j];
 
+		// form is a reserved property, so we use _form
+		input._form = field._form;
+		// Get associated label
+		input.label = u.qs("label[for='"+input.id+"']", field);
+		// Let it know it's field
 		input.field = field;
-		input._form = _form;
-
-		// add input to fields array
-		_form.fields[input.name] = input;
-
-		// get input label
-		input._label = u.qs("label[for='"+input.id+"']", field);
-
 
 		// get/set value function
 		input.val = u.f._value;
@@ -34,10 +34,10 @@ Util.Form.customInit["location"] = function(_form, field) {
 		u.e.addEvent(input, "keyup", u.f._updated);
 		u.e.addEvent(input, "change", u.f._changed);
 
-		// submit on enter (checks for autocomplete etc)
+		// submit on enter
 		u.f.inputOnEnter(input);
 
-		// activate input
+		// Add additional standard event listeners and labelstyle
 		u.f.activateInput(input);
 	}
 
@@ -45,13 +45,11 @@ Util.Form.customInit["location"] = function(_form, field) {
 	if(navigator.geolocation) {
 
 
-		u.f.geoLocation(field);
+		u.f.location(field);
 
 
 	}
 
-	// validate field now
-	u.f.validate(field._input);
 }
 
 // validator
@@ -62,7 +60,7 @@ Util.Form.customValidate["location"] = function(iN) {
 	var loc_fields = 0;
 
 	// location input
-	if(iN.field._input) {
+	if(iN.field.input) {
 
 		loc_fields++;
 
@@ -70,13 +68,13 @@ Util.Form.customValidate["location"] = function(iN) {
 		max = 255;
 
 		if(
-			iN.field._input.val().length >= min &&
-			iN.field._input.val().length <= max
+			iN.field.input.val().length >= min &&
+			iN.field.input.val().length <= max
 		) {
-			u.f.fieldCorrect(iN.field._input);
+			u.f.inputIsCorrect(iN.field.input);
 		}
 		else {
-			u.f.fieldError(iN.field._input);
+			u.f.inputHasError(iN.field.input);
 		}
 	}
 
@@ -93,10 +91,10 @@ Util.Form.customValidate["location"] = function(iN) {
 			iN.field.lat_input.val() >= min && 
 			iN.field.lat_input.val() <= max
 		) {
-			u.f.fieldCorrect(iN.field.lat_input);
+			u.f.inputIsCorrect(iN.field.lat_input);
 		}
 		else {
-			u.f.fieldError(iN.field.lat_input);
+			u.f.inputHasError(iN.field.lat_input);
 		}
 	}
 
@@ -113,10 +111,10 @@ Util.Form.customValidate["location"] = function(iN) {
 			iN.field.lon_input.val() >= min && 
 			iN.field.lon_input.val() <= max
 		) {
-			u.f.fieldCorrect(iN.field.lon_input);
+			u.f.inputIsCorrect(iN.field.lon_input);
 		}
 		else {
-			u.f.fieldError(iN.field.lon_input);
+			u.f.inputHasError(iN.field.lon_input);
 		}
 	}
 
@@ -138,7 +136,7 @@ Util.Form.customValidate["location"] = function(iN) {
 
 // inject GeoLocation button in location field
 // Extended geolocation interface
-Util.Form.geoLocation = function(field) {
+Util.Form.location = function(field) {
 
 	u.ac(field, "geolocation");
 
@@ -197,6 +195,9 @@ Util.Form.geoLocation = function(field) {
 			window._mapsiframe.doc.open();
 			window._mapsiframe.doc.write(html);
 			window._mapsiframe.doc.close();
+			window._mapsiframe.doc.field = this;
+			
+			u.e.addEvent(window._mapsiframe.doc, "focus", function() {u.t.resetTimer(this.field.t_hide_map)});
 
 		}
 		else {
@@ -288,11 +289,11 @@ Util.Form.geoLocation = function(field) {
 	}
 	// hide map when lat/long fields loose focus
 	field.lat_input.blurred = field.lon_input.blurred = function() {
-//			this.field.t_hide_map = u.t.setTimer(this.field, this.field.hideMap, 800);
+		this.field.t_hide_map = u.t.setTimer(this.field, this.field.hideMap, 800);
 	}
 
 
-	field.bn_geolocation = u.ae(field, "div", {"class":"geolocation"});
+	field.bn_geolocation = u.ae(field, "div", {"class":"geolocation", "title":"Select current location"});
 	field.bn_geolocation.field = field;
 	u.ce(field.bn_geolocation);
 
@@ -313,36 +314,47 @@ Util.Form.geoLocation = function(field) {
 		}
 		this.transitioned();
 
-		window._geoLocationField = this.field;
+		window._locationField = this.field;
 
 		window._foundLocation = function(position) {
 			var lat = position.coords.latitude;
 			var lon = position.coords.longitude;
 
-			window._geoLocationField.lat_input.val(u.round(lat, 6));
-			window._geoLocationField.lon_input.val(u.round(lon, 6));
+			window._locationField.lat_input.val(u.round(lat, 6));
+			window._locationField.lon_input.val(u.round(lon, 6));
 			// trigger validation
-			window._geoLocationField.lat_input.focus();
-			window._geoLocationField.lon_input.focus();
+			window._locationField.lat_input.focus();
+			window._locationField.lon_input.focus();
 
 			// end process animation
-			u.a.transition(window._geoLocationField.bn_geolocation, "none");
-			u.a.scale(window._geoLocationField.bn_geolocation, 1);
+			u.a.transition(window._locationField.bn_geolocation, "none");
+			u.a.scale(window._locationField.bn_geolocation, 1);
 
 			// show map
-			window._geoLocationField.showMap();
+			window._locationField.showMap();
 
 			// update map
-			window._geoLocationField.updateMap();
+			window._locationField.updateMap();
 		}
 
-		// Location error
+		// Location error (Could be non SSL site or no access to Location service)
 		window._noLocation = function() {
 
-			u.a.transition(window._geoLocationField.bn_geolocation, "none");
-			u.a.scale(window._geoLocationField.bn_geolocation, 1);
+			// Use Copenhagen as starting point
+			window._locationField.lat_input.val(55.676098);
+			window._locationField.lon_input.val(12.568337);
+			// trigger validation
+			window._locationField.lat_input.focus();
+			window._locationField.lon_input.focus();
 
-			alert('Could not find location');
+			u.a.transition(window._locationField.bn_geolocation, "none");
+			u.a.scale(window._locationField.bn_geolocation, 1);
+
+			// show map
+			window._locationField.showMap();
+
+			// update map
+			window._locationField.updateMap();
 		}
 
 		navigator.geolocation.getCurrentPosition(window._foundLocation, window._noLocation);

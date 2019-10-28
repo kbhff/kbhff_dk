@@ -4,7 +4,7 @@ global $action;
 global $itemtype;
 
 $sindex = $action[0];
-$item = $IC->getItem(array("sindex" => $sindex, "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true)));
+$item = $IC->getItem(array("sindex" => $sindex, "status" => 1, "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true)));
 if($item) {
 	$this->sharingMetaData($item);
 
@@ -32,7 +32,7 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 	<div class="banner i:banner variant:random format:jpg"></div>
 
 <? if($item):
-	$media = $IC->sliceMediae($item); ?>
+	$media = $IC->sliceMediae($item, "single_media"); ?>
 
 	<div class="c-wrapper">
 		

@@ -33,7 +33,7 @@ Util.Objects["newsletter"] = new function() {
 			//
 			// }
 			//
-			// u.request(this, this.action, {method: this.method, data:u.f.getParams(this), headers:{"accept":"text/html"}});
+			// u.request(this, this.action, {method: this.method, data: this.getData(), headers:{"accept":"text/html"}});
 		}
 
 	}
