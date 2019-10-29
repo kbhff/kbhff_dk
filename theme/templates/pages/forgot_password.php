@@ -9,8 +9,7 @@ $this->pageTitle("Glemt adgangskode");
 	<h1>Glemt adgangskode?</h1>
 
 	<p>
-		Har du glemt din adgangskode? Indtast din e-mailadresse nedenfor,
-		og vi sender dig en mail med en ny kode til at nulstille din adgangskode.
+		Har du glemt din adgangskode? Indtast din e-mailadresse nedenfor, og vi sender dig en mail med en ny kode til at nulstille din adgangskode.
 	</p>
 
 	<?= $model->formStart("requestReset", ["class" => "request_password"]) ?>
