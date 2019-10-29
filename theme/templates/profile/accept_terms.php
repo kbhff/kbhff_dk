@@ -6,16 +6,13 @@ global $UC;
 
 	<h1>Samtykke om brug af persondata</h1>
 
-	<p>I forbindelse med overgangen til det nye system vil vi en enkelt gang bede dig om
-	 dit samtykke til at vi opbevarer og behandler den persondata, du har givet os.
-		Dette er fra lovgivningens side en forudsætning for, at vi kan have dig som medlem.</p>
+	<p>I forbindelse med overgangen til det nye system vil vi en enkelt gang bede dig om dit samtykke til at vi opbevarer og behandler den persondata du har givet os. Dette er fra lovgivningens side en forudsætning for, at vi kan have dig som medlem.</p>
 
 	<p>Vi opbevarer følgende informationer: Navn, e-mailadresse, telefonnummer og dine indkøb.</P>
 
-	<p>Afviser du dette samtykke, vil det medføre ophør af dit medlemskab, og
-		persondata vi har om dig slettes fra vores server i overensstemmelse med vore retningslinjer.</p>
+	<p>Afviser du dette samtykke, vil det medføre ophør af dit medlemskab, og persondata vi har om dig slettes fra vores server i overensstemmelse med vore retningslinjer.</p>
 
-	<p>Vi gør opmærksom på at, at du selv er ansvarlig for eventuelle persondata du skriver på wikisider, eller lignende offentligt tilgængelige sider, som bliver brugt i foreningens arbejde.</p>
+	<p>Vi gør opmærksom på, at du selv er ansvarlig for eventuelle persondata du skriver på wikisider, eller lignende offentligt tilgængelige sider, som bliver brugt i foreningens arbejde.</p>
 
 	<p>Læs mere i vore <a href="/persondata">retningslinjer for behandling og opbevaring af persondata</a></p>
 
