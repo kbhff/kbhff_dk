@@ -10,7 +10,7 @@ global $UC;
 	 dit samtykke til at vi opbevarer og behandler den persondata, du har givet os.
 		Dette er fra lovgivningens side en forudsætning for, at vi kan have dig som medlem.</p>
 
-	<p>Vi opbevarer følgende informationer: Navn, emailadresse, telefonnummer og dine indkøb.</P>
+	<p>Vi opbevarer følgende informationer: Navn, e-mailadresse, telefonnummer og dine indkøb.</P>
 
 	<p>Afviser du dette samtykke, vil det medføre ophør af dit medlemskab, og
 		persondata vi har om dig slettes fra vores server i overensstemmelse med vore retningslinjer.</p>
