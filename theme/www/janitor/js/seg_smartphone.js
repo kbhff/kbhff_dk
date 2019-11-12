@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-10-25 02:36:20
+asset-builder @ 2019-11-12 17:58:15
 */
 
 /*seg_smartphone_include.js*/
@@ -759,7 +759,7 @@ Util.clickableElement = u.ce = function(node, _options) {
 				if(fun(node.preClicked)) {
 					node.preClicked();
 				}
-				if(event && (event.metaKey || event.ctrlKey)) {
+				if(event && (event.metaKey || event.ctrlKey || (this._a && this._a.target))) {
 					window.open(this.url);
 				}
 				else {
@@ -3700,11 +3700,12 @@ u.f.textEditor = function(field) {
 			input_classname.tag = tag;
 			u.ac(tag.bn_classname, "open");
 			u.f.init(form);
-			input_classname._input.focus();
-			input_classname._input.blurred = function() {
+			input_classname.input.focus();
+			input_classname.input.blurred = function() {
 				this.field.tag._classname = this.val();
 				this.field.tag.bn_classname.removeChild(this._form);
 				u.rc(this.field.tag.bn_classname, "open");
+				this.field.tag.field.update();
 			}
 		}
 	}
@@ -5121,17 +5122,27 @@ Util.History = u.h = new function() {
 	this.is_listening = false;
 	this.navigate = function(url, node, silent) {
 		silent = silent || false;
-		if(this.popstate) {
-			history.pushState({}, url, url);
-			if(!silent) {
-				this.callback(url);
+		if((!url.match(/^http[s]?\:\/\//) || url.match(document.domain)) && (!node || !node._a || !node._a.target)) {
+			if(this.popstate) {
+				history.pushState({}, url, url);
+				if(!silent) {
+					this.callback(url);
+				}
+			}
+			else {
+				if(silent) {
+					this.next_hash_is_silent = true;
+				}
+				location.hash = u.h.getCleanUrl(url);
 			}
 		}
 		else {
-			if(silent) {
-				this.next_hash_is_silent = true;
+			if(!node || !node._a || !node._a.target) {
+				location.href = url;
 			}
-			location.hash = u.h.getCleanUrl(url);
+			else {
+				window.open(this.url);
+			}
 		}
 	}
 	this.callback = function(url) {
@@ -5221,7 +5232,7 @@ Util.History = u.h = new function() {
 		this.trail.push({"url":url, "node":node});
 	}
 	this.getCleanUrl = function(string, levels) {
-		string = string.replace(location.protocol+"//"+document.domain, "").match(/[^#$]+/)[0];
+		string = string.replace(location.protocol+"//"+document.domain, "") ? string.replace(location.protocol+"//"+document.domain, "").match(/[^#$]+/)[0] : "/";
 		if(!levels) {
 			return string;
 		}
@@ -8968,8 +8979,8 @@ Util.Objects["sendMessage"] = new function() {
 				u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this, {"send_as":"formdata"})});
 			}
 			else {
-				u.f.fieldError(this.inputs["recipients"]);
-				u.f.fieldError(this.inputs["maillist_id"]);
+				u.f.inputHasError(this.inputs["recipients"]);
+				u.f.inputHasError(this.inputs["maillist_id"]);
 			}
 		}
 	}
@@ -9904,7 +9915,7 @@ Util.Objects["usernames"] = new function() {
 			}
 			this.response = function(response) {
 				if(response.cms_status == "error") {
-					u.f.fieldError(this.inputs["email"]);
+					u.f.inputHasError(this.inputs["email"]);
 				}
 				else {
 					this.inputs.email.saved_email = this.inputs.email.val();
@@ -9959,7 +9970,7 @@ Util.Objects["usernames"] = new function() {
 			this.response = function(response) {
 				page.notify(response);
 				if(response.cms_status == "error") {
-					u.f.fieldError(this.inputs["mobile"]);
+					u.f.inputHasError(this.inputs["mobile"]);
 				}
 				else {
 					u.rc(this.actions["save"], "primary");
@@ -10517,11 +10528,11 @@ Util.Objects["usernamesProfile"] = new function() {
 			this.response = function(response) {
 				if(response.cms_object && response.cms_object.status == "USER_EXISTS") {
 					page.notify({"isJSON":true, "cms_status":"error", "cms_message":["Email already exists"]});
-					u.f.fieldError(this.inputs["email"]);
+					u.f.inputHasError(this.inputs["email"]);
 				}
 				else if(response.cms_status == "error") {
 					page.notify({"isJSON":true, "cms_status":"error", "cms_message":["Email could not be updated"]});
-					u.f.fieldError(this.inputs["email"]);
+					u.f.inputHasError(this.inputs["email"]);
 				}
 				else {
 					u.rc(this.actions["save"], "primary");
@@ -10539,11 +10550,11 @@ Util.Objects["usernamesProfile"] = new function() {
 			this.response = function(response) {
 				if(response.cms_object && response.cms_object.status == "USER_EXISTS") {
 					page.notify({"isJSON":true, "cms_status":"error", "cms_message":["Mobile already exists"]});
-					u.f.fieldError(this.inputs["mobile"]);
+					u.f.inputHasError(this.inputs["mobile"]);
 				}
 				else if(response.cms_status == "error") {
 					page.notify({"isJSON":true, "cms_status":"error", "cms_message":["Mobile could not be updated"]});
-					u.f.fieldError(this.inputs["mobile"]);
+					u.f.inputHasError(this.inputs["mobile"]);
 				}
 				else {
 					u.rc(this.actions["save"], "primary");
@@ -10691,7 +10702,7 @@ Util.Objects["cancellationProfile"] = new function() {
 			div.form.div = div;
 			u.f.init(div.form);
 			div.form.actions["cancelaccount"].org_value = div.form.actions["cancelaccount"].value;
-			div.form.actions["cancelaccount"].confirm_value = "Cancelling you account cannot be undone. OK?";
+			div.form.actions["cancelaccount"].confirm_value = "Cancelling your account cannot be undone. OK?";
 			div.form.actions["cancelaccount"].submit_value = "Confirm";
 			div.form.inputs["password"].updated = function() {
 				u.bug("typing password")
