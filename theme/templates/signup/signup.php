@@ -71,7 +71,7 @@ if(message()->hasMessages(array("type" => "error"))): ?>
 	<fieldset>
 		<?= $model->input("firstname", array("required" => true, "label" => "Fornavn", "hint_message" => "Skriv dit fornavn her", "error_message" => "Dit fornavn må kun indeholde bogstaver.")) ?>
 		<?= $model->input("lastname", array("required" => true, "label" => "Efternavn", "hint_message" => "Skriv dit efternavn her", "error_message" => "Dit efternavn må kun indeholde bogstaver.")) ?>
-		<?= $model->input("email", array("required" => true, "label" => "Din email", "value" => $email, "hint_message" => "Indtast din email.", "error_message" => "Du har indtastet en ugyldig emailadresse.")); ?>
+		<?= $model->input("email", array("required" => true, "label" => "Din email", "value" => $email, "hint_message" => "Indtast din email.", "error_message" => "Du har indtastet en ugyldig e-mailadresse.")); ?>
 		<?= $model->input("confirm_email", array("label" => "Gentag din email", "required" => true, "hint_message" => "Indtast din email igen.", "error_message" => "De to email adresser er ikke ens.")); ?>
 		<?= $model->input("mobile", array("label" => "Mobilnummer", "hint_message" => "Indtast dit mobilnummer.", "error_message" => "Det skal være et dansk mobilnummer.")); ?>
 		<?= $model->input("password", array("required" => true, "label" => "Adgangskode", "hint_message" => "Indtast en adgangskode på mindst 8 karakterer.", "error_message" => "Din adgangskode skal være mere end 8 karakterer.")); ?>

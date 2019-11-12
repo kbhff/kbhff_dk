@@ -23,11 +23,11 @@ Util.Objects["stripe"] = new function() {
 
 				var card_number = iN.val().replace(/ /g, "");
 				if(u.paymentCards.validateCardNumber(card_number)) {
-					u.f.fieldCorrect(iN);
+					u.f.inputIsCorrect(iN);
 					u.f.validate(iN._form.inputs["card_cvc"]);
 				}
 				else {
-					u.f.fieldError(iN);
+					u.f.inputHasError(iN);
 				}
 
 			}
@@ -45,10 +45,10 @@ Util.Objects["stripe"] = new function() {
 
 
 				if(u.paymentCards.validateExpMonth(month)) {
-					u.f.fieldCorrect(iN);
+					u.f.inputIsCorrect(iN);
 				}
 				else {
-					u.f.fieldError(iN);
+					u.f.inputHasError(iN);
 				}
 
 				// validate year - performs combined validation if year is filled out
@@ -81,7 +81,7 @@ Util.Objects["stripe"] = new function() {
 				}
 
 				if(u.paymentCards.validateExpDate(month, year)) {
-					u.f.fieldCorrect(iN);
+					u.f.inputIsCorrect(iN);
 				}
 				else if(!month && u.paymentCards.validateExpYear(year)) {
 
@@ -91,8 +91,8 @@ Util.Objects["stripe"] = new function() {
 				}
 				// mark both fields as errors (one of them is wrong)
 				else {
-					u.f.fieldError(iN);
-					u.f.fieldError(iN._form.inputs["card_exp_month"]);
+					u.f.inputHasError(iN);
+					u.f.inputHasError(iN._form.inputs["card_exp_month"]);
 				}
 
 			}
@@ -104,10 +104,10 @@ Util.Objects["stripe"] = new function() {
 				var card_number = iN._form.inputs["card_number"].val().replace(/ /g, "");
 
 				if(u.paymentCards.validateCVC(cvc, card_number)) {
-					u.f.fieldCorrect(iN);
+					u.f.inputIsCorrect(iN);
 				}
 				else {
-					u.f.fieldError(iN);
+					u.f.inputHasError(iN);
 				}
 			}
 

@@ -9,8 +9,7 @@ $this->pageTitle("Glemt adgangskode");
 	<h1>Glemt adgangskode?</h1>
 
 	<p>
-		Har du glemt din adgangskode? Indtast din e-mailadresse nedenfor,
-		så vi sender dig en mail med en ny kode til at nulstille din adgangskode.
+		Har du glemt din adgangskode? Indtast din e-mailadresse nedenfor, og vi sender dig en mail med en ny kode til at nulstille din adgangskode.
 	</p>
 
 	<?= $model->formStart("requestReset", ["class" => "request_password"]) ?>
@@ -32,8 +31,8 @@ $this->pageTitle("Glemt adgangskode");
 					"label" => "Emailadresse",
 					"required" => true,
 					"pattern" => "^(1|[0-9]{4,5}|[\+0-9\-\.\s\(\)]{5,18}|[\w\.\-_\+]+@[\w\-\.]+\.\w{2,10})$",
-					"hint_message" => "Skriv den emailadresse, som du har registreret hos KBHFF.",
-					"error_message" => "Du skal angive en gyldig emailadresse."
+					"hint_message" => "Skriv den e-mailadresse, som du har registreret hos KBHFF.",
+					"error_message" => "Du skal angive en gyldig e-mailadresse."
 				));
 			?>
 		</fieldset>

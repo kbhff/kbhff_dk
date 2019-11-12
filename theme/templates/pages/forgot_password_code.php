@@ -12,8 +12,7 @@ $this->pageTitle("Verificering");
 	<h2>Bekræft at du vil nulstille din adgangskode</h2>
 	<p class="validateParagraph">
 		<span class='highlight'>TAK.</span> 
-		Vi har nu sendt dig en mail. I mailen er en kode, 
-		som du kan indtaste her og hvorefter du vil blive bedt om at vælge en ny adgangskode.
+		Vi har nu sendt dig en mail. I mailen er en kode, som du kan indtaste her, hvorefter du vil blive bedt om at vælge en ny adgangskode.
 	</p>
 
 	<?= $model->formStart("validateCode", ["class" => "verify_code"]) ?>

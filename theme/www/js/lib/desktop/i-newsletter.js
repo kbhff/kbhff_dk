@@ -12,7 +12,7 @@ Util.Objects["newsletter"] = new function() {
 			
 			this.reset();
 
-			u.ae(this.div, "p", {html:"Tak for din tilmelding – husk at bekræfte din emailadresse via den tilsendte email."})
+			u.ae(this.div, "p", {html:"Tak for din tilmelding – husk at bekræfte din e-mailadresse via den tilsendte email."})
 			u.ass(this, {
 				display: "none"
 			});
