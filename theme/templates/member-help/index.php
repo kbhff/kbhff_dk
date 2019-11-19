@@ -1,6 +1,7 @@
 <?php
 global $model;
 global $action;
+global $page;
 
 include_once("classes/system/department.class.php");
 $DC = new Department();
@@ -8,11 +9,19 @@ $departments = $DC->getDepartments();
 
 $UC = new User();
 $user_department = $UC->getUserDepartment();
-$search_users = $model->searchUsers($action);
+$department_id = false;
+$users = false;
 
-$search_value = $search_users["search_value"];
-$users = $search_users["users"];
-$department_id = $search_users["department_id"];
+$global_search_allowed = $page->validatePath("/medlemshjaelp/globalSearch"); 
+
+if($global_search_allowed) {
+
+	$search_users = $model->searchUsers($action);
+	$search_value = $search_users["search_value"];
+	$users = $search_users["users"];
+	$department_id = $search_users["department_id"];
+}
+
 if (!$department_id) {
 	$department_id = $user_department["id"];
 }
@@ -25,7 +34,7 @@ if (!$department_id) {
 
 	<div class="c-wrapper find-member">
 		<div class="c-three-quarters">
-			<h2>Find medlem</h2>
+		<h2>Find medlem <? if(!$global_search_allowed):?>i afdeling <?=$user_department["name"]?><? endif; ?></h2>
 		</div>
 
 		<div class="c-one-quarter">
@@ -42,7 +51,11 @@ if (!$department_id) {
 		<div class="c-three-quarters">
 			<fieldset>
 				<?= $model->input("search_member") ?>
+				<? if($page->validatePath("/medlemshjaelp/globalSearch")): ?>
 				<?= $model->input("department_id", array("type" => "select", "hint_message" => "Begræns din søgning til en afdeling.", "error_message" => "Du kan søge på den enkelte afdeling eller vælge 'alle afdelinger'.", "value" => $department_id, "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["all" => "Alle afdelinger"]]),)); ?>
+				<? else: ?>
+				<?= $model->input("department_id", ["type" => "hidden", "value" => $department_id]) ?>
+				<? endif; ?>
 			</fieldset>
 		</div>
 		<div class="c-one-quarter">

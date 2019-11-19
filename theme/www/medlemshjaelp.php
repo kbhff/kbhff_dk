@@ -2,6 +2,7 @@
 
 // enable access control
 $access_item["/"] = true;
+$access_item["/globalSearch"] = true;
 if(isset($read_access) && $read_access) {
 	return;
 }
@@ -16,6 +17,7 @@ $action = $page->actions();
 // define which model this controller is referring to
 $model = new SuperUser();
 $SC = new SuperShop();
+$UC = new User();
 
 // page info
 $page->bodyClass("member_help");
@@ -24,6 +26,20 @@ $page->pageTitle("Medlemshjælp");
 if($action) {
 	
 	if($action[0] == "soeg") {
+		
+		// users that are not allowed to make global searches can only search their own department
+		if(!$page->validatePath("/medlemshjaelp/globalSearch")) {
+			$user_department = $UC->getUserDepartment();
+			$department_id = getPost("department_id");
+			
+			if($department_id != $user_department["id"]) {
+				
+				// message()->resetMessages();
+				// message()->addMessage("Søgning mislykkedes.", array("type" => "error"));
+				exit();
+			}
+		}
+
 		$users = $model->searchUsers($action);
 		$output = new Output();
 		$output->screen($users);
