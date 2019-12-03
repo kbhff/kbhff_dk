@@ -23,7 +23,28 @@ $UC = new User();
 $page->bodyClass("member_help");
 $page->pageTitle("Medlemshjælp");
 
+// Allow accept terms
+if($action && count($action) == 1 && $action[0] == "accept" && $page->validateCsrfToken()) {
+
+	$UC->acceptedTerms(["name" => "memberhelp"]);
+
+}
+
+// User must always accept terms - force dialogue if user has not accepted the terms
+if(!$UC->hasAcceptedTerms(["name" => "memberhelp"])) {
+
+	$page->page(array(
+		"templates" => "member-help/accept_terms.php",
+		"type" => "login",
+		"page_title" => "Samtykke"
+	));
+	exit();
+
+}
+
 if($action) {
+
+	
 	
 	if($action[0] == "soeg") {
 		
