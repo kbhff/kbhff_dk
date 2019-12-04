@@ -43,8 +43,6 @@ if(!$UC->hasAcceptedTerms(["name" => "memberhelp"])) {
 }
 
 if($action) {
-
-	
 	
 	if($action[0] == "soeg") {
 		
