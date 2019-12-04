@@ -138,8 +138,6 @@ else {
 			</fieldset>
 	
 		<ul class="actions">
-			<!-- <li class="cancel"><a href="/" class="button">Annullér</a></li> -->
-			<li class="cancel"><a href="/medlemshjaelp/betaling/spring-over/kvittering" class="button">Spring over</a></li>
 			<?= $model->submit("Godkend betaling af ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
 		</ul>
 		<?= $model->formEnd() ?>

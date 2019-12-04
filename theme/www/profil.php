@@ -10,6 +10,7 @@ include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 $action = $page->actions();
 $IC = new Items();
 $UC = new User();
+$MC = new Member();
 
 
 $page->bodyClass("profil");
@@ -88,13 +89,21 @@ if(!$UC->hasAcceptedTerms()) {
 
 }
 
+// Members with unpaid memberships will be directed to payment page
+$order_no = $UC->hasUnpaidMembership();
+if($order_no) {
+
+	message()->addMessage("Du mangler at betale dit medlemskab. Betal venligst før du kan gå videre.", array("type" => "error"));
+	header("Location: /butik/betaling/".$order_no);
+	exit();
+}
 
 
 if($action) {
 
 	// Allow update
 	if($action[0] == "update" && $page->validateCsrfToken()) {
-		$UC->update();
+		$UC->update($action);
 	}
 
 	// ../profil/afdeling lead to template
