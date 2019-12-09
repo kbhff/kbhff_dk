@@ -124,6 +124,22 @@ else {
 			<?= $model->submit("Godkend betaling af ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
 		</ul>
 		<?= $model->formEnd() ?>
+
+		<?= $model->formStart("/butik/betaling/".$order_no."/stripe/process", array("class" => "card")) ?>
+
+			<fieldset>
+				<?= $model->input("card_number", array("type" => "tel", "label" => "Kortnummer", "hint_message" => "Indtast dit kortnummer", "error_message" => "Ugyldigt kortnummer")); ?>
+				<?= $model->input("card_exp_month", array("type" => "tel", "hint_message" => "Måned", "error_message" => "Ugyldig")); ?>
+				<span class="slash">/</span>
+				<?= $model->input("card_exp_year", array("type" => "tel", "hint_message" => "År", "error_message" => "Ugyldig")); ?>
+				<?= $model->input("card_cvc", array("type" => "tel", "hint_message" => "Kontrolnummer", "error_message" => "Ugyldig")); ?>
+
+			</fieldset>
+
+			<ul class="actions">
+				<?= $model->submit("Betal ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
+			</ul>
+		<?= $model->formEnd() ?>
 	
 		<?= $model->formStart("registerPayment/".$order_no, ["class" => "cash"]) ?>
 			<fieldset class="cash">
