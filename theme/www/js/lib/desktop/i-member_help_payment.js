@@ -23,12 +23,15 @@ Util.Objects["member_help_payment"] = new function() {
 			var cash_checkbox_field = u.qs(".field.checkbox", cash_fieldset);
 			var cash_checkbox = u.qs("input[type=checkbox]", cash_checkbox_field);
 			var cash_instructions = u.qs("div.instructions", cash_fieldset);
+			var card_form = u.qs("form.card", payment_options);
+			var card_fieldset = u.qs("fieldset", card_form);
 			
-			// adjust mobile and cash forms to the same height
+			// adjust forms to the same height
 			var fieldset_height = u.actualHeight(mobilepay_fieldset);
 			var mobilepay_code_div_height = u.actualHeight(mobilepay_code_div);
 			u.as(cash_fieldset, "height", fieldset_height + "px"); 
 			u.as(cash_instructions, "height", mobilepay_code_div_height + "px"); 
+			u.as(card_fieldset, "height", fieldset_height + "px"); 
 
 			// initialize forms
 			if(mobilepay_form) {
@@ -38,7 +41,6 @@ Util.Objects["member_help_payment"] = new function() {
 				u.f.init(cash_form);
 			}
 
-			this.card_form = u.qs("form.card", this);
 
 			// Validate card number
 			u.f.customValidate["card"] = function(iN) {
@@ -139,9 +141,9 @@ Util.Objects["member_help_payment"] = new function() {
 
 
 			// initalize form
-			u.f.init(this.card_form);
+			u.f.init(card_form);
 
-			this.card_form.submitted = function() {
+			card_form.submitted = function() {
 				
 				if(!this.is_submitting) {
 					this.is_submitting = true;
@@ -153,7 +155,7 @@ Util.Objects["member_help_payment"] = new function() {
 
 
 			// format card as you type
-			this.card_form.inputs["card_number"].updated = function(iN) {
+			card_form.inputs["card_number"].updated = function(iN) {
 				var value = this.val();
 				this.value = u.paymentCards.formatCardNumber(value.replace(/ /g, ""));
 
@@ -173,7 +175,7 @@ Util.Objects["member_help_payment"] = new function() {
 			}
 
 			// remove first two digits in 2000-fullyears
-			this.card_form.inputs["card_exp_year"].changed = function(iN) {
+			card_form.inputs["card_exp_year"].changed = function(iN) {
 				var year = parseInt(this.val());
 				if(year > 99) {
 					if(year > 2000 && year < 2100) {
@@ -183,7 +185,7 @@ Util.Objects["member_help_payment"] = new function() {
 			}
 
 			// prefix month with "0" if less than 10
-			this.card_form.inputs["card_exp_month"].changed = function(iN) {
+			card_form.inputs["card_exp_month"].changed = function(iN) {
 				var month = parseInt(this.val());
 				if(month < 10) {
 					this.val("0"+month);
@@ -233,16 +235,30 @@ Util.Objects["member_help_payment"] = new function() {
 			u.e.click(mobilepay_tab);
 			mobilepay_tab.clicked = function () {
 				u.as(cash_form, "display", "none");
+				u.as(card_form, "display", "none");
 				u.as(mobilepay_form, "display", "block");
 				u.as(cash_tab, "backgroundColor", "#BBBBBB");
+				u.as(card_tab, "backgroundColor", "#BBBBBB");
 				u.as(mobilepay_tab, "backgroundColor", "#f2f2f2f2");
 			}
 			
+			u.e.click(card_tab);
+			card_tab.clicked = function () {
+				u.as(mobilepay_form, "display", "none");
+				u.as(cash_form, "display", "none");
+				u.as(card_form, "display", "block");
+				u.as(mobilepay_tab, "backgroundColor", "#BBBBBB");
+				u.as(cash_tab, "backgroundColor", "#BBBBBB");
+				u.as(card_tab, "backgroundColor", "#f2f2f2f2")
+			}
+
 			u.e.click(cash_tab);
 			cash_tab.clicked = function () {
 				u.as(mobilepay_form, "display", "none");
+				u.as(card_form, "display", "none");
 				u.as(cash_form, "display", "block");
 				u.as(mobilepay_tab, "backgroundColor", "#BBBBBB");
+				u.as(card_tab, "backgroundColor", "#BBBBBB");
 				u.as(cash_tab, "backgroundColor", "#f2f2f2f2")
 			}
 

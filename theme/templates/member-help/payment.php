@@ -125,7 +125,7 @@ else {
 		</ul>
 		<?= $model->formEnd() ?>
 
-		<?= $model->formStart("/butik/betaling/".$order_no."/stripe/process", array("class" => "card")) ?>
+		<?= $model->formStart("betaling/".$order_no."/stripe/process", array("class" => "card")) ?>
 
 			<fieldset>
 				<?= $model->input("card_number", array("type" => "tel", "label" => "Kortnummer", "hint_message" => "Indtast dit kortnummer", "error_message" => "Ugyldigt kortnummer")); ?>

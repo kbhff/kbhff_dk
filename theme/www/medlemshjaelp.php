@@ -385,8 +385,32 @@ if($action) {
 			));
 			exit();
 		} 
+		
+		// /medlemshjaelp/betaling/#order_no#/stripe/process
+		else if(count($action) === 4 && $action[3] == "process" && $page->validateCsrfToken()) {
+			// process gateway data and create payment-id
+			$payment_id = $SC->processOrderPayment($action);
+			// successful payment and creation of payment-id
+			if($payment_id) {
+				message()->resetMessages();
+				// redirect to leave POST state
+				// header("Location: /butik/kvittering/".$action[1]."/".$action[2]."/".$payment_id);
+				header("Location: /medlemshjaelp/betaling/".$payment_id."/".$action[1]."/kvittering");
+				exit();
 
-		// /medlemshjaelp/betaling/#payment_id#/kvittering
+			}
+			// Something went wrong
+			else {
+				message()->resetMessages();
+				message()->addMessage("Der skete en fejl i registreringen af betalingen.", array("type" => "error"));
+				// redirect to leave POST state
+				header("Location: /butik/kvittering/".$action[1]."/fejl");
+				exit();
+
+			}
+		}
+		
+		// /medlemshjaelp/betaling/#order_no/#payment_id#/kvittering
 		else if(count($action) === 4 && $action[3] == "kvittering") {
 			$page->page(array(
 				"templates" => "member-help/receipt/index.php",
