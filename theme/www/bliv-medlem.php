@@ -10,7 +10,7 @@ include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 $action = $page->actions();
 $SC = new Shop();
 $model = new User();
-
+$MC = new Member();
 
 $page->bodyClass("signup");
 $page->pageTitle("Bliv medlem");
@@ -26,8 +26,7 @@ if($action) {
 		$user_id = session()->value("user_id");
 		if($user_id > 1) {
 
-			include_once("classes/users/member.class.php");
-			$MC = new Member();
+			
 			$membership = $MC->getMembership();
 			// user is a member with a subscription
 			if($membership && $membership["subscription_id"]) {
@@ -45,8 +44,8 @@ if($action) {
 			header("Location: /bliv-medlem/tilmelding/");
 			exit();
 			
-			}
-			// Something went wrong
+		}
+		// Something went wrong
 		else {
 			message()->addMessage("Det ser ud til at der er sket en fejl.", array("type" => "error"));
 
@@ -65,7 +64,7 @@ if($action) {
 		));
 		exit();
 
-		}
+	}
 
 	// user is already a member with a subsription 
 	// bliv-medlem/allerece-medlem
@@ -77,9 +76,6 @@ if($action) {
 		exit();
 
 	}
-
-
-
 
 	// bliv-medlem/save
 	else if($action[0] == "save" && $page->validateCsrfToken()) {

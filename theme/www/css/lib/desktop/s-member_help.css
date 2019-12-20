@@ -75,9 +75,11 @@
 
 /* PAYMENT – tabs */
 #content .member_help_payment div.payment_options {margin: 0 auto; margin-top: 32px; width: 40%;}
-#content .member_help_payment div.payment_options h4.tab {display: inline-block; background-color: #f2f2f2f2; padding: 6px calc(2.5% + 10px); margin-right: 12px; cursor:pointer;}
+#content .member_help_payment div.payment_options h4.tab {display: inline-block; background-color: #f2f2f2f2; padding: 6px calc(2.5% + 10px); margin-right: 6px; cursor:pointer;}
 #content .member_help_payment div.payment_options h4.cash_tab {background-color: #bbbbbb;}
+#content .member_help_payment div.payment_options h4.card_tab {background-color: #bbbbbb;}
 #content .member_help_payment form.cash {display:none;}
+#content .member_help_payment form.card {display:none;}
 
 #content .member_help_payment form fieldset {background-color: #f2f2f2; position: relative; padding-bottom: 40px} 
 
@@ -95,6 +97,15 @@
 
 /* PAYMENT – Cash */
 #content .member_help_payment form div.cash.instructions p {font-size: 16px; padding: 12px 12px 12px;}
+
+/* PAYMENT – Card */
+#content .member_help_payment form.card .field.card {padding-top: 14px;}
+#content .member_help_payment form.card .field.exp_month,
+#content .member_help_payment form.card .field.exp_year {display: inline-block; width: 65px;}
+
+#content .member_help_payment form.card .field.cvc {width: 85px; float: right;}
+
+#content .member_help_payment form.card span.slash {font-size: 26px; vertical-align: middle; position: relative; top: 10px;}
 
 /* PAYMENT – checkboxes and buttons */
 #content .member_help_payment form .checkbox {padding: 12px 10px; position: absolute; bottom: 0;}

@@ -299,6 +299,21 @@ class User extends UserCore {
 		return false;
 	}
 
+	function hasUnpaidMembership() {
+
+		$query = new Query();
+		$MC = new Member();
+		$user_id = session()->value("user_id");
+		
+
+		$member = $MC->getMembership();
+		if($member && $member["order"] && $member["order"]["payment_status"] <= 1) {
+			return $member["order"]["order_no"];
+		}
+
+		return false;
+
+	}
 
 	/**
 	 * Update user account information
@@ -584,7 +599,6 @@ class User extends UserCore {
 				$cart_reference = isset($_COOKIE["cart_reference"]) ? $_COOKIE["cart_reference"] : false;
 			}
 			if($cart_reference) {
-				include_once("classes/users/member.class.php");
 				$MC = new Member();
 				
 				$membership = $MC->getMembership();

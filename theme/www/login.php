@@ -43,7 +43,7 @@ if($action) {
 		
 		// check if user has Janitor password
 		$query = new Query();
-		$sql = "SELECT user_id FROM ".SITE_DB.".user_usernames as usernames WHERE usernames.username='$username' AND user_id IN (SELECT user_id FROM ".SITE_DB.".user_s)";
+		$sql = "SELECT user_id FROM ".SITE_DB.".user_usernames as usernames WHERE usernames.username='$username' AND user_id IN (SELECT user_id FROM ".SITE_DB.".user_passwords)";
 		// print $sql;
 		if(!$query->sql($sql)) {
 			

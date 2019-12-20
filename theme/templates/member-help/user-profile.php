@@ -135,7 +135,7 @@ $has_accepted_terms = $UC->hasAcceptedTerms(["user_id" => $user_id]);
 
 			<div class="section membership">
 				<div class="c-box">
-					<h3>medlemsskabsinfo</h3>
+					<h3>Medlemskabsinfo</h3>
 
 					<div class="fields">
 						<div class="membership-info">

@@ -108,7 +108,8 @@ class TypeSignupfee extends Itemtype {
 		$order_id = $order["id"];
 		$user_id = $order["user_id"];
 
-		$membership_type = $IC->getItem(["id" => $order_item["associated_membership_id"], "extend" => ["subscription_method" => true]]);
+		$signupfee_item = $IC->getItem(["id" => $order_item["item_id"], "extend" => true]);
+		$membership_type = $IC->getItem(["id" => $signupfee_item["associated_membership_id"], "extend" => ["subscription_method" => true]]);
 		
 		$existing_membership = $MC->getMembers(["user_id" => $user_id]);
 		
@@ -161,7 +162,7 @@ class TypeSignupfee extends Itemtype {
 			if(SITE_SUBSCRIPTIONS && $membership_type["subscription_method"]) {
 				
 				// add subscription
-				$_POST["item_id"] = $membership_type["id"];
+				$_POST["item_id"] = $membership_type["item_id"];
 				$_POST["user_id"] = $user_id;
 				$_POST["order_id"] = $order_id;
 				$subscription = $SuperSubscriptionClass->addSubscription(["addSubscription"]);

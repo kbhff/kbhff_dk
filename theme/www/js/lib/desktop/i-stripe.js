@@ -11,11 +11,42 @@ Util.Objects["stripe"] = new function() {
 //			u.bug("scrolled:", this);;
 		}
 
+		scene.beforeUnload = function(event) {
+
+			// event.preventDefault();
+			// event.returnValue = 'test';
+
+			// u.bug(event); 
+
+			// this.confirm_close = u.overlay({title:"Glemmer du ikke noget?", height:200,width:600, class:"confirm_close"});
+			// this.confirm_close.warning = u.ae(this.confirm_close.div_content, "p", {
+			// 	html:"Du mangler at betale dit medlemskab. Hvis du forlader siden, vil du blive bedt om at betale, når du forsøger at logge på."
+			// });
+			// this.confirm_close.actions = u.ae(this.confirm_close.div_content, "ul", {
+			// 	class:"actions"
+			// })
+			
+			// // Add action buttons to cancel and confirm
+			// this.confirm_close.continue = u.f.addAction(this.confirm_close.actions, {"type":"button", "name":"continue", "class":"button","value":"Forlad siden"});
+			// this.confirm_close.regret = u.f.addAction(this.confirm_close.actions, {"type":"button", "name":"regret", "class":"button primary", "value":"Fortryd"});
+			
+			
+			// // Add click event to cancel and close overlay
+			// u.e.click(this.confirm_close.regret);
+			// this.confirm_close.regret.clicked = function () {
+			// 	this.confirm_close.close ();
+			// }
+
+			return "test";
+			
+		}
+
 		scene.ready = function() {
 //			u.bug("scene.ready:", this);
 
-
 			page.cN.scene = this;
+
+			// u.e.addWindowEvent(this, "beforeunload", this.beforeUnload);
 
 			this.card_form = u.qs("form.card", this);
 
