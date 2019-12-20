@@ -91,7 +91,7 @@ $IC = new Items();
 				<? // print membership information
 				if($item["itemtype"] == "signupfee"): ?>
 				<p class="membership">
-					Dit køb indkluderer et medlemskab.
+					Dit køb inkluderer et medlemskab.
 				</p>
 				<? endif; ?>
 

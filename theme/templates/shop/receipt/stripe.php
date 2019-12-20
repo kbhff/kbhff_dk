@@ -82,7 +82,7 @@ if(count($action) == 4) {
 			<p>Husk at aktivere din konto ved at verificere din email. Ellers kan du ikke bestille grøntsager. Kig i din indbakke efter aktiveringsemailen.</p>
 		<? else: ?>
 			<ul class="actions">
-				<li><a class="button primary clickable" href="/">Log ind</a></li>
+				<li><a class="button primary clickable" href="/login">Log ind</a></li>
 			</ul>
 		<? endif; ?>
 		</div>
