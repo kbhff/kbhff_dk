@@ -14,7 +14,7 @@ $departments = $model->getDepartments();
 		<?= $JML->listNew(array("label" => "New department")) ?>
 	</ul>
 
-	<div class="all_items i:defaultList filters"<?= $JML->jsData(["search"]) ?>>
+	<div class="all_items i:defaultList filters"<?= $HTML->jsData(["search"]) ?>>
 <?		if($departments): ?>
 		<ul class="items">
 <?			foreach($departments as $department): ?>
