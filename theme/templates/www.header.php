@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="<?= $this->language() ?>">
 <head>
-	<!-- 
+	<!--
 	Foodnet platform
     Copyright (C) 2018  Københavns Fødevarefællesskab and think.dk
-    
+
     Københavns Fødevarefællesskab
     KPH-Projects
     Enghavevej 80 C, 3. sal
     2450 København SV
     Denmark
     mail: bestyrelse@kbhff.dk
-    
+
     think.dk
     Æbeløgade 4
     2100 København Ø
     Denmark
     mail: start@think.dk
-     
+
     This source code is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -30,10 +30,10 @@
 
     You should have received a copy of the GNU General Public License
 	along with this source code.  If not, see <http://www.gnu.org/licenses/>. -->
-	
+
 	<!-- If you want to use or contribute to this code, visit http://parentnode.dk -->
 
-	
+
 	<title><?= $this->pageTitle() ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="keywords" content="Økologi grøntsager lokal sæson mad fødevarer fællesskab" />
@@ -65,6 +65,7 @@
 	<div id="header">
 		<ul class="servicenavigation">
 			<li class="keynav navigation nofollow"><a href="#navigation">To navigation</a></li>
+			<li class="keynav kontakt"><a href="/kontakt">Kontakt</a></li>
 			<li class="keynav wiki nofollow"><a href="http://kbhffwiki.org">Wiki</a></li>
 
 <?		if(session()->value("user_id") && session()->value("user_group_id") > 1): ?>
