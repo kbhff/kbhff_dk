@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-01-14 16:10:53
+asset-builder @ 2020-01-14 23:20:25
 */
 
 /*seg_desktop_include.css*/
@@ -1136,10 +1136,11 @@ div.overlay .close:after {
 
 
 /*s-faq.css*/
-#content .scene.faq ul.questions {padding: 24px 0; list-style: none; margin: 0; font-size: 0;}
-#content .scene.faq ul.questions li.question {}
-#content .scene.faq ul.questions li.question h2 {padding: 8px 12px 12px 28px; position: relative; font-size: 24px;}
-#content .scene.faq ul.questions li.question h2 svg {position: absolute; left: 3px; top: 17px; stroke: #999999; stroke-width: 3px;}
+#content .scene.faq {padding-bottom: 60px;}
+#content .scene.faq ul.questions {padding: 0; list-style: none; margin: 0; font-size: 0;}
+#content .scene.faq ul.questions li.question {padding-top: 0;}
+#content .scene.faq ul.questions li.question h3 {padding: 8px 12px 12px 28px; position: relative; font-size: 18px;}
+#content .scene.faq ul.questions li.question h3 svg {position: absolute; left: 3px; top: 13px; stroke: #999999; stroke-width: 3px;}
 #content .scene.faq ul.questions li.question .articlebody {display: none; padding-left: 16px;}
 #content .scene.faq ul.questions li.question.open .articlebody {display: block;}
 
@@ -1153,8 +1154,9 @@ div.overlay .close:after {
 #navigation ul.navigation li.selected > a {
 	background-color: #fff;
 	border: 2px solid #3e8e17;
-	padding: 5px 12px;
+	padding: 5px 12px 7px;
 	color: #3e8e17;
+	border-bottom: none;
 }
 #navigation ul.navigation h5:hover, 
 #navigation ul.navigation li:not(.selected) a:hover {
@@ -1197,8 +1199,8 @@ div.overlay .close:after {
 	text-transform: uppercase;
 	font-family: "voresfont";
 }
-#content .scene ul.subnavigation {margin: 48px 12px 24px; padding: 0; list-style: none; }
-#content .scene ul.subnavigation li {display: inline-block; vertical-align: top; line-height: 34px; padding: 0 12px 12px 0;}
+#content .scene ul.subnavigation {font-size: 0; margin: 48px 0 24px; padding: 0; list-style: none; }
+#content .scene ul.subnavigation li {display: inline-block; vertical-align: top; width: 33.3333%; box-sizing: border-box; line-height: 34px; padding: 0 6px 12px 6px;}
 #content .scene ul.subnavigation li a {font-size: 18px; display: block; padding: 12px 24px; line-height: 22px; background-color: #999999; color: #ffffff; border: none; cursor: pointer;
 	font-weight: 400;
 	text-transform: uppercase;
