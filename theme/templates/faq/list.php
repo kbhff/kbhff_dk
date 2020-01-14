@@ -3,8 +3,12 @@ global $action;
 global $IC;
 global $itemtype;
 
-$items = $IC->getItems(array("itemtype" => $itemtype, "order" => "position DESC", "extend" => array("tags" => true)));
+include_once("classes/items/taglist.class.php");
+$TC = new Taglist();
 
+$taglist = $TC->getTaglist(["handle" => "faq"]);
+$categories = $TC->getTaglistTags(["taglist_id" => $taglist["id"]]);
+// debug([$categories]);
 
 
 ?>
@@ -14,21 +18,27 @@ $items = $IC->getItems(array("itemtype" => $itemtype, "order" => "position DESC"
 
 	<h1>Spørgsmål og svar</h1>
 
-	<? if($items): ?>
-		<ul class="items questions">
-			<? foreach($items as $item): ?>
-			<li class="item question id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
 
-				<h2 itemprop="headline"><a href="/faq/<?= $item["sindex"] ?>"><?= $item["question"] ?></a></h2>
+<? foreach($categories as $category): ?>
+	<h2><?= $category["value"] ?></h2>
+	<? 
+	$items = $IC->getItems(array("itemtype" => $itemtype, "tags" => "faq:".$category["value"], "order" => "position DESC", "extend" => true));
 
-				<?= $HTML->articleInfo($item, "/faq/".$item["sindex"]) ?>
+	if($items): ?>
+	<ul class="items questions">
+		<? foreach($items as $item): ?>
+		<li class="item question id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
 
-			</li>
-			<? endforeach; ?>
-		</ul>
+			<h3 itemprop="headline"><a href="/faq/<?= $item["sindex"] ?>"><?= $item["question"] ?></a></h3>
+
+			<?= $HTML->articleInfo($item, "/faq/".$item["sindex"]) ?>
+
+		</li>
+		<? endforeach; ?>
+	</ul>
 
 	<? else: ?>
-		<p>Ingen spørgsmål og svar</p>
+	<p>Ingen spørgsmål og svar</p>
 	<? endif; ?>
-
+<? endforeach ?>
 </div>
