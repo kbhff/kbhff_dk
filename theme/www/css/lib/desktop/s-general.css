@@ -30,6 +30,9 @@
 /* ABOUT */
 #content .scene.about .c-one-third .c-box:first-child {margin-top: 58px;}
 
+/* ARTICLE IMAGES */
+#content .article .image img {width: 100%;}
+
 
 /* C-BOX ACTION */
 #content .c-box.actions ul.actions li {display: block; text-align: left; padding-left: 0;}	
