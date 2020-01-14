@@ -18,7 +18,7 @@ else {
 }
 
 // add base pattern properties
-$related_pattern["limit"] = 5;
+$related_pattern["limit"] = 4;
 $related_pattern["extend"] = array("tags" => true, "user" => true, "mediae" => true);
 
 // get related items
