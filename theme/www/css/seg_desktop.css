@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-01-14 16:08:41
+asset-builder @ 2020-01-14 16:10:53
 */
 
 /*seg_desktop_include.css*/
@@ -1164,6 +1164,7 @@ div.overlay .close:after {
 #content .scene.english .c-one-third .c-box:first-child {margin-top: 58px;}
 #content .scene.about .c-one-third .c-box:first-child {margin-top: 58px;}
 #content .scene.page .c-one-third .c-box:first-child {margin-top: 58px;}
+#content .scene.member .c-one-third .c-box:first-child {margin-top: 58px;}
 #content .article .image img,
 #content .article .media img {width: 100%;}
 #content .c-box.actions ul.actions li {display: block; text-align: left; padding-left: 0;}	

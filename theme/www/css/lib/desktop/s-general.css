@@ -33,6 +33,9 @@
 /* PAGE */
 #content .scene.page .c-one-third .c-box:first-child {margin-top: 58px;}
 
+/* MEMBER */
+#content .scene.member .c-one-third .c-box:first-child {margin-top: 58px;}
+
 /* ARTICLE IMAGES */
 #content .article .image img,
 #content .article .media img {width: 100%;}
