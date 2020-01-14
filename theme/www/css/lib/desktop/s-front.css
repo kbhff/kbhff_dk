@@ -61,23 +61,4 @@
 #content .front .c-box.weeklybag p.readmore {padding-bottom: 12px; text-align: right;}
 
 
-#content .front .c-box.actions ul.actions li {display: block; text-align: left; padding-left: 0;}	
-#content .front .c-box.actions ul.actions li a {position: relative; display: inline-block; vertical-align: top; padding: 8px 20px; line-height: 16px; font-size: 16px; height: 18px; background-color: #3e8e17; background-repeat: no-repeat; background-position: top left; color: #ffffff;}
 
-#content .front .c-box.actions ul.actions li a:after {
-	content: " ";
-	vertical-align: top;
-	display: inline-block;
-	height: 24px;
-	width: 24px;
-	background-color: #3e8e17;
-	position: absolute;
-	top: 5px;
-	right: -12px;
-	transform: rotate(45deg);
-}
-
-#content .front .c-box.actions ul.actions li a:hover,
-#content .front .c-box.actions ul.actions li a:hover:after {
-	background-color: #357914;
-}

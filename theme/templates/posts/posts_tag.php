@@ -4,7 +4,33 @@ global $IC;
 global $itemtype;
 
 $selected_tag = urldecode($action[1]);
-$items = $IC->getItems(array("itemtype" => $itemtype, "status" => 1, "tags" => $itemtype.":".addslashes($selected_tag), "extend" => array("tags" => true, "user" => true, "mediae" => true)));
+
+
+// List extension (page > 1)
+if(count($action) === 4) {
+	$page = $action[3];
+}
+// Default list
+else {
+	$page = false;
+}
+
+// Get posts
+$items = $IC->paginate([
+	"pattern" => [
+		"itemtype" => $itemtype, 
+		"status" => 1, 
+		"tags" => $itemtype.":".addslashes($selected_tag), 
+		"extend" => [
+			"tags" => true, 
+			"user" => true, 
+			"mediae" => true
+		]
+	],
+	"page" => $page,
+	"limit" => 20
+]);
+
 
 $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 
@@ -24,13 +50,11 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 
 
 
-		<?	if($items): ?>
+		<?	if($items && $items["range_items"]): ?>
 			<ul class="items articles">
-				<? foreach($items as $item):
-					$media = $IC->sliceMediae($item); ?>
-				<li class="item article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle"
-					data-readstate="<?= $item["readstate"] ?>"
-					>
+				<? foreach($items["range_items"] as $item):
+					$media = $IC->sliceMediae($item, "mediae"); ?>
+				<li class="item article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle">
 
 					<? if($media): ?>
 					<div class="image item_id:<?= $media["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>"></div>
@@ -43,7 +67,7 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 					]) ?>
 
 
-					<h3 itemprop="headline"><a href="/nyheder/<?= $item["sindex"] ?>"><?= $item["name"] ?></a></h3>
+					<h3 itemprop="headline"><a href="/nyheder/tag/<?= urlencode($selected_tag) ?>/<?= $item["sindex"] ?>"><?= $item["name"] ?></a></h3>
 
 
 					<?= $HTML->articleInfo($item, "/nyheder/".$item["sindex"], [
@@ -64,8 +88,7 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 
 		<? else: ?>
 
-			<h2>Technology needs humanity.</h2>
-			<p>We could not find any posts with the selected tag.</p>
+			<p>Vi kunne ikke finde nogle nyheder om <?= $selected_tag ?>.</p>
 
 		<? endif; ?>
 
@@ -81,7 +104,7 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 			<? if($categories): ?>
 				<div class="categories">
 					<ul class="tags">
-						<li><a href="/nyheder">Alle artikler</a></li>
+						<li><a href="/nyheder">Alle nyheder</a></li>
 					<? foreach($categories as $tag): ?>
 						<li<?= ($selected_tag == $tag["value"] ? ' class="selected"' : '') ?>><a href="/nyheder/tag/<?= urlencode($tag["value"]) ?>"><?= $tag["value"] ?></a></li>
 						<? endforeach; ?>

@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-11-12 18:02:48
+asset-builder @ 2020-01-14 15:30:22
 */
 
 /*seg_desktop_include.css*/
@@ -523,6 +523,13 @@ body #selection_options ul.actions li {padding: 0 5px 0 0;}
 #content .scene.tagList ul.items > li h3 span {font-size: 12px;}
 
 
+/*s-taglists.css*/
+#content .scene.taglistList ul.items li.item ul.actions li.add { display: inline-block;}
+#content .scene.taglistList ul.items li.item ul.actions li.remove {display: none;}
+#content .scene.taglistList ul.items li.item.added ul.actions li.add { display: none;}
+#content .scene.taglistList ul.items li.item.added ul.actions li.remove {display: inline-block;}
+
+
 /*s-shop.css*/
 #content .scene.shopList ul.tabs li.waiting {color: orange;}
 #content .scene.shopList ul.tabs li.pending {color: red;}
@@ -1002,8 +1009,9 @@ body.invoice #content div.scene .all_items ul.items li span.amount {float: right
 #content .scene.defaultEdit > div.prices ul.prices {padding: 0 0 15px;}
 #content .scene.defaultEdit > div.prices ul.prices li.pricedetails {display: block; position: relative; border-bottom: 1px solid #dedede;}
 #content .scene.defaultEdit > div.prices ul.prices li.pricedetails ul.info li {display: inline-block; vertical-align: top; padding: 10px 5px 10px 0; line-height: 1em;}
+#content .scene.defaultEdit > div.prices ul.prices li.pricedetails ul.info li.custom_price:before,
 #content .scene.defaultEdit > div.prices ul.prices li.pricedetails ul.info li.offer:before,
-#content .scene.defaultEdit > div.prices ul.prices li.pricedetails ul.info li.bulk:before {content: "- ";}
+#content .scene.defaultEdit > div.prices ul.prices li.pricedetails ul.info li.bulk:before{content: "- ";}
 #content .scene.defaultEdit > div.prices ul.prices > li > ul.actions {position: absolute; top: 3px; right: 0;}
 #content .scene.defaultEdit > div.subscription_method {padding: 0; border-bottom: 1px solid #bbbbbb; position: relative;}
 #content .scene.defaultEdit > div.subscription_method dl.info {padding-bottom: 20px;}

@@ -3,7 +3,9 @@ global $IC;
 global $action;
 global $itemtype;
 
-$sindex = $action[0];
+$sindex = $action[2];
+$selected_tag = urldecode($action[1]);
+
 $item = $IC->getItem(array("sindex" => $sindex, "status" => 1, "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true)));
 if($item) {
 	$this->sharingMetaData($item);
@@ -136,7 +138,7 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 					<ul class="tags">
 						<li><a href="/nyheder">Alle nyheder</a></li>
 					<? foreach($categories as $tag): ?>
-						<li><a href="/nyheder/tag/<?= urlencode($tag["value"]) ?>"><?= $tag["value"] ?></a></li>
+						<li<?= ($selected_tag == $tag["value"] ? ' class="selected"' : '') ?>><a href="/nyheder/tag/<?= urlencode($tag["value"]) ?>"><?= $tag["value"] ?></a></li>
 						<? endforeach; ?>
 					</ul>
 				</div>

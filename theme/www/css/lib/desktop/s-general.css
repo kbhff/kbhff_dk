@@ -21,6 +21,38 @@
 }
 
 
+/* CONTACT */
+#content .scene.contact .c-one-third .c-box:first-child {margin-top: 58px;}
+
+/* ENGLISH */
+#content .scene.english .c-one-third .c-box:first-child {margin-top: 58px;}
+
+/* ABOUT */
+#content .scene.about .c-one-third .c-box:first-child {margin-top: 58px;}
+
+
+/* C-BOX ACTION */
+#content .c-box.actions ul.actions li {display: block; text-align: left; padding-left: 0;}	
+#content .c-box.actions ul.actions li a {position: relative; display: inline-block; vertical-align: top; padding: 8px 20px; line-height: 16px; font-size: 16px; height: 18px; background-color: #3e8e17; background-repeat: no-repeat; background-position: top left; color: #ffffff;}
+
+#content .c-box.actions ul.actions li a:after {
+	content: " ";
+	vertical-align: top;
+	display: inline-block;
+	height: 24px;
+	width: 24px;
+	background-color: #3e8e17;
+	position: absolute;
+	top: 5px;
+	right: -12px;
+	transform: rotate(45deg);
+}
+
+#content .c-box.actions ul.actions li a:hover,
+#content .c-box.actions ul.actions li a:hover:after {
+	background-color: #357914;
+}
+
 
 #content .scene div.media p a {font-weight: normal; font-size: 12px; font-style: italic; color: #aaaaaa; cursor: pointer;}
 

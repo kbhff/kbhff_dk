@@ -16,18 +16,29 @@ $page->bodyClass("posts");
 $page->pageTitle("Nyheder");
 
 
-// /nyheder/#sindex#
-if(count($action) == 1) {
+# View specific post
+# /nyheder/#sindex#
+if(count($action) === 1) {
 
 	$page->page(array(
 		"templates" => "posts/post.php"
 	));
 	exit();
+}
+# View specific post (tag listed)
+# /nyheder/tag/#tag#/#sindex#
+else if(count($action) === 3 && $action[0] == "tag") {
 
+	$page->page(array(
+		"templates" => "posts/post_tag.php"
+	));
+	exit();
 }
 
-// /nyheder/tag/#tag#
-else if(count($action) >= 2 && $action[0] == "tag") {
+# List by tag
+# /nyheder/tag/#tag#
+# /nyheder/tag/#tag#/page/#sindex#
+else if((count($action) === 2 && $action[0] == "tag") || (count($action) === 4 && $action[0] == "tag" && $action[2] == "page")) {
 
 	$page->page(array(
 		"templates" => "posts/posts_tag.php"
@@ -35,6 +46,7 @@ else if(count($action) >= 2 && $action[0] == "tag") {
 	exit();
 
 }
+
 
 // /nyheder
 // overview of posts

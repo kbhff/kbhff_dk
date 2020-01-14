@@ -5,16 +5,15 @@ Util.Objects["articles"] = new function() {
 		}
 
 		scene.scrolled = function() {
-			// u.bug("scrolled:", this);
+			// u.bug("scebe.scrolled:", this);
 		}
 
 		scene.ready = function() {
-			u.bug("scene.ready:", this);
+			// u.bug("scene.ready:", this);
 
 			page.cN.scene = this;
 
 			var nodes = u.qsa("div.posts ul.items li.item", this);
-			u.bug(nodes)
 			var i, node
 			if(nodes) {
 				for(i = 0; node = nodes[i]; i++) {
@@ -37,7 +36,6 @@ Util.Objects["articles"] = new function() {
 
 						// if image
 						if(node.image._id && node.image._format) {
-
 							// add image
 							node.image._image_src = "/images/" + node.image._id + "/" + (node.image._variant ? node.image._variant+"/" : "") + "300x200." + node.image._format;
 

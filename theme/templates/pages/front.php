@@ -14,51 +14,52 @@ $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage"
 <div class="scene front i:scene i:front">
 	<div class="banner i:banner variant:random format:jpg"></div>
 
-
-<? if($page_item): 
-	$media = $IC->sliceMediae($page_item, "single_media"); ?>
-	<div class="article i:article" itemscope itemtype="http://schema.org/Article">
-
-		<? if($media): ?>
-		<div class="image item_id:<?= $page_item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>"></div>
-		<? endif; ?>
-
-
-		<?= $HTML->articleTags($page_item, [
-			"context" => false
-		]) ?>
-
-
-		<h1 itemprop="headline"><?= $page_item["name"] ?></h1>
-
-		<? if($page_item["subheader"]): ?>
-		<h2 itemprop="alternativeHeadline"><?= $page_item["subheader"] ?></h2>
-		<? endif; ?>
-
-
-		<?= $HTML->articleInfo($page_item, "/", [
-			"media" => $media, 
-			"sharing" => true
-		]) ?>
-
-
-		<? if($page_item["html"]): ?>
-		<div class="articlebody" itemprop="articleBody">
-			<?= $page_item["html"] ?>
-		</div>
-		<? endif; ?>
-	</div>
-<? endif; ?>
-
-
 	<div class="c-wrapper">
 
 		<div class="c-two-thirds">
-			<? if($post_items): ?>
+
+
+		<? if($page_item): 
+			$media = $IC->sliceMediae($page_item, "single_media"); ?>
+			<div class="article i:article" itemscope itemtype="http://schema.org/Article">
+
+				<? if($media): ?>
+				<div class="image item_id:<?= $page_item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>"></div>
+				<? endif; ?>
+
+
+				<?= $HTML->articleTags($page_item, [
+					"context" => false
+				]) ?>
+
+
+				<h1 itemprop="headline"><?= $page_item["name"] ?></h1>
+
+				<? if($page_item["subheader"]): ?>
+				<h2 itemprop="alternativeHeadline"><?= $page_item["subheader"] ?></h2>
+				<? endif; ?>
+
+
+				<?= $HTML->articleInfo($page_item, "/", [
+					"media" => $media, 
+					"sharing" => true
+				]) ?>
+
+
+				<? if($page_item["html"]): ?>
+				<div class="articlebody" itemprop="articleBody">
+					<?= $page_item["html"] ?>
+				</div>
+				<? endif; ?>
+			</div>
+		<? endif; ?>
+
+
+		<? if($post_items): ?>
 			<div class="news">
 				<ul class="items articles">
 				<? foreach($post_items as $item): 
-					$media = $IC->sliceMediae($item); ?>
+					$media = $IC->sliceMediae($item, "mediae"); ?>
 					<li class="item article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle" data-readstate="<?= $item["readstate"] ?>">
 
 						<? if($media): ?>
@@ -91,9 +92,9 @@ $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage"
 				<? endforeach; ?>
 				</ul>
 			</div>
-			<?	else: ?>
-				<p>Ingen artikler.</p>
-			<? endif ?>
+		<?	else: ?>
+			<p>Ingen nyheder.</p>
+		<? endif ?>
 		</div>
 
 		<div class="c-one-third">

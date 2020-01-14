@@ -38,7 +38,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="keywords" content="Økologi grøntsager lokal sæson mad fødevarer fællesskab" />
 	<meta name="description" content="<?= $this->pageDescription() ?>" />
-	<meta name="viewport" content="initial-scale=1, user-scalable=no" />
+	<meta name="viewport" content="initial-scale=1" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
@@ -51,8 +51,8 @@
 	<link type="text/css" rel="stylesheet" media="all" href="/css/lib/seg_<?= $this->segment() ?>_include.css?cb=<?=randomKey(4); ?>" />
 	<script type="text/javascript" src="/js/lib/seg_<?= $this->segment() ?>_include.js?cb=<?=randomKey(4); ?>"></script>
 <? } else { ?>
-	<link type="text/css" rel="stylesheet" media="all" href="/css/seg_<?= $this->segment() ?>.css?rev=20191210-122017" />
-	<script type="text/javascript" src="/js/seg_<?= $this->segment() ?>.js?rev=20191210-122017"></script>
+	<link type="text/css" rel="stylesheet" media="all" href="/css/seg_<?= $this->segment() ?>.css?rev=20200114-153105" />
+	<script type="text/javascript" src="/js/seg_<?= $this->segment() ?>.js?rev=20200114-153105"></script>
 <? } ?>
 
 	<?= $this->headerIncludes() ?>
