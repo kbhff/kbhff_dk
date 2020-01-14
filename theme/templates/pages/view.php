@@ -4,7 +4,7 @@ global $action;
 $sindex = $action[0];
 
 
-$item = $IC->getItem(array("sindex" => $sindex, "status" => 1, "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true, "readstate" => true)));
+$item = $IC->getItem(array("sindex" => $sindex, "itemtype" => "page", "status" => 1, "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true,)));
 if($item) {
 	$this->sharingMetaData($item);
 }
@@ -23,11 +23,11 @@ if($item) {
 
 			<div class="article i:article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
 
-			<? if($media): ?>
+				<? if($media): ?>
 				<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">
 					<p>Image: <a href="/images/<?= $item["item_id"] ?>/<?= $media["variant"] ?>/500x.<?= $media["format"] ?>"><?= $media["name"] ?></a></p>
 				</div>
-			<? endif; ?>
+				<? endif; ?>
 
 
 				<h1 itemprop="headline"><?= $item["name"] ?></h1>
@@ -40,8 +40,10 @@ if($item) {
 					<?= $item["html"]?>
 				</div>
 
-				<? if($item["mediae"]): ?>
-					<? foreach($item["mediae"] as $media): ?>
+				<?
+				$mediae = $IC->filterMediae($item, "mediae");
+				if($mediae): ?>
+					<? foreach($mediae as $media): ?>
 				<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">
 					<p>Image: <a href="/images/<?= $item["item_id"] ?>/<?= $media["variant"] ?>/500x.<?= $media["format"] ?>"><?= $media["name"] ?></a></p>
 				</div>
