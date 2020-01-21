@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-01-14 23:20:25
+asset-builder @ 2020-01-21 19:38:41
 */
 
 /*seg_desktop_include.css*/
@@ -1139,8 +1139,8 @@ div.overlay .close:after {
 #content .scene.faq {padding-bottom: 60px;}
 #content .scene.faq ul.questions {padding: 0; list-style: none; margin: 0; font-size: 0;}
 #content .scene.faq ul.questions li.question {padding-top: 0;}
-#content .scene.faq ul.questions li.question h3 {padding: 8px 12px 12px 28px; position: relative; font-size: 18px;}
-#content .scene.faq ul.questions li.question h3 svg {position: absolute; left: 3px; top: 13px; stroke: #999999; stroke-width: 3px;}
+#content .scene.faq ul.questions li.question h3 {padding: 8px 12px 12px 28px; position: relative; font-size: 18px; font-family: Arial, sans-serif; text-transform: none;}
+#content .scene.faq ul.questions li.question h3 svg {position: absolute; left: 3px; top: 15px; stroke: #999999; stroke-width: 3px;}
 #content .scene.faq ul.questions li.question .articlebody {display: none; padding-left: 16px;}
 #content .scene.faq ul.questions li.question.open .articlebody {display: block;}
 
