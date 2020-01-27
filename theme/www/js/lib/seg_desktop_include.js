@@ -7,6 +7,8 @@ document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipu
 document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/src/u-template.js"></script>');
 document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/src/u-googlemaps.js"></script>');
 
+document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/src/u-object.js"></script>');
+document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/manipulator/src/beta-u-form-onebuttonform.js"></script>');
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-article.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-articles.js"></script>');
@@ -39,5 +41,7 @@ document.write('<script type="text/javascript" src="/js/lib/desktop/i-user_profi
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-profile.js"></script>');
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-forgot.js"></script>');
+
+document.write('<script type="text/javascript" src="/js/lib/desktop/i-tally.js"></script>');
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/u-expandarrow.js"></script>');
