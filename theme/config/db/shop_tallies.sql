@@ -1,4 +1,4 @@
-CREATE TABLE `SITE_DB`.`system_tallies` (
+CREATE TABLE `SITE_DB`.`shop_tallies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
 
@@ -20,6 +20,6 @@ CREATE TABLE `SITE_DB`.`system_tallies` (
   PRIMARY KEY (`id`),
   KEY `department_id` (`department_id`),
 
-  CONSTRAINT `system_tallies_ibfk_1` FOREIGN KEY (`department_id`) REFERENCES `SITE_DB`.`system_departments` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `shop_tallies_ibfk_1` FOREIGN KEY (`department_id`) REFERENCES `SITE_DB`.`system_departments` (`id`) ON UPDATE CASCADE
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

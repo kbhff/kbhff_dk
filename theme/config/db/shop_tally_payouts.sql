@@ -1,4 +1,4 @@
-CREATE TABLE `SITE_DB`.`system_tally_payouts` (
+CREATE TABLE `SITE_DB`.`shop_tally_payouts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tally_id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -8,6 +8,6 @@ CREATE TABLE `SITE_DB`.`system_tally_payouts` (
   PRIMARY KEY (`id`),
   KEY `tally_id` (`tally_id`),
 
-  CONSTRAINT `system_tally_payouts_ibfk_1` FOREIGN KEY (`tally_id`) REFERENCES `SITE_DB`.`system_tallies` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
+  CONSTRAINT `shop_tally_payouts_ibfk_1` FOREIGN KEY (`tally_id`) REFERENCES `SITE_DB`.`shop_tallies` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

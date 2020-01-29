@@ -12,6 +12,7 @@ $department = $DC->getDepartment(["id" => $tally["department_id"]]);
 
 $payouts = $TC->getPayouts($tally_id);
 $revenues = $TC->getMiscRevenues($tally_id);
+$calculated_sales_by_the_piece = $TC->calculateSalesByThePiece($tally_id);
 
 $this->pageTitle("Kasseregnskab");
 ?>
@@ -45,9 +46,10 @@ $this->pageTitle("Kasseregnskab");
 
 			</div>
 
+			<? if($tally["status"] == 1): ?>
 			<div class="section tally">
 				<div class="cash">
-					<h2>Kassebeholdning</h2>
+					<h3>Kassebeholdning</h3>
 
 					<div class="start_cash">
 
@@ -125,7 +127,7 @@ $this->pageTitle("Kasseregnskab");
 				</div>
 
 				<div class="payouts">
-					<h2>Udbetalinger</h2>
+					<h3>Udbetalinger <span class="sum"><?= $TC->getPayoutsSum($tally_id) ?> kr.</span></h3>
 				
 
 					<? if($payouts): ?>
@@ -161,7 +163,7 @@ $this->pageTitle("Kasseregnskab");
 				</div>
 
 				<div class="misc_revenues">
-					<h2>Andre kontante indtægter</h2>
+					<h3>Andre kontante indtægter <span class="sum"><?= $TC->getMiscRevenuesSum($tally_id) ?> kr.</span></h3>
 
 					<? if($revenues): ?>
 					<? foreach($revenues as $revenue):?>
@@ -195,15 +197,15 @@ $this->pageTitle("Kasseregnskab");
 				</div>
 
 				<div class="cash_sales">
-					<h2>Registreret kontantsalg</h2>
+					<h3>Registreret kontantsalg</h3>
 				</div>
 
 				<div class="calculated_sales">
-					<h2>Beregnet løssalg</h2>
+					<h3>Beregnet løssalg <span class="sum"><?= $calculated_sales_by_the_piece ?> kr.</span></h3>
 				</div>
 
 				<div class="change">
-					<h2>Byttepenge til næste uge (kassebeholdning ved slut minus deponerede penge)</h2>
+					<h3>Byttepenge til næste uge (kassebeholdning ved slut minus deponerede penge) <span class="sum"><?= $TC->calculateChange($tally_id); ?> kr.</span></h3>
 				</div>
 
 				<?= $TC->formStart("kasse/$tally_id/updateTally", ["class" => "labelstyle:inject comment"]); ?>
@@ -215,11 +217,17 @@ $this->pageTitle("Kasseregnskab");
 				
 					<ul class="actions">
 						<?= $TC->submit("Gem og gå tilbage", ["wrapper" => "li.save"]); ?>
+						<?= $TC->submit("Godkend regnskab og luk kasse", ["wrapper" => "li.save", "formaction" => "closeTally"]) ?>
 					</ul>
 				<?= $TC->formEnd(); ?>
 
 				
 			</div>
+			<? else: ?>
+			<div class="section tally closed">
+				<p>Denne kasse er afstemt og lukket.</p>
+			</div>
+			<? endif; ?>
 
 			
 

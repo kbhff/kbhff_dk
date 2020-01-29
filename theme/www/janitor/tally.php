@@ -7,7 +7,7 @@ if(isset($read_access) && $read_access) {
 }
 
 include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
-include_once("classes/system/tally.class.php");
+include_once("classes/shop/tally.class.php");
 
 // get REST parameters
 $action = $page->actions();

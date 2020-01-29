@@ -20,9 +20,9 @@ class Tally extends Model {
 
 
 		// Define the name of tallies table in database
-		$this->db = SITE_DB.".system_tallies";
-		$this->db_payouts = SITE_DB.".system_tally_payouts";
-		$this->db_misc_revenues = SITE_DB.".system_tally_misc_revenues";
+		$this->db = SITE_DB.".shop_tallies";
+		$this->db_payouts = SITE_DB.".shop_tally_payouts";
+		$this->db_misc_revenues = SITE_DB.".shop_tally_misc_revenues";
 
 
 		// Name
@@ -251,7 +251,7 @@ class Tally extends Model {
 	 * Update a single tally.
 	 *
 	 * @param array $action REST parameters of current request
-	 * @return array|false Updated Tally data object (via callback to getTally())
+	 * @return array|false Updated Tally data object
 	 */
 	function updateTally($action) {
 
@@ -475,6 +475,134 @@ class Tally extends Model {
 
 		return false;
 
+	}
+
+	function calculateSalesByThePiece($tally_id) {
+
+		$start_cash = $this->getStartCash($tally_id);
+		$end_cash = $this->getEndCash($tally_id);
+		$cash_sales = 0;
+		$misc_revenues = $this->getMiscRevenuesSum($tally_id);
+		$payouts = $this->getPayoutsSum($tally_id);
+
+		if($start_cash !== false && $end_cash !== false && $cash_sales !== false && $misc_revenues !== false && $payouts !== false) {
+
+			$calculated_sales_by_the_piece = $end_cash - $start_cash - $cash_sales -$misc_revenues + $payouts;
+	
+			return $calculated_sales_by_the_piece;
+		}
+
+		return false;
+
+	}
+
+	function calculateChange($tally_id) {
+
+		$end_cash = $this->getEndCash($tally_id);
+		$deposited = $this->getDeposited($tally_id);
+
+		if($end_cash !== false && $deposited !== false) {
+
+			return $end_cash - $deposited;
+		}
+
+		return false;
+	}
+
+	function getDeposited($tally_id) {
+
+		$query = new Query();
+
+		$sql = "SELECT deposited FROM ".$this->db." WHERE id = $tally_id";
+		if($query->sql($sql)) {
+
+			return $query->result(0, "deposited");
+		}
+
+		return false;
+	}
+
+	function getMiscRevenuesSum($tally_id) {
+
+		$revenues = $this->getMiscRevenues($tally_id);
+
+		$sum = 0;
+		
+		if($revenues) {
+
+			foreach($revenues as $revenue) {
+				$sum += $revenue["amount"];
+			}
+	
+		}
+		
+		return $sum;
+
+	}
+
+	function getPayoutsSum($tally_id) {
+
+		$payouts = $this->getPayouts($tally_id);
+
+		$sum = 0;
+		
+		if($payouts) {
+
+			foreach($payouts as $payout) {
+				$sum += $payout["amount"];
+			}
+	
+		}
+		
+		return $sum;
+
+	}
+
+	function getStartCash($tally_id) {
+
+		$query = new Query();
+
+		$sql = "SELECT start_cash FROM ".$this->db." WHERE id = $tally_id";
+		if($query->sql($sql)) {
+
+			return $query->result(0, "start_cash");
+		}
+
+		return false;
+	}
+	
+	function getEndCash($tally_id) {
+
+		$query = new Query();
+
+		$sql = "SELECT end_cash FROM ".$this->db." WHERE id = $tally_id";
+		if($query->sql($sql)) {
+
+			return $query->result(0, "end_cash");
+		}
+
+		return false;
+	}
+
+	function closeTally($action) {
+
+		if(count($action) == 3)	{
+
+			$tally_id = $action[1];
+	
+			$this->getPostedEntities();
+	
+			$tally = $this->updateTally(["updateTally", $tally_id]);
+	
+			$query = new Query();
+			$sql = "UPDATE ".$this->db." SET status = 2 WHERE id = $tally_id";
+			if($query->sql($sql)) {
+	
+				return $tally_id;
+			}
+		}
+
+		return false;
 	}
 
 }

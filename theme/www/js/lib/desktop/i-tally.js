@@ -16,15 +16,49 @@ Util.Objects["tally"] = new function() {
 
 			// page.cN.scene = this;
 
-			this.tally_id = u.cv(this, "tally_id");
+			if(!u.qs(".section.tally.closed")) {
+				
+				this.tally_id = u.cv(this, "tally_id");
+				
+				this.initStartCash();
+				this.initEndCash();
+				this.initDeposited();
+				this.initPayouts();
+				this.initMiscRevenues();
+		
+				this.comment_form = u.qs("form.comment", this);
+				this.comment_form.scene = this;
+				u.f.init(this.comment_form);
+		
+				this.comment_form.submitted = function(iN) {
+		
+					if(iN.hasAttribute("formaction")) {
+		
+						this.action = iN.getAttribute("formaction");
+					}
+		
+					this.response = function(response) {
+		
+						if(u.qs(".scene.shop_shift", response)) {
+		
+							location.href = "/butiksvagt"; 
+						}
+						else {
+		
+							location.href = "/butiksvagt/kasse/"+this.scene.tally_id;
+						}
+					} 
+		
+					u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this)});
+		
+				}
+		
+				this.calculated_sales_by_the_piece = u.qs(".calculated_sales span.sum", this);
+				this.change = u.qs(".change span.sum", this);
+			}
+	
 
-			this.initStartCash();
-			this.initEndCash();
-			this.initDeposited();
-			this.initPayouts();
-			this.initMiscRevenues();
 
-			
 			// // accept cookies?
 			// page.acceptCookies();
 
@@ -67,6 +101,8 @@ Util.Objects["tally"] = new function() {
 					
 					u.as(this.scene.start_cash_edit, "display", "none");
 					u.as(this.scene.start_cash_view, "display", "block");
+
+					this.scene.updateCalculatedValues(response);
 				}
 				
 				u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
@@ -110,6 +146,8 @@ Util.Objects["tally"] = new function() {
 					
 					u.as(this.scene.end_cash_edit, "display", "none");
 					u.as(this.scene.end_cash_view, "display", "block");
+
+					this.scene.updateCalculatedValues(response);
 				}
 				
 				u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
@@ -153,6 +191,8 @@ Util.Objects["tally"] = new function() {
 					
 					u.as(this.scene.deposited_edit, "display", "none");
 					u.as(this.scene.deposited_view, "display", "block");
+
+					this.scene.updateCalculatedValues(response);
 				}
 				
 				u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
@@ -164,7 +204,9 @@ Util.Objects["tally"] = new function() {
 
 			this.tally_section = u.qs(".section.tally", this);
 			this.payouts = u.qs(".payouts", this);
-			
+			this.calculated_sales_by_the_piece = u.qs(".calculated_sales span.sum", this);
+
+
 			this.payouts.delete_forms = u.qsa("ul.payout .delete");
 				if(this.payouts.delete_forms) {
 				for (let i = 0; i < this.payouts.delete_forms.length; i++) {
@@ -177,8 +219,9 @@ Util.Objects["tally"] = new function() {
 					delete_form.confirmed = function(response) {
 
 						this.payouts = u.qs("div.payouts", response);
-
 						this.scene.tally_section.replaceChild(this.payouts, this.scene.payouts);
+
+						this.scene.updateCalculatedValues(response);
 
 						this.scene.initPayouts();
 					}
@@ -204,19 +247,21 @@ Util.Objects["tally"] = new function() {
 					u.f.init(this.scene.payouts.div_add.form);
 
 					this.scene.payouts.div_add.replaceChild(this.scene.payouts.div_add.form, this.scene.payouts.div_add.ul); 
-
 					this.scene.payouts.div_add.form.submitted = function() {
 
+						
+						
 						this.response = function(response) {
-
+							
 							this.scene.payouts.div_add.replaceChild(this.scene.payouts.div_add.ul, this.scene.payouts.div_add.form); 
-
+							
 							this.response = function(response) {
-
+								
 								this.payouts = u.qs("div.payouts", response);
-
 								this.scene.tally_section.replaceChild(this.payouts, this.scene.payouts);
 								
+								this.scene.updateCalculatedValues(response);
+
 								this.scene.initPayouts();
 							}
 
@@ -239,6 +284,8 @@ Util.Objects["tally"] = new function() {
 
 			this.tally_section = u.qs(".section.tally", this);
 			this.revenues = u.qs(".misc_revenues", this);
+			this.calculated_sales_by_the_piece = u.qs(".calculated_sales span.sum", this);
+
 			
 			this.revenues.delete_forms = u.qsa("ul.revenue .delete");
 				if(this.revenues.delete_forms) {
@@ -252,8 +299,9 @@ Util.Objects["tally"] = new function() {
 					delete_form.confirmed = function(response) {
 
 						this.revenues = u.qs("div.misc_revenues", response);
-
 						this.scene.tally_section.replaceChild(this.revenues, this.scene.revenues);
+
+						this.scene.updateCalculatedValues(response);
 
 					this.scene.initMiscRevenues();
 					}
@@ -289,9 +337,10 @@ Util.Objects["tally"] = new function() {
 							this.response = function(response) {
 
 								this.revenues = u.qs("div.misc_revenues", response);
-
 								this.scene.tally_section.replaceChild(this.revenues, this.scene.revenues);
 								
+								this.scene.updateCalculatedValues(response);
+
 								this.scene.initMiscRevenues();
 							}
 
@@ -307,6 +356,19 @@ Util.Objects["tally"] = new function() {
 				u.request(this, "/butiksvagt/kasse/" + this.scene.tally_id + "/andre-indtaegter");
 
 			}
+
+		}
+
+		scene.updateCalculatedValues = function(response) {
+			
+			var calculated_sales_by_the_piece = u.qs(".calculated_sales span.sum", response);
+			var change = u.qs(".change span.sum", response);
+
+			u.pn(this.calculated_sales_by_the_piece).replaceChild(calculated_sales_by_the_piece, this.calculated_sales_by_the_piece);
+			u.pn(this.change).replaceChild(change, this.change);
+
+			this.calculated_sales_by_the_piece = calculated_sales_by_the_piece;
+			this.change = change;
 
 		}
 

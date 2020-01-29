@@ -11,7 +11,7 @@ include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 // get REST parameters
 $action = $page->actions();
 
-include_once("classes/system/tally.class.php");
+include_once("classes/shop/tally.class.php");
 $TC = new Tally();
 
 // page info
@@ -44,7 +44,34 @@ if($action) {
 				message()->resetMessages();
 	
 				// redirect to leave POST state
+				header("Location: /butiksvagt");
+				exit();
+				
+			}
+			// Something went wrong
+			else {
+				message()->resetMessages();
+				message()->addMessage("Hov, noget gik galt. Prøv igen.", array("type" => "error"));
+				// redirect to leave POST state
 				header("Location: /butiksvagt/kasse/".$action[1]);
+				exit();
+	
+			}
+	
+			exit();
+	
+		}
+
+		// /butiksvagt/kasse/#tally_id#/closeTally
+		elseif(count($action) == 3 && $action[2] == "closeTally" && $page->validateCsrfToken()) {
+	
+			$tally_id = $TC->closeTally($action);
+	
+			if($tally_id) {
+				message()->resetMessages();
+	
+				// redirect to leave POST state
+				header("Location: /butiksvagt");
 				exit();
 				
 			}
