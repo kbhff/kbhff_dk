@@ -147,6 +147,7 @@ else {
 				<?= $model->input("payment_method", array("type" => "hidden", "value" => $cash_payment_method_id)); ?>
 				<?= $model->input("order_id", array("type" => "hidden", "value" => $order["id"])); ?>
 				<?= $model->input("transaction_id", array("type" => "hidden", "value" => $transaction_id)); ?>
+				<?= $model->input("receiving_user_id", array("type" => "hidden", "value" => session()->value("user_id"))); ?>
 				<div class="cash instructions">
 					<p>Bekræft nedenfor at personen har betalt kontant.</p>
 				</div>

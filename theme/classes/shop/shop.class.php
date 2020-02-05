@@ -12,6 +12,17 @@ class Shop extends ShopCore {
 	*/
 	function __construct() {
 
+		// order id
+		$this->addToModel("receiving_user_id", array(
+			"type" => "integer",
+			"label" => "Receiving user_id",
+			"required" => true,
+			"hint_message" => "The user_id that accepted the payment from memberhelp",
+			"error_message" => "Error"
+		));
+
+
+
 		parent::__construct(get_class());
 
 
@@ -127,6 +138,7 @@ class Shop extends ShopCore {
 		}
 		return false;	
 	}
+	
 
 }
 
