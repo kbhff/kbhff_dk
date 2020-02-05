@@ -44,7 +44,7 @@ if($action) {
 				message()->resetMessages();
 	
 				// redirect to leave POST state
-				header("Location: /butiksvagt");
+				header("Location: /butiksvagt/kasse/".$action[1]);
 				exit();
 				
 			}
@@ -161,6 +161,7 @@ if($action) {
 			}
 
 		}
+
 		// /butiksvagt/kasse/#tally_id#/andre-indtaegter/...
 		elseif(count($action) > 2 && $action[2] == "andre-indtaegter") {
 			

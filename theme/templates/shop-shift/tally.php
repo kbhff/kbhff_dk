@@ -2,6 +2,7 @@
 $IC = new Items();
 global $action;
 global $TC;
+$SC = new Shop();
 
 include_once("classes/system/department.class.php");
 $DC = new Department();
@@ -13,6 +14,7 @@ $department = $DC->getDepartment(["id" => $tally["department_id"]]);
 $payouts = $TC->getPayouts($tally_id);
 $revenues = $TC->getMiscRevenues($tally_id);
 $calculated_sales_by_the_piece = $TC->calculateSalesByThePiece($tally_id);
+$cash_order_items_summary = $TC->cashOrderItemsSummary($tally_id);
 
 $this->pageTitle("Kasseregnskab");
 ?>
@@ -80,7 +82,7 @@ $this->pageTitle("Kasseregnskab");
 
 						<div class="view">
 							<ul class="actions">
-								<li class="description">Ved vagtafslutnig</li>
+								<li class="description">Ved vagtafslutning</li>
 								<li class="amount"><?= $tally["end_cash"] ?></li>
 								<li class="edit_btn"><a href="#" class="button">Redigér</a></li>
 							</ul>
@@ -197,11 +199,27 @@ $this->pageTitle("Kasseregnskab");
 				</div>
 
 				<div class="cash_sales">
-					<h3>Registreret kontantsalg</h3>
+					<? if($cash_order_items_summary): ?>
+					
+					<h3>Registreret kontantsalg <span class="sum"><?= $TC->calculateCashSalesSum($cash_order_items_summary) ?> kr.</span></h3>
+					<? foreach($cash_order_items_summary as $item_id => $values): ?>					
+					<ul class="<?= $values["itemtype"]." ".$values["name"] ?>">
+						<li class="line_summary"><?= $values["count"] ?> <span class="x">x</span> <?= $values["name"]." (".$values["itemtype"].") á ".$values["unit_price"] ?> kr.</li>
+						<li class="total_price"><?= $values["total_price"] ?> kr.</li>
+					</ul>
+					<? endforeach; ?>
+					<? else: ?>;
+					<h3>Registreret kontantsalg <span class="sum">0 kr.</span></h3>
+					<p>Intet registreret kontantsalg.</p>
+					<? endif; ?>
+					
+					
+
 				</div>
 
 				<div class="calculated_sales">
 					<h3>Beregnet løssalg <span class="sum"><?= $calculated_sales_by_the_piece ?> kr.</span></h3>
+
 				</div>
 
 				<div class="change">
@@ -217,7 +235,7 @@ $this->pageTitle("Kasseregnskab");
 				
 					<ul class="actions">
 						<?= $TC->submit("Gem og gå tilbage", ["wrapper" => "li.save"]); ?>
-						<?= $TC->submit("Godkend regnskab og luk kasse", ["wrapper" => "li.save", "formaction" => "closeTally"]) ?>
+						<?= $TC->submit("Godkend regnskab og luk kasse", ["wrapper" => "li.save", "formaction" => "$tally_id/closeTally"]) ?>
 					</ul>
 				<?= $TC->formEnd(); ?>
 

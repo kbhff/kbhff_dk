@@ -138,7 +138,7 @@ Util.Objects["tally"] = new function() {
 					this.is_requesting = false;
 					u.rc(this, "loading");
 					
-					// u.bug(response);
+					u.bug(response);
 
 					var new_amount = u.text(u.qs(".end_cash .view .amount", response));
 
@@ -362,13 +362,20 @@ Util.Objects["tally"] = new function() {
 		scene.updateCalculatedValues = function(response) {
 			
 			var calculated_sales_by_the_piece = u.qs(".calculated_sales span.sum", response);
+			if(calculated_sales_by_the_piece) {
+
+				u.pn(this.calculated_sales_by_the_piece).replaceChild(calculated_sales_by_the_piece, this.calculated_sales_by_the_piece);
+				this.calculated_sales_by_the_piece = calculated_sales_by_the_piece;
+			}
+
+
 			var change = u.qs(".change span.sum", response);
+			if(change) {
+				
+				u.pn(this.change).replaceChild(change, this.change);
+				this.change = change;
+			}
 
-			u.pn(this.calculated_sales_by_the_piece).replaceChild(calculated_sales_by_the_piece, this.calculated_sales_by_the_piece);
-			u.pn(this.change).replaceChild(change, this.change);
-
-			this.calculated_sales_by_the_piece = calculated_sales_by_the_piece;
-			this.change = change;
 
 		}
 

@@ -23,6 +23,7 @@ class Tally extends Model {
 		$this->db = SITE_DB.".shop_tallies";
 		$this->db_payouts = SITE_DB.".shop_tally_payouts";
 		$this->db_misc_revenues = SITE_DB.".shop_tally_misc_revenues";
+		$this->db_cash_payments = SITE_DB.".shop_tally_cash_payments";
 
 
 		// Name
@@ -158,6 +159,7 @@ class Tally extends Model {
 		return false;
 	}
 
+	
 	/**
 	 * Saves the tally to the database.
 	 * 
@@ -168,31 +170,34 @@ class Tally extends Model {
 		
 		$this->getPostedEntities();
 
+		
 		if(count($action) == 1 && $this->validateList(["name", "department_id"])) {
-
+			
 			$query = new Query();
- 
 			$query->checkDbExistence($this->db);
 			
 			// Get posted values
 			$name = $this->getProperty("name", "value");
 			$department_id = $this->getProperty("department_id", "value");
-
+	
+			$opened_by = session()->value("user_id");
+			
 			// Check if the tally is already created (to avoid faulty double entries)  
-			$sql = "SELECT * FROM ".$this->db." WHERE name = '$name'";
+			$sql = "SELECT * FROM ".$this->db." WHERE status = 1 AND department_id = $department_id";
 			if(!$query->sql($sql)) {
 
+
 				// enter the tally into the database
-				$sql = "INSERT INTO ".$this->db." SET name='$name', department_id = $department_id";
+				$sql = "INSERT INTO ".$this->db." SET name='$name', department_id = $department_id, opened_by = $opened_by";
 				
 				// if successful, add message and return tally id
 				if($query->sql($sql)) {
 					message()->addMessage("Tally created");
-					return ["item_id" => $query->lastInsertId()];
+					return $query->lastInsertId();
 				}
 			}
 			else {
-				message()->addMessage("Tally already exists.", ["type" => "error"]);
+				message()->addMessage("An open tally already exists for this department.", ["type" => "error"]);
 				return false;
 			}
 
@@ -207,7 +212,9 @@ class Tally extends Model {
 	 * Get a single tally from database.
 	 *
 	 * @param array|boolean $_options Associative array containing unsorted function parameters.
-	 * 		$id		int		Tally id
+	 * 		$id				int			Tally id
+	 * 		$name			string		Tally name
+	 * 		$department_id	int			Will search for active tally for given department
 	 * 
 	 * @return array|false Tally item (via callback to Query->result(0))
 	 */
@@ -216,13 +223,15 @@ class Tally extends Model {
 		// Define default values
 		$id = false;
 		$name = false;
+		$department_id = false;
 		
 		// Search through $_options to find recognized parameters
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
-					case "id"        : $id             = $_value; break;
-					case "name"      : $name           = $_value; break;
+					case "id"                   : $id             = $_value; break;
+					case "name"                 : $name           = $_value; break;
+					case "department_id"       : $department_id  = $_value; break;
 				}
 			}
 		}
@@ -241,6 +250,32 @@ class Tally extends Model {
 			$sql = "SELECT * FROM ".$this->db." WHERE name = '$name'";
 			if($query->sql($sql)) {
 				return $query->result(0);
+			}
+		}
+		else if($department_id) {
+			$query = new Query();
+			$sql = "SELECT * FROM ".$this->db." WHERE department_id = '$department_id' AND status = 1";
+			if($query->sql($sql)) {
+				return $query->result(0);
+			}
+			else {
+
+				include_once("classes/system/department.class.php");
+				$DC = new Department;
+
+				$department = $DC->getDepartment(["id" => $department_id]); 
+				$department_name = $department ? superNormalize($department["name"]) : "";
+
+				$_POST["name"] = date("Y-m-d", time())."_".$department_name;
+				$_POST["department_id"] = $department_id;
+				$tally_id = $this->saveTally(["saveTally"]);
+				unset($_POST);
+
+				$sql = "SELECT * FROM ".$this->db." WHERE id = '$tally_id'";
+				if($query->sql($sql)) {
+
+					return $query->result(0);
+				}
 			}
 		}
 
@@ -281,13 +316,28 @@ class Tally extends Model {
 			if($name) {
 				$sql .= ", name='$name'";
 			}
-			if($start_cash) {
+			if($start_cash !== false) {
+
+				if($start_cash === "") {
+					$start_cash = 0;
+				}
+				
 				$sql .= ", start_cash = $start_cash";
 			}
-			if($end_cash) {
+			if($end_cash !== false) {
+
+				if($end_cash === "") {
+					$end_cash = 0;
+				}
+
 				$sql .= ", end_cash = $end_cash";
 			}
-			if($deposited) {
+			if($deposited !== false) {
+
+				if($deposited === "") {
+					$deposited = 0;
+				}
+
 				$sql .= ", deposited = $deposited";
 			}
 			if($misc_cash_revenue) {
@@ -303,6 +353,11 @@ class Tally extends Model {
 			// if successful, add message and return the tally data object
 			if($query->sql($sql)) {
 				message()->addMessage("Tally updated");
+
+				global $page;
+				$user_id = session()->value("user_id");
+				$page->addLog("Tally: tally_id:$id updated by user_id:$user_id; sql = '$sql'");
+
 				return $this->getTally(["id"=>$id]);
 			}
 
@@ -337,6 +392,11 @@ class Tally extends Model {
 			$sql = "DELETE FROM ".$this->db." WHERE id = '$id'";
 			if($query->sql($sql)) {
 				message()->addMessage("Tally deleted");
+
+				global $page;
+				$user_id = session()->value("user_id");
+				$page->addLog("Tally: tally_id:$id deleted by user_id:$user_id");
+
 				return true;		
 			}
 
@@ -367,6 +427,10 @@ class Tally extends Model {
 
 				$payout_id = $query->lastInsertId();
 
+				global $page;
+				$user_id = session()->value("user_id");
+				$page->addLog("Tally: payout_id:$payout_id added to tally_id:$tally_id by user_id:$user_id");
+
 				return $payout_id;
 			}
 
@@ -383,9 +447,14 @@ class Tally extends Model {
 		if(count($action) == 5) {
 
 			$query = new Query();
+			$tally_id = $action[1];
  
 			$sql = "DELETE FROM ".$this->db_payouts." WHERE id = $payout_id";
 			if($query->sql($sql)) {
+
+				global $page;
+				$user_id = session()->value("user_id");
+				$page->addLog("Tally: payout_id:$payout_id deleted from tally_id:$tally_id by user_id:$user_id");
 
 				return true;
 			}
@@ -399,6 +468,7 @@ class Tally extends Model {
 	function getPayouts($tally_id) {
 
 		$query = new Query();
+		$query->checkDbExistence($this->db_payouts);
 
 		$sql = "SELECT * FROM ".$this->db_payouts." WHERE tally_id = $tally_id";
 		if($query->sql($sql)) {
@@ -412,6 +482,7 @@ class Tally extends Model {
 	function getMiscRevenues($tally_id) {
 
 		$query = new Query();
+		$query->checkDbExistence($this->db_misc_revenues);
 
 		$sql = "SELECT * FROM ".$this->db_misc_revenues." WHERE tally_id = $tally_id";
 		if($query->sql($sql)) {
@@ -446,6 +517,10 @@ class Tally extends Model {
 
 				$revenue_id = $query->lastInsertId();
 
+				global $page;
+				$user_id = session()->value("user_id");
+				$page->addLog("Tally: revenue_id:$revenue_id added to tally_id:$tally_id by user_id:$user_id");
+
 				return $revenue_id;
 			}
 
@@ -464,9 +539,14 @@ class Tally extends Model {
 		if(count($action) == 5) {
 
 			$query = new Query();
+			$tally_id = $action[1];
 
 			$sql = "DELETE FROM ".$this->db_misc_revenues." WHERE id = $revenue_id";
 			if($query->sql($sql)) {
+
+				global $page;
+				$user_id = session()->value("user_id");
+				$page->addLog("Tally: revenue_id:$revenue_id deleted from tally_id:$tally_id by user_id:$user_id");
 
 				return true;
 			}
@@ -481,19 +561,37 @@ class Tally extends Model {
 
 		$start_cash = $this->getStartCash($tally_id);
 		$end_cash = $this->getEndCash($tally_id);
-		$cash_sales = 0;
+		
+		$cash_sales_sum = $this->calculateCashSalesSum($this->cashOrderItemsSummary($tally_id));
+		
 		$misc_revenues = $this->getMiscRevenuesSum($tally_id);
 		$payouts = $this->getPayoutsSum($tally_id);
 
-		if($start_cash !== false && $end_cash !== false && $cash_sales !== false && $misc_revenues !== false && $payouts !== false) {
+		if($start_cash !== false && $end_cash !== false && $cash_sales_sum !== false && $misc_revenues !== false && $payouts !== false) {
 
-			$calculated_sales_by_the_piece = $end_cash - $start_cash - $cash_sales -$misc_revenues + $payouts;
+			$calculated_sales_by_the_piece = $end_cash - $start_cash - $cash_sales_sum -$misc_revenues + $payouts;
 	
 			return $calculated_sales_by_the_piece;
 		}
 
 		return false;
 
+	}
+
+	function calculateCashSalesSum($cash_order_items_summary) {
+
+		if($cash_order_items_summary) {
+
+			$cash_orders_sum = 0; 
+			foreach($cash_order_items_summary as $item_id => $values) {
+	
+				$cash_orders_sum += $values["total_price"];
+			}
+	
+			return $cash_orders_sum;
+		}	
+
+		return false;
 	}
 
 	function calculateChange($tally_id) {
@@ -597,12 +695,114 @@ class Tally extends Model {
 			$query = new Query();
 			$sql = "UPDATE ".$this->db." SET status = 2 WHERE id = $tally_id";
 			if($query->sql($sql)) {
+
+				global $page;
+				$user_id = session()->value("user_id");
+				$page->addLog("Tally: tally_id:$tally_id closed by user_id:$user_id");
 	
 				return $tally_id;
 			}
 		}
 
 		return false;
+	}
+
+	function addRegisteredCashPayment($tally_id, $payment_id) {
+
+		$query = new Query();
+		$query->checkDbExistence($this->db_cash_payments);
+
+		$sql = "INSERT INTO ".$this->db_cash_payments." SET tally_id = $tally_id, payment_id = $payment_id";
+
+		if($query->sql($sql)) {
+		
+			message()->addMessage("New registered cash payment was added.");
+			return ["item_id" => $query->lastInsertId()];
+		}
+
+
+		return false;
+
+	}
+
+	function getRegisteredCashPayments($tally_id) {
+
+		$query = new Query();
+		$query->checkDbExistence($this->db_cash_payments);
+
+		$sql = "SELECT * FROM ".$this->db_cash_payments." WHERE tally_id = $tally_id";
+
+		if($query->sql($sql)) {
+
+			return $query->results();
+		}
+
+		return false;
+	}
+
+
+	function cashOrderItemsSummary($tally_id) {
+
+		include_once("classes/shop/supershop.class.php");
+		$SC = new SuperShop();
+		$IC = new Items();
+		$query = new Query();
+		$cash_orders = [];
+		$first_run = true;
+
+		$registered_cash_payments = $this->getRegisteredCashPayments($tally_id);
+		$cash_order_items_summary = [];
+
+		if($registered_cash_payments) {
+
+			// create list of orders
+			foreach($registered_cash_payments as $registered_cash_payment) {
+	
+				$sql = "SELECT order_id FROM ".SITE_DB.".shop_payments WHERE id = ".$registered_cash_payment["payment_id"];
+				if($query->sql($sql)) {
+	
+					$order_id = $query->result(0, "order_id");
+					$cash_orders[] = $SC->getOrders(["order_id" => $order_id]);
+				}
+	
+			}
+
+			// create list of items
+			foreach($cash_orders as $cash_order) {
+				
+
+				foreach($cash_order["items"] as $order_item) {
+
+
+					$cash_order_items_summary[$order_item["item_id"]]["items"][] = $order_item;
+
+					
+					if($first_run) {
+						$item = $IC->getItem(["id" => $order_item["item_id"], "extend" => true]);
+
+						$cash_order_items_summary[$order_item["item_id"]]["count"] = 1;
+						$cash_order_items_summary[$order_item["item_id"]]["name"] = $item["name"];
+						$cash_order_items_summary[$order_item["item_id"]]["itemtype"] = $item["itemtype"];
+						$cash_order_items_summary[$order_item["item_id"]]["unit_price"] = $order_item["unit_price"];	
+						$cash_order_items_summary[$order_item["item_id"]]["total_price"] = $order_item["unit_price"];	
+						
+						$first_run = false;
+					}
+					else {
+						
+						$cash_order_items_summary[$order_item["item_id"]]["count"] = ++$cash_order_items_summary[$order_item["item_id"]]["count"];
+						$cash_order_items_summary[$order_item["item_id"]]["total_price"] += $order_item["unit_price"];	
+					}
+
+				}
+				
+			}
+
+			return $cash_order_items_summary;
+		}
+
+		return false;
+
 	}
 
 }
