@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-12-10 12:20:17
+asset-builder @ 2020-01-21 19:38:41
 */
 
 /*seg_desktop_include.css*/
@@ -814,24 +814,6 @@ position: relative;
 	padding-top: 0;
 }
 #content .front .c-box.weeklybag p.readmore {padding-bottom: 12px; text-align: right;}
-#content .front .c-box.actions ul.actions li {display: block; text-align: left; padding-left: 0;}	
-#content .front .c-box.actions ul.actions li a {position: relative; display: inline-block; vertical-align: top; padding: 8px 20px; line-height: 16px; font-size: 16px; height: 18px; background-color: #3e8e17; background-repeat: no-repeat; background-position: top left; color: #ffffff;}
-#content .front .c-box.actions ul.actions li a:after {
-	content: " ";
-	vertical-align: top;
-	display: inline-block;
-	height: 24px;
-	width: 24px;
-	background-color: #3e8e17;
-	position: absolute;
-	top: 5px;
-	right: -12px;
-	transform: rotate(45deg);
-}
-#content .front .c-box.actions ul.actions li a:hover,
-#content .front .c-box.actions ul.actions li a:hover:after {
-	background-color: #357914;
-}
 
 
 /*s-post.css*/
@@ -844,9 +826,9 @@ position: relative;
 #content .post .vimeo {margin: 0 12px 24px;}
 #content .post .c-one-third .c-box {margin-top: 12px;}
 #content .post .c-one-third .c-box:first-child {margin-top: 58px; border-top: 5px solid #000;}
-#content .post .related {padding: 50px 0; width: 66.666%;}
+#content .post .related {padding: 50px 0; }
 #content .post .related li.item .description p {padding: 0;}
-#content .post .image img {width: 100%;}
+
 
 /*s-memberships.css*/
 #content .membership h1 {margin-bottom: 22px;}
@@ -883,6 +865,7 @@ position: relative;
 #content .scene ul.items.articles li.item.article > ul.info {display: none;}
 #content .scene div.categories ul.tags li {list-style-type: none; padding: 0;}
 #content .scene div.categories ul.tags {padding: 0 0 20px;}
+#content .scene div.categories ul.tags li.selected a {color: #000000;}
 #content .scene ul.items.articles ul.tags {z-index: 10; display: block; line-height: 12px; position: absolute; font-size: 0; top: 10px; left: 0; background: rgba(0, 0, 0, 0.8); padding: 0; margin: 0; list-style: none;}
 #content .scene ul.items.articles ul.tags li {padding: 0;}
 #content .scene ul.items.articles ul.tags li {width: auto; font-size: 12px; line-height: 12px; display: inline-block;}
@@ -890,7 +873,7 @@ position: relative;
 #content .scene ul.items.articles ul.tags li a {color: #ffffff; font-weight: normal; padding: 5px 10px; display: inline-block;}
 #content .scene ul.items.articles ul.tags li:last-child::after {content: "";} 
 #content .scene.posts .c-one-third .c-box {margin-top: 12px;}
-#content .scene.posts .c-one-third .c-box:first-child {margin-top: 58px; border-top: 5px solid #000;}
+#content .scene.posts .c-one-third .c-box:first-child {margin-top: 58px;}
 #content .scene div.posts ul.items {font-size: 0; padding: 0; list-style: none; margin: 0;}
 #content .scene div.posts ul.items li.item {
 	display: inline-block;
@@ -1153,10 +1136,11 @@ div.overlay .close:after {
 
 
 /*s-faq.css*/
-#content .scene.faq ul.questions {padding: 24px 0; list-style: none; margin: 0; font-size: 0;}
-#content .scene.faq ul.questions li.question {}
-#content .scene.faq ul.questions li.question h2 {padding: 8px 12px 12px 28px; position: relative; font-size: 24px;}
-#content .scene.faq ul.questions li.question h2 svg {position: absolute; left: 3px; top: 17px; stroke: #999999; stroke-width: 3px;}
+#content .scene.faq {padding-bottom: 60px;}
+#content .scene.faq ul.questions {padding: 0; list-style: none; margin: 0; font-size: 0;}
+#content .scene.faq ul.questions li.question {padding-top: 0;}
+#content .scene.faq ul.questions li.question h3 {padding: 8px 12px 12px 28px; position: relative; font-size: 18px; font-family: Arial, sans-serif; text-transform: none;}
+#content .scene.faq ul.questions li.question h3 svg {position: absolute; left: 3px; top: 15px; stroke: #999999; stroke-width: 3px;}
 #content .scene.faq ul.questions li.question .articlebody {display: none; padding-left: 16px;}
 #content .scene.faq ul.questions li.question.open .articlebody {display: block;}
 
@@ -1170,11 +1154,37 @@ div.overlay .close:after {
 #navigation ul.navigation li.selected > a {
 	background-color: #fff;
 	border: 2px solid #3e8e17;
-	padding: 5px 12px;
+	padding: 5px 12px 7px;
 	color: #3e8e17;
+	border-bottom: none;
 }
 #navigation ul.navigation h5:hover, 
 #navigation ul.navigation li:not(.selected) a:hover {
+	background-color: #357914;
+}
+#content .scene.contact .c-one-third .c-box:first-child {margin-top: 58px;}
+#content .scene.english .c-one-third .c-box:first-child {margin-top: 58px;}
+#content .scene.about .c-one-third .c-box:first-child {margin-top: 58px;}
+#content .scene.page .c-one-third .c-box:first-child {margin-top: 58px;}
+#content .scene.member .c-one-third .c-box:first-child {margin-top: 58px;}
+#content .article .image img,
+#content .article .media img {width: 100%;}
+#content .c-box.actions ul.actions li {display: block; text-align: left; padding-left: 0;}	
+#content .c-box.actions ul.actions li a {position: relative; display: inline-block; vertical-align: top; padding: 8px 20px; line-height: 16px; font-size: 16px; height: 18px; background-color: #3e8e17; background-repeat: no-repeat; background-position: top left; color: #ffffff;}
+#content .c-box.actions ul.actions li a:after {
+	content: " ";
+	vertical-align: top;
+	display: inline-block;
+	height: 24px;
+	width: 24px;
+	background-color: #3e8e17;
+	position: absolute;
+	top: 5px;
+	right: -12px;
+	transform: rotate(45deg);
+}
+#content .c-box.actions ul.actions li a:hover,
+#content .c-box.actions ul.actions li a:hover:after {
 	background-color: #357914;
 }
 #content .scene div.media p a {font-weight: normal; font-size: 12px; font-style: italic; color: #aaaaaa; cursor: pointer;}
@@ -1189,8 +1199,8 @@ div.overlay .close:after {
 	text-transform: uppercase;
 	font-family: "voresfont";
 }
-#content .scene ul.subnavigation {margin: 48px 12px 24px; padding: 0; list-style: none; }
-#content .scene ul.subnavigation li {display: inline-block; vertical-align: top; line-height: 34px; padding: 0 12px 12px 0;}
+#content .scene ul.subnavigation {font-size: 0; margin: 48px 0 24px; padding: 0; list-style: none; }
+#content .scene ul.subnavigation li {display: inline-block; vertical-align: top; width: 33.3333%; box-sizing: border-box; line-height: 34px; padding: 0 6px 12px 6px;}
 #content .scene ul.subnavigation li a {font-size: 18px; display: block; padding: 12px 24px; line-height: 22px; background-color: #999999; color: #ffffff; border: none; cursor: pointer;
 	font-weight: 400;
 	text-transform: uppercase;

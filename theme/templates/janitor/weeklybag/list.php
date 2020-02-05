@@ -15,7 +15,7 @@ $items = $IC->getItems(array("itemtype" => $itemtype, "extend" => true));
 		<?= $JML->listNew(array("label" => "New weekly bag")) ?>
 	</ul>
 
-	<div class="all_items i:defaultList filters"<?= $JML->jsData(["search"]) ?>>
+	<div class="all_items i:defaultList filters"<?= $HTML->jsData(["search"]) ?>>
 <?		if($items): ?>
 		<ul class="items">
 

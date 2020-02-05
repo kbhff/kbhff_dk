@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2019-11-12 18:02:48
+asset-builder @ 2020-01-14 15:30:22
 */
 
 /*seg_desktop_include.js*/
@@ -9679,7 +9679,7 @@ Util.Objects["defaultPrices"] = new function() {
 			div.add_price_url = div._prices_form.action;
 			u.f.init(div._prices_form);
 			div._prices_form.inputs["item_price_type"].changed = function() {
-				if(this.val() == "bulk") {
+				if(this.val() == 3) {
 					u.ac(this._form.inputs["item_price_quantity"].field, "required");
 					u.ass(this._form.inputs["item_price_quantity"].field, {
 						"display":"inline-block"
@@ -9692,7 +9692,7 @@ Util.Objects["defaultPrices"] = new function() {
 					})
 				}
 			}
-			if(div._prices_form.inputs["item_price_type"].val() == "bulk") {
+			if(div._prices_form.inputs["item_price_type"].val() == 3) {
 				u.ass(div._prices_form.inputs["item_price_quantity"].field, {
 					"display":"inline-block"
 				})
@@ -9710,6 +9710,9 @@ Util.Objects["defaultPrices"] = new function() {
 						}
 						else if(response.cms_object["type"] == "bulk") {
 							u.ae(info, "li", {"class":"bulk", "html":"Bulk price for "+response.cms_object["quantity"] + " items"});
+						}
+						else if(response.cms_object["type"] != "default") {
+							u.ae(info, "li", {"class":"custom_price", "html":response.cms_object["description"]});
 						}
 						this.div.initPrice(price_li);
 						this.reset();
@@ -10854,6 +10857,27 @@ Util.Objects["cancellationProfile"] = new function() {
 	}
 }
 
+
+/*i-taglist_tags.js*/
+Util.Objects["taglist_tags"] = new function() {
+	this.init = function(div) {
+		var items = u.qsa("li.item", div);
+		for(var i = 0; i < items.length; i++) {
+			li = items[i];
+			var add = u.qs("ul.actions li.add", li);
+			add.li = li;
+			var remove = u.qs("ul.actions li.remove", li);
+			remove.li = li;
+			add.added = function(response) {
+				console.log(response);
+				u.addClass(this.li, "added");
+			}
+			remove.removed = function(response) {
+				u.removeClass(this.li, "added");
+			}
+		}
+	}
+}
 
 
 /*u-settings.js*/

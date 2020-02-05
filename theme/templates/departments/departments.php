@@ -22,11 +22,11 @@ $departments = $model->getDepartments(["order" => "name ASC"]);
 
 	<div class="article i:article id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle">
 
-	<? if($media): ?>
+		<? if($media): ?>
 		<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">
 			<p>Image: <a href="/images/<?= $item["item_id"] ?>/<?= $media["variant"] ?>/500x.<?= $media["format"] ?>"><?= $media["name"] ?></a></p>
 		</div>
-	<? endif; ?>
+		<? endif; ?>
 
 
 		<h1 itemprop="headline"><?= $item["name"] ?></h1>
@@ -35,8 +35,10 @@ $departments = $model->getDepartments(["order" => "name ASC"]);
 			<?= $item["html"]?>
 		</div>
 
-		<? if($item["mediae"]): ?>
-			<? foreach($item["mediae"] as $media): ?>
+		<?
+		$mediae = $IC->filterMediae($item, "mediae");
+		if($mediae): ?>
+			<? foreach($mediae as $media): ?>
 		<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">
 			<p>Image: <a href="/images/<?= $item["item_id"] ?>/<?= $media["variant"] ?>/500x.<?= $media["format"] ?>"><?= $media["name"] ?></a></p>
 		</div>

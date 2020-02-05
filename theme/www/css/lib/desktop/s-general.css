@@ -9,10 +9,11 @@
 #navigation ul.navigation li.selected > a {
 	background-color: #fff;
 	border: 2px solid #3e8e17;
-	padding: 5px 12px;
+	padding: 5px 12px 7px;
 	color: #3e8e17;
 /*	background-color: #3e8e17;
 */
+	border-bottom: none;
 }
 
 #navigation ul.navigation h5:hover, 
@@ -20,6 +21,48 @@
 	background-color: #357914;
 }
 
+
+/* CONTACT */
+#content .scene.contact .c-one-third .c-box:first-child {margin-top: 58px;}
+
+/* ENGLISH */
+#content .scene.english .c-one-third .c-box:first-child {margin-top: 58px;}
+
+/* ABOUT */
+#content .scene.about .c-one-third .c-box:first-child {margin-top: 58px;}
+
+/* PAGE */
+#content .scene.page .c-one-third .c-box:first-child {margin-top: 58px;}
+
+/* MEMBER */
+#content .scene.member .c-one-third .c-box:first-child {margin-top: 58px;}
+
+/* ARTICLE IMAGES */
+#content .article .image img,
+#content .article .media img {width: 100%;}
+
+
+/* C-BOX ACTION */
+#content .c-box.actions ul.actions li {display: block; text-align: left; padding-left: 0;}	
+#content .c-box.actions ul.actions li a {position: relative; display: inline-block; vertical-align: top; padding: 8px 20px; line-height: 16px; font-size: 16px; height: 18px; background-color: #3e8e17; background-repeat: no-repeat; background-position: top left; color: #ffffff;}
+
+#content .c-box.actions ul.actions li a:after {
+	content: " ";
+	vertical-align: top;
+	display: inline-block;
+	height: 24px;
+	width: 24px;
+	background-color: #3e8e17;
+	position: absolute;
+	top: 5px;
+	right: -12px;
+	transform: rotate(45deg);
+}
+
+#content .c-box.actions ul.actions li a:hover,
+#content .c-box.actions ul.actions li a:hover:after {
+	background-color: #357914;
+}
 
 
 #content .scene div.media p a {font-weight: normal; font-size: 12px; font-style: italic; color: #aaaaaa; cursor: pointer;}
@@ -53,8 +96,8 @@
 }
 
 
-#content .scene ul.subnavigation {margin: 48px 12px 24px; padding: 0; list-style: none; /*display: inline-block; vertical-align: top; white-space: nowrap;*/}
-#content .scene ul.subnavigation li {display: inline-block; vertical-align: top; line-height: 34px; padding: 0 12px 12px 0;}
+#content .scene ul.subnavigation {font-size: 0; margin: 48px 0 24px; padding: 0; list-style: none; /*display: inline-block; vertical-align: top; white-space: nowrap;*/}
+#content .scene ul.subnavigation li {display: inline-block; vertical-align: top; width: 33.3333%; box-sizing: border-box; line-height: 34px; padding: 0 6px 12px 6px;}
 #content .scene ul.subnavigation li a {font-size: 18px; display: block; padding: 12px 24px; line-height: 22px; background-color: #999999; color: #ffffff; border: none; cursor: pointer;
 	font-weight: 400;
 	text-transform: uppercase;
