@@ -97,6 +97,57 @@ class SuperShop extends SuperShopCore {
 		return false;
 	}
 
+	function createKbhffQrCode($amount, $mobilepay_id, $comment) {
+
+		$identifier = "mp_".$mobilepay_id."_".$comment;
+		$filename = "img/qr-codes/".$identifier.".png"; 
+
+		$mobilepay_link = "https://www.mobilepay.dk/erhverv/betalingslink/betalingslink-svar?"
+			.$this->getPhonenumberText($mobilepay_id)
+			.$this->getAmountText($amount)
+			.$this->getCommentText($comment)
+			.$this->getLockText(true);
+
+		return qr_codes()->create($mobilepay_link, $filename, ["size" => 200]);
+	}
+
+	private static function getPhonenumberText($phonenumber){
+        if(!(is_string($phonenumber) && preg_match("/^[0-9]+$/", $phonenumber) === 1)){
+            throw new InvalidArgumentException("Phone number should be a string containing only numbers");
+        }
+
+        return sprintf("phone=%s", $phonenumber);
+    }
+
+    private static function getAmountText($amount){
+        if(is_null($amount))
+            return "";
+        elseif ($amount < 0)
+            throw new InvalidArgumentException("Amount should be positive");
+        //Mobilepay's QR code generator doesn't include a decimal point for integer amounts
+        elseif (is_integer($amount))
+            return sprintf("&amount=%d", $amount);
+        else
+            return sprintf("&amount=%.2f", $amount);
+    }
+
+    private static function getCommentText($comment){
+        if(strlen($comment) > 25)
+            throw new InvalidArgumentException("Comment must be at most 25 characters long");
+
+        if($comment === "")
+            return "";
+        else
+            return sprintf("&comment=%s", rawurlencode($comment));
+    }
+
+    private static function getLockText($lockCommentField){
+        if($lockCommentField)
+            return "&lock=1";
+        else
+            return "";
+    }
+
 }
 
 ?>

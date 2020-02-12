@@ -48,12 +48,13 @@ class JanitorEndroidQrCodeGenerator {
 			}
 
 			$QRC = new QrCode($content_string);
+			$QRC->setMargin(0);
 	
 			if($size) {
 				$QRC->setSize($size);
 			}
 	
-			if($margin) {
+			if($margin !== false) {
 				$QRC->setMargin($margin);
 			}
 	
