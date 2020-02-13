@@ -82,7 +82,7 @@ if(message()->hasMessages(array("type" => "error"))): ?>
 
 	<ul class="actions">
 		<li class="reject"><a href="/bliv-medlem" class="button">Annuller</a></li>
-		<?= $model->submit("Næste", array("class" => "primary", "wrapper" => "li.signup")) ?>
+		<?= $model->submit("Meld mig ind", array("class" => "primary", "wrapper" => "li.signup")) ?>
 	</ul>
 <?= $model->formEnd() ?>
 
