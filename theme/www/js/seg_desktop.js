@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-01-21 19:38:41
+asset-builder @ 2020-02-13 15:10:00
 */
 
 /*seg_desktop_include.js*/
@@ -5391,6 +5391,158 @@ u.googlemaps = new function() {
 }
 
 
+/*u-object.js*/
+u.objectValues = function(obj) {
+	var key, values = [];
+	for(key in obj) {
+		if(obj.hasOwnProperty(key)) {
+			values.push(obj[key]);
+		}
+	}
+	return values;
+}
+
+/*beta-u-form-onebuttonform.js*/
+Util.Objects["oneButtonForm"] = new function() {
+	this.init = function(node) {
+		if(!node.childNodes.length) {
+			var csrf_token = node.getAttribute("data-csrf-token");
+			if(csrf_token) {
+				if(node.nodeName.toLowerCase() === "form") {
+					node._ob_form = node;
+				}
+				else {
+					var form_action = node.getAttribute("data-form-action");
+					var form_target = node.getAttribute("data-form-target");
+					if(form_action) {
+						var form_options = {"action":form_action, "class":"confirm_action_form"};
+						if(form_target) {
+							form_options["target"] = form_target;
+						}
+						node._ob_form = u.f.addForm(node, form_options);
+					}
+					else {
+						u.bug("oneButtonForm missin information");
+						return;
+					}
+				}
+				u.ae(node._ob_form, "input", {"type":"hidden","name":"csrf-token", "value":csrf_token});
+				var inputs = node.getAttribute("data-inputs");
+				if(inputs) {
+					inputs = JSON.parse(inputs);
+					for(input_name in inputs) {
+						u.ae(node._ob_form, "input", {"type":"hidden","name":input_name, "value":inputs[input_name]});
+					}
+				}
+				var button_value = node.getAttribute("data-button-value");
+				var button_name = node.getAttribute("data-button-name");
+				var button_class = node.getAttribute("data-button-class");
+				u.f.addAction(node._ob_form, {"value":button_value, "class":"button" + (button_class ? " "+button_class : ""), "name":u.stringOr(button_name, "save")});
+			}
+		}
+		else {
+			if(node.nodeName.toLowerCase() === "form") {
+				node._ob_form = node;
+			}
+			else {
+				node._ob_form = u.qs("form", node);
+			}
+		}
+		if(node._ob_form) {
+			u.f.init(node._ob_form);
+			node._ob_form._ob_node = node;
+			node._ob_form._ob_submit_button = u.qs("input[type=submit]", node._ob_form);
+			if(u.objectValues(node._ob_form.actions).indexOf(node._ob_form._ob_submit_button) === -1) {
+				u.f.initButton(node._ob_form, node._ob_form._ob_submit_button);
+			}
+			node._ob_form._ob_submit_button.org_value = node._ob_form._ob_submit_button.value;
+			node._ob_form._ob_submit_button.confirm_value = node.getAttribute("data-confirm-value");
+			node._ob_form._ob_submit_button.wait_value = node.getAttribute("data-wait-value");
+			node._ob_form._ob_success_function = node.getAttribute("data-success-function");
+			node._ob_form._ob_success_location = node.getAttribute("data-success-location");
+			node._ob_form._ob_error_function = node.getAttribute("data-error-function");
+			node._ob_form._ob_dom_submit = node.getAttribute("data-dom-submit");
+			node._ob_form._ob_download = node.getAttribute("data-download");
+			node._ob_form.restore = function(event) {
+				u.t.resetTimer(this.t_confirm);
+				u.rc(this._ob_submit_button, "confirm");
+				delete this._ob_submit_button._ob_wait_for_confirm;
+				this._ob_submit_button.value = this._ob_submit_button.org_value;
+			}
+			node._ob_form.submitted = function(action) {
+				if(!this._ob_submit_button._ob_wait_for_confirm && this._ob_submit_button.confirm_value) {
+					u.ac(this._ob_submit_button, "confirm");
+					this._ob_submit_button._ob_wait_for_confirm = true;
+					this._ob_submit_button.value = this._ob_submit_button.confirm_value;
+					this.t_confirm = u.t.setTimer(this, this.restore, 3000);
+				}
+				else {
+					u.t.resetTimer(this.t_confirm);
+					this.response = function(response) {
+						u.rc(this, "submitting");
+						u.rc(this._ob_submit_button, "disabled");
+						if(fun(page.notify)) {
+							page.notify(response);
+						}
+						this.restore();
+						if(!response.cms_status || response.cms_status == "success") {
+							if(response.cms_object && response.cms_object.constraint_error) {
+								this._ob_submit_button.value = this._ob_submit_button.org_value;
+								u.ac(this, "disabled");
+							}
+							else {
+								if(this._ob_success_location) {
+									u.ass(this._ob_submit_button, {
+										"display": "none"
+									});
+									location.href = this._ob_success_location;
+								}
+								else if(this._ob_success_function) {
+									if(fun(this._ob_node[this._ob_success_function])) {
+										this._ob_node[this._ob_success_function](response);
+									}
+								}
+								else if(fun(this._ob_node.confirmed)) {
+									this._ob_node.confirmed(response);
+								}
+								else {
+									u.bug("default return handling" + this._ob_success_location)
+								}
+							}
+						}
+						else {
+							if(this._ob_error_function) {
+								u.bug("error function:" + this._ob_error_function);
+								if(fun(this._ob_node[this._ob_error_function])) {
+									this._ob_node[this._ob_error_function](response);
+								}
+							}
+							else if(fun(this._ob_node.confirmedError)) {
+								u.bug("confirmedError");
+								this._ob_node.confirmedError(response);
+							}
+						}
+					}
+					u.ac(this._ob_submit_button, "disabled");
+					u.ac(this, "submitting");
+					this._ob_submit_button.value = u.stringOr(this._ob_submit_button.wait_value, "Wait");
+					if(this._ob_dom_submit) {
+						u.bug("should submit:" + this._ob_download);
+						if(this._ob_download) {
+							this.response({"cms_status":"success"});
+							u.bug("wait for download");
+						}
+						this.DOMsubmit();
+					}
+					else {
+						u.request(this, this.action, {"method":"post", "data":this.getData()});
+					}
+				}
+			}
+		}
+	}
+}
+
 /*i-article.js*/
 Util.Objects["article"] = new function() {
 	this.init = function(article) {
@@ -7159,6 +7311,237 @@ Util.Objects["forgot"] = new function() {
 					u.a.transition(this, "all 0.15s linear");
 					u.a.scale(this, 1);
 				}
+			}
+		}
+		scene.ready();
+	}
+}
+
+
+/*i-tally.js*/
+Util.Objects["tally"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			if(!u.qs(".section.tally.closed")) {
+				this.tally_id = u.cv(this, "tally_id");
+				this.initStartCash();
+				this.initEndCash();
+				this.initDeposited();
+				this.initPayouts();
+				this.initMiscRevenues();
+				this.comment_form = u.qs("form.comment", this);
+				this.comment_form.scene = this;
+				u.f.init(this.comment_form);
+				this.comment_form.submitted = function(iN) {
+					if(iN.hasAttribute("formaction")) {
+						this.action = iN.getAttribute("formaction");
+					}
+					this.response = function(response) {
+						if(u.qs(".scene.shop_shift", response)) {
+							location.href = "/butiksvagt"; 
+						}
+						else {
+							location.href = "/butiksvagt/kasse/"+this.scene.tally_id;
+						}
+					} 
+					u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this)});
+				}
+				this.calculated_sales_by_the_piece = u.qs(".calculated_sales span.sum", this);
+				this.change = u.qs(".change span.sum", this);
+			}
+			// 
+			page.resized();
+		}
+		scene.initStartCash = function() {
+			this.start_cash_view = u.qs(".start_cash .view");
+			this.start_cash_view.edit_btn = u.qs(".edit_btn", this.start_cash_view);
+			this.start_cash_view.amount = u.qs(".amount", this.start_cash_view);
+			this.start_cash_view.edit_btn.scene = this;
+			this.start_cash_edit = u.qs(".start_cash .edit");
+			this.start_cash_edit.form = u.qs("form", this.start_cash_edit);
+			this.start_cash_edit.form.scene = this;
+			u.f.init(this.start_cash_edit.form);
+			u.clickableElement(this.start_cash_view.edit_btn);
+			this.start_cash_view.edit_btn.clicked = function() {
+				u.as(this.scene.start_cash_view, "display", "none");
+				u.as(this.scene.start_cash_edit, "display", "block");
+			}
+			this.start_cash_edit.form.submitted = function() {
+				this.response = function(response) {
+					this.is_requesting = false;
+					u.rc(this, "loading");
+					var new_amount = u.text(u.qs(".start_cash .view .amount", response));
+					this.scene.start_cash_view.amount.innerText = new_amount;
+					u.as(this.scene.start_cash_edit, "display", "none");
+					u.as(this.scene.start_cash_view, "display", "block");
+					this.scene.updateCalculatedValues(response);
+				}
+				u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+			}
+		}
+		scene.initEndCash = function() {
+			this.end_cash_view = u.qs(".end_cash .view");
+			this.end_cash_view.edit_btn = u.qs(".edit_btn", this.end_cash_view);
+			this.end_cash_view.amount = u.qs(".amount", this.end_cash_view);
+			this.end_cash_view.edit_btn.scene = this;
+			this.end_cash_edit = u.qs(".end_cash .edit");
+			this.end_cash_edit.form = u.qs("form", this.end_cash_edit);
+			this.end_cash_edit.form.scene = this;
+			u.f.init(this.end_cash_edit.form);
+			u.clickableElement(this.end_cash_view.edit_btn);
+			this.end_cash_view.edit_btn.clicked = function() {
+				u.as(this.scene.end_cash_view, "display", "none");
+				u.as(this.scene.end_cash_edit, "display", "block");
+			}
+			this.end_cash_edit.form.submitted = function() {
+				this.response = function(response) {
+					this.is_requesting = false;
+					u.rc(this, "loading");
+					u.bug(response);
+					var new_amount = u.text(u.qs(".end_cash .view .amount", response));
+					this.scene.end_cash_view.amount.innerText = new_amount;
+					u.as(this.scene.end_cash_edit, "display", "none");
+					u.as(this.scene.end_cash_view, "display", "block");
+					this.scene.updateCalculatedValues(response);
+				}
+				u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+			}
+		}
+		scene.initDeposited = function() {
+			this.deposited_view = u.qs(".deposited .view");
+			this.deposited_view.edit_btn = u.qs(".edit_btn", this.deposited_view);
+			this.deposited_view.amount = u.qs(".amount", this.deposited_view);
+			this.deposited_view.edit_btn.scene = this;
+			this.deposited_edit = u.qs(".deposited .edit");
+			this.deposited_edit.form = u.qs("form", this.deposited_edit);
+			this.deposited_edit.form.scene = this;
+			u.f.init(this.deposited_edit.form);
+			u.clickableElement(this.deposited_view.edit_btn);
+			this.deposited_view.edit_btn.clicked = function() {
+				u.as(this.scene.deposited_view, "display", "none");
+				u.as(this.scene.deposited_edit, "display", "block");
+			}
+			this.deposited_edit.form.submitted = function() {
+				this.response = function(response) {
+					this.is_requesting = false;
+					u.rc(this, "loading");
+					var new_amount = u.text(u.qs(".deposited .view .amount", response));
+					this.scene.deposited_view.amount.innerText = new_amount;
+					u.as(this.scene.deposited_edit, "display", "none");
+					u.as(this.scene.deposited_view, "display", "block");
+					this.scene.updateCalculatedValues(response);
+				}
+				u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+			}
+		}
+		scene.initPayouts = function() {
+			this.tally_section = u.qs(".section.tally", this);
+			this.payouts = u.qs(".payouts", this);
+			this.calculated_sales_by_the_piece = u.qs(".calculated_sales span.sum", this);
+			this.payouts.delete_forms = u.qsa("ul.payout .delete");
+				if(this.payouts.delete_forms) {
+				for (let i = 0; i < this.payouts.delete_forms.length; i++) {
+					var delete_form = this.payouts.delete_forms[i];
+					delete_form.scene = this;
+					u.o.oneButtonForm.init(delete_form);
+					delete_form.confirmed = function(response) {
+						this.payouts = u.qs("div.payouts", response);
+						this.scene.tally_section.replaceChild(this.payouts, this.scene.payouts);
+						this.scene.updateCalculatedValues(response);
+						this.scene.initPayouts();
+					}
+				}
+			}
+			this.payouts.div_add = u.qs("div.add_payout", this.payouts);
+			this.payouts.div_add.ul = u.qs("ul.actions", this.payouts.div_add);
+			this.payouts.btn_add = u.qs("li.add_payout", this.payouts);
+			this.payouts.btn_add.scene = this;
+			u.e.resetClickEvents(this.payouts.btn_add);
+			u.ce(this.payouts.btn_add);
+			this.payouts.btn_add.clicked = function() {
+				this.response = function(response) {
+					this.scene.payouts.div_add.form = u.qs("form.add_payout", response);
+					this.scene.payouts.div_add.form.scene = this.scene;
+					u.f.init(this.scene.payouts.div_add.form);
+					this.scene.payouts.div_add.replaceChild(this.scene.payouts.div_add.form, this.scene.payouts.div_add.ul); 
+					this.scene.payouts.div_add.form.submitted = function() {
+						this.response = function(response) {
+							this.scene.payouts.div_add.replaceChild(this.scene.payouts.div_add.ul, this.scene.payouts.div_add.form); 
+							this.response = function(response) {
+								this.payouts = u.qs("div.payouts", response);
+								this.scene.tally_section.replaceChild(this.payouts, this.scene.payouts);
+								this.scene.updateCalculatedValues(response);
+								this.scene.initPayouts();
+							}
+							u.request(this, "/butiksvagt/kasse/" + this.scene.tally_id);
+						}
+						u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+					}
+				}
+				u.request(this, "/butiksvagt/kasse/" + this.scene.tally_id + "/udbetaling");
+			}
+		}
+		scene.initMiscRevenues = function() {
+			this.tally_section = u.qs(".section.tally", this);
+			this.revenues = u.qs(".misc_revenues", this);
+			this.calculated_sales_by_the_piece = u.qs(".calculated_sales span.sum", this);
+			this.revenues.delete_forms = u.qsa("ul.revenue .delete");
+				if(this.revenues.delete_forms) {
+				for (let i = 0; i < this.revenues.delete_forms.length; i++) {
+					var delete_form = this.revenues.delete_forms[i];
+					delete_form.scene = this;
+					u.o.oneButtonForm.init(delete_form);
+					delete_form.confirmed = function(response) {
+						this.revenues = u.qs("div.misc_revenues", response);
+						this.scene.tally_section.replaceChild(this.revenues, this.scene.revenues);
+						this.scene.updateCalculatedValues(response);
+					this.scene.initMiscRevenues();
+					}
+				}
+			}
+			this.revenues.div_add = u.qs("div.add_revenue", this.revenues);
+			this.revenues.div_add.ul = u.qs("ul.actions", this.revenues.div_add);
+			this.revenues.btn_add = u.qs("li.add_revenue", this.revenues);
+			this.revenues.btn_add.scene = this;
+			u.e.resetClickEvents(this.revenues.btn_add);
+			u.ce(this.revenues.btn_add);
+			this.revenues.btn_add.clicked = function() {
+				this.response = function(response) {
+					this.scene.revenues.div_add.form = u.qs("form.add_revenue", response);
+					this.scene.revenues.div_add.form.scene = this.scene;
+					u.f.init(this.scene.revenues.div_add.form);
+					this.scene.revenues.div_add.replaceChild(this.scene.revenues.div_add.form, this.scene.revenues.div_add.ul); 
+					this.scene.revenues.div_add.form.submitted = function() {
+						this.response = function(response) {
+							this.scene.revenues.div_add.replaceChild(this.scene.revenues.div_add.ul, this.scene.revenues.div_add.form); 
+							this.response = function(response) {
+								this.revenues = u.qs("div.misc_revenues", response);
+								this.scene.tally_section.replaceChild(this.revenues, this.scene.revenues);
+								this.scene.updateCalculatedValues(response);
+								this.scene.initMiscRevenues();
+							}
+							u.request(this, "/butiksvagt/kasse/" + this.scene.tally_id);
+						}
+						u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+					}
+				}
+				u.request(this, "/butiksvagt/kasse/" + this.scene.tally_id + "/andre-indtaegter");
+			}
+		}
+		scene.updateCalculatedValues = function(response) {
+			var calculated_sales_by_the_piece = u.qs(".calculated_sales span.sum", response);
+			if(calculated_sales_by_the_piece) {
+				u.pn(this.calculated_sales_by_the_piece).replaceChild(calculated_sales_by_the_piece, this.calculated_sales_by_the_piece);
+				this.calculated_sales_by_the_piece = calculated_sales_by_the_piece;
+			}
+			var change = u.qs(".change span.sum", response);
+			if(change) {
+				u.pn(this.change).replaceChild(change, this.change);
+				this.change = change;
 			}
 		}
 		scene.ready();
