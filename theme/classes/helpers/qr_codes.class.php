@@ -33,7 +33,7 @@ class QrCodesGateway {
 	 * 
 	 * @return string|false path of generated qr code (via adapter class). False on error.
 	 */
-	function create($content, $output_file, $_options = false) {
+	function create($content, $_options = false) {
 
 		$this->init_adapter();
 
@@ -43,6 +43,7 @@ class QrCodesGateway {
 			$margin = false;
 			$foreground_color = false;
 			$background_color = false;
+			$output_file = false;
 			$format = false;
 
 			if($_options !== false) {
@@ -54,19 +55,21 @@ class QrCodesGateway {
 						case "foreground_color"       : $foreground_color       = $_value; break;
 						case "background_color"       : $background_color       = $_value; break;
 						
+						case "output_file"            : $output_file            = $_value; break;
 						case "format"                 : $format                 = $_value; break;
 		
 					}
 				}
 			}
 
-			return $this->adapter->create($content, $output_file, [
+			return $this->adapter->create($content, [
 
 				"size" => $size,
 				"margin" => $margin,
 				"foreground_color" => $foreground_color,
 				"background_color" => $background_color,
 
+				"output_file" => $output_file,
 				"format" => $format,
 
 			]);

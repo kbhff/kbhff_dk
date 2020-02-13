@@ -12,13 +12,14 @@ class JanitorEndroidQrCodeGenerator {
 	*/
 	function __construct() {}
 
-	function create($content, $output_file, $_options) {
+	function create($content, $_options) {
 
 		$size = false;
 		$margin = false;
 		$foreground_color = false;
 		$background_color = false;
 		$format = false;
+		$output_file = false;
 
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
@@ -29,6 +30,7 @@ class JanitorEndroidQrCodeGenerator {
 					case "foreground_color"       : $foreground_color       = $_value; break;
 					case "background_color"       : $background_color       = $_value; break;
 					
+					case "output_file"            : $output_file            = $_value; break;
 					case "format"                 : $format                 = $_value; break;
 	
 				}
@@ -70,13 +72,26 @@ class JanitorEndroidQrCodeGenerator {
 	
 				$QRC->setWriterByName($format);
 			}
-	
-			$QRC->writeFile($output_file);
-	
-			if(file_exists($output_file)) {
-				
-				return $output_file;
+
+			if($output_file) {
+
+				$QRC->writeFile($output_file);
+		
+				if(file_exists($output_file)) {
+					
+					return $output_file;
+				}
 			}
+			else {
+
+				$output_string = $QRC->writeString();
+
+				if($output_string) {
+
+					return $output_string;
+				}
+			}
+	
 		}
 
 		return false;
