@@ -64,8 +64,6 @@ class SuperShop extends SuperShopCore {
 							$TC->addRegisteredCashPayment($tally["id"], $payment_id);
 						}
 						
-
-						
 					}
 
 
@@ -97,10 +95,7 @@ class SuperShop extends SuperShopCore {
 		return false;
 	}
 
-	function createKbhffQrCode($amount, $mobilepay_id, $comment) {
-
-		$identifier = "mp_".$mobilepay_id."_".$comment;
-		$filename = "img/qr-codes/".$identifier.".png"; 
+	function getMobilepayLink($amount, $mobilepay_id, $comment) {
 
 		$mobilepay_link = "https://www.mobilepay.dk/erhverv/betalingslink/betalingslink-svar?"
 			.$this->getPhonenumberText($mobilepay_id)
@@ -108,7 +103,7 @@ class SuperShop extends SuperShopCore {
 			.$this->getCommentText($comment)
 			.$this->getLockText(true);
 
-		return qr_codes()->create($mobilepay_link, $filename, ["size" => 200]);
+		return $mobilepay_link;
 	}
 
 	private static function getPhonenumberText($phonenumber){

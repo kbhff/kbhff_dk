@@ -105,7 +105,7 @@ else {
 				<?= $model->input("transaction_id", array("type" => "hidden", "value" => $transaction_id)); ?>
 				<div class="mobilepay qr">
 					<h5>QR-kode</h5>
-					<img src="/<?= $model->createKbhffQrCode($total_order_price["price"], $department["mobilepay_id"], $order["order_no"]) ?>" alt="QR-kode til indmeldelse i <?= $department["name"] ?>-afdelingen">
+					<img src="data:image/png;base64,<?= base64_encode(qr_codes()->create($model->getMobilepayLink($total_order_price["price"], $department["mobilepay_id"], $order["order_no"]), ["size" => 158])); ?>" alt="QR-kode til indmeldelse i <?= $department["name"] ?>-afdelingen">
 				</div>
 				<div class="mobilepay code">
 					<h5>MobilePay-nummer</h5>
