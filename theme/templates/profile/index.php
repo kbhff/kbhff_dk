@@ -134,7 +134,7 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 						</div>
 
 						<div class="department-info">
-							<p class="over">Åbningtider</p>
+							<p class="over">Åbningstider</p>
 							<p class="under"><?= $department["opening_hours"] ?></p>
 						</div>
 
