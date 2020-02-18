@@ -14,7 +14,7 @@ body {
 #page {}
 
 body span.highlight,
-#page span.highlight {color: #3e8e17;}
+#page span.highlight {display: block; color: #3e8e17;}
 
 body p.error,
 body p.errormessage,
