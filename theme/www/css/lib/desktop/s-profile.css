@@ -23,6 +23,15 @@
 	padding-left: 0;
 	padding-right: 0;
 }
+#content div.profile ul.actions li.full-width:last-of-type {
+	padding-bottom: 0;
+
+}
+#content div.profile ul.actions li.full-width a.button.primary {
+	background-color: #fff;
+	color: #3e8e17;
+	border: 2px solid #3e8e17;
+}
 #content div.profile ul.actions .half-width {
 	width: 50%;
 	text-align: center;
@@ -98,6 +107,9 @@
 /* RIGHT COLUMN */
 #content div.profile .c-wrapper > .c-one-third > ul.actions {
 	margin-top: 36px;
+	padding-bottom: 12px;
+	padding-left: 12px;
+	padding-right: 12px;
 }
 
 #content div.profile .c-box,
