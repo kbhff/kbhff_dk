@@ -2,24 +2,26 @@
 	position: relative;
 	width: 936px;
 	margin: 0 auto;
-	padding: 18px 0 18px;
+	padding: 36px 0 18px;
 }
 #header .logo {
 	box-sizing: border-box;
-	height: 48px;
-	padding: 8px 0 0 54px;
+	height: 66px;
+	padding: 0 0 0 68px;
 	display: inline-block;
-	background: transparent url(../../../img/logos/logo-stempel_sort_lille_gulerod.png) no-repeat top left;
+	background: transparent url(../../../img/logos/logo-stempel_sort_lille_gulerod.png) no-repeat center left;
+	letter-spacing: 1px;
 	font-family: 'voresfont';
-	font-size: 28px;
+	font-size: 30px;
 	line-height: 32px;
+	letter-spacing: 1px;
 	text-transform: uppercase;
 }
 
 #header ul.servicenavigation {
 	position: absolute;
 	line-height: 6px;
-	top: 6px;
+	top: 36px;
 	right: 0px;
 }
 

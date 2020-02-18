@@ -20,11 +20,12 @@
 #content h1 {
 	font-family: 'voresfont', Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
-	font-size: 40px;
-	line-height: 48px;
-	box-shadow: 0px -5px black inset;
+	font-size: 36px;
+	line-height: 42px;
 	padding-bottom: 2px;
 	padding-top: 13px;
+	box-sizing: border-box;
+	border-bottom: 2px solid #000;
 }
 
 #content h2 {
@@ -172,8 +173,8 @@
 #content ol,
 #content ul,
 #content dl {
-	padding-left: 12px;
-	padding-right: 12px;
+	padding-left: 18px;
+	padding-right: 18px;
 }
 
 
@@ -229,14 +230,16 @@
 	box-sizing: border-box;
 	margin-left: 12px;
 	margin-right: 12px;
-	margin-bottom: 24px;
+	margin-bottom: 12px;
 }
 
 #content div.c-box {
 	background: #f2f2f2;
-	border-top: 5px solid #000000;
+	/* border-top: 0px solid #473213; */
 }
-#content div.c-box.obs {border-top: 5px solid #3e8e17;}
+#content div.c-box.obs {
+	border-top: 2px solid #3e8e17;
+}
 
 #content div.c-primary-box {
 	background: #3e8e17;
