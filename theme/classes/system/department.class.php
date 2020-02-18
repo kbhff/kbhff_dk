@@ -141,9 +141,11 @@ class Department extends Model {
 
 		// HTML
 		$this->addToModel("html", array(
+			"type" => "html",
 			"label" => "Full description",
+			"allowed_tags" => "p,h2,h3,h4,ul,ol,vimeo,youtube",
 			"hint_message" => "Write the full department description",
-			"allowed_tags" => "p,h2,h3,h4,ul,ol,download,jpg,png,vimeo,youtube", //,mp4,code",
+			"error_message" => "No words? How weird."
 		));
 
 	}
