@@ -87,7 +87,7 @@
 #content .member_help_payment form.mobilepay .qr {float: right; position: relative;}
 #content .member_help_payment form.mobilepay .qr::before {z-index: 1; content: ""; display: block; position: absolute; top: 12px; bottom: 12px; border: 1px solid #999; border-width: 0 0 0 1px;}
 
-#content .member_help_payment form.mobilepay .qr img {width: 158px; padding: 0; border: 8px solid white; margin: 14px;}
+#content .member_help_payment form.mobilepay .qr img {padding: 0; margin: 14px;}
 
 #content .member_help_payment form.mobilepay  h5 {padding: 14px 12px 0px; font-size: 16px; line-height: 24px;}
 #content .member_help_payment form.mobilepay .qr h5 {text-align: center;}

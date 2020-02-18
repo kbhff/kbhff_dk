@@ -22,14 +22,14 @@ if($action) {
 	// bliv-medlem/addToCart
 	if($action[0] == "addToCart" && $page->validateCsrfToken()) {
 
-		// Check if user is already a user and then check if user is a member with a subscription
+		// user is already a user
 		$user_id = session()->value("user_id");
 		if($user_id > 1) {
 
-			
-			$membership = $MC->getMembership();
 			// user is a member with a subscription
+			$membership = $MC->getMembership();
 			if($membership && $membership["subscription_id"]) {
+
 				//redirect to leave POST state
 				header("Location: allerede-medlem");
 				exit();
@@ -73,6 +73,15 @@ if($action) {
 		$page->page(array(
 			"templates" => "signup/already-member.php"
 		));
+		exit();
+
+	}
+
+	elseif($action[0] == "resetSessionBeforeSignup") {
+
+		session()->reset();
+
+		header("Location: /bliv-medlem/");
 		exit();
 
 	}

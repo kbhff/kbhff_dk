@@ -73,8 +73,8 @@ $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "positio
 					<li class="subscription_price"><p>Indmeldelsesgebyr:</p></li>
 				<? // if signupfee has an offer, show the price, else show the default price or 'free'.
 				if($signupfee["prices"]) {
-						$offer_key = arrayKeyValue($signupfee["prices"], "name", "offer");
-						$default_key = arrayKeyValue($signupfee["prices"], "name", "default");
+						$offer_key = arrayKeyValue($signupfee["prices"], "type", "offer");
+						$default_key = arrayKeyValue($signupfee["prices"], "type", "default");
 
 					if($offer_key !== false) { ?>
 					<li class="price default"><?= formatPrice($signupfee["prices"][$default_key]).(isset($signupfee["subscription_method"]) && $signupfee["subscription_method"] && $signupfee["prices"][$default_key]["price"] ? ' / '.$signupfee["subscription_method"]["name"] : '') ?></li>
@@ -101,8 +101,8 @@ $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "positio
 					<li class="subscription_price"><p>Årligt kontingent:</p></li>
 				<? // If membership has an offer, show the price, else show default price or 'free'. 
 				if($membership_item["prices"]) {
-					$offer_key = arrayKeyValue($membership_item["prices"], "name", "offer");
-					$default_key = arrayKeyValue($membership_item["prices"], "name", "default");
+					$offer_key = arrayKeyValue($membership_item["prices"], "type", "offer");
+					$default_key = arrayKeyValue($membership_item["prices"], "type", "default");
 
 					if($offer_key !== false) { ?>
 					<li class="price default"><?= formatPrice($membership_item["prices"][$default_key]).(isset($membership_item["subscription_method"]) && $membership_item["subscription_method"] && $membership_item["prices"][$default_key]["price"] ? ' / '.$membership_item["subscription_method"]["name"] : '') ?></li>

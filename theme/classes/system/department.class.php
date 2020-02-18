@@ -100,9 +100,10 @@ class Department extends Model {
 		// MobilePay number for signup in shop
 		$this->addToModel("mobilepay_id", array(
 			"type" => "string",
-			"label" => "MobilePay number for signup",
-			"hint_message" => "The department has a MobilePay number that new members can use if they go to a physical shop to sign up.",
-			"error_message" => "Invalid MobilePay number"
+			"label" => "MobilePay number",
+			"required" => true,
+			"hint_message" => "The department has a MobilePay number.",
+			"error_message" => "MobilePay number is required"
 		));
 
 		// Accepts new members?

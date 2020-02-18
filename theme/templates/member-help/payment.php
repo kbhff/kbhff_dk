@@ -103,10 +103,10 @@ else {
 				<?= $model->input("payment_method", array("type" => "hidden", "value" => $mobilepay_payment_method_id)); ?>
 				<?= $model->input("order_id", array("type" => "hidden", "value" => $order["id"])); ?>
 				<?= $model->input("transaction_id", array("type" => "hidden", "value" => $transaction_id)); ?>
-				<!-- <div class="mobilepay qr">
+				<div class="mobilepay qr">
 					<h5>QR-kode</h5>
-					<img src="/img/qr-codes/qr-signup-vesterbro.png" alt="QR-kode til indmeldelse i Vesterbro-afdelingen">
-				</div> -->
+					<img src="data:image/png;base64,<?= base64_encode(qr_codes()->create($model->getMobilepayLink($total_order_price["price"], $department["mobilepay_id"], $order["order_no"]), ["size" => 158])); ?>" alt="QR-kode til indmeldelse i <?= $department["name"] ?>-afdelingen">
+				</div>
 				<div class="mobilepay code">
 					<h5>MobilePay-nummer</h5>
 					<p>(<?=$department["name"]?>)</p>
@@ -147,6 +147,7 @@ else {
 				<?= $model->input("payment_method", array("type" => "hidden", "value" => $cash_payment_method_id)); ?>
 				<?= $model->input("order_id", array("type" => "hidden", "value" => $order["id"])); ?>
 				<?= $model->input("transaction_id", array("type" => "hidden", "value" => $transaction_id)); ?>
+				<?= $model->input("receiving_user_id", array("type" => "hidden", "value" => session()->value("user_id"))); ?>
 				<div class="cash instructions">
 					<p>Bekræft nedenfor at personen har betalt kontant.</p>
 				</div>
