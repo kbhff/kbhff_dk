@@ -240,15 +240,22 @@ class SuperUser extends SuperUserCore {
 		// Updates and checks if it went true(good) or false(bad)
 		if ($this->update(["update", $user_id])) {
 			
+			$update_success = true;
+
 			if($email) {
-				if($this->updateEmail(["updateEmail", $user_id])) {
-					if($mobile) {
-						if($this->updateMobile(["updateMobile", $user_id])) {
-							message()->resetMessages();
-							message()->addMessage("Dine oplysninger blev opdateret");
-						}
-					}
+				if(!$this->updateEmail(["updateEmail", $user_id])) {
+					$update_success = false;
 				}
+			}
+			if($mobile) {
+				if(!$this->updateMobile(["updateMobile", $user_id])) {
+					$update_success = false;
+				}
+			}
+
+			if($update_success) {
+				message()->resetMessages();
+				message()->addMessage("Dine oplysninger blev opdateret");	
 			}
 			else {
 				message()->resetMessages();
