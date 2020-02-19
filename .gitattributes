@@ -18,6 +18,7 @@
 *.swf	binary
 
 # FONTS
+*.otf	binary
 *.eot	binary
 *.ttf	binary
 *.woff	binary

@@ -76,7 +76,7 @@ class TypeSignupfee extends Itemtype {
 			"error_message" => "A signup fee must be associated with a membership type"
 			
 		));
-		
+
 		// Description
 		$this->addToModel("description", array(
 			"type" => "text",
@@ -84,15 +84,27 @@ class TypeSignupfee extends Itemtype {
 			"hint_message" => "Write a short description of the signup fee for SEO.",
 			"error_message" => "A short description without any words? How weird."
 		));
-		
+
 		// HTML
-		$this->addToModel("html", array(
+		$this->addToModel("html", [
 			"type" => "html",
 			"label" => "Full description",
+			"allowed_tags" => "p,h2,h3,h4,ul,ol,code,download,jpg,png", //,mp4,vimeo,youtube",
 			"hint_message" => "Write a full description of the signup fee.",
 			"error_message" => "A full description without any words? How weird."
+		]);
+
+		// Single media
+		$this->addToModel("single_media", array(
+			"type" => "files",
+			"label" => "Add media here",
+			"allowed_sizes" => "960x540",
+			"max" => 1,
+			"allowed_formats" => "png,jpg",
+			"hint_message" => "Add single image by dragging it here. PNG or JPG allowed in 960x540",
+			"error_message" => "Media does not fit requirements."
 		));
-		
+
 	}
 
 	function ordered($order_item, $order) {
