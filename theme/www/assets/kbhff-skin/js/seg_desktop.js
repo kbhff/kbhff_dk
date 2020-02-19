@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-02-19 15:44:22
+asset-builder @ 2020-02-19 16:56:05
 */
 
 /*seg_desktop_include.js*/
@@ -4706,8 +4706,6 @@ Util.Objects["page"] = new function() {
 			}
 		}
 		page.initHeader = function() {
-			var logo = u.ie(this.hN, "a", {"class":"logo", "href":"/","html": 'KBHFF <span class="highlight">' + document.title + '</span>'});
-			u.ce(logo, {"type":"link"});
 		}
 		page.initNavigation = function() {
 			page.nN_nodes = u.qsa("li.indent0", page.nN);
