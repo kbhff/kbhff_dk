@@ -121,10 +121,8 @@ u.overlay = function (_options) {
 	// Add main overlay elements - header, options (content) and actions (footer)
 	// Add header
 	overlay.div_header = u.ae(overlay, "div", {class:"header"});
-	if(title) {
-		overlay.div_header.h2 = u.ae(overlay.div_header, "h2", {html: title});
-		overlay.div_header.overlay = overlay;
-	}
+	overlay.div_header.h2 = u.ae(overlay.div_header, "h2", {html: title});
+	overlay.div_header.overlay = overlay;
 
 	// Add content div to overlay (called options because content is reserved word)
 	overlay.div_content = u.ae(overlay, "div", {class: "content"});
