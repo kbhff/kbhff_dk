@@ -748,36 +748,35 @@ class Tally extends Model {
 		$IC = new Items();
 		$query = new Query();
 		$cash_orders = [];
-		$first_run = true;
-
+		
 		$registered_cash_payments = $this->getRegisteredCashPayments($tally_id);
 		$cash_order_items_summary = [];
-
+		
 		if($registered_cash_payments) {
-
+			
 			// create list of orders
 			foreach($registered_cash_payments as $registered_cash_payment) {
-	
+				
 				$sql = "SELECT order_id FROM ".SITE_DB.".shop_payments WHERE id = ".$registered_cash_payment["payment_id"];
 				if($query->sql($sql)) {
-	
+					
 					$order_id = $query->result(0, "order_id");
 					$cash_orders[] = $SC->getOrders(["order_id" => $order_id]);
 				}
-	
+				
 			}
-
+			
 			// create list of items
 			foreach($cash_orders as $cash_order) {
 				
-
+				
 				foreach($cash_order["items"] as $order_item) {
-
-
+					
+					
 					$cash_order_items_summary[$order_item["item_id"]]["items"][] = $order_item;
 
 					
-					if($first_run) {
+					if(count($cash_order_items_summary[$order_item["item_id"]]["items"]) == 1) {
 						$item = $IC->getItem(["id" => $order_item["item_id"], "extend" => true]);
 
 						$cash_order_items_summary[$order_item["item_id"]]["count"] = 1;
@@ -786,7 +785,6 @@ class Tally extends Model {
 						$cash_order_items_summary[$order_item["item_id"]]["unit_price"] = $order_item["unit_price"];	
 						$cash_order_items_summary[$order_item["item_id"]]["total_price"] = $order_item["unit_price"];	
 						
-						$first_run = false;
 					}
 					else {
 						
