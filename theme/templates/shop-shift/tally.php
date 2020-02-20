@@ -208,7 +208,7 @@ $this->pageTitle("Kasseregnskab");
 						<li class="total_price"><?= $values["total_price"] ?> kr.</li>
 					</ul>
 					<? endforeach; ?>
-					<? else: ?>;
+					<? else: ?>
 					<h3>Registreret kontantsalg <span class="sum">0 kr.</span></h3>
 					<p>Intet registreret kontantsalg.</p>
 					<? endif; ?>
