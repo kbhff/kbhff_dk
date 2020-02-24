@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-02-13 15:10:00
+asset-builder @ 2020-02-24 06:50:26
 */
 
 /*seg_desktop_include.css*/
@@ -18,6 +18,7 @@ body {
 #page {}
 body span.highlight,
 #page span.highlight {color: #3e8e17;}
+#header span.highlight {display: block;}
 body p.error,
 body p.errormessage,
 #page p.error,
@@ -68,8 +69,8 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 form {}
 div.field {
 	padding: 0 0 25px; position: relative; font-size: 0; z-index: 1;
-	padding-left: 10px;
-	padding-right: 10px;
+	padding-left: 16px;
+	padding-right: 16px;
 }
 div.field label {display: block; margin: 0 0 0 2px; line-height: 12px; font-size: 11px; text-transform: uppercase;}
 div.field input,
@@ -218,23 +219,26 @@ input[type="submit"] {
 	position: relative;
 	width: 936px;
 	margin: 0 auto;
-	padding: 18px 0 18px;
+	padding: 36px 0 18px;
 }
 #header .logo {
 	box-sizing: border-box;
-	height: 48px;
-	padding: 8px 0 0 54px;
+	height: 66px;
+	padding: 0 0 0 68px;
 	display: inline-block;
-	background: transparent url(../assets/kbhff-skin/img/logos/logo-stempel_sort_lille_gulerod.png) no-repeat top left;
+	background: transparent url(../assets/kbhff-skin/img/logos/logo-stempel_sort_lille_gulerod.png) no-repeat center left;
+	background-size: 60px;
+	letter-spacing: 1px;
 	font-family: 'voresfont';
-	font-size: 28px;
+	font-size: 30px;
 	line-height: 32px;
+	letter-spacing: 1px;
 	text-transform: uppercase;
 }
 #header ul.servicenavigation {
 	position: absolute;
 	line-height: 6px;
-	top: 6px;
+	top: 36px;
 	right: 0px;
 }
 #header ul.servicenavigation li {
@@ -272,7 +276,7 @@ position: relative;
 }
 #navigation ul.navigation li {
 	display: inline-block;
-	margin-right: 5px;
+	margin-right: 3px;
 	position: relative;
 }
 #navigation ul.navigation li.path > h4,
@@ -282,6 +286,9 @@ position: relative;
 #navigation ul.navigation li.selected > h5,
 #navigation ul.navigation li.selected > a {
 	background-color: #3e8e17;
+	border: 0px solid #3e8e17;
+	padding: 5px 12px;
+	color: #fff;
 }
 #navigation ul.navigation ul li {
 	display: block;
@@ -294,7 +301,8 @@ position: relative;
 	text-transform: uppercase;
 	font-size: 14px;
 	line-height: 22px;
-	padding: 7px 14px;
+	letter-spacing: 0.5px;
+	padding: 5px 12px;
 	display: block;
 	color: #ffffff;
 	background-color: #000000;
@@ -330,11 +338,12 @@ position: relative;
 #content h1 {
 	font-family: 'voresfont', Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
-	font-size: 40px;
-	line-height: 48px;
-	box-shadow: 0px -5px black inset;
+	font-size: 36px;
+	line-height: 42px;
 	padding-bottom: 2px;
 	padding-top: 13px;
+	box-sizing: border-box;
+	border-bottom: 2px solid #000;
 }
 #content h2 {
 	font-family: 'voresfont', Arial, Helvetica, sans-serif;
@@ -456,8 +465,8 @@ position: relative;
 #content ol,
 #content ul,
 #content dl {
-	padding-left: 12px;
-	padding-right: 12px;
+	padding-left: 18px;
+	padding-right: 18px;
 }
 #content div.c-wrapper {
 	display: block;
@@ -495,13 +504,14 @@ position: relative;
 	box-sizing: border-box;
 	margin-left: 12px;
 	margin-right: 12px;
-	margin-bottom: 24px;
+	margin-bottom: 12px;
 }
 #content div.c-box {
 	background: #f2f2f2;
-	border-top: 5px solid #000000;
 }
-#content div.c-box.obs {border-top: 5px solid #3e8e17;}
+#content div.c-box.obs {
+	border-top: 2px solid #3e8e17;
+}
 #content div.c-primary-box {
 	background: #3e8e17;
 }
@@ -630,6 +640,9 @@ position: relative;
 	padding-left: 0;
 	padding-right: 0;
 }
+#content div.profile ul.actions li.full-width:last-of-type {
+	padding-bottom: 0;
+}
 #content div.profile ul.actions .half-width {
 	width: 50%;
 	text-align: center;
@@ -692,6 +705,9 @@ position: relative;
 }
 #content div.profile .c-wrapper > .c-one-third > ul.actions {
 	margin-top: 36px;
+	padding-bottom: 12px;
+	padding-left: 12px;
+	padding-right: 12px;
 }
 #content div.profile .c-box,
 #content div.profile .fields {
@@ -825,7 +841,7 @@ position: relative;
 #content .post .youtube,
 #content .post .vimeo {margin: 0 12px 24px;}
 #content .post .c-one-third .c-box {margin-top: 12px;}
-#content .post .c-one-third .c-box:first-child {margin-top: 58px; border-top: 5px solid #000;}
+#content .post .c-one-third .c-box:first-child {margin-top: 53px;}
 #content .post .related {padding: 50px 0; }
 #content .post .related li.item .description p {padding: 0;}
 
@@ -926,7 +942,7 @@ position: relative;
 
 /*s-member_help.css*/
 #content .member_help h1 {display: none;}
-#content .member_help h2 {padding: 0; margin-left: 12px; margin-right: 12px; margin-top: 20px; margin-bottom: 12px;}
+#content .member_help h2 {padding: 0; margin-left: 12px; margin-right: 12px; margin-top: 20px; margin-bottom: 12px; border-bottom: 2px solid #000000;}
 #content .member_help div.c-wrapper,
 #content .member_help div.c-wrapper > div {min-height: 0px; padding: 0;}
 #content .member_help div.c-wrapper div.field label {display: none;}
@@ -1150,18 +1166,6 @@ div.overlay .close:after {
 
 
 /*s-general.css*/
-#navigation ul.navigation li.path > h4, 
-#navigation ul.navigation li.path > h5, 
-#navigation ul.navigation li.path > a, 
-#navigation ul.navigation li.selected > h4, 
-#navigation ul.navigation li.selected > h5, 
-#navigation ul.navigation li.selected > a {
-	background-color: #fff;
-	border: 2px solid #3e8e17;
-	padding: 5px 12px 7px;
-	color: #3e8e17;
-	border-bottom: none;
-}
 #navigation ul.navigation h5:hover, 
 #navigation ul.navigation li:not(.selected) a:hover {
 	background-color: #357914;
