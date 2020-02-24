@@ -27,11 +27,6 @@
 	padding-bottom: 0;
 
 }
-#content div.profile ul.actions li.full-width a.button.primary {
-	background-color: #fff;
-	color: #3e8e17;
-	border: 2px solid #3e8e17;
-}
 #content div.profile ul.actions .half-width {
 	width: 50%;
 	text-align: center;
