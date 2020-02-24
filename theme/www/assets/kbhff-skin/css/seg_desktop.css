@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-02-19 17:12:23
+asset-builder @ 2020-02-24 06:47:45
 */
 
 /*seg_desktop_include.css*/
@@ -316,11 +316,11 @@ position: relative;
 	text-transform: uppercase;
 	font-size: 14px;
 	line-height: 22px;
-	letter-spacing: 1px;
+	letter-spacing: 0.5px;
 	padding: 5px 12px;
 	display: block;
 	color: #ffffff;
-	background-color: #473213;
+	background-color: #000000;
 }
 #navigation ul.navigation ul li h5,
 #navigation ul.navigation ul li h4,
