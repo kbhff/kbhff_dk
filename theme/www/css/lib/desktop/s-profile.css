@@ -113,9 +113,12 @@
 }
 #content div.profile .c-box ul.actions {
 	padding-top: 5px;
-	padding-bottom: 0;
+	padding-bottom: 12px;
 }
 
+#content div.profile .c-box ul.actions li {
+	padding-bottom: 0;
+}
 
 #content div.profile .c-box > h3 {
 	padding-left: 0;
@@ -153,6 +156,10 @@
 #content div.profile .membership-info,
 #content div.profile .user-info {
 	padding-bottom: 25px;
+}
+
+#content div.profile .department-info:last-child {
+	padding-bottom: 12px;
 }
 
 #content div.profile .password p.under {
