@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-02-24 06:50:26
+asset-builder @ 2020-02-25 01:56:45
 */
 
 /*seg_desktop_include.css*/
@@ -715,6 +715,9 @@ position: relative;
 }
 #content div.profile .c-box ul.actions {
 	padding-top: 5px;
+	padding-bottom: 12px;
+}
+#content div.profile .c-box ul.actions li {
 	padding-bottom: 0;
 }
 #content div.profile .c-box > h3 {
@@ -748,6 +751,9 @@ position: relative;
 #content div.profile .membership-info,
 #content div.profile .user-info {
 	padding-bottom: 25px;
+}
+#content div.profile .department-info:last-child {
+	padding-bottom: 12px;
 }
 #content div.profile .password p.under {
 	font-size: 26px;
