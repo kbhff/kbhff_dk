@@ -70,7 +70,7 @@ $this->pageTitle("Kasseregnskab");
 								</fieldset>
 								
 							<ul class="actions">
-								<?= $TC->submit("Gem", ["wrapper" => "li.save"]); ?>
+								<?= $TC->submit("Gem", ["wrapper" => "li.save", "class" => "primary"]); ?>
 							</ul>
 							<?= $TC->formEnd(); ?>
 
@@ -95,7 +95,7 @@ $this->pageTitle("Kasseregnskab");
 								</fieldset>
 								
 							<ul class="actions">
-								<?= $TC->submit("Gem", ["wrapper" => "li.save"]); ?>
+								<?= $TC->submit("Gem", ["wrapper" => "li.save", "class" => "primary"]); ?>
 							</ul>
 							<?= $TC->formEnd(); ?>
 						</div>
@@ -120,7 +120,7 @@ $this->pageTitle("Kasseregnskab");
 								</fieldset>
 								
 							<ul class="actions">
-								<?= $TC->submit("Gem", ["wrapper" => "li.save"]); ?>
+								<?= $TC->submit("Gem", ["wrapper" => "li.save", "class" => "primary"]); ?>
 							</ul>
 							<?= $TC->formEnd(); ?>
 						</div>
@@ -208,7 +208,7 @@ $this->pageTitle("Kasseregnskab");
 						<li class="total_price"><?= $values["total_price"] ?> kr.</li>
 					</ul>
 					<? endforeach; ?>
-					<? else: ?>;
+					<? else: ?>
 					<h3>Registreret kontantsalg <span class="sum">0 kr.</span></h3>
 					<p>Intet registreret kontantsalg.</p>
 					<? endif; ?>
@@ -235,7 +235,7 @@ $this->pageTitle("Kasseregnskab");
 				
 					<ul class="actions">
 						<?= $TC->submit("Gem og gå tilbage", ["wrapper" => "li.save"]); ?>
-						<?= $TC->submit("Godkend regnskab og luk kasse", ["wrapper" => "li.save", "formaction" => "$tally_id/closeTally"]) ?>
+						<?= $TC->submit("Godkend regnskab og luk kasse", ["wrapper" => "li.save", "class" => "primary", "formaction" => "$tally_id/closeTally"]) ?>
 					</ul>
 				<?= $TC->formEnd(); ?>
 
