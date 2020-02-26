@@ -38,8 +38,21 @@ Util.Objects["tally"] = new function() {
 					}
 		
 					this.response = function(response) {
-		
-						if(u.qs(".scene.shop_shift", response)) {
+
+						var error_message = u.qs(".messages .error", response).innerHTML
+
+						if(error_message) {
+							if(this.p_error) {
+
+								this.p_error.parentNode.removeChild(this.p_error);
+							} 
+
+							this.p_error = u.ie(u.qs(".section.tally"), "p", {
+								html:error_message,
+								class:"error"
+							})
+						}
+						else if(u.qs(".scene.shop_shift", response)) {
 		
 							location.href = "/butiksvagt"; 
 						}
