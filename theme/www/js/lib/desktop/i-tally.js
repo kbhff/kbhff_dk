@@ -39,7 +39,7 @@ Util.Objects["tally"] = new function() {
 		
 					this.response = function(response) {
 
-						var error_message = u.qs(".messages .error", response).innerHTML
+						var error_message = u.qs(".messages .error", response);
 
 						if(error_message) {
 							if(this.p_error) {
@@ -48,7 +48,7 @@ Util.Objects["tally"] = new function() {
 							} 
 
 							this.p_error = u.ie(u.qs(".section.tally"), "p", {
-								html:error_message,
+								html:error_message.innerHTML,
 								class:"error"
 							})
 						}
