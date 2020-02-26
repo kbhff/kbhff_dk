@@ -58,7 +58,7 @@ $this->pageTitle("Kasseregnskab");
 						<div class="view">
 							<ul class="actions">
 								<li class="description">Ved vagtstart</li>
-								<li class="amount"><?= $tally["start_cash"] ?> kr.</li>
+								<li class="amount"><?= $tally["start_cash"] ? $tally["start_cash"] . " kr." : "" ?></li>
 								<li class="edit_btn"><a href="#" class="button">Redigér</a></li>
 							</ul>
 						</div>
@@ -83,7 +83,7 @@ $this->pageTitle("Kasseregnskab");
 						<div class="view">
 							<ul class="actions">
 								<li class="description">Ved vagtafslutning</li>
-								<li class="amount"><?= $tally["end_cash"] ?> kr.</li>
+								<li class="amount"><?= $tally["start_cash"] ? $tally["start_cash"] . " kr." : "" ?></li>
 								<li class="edit_btn"><a href="#" class="button">Redigér</a></li>
 							</ul>
 						</div>
@@ -107,7 +107,7 @@ $this->pageTitle("Kasseregnskab");
 						<div class="view">
 							<ul class="actions">
 								<li class="description">Evt. deponeret</li>
-								<li class="amount"><?= $tally["deposited"] ?> kr.</li>
+								<li class="amount"><?= $tally["start_cash"] ? $tally["start_cash"] . " kr." : "" ?></li>
 								<li class="edit_btn"><a href="#" class="button">Redigér</a></li>
 							</ul>
 						</div>
@@ -138,7 +138,7 @@ $this->pageTitle("Kasseregnskab");
 
 					<ul class="payout">
 						<li class="name"><?= $payout["name"] ?></li>
-						<li class="amount"><?= $payout["amount"] ?> kr.</li>
+						<li class="amount"><?= $tally["start_cash"] ? $tally["start_cash"] . " kr." : "" ?></li>
 						<?= $HTML->oneButtonForm("Slet", "/butiksvagt/kasse/$tally_id/udbetaling/deletePayout/$payout_id", [
 							"wrapper" => "li.delete",
 							"confirm_value" => "Bekræft"
@@ -173,7 +173,7 @@ $this->pageTitle("Kasseregnskab");
 
 					<ul class="revenue">
 						<li class="name"><?= $revenue["name"] ?></li>
-						<li class="amount"><?= $revenue["amount"] ?> kr.</li>
+						<li class="amount"><?= $tally["start_cash"] ? $tally["start_cash"] . " kr." : "" ?></li>
 						<?= $HTML->oneButtonForm("Slet", "/butiksvagt/kasse/$tally_id/andre-indtaegter/deleteRevenue/$revenue_id", [
 							"wrapper" => "li.delete",
 							"confirm_value" => "Bekræft"
