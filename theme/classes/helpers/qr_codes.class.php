@@ -14,8 +14,8 @@ class QrCodesGateway {
 
 		if(!$this->adapter) {
 
-			include_once("classes/adapters/qr_codes/endroid-qr-code-generator.class.php");
-			$this->adapter = new JanitorEndroidQrCodeGenerator();
+			include_once("classes/adapters/qr_codes/bacon-qr-code.class.php");
+			$this->adapter = new JanitorBaconQrCode();
 		}
 	}
 
@@ -23,15 +23,15 @@ class QrCodesGateway {
 	 * QrCodesGateway::create
 	 *
 	 * @param string|array|mixed $content – array is converted to json-encoded string. Everything else is directly converted to string. 
-	 * @param string $output_file – intended path of generated qr code
 	 * @param array|false $_options
 	 * * size (number): size in px
-	 * * margin (number): margin size in px
+	 * * margin (boolean): toggles a column-sized margin
 	 * * foreground_color (array): rgba array, e.g. ["r" => 255, "g" => 255, "b" => 255, "a" => 0]
 	 * * background_color (array): rgba array
+	 * * output_file (string): will save the QR code as the specified filename
 	 * * format (string): png (default) or svg
 	 * 
-	 * @return string|false path of generated qr code (via adapter class). False on error.
+	 * @return string|false qr code as binary string or path of qr code. False on error.
 	 */
 	function create($content, $_options = false) {
 
@@ -40,7 +40,7 @@ class QrCodesGateway {
 		if($this->adapter) {
 
 			$size = false;
-			$margin = false;
+			$margin = true;
 			$foreground_color = false;
 			$background_color = false;
 			$output_file = false;
@@ -61,6 +61,8 @@ class QrCodesGateway {
 					}
 				}
 			}
+
+			$margin ? $margin = 1 : $margin = 0;
 
 			return $this->adapter->create($content, [
 

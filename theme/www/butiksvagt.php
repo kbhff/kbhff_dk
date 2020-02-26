@@ -77,8 +77,6 @@ if($action) {
 			}
 			// Something went wrong
 			else {
-				message()->resetMessages();
-				message()->addMessage("Hov, noget gik galt. Prøv igen.", array("type" => "error"));
 				// redirect to leave POST state
 				header("Location: /butiksvagt/kasse/".$action[1]);
 				exit();

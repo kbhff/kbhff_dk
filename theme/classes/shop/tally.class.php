@@ -140,18 +140,45 @@ class Tally extends Model {
 
 		// define default sorting order
 		$order = "name ASC";
+		
+		$department_id = false;
 
 
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
-					case "order"        : $order             = $_value; break;
+					case "order"           : $order                = $_value; break;
+					case "department_id"   : $department_id        = $_value; break;
+					case "status"          : $status               = $_value; break;
 				}
 			}
 		}
 
 		$query = new Query();
-		$sql = "SELECT * FROM ".$this->db . " ORDER BY $order";		
+		$sql = "SELECT * FROM ".$this->db;		
+		$where = [];
+
+		if($department_id || $status) {
+			$sql .= " WHERE ";
+		}
+
+		if($department_id) {
+
+			$sql .= "department_id = $department_id";
+		}
+		if($status) {
+
+			if($department_id) {
+				
+				$sql .= " AND ";
+			}
+
+			$sql .= "status = $status";
+		}
+
+		$sql .= " ORDER BY $order";
+
+
 		if($query->sql($sql)) {
 			return $query->results();
 		}
@@ -562,7 +589,7 @@ class Tally extends Model {
 		$start_cash = $this->getStartCash($tally_id);
 		$end_cash = $this->getEndCash($tally_id);
 		
-		$cash_sales_sum = $this->calculateCashSalesSum($this->cashOrderItemsSummary($tally_id));
+		$cash_sales_sum = $this->calculateCashSalesSum($this->cashOrderItemsSummary($tally_id)) ?: 0;
 		
 		$misc_revenues = $this->getMiscRevenuesSum($tally_id);
 		$payouts = $this->getPayoutsSum($tally_id);
@@ -656,6 +683,20 @@ class Tally extends Model {
 
 	}
 
+	function getTotalCashRevenue($tally_id) {
+		
+		$misc_revenues = $this->getMiscRevenuesSum($tally_id);
+		$cash_sales = $this->calculateCashSalesSum($this->cashOrderItemsSummary($tally_id)) ?: 0;
+
+		if($misc_revenues !== false) {
+
+			return $misc_revenues + $cash_sales;
+		}
+
+		return false;
+		
+	}
+
 	function getStartCash($tally_id) {
 
 		$query = new Query();
@@ -687,23 +728,27 @@ class Tally extends Model {
 		if(count($action) == 3)	{
 
 			$tally_id = $action[1];
+			$user_id = session()->value("user_id");
 	
 			$this->getPostedEntities();
 	
-			$tally = $this->updateTally(["updateTally", $tally_id]);
-	
-			$query = new Query();
-			$sql = "UPDATE ".$this->db." SET status = 2 WHERE id = $tally_id";
-			if($query->sql($sql)) {
+			$tally = $this->updateTally(["kasse", $tally_id, "updateTally"]);
 
-				global $page;
-				$user_id = session()->value("user_id");
-				$page->addLog("Tally: tally_id:$tally_id closed by user_id:$user_id");
+			if(isset($tally["start_cash"]) && isset($tally["end_cash"])) {
+
+				$query = new Query();
+				$sql = "UPDATE ".$this->db." SET status = 2, closed_by = $user_id WHERE id = $tally_id";
+				if($query->sql($sql)) {
 	
-				return $tally_id;
+					global $page;
+					$page->addLog("Tally: tally_id:$tally_id closed by user_id:$user_id");
+		
+					return $tally_id;
+				}
 			}
 		}
 
+		message()->addMessage("Kunne ikke lukke regnskabet. Tjek at startbeholdning og slutbeholdning er udfyldt.", ["type" => "error"]);
 		return false;
 	}
 
@@ -748,36 +793,35 @@ class Tally extends Model {
 		$IC = new Items();
 		$query = new Query();
 		$cash_orders = [];
-		$first_run = true;
-
+		
 		$registered_cash_payments = $this->getRegisteredCashPayments($tally_id);
 		$cash_order_items_summary = [];
-
+		
 		if($registered_cash_payments) {
-
+			
 			// create list of orders
 			foreach($registered_cash_payments as $registered_cash_payment) {
-	
+				
 				$sql = "SELECT order_id FROM ".SITE_DB.".shop_payments WHERE id = ".$registered_cash_payment["payment_id"];
 				if($query->sql($sql)) {
-	
+					
 					$order_id = $query->result(0, "order_id");
 					$cash_orders[] = $SC->getOrders(["order_id" => $order_id]);
 				}
-	
+				
 			}
-
+			
 			// create list of items
 			foreach($cash_orders as $cash_order) {
 				
-
+				
 				foreach($cash_order["items"] as $order_item) {
-
-
+					
+					
 					$cash_order_items_summary[$order_item["item_id"]]["items"][] = $order_item;
 
 					
-					if($first_run) {
+					if(count($cash_order_items_summary[$order_item["item_id"]]["items"]) == 1) {
 						$item = $IC->getItem(["id" => $order_item["item_id"], "extend" => true]);
 
 						$cash_order_items_summary[$order_item["item_id"]]["count"] = 1;
@@ -786,7 +830,6 @@ class Tally extends Model {
 						$cash_order_items_summary[$order_item["item_id"]]["unit_price"] = $order_item["unit_price"];	
 						$cash_order_items_summary[$order_item["item_id"]]["total_price"] = $order_item["unit_price"];	
 						
-						$first_run = false;
 					}
 					else {
 						
