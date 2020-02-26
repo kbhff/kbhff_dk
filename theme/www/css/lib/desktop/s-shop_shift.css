@@ -17,18 +17,21 @@
 	border-bottom: 1px solid #c9c9c9;
 }
 
-/* #content div.tally li.description {
+#content div.tally li.description {
 	float: left;
 }
 
+#content div.tally li.amount {
+	padding-right: 5px;
+}
 
 #content div.tally fieldset label,
 #content div.tally fieldset input {
 	display: inline-block;
 }
 
-/* 
-#content div.tally .cash ul.actions */
+
+#content div.tally .cash ul.actions 
 #content div.tally .payouts ul.actions,
 #content div.tally .misc_revenues ul.actions,
 #content div.tally .cash_sales ul.actions,
@@ -36,9 +39,9 @@
 #content div.tally .change ul.actions {
 	display: inline-block;
 	vertical-align: top;
-} */
+} 
 
-/* #content div.tally .edit ul.actions {
+#content div.tally .edit ul.actions {
 	display: inline-block;
 	vertical-align: top;
-} */
+} 
