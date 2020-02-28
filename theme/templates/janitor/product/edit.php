@@ -5,7 +5,7 @@ global $model;
 global $itemtype;
 
 $item_id = $action[1];
-$item = $IC->getItem(array("id" => $item_id, "extend" => true));
+$item = $IC->getItem(array("id" => $item_id, "extend" => ["tags" => true, "mediae" => true, "comments" => true, "subscription_method" => true]));
 
 ?>
 <div class="scene i:scene defaultEdit <?= $itemtype ?>Edit">
@@ -13,6 +13,7 @@ $item = $IC->getItem(array("id" => $item_id, "extend" => true));
 	<h2><?= strip_tags($item["name"]) ?></h2>
 
 	<?= $JML->editGlobalActions($item) ?>
+	<?= $JML->editSingleMedia($item) ?>
 
 	<div class="item i:defaultEdit">
 		<h2>Product details</h2>

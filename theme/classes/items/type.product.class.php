@@ -97,6 +97,17 @@ class TypeProduct extends Itemtype {
 			"error_message" => "The product needs a description."
 		));
 
+		// Single media
+		$this->addToModel("single_media", array(
+			"type" => "files",
+			"label" => "Add media here",
+			"allowed_sizes" => "960x540",
+			"max" => 1,
+			"allowed_formats" => "png,jpg",
+			"hint_message" => "Add single image by dragging it here. PNG or JPG allowed in 960x540",
+			"error_message" => "Media does not fit requirements."
+		));
+
 	}
 
 	function getProductTypes() {
