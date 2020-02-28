@@ -31,4 +31,6 @@ $item = $IC->getItem(array("id" => $item_id, "extend" => true));
 		<?= $model->formEnd() ?>
 	</div>
 
+	<?= $JML->editPrices($item); ?>
+
 </div>
