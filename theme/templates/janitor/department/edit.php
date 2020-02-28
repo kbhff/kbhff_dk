@@ -3,6 +3,9 @@
 global $action;
 global $model;
 
+$IC = new Items();
+$products = $IC->getItems(["itemtype" => "product", "extend" => true]);
+
 $department_id = $action[1];
 $department = $model->getDepartment(array("id" => $department_id));
 ?>
@@ -44,9 +47,27 @@ $department = $model->getDepartment(array("id" => $department_id));
 				<?= $model->input("html", array("value" => $department["html"])) ?>
 			</fieldset>
 
+
 			<?= $JML->editActions($department) ?>
 
 		<?= $model->formEnd() ?>
+	</div>
+
+	<div class="products i:collapseHeader ">
+		<h2>Products</h2>
+		<ul class="products">
+			<? if($products): ?>
+				<? foreach($products as $product): ?>
+			<li class="product product_id:<?= $product["id"] ?>"></li>
+				<ul class="info">
+					<li class="name"><?= $product["name"] ?></li>
+				</ul>
+			
+				<? endforeach; ?>
+			<? endif; ?>
+	
+		</ul>
+
 	</div>
 
 </div>

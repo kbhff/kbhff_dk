@@ -21,6 +21,7 @@ class Department extends Model {
 
 		// Define the name of departments table in database
 		$this->db = SITE_DB.".system_departments";
+		$this->db_products = SITE_DB.".department_products";
 
 
 		// Name
@@ -164,7 +165,9 @@ class Department extends Model {
 
 		if(count($action) == 1 && $this->validateList(array("name", "abbreviation", "address1", "address2", "city", "postal", "email", "opening_hours", "mobilepay_id", "accepts_signup", "geolocation", "latitude", "longitude", "description", "html"))) {
 
+			$IC = new Items();
 			$query = new Query();
+			
  
 			$query->checkDbExistence($this->db);
 			
@@ -196,8 +199,18 @@ class Department extends Model {
 				
 				// if successful, add message and return department id
 				if($query->sql($sql)) {
+
+					$department_id = $query->lastInsertId();
+
+					// add all products to the new department
+					$products = $IC->getItems(["itemtype" => "product"]);
+					foreach($products as $product) {
+						
+						$this->addProduct($department_id, $product["id"]);
+					}
+
 					message()->addMessage("Department created");
-					return array("item_id" => $query->lastInsertId());
+					return array("id" => $department_id);
 				}
 			}
 			else {
@@ -385,6 +398,48 @@ class Department extends Model {
 		}
 		message()->addMessage("Department could not be deleted.", array("type" => "error"));
 		return false;
+	}
+
+	/**
+	 * Add a product to the department
+	 *
+	 * @param int $department_id
+	 * @param int $product_id
+	 * @return boolean
+	 */
+	function addProduct($department_id, $product_id) {
+
+		$query = new Query();
+		$query->checkDbExistence($this->db_products);
+
+		$sql = "INSERT INTO ".$this->db_products." SET department_id = $department_id, product_id = $product_id";
+		if($query->sql($sql)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Remove a product from the department
+	 *
+	 * @param int $department_id
+	 * @param int $product_id
+	 * @return boolean
+	 */
+	function removeProduct($department_id, $product_id) {
+		
+		$query = new Query();
+
+		$sql = "DELETE FROM ".$this->db_products." WHERE department_id = $department_id AND product_id = $product_id";
+
+		if($query->sql($sql)) {
+			return true;
+		}
+
+		return false;
+
 	}
 }
 
