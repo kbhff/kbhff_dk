@@ -22,6 +22,7 @@ class Department extends Model {
 		// Define the name of departments table in database
 		$this->db = SITE_DB.".system_departments";
 		$this->db_products = SITE_DB.".department_products";
+		$this->db_pickupdates = SITE_DB.".department_pickupdates";
 
 
 		// Name
@@ -209,8 +210,19 @@ class Department extends Model {
 						$this->addProduct($department_id, $product["id"]);
 					}
 
+					// add all pickup dates to the new department
+					// only opening dates that after current date? 
+					include_once("classes/shop/pickupdate.class.php");
+					$PC = new Pickupdate();
+					$pickupdates = $PC->getPickupdates();
+					foreach($pickupdates as $pickupdate) {
+
+						$this->addPickupdate($department_id, $pickupdate["id"]);
+					}
+
+
 					message()->addMessage("Department created");
-					return array("id" => $department_id);
+					return array("item_id" => $department_id);
 				}
 			}
 			else {
@@ -435,6 +447,49 @@ class Department extends Model {
 		$sql = "DELETE FROM ".$this->db_products." WHERE department_id = $department_id AND product_id = $product_id";
 
 		if($query->sql($sql)) {
+			return true;
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * Add a pickup date to the department
+	 *
+	 * @param int $department_id
+	 * @param int $pickupdate_id
+	 * @return boolean
+	 */
+	function addPickupdate($department_id, $pickupdate_id) {
+
+		$query = new Query();
+		$query->checkDbExistence($this->db_pickupdates);
+
+		$sql = "INSERT INTO ".$this->db_pickupdates." SET department_id = $department_id, pickupdate_id = $pickupdate_id";
+		if($query->sql($sql)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Remove a pickup date from the department
+	 *
+	 * @param int $department_id
+	 * @param int $pickupdate_id
+	 * @return boolean
+	 */
+	function removePickupdate($department_id, $pickupdate_id) {
+		
+		$query = new Query();
+
+		$sql = "DELETE FROM ".$this->db_pickupdates." WHERE department_id = $department_id AND pickupdate_id = $pickupdate_id";
+
+		if($query->sql($sql)) {
+
 			return true;
 		}
 
