@@ -6,7 +6,7 @@ $departments = $DC->getDepartments();
 
 ?>
 
-<div class="scene accountant i:scene" itemscope itemtype="http://schema.org/NewsArticle">
+<div class="scene accountant departments i:scene" itemscope itemtype="http://schema.org/NewsArticle">
 	<h1>Bogholder</h1>
 	
 	<div class="c-wrapper">

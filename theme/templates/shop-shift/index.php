@@ -11,7 +11,9 @@ $tally_id = $tally["id"];
 <div class="scene shop_shift i:scene" itemscope itemtype="http://schema.org/NewsArticle">
 	<h1>Shop shift</h1>
 	<p>Shop shift dummy. Shop shift dummy. Shop shift dummy. Shop shift dummy. Shop shift dummy. Shop shift dummy.</p>
-	<a href="butiksvagt/kasse/<?= $tally_id ?>">Åbn kasse</a>
+	<ul class="actions">
+		<li class="shop"><a href="butiksvagt/kasse/<?= $tally_id ?>" class="button primary">Åbn kasse</a></li>
+	</ul>
 	
 
 	

@@ -58,7 +58,7 @@ $this->pageTitle("Kasseregnskab");
 						<div class="view">
 							<ul class="actions">
 								<li class="description">Ved vagtstart</li>
-								<li class="amount"><?= $tally["start_cash"] ?></li>
+								<li class="amount"><?= $tally["start_cash"] ? $tally["start_cash"] . " kr." : "" ?></li>
 								<li class="edit_btn"><a href="#" class="button">Redigér</a></li>
 							</ul>
 						</div>
@@ -70,7 +70,7 @@ $this->pageTitle("Kasseregnskab");
 								</fieldset>
 								
 							<ul class="actions">
-								<?= $TC->submit("Gem", ["wrapper" => "li.save"]); ?>
+								<?= $TC->submit("Gem", ["wrapper" => "li.save", "class" => "primary"]); ?>
 							</ul>
 							<?= $TC->formEnd(); ?>
 
@@ -83,7 +83,7 @@ $this->pageTitle("Kasseregnskab");
 						<div class="view">
 							<ul class="actions">
 								<li class="description">Ved vagtafslutning</li>
-								<li class="amount"><?= $tally["end_cash"] ?></li>
+								<li class="amount"><?= $tally["start_cash"] ? $tally["start_cash"] . " kr." : "" ?></li>
 								<li class="edit_btn"><a href="#" class="button">Redigér</a></li>
 							</ul>
 						</div>
@@ -95,7 +95,7 @@ $this->pageTitle("Kasseregnskab");
 								</fieldset>
 								
 							<ul class="actions">
-								<?= $TC->submit("Gem", ["wrapper" => "li.save"]); ?>
+								<?= $TC->submit("Gem", ["wrapper" => "li.save", "class" => "primary"]); ?>
 							</ul>
 							<?= $TC->formEnd(); ?>
 						</div>
@@ -107,7 +107,7 @@ $this->pageTitle("Kasseregnskab");
 						<div class="view">
 							<ul class="actions">
 								<li class="description">Evt. deponeret</li>
-								<li class="amount"><?= $tally["deposited"] ?></li>
+								<li class="amount"><?= $tally["start_cash"] ? $tally["start_cash"] . " kr." : "" ?></li>
 								<li class="edit_btn"><a href="#" class="button">Redigér</a></li>
 							</ul>
 						</div>
@@ -120,7 +120,7 @@ $this->pageTitle("Kasseregnskab");
 								</fieldset>
 								
 							<ul class="actions">
-								<?= $TC->submit("Gem", ["wrapper" => "li.save"]); ?>
+								<?= $TC->submit("Gem", ["wrapper" => "li.save", "class" => "primary"]); ?>
 							</ul>
 							<?= $TC->formEnd(); ?>
 						</div>
@@ -138,7 +138,7 @@ $this->pageTitle("Kasseregnskab");
 
 					<ul class="payout">
 						<li class="name"><?= $payout["name"] ?></li>
-						<li class="amount"><?= $payout["amount"] ?></li>
+						<li class="amount"><?= $tally["start_cash"] ? $tally["start_cash"] . " kr." : "" ?></li>
 						<?= $HTML->oneButtonForm("Slet", "/butiksvagt/kasse/$tally_id/udbetaling/deletePayout/$payout_id", [
 							"wrapper" => "li.delete",
 							"confirm_value" => "Bekræft"
@@ -173,7 +173,7 @@ $this->pageTitle("Kasseregnskab");
 
 					<ul class="revenue">
 						<li class="name"><?= $revenue["name"] ?></li>
-						<li class="amount"><?= $revenue["amount"] ?></li>
+						<li class="amount"><?= $tally["start_cash"] ? $tally["start_cash"] . " kr." : "" ?></li>
 						<?= $HTML->oneButtonForm("Slet", "/butiksvagt/kasse/$tally_id/andre-indtaegter/deleteRevenue/$revenue_id", [
 							"wrapper" => "li.delete",
 							"confirm_value" => "Bekræft"
@@ -235,7 +235,7 @@ $this->pageTitle("Kasseregnskab");
 				
 					<ul class="actions">
 						<?= $TC->submit("Gem og gå tilbage", ["wrapper" => "li.save"]); ?>
-						<?= $TC->submit("Godkend regnskab og luk kasse", ["wrapper" => "li.save", "formaction" => "$tally_id/closeTally"]) ?>
+						<?= $TC->submit("Godkend regnskab og luk kasse", ["wrapper" => "li.save", "class" => "primary", "formaction" => "$tally_id/closeTally"]) ?>
 					</ul>
 				<?= $TC->formEnd(); ?>
 
