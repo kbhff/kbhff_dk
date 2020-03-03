@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-02-25 01:56:45
+asset-builder @ 2020-03-03 01:09:51
 */
 
 /*seg_desktop_include.js*/
@@ -7339,7 +7339,17 @@ Util.Objects["tally"] = new function() {
 						this.action = iN.getAttribute("formaction");
 					}
 					this.response = function(response) {
-						if(u.qs(".scene.shop_shift", response)) {
+						var error_message = u.qs(".messages .error", response);
+						if(error_message) {
+							if(this.p_error) {
+								this.p_error.parentNode.removeChild(this.p_error);
+							} 
+							this.p_error = u.ie(u.qs(".section.tally"), "p", {
+								html:error_message.innerHTML,
+								class:"error"
+							})
+						}
+						else if(u.qs(".scene.shop_shift", response)) {
 							location.href = "/butiksvagt"; 
 						}
 						else {
