@@ -1,0 +1,67 @@
+/* DEPARTMENT OVERVIEW */
+#content .scene.accountant {}
+
+#content .scene.accountant.departments div.c-wrapper ul {list-style: none; margin-left: 0;}
+#content .scene.accountant.departments div.c-wrapper ul li {padding-left: 0;}
+#content .scene.accountant.departments div.c-wrapper ul li a {font-size: 20px;}
+
+/* TALLY OVERVIEW */
+#content .scene.accountant ul {list-style: none; margin-left: 0;}
+#content .scene.accountant ul.tallies {width: 50%; padding: 0; margin: 18px; border: 2px solid #000000;}
+#content .scene.accountant ul.tallies li {padding-left: 0;}
+#content .scene.accountant ul.tallies ul {padding: 0;}
+
+/* #content .scene.accountant ul.tallies li.labels {background: #f2f2f2;} */
+#content .scene.accountant ul.tallies li.labels ul {font-size: 0; padding-top: 12px;}
+#content .scene.accountant ul.tallies li.labels ul li {
+	display: inline-block; 
+	width: calc(50% - 24px);
+	padding: 0;
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1em;
+
+	padding-left: 12px;
+	padding-right: 12px;
+}
+
+#content .scene.accountant ul.tallies li.tally ul.details {font-size: 0;}
+#content .scene.accountant ul.tallies li.tally ul.details li {display: inline-block; width: calc(50% - 24px); padding: 0; line-height: 1em; padding-left: 12px; padding-right: 12px;}
+
+#content .scene.accountant ul.tallies li.tally {
+	border-top: 1px solid #000000;
+}
+
+#content .scene.accountant ul.tallies li.tally:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+/* TALLY */
+#content .scene.accountant h3 {
+	padding: 12px 0 0 0;
+	margin: 0 18px;
+	margin-bottom: 12px;
+	border-bottom: 1px solid #000000;
+}
+
+#content .scene.accountant .info dl {width: 100%;}
+#content .scene.accountant .info dt,
+#content .scene.accountant .info dd {
+	display: block;
+	line-height: 1.4em;
+	text-align: left;
+}
+#content .scene.accountant .info dd {padding-bottom: 12px;}
+
+
+#content .scene.accountant dl {width: 50%; font-size: 0;}
+#content .scene.accountant dt,
+#content .scene.accountant dd {
+	display: inline-block;
+	width: 50%;
+	line-height: 1.2em;
+}
+#content .scene.accountant dd {text-align: right; padding: 0;}
+#content .scene.accountant dl.subtotal >* {font-weight: 600;}
+
+#content .scene.accountant .calculated {padding-bottom: 46px; border-bottom: 1px;}

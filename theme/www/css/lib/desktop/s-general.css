@@ -1,21 +1,6 @@
 /* THIS CSS SHOULD PROBABLY BE MOVED TO THE SKIN – OR BE DISTRIBUTED TO OTHER CSS FILES */
 /* CONSIDER THIS A TEMP CSS FILE */
 
-#navigation ul.navigation li.path > h4, 
-#navigation ul.navigation li.path > h5, 
-#navigation ul.navigation li.path > a, 
-#navigation ul.navigation li.selected > h4, 
-#navigation ul.navigation li.selected > h5, 
-#navigation ul.navigation li.selected > a {
-	background-color: #fff;
-	border: 2px solid #3e8e17;
-	padding: 5px 12px 7px;
-	color: #3e8e17;
-/*	background-color: #3e8e17;
-*/
-	border-bottom: none;
-}
-
 #navigation ul.navigation h5:hover, 
 #navigation ul.navigation li:not(.selected) a:hover {
 	background-color: #357914;

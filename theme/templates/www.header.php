@@ -51,8 +51,8 @@
 	<link type="text/css" rel="stylesheet" media="all" href="/css/lib/seg_<?= $this->segment() ?>_include.css?cb=<?=randomKey(4); ?>" />
 	<script type="text/javascript" src="/js/lib/seg_<?= $this->segment() ?>_include.js?cb=<?=randomKey(4); ?>"></script>
 <? } else { ?>
-	<link type="text/css" rel="stylesheet" media="all" href="/css/seg_<?= $this->segment() ?>.css?rev=20200213-151000" />
-	<script type="text/javascript" src="/js/seg_<?= $this->segment() ?>.js?rev=20200213-151000"></script>
+	<link type="text/css" rel="stylesheet" media="all" href="/css/seg_<?= $this->segment() ?>.css?rev=20200303-010951" />
+	<script type="text/javascript" src="/js/seg_<?= $this->segment() ?>.js?rev=20200303-010951"></script>
 <? } ?>
 
 	<?= $this->headerIncludes() ?>
@@ -63,6 +63,7 @@
 <div id="page" class="i:page">
 
 	<div id="header">
+		<a class="logo" href="/">Københavns <span class="highlight">Fødevarefælleskab</span></a>
 		<ul class="servicenavigation">
 			<li class="keynav navigation nofollow"><a href="#navigation">To navigation</a></li>
 			<li class="keynav kontakt"><a href="/kontakt">Kontakt</a></li>
