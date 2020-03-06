@@ -204,7 +204,7 @@ class Department extends Model {
 					$department_id = $query->lastInsertId();
 
 					// add all products to the new department
-					$products = $IC->getItems(["itemtype" => "product"]);
+					$products = $IC->getItems(["where" => "itemtype REGEXP '^product'"]);
 					foreach($products as $product) {
 						
 						$this->addProduct($department_id, $product["id"]);

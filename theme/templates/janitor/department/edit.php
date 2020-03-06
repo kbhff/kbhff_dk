@@ -4,7 +4,7 @@ global $action;
 global $model;
 
 $IC = new Items();
-$products = $IC->getItems(["itemtype" => "product", "extend" => true]);
+$products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "extend" => true]);
 
 $department_id = $action[1];
 $department = $model->getDepartment(array("id" => $department_id));

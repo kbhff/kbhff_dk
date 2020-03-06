@@ -36,7 +36,7 @@
 * This file contains item type functionality
 */
 
-class TypeProduct extends Itemtype {
+class TypeProductSeasonalbag extends Itemtype {
 
 	/**
 	* Init, set varnames, validation rules
@@ -48,8 +48,7 @@ class TypeProduct extends Itemtype {
 
 
 		// itemtype database
-		$this->db = SITE_DB.".item_product";
-		$this->db_product_types = SITE_DB.".system_product_types";
+		$this->db = SITE_DB.".item_product_seasonalbag";
 
 
 		// Name
@@ -57,8 +56,8 @@ class TypeProduct extends Itemtype {
 			"type" => "string",
 			"label" => "Name",
 			"required" => true,
-			"hint_message" => "Give the weekly bag a name. Preferably use Week number in Danish as name, i.e. 'Uge 21' for consistency.",
-			"error_message" => "The weekly bag needs a title."
+			"hint_message" => "Give the seasonal bag a name. ",
+			"error_message" => "The seasonal bag needs a title."
 		));
 
 		// Start availability date
@@ -78,15 +77,6 @@ class TypeProduct extends Itemtype {
 			"error_message" => "Invalid end availability date."
 		));
 
-		
-		// product_type
-		$this->addToModel("product_type", array(
-			"type" => "integer",
-			"label" => "Product type",
-			"required" => true,
-			"hint_message" => "State the type of product.",
-			"error_message" => "The product needs a product type."
-		));
 
 		// description
 		$this->addToModel("description", array(
@@ -106,26 +96,6 @@ class TypeProduct extends Itemtype {
 			"hint_message" => "Add single image by dragging it here. PNG or JPG allowed.",
 			"error_message" => "Media does not fit requirements."
 		));
-
-	}
-
-	function getProductTypes() {
-
-		include_once("classes/system/upgrade.class.php");
-		$UG = new Upgrade();
-		$query = new Query();
-
-		$query->checkDbExistence($this->db_product_types);
-		$UG->checkDefaultValues($this->db_product_types);
-
-		$sql = "SELECT * FROM ".$this->db_product_types;
-
-		if($query->sql($sql)) {
-
-			return $query->results();
-		}
-
-		return false;
 
 	}
 

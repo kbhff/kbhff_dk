@@ -9,10 +9,10 @@ $items = $IC->getItems(array("itemtype" => $itemtype, "extend" => true));
 
 ?>
 <div class="scene i:scene defaultList <?= $itemtype ?>List">
-	<h1>Products</h1>
+	<h1>Weekly bags (product)</h1>
 
 	<ul class="actions">
-		<?= $JML->listNew(array("label" => "New product")) ?>
+		<?= $JML->listNew(array("label" => "New weekly bag")) ?>
 	</ul>
 
 	<div class="all_items i:defaultList filters"<?= $HTML->jsData(["search"]) ?>>
@@ -29,7 +29,7 @@ $items = $IC->getItems(array("itemtype" => $itemtype, "extend" => true));
 
 		</ul>
 <?		else: ?>
-		<p>No products.</p>
+		<p>No weekly bags.</p>
 <?		endif; ?>
 	</div>
 

@@ -6,7 +6,7 @@ global $itemtype;
 
 ?>
 <div class="scene i:scene defaultNew">
-	<h1>New product</h1>
+	<h1>New seasonal bag (product)</h1>
 
 	<ul class="actions">
 		<?= $JML->newList(array("label" => "List")) ?>
@@ -17,7 +17,6 @@ global $itemtype;
 			<?= $model->input("name") ?>
 			<?= $model->input("start_availability_date", ["type" => "date"]) ?>
 			<?= $model->input("end_availability_date", ["type" => "date"]) ?>
-			<?= $model->input("product_type", ["type" => "select", "options" => $model->toOptions($model->getProductTypes(), "id", "name", ["add" => ["" => "Choose product type"]])]) ?>
 			<?= $model->input("description") ?>
 		</fieldset>
 

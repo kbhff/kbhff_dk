@@ -15,12 +15,12 @@ $action = $page->actions();
 
 // define which model this controller is referring to
 $IC = new Items();
-$itemtype = "product";
+$itemtype = "productcanvasbag";
 $model = $IC->typeObject($itemtype);
 
 // page info
-$page->bodyClass("product");
-$page->pageTitle("Products");
+$page->bodyClass("product_canvasbag");
+$page->pageTitle("Canvas bag");
 
 
 if(is_array($action) && count($action)) {
@@ -30,7 +30,7 @@ if(is_array($action) && count($action)) {
 
 		$page->page(array(
 			"type" => "janitor",
-			"templates" => "janitor/product/".$action[0].".php"
+			"templates" => "janitor/product_canvasbag/".$action[0].".php"
 		));
 		exit();
 	}
