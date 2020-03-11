@@ -48,16 +48,24 @@
 	vertical-align: top;
 }
 
-
+#content div.scene.tally .edit fieldset {
+	display: inline-block;
+	vertical-align: top;
+	width: 400px;
+}
 
 #content div.scene.tally .edit ul.actions {
 	display: inline-block;
 	vertical-align: top;
+	padding-top: 12px;
+	padding-bottom: 0;
+	float: right;
 }
 
 #content div.scene.tally ul.actions li.edit_btn {padding: 0;}
-#content div.scene.tally ul.actions li.edit_btn .button {
-	padding: 4px 7px;
+#content div.scene.tally ul.actions li.edit_btn .button,
+#content div.scene.tally ul.actions li.save .button {
+	/* padding: 4px 7px; */
 }
 
 #content div.scene.tally .pseudolabel {display: none;}
