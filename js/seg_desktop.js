@@ -3538,7 +3538,7 @@ Util.History = u.h = new function() {
 		return !location.hash ? this.getCleanUrl(location.href) : this.getCleanHash(location.hash);
 	}
 }
-Util.Objects = u.o = new Object();
+Util.Modules = u.o = new Object();
 Util.init = function(scope) {
 	var i, node, nodes, object;
 	scope = scope && scope.nodeName ? scope : document;
@@ -4666,7 +4666,7 @@ Util.getVar = function(param, url) {
 
 
 /*i-page.js*/
-Util.Objects["page"] = new function() {
+Util.Modules["page"] = new function() {
 	this.init = function(page) {
 		page.hN = u.qs("#header");
 		page.hN.ul_service = u.qs("ul.servicenavigation", page.hN);
@@ -4754,7 +4754,7 @@ u.e.addDOMReadyEvent(u.init);
 
 
 /*i-scene.js*/
-Util.Objects["scene"] = new function() {
+Util.Modules["scene"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -4768,7 +4768,7 @@ Util.Objects["scene"] = new function() {
 
 
 /*i-banner.js*/
-Util.Objects["banner"] = new function() {
+Util.Modules["banner"] = new function() {
 	this.init = function(div) {
 		var variant = u.cv(div, "variant");
 		var format = u.cv(div, "format");
