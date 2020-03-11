@@ -8,40 +8,126 @@
 }
 
 /* TALLY */
-#content div.tally {}
+#content div.scene.tally {}
 
-#content div.tally h3 {
+#content div.scene.tally h3 {
 	padding: 12px 0 0 0;
 	margin: 0 18px;
 	margin-bottom: 12px;
 	border-bottom: 1px solid #000000;
 }
 
-#content div.tally li.description {
+#content div.scene.tally div.view li {
+	line-height: 30px;
+	vertical-align: middle;
+}
+
+#content div.scene.tally li.description {
+	float: left;
+	padding: 0;
+}
+
+#content div.scene.tally li.amount {
+	padding-bottom: 0;
+	padding-right: 10px;
+}
+
+#content div.scene.tally fieldset label,
+#content div.scene.tally fieldset input {
+	/* display: inline-block; */
+}
+
+
+#content div.scene.tally .cash ul.actions 
+#content div.scene.tally .payouts ul.actions,
+#content div.scene.tally .misc_revenues ul.actions,
+#content div.scene.tally .cash_sales ul.actions,
+#content div.scene.tally .calculated_sales ul.actions,
+#content div.scene.tally .change ul.actions {
+	display: inline-block;
+	vertical-align: top;
+}
+
+#content div.scene.tally .edit fieldset {
+	display: inline-block;
+	vertical-align: top;
+	width: 400px;
+}
+
+#content div.scene.tally .edit ul.actions {
+	display: inline-block;
+	vertical-align: top;
+	padding-top: 12px;
+	padding-bottom: 0;
+	float: right;
+}
+
+#content div.scene.tally ul.actions li.edit_btn {padding: 0;}
+#content div.scene.tally ul.actions li.edit_btn .button,
+#content div.scene.tally ul.actions li.save .button {
+	/* padding: 4px 7px; */
+}
+
+#content div.scene.tally .pseudolabel {display: none;}
+
+
+#content div.scene.tally .payouts ul.payout,
+#content div.scene.tally .misc_revenues ul.revenue {
+	list-style: none;
+	padding: 0;
+	text-align: right;
+	margin: 0 18px;
+	padding-bottom: 18px;
+}
+#content div.scene.tally .payouts ul.payout li,
+#content div.scene.tally .misc_revenues ul.revenue li {
+	display: inline-block;
+	padding: 0;
+	line-height: 30px;
+	vertical-align: middle;
+}
+
+#content div.scene.tally .payouts ul.payout li.name,
+#content div.scene.tally .misc_revenues ul.revenue li.name {
 	float: left;
 }
 
-#content div.tally li.amount {
-	padding-right: 5px;
-}
-
-#content div.tally fieldset label,
-#content div.tally fieldset input {
-	display: inline-block;
+#content div.scene.tally div.add_revenue > ul.actions {
+	width: 100%;
+	box-sizing: border-box;
 }
 
 
-#content div.tally .cash ul.actions 
-#content div.tally .payouts ul.actions,
-#content div.tally .misc_revenues ul.actions,
-#content div.tally .cash_sales ul.actions,
-#content div.tally .calculated_sales ul.actions,
-#content div.tally .change ul.actions {
+#content div.scene.tally div.add_payout form fieldset,
+#content div.scene.tally div.add_payout form ul.actions,
+#content div.scene.tally div.misc_revenues form fieldset,
+#content div.scene.tally div.misc_revenues form ul.actions {
 	display: inline-block;
-	vertical-align: top;
-} 
+	vertical-align: baseline;
+}
 
-#content div.tally .edit ul.actions {
+#content div.scene.tally div.add_payout form fieldset,
+#content div.scene.tally div.misc_revenues form fieldset {width: 878px;}
+#content div.scene.tally div.add_payout form ul.actions,
+#content div.scene.tally div.misc_revenues form ul.actions {padding-left: 0;}
+
+
+#content div.scene.tally div.add_payout form fieldset .field,
+#content div.scene.tally div.misc_revenues form fieldset .field {
 	display: inline-block;
-	vertical-align: top;
-} 
+}
+
+#content div.scene.tally div.add_payout form fieldset .field.string,
+#content div.scene.tally div.misc_revenues form fieldset .field.string {
+	/* padding-right: 0; */
+}
+
+#content div.scene.tally div.add_payout form fieldset .field.number,
+#content div.scene.tally div.misc_revenues form fieldset .field.number {
+	float: right;
+	padding-left: 0;
+	padding-right: 0;
+	text-align: right;
+}
+#content div.scene.tally div.add_payout form fieldset .field.number input,
+#content div.scene.tally div.misc_revenues form fieldset .field.number input {text-align: right;}

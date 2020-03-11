@@ -51,6 +51,7 @@
 	line-height: 1.4em;
 	text-align: left;
 }
+#content .scene.accountant .info dt {padding: 0;}
 #content .scene.accountant .info dd {padding-bottom: 12px;}
 
 
@@ -59,9 +60,10 @@
 #content .scene.accountant dd {
 	display: inline-block;
 	width: 50%;
-	line-height: 1.2em;
+	line-height: 1.3em;
+	padding-bottom: 12px;
 }
-#content .scene.accountant dd {text-align: right; padding: 0;}
+#content .scene.accountant dd {text-align: right;}
 #content .scene.accountant dl.subtotal >* {font-weight: 600;}
 
 #content .scene.accountant .calculated {padding-bottom: 46px; border-bottom: 1px;}
