@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-02-24 06:47:45
+asset-builder @ 2020-03-11 10:00:30
 */
 
 /*seg_desktop_include.css*/
@@ -238,7 +238,7 @@ input[type="submit"] {
 	height: 66px;
 	padding: 0 0 0 68px;
 	display: inline-block;
-	background: transparent url(../img/logos/logo-stempel_sort_lille_gulerod.png) no-repeat center left;
+	background: transparent url(../img/logos/logo-stempel_sort_stor.png) no-repeat center left;
 	background-size: 60px;
 	letter-spacing: 1px;
 	font-family: 'voresfont';
