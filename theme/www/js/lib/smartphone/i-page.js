@@ -1,4 +1,4 @@
-Util.Objects["page"] = new function() {
+Util.Modules["page"] = new function() {
 	this.init = function(page) {
 
 		// header reference

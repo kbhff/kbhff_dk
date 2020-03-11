@@ -1,6 +1,6 @@
 
 // generic 
-Util.Objects["generic"] = new function() {
+Util.Modules["generic"] = new function() {
 	this.init = function(div) {
 
 

@@ -1,4 +1,4 @@
-Util.Objects["comments"] = new function() {
+Util.Modules["comments"] = new function() {
 	this.init = function(div) {
 //		u.bug("comment init:", div);
 

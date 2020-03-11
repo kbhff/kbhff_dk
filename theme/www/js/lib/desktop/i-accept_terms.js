@@ -1,4 +1,4 @@
-Util.Objects["accept_terms"] = new function() {
+Util.Modules["accept_terms"] = new function() {
 	this.init = function(scene) {
 
 		scene.resized = function() {

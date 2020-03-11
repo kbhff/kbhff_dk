@@ -3538,7 +3538,7 @@ Util.History = u.h = new function() {
 		return !location.hash ? this.getCleanUrl(location.href) : this.getCleanHash(location.hash);
 	}
 }
-Util.Objects = u.o = new Object();
+Util.Modules = u.o = new Object();
 Util.init = function(scope) {
 	var i, node, nodes, object;
 	scope = scope && scope.nodeName ? scope : document;
@@ -4663,7 +4663,7 @@ Util.getVar = function(param, url) {
 		return "";
 	}
 }
-Util.Objects["page"] = new function() {
+Util.Modules["page"] = new function() {
 	this.init = function(page) {
 		page.hN = u.qs("#header");
 		page.hN.ul_service = u.qs("ul.servicenavigation", page.hN);
@@ -4748,7 +4748,7 @@ Util.Objects["page"] = new function() {
 	}
 }
 u.e.addDOMReadyEvent(u.init);
-Util.Objects["scene"] = new function() {
+Util.Modules["scene"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -4759,7 +4759,7 @@ Util.Objects["scene"] = new function() {
 		scene.ready();
 	}
 }
-Util.Objects["banner"] = new function() {
+Util.Modules["banner"] = new function() {
 	this.init = function(div) {
 		var variant = u.cv(div, "variant");
 		var format = u.cv(div, "format");
@@ -5401,7 +5401,7 @@ u.objectValues = function(obj) {
 }
 
 /*beta-u-form-onebuttonform.js*/
-Util.Objects["oneButtonForm"] = new function() {
+Util.Modules["oneButtonForm"] = new function() {
 	this.init = function(node) {
 		if(!node.childNodes.length) {
 			var csrf_token = node.getAttribute("data-csrf-token");
@@ -5542,7 +5542,7 @@ Util.Objects["oneButtonForm"] = new function() {
 }
 
 /*i-article.js*/
-Util.Objects["article"] = new function() {
+Util.Modules["article"] = new function() {
 	this.init = function(article) {
 		u.bug("article init:", article);
 		article.csrf_token = article.getAttribute("data-csrf-token");
@@ -5616,7 +5616,7 @@ Util.Objects["article"] = new function() {
 
 
 /*i-articles.js*/
-Util.Objects["articles"] = new function() {
+Util.Modules["articles"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5656,7 +5656,7 @@ Util.Objects["articles"] = new function() {
 
 
 /*i-front.js*/
-Util.Objects["front"] = new function() {
+Util.Modules["front"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5696,7 +5696,7 @@ Util.Objects["front"] = new function() {
 
 
 /*i-faq.js*/
-Util.Objects["faq"] = new function() {
+Util.Modules["faq"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5745,7 +5745,7 @@ Util.Objects["faq"] = new function() {
 
 
 /*i-login.js*/
-Util.Objects["login"] = new function() {
+Util.Modules["login"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5761,7 +5761,7 @@ Util.Objects["login"] = new function() {
 
 
 /*i-accept_terms.js*/
-Util.Objects["accept_terms"] = new function() {
+Util.Modules["accept_terms"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5846,7 +5846,7 @@ Util.Objects["accept_terms"] = new function() {
 
 
 /*i-confirm_account.js*/
-Util.Objects["confirm_account"] = new function() {
+Util.Modules["confirm_account"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5863,7 +5863,7 @@ Util.Objects["confirm_account"] = new function() {
 
 
 /*i-create_password.js*/
-Util.Objects["create_password"] = new function() {
+Util.Modules["create_password"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5880,7 +5880,7 @@ Util.Objects["create_password"] = new function() {
 
 
 /*i-update_department.js*/
-Util.Objects["update_department"] = new function() {
+Util.Modules["update_department"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5896,7 +5896,7 @@ Util.Objects["update_department"] = new function() {
 
 
 /*i-update_user_information.js*/
-Util.Objects["user_information"] = new function() {
+Util.Modules["user_information"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5912,7 +5912,7 @@ Util.Objects["user_information"] = new function() {
 
 
 /*i-update_user_password.js*/
-Util.Objects["user_password"] = new function() {
+Util.Modules["user_password"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5928,7 +5928,7 @@ Util.Objects["user_password"] = new function() {
 
 
 /*i-delete_user_information.js*/
-Util.Objects["delete_user_information"] = new function() {
+Util.Modules["delete_user_information"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5946,7 +5946,7 @@ Util.Objects["delete_user_information"] = new function() {
 
 
 /*i-signupfees.js*/
-Util.Objects["signupfees"] = new function() {
+Util.Modules["signupfees"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5986,7 +5986,7 @@ Util.Objects["signupfees"] = new function() {
 
 
 /*i-signup.js*/
-Util.Objects["signup"] = new function() {
+Util.Modules["signup"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6015,7 +6015,7 @@ Util.Objects["signup"] = new function() {
 
 
 /*i-comments.js*/
-Util.Objects["comments"] = new function() {
+Util.Modules["comments"] = new function() {
 	this.init = function(div) {
 		div.item_id = u.cv(div, "item_id");
 		div.list = u.qs("ul.comments", div);
@@ -6106,7 +6106,7 @@ Util.Objects["comments"] = new function() {
 
 
 /*i-stripe.js*/
-Util.Objects["stripe"] = new function() {
+Util.Modules["stripe"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6227,7 +6227,7 @@ Util.Objects["stripe"] = new function() {
 }
 
 /*i-member_help_accept_terms.js*/
-Util.Objects["member_help_accept_terms"] = new function() {
+Util.Modules["member_help_accept_terms"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6243,7 +6243,7 @@ Util.Objects["member_help_accept_terms"] = new function() {
 
 
 /*i-member_help_signup.js*/
-Util.Objects["member_help_signup"] = new function() {
+Util.Modules["member_help_signup"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6263,7 +6263,7 @@ Util.Objects["member_help_signup"] = new function() {
 
 
 /*i-member_help_payment.js*/
-Util.Objects["member_help_payment"] = new function() {
+Util.Modules["member_help_payment"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6451,7 +6451,7 @@ Util.Objects["member_help_payment"] = new function() {
 
 
 /*i-member_help_index.js*/
-Util.Objects["member_help"] = new function() {
+Util.Modules["member_help"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6525,7 +6525,7 @@ Util.Objects["member_help"] = new function() {
 
 
 /*i-newsletter.js*/
-Util.Objects["newsletter"] = new function() {
+Util.Modules["newsletter"] = new function() {
 	this.init = function(div) {
 		var form = u.qs("form", div);
 		form.div = div;
@@ -6542,7 +6542,7 @@ Util.Objects["newsletter"] = new function() {
 }
 
 /*i-departments.js*/
-Util.Objects["departments"] = new function() {
+Util.Modules["departments"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6584,7 +6584,7 @@ Util.Objects["departments"] = new function() {
 
 
 /*i-department_view.js*/
-Util.Objects["departmentView"] = new function() {
+Util.Modules["departmentView"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6600,7 +6600,7 @@ Util.Objects["departmentView"] = new function() {
 
 
 /*i-user_profile.js*/
-Util.Objects["user_profile"] = new function() {
+Util.Modules["user_profile"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6881,7 +6881,7 @@ Util.Objects["user_profile"] = new function() {
 
 
 /*i-profile.js*/
-Util.Objects["profile"] = new function() {
+Util.Modules["profile"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -7246,7 +7246,7 @@ Util.Objects["profile"] = new function() {
 
 
 /*i-forgot.js*/
-Util.Objects["forgot"] = new function() {
+Util.Modules["forgot"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -7317,7 +7317,7 @@ Util.Objects["forgot"] = new function() {
 
 
 /*i-tally.js*/
-Util.Objects["tally"] = new function() {
+Util.Modules["tally"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}

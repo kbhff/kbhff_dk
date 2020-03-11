@@ -1,5 +1,5 @@
 // generic 
-Util.Objects["restructure"] = new function() {
+Util.Modules["restructure"] = new function() {
 	this.init = function(div) {
 
 		var result_code = u.qs("div.result code");
@@ -26,7 +26,7 @@ Util.Objects["restructure"] = new function() {
 
 
 // generic 
-Util.Objects["generic"] = new function() {
+Util.Modules["generic"] = new function() {
 	this.init = function(div) {
 
 

@@ -1,4 +1,4 @@
-Util.Objects["member_help_signup"] = new function() {
+Util.Modules["member_help_signup"] = new function() {
 	this.init = function(scene) {
 //		u.bug("scene init:", scene);
 

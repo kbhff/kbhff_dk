@@ -1,4 +1,4 @@
-Util.Objects["delete_user_information"] = new function() {
+Util.Modules["delete_user_information"] = new function() {
 	this.init = function(scene) {
 
 		scene.resized = function() {

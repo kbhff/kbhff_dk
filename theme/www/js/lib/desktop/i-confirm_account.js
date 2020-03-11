@@ -1,4 +1,4 @@
-Util.Objects["confirm_account"] = new function() {
+Util.Modules["confirm_account"] = new function() {
 	this.init = function(scene) {
 
 		scene.resized = function() {

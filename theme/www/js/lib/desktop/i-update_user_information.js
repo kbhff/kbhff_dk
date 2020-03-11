@@ -1,4 +1,4 @@
-Util.Objects["user_information"] = new function() {
+Util.Modules["user_information"] = new function() {
 	this.init = function(scene) {
 
 		scene.resized = function() {

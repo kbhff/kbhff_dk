@@ -1,4 +1,4 @@
-Util.Objects["tally"] = new function() {
+Util.Modules["tally"] = new function() {
 	this.init = function(scene) {
 //		u.bug("scene init:", scene);
 

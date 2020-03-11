@@ -1,4 +1,4 @@
-Util.Objects["update_membership"] = new function() {
+Util.Modules["update_membership"] = new function() {
 	this.init = function(scene) {
 
 		scene.resized = function() {

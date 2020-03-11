@@ -1,4 +1,4 @@
-Util.Objects["departments"] = new function() {
+Util.Modules["departments"] = new function() {
 	this.init = function(scene) {
 		// u.bug("scene init:", scene);
 

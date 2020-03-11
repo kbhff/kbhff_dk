@@ -1,6 +1,6 @@
 
 // Stardard article enabling
-Util.Objects["article"] = new function() {
+Util.Modules["article"] = new function() {
 	this.init = function(article) {
 		u.bug("article init:", article);
 

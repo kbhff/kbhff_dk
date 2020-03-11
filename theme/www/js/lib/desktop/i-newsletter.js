@@ -1,4 +1,4 @@
-Util.Objects["newsletter"] = new function() {
+Util.Modules["newsletter"] = new function() {
 	this.init = function(div) {
 
 		var form = u.qs("form", div);
