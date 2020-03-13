@@ -139,11 +139,15 @@ $this->pageTitle("Kasseregnskab");
 					<ul class="payout">
 						<li class="name"><?= $payout["name"] ?></li>
 						<li class="amount"><?= $payout["amount"] ?> kr.</li>
-						<?= $HTML->oneButtonForm("Slet", "/butiksvagt/kasse/$tally_id/udbetaling/deletePayout/$payout_id", [
-							"wrapper" => "li.delete",
-							"confirm_value" => "Bekræft"
+						<li>
+							<ul class="actions">
+								<?= $HTML->oneButtonForm("Slet", "/butiksvagt/kasse/$tally_id/udbetaling/deletePayout/$payout_id", [
+									"wrapper" => "li.delete",
+									"confirm_value" => "Bekræft"
 
-							]) ?>
+								])?>
+							</ul>
+						</li>
 					</ul>
 
 					<? endforeach; ?>
@@ -174,11 +178,14 @@ $this->pageTitle("Kasseregnskab");
 					<ul class="revenue">
 						<li class="name"><?= $revenue["name"] ?></li>
 						<li class="amount"><?= $revenue["amount"] ?> kr.</li>
-						<?= $HTML->oneButtonForm("Slet", "/butiksvagt/kasse/$tally_id/andre-indtaegter/deleteRevenue/$revenue_id", [
-							"wrapper" => "li.delete",
-							"confirm_value" => "Bekræft"
-
-							]) ?>
+						<li>
+							<ul class="actions">
+								<?= $HTML->oneButtonForm("Slet", "/butiksvagt/kasse/$tally_id/andre-indtaegter/deleteRevenue/$revenue_id", [
+									"wrapper" => "li.delete",
+									"confirm_value" => "Bekræft"
+								]) ?>
+							</ul>
+						</li>
 					</ul>
 
 					<? endforeach; ?>
