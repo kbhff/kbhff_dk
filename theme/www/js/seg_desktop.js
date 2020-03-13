@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-03-13 15:46:54
+asset-builder @ 2020-03-13 16:02:21
 */
 
 /*seg_desktop_include.js*/
@@ -7379,6 +7379,7 @@ Util.Modules["tally"] = new function() {
 			this.start_cash_view.edit_btn.clicked = function() {
 				u.as(this.scene.start_cash_view, "display", "none");
 				u.as(this.scene.start_cash_edit, "display", "block");
+				this.scene.start_cash_edit.form.inputs["start_cash"].focus()
 			}
 			this.start_cash_edit.form.submitted = function() {
 				this.response = function(response) {
@@ -7406,6 +7407,7 @@ Util.Modules["tally"] = new function() {
 			this.end_cash_view.edit_btn.clicked = function() {
 				u.as(this.scene.end_cash_view, "display", "none");
 				u.as(this.scene.end_cash_edit, "display", "block");
+				this.scene.end_cash_edit.form.inputs["end_cash"].focus()
 			}
 			this.end_cash_edit.form.submitted = function() {
 				this.response = function(response) {
@@ -7434,6 +7436,7 @@ Util.Modules["tally"] = new function() {
 			this.deposited_view.edit_btn.clicked = function() {
 				u.as(this.scene.deposited_view, "display", "none");
 				u.as(this.scene.deposited_edit, "display", "block");
+				this.scene.deposited_edit.form.inputs["deposited"].focus()
 			}
 			this.deposited_edit.form.submitted = function() {
 				this.response = function(response) {
@@ -7478,6 +7481,7 @@ Util.Modules["tally"] = new function() {
 					this.scene.payouts.div_add.form.scene = this.scene;
 					u.f.init(this.scene.payouts.div_add.form);
 					this.scene.payouts.div_add.replaceChild(this.scene.payouts.div_add.form, this.scene.payouts.div_add.ul); 
+					this.scene.payouts.div_add.form.inputs["payout_name"].focus();
 					this.scene.payouts.div_add.form.submitted = function() {
 						this.response = function(response) {
 							this.scene.payouts.div_add.replaceChild(this.scene.payouts.div_add.ul, this.scene.payouts.div_add.form); 
@@ -7525,6 +7529,7 @@ Util.Modules["tally"] = new function() {
 					this.scene.revenues.div_add.form.scene = this.scene;
 					u.f.init(this.scene.revenues.div_add.form);
 					this.scene.revenues.div_add.replaceChild(this.scene.revenues.div_add.form, this.scene.revenues.div_add.ul); 
+					this.scene.revenues.div_add.form.inputs["revenue_name"].focus();
 					this.scene.revenues.div_add.form.submitted = function() {
 						this.response = function(response) {
 							this.scene.revenues.div_add.replaceChild(this.scene.revenues.div_add.ul, this.scene.revenues.div_add.form); 
