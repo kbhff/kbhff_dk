@@ -79,6 +79,12 @@
 	margin: 0 18px;
 	padding-bottom: 18px;
 }
+
+#content div.scene.tally .payouts ul.payout ul.actions,
+#content div.scene.tally .misc_revenues ul.revenue ul.actions {
+	padding: 0;
+}
+
 #content div.scene.tally .payouts ul.payout li,
 #content div.scene.tally .misc_revenues ul.revenue li {
 	display: inline-block;
