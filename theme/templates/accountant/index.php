@@ -13,13 +13,17 @@ $departments = $DC->getDepartments();
 	<div class="c-wrapper">
 		<h2>Download afregningsoversigt</h2>
 		<?= $TC->formStart("download", ["class" => "labelstyle:inject form"]); ?>
-		<?= $TC->input("creation_date", [
-			"type" => "date",
-			"label" => "Afregningsdato",
-			"required" => true,
-			"hint" => "Vælg åbningsdato for kasseafregninger",
-			"error" => "Du skal vælge en dato"
-		]); ?>
+		<fieldset>
+			<div class="c-one-half">
+				<?= $TC->input("creation_date", [
+					"type" => "date",
+					"label" => "Afregningsdato",
+					"required" => true,
+					"hint" => "Vælg åbningsdato for kasseafregninger",
+					"error" => "Du skal vælge en dato"
+				]); ?>
+			</div>
+		</fieldset>
 		
 		<ul class="actions">
 		<?= $TC->submit("Download fil"); ?>
