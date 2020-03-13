@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-03-13 10:10:25
+asset-builder @ 2020-03-13 15:05:21
 */
 
 /*seg_desktop_include.css*/
@@ -1024,6 +1024,16 @@ position: relative;
 #content div.scene.tally .misc_revenues ul.revenue li.name {
 	float: left;
 }
+#content div.scene.tally .payouts ul.payout li.delete input,
+#content div.scene.tally .misc_revenues ul.revenue li.delete input {
+	background-color: #C22414;
+	color: #ffffff;
+}
+#content div.scene.tally .payouts ul.payout li.delete input.confirm,
+#content div.scene.tally .misc_revenues ul.revenue li.delete input.confirm {
+	background-color: #3e8e17;
+	color: #ffffff;
+}
 #content div.scene.tally div.add_revenue > ul.actions {
 	width: 100%;
 	box-sizing: border-box;
@@ -1228,6 +1238,7 @@ div.overlay .close:after {
 #content .scene.accountant.departments div.c-wrapper ul {list-style: none; margin-left: 0;}
 #content .scene.accountant.departments div.c-wrapper ul li {padding-left: 0;}
 #content .scene.accountant.departments div.c-wrapper ul li a {font-size: 20px;}
+#content .scene.accountant.departments div.c-wrapper .c-one-half {min-height: 0px;}
 #content .scene.accountant ul {list-style: none; margin-left: 0;}
 #content .scene.accountant ul.tallies {width: 50%; padding: 0; margin: 18px; border: 2px solid #000000;}
 #content .scene.accountant ul.tallies li {padding-left: 0;}
