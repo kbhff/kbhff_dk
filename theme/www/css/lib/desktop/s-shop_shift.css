@@ -98,6 +98,17 @@
 	float: left;
 }
 
+#content div.scene.tally .payouts ul.payout li.delete input,
+#content div.scene.tally .misc_revenues ul.revenue li.delete input {
+	background-color: #C22414;
+	color: #ffffff;
+}
+#content div.scene.tally .payouts ul.payout li.delete input.confirm,
+#content div.scene.tally .misc_revenues ul.revenue li.delete input.confirm {
+	background-color: #3e8e17;
+	color: #ffffff;
+}
+
 #content div.scene.tally div.add_revenue > ul.actions {
 	width: 100%;
 	box-sizing: border-box;
