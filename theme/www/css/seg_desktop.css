@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-03-11 10:08:03
+asset-builder @ 2020-03-13 10:10:25
 */
 
 /*seg_desktop_include.css*/
@@ -1008,6 +1008,10 @@ position: relative;
 	text-align: right;
 	margin: 0 18px;
 	padding-bottom: 18px;
+}
+#content div.scene.tally .payouts ul.payout ul.actions,
+#content div.scene.tally .misc_revenues ul.revenue ul.actions {
+	padding: 0;
 }
 #content div.scene.tally .payouts ul.payout li,
 #content div.scene.tally .misc_revenues ul.revenue li {
