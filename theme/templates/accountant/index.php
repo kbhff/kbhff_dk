@@ -1,6 +1,7 @@
 <? 
 global $action;
 global $DC;
+global $TC;
 
 $departments = $DC->getDepartments();
 
@@ -10,6 +11,20 @@ $departments = $DC->getDepartments();
 	<h1>Bogholder</h1>
 	
 	<div class="c-wrapper">
+		<h2>Download afregningsoversigt</h2>
+		<?= $TC->formStart("download", ["class" => "labelstyle:inject form"]); ?>
+		<?= $TC->input("creation_date", [
+			"type" => "date",
+			"label" => "Afregningsdato",
+			"required" => true,
+			"hint" => "Vælg åbningsdato for kasseafregninger",
+			"error" => "Du skal vælge en dato"
+		]); ?>
+		
+		<ul class="actions">
+		<?= $TC->submit("Download fil"); ?>
+		</ul>
+		<?= $TC->formEnd(); ?>
 
 		<h2>Se afregninger pr. afdeling</h2>
 		<ul>

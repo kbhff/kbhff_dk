@@ -129,6 +129,7 @@ class Tally extends Model {
 
 
 
+
 	}
 	
 	/**
@@ -142,6 +143,8 @@ class Tally extends Model {
 		$order = "name ASC";
 		
 		$department_id = false;
+		$creation_date = false;
+		$status = false;
 
 
 		if($_options !== false) {
@@ -150,6 +153,7 @@ class Tally extends Model {
 					case "order"           : $order                = $_value; break;
 					case "department_id"   : $department_id        = $_value; break;
 					case "status"          : $status               = $_value; break;
+					case "creation_date"   : $creation_date        = $_value; break;
 				}
 			}
 		}
@@ -158,7 +162,7 @@ class Tally extends Model {
 		$sql = "SELECT * FROM ".$this->db;		
 		$where = [];
 
-		if($department_id || $status) {
+		if($department_id || $status || $creation_date) {
 			$sql .= " WHERE ";
 		}
 
@@ -166,9 +170,18 @@ class Tally extends Model {
 
 			$sql .= "department_id = $department_id";
 		}
-		if($status) {
+		if($creation_date) {
 
 			if($department_id) {
+				
+				$sql .= " AND ";
+			}
+
+			$sql .= "created_at LIKE '$creation_date%'";
+		}
+		if($status) {
+
+			if($creation_date || $department_id) {
 				
 				$sql .= " AND ";
 			}
@@ -848,6 +861,107 @@ class Tally extends Model {
 
 	}
 
+	function getPreviousTally($tally_id) {
+
+		$query = new Query();
+
+		$tally = $this->getTally(["id" => $tally_id]);
+		$department_id = $tally["department_id"];
+		$tallies = $this->getTallies(["department_id" => $department_id, "status" => 2, "order" => "created_at ASC"]);
+
+		$tally_index = arrayKeyValue($tallies, "id", $tally["id"]);
+		if($tally_index) {
+
+			$previous_tally = $tallies[$tally_index - 1];
+
+			return $previous_tally;
+		}
+
+		return false; 
+	}
+
+	function createCsv($creation_date) {
+
+		include_once("classes/system/department.class.php");
+		$DC = new Department();
+		include_once("classes/users/superuser.class.php");
+		
+		$UC = new SuperUser();
+
+
+		$tallies = $this->getTallies(["creation_date" => $creation_date, "status" => 2, "order" => "department_id ASC"]);
+
+		$csv_arr = [];
+
+		foreach($tallies as $tally) {
+
+			$department = $DC->getDepartment(["id" => $tally["department_id"]]);
+			$opened_by = $UC->getUser(["user_id" => $tally["opened_by"]]);
+			$closed_by = $UC->getUser(["user_id" => $tally["closed_by"]]);
+			$previous_tally = $this->getPreviousTally($tally["id"]);
+			if($previous_tally) {
+
+				$previous_tally_change = $this->calculateChange($previous_tally["id"]);
+			}
+
+			$payouts = $this->getPayouts($tally["id"]);
+			$revenues = $this->getMiscRevenues($tally["id"]);
+			$calculated_sales_by_the_piece = $this->calculateSalesByThePiece($tally["id"]);
+			$cash_order_items_summary = $this->cashOrderItemsSummary($tally["id"]);
+
+			$csv_arr[] = $department["name"].",Åbnet af,".$opened_by["nickname"]." (".$opened_by["email"].")";
+			$csv_arr[] = $department["name"].",Åbningstidspunkt,".date("d/m-Y H:i", strtotime($tally["created_at"]));
+			$csv_arr[] = $department["name"].",Lukket af,".$closed_by["nickname"]." (".$closed_by["email"].")";
+			$csv_arr[] = $department["name"].",Lukningstidspunkt,".date("d/m-Y H:i", strtotime($tally["modified_at"]));
+			$csv_arr[] = $department["name"].",Forrige kasseåbning,".($previous_tally ? date("d/m-Y H:i", strtotime($previous_tally["created_at"])) : "Ikke tilgængelig");
+			$csv_arr[] = $department["name"].",Byttepenge efter forrige kasselukning (kr.),".($previous_tally_change ?? "Ikke tilgængelig");
+			$csv_arr[] = $department["name"].",Kassebeholdning ved vagtstart (kr.),".$tally["start_cash"];
+			$csv_arr[] = $department["name"].",Kassebeholdning ved vagtafslutning (kr.),".$tally["end_cash"];
+			$csv_arr[] = $department["name"].",Evt. deponeret (kr.),".($tally["deposited"] ?? 0);
+			$csv_arr[] = $department["name"].",Udbetalinger fra kassen I ALT (kr.),".$this->getPayoutsSum($tally["id"]);
+			
+			if($payouts) {
+				
+				foreach($payouts as $payout) {
+					
+					$csv_arr[] = $department["name"].",Udbetaling: ".$payout["name"]." (kr.),".$payout["amount"];
+					
+				}
+			}
+			
+			
+			$csv_arr[] = $department["name"].",Andre kontante indtægter I ALT (kr.),".$this->getMiscRevenuesSum($tally["id"]);
+			
+			if($revenues) {
+				
+				foreach($revenues as $revenue) {
+					
+					$csv_arr[] = $department["name"].",Indtægt: ".$revenue["name"]." (kr.),".$revenue["amount"];
+					
+				}
+			}
+			
+			$csv_arr[] = $department["name"].",Registreret kontantsalg I ALT (kr.),".($this->calculateCashSalesSum($cash_order_items_summary) ?: "0");
+			
+			if($cash_order_items_summary) {
+				
+				foreach($cash_order_items_summary as $item_id => $values) {
+					
+					$csv_arr[] = $department["name"].",".$values["count"]."x ".$values["name"]." (".$values["itemtype"].") á ".$values["unit_price"]."kr. (kr.),".$values["total_price"];
+				}
+			}
+			
+			$csv_arr[] = $department["name"].",Beregnet løssalg I ALT (kr.),".$this->calculateSalesByThePiece($tally["id"]);
+			$csv_arr[] = $department["name"].",Byttepenge til næste uge (kassebeholdning ved slut minus deponerede penge) (kr.),".$this->calculateChange($tally["id"]);
+			$csv_arr[] = $department["name"].",Noter,".$tally["comment"];
+			
+
+		}
+
+		$csv = implode($csv_arr, "\n");
+
+		return $csv;
+	}
 }
 
 ?>

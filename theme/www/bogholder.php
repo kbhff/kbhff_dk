@@ -45,6 +45,31 @@ if($action) {
 		}
 
 	}
+	elseif($action[0] == "download") {
+
+		// /bogholder/download
+		if(count($action) == 1) {
+
+			$TC->getPostedEntities();
+			
+			$creation_date = getPost("creation_date");
+
+			$csv = $TC->createCsv($creation_date);
+
+			header('Content-Description: File Transfer');
+			header('Content-Type: text/text');
+			header("Content-Type: application/force-download");
+			header('Content-Disposition: attachment; filename='.$creation_date."_kbhff_regnskab.csv");
+			header('Expires: 0');
+			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+			header('Pragma: public');
+			header('Content-Length: ' . strlen($csv));
+			ob_clean();
+			flush();
+			print $csv;
+			exit();
+		}
+	}
 }
 
 // standard template
