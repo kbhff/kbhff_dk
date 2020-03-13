@@ -97,6 +97,10 @@ Util.Modules["tally"] = new function() {
 				u.as(this.scene.start_cash_view, "display", "none");
 				u.as(this.scene.start_cash_edit, "display", "block");
 				
+				// console.log(this.scene.start_cash_edit.form.inputs)
+
+				this.scene.start_cash_edit.form.inputs["start_cash"].focus()
+
 			}
 			
 			this.start_cash_edit.form.submitted = function() {
@@ -142,6 +146,8 @@ Util.Modules["tally"] = new function() {
 				u.as(this.scene.end_cash_view, "display", "none");
 				u.as(this.scene.end_cash_edit, "display", "block");
 				
+				this.scene.end_cash_edit.form.inputs["end_cash"].focus()
+
 			}
 			
 			this.end_cash_edit.form.submitted = function() {
@@ -187,6 +193,8 @@ Util.Modules["tally"] = new function() {
 				u.as(this.scene.deposited_view, "display", "none");
 				u.as(this.scene.deposited_edit, "display", "block");
 				
+				this.scene.deposited_edit.form.inputs["deposited"].focus()
+
 			}
 			
 			this.deposited_edit.form.submitted = function() {
@@ -259,7 +267,12 @@ Util.Modules["tally"] = new function() {
 
 					u.f.init(this.scene.payouts.div_add.form);
 
+					
 					this.scene.payouts.div_add.replaceChild(this.scene.payouts.div_add.form, this.scene.payouts.div_add.ul); 
+
+					this.scene.payouts.div_add.form.inputs["payout_name"].focus();
+
+
 					this.scene.payouts.div_add.form.submitted = function() {
 
 						
@@ -340,6 +353,8 @@ Util.Modules["tally"] = new function() {
 					u.f.init(this.scene.revenues.div_add.form);
 
 					this.scene.revenues.div_add.replaceChild(this.scene.revenues.div_add.form, this.scene.revenues.div_add.ul); 
+
+					this.scene.revenues.div_add.form.inputs["revenue_name"].focus();
 
 					this.scene.revenues.div_add.form.submitted = function() {
 
