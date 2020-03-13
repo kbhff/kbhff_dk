@@ -148,3 +148,7 @@
 }
 #content div.scene.tally div.add_payout form fieldset .field.number input,
 #content div.scene.tally div.misc_revenues form fieldset .field.number input {text-align: right;}
+
+#content div.scene.tally div.cash_sales ul {list-style: none; margin: 0; padding-bottom: 15px;}
+#content div.scene.tally div.cash_sales ul li {display: inline-block; padding: 0;}
+#content div.scene.tally div.cash_sales ul li.total_price {float: right;}
