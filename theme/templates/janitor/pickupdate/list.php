@@ -2,7 +2,7 @@
 global $action;
 global $model;
 
-$pickupdates = $model->getPickupdates();
+$pickupdates = $model->getPickupdates(["order" => "pickupdate DESC"]);
 
 ?>
 <div class="scene i:scene defaultList pickupdateList">
