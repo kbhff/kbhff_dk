@@ -143,7 +143,7 @@ $this->pageTitle("Kasseregnskab");
 							<ul class="actions">
 								<?= $HTML->oneButtonForm("Slet", "/butiksvagt/kasse/$tally_id/udbetaling/deletePayout/$payout_id", [
 									"wrapper" => "li.delete",
-									"confirm_value" => "Bekræft"
+									"confirm-value" => "Bekræft",
 
 								])?>
 							</ul>
@@ -182,7 +182,7 @@ $this->pageTitle("Kasseregnskab");
 							<ul class="actions">
 								<?= $HTML->oneButtonForm("Slet", "/butiksvagt/kasse/$tally_id/andre-indtaegter/deleteRevenue/$revenue_id", [
 									"wrapper" => "li.delete",
-									"confirm_value" => "Bekræft"
+									"confirm-value" => "Bekræft",
 								]) ?>
 							</ul>
 						</li>
