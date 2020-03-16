@@ -14,13 +14,10 @@ $users = false;
 
 $global_search_allowed = $page->validatePath("/medlemshjaelp/globalSearch"); 
 
-if($global_search_allowed) {
-
-	$search_users = $model->searchUsers($action);
-	$search_value = $search_users["search_value"];
-	$users = $search_users["users"];
-	$department_id = $search_users["department_id"];
-}
+$search_users = $model->searchUsers($action);
+$search_value = $search_users["search_value"];
+$users = $search_users["users"];
+$department_id = $search_users["department_id"];
 
 if (!$department_id) {
 	$department_id = $user_department["id"];
