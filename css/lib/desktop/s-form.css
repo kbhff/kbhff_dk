@@ -24,7 +24,12 @@ div.field select {width: calc(100% - 4px); padding: 2px 3px 2px 2px;
 div.field select:not(*:root) {
 	padding: 3px 3px 3px 6px;
 }
-
+/* FIREFOX ONLY */
+@-moz-document url-prefix() { 
+	div.field select {
+		padding: 3px 3px 3px 6px;
+	}
+}
 
 div.field select option {height: 24px;}
 div.field textarea {width: calc(100% - 4px); height: 100px; resize: none; overflow: auto; padding: 3px 0 2px 6px;}
