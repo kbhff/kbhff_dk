@@ -81,7 +81,7 @@ $english_subnavigation = $this->navigation("sub-english");
 				<ul class="actions">
 					<li><a href="http://kbhffwiki.org/tiki-index.php?page=Vagtplaner" class="shift">Take a shift</a></li>
 					<li><a href="https://medlem.kbhff.dk" class="order">Order a bag</a></li>
-					<li><a href="http://kbhff.dk/for-medlemmer-2/bliv-medlem/" class="member">Become a member</a></li>
+					<li><a href="/om/bliv-medlem" class="member">Become a member</a></li>
 				</ul>
 			</div>
 
