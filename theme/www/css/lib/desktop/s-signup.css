@@ -28,7 +28,7 @@
 /*	background-color: rgba(255, 255, 255, 0.9);*/
 	margin-top: 48px; margin-right: 12px; margin-left: 12px; padding-left: 0;
 }
-/*#content .signupfees li.signupfee + li {padding-top: 0;}*/
+#content .signupfees li.signupfee + li.signupfee {padding-top: 200px;}
 
 #content .signupfees ul.actions {margin: 0 auto; padding-top: 5px; text-align: center;}
 #content .signupfees ul.actions input {margin: 0 auto;}

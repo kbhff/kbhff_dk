@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-03-24 19:18:43
+asset-builder @ 2020-03-24 19:26:05
 */
 
 /*seg_desktop_include.css*/
@@ -784,6 +784,7 @@ position: relative;
 #content .signupfees li.signupfee {display: inline-block; width: calc(50% - 14px - 12px); vertical-align: top; 
 	margin-top: 48px; margin-right: 12px; margin-left: 12px; padding-left: 0;
 }
+#content .signupfees li.signupfee + li.signupfee {padding-top: 200px;}
 #content .signupfees ul.actions {margin: 0 auto; padding-top: 5px; text-align: center;}
 #content .signupfees ul.actions input {margin: 0 auto;}
 #content .signupfees ul.actions li {display: block; width: 100%; padding-left: 0;}
