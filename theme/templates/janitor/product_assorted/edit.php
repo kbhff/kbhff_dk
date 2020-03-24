@@ -13,7 +13,8 @@ $item = $IC->getItem(array("id" => $item_id, "extend" => ["tags" => true, "media
 	<h2><?= strip_tags($item["name"]) ?></h2>
 
 	<?= $JML->editGlobalActions($item) ?>
-	<?= $JML->editSingleMedia($item) ?>
+
+	<?= $JML->editSingleMedia($item, array("label" => "Main membership image")) ?>
 
 	<div class="item i:defaultEdit">
 		<h2>Product details</h2>

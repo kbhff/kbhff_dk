@@ -2,4 +2,4 @@ document.write('<script type="text/javascript" src="/janitor/admin/js/lib/seg_de
 
 document.write('<script type="text/javascript" src="/janitor/js/lib/u-settings.js"></script>');
 
-document.write('<script type="text/javascript" src="/janitor/js/lib/desktop/i-form.js"></script>');
+document.write('<script type="text/javascript" src="/janitor/js/lib/desktop/m-form.js"></script>');

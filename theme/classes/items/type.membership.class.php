@@ -77,9 +77,10 @@ class TypeMembership extends Itemtype {
 		// Description
 		$this->addToModel("description", array(
 			"type" => "text",
-			"label" => "SEO description",
+			"label" => "Short SEO description",
+			"max" => 155,
 			"hint_message" => "Write a short description of the membership for SEO.",
-			"error_message" => "A short description without any words? How weird."
+			"error_message" => "Your membership needs a description – max 155 characters."
 		));
 
 		// Introduction

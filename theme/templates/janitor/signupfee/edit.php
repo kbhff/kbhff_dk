@@ -23,7 +23,6 @@ $memberships = $IC->getItems(array("itemtype" => "membership", "extend" => true)
 
 			<fieldset>
 				<?= $model->input("name", array("value" => $item["name"])) ?>
-				<?= $model->input("classname", array("value" => $item["classname"])) ?>
 				<?= $model->input("associated_membership_id", array("type" => "select", "options" => $HTML->toOptions($memberships, "id", "name", ["add" => ["" => "Choose associated membership type"]]), "value" => $item["associated_membership_id"])) ?>
 				<?= $model->input("description", array("class" => "autoexpand short", "value" => $item["description"])) ?>
 				<?= $model->input("html", array("value" => $item["html"])) ?>
@@ -38,6 +37,8 @@ $memberships = $IC->getItems(array("itemtype" => "membership", "extend" => true)
 
 	<?= $JML->editTags($item) ?>
 
+	<?= $JML->editDeveloperSettings($item) ?>
 
+	<?= $JML->editOwner($item) ?>
 
 </div>
