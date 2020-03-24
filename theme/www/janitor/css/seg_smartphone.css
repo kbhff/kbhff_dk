@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-01-14 15:30:22
+asset-builder @ 2020-03-24 19:18:48
 */
 
 /*seg_smartphone_include.css*/
@@ -573,11 +573,15 @@ body #selection_options ul.actions a.button:hover {background-color: #313942;}
 #content .scene.newPayment > div.charge ul.actions li {float: left; clear: both;}
 #content .scene.newPayment div.reminder ul.info {padding: 0 30px 25px;}
 #content .scene.newPayment div.reminder ul.info li {padding: 0 0 3px; display: block;}
-body.invoice {background: #ffffff;}
+body.invoice {background: #ffffff; height: 1000px;}
+body.invoice #page {height: 1000px; overflow: hidden;}
+body.invoice #page #content,
+body.invoice #page #content .scene {height: 900px;}
 body.invoice #navigation,
 body.invoice #header,
 body.invoice #footer,
-body.invoice #page > ul.servicenavigation {display: none;}
+body.invoice #page > ul.servicenavigation,
+body.invoice #notifications {display: none;}
 body.invoice #page {margin: 0;}
 body.invoice #content {margin: 50px 0;}
 body.invoice #content div.scene ul.info {padding: 0 30px;}
@@ -590,15 +594,17 @@ body.invoice #content div.scene .basics dl.info {padding: 10px 30px;}
 body.invoice #content div.scene .basics dl.info dt {font-weight: 700;}
 body.invoice #content div.scene .basics dl.info dd,
 body.invoice #content div.scene .basics dl.info dt {display: block; float: none; padding: 0 0 5px;}
+body.invoice #content div.scene .buyer {position: absolute; top: 50px; left: 0px;}
 body.invoice #content div.scene .buyer ul.info {padding-bottom: 20px;}
 body.invoice #content div.scene .all_items {padding-top: 20px;}
+body.invoice #content div.scene .all_items ul.items li:hover {background: transparent;}
 body.invoice #content div.scene .all_items ul.items li h3 {padding-right: 30px;}
 body.invoice #content div.scene .all_items ul.items li h3 span {font-size: 14px; line-height: 1em; padding: 9px 5px 5px 0; display: inline-block; vertical-align: top;}
 body.invoice #content div.scene .all_items ul.items li h3 span.total_price {float: right; padding: 8px 0; display: inline-block; font-size: 16px;}
 body.invoice #content div.scene .all_items ul.items li.order_total {font-size: 20px; padding: 20px 30px 5px; border-bottom: none;}
 body.invoice #content div.scene .all_items ul.items li.order_vat {font-size: 14px; padding: 0 30px 20px;}
 body.invoice #content div.scene .all_items ul.items li span.amount {float: right;}
-
+body.invoice #content div.scene .payment_info {position: absolute; bottom: 50px; left: 0px;}
 
 /*s-shop.css*/
 #content .scene.shopList ul.items > li dl.info dd.price {position: static; top: auto; right: auto; clear: both; padding-top: 5px; font-size: 26px;}
@@ -646,9 +652,7 @@ body.invoice #content div.scene .all_items ul.items li span.amount {float: right
 #content .scene.userEdit > div.addresses ul.addresses > li div {padding: 0 0 3px;}
 #content .scene.userEdit > div.addresses ul.addresses > li .actions {position: absolute; bottom: 0; left: 0; padding: 0;}
 #content .scene.userEdit > div.addresses ul.addresses > li .actions li {padding-left: 0;}
-#content .scene.userEdit > div.addresses > .actions {padding-bottom: 15px;}
-#content .scene.defaultList > div.maillists {border-bottom: 1px solid #bbbbbb;}
-#content .scene.defaultList > div.maillists h2 {padding-top: 10px;}
+#content .scene.userEdit > div.addresses ul.actions {padding-bottom: 15px;}
 #content .scene.defaultList > div.maillists ul.maillists {padding: 0 30px 10px;}
 #content .scene.defaultList > div.maillists ul.maillists > li {display: block; padding: 0 0 10px;}
 #content .scene.defaultList > div.maillists ul.maillists > li h3 {padding: 4px 0 0; display: inline-block; vertical-align: top;}
@@ -669,8 +673,8 @@ body.invoice #content div.scene .all_items ul.items li span.amount {float: right
 #content .defaultEdit.accessEdit > div.access ul.points li .field {padding-bottom: 10px;}
 #content .defaultEdit.accessEdit > div.access ul.points li.action {border-top: 1px solid #dedede; padding: 10px 0 0;}
 #content .defaultEdit.usergroupEdit > ul.actions li.access {float: right; padding-right: 0;}
-#content .defaultList.userContentList div.all_items {padding-bottom: 20px;}
-#content .defaultList.userOrderList div.all_items {padding-bottom: 20px;}
+#content .defaultList.userContentList div.all_items {padding-bottom: 40px;}
+#content .defaultList.orderList div.all_items {padding-bottom: 40px;}
 #content .defaultNew.userSubscriptions .item {padding-top: 10px;}
 #content .defaultNew.userSubscriptions .item p {padding-bottom: 3px;}
 #content .defaultList.userSubscriptions dd.price.default {text-decoration: line-through;}
@@ -680,9 +684,7 @@ body.invoice #content div.scene .all_items ul.items li span.amount {float: right
 #content .defaultList.userSubscriptions dd.price+dt.price+dd.price {padding-top: 0;}
 #content .defaultList.userSubscriptions dt.membership {display: none;}
 #content .defaultList.userSubscriptions dd.membership {color: green; clear: left; padding-top: 5px;}
-#content .defaultView.userMembership > div > h2 {font-size: 0.8em; text-transform: uppercase; padding-top: 7px; padding-bottom: 10px; margin: 0 0 20px;}
-#content .defaultView.userMembership div.item {position: relative; border-bottom: 1px solid #bbbbbb;}
-#content .defaultView.userMembership div.item h3 {padding-bottom: 20px; font-size: 28px;}
+#content .defaultView.userMembership div.item h3 {padding-bottom: 20px; font-size: 38px;}
 #content .defaultView.userMembership div.item dl {margin-top: -5px; padding-bottom: 30px;}
 #content .defaultView.userMembership div.item dd.price.default {text-decoration: line-through;}
 #content .defaultView.userMembership div.item dt.price,
@@ -846,11 +848,15 @@ body.invoice #content div.scene .all_items ul.items li span.amount {float: right
 
 
 /*s-default_edit.css*/
-#content .scene div > h2 {font-size: 0.8em; text-transform: uppercase; padding-top: 7px; padding-bottom: 10px; margin: 0 0 20px;}
+#content .scene div > h2 {font-size: 1.9em; text-transform: uppercase; padding-top: 17px; padding-bottom: 15px; margin: 0 0 20px;}
 #content .scene div.togglable,
 #content .scene li.togglable {overflow: hidden;}
+#content .scene div.togglable div.togglable_content,
+#content .scene li.togglable div.togglable_content {display: none;}
 #content .scene div.togglable.open,
 #content .scene li.togglable.open {overflow: visible;}
+#content .scene div.togglable.open div.togglable_content,
+#content .scene li.togglable.open div.togglable_content {display: block;}
 #content .scene div.togglable > h2,
 #content .scene div.togglable > h3,
 #content .scene div.togglable > h4,
@@ -862,7 +868,7 @@ body.invoice #content div.scene .all_items ul.items li span.amount {float: right
 #content .scene div.togglable > h4 svg,
 #content .scene li.togglable > h2 svg,
 #content .scene li.togglable > h3 svg,
-#content .scene li.togglable > h4 svg {position: absolute; top: 7px; right: 25px; stroke: #313942; stroke-width: 3px;}
+#content .scene li.togglable > h4 svg {position: absolute; top: 21px; right: 25px; stroke: #313942; stroke-width: 3px;}
 #content .scene.defaultEdit > div.status {border-bottom: 1px solid #bbbbbb;}
 #content .scene.defaultEdit > div.status .actions {padding: 0;}
 #content .scene.defaultEdit > div.status .actions li.status {display: block; padding: 10px 0px; text-align: right; height: 27px;}
@@ -871,11 +877,15 @@ body.invoice #content div.scene .all_items ul.items li span.amount {float: right
 #content .scene.defaultEdit > div.status .actions li.status.disabled form.disable {display: none;}
 #content .scene.defaultEdit > div.status .actions li.status.enabled form.enable {display: none;}
 #content .scene.defaultEdit > div.status .actions li.status input {display: inline-block; vertical-align: top;}
-#content .scene.defaultEdit > div.item {padding: 0; border-bottom: 1px solid #bbbbbb;}
+#content .scene > div.item {padding: 0; border-bottom: 1px solid #bbbbbb;}
 #content .scene.defaultEdit > div.item .actions {text-align: left; padding-bottom: 10px;}
 #content .scene.defaultEdit > div.item .actions li {padding: 0 5px 10px;}
 #content .scene.defaultEdit > div.owner {padding: 0; border-bottom: 1px solid #bbbbbb; position: relative;}
+#content .scene.defaultEdit > div.owner form {padding-bottom: 15px;}
 #content .scene.defaultEdit > div.sindex {padding: 0; border-bottom: 1px solid #bbbbbb; position: relative;}
+#content .scene.defaultEdit > div.sindex form {padding-bottom: 15px;}
+#content .scene.defaultEdit > div.developer {padding: 0; border-bottom: 1px solid #bbbbbb; position: relative;}
+#content .scene.defaultEdit > div.developer form {padding-bottom: 15px;}
 #content .scene.defaultEdit > div.media {padding: 0; border-bottom: 1px solid #bbbbbb; position: relative;}
 #content .scene.defaultEdit > div.media form.upload {text-align: left; position: relative; z-index: 2;}
 #content .scene.defaultEdit > div.media form.upload .actions {display: none;}
@@ -1011,7 +1021,8 @@ body.invoice #content div.scene .all_items ul.items li span.amount {float: right
 #content .scene.wishList ul.items > li dl dt.reserved {display: none;}
 #content .scene.wishList ul.items > li dl dd.reserved {font-size: 14px;}
 #content .scene.eventList ul.items > li.past {background: #dddddd;}
-#content .scene.eventEdit fieldset h2 {font-size: 0.8em; text-transform: uppercase; padding-top: 7px; padding-bottom: 10px; margin: 20px 0 0px;}
+#content .scene fieldset h3 {font-size: 0.8em; text-transform: uppercase; padding-top: 7px; padding-bottom: 10px; margin: 0;}
+#content .scene fieldset + fieldset h3 {margin: 20px 0 0px;}
 #content .scene.messageList > ul.actions li.maillists {float: right; padding: 0 0 10px 10px;}
 #content .scene.messageList > div.system {border-bottom: 1px solid #aaaaaa;}
 #content .scene.messageList > div.dynamic {padding-bottom: 30px; border-bottom: 1px solid #aaaaaa;}

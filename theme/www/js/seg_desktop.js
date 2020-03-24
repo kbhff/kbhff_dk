@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-03-17 22:30:45
+asset-builder @ 2020-03-24 19:18:43
 */
 
 /*seg_desktop_include.js*/
@@ -6038,32 +6038,9 @@ Util.Modules["signupfees"] = new function() {
 		scene.scrolled = function() {
 		}
 		scene.ready = function() {
-			var signupfees = u.qsa("ul.offer li.description");
-			var largestHeight = 0;
-			for (var i = 0; i < signupfees.length; i++) {
-				if (u.actualHeight(signupfees[i]) > largestHeight) {
-					var largestHeight = u.actualHeight(signupfees[i]);
-				}
-			}
-			var j = signupfees.length;
-			while (j--) {
-				u.ass(signupfees[j], {"height":largestHeight+"px"})
-			}
-			var bg1 = u.ae(scene, "div", {class:"bg volunteer"});
-			var bg2 = u.ae(scene, "div", {class:"bg supporter"});
-			page.resized();
-			u.ass(bg1, {
-				height: page.offsetHeight + "px",
-				top: -(u.absY(scene)) + "px",
-				right: -(page.browser_w - u.absX(scene) - scene.offsetWidth) + "px",
-				width: (page.browser_w / 2) + "px",
-			});
-			u.ass(bg2, {
-				height: page.offsetHeight + "px",
-				top: -(u.absY(scene)) + "px",
-				left: -(page.browser_w - u.absX(scene) - scene.offsetWidth) + "px",
-				width: (page.browser_w / 2) + "px",
-			});
+		// 	
+		// 	
+		// 	
 		}
 		scene.ready();
 	}
