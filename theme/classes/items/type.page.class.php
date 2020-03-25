@@ -31,9 +31,9 @@ class TypePage extends Itemtype {
 		$this->addToModel("name", array(
 			"type" => "string",
 			"label" => "Title",
-			"required" => true,
 			"searchable" => true,
-			"hint_message" => "Title of your page", 
+			"required" => true,
+			"hint_message" => "Title of your page.", 
 			"error_message" => "Title must be filled out."
 		));
 
@@ -42,22 +42,23 @@ class TypePage extends Itemtype {
 			"type" => "string",
 			"label" => "Secondary headline",
 			"searchable" => true,
-			"hint_message" => "Secondary headline of your page", 
+			"hint_message" => "Secondary headline of your page.",
 			"error_message" => "Secondary headline contains illigal characters."
 		));
 
 		// Description
 		$this->addToModel("description", array(
 			"type" => "text",
-			"label" => "Short description",
-			"hint_message" => "Write a short description of the page. It is used for page listings and SEO.",
-			"error_message" => "Your page needs a description"
+			"label" => "Short SEO description",
+			"max" => 155,
+			"hint_message" => "Write a short description of the page for SEO and listings.",
+			"error_message" => "Your page needs a description – max 155 characters."
 		));
 
 		// HTML
 		$this->addToModel("html", array(
 			"type" => "html",
-			"label" => "Fule page text",
+			"label" => "Full page text",
 			"searchable" => true,
 			"allowed_tags" => "p,h2,h3,h4,ul,ol,download,jpg,png,vimeo,youtube", //,mp4,code",
 			"hint_message" => "Write!",
@@ -71,7 +72,17 @@ class TypePage extends Itemtype {
 			"allowed_sizes" => "960x540",
 			"max" => 1,
 			"allowed_formats" => "png,jpg",
-			"hint_message" => "Add single image by dragging it here. PNG or JPG allowed in 960x540",
+			"hint_message" => "Add single image by dragging it here. PNG or JPG allowed in 960x540.",
+			"error_message" => "Media does not fit requirements."
+		));
+
+		// Mediae
+		$this->addToModel("mediae", array(
+			"type" => "files",
+			"label" => "Add media here",
+			"max" => 20,
+			"allowed_formats" => "png,jpg",
+			"hint_message" => "Add images or videos here. Use png or jpg.",
 			"error_message" => "Media does not fit requirements."
 		));
 

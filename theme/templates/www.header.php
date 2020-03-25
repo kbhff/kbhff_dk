@@ -51,8 +51,8 @@
 	<link type="text/css" rel="stylesheet" media="all" href="/css/lib/seg_<?= $this->segment() ?>_include.css?cb=<?=randomKey(4); ?>" />
 	<script type="text/javascript" src="/js/lib/seg_<?= $this->segment() ?>_include.js?cb=<?=randomKey(4); ?>"></script>
 <? } else { ?>
-	<link type="text/css" rel="stylesheet" media="all" href="/css/seg_<?= $this->segment() ?>.css?rev=20200317-223045" />
-	<script type="text/javascript" src="/js/seg_<?= $this->segment() ?>.js?rev=20200317-223045"></script>
+	<link type="text/css" rel="stylesheet" media="all" href="/css/seg_<?= $this->segment() ?>.css?rev=20200324-192605" />
+	<script type="text/javascript" src="/js/seg_<?= $this->segment() ?>.js?rev=20200324-192605"></script>
 <? } ?>
 
 	<?= $this->headerIncludes() ?>
@@ -73,7 +73,7 @@
 			<?= $HTML->link("Janitor", "/janitor", ["wrapper" => "li.keynav.front"]) ?>
 			<li class="keynav user nofollow"><a href="/login/logoff">Logoff</a></li>
 <?		else: ?>
-			<li class="keynav user nofollow"><a href="/login">Login</a></li>
+			<li class="keynav user nofollow"><a href="https://medlem.kbhff.dk/">Login</a></li>
 <?		endif; ?>
 		</ul>
 	</div>

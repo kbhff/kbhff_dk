@@ -80,9 +80,10 @@ class TypeSignupfee extends Itemtype {
 		// Description
 		$this->addToModel("description", array(
 			"type" => "text",
-			"label" => "SEO description",
-			"hint_message" => "Write a short description of the signup fee for SEO.",
-			"error_message" => "A short description without any words? How weird."
+			"label" => "Short SEO description",
+			"max" => 155,
+			"hint_message" => "Write a short description of the post for SEO and listings.",
+			"error_message" => "Your post needs a description – max 155 characters."
 		));
 
 		// HTML

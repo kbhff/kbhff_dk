@@ -22,9 +22,9 @@ class TypePost extends Itemtype {
 		// Published
 		$this->addToModel("published_at", array(
 			"type" => "datetime",
-			"label" => "Publish date (yyyy-mm-dd hh:mm)",
-			"hint_message" => "Publishing date of the post. Leave empty for current time",
-			"error_message" => "Datetime must be of format (yyyy-mm-dd hh:mm)"
+			"label" => "Publishing time (yyyy-mm-dd hh:mm)",
+			"hint_message" => "Date of the post publication (yyyy-mm-dd hh:mm). Leave empty for current time.", 
+			"error_message" => "Date of the post publication must be a valid date (yyyy-mm-dd hh:mm). Leave empty for current time.", 
 		));
 
 		// Name
@@ -47,9 +47,10 @@ class TypePost extends Itemtype {
 		// description
 		$this->addToModel("description", array(
 			"type" => "text",
-			"label" => "Short description",
-			"hint_message" => "Write a short description of the post",
-			"error_message" => "A short description without any words? How weird."
+			"label" => "Short SEO description",
+			"max" => 155,
+			"hint_message" => "Write a short description of the post for SEO and listings.",
+			"error_message" => "Your post needs a description – max 155 characters."
 		));
 
 		// HTML
