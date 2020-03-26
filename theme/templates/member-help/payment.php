@@ -66,9 +66,17 @@ else {
 //$this->headerIncludes(["https://checkout.stripe.com/checkout.js"]);
 
 ?>
-<div class="scene member_help_payment <?= $order ? "i:member_help_payment" : "i:scene" ?>">
 
-<? if($order && $mobilepay_payment_method_id && $cash_payment_method_id): ?>
+<? if($order && $order["payment_status"] == 2): ?>
+	<div class="i:scene">
+
+		<h1>Hovsa?</h1>
+		<p>Denne ordre (<?= $order["order_no"] ?>) er allerede betalt, så der er intet at gøre her.</p>
+	</div>
+<? else: ?>
+
+<div class="scene member_help_payment <?= $order ? "i:member_help_payment" : "i:scene" ?>">
+	<? if($order && $mobilepay_payment_method_id && $cash_payment_method_id): ?>
 
 <? 
 	// print_r($order);
@@ -159,11 +167,13 @@ else {
 		</ul>
 		<?= $model->formEnd() ?>
 	</div>
-<? else: ?>
 
-	<h1>Er du ved at gennemføre en betaling?</h1>
-	<p>Du bør <a href="/login">logge ind</a> på din konto og starte din betaling derfra.</p>
+	<? else: ?>
+	
+		<h1>Er du ved at gennemføre en betaling?</h1>
+		<p>Du bør <a href="/login">logge ind</a> på din konto og starte din betaling derfra.</p>
+	<? endif; ?>
+</div>
 
 <? endif;?>
 
-</div>

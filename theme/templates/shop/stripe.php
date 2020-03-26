@@ -103,7 +103,7 @@ if(message()->hasMessages(array("type" => "error"))): ?>
 <? elseif($order && $order["payment_status"] == 2): ?>
 	
 	<h1>Hovsa?</h1>
-	<p>Denne ordre er allerede betalt, så der er intet at gøre her.</p>
+	<p>Denne ordre (<?= $order["order_no"] ?>) er allerede betalt, så der er intet at gøre her.</p>
 
 <? else: ?>
 
