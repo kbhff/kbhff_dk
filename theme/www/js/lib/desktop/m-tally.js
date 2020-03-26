@@ -235,7 +235,7 @@ Util.Modules["tally"] = new function() {
 					var delete_form = this.payouts.delete_forms[i];
 					delete_form.scene = this;
 
-					u.o.oneButtonForm.init(delete_form);
+					u.m.oneButtonForm.init(delete_form);
 
 					delete_form.confirmed = function(response) {
 
@@ -320,7 +320,7 @@ Util.Modules["tally"] = new function() {
 					var delete_form = this.revenues.delete_forms[i];
 					delete_form.scene = this;
 
-					u.o.oneButtonForm.init(delete_form);
+					u.m.oneButtonForm.init(delete_form);
 
 					delete_form.confirmed = function(response) {
 
