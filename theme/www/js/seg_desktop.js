@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-03-24 19:26:05
+asset-builder @ 2020-03-26 11:00:06
 */
 
 /*seg_desktop_include.js*/
@@ -7520,7 +7520,7 @@ Util.Modules["tally"] = new function() {
 				for (let i = 0; i < this.payouts.delete_forms.length; i++) {
 					var delete_form = this.payouts.delete_forms[i];
 					delete_form.scene = this;
-					u.o.oneButtonForm.init(delete_form);
+					u.m.oneButtonForm.init(delete_form);
 					delete_form.confirmed = function(response) {
 						this.payouts = u.qs("div.payouts", response);
 						this.scene.tally_section.replaceChild(this.payouts, this.scene.payouts);
@@ -7568,7 +7568,7 @@ Util.Modules["tally"] = new function() {
 				for (let i = 0; i < this.revenues.delete_forms.length; i++) {
 					var delete_form = this.revenues.delete_forms[i];
 					delete_form.scene = this;
-					u.o.oneButtonForm.init(delete_form);
+					u.m.oneButtonForm.init(delete_form);
 					delete_form.confirmed = function(response) {
 						this.revenues = u.qs("div.misc_revenues", response);
 						this.scene.tally_section.replaceChild(this.revenues, this.scene.revenues);
