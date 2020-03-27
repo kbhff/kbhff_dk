@@ -232,7 +232,6 @@ class Tally extends Model {
 				
 				// if successful, add message and return tally id
 				if($query->sql($sql)) {
-					message()->addMessage("Tally created");
 					return $query->lastInsertId();
 				}
 			}
