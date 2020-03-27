@@ -44,7 +44,7 @@ if($action) {
 				message()->resetMessages();
 	
 				// redirect to leave POST state
-				header("Location: /butiksvagt/kasse/".$action[1]);
+				header("Location: /butiksvagt");
 				exit();
 				
 			}
