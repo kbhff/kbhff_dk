@@ -2,7 +2,7 @@ CREATE TABLE `SITE_DB`.`shop_tally_payouts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tally_id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `amount` int(11) NOT NULL,
+  `amount` float NOT NULL,
   `comment` text NOT NULL,
 
   PRIMARY KEY (`id`),

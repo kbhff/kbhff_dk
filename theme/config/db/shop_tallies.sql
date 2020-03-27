@@ -4,9 +4,9 @@ CREATE TABLE `SITE_DB`.`shop_tallies` (
 
   `department_id` int(11) NOT NULL,
 
-  `start_cash` int(11) DEFAULT NULL,
-  `end_cash` int(11) DEFAULT NULL,
-  `deposited` int(11) DEFAULT NULL,
+  `start_cash` float DEFAULT NULL,
+  `end_cash` float DEFAULT NULL,
+  `deposited` float DEFAULT NULL,
 
   `comment` text NOT NULL DEFAULT '',
 
