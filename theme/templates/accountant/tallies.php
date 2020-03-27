@@ -20,7 +20,7 @@ $tallies = $TC->getTallies(["department_id" => $department_id, "order" => "creat
 		<li class="labels">
 			<ul>
 				<li class="time">Tidspunkt/periode</li>
-				<li class="turnover">Kontant omsætning</li>
+				<li class="deposited">Deponeret</li>
 			</ul>
 		</li>
 
@@ -35,7 +35,7 @@ $tallies = $TC->getTallies(["department_id" => $department_id, "order" => "creat
 				<li class="created_at">
 					<a href="/bogholder/afregninger/<?= $department_id."/".$tally["id"] ?>"><? print $created_at; if($closed_at != $created_at): print " - ".$closed_at; endif; ?></a>
 				</li>
-				<li class="total_cash_revenue"><?= $TC->getTotalCashRevenue($tally["id"]) ?: 0 ?> kr.</li>
+				<li class="deposited"><?= $TC->getDeposited($tally["id"]) ?: 0 ?> kr.</li>
 			</ul>
 		</li>
 	<? endforeach; ?>
