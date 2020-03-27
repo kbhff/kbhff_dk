@@ -44,7 +44,7 @@ if($action) {
 				message()->resetMessages();
 	
 				// redirect to leave POST state
-				header("Location: /butiksvagt");
+				header("Location: /butiksvagt/kasse/".$action[1]);
 				exit();
 				
 			}
@@ -62,6 +62,33 @@ if($action) {
 	
 		}
 
+		// /butiksvagt/kasse/#tally_id#/saveTally
+		elseif(count($action) == 3 && $action[2] == "saveTally" && $page->validateCsrfToken()) {
+
+			$tally = $TC->updateTally($action);
+	
+			if($tally) {
+				message()->resetMessages();
+	
+				// redirect to leave POST state
+				header("Location: /butiksvagt");
+				exit();
+				
+			}
+			// Something went wrong
+			else {
+				message()->resetMessages();
+				message()->addMessage("Hov, noget gik galt. Prøv igen.", array("type" => "error"));
+				// redirect to leave POST state
+				header("Location: /butiksvagt/kasse/".$action[1]);
+				exit();
+	
+			}
+	
+			exit();
+	
+				}
+		
 		// /butiksvagt/kasse/#tally_id#/closeTally
 		elseif(count($action) == 3 && $action[2] == "closeTally" && $page->validateCsrfToken()) {
 	

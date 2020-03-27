@@ -233,7 +233,7 @@ $this->pageTitle("Kasseregnskab");
 					<h3>Byttepenge til næste uge (kassebeholdning ved slut minus deponerede penge) <span class="sum"><?= $TC->calculateChange($tally_id); ?> kr.</span></h3>
 				</div>
 
-				<?= $TC->formStart("kasse/$tally_id/updateTally", ["class" => "labelstyle:inject comment"]); ?>
+				<?= $TC->formStart("kasse/$tally_id/saveTally", ["class" => "labelstyle:inject comment"]); ?>
 
 					<fieldset>
 						<?= $TC->input("comment"); ?>
