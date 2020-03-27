@@ -98,16 +98,27 @@
 	float: left;
 }
 
+#content div.scene.tally .payouts ul.payout li.amount,
+#content div.scene.tally .misc_revenues ul.revenue li.amount {
+	padding-right: 10px;
+}
+
 #content div.scene.tally .payouts ul.payout li.delete input,
 #content div.scene.tally .misc_revenues ul.revenue li.delete input {
 	background-color: #C22414;
 	color: #ffffff;
 }
+#content div.scene.tally .payouts ul.payout li.delete input:hover,
+#content div.scene.tally .misc_revenues ul.revenue li.delete input:hover {background-color: #a81100;}
+
 #content div.scene.tally .payouts ul.payout li.delete input.confirm,
 #content div.scene.tally .misc_revenues ul.revenue li.delete input.confirm {
 	background-color: #3e8e17;
 	color: #ffffff;
 }
+#content div.scene.tally .payouts ul.payout li.delete input.confirm:hover,
+#content div.scene.tally .misc_revenues ul.revenue li.delete input.confirm:hover {background-color: #357914;}
+
 
 #content div.scene.tally div.add_revenue > ul.actions {
 	width: 100%;
@@ -148,6 +159,8 @@
 }
 #content div.scene.tally div.add_payout form fieldset .field.number input,
 #content div.scene.tally div.misc_revenues form fieldset .field.number input {text-align: right;}
+
+#content div.scene.tally div.add_payout form fieldset .field.number:after {content: "-"; display: inline-block; font-size: 18px; position: absolute; left: -12px; top: 16px;}
 
 #content div.scene.tally div.cash_sales ul {list-style: none; margin: 0; padding-bottom: 15px;}
 #content div.scene.tally div.cash_sales ul li {display: inline-block; padding: 0;}

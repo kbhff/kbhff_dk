@@ -129,7 +129,7 @@ $this->pageTitle("Kasseregnskab");
 				</div>
 
 				<div class="payouts">
-					<h3>Udbetalinger <span class="sum"><?= $TC->getPayoutsSum($tally_id) ?> kr.</span></h3>
+					<h3>Udbetalinger <span class="sum"><?= $TC->getPayoutsSum($tally_id) ? "-" . $TC->getPayoutsSum($tally_id) : "0" ?> kr.</span></h3>
 				
 
 					<? if($payouts): ?>
@@ -138,7 +138,7 @@ $this->pageTitle("Kasseregnskab");
 
 					<ul class="payout">
 						<li class="name"><?= $payout["name"] ?></li>
-						<li class="amount"><?= $payout["amount"] ?> kr.</li>
+						<li class="amount"><?= "-" . $payout["amount"] ?> kr.</li>
 						<li>
 							<ul class="actions">
 								<?= $HTML->oneButtonForm("Slet", "/butiksvagt/kasse/$tally_id/udbetaling/deletePayout/$payout_id", [
