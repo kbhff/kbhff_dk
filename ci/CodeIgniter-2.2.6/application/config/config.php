@@ -35,7 +35,7 @@ define('FF_ANNUALFEE', 77);
 */
 
 if(ENVIRONMENT == "production") {
-	$config['base_url']	= 'http://website.kbhff.dk';
+	$config['base_url']	= 'http://kbhff.dk';
 }
 else if(ENVIRONMENT == "testing") {
 	$config['base_url']	= 'http://test.kbhff.dk';
