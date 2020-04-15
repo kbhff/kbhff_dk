@@ -10,7 +10,7 @@ $related_items = false;
 
 // Use special property, fixed_url_identifier to identify topic
 $fixed_url_identifier = $action[1];
-$sql = "SELECT item_id FROM ".SITE_DB.".item_membership WHERE fixed_url_identifier = '$fixed_url_identifier' LIMIT 1";
+$sql = "SELECT item_id FROM ".SITE_DB.".item_signupfee WHERE fixed_url_identifier = '$fixed_url_identifier' LIMIT 1";
 
 $query = new Query;
 if($query->sql($sql)) {
