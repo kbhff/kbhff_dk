@@ -57,7 +57,7 @@ class HTML extends HTMLCore {
 	
 		$_ = '';
 
-		if($item["prices"]) {
+		if(!empty($item["prices"])) {
 
 			global $page;
 
