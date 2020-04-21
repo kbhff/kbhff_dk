@@ -89,3 +89,12 @@
 	font-family: "voresfont";
 }
 
+
+/* Posts */
+
+#content .scene.post .article .articlebody > p:first-child,
+#content .scene.post .article .articlebody > h3:first-child,
+#content .scene.post .article .articlebody > .c-wrapper:first-child {padding-top: 30px;}
+
+#content .scene.post .article > ul.info {display: block; width: 100%; margin: 0 auto; padding: 16px 12px 0 18px;  box-sizing: border-box;}
+#content .scene.post .article > ul.info li {padding-left: 0; color: #666;}
