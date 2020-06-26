@@ -20,10 +20,10 @@ class Tally extends Model {
 
 
 		// Define the name of tallies table in database
-		$this->db = SITE_DB.".shop_tallies";
-		$this->db_payouts = SITE_DB.".shop_tally_payouts";
-		$this->db_misc_revenues = SITE_DB.".shop_tally_misc_revenues";
-		$this->db_cash_payments = SITE_DB.".shop_tally_cash_payments";
+		$this->db = SITE_DB.".project_tallies";
+		$this->db_payouts = SITE_DB.".project_tally_payouts";
+		$this->db_misc_revenues = SITE_DB.".project_tally_misc_revenues";
+		$this->db_cash_payments = SITE_DB.".project_tally_cash_payments";
 
 
 		// Name

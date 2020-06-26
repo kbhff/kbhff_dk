@@ -20,7 +20,7 @@ class Pickupdate extends Model {
 
 
 		// Define the name of table in database
-		$this->db = SITE_DB.".shop_pickupdates";
+		$this->db = SITE_DB.".project_pickupdates";
 
 
 		// pickup date

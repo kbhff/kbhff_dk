@@ -1,4 +1,4 @@
-CREATE TABLE `SITE_DB`.`shop_pickupdates` (
+CREATE TABLE `SITE_DB`.`project_pickupdates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pickupdate` varchar(50) NOT NULL,
 

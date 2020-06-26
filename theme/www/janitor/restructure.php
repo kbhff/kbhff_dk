@@ -1775,7 +1775,7 @@ if(is_array($action) && count($action)) {
 		// CREATE DEPENDENCIES BEFORE IMPORTING ALL REMAINING USERS
 		if($pre_user_operations) {
 
-			$query->checkDbExistence(SITE_DB.".system_departments");
+			$query->checkDbExistence(SITE_DB.".project_departments");
 			$query->checkDbExistence(SITE_DB.".system_maillists");
 
 			$query->checkDbExistence(SITE_DB.".user_item_subscriptions");
@@ -1829,11 +1829,11 @@ if(is_array($action) && count($action)) {
 					// Division has either members or products (and does not already exist)
 					$sql_members = "SELECT * FROM ".SITE_DB.".ff_division_members";
 					$sql_items = "SELECT * FROM ".SITE_DB.".ff_items";
-					$sql_exists = "SELECT * FROM ".SITE_DB.".system_departments WHERE abbreviation = '".$division["shortname"]."'";
+					$sql_exists = "SELECT * FROM ".SITE_DB.".project_departments WHERE abbreviation = '".$division["shortname"]."'";
 					if(($query->sql($sql_members) || $query->sql($sql_items)) && !$query->sql($sql_exists)) {
 
 						// CREATE DEPARTMENT IN NEW TABLE
-						$sql = "INSERT INTO ".SITE_DB.".system_departments SET name = '".$division["name"]."', abbreviation = '".$division["shortname"]."', email = '".$division["kontakt"]."'";
+						$sql = "INSERT INTO ".SITE_DB.".project_departments SET name = '".$division["name"]."', abbreviation = '".$division["shortname"]."', email = '".$division["kontakt"]."'";
 						if($query->sql($sql)) {
 							output("CREATED DIVISION:". $division["shortname"]);
 						}
@@ -1916,7 +1916,7 @@ if(is_array($action) && count($action)) {
 
 
 			// departments?
-			$sql = "SELECT id, abbreviation FROM ".SITE_DB.".system_departments";
+			$sql = "SELECT id, abbreviation FROM ".SITE_DB.".project_departments";
 			if($query->sql($sql)) {
 
 				$department_index = [];

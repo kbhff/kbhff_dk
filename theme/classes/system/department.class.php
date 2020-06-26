@@ -20,9 +20,9 @@ class Department extends Model {
 
 
 		// Define the name of departments table in database
-		$this->db = SITE_DB.".system_departments";
-		$this->db_products = SITE_DB.".department_products";
-		$this->db_pickupdates = SITE_DB.".department_pickupdates";
+		$this->db = SITE_DB.".project_departments";
+		$this->db_products = SITE_DB.".project_department_products";
+		$this->db_pickupdates = SITE_DB.".project_department_pickupdates";
 
 
 		// Name
