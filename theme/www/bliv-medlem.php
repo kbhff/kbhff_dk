@@ -66,7 +66,7 @@ if($action) {
 
 	}
 
-	// user is already a member with a subsription 
+	// user is already a member with a subscription 
 	// bliv-medlem/allerece-medlem
 	else if($action[0] == "allerede-medlem") {
 
