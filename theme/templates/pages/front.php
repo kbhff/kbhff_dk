@@ -9,7 +9,18 @@ if($page_item) {
 $WBC = $IC->typeObject("weeklybag");
 $weeklybag_item = $WBC->getWeeklyBag();
 
-$post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage", "status" => 1, "extend" => array("tags" => true, "readstate" => true, "user" => true, "mediae" => true)));
+$post_items = $IC->getItems([
+	"itemtype" => "post",
+	"tags" => "on:frontpage",
+	"status" => 1,
+	"limit" => 12,
+	"extend" => [
+		"tags" => true,
+		"readstate" => true,
+		"user" => true,
+		"mediae" => true
+	]
+]);
 ?>
 <div class="scene front i:scene i:front">
 	<div class="banner i:banner variant:random format:jpg"></div>
