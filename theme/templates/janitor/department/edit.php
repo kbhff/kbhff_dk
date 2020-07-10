@@ -3,6 +3,9 @@
 global $action;
 global $model;
 
+$IC = new Items();
+$products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "extend" => true]);
+
 $department_id = $action[1];
 $department = $model->getDepartment(array("id" => $department_id));
 ?>
@@ -14,8 +17,44 @@ $department = $model->getDepartment(array("id" => $department_id));
 		<?= $JML->newList(array("label" => "List")) ?>
 	</ul>
 
-	<div class="item i:defaultEdit">
-		<h2>Post content</h2>
+	<div class="products i:collapseHeader ">
+		<h2>Products</h2>
+		<ul class="products">
+			<? if($products): ?>
+				<? foreach($products as $product): ?>
+				<? 
+				 
+				 // if product has end_availabilit date
+					 // if today is in availability window
+						 // show li
+				 // else
+					 // if today is after first availability
+						 //show li 				
+				
+				?>	
+
+			<li class="product product_id:<?= $product["id"] ?>"></li>
+				<ul class="info">
+					<li class="name"><?= $product["name"] ?></li>
+				</ul>
+			
+				<? endforeach; ?>
+			<? endif; ?>
+	
+		</ul>
+
+	</div>
+
+	<div class="pickupdates">
+			
+			<? // show upcoming pickupdates ?>
+
+	</div>
+
+
+
+	<div class="item i:defaultEdit i:collapseHeader">
+		<h2>Department details</h2>
 		<?= $model->formStart("updateDepartment/".$department["id"], array("class" => "labelstyle:inject")) ?>
 		
 			<fieldset>
@@ -44,9 +83,11 @@ $department = $model->getDepartment(array("id" => $department_id));
 				<?= $model->input("html", array("value" => $department["html"])) ?>
 			</fieldset>
 
+
 			<?= $JML->editActions($department) ?>
 
 		<?= $model->formEnd() ?>
 	</div>
+
 
 </div>

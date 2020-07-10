@@ -1,4 +1,4 @@
-Util.Objects["banner"] = new function() {
+Util.Modules["banner"] = new function() {
 	this.init = function(div) {
 
 		var variant = u.cv(div, "variant");

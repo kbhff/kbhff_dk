@@ -1,4 +1,4 @@
-Util.Objects["page"] = new function() {
+Util.Modules["page"] = new function() {
 	this.init = function(page) {
 
 		// header reference
@@ -84,8 +84,8 @@ Util.Objects["page"] = new function() {
 
 		// initialize header
 		page.initHeader = function() {
-			var logo = u.ie(this.hN, "a", {"class":"logo", "href":"/","html": 'KBHFF <span class="highlight">' + document.title + '</span>'});
-			u.ce(logo, {"type":"link"});
+			// var logo = u.ie(this.hN, "a", {"class":"logo", "href":"/","html": 'KBHFF <span class="highlight">' + document.title + '</span>'});
+			// u.ce(logo, {"type":"link"});
 		}
 
 		// initialize navigation

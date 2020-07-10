@@ -20,7 +20,9 @@ class Department extends Model {
 
 
 		// Define the name of departments table in database
-		$this->db = SITE_DB.".system_departments";
+		$this->db = SITE_DB.".project_departments";
+		$this->db_products = SITE_DB.".project_department_products";
+		$this->db_pickupdates = SITE_DB.".project_department_pickupdates";
 
 
 		// Name
@@ -100,9 +102,10 @@ class Department extends Model {
 		// MobilePay number for signup in shop
 		$this->addToModel("mobilepay_id", array(
 			"type" => "string",
-			"label" => "MobilePay number for signup",
-			"hint_message" => "The department has a MobilePay number that new members can use if they go to a physical shop to sign up.",
-			"error_message" => "Invalid MobilePay number"
+			"label" => "MobilePay number",
+			"required" => true,
+			"hint_message" => "The department has a MobilePay number.",
+			"error_message" => "MobilePay number is required"
 		));
 
 		// Accepts new members?
@@ -141,9 +144,11 @@ class Department extends Model {
 
 		// HTML
 		$this->addToModel("html", array(
+			"type" => "html",
 			"label" => "Full description",
+			"allowed_tags" => "p,h2,h3,h4,ul,ol,vimeo,youtube",
 			"hint_message" => "Write the full department description",
-			"allowed_tags" => "p,h2,h3,h4,ul,ol,download,jpg,png,vimeo,youtube", //,mp4,code",
+			"error_message" => "No words? How weird."
 		));
 
 	}
@@ -161,7 +166,9 @@ class Department extends Model {
 
 		if(count($action) == 1 && $this->validateList(array("name", "abbreviation", "address1", "address2", "city", "postal", "email", "opening_hours", "mobilepay_id", "accepts_signup", "geolocation", "latitude", "longitude", "description", "html"))) {
 
+			$IC = new Items();
 			$query = new Query();
+			
  
 			$query->checkDbExistence($this->db);
 			
@@ -193,8 +200,29 @@ class Department extends Model {
 				
 				// if successful, add message and return department id
 				if($query->sql($sql)) {
+
+					$department_id = $query->lastInsertId();
+
+					// add all products to the new department
+					$products = $IC->getItems(["where" => "itemtype REGEXP '^product'"]);
+					foreach($products as $product) {
+						
+						$this->addProduct($department_id, $product["id"]);
+					}
+
+					// add all pickup dates to the new department
+					// only opening dates that after current date? 
+					include_once("classes/shop/pickupdate.class.php");
+					$PC = new Pickupdate();
+					$pickupdates = $PC->getPickupdates();
+					foreach($pickupdates as $pickupdate) {
+
+						$this->addPickupdate($department_id, $pickupdate["id"]);
+					}
+
+
 					message()->addMessage("Department created");
-					return array("item_id" => $query->lastInsertId());
+					return array("item_id" => $department_id);
 				}
 			}
 			else {
@@ -382,6 +410,91 @@ class Department extends Model {
 		}
 		message()->addMessage("Department could not be deleted.", array("type" => "error"));
 		return false;
+	}
+
+	/**
+	 * Add a product to the department
+	 *
+	 * @param int $department_id
+	 * @param int $product_id
+	 * @return boolean
+	 */
+	function addProduct($department_id, $product_id) {
+
+		$query = new Query();
+		$query->checkDbExistence($this->db_products);
+
+		$sql = "INSERT INTO ".$this->db_products." SET department_id = $department_id, product_id = $product_id";
+		if($query->sql($sql)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Remove a product from the department
+	 *
+	 * @param int $department_id
+	 * @param int $product_id
+	 * @return boolean
+	 */
+	function removeProduct($department_id, $product_id) {
+		
+		$query = new Query();
+
+		$sql = "DELETE FROM ".$this->db_products." WHERE department_id = $department_id AND product_id = $product_id";
+
+		if($query->sql($sql)) {
+			return true;
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * Add a pickup date to the department
+	 *
+	 * @param int $department_id
+	 * @param int $pickupdate_id
+	 * @return boolean
+	 */
+	function addPickupdate($department_id, $pickupdate_id) {
+
+		$query = new Query();
+		$query->checkDbExistence($this->db_pickupdates);
+
+		$sql = "INSERT INTO ".$this->db_pickupdates." SET department_id = $department_id, pickupdate_id = $pickupdate_id";
+		if($query->sql($sql)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Remove a pickup date from the department
+	 *
+	 * @param int $department_id
+	 * @param int $pickupdate_id
+	 * @return boolean
+	 */
+	function removePickupdate($department_id, $pickupdate_id) {
+		
+		$query = new Query();
+
+		$sql = "DELETE FROM ".$this->db_pickupdates." WHERE department_id = $department_id AND pickupdate_id = $pickupdate_id";
+
+		if($query->sql($sql)) {
+
+			return true;
+		}
+
+		return false;
+
 	}
 }
 

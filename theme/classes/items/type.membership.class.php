@@ -77,9 +77,10 @@ class TypeMembership extends Itemtype {
 		// Description
 		$this->addToModel("description", array(
 			"type" => "text",
-			"label" => "SEO description",
+			"label" => "Short SEO description",
+			"max" => 155,
 			"hint_message" => "Write a short description of the membership for SEO.",
-			"error_message" => "A short description without any words? How weird."
+			"error_message" => "Your membership needs a description – max 155 characters."
 		));
 
 		// Introduction
@@ -91,19 +92,31 @@ class TypeMembership extends Itemtype {
 			"error_message" => "A short introduction without any words? How weird."
 		));
 
-		// Full description
-		$this->addToModel("html", array(
+		// HTML
+		$this->addToModel("html", [
 			"type" => "html",
 			"label" => "Full description",
+			"allowed_tags" => "p,h2,h3,h4,ul,ol,code,download,jpg,png", //,mp4,vimeo,youtube",
 			"hint_message" => "Write a full description of the membership.",
 			"error_message" => "A full description without any words? How weird."
+		]);
+
+		// Single media
+		$this->addToModel("single_media", array(
+			"type" => "files",
+			"label" => "Add media here",
+			"allowed_sizes" => "960x540",
+			"max" => 1,
+			"allowed_formats" => "png,jpg",
+			"hint_message" => "Add single image by dragging it here. PNG or JPG allowed in 960x540",
+			"error_message" => "Media does not fit requirements."
 		));
-		
+
 		// Fixed url id (to allow for prettier and fixed url's – because sindex must be unique, and signupfees and memberships have identical names)
 		$this->addToModel("fixed_url_identifier", array(
 			"type" => "string",
 			"label" => "Fixed URL identifier",
-			"hint_message" => "The URL identifier is used for linking to topics. If left empty, this will be based on Topic name.", 
+			"hint_message" => "The URL identifier is used for linking to topics. If left empty, this will be based on Membership name.", 
 			"error_message" => "Fixed URL identifier has invalid value."
 		));
 

@@ -1,4 +1,4 @@
-Util.Objects["stripe"] = new function() {
+Util.Modules["stripe"] = new function() {
 	this.init = function(scene) {
 //		u.bug("stripe init:", this);
 		

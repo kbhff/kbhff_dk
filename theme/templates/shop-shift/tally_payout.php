@@ -20,10 +20,11 @@ $department = $DC->getDepartment(["id" => $tally["department_id"]]);
 			<fieldset>
 				<?= $TC->input("payout_name", ["label" => "Hvad betales der for?"]); ?>
 				<?= $TC->input("payout_amount", ["label" => "Beløb"]); ?>
+				
 			</fieldset>
 
 			<ul class="actions">
-				<?= $TC->submit("Gem", ["wrapper" => "li.save"]); ?>
+				<?= $TC->submit("Gem", ["wrapper" => "li.save", "class" => "primary"]); ?>
 			</ul>
 		<?= $TC->formEnd(); ?>
 

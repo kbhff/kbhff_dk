@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-01-21 19:38:41
+asset-builder @ 2020-03-27 10:53:54
 */
 
 /*seg_desktop_include.css*/
@@ -18,6 +18,7 @@ body {
 #page {}
 body span.highlight,
 #page span.highlight {color: #3e8e17;}
+#header span.highlight {display: block;}
 body p.error,
 body p.errormessage,
 #page p.error,
@@ -68,8 +69,8 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 form {}
 div.field {
 	padding: 0 0 25px; position: relative; font-size: 0; z-index: 1;
-	padding-left: 10px;
-	padding-right: 10px;
+	padding-left: 16px;
+	padding-right: 16px;
 }
 div.field label {display: block; margin: 0 0 0 2px; line-height: 12px; font-size: 11px; text-transform: uppercase;}
 div.field input,
@@ -84,6 +85,11 @@ div.field select {width: calc(100% - 4px); padding: 2px 3px 2px 2px;
 }
 div.field select:not(*:root) {
 	padding: 3px 3px 3px 6px;
+}
+@-moz-document url-prefix() { 
+	div.field select {
+		padding: 3px 3px 3px 6px;
+	}
 }
 div.field select option {height: 24px;}
 div.field textarea {width: calc(100% - 4px); height: 100px; resize: none; overflow: auto; padding: 3px 0 2px 6px;}
@@ -218,23 +224,26 @@ input[type="submit"] {
 	position: relative;
 	width: 936px;
 	margin: 0 auto;
-	padding: 18px 0 18px;
+	padding: 36px 0 18px;
 }
 #header .logo {
 	box-sizing: border-box;
-	height: 48px;
-	padding: 8px 0 0 54px;
+	height: 66px;
+	padding: 0 0 0 68px;
 	display: inline-block;
-	background: transparent url(../assets/kbhff-skin/img/logos/logo-stempel_sort_lille_gulerod.png) no-repeat top left;
+	background: transparent url(../assets/kbhff-skin/img/logos/logo-stempel_sort_stor.png) no-repeat center left;
+	background-size: 60px;
+	letter-spacing: 1px;
 	font-family: 'voresfont';
-	font-size: 28px;
+	font-size: 30px;
 	line-height: 32px;
+	letter-spacing: 1px;
 	text-transform: uppercase;
 }
 #header ul.servicenavigation {
 	position: absolute;
 	line-height: 6px;
-	top: 6px;
+	top: 36px;
 	right: 0px;
 }
 #header ul.servicenavigation li {
@@ -272,7 +281,7 @@ position: relative;
 }
 #navigation ul.navigation li {
 	display: inline-block;
-	margin-right: 5px;
+	margin-right: 3px;
 	position: relative;
 }
 #navigation ul.navigation li.path > h4,
@@ -282,6 +291,9 @@ position: relative;
 #navigation ul.navigation li.selected > h5,
 #navigation ul.navigation li.selected > a {
 	background-color: #3e8e17;
+	border: 0px solid #3e8e17;
+	padding: 5px 12px;
+	color: #fff;
 }
 #navigation ul.navigation ul li {
 	display: block;
@@ -294,7 +306,8 @@ position: relative;
 	text-transform: uppercase;
 	font-size: 14px;
 	line-height: 22px;
-	padding: 7px 14px;
+	letter-spacing: 0.5px;
+	padding: 5px 12px;
 	display: block;
 	color: #ffffff;
 	background-color: #000000;
@@ -330,11 +343,12 @@ position: relative;
 #content h1 {
 	font-family: 'voresfont', Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
-	font-size: 40px;
-	line-height: 48px;
-	box-shadow: 0px -5px black inset;
+	font-size: 36px;
+	line-height: 42px;
 	padding-bottom: 2px;
 	padding-top: 13px;
+	box-sizing: border-box;
+	border-bottom: 2px solid #000;
 }
 #content h2 {
 	font-family: 'voresfont', Arial, Helvetica, sans-serif;
@@ -456,8 +470,8 @@ position: relative;
 #content ol,
 #content ul,
 #content dl {
-	padding-left: 12px;
-	padding-right: 12px;
+	padding-left: 18px;
+	padding-right: 18px;
 }
 #content div.c-wrapper {
 	display: block;
@@ -495,13 +509,14 @@ position: relative;
 	box-sizing: border-box;
 	margin-left: 12px;
 	margin-right: 12px;
-	margin-bottom: 24px;
+	margin-bottom: 12px;
 }
 #content div.c-box {
 	background: #f2f2f2;
-	border-top: 5px solid #000000;
 }
-#content div.c-box.obs {border-top: 5px solid #3e8e17;}
+#content div.c-box.obs {
+	border-top: 2px solid #3e8e17;
+}
 #content div.c-primary-box {
 	background: #3e8e17;
 }
@@ -630,6 +645,9 @@ position: relative;
 	padding-left: 0;
 	padding-right: 0;
 }
+#content div.profile ul.actions li.full-width:last-of-type {
+	padding-bottom: 0;
+}
 #content div.profile ul.actions .half-width {
 	width: 50%;
 	text-align: center;
@@ -692,6 +710,9 @@ position: relative;
 }
 #content div.profile .c-wrapper > .c-one-third > ul.actions {
 	margin-top: 36px;
+	padding-bottom: 12px;
+	padding-left: 12px;
+	padding-right: 12px;
 }
 #content div.profile .c-box,
 #content div.profile .fields {
@@ -699,6 +720,9 @@ position: relative;
 }
 #content div.profile .c-box ul.actions {
 	padding-top: 5px;
+	padding-bottom: 12px;
+}
+#content div.profile .c-box ul.actions li {
 	padding-bottom: 0;
 }
 #content div.profile .c-box > h3 {
@@ -733,32 +757,51 @@ position: relative;
 #content div.profile .user-info {
 	padding-bottom: 25px;
 }
+#content div.profile .department-info:last-child {
+	padding-bottom: 12px;
+}
 #content div.profile .password p.under {
 	font-size: 26px;
 	padding-bottom: 25px;
 }
 
 /*s-signup.css*/
-#content .signupfees h1 {color: #ffffff; box-shadow: 0px -5px white inset;}
-#content .signupfees h3 {padding-bottom: 8px; margin-right: 12px; margin-left: 12px; margin-top: 12px; border-bottom: 1px solid #000000; font-size: 26px;}
+#content .signupfees h3 {padding-bottom: 8px;
+	padding-left: 0px; padding-right: 0px; margin-left: 18px; margin-right: 18px;
+	border-bottom: 1px solid #000000; font-size: 26px;
+}
+#content .signupfees li.supporter {padding-top: 200px; 
+	background: transparent url(../img/signup/bg_supporter.jpg) no-repeat center top;
+}
+#content .signupfees li.volunteer {padding-top: 200px; 
+	background: transparent url(../img/signup/bg_volunteer.jpg) no-repeat center top;
+}
+#content .signupfees h3.price {border: none; font-size: 20px; padding-top: 0; padding-bottom: 30px;
+	font-family: Arial, sans-serif;
+}
+#content .signupfees h3.price + h3.price {margin-top: -25px;}
 #content .signupfees ul.signupfees {font-size: 0; margin-left: 0;}
-#content .signupfees li.signupfee {display: inline-block; width: calc(50% - 14px - 12px); vertical-align: top; text-align: center; background-color: rgba(255, 255, 255, 0.9); margin-top: 48px; margin-right: 12px; margin-left: 12px; padding-left: 0;}
-#content .signupfees li.signupfee + li {padding-top: 0;}
+#content .signupfees li.signupfee {display: inline-block; width: calc(50% - 14px - 12px); vertical-align: top; 
+	margin-top: 48px; margin-right: 12px; margin-left: 12px; padding-left: 0;
+}
+#content .signupfees li.signupfee + li.signupfee {padding-top: 200px;}
 #content .signupfees ul.actions {margin: 0 auto; padding-top: 5px; text-align: center;}
 #content .signupfees ul.actions input {margin: 0 auto;}
 #content .signupfees ul.actions li {display: block; width: 100%; padding-left: 0;}
-#content .signupfees ul.actions li.readmore {padding-bottom: 20px;}
+#content .signupfees ul.actions li.readmore { padding-bottom: 10px;}
 #content .signupfees ul.offer,
 #content .signupfees .articlebody ul.offer {font-size: 0; padding: 0; margin: 0; list-style: none;}
 #content .signupfees ul.offer li {font-size: 20px; display: inline-block; vertical-align: top; padding: 12px 5px 0 0px;}
 #content .signupfees ul.offer li.name,
 #content .signupfees ul.offer li.currency,
-#content .signupfees ul.offer li.url {display: none;}
+#content .signupfees ul.offer li.url,
+#content .signupfees ul.offer li.subscription_price,
+#content .signupfees ul.offer li.price {display: none;}
 #content .signupfees ul.offer li.default {text-decoration: line-through;}
 #content .signupfees ul.offer li.description {padding-top: 4px; display: block;}
 #content .signupfees ul.offer li.description ul {list-style: disc;}
 #content .signupfees ul.offer li.description ul li {display: list-item; padding: 0 0 3px; font-size: 13px;}
-#content .signupfees ul.offer li.subscription_price > p {padding: 0; font-size: 20px;}
+#content .signupfees ul.offer li.subscription_price > p {padding: 0 0 0 18px; font-size: 20px;}
 #content .signup form {width: 380px; margin: 0 auto; padding-top: 20px;}
 #content .signup ul.actions li { padding: 0 2.5px 10px 2.5px; }
 #content .signup p {box-sizing: border-box; width: 380px; margin: 0 auto;}
@@ -825,7 +868,7 @@ position: relative;
 #content .post .youtube,
 #content .post .vimeo {margin: 0 12px 24px;}
 #content .post .c-one-third .c-box {margin-top: 12px;}
-#content .post .c-one-third .c-box:first-child {margin-top: 58px; border-top: 5px solid #000;}
+#content .post .c-one-third .c-box:first-child {margin-top: 53px;}
 #content .post .related {padding: 50px 0; }
 #content .post .related li.item .description p {padding: 0;}
 
@@ -924,9 +967,141 @@ position: relative;
 #content .scene.shopReceipt ul.actions {text-align: center}
 
 
+/*s-shop_shift.css*/
+#content div.shop_shift ul.actions {
+	text-align: left;
+}
+#content div.shop_shift ul.actions li.shop {
+	padding-left: 0;
+}
+#content div.scene.tally {}
+#content div.scene.tally h3 {
+	padding: 12px 0 0 0;
+	margin: 0 18px;
+	margin-bottom: 12px;
+	border-bottom: 1px solid #000000;
+}
+#content div.scene.tally div.view li {
+	line-height: 30px;
+	vertical-align: middle;
+}
+#content div.scene.tally li.description {
+	float: left;
+	padding: 0;
+}
+#content div.scene.tally li.amount {
+	padding-bottom: 0;
+	padding-right: 10px;
+}
+#content div.scene.tally fieldset label,
+#content div.scene.tally fieldset input {
+}
+#content div.scene.tally .cash ul.actions 
+#content div.scene.tally .payouts ul.actions,
+#content div.scene.tally .misc_revenues ul.actions,
+#content div.scene.tally .cash_sales ul.actions,
+#content div.scene.tally .calculated_sales ul.actions,
+#content div.scene.tally .change ul.actions {
+	display: inline-block;
+	vertical-align: top;
+}
+#content div.scene.tally .edit fieldset {
+	display: inline-block;
+	vertical-align: top;
+	width: 400px;
+}
+#content div.scene.tally .edit ul.actions {
+	display: inline-block;
+	vertical-align: top;
+	padding-top: 12px;
+	padding-bottom: 0;
+	float: right;
+}
+#content div.scene.tally ul.actions li.edit_btn {padding: 0;}
+#content div.scene.tally ul.actions li.edit_btn .button,
+#content div.scene.tally ul.actions li.save .button {
+}
+#content div.scene.tally .pseudolabel {display: none;}
+#content div.scene.tally .payouts ul.payout,
+#content div.scene.tally .misc_revenues ul.revenue {
+	list-style: none;
+	padding: 0;
+	text-align: right;
+	margin: 0 18px;
+	padding-bottom: 18px;
+}
+#content div.scene.tally .payouts ul.payout ul.actions,
+#content div.scene.tally .misc_revenues ul.revenue ul.actions {
+	padding: 0;
+}
+#content div.scene.tally .payouts ul.payout li,
+#content div.scene.tally .misc_revenues ul.revenue li {
+	display: inline-block;
+	padding: 0;
+	line-height: 30px;
+	vertical-align: middle;
+}
+#content div.scene.tally .payouts ul.payout li.name,
+#content div.scene.tally .misc_revenues ul.revenue li.name {
+	float: left;
+}
+#content div.scene.tally .payouts ul.payout li.amount,
+#content div.scene.tally .misc_revenues ul.revenue li.amount {
+	padding-right: 10px;
+}
+#content div.scene.tally .payouts ul.payout li.delete input,
+#content div.scene.tally .misc_revenues ul.revenue li.delete input {
+	background-color: #999999;
+	color: #ffffff;
+}
+#content div.scene.tally .payouts ul.payout li.delete input:hover,
+#content div.scene.tally .misc_revenues ul.revenue li.delete input:hover {background-color: #666666;}
+#content div.scene.tally .payouts ul.payout li.delete input.confirm,
+#content div.scene.tally .misc_revenues ul.revenue li.delete input.confirm {
+	background-color: #C22414;
+	color: #ffffff;
+}
+#content div.scene.tally .payouts ul.payout li.delete input.confirm:hover,
+#content div.scene.tally .misc_revenues ul.revenue li.delete input.confirm:hover {background-color: #a81100;}
+#content div.scene.tally div.add_revenue > ul.actions {
+	width: 100%;
+	box-sizing: border-box;
+}
+#content div.scene.tally div.add_payout form fieldset,
+#content div.scene.tally div.add_payout form ul.actions,
+#content div.scene.tally div.misc_revenues form fieldset,
+#content div.scene.tally div.misc_revenues form ul.actions {
+	display: inline-block;
+	vertical-align: baseline;
+}
+#content div.scene.tally div.add_payout form fieldset,
+#content div.scene.tally div.misc_revenues form fieldset {width: 878px;}
+#content div.scene.tally div.add_payout form ul.actions,
+#content div.scene.tally div.misc_revenues form ul.actions {padding-left: 0;}
+#content div.scene.tally div.add_payout form fieldset .field,
+#content div.scene.tally div.misc_revenues form fieldset .field {
+	display: inline-block;
+}
+#content div.scene.tally div.add_payout form fieldset .field.string,
+#content div.scene.tally div.misc_revenues form fieldset .field.string {
+}
+#content div.scene.tally div.add_payout form fieldset .field.number,
+#content div.scene.tally div.misc_revenues form fieldset .field.number {
+	float: right;
+	padding-left: 0;
+	padding-right: 0;
+	text-align: right;
+}
+#content div.scene.tally div.add_payout form fieldset .field.number input,
+#content div.scene.tally div.misc_revenues form fieldset .field.number input {text-align: right;}
+#content div.scene.tally div.add_payout form fieldset .field.number:after {content: "-"; display: inline-block; font-size: 18px; position: absolute; left: -12px; top: 16px;}
+#content div.scene.tally div.cash_sales ul {list-style: none; margin: 0; padding-bottom: 15px;}
+#content div.scene.tally div.cash_sales ul li {display: inline-block; padding: 0;}
+#content div.scene.tally div.cash_sales ul li.total_price {float: right;}
+
 /*s-member_help.css*/
 #content .member_help h1 {display: none;}
-#content .member_help h2 {padding: 0; margin-left: 12px; margin-right: 12px; margin-top: 20px; margin-bottom: 12px;}
+#content .member_help h2 {padding: 0; margin-left: 12px; margin-right: 12px; margin-top: 20px; margin-bottom: 12px; border-bottom: 2px solid #000000;}
 #content .member_help div.c-wrapper,
 #content .member_help div.c-wrapper > div {min-height: 0px; padding: 0;}
 #content .member_help div.c-wrapper div.field label {display: none;}
@@ -983,7 +1158,7 @@ position: relative;
 #content .member_help_payment form fieldset {background-color: #f2f2f2; position: relative; padding-bottom: 40px} 
 #content .member_help_payment form.mobilepay .qr {float: right; position: relative;}
 #content .member_help_payment form.mobilepay .qr::before {z-index: 1; content: ""; display: block; position: absolute; top: 12px; bottom: 12px; border: 1px solid #999; border-width: 0 0 0 1px;}
-#content .member_help_payment form.mobilepay .qr img {width: 158px; padding: 0; border: 8px solid white; margin: 14px;}
+#content .member_help_payment form.mobilepay .qr img {padding: 0; margin: 14px;}
 #content .member_help_payment form.mobilepay  h5 {padding: 14px 12px 0px; font-size: 16px; line-height: 24px;}
 #content .member_help_payment form.mobilepay .qr h5 {text-align: center;}
 #content .member_help_payment form.mobilepay .code p {width: 50%; margin-top: -5px; padding-bottom: 12px;}
@@ -1087,6 +1262,66 @@ div.overlay .close:after {
 	transform: rotate(-45deg);
 }
 
+/*s-tally.css*/
+#content .cash .edit {display: none;}
+#content .section.tally .sum {float: right;}
+
+/*s-accountant.css*/
+#content .scene.accountant {}
+#content .scene.accountant.departments div.c-wrapper ul {list-style: none; margin-left: 0;}
+#content .scene.accountant.departments div.c-wrapper ul li {padding-left: 0;}
+#content .scene.accountant.departments div.c-wrapper ul li a {font-size: 20px;}
+#content .scene.accountant.departments div.c-wrapper .c-one-half {min-height: 0px;}
+#content .scene.accountant ul {list-style: none; margin-left: 0;}
+#content .scene.accountant ul.tallies {width: 50%; padding: 0; margin: 18px; border: 2px solid #000000;}
+#content .scene.accountant ul.tallies li {padding-left: 0;}
+#content .scene.accountant ul.tallies ul {padding: 0;}
+#content .scene.accountant ul.tallies li.labels ul {font-size: 0; padding-top: 12px;}
+#content .scene.accountant ul.tallies li.labels ul li {
+	display: inline-block; 
+	width: calc(50% - 24px);
+	padding: 0;
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1em;
+	padding-left: 12px;
+	padding-right: 12px;
+}
+#content .scene.accountant ul.tallies li.tally ul.details {font-size: 0;}
+#content .scene.accountant ul.tallies li.tally ul.details li {display: inline-block; width: calc(50% - 24px); padding: 0; line-height: 1em; padding-left: 12px; padding-right: 12px;}
+#content .scene.accountant ul.tallies li.tally {
+	border-top: 1px solid #000000;
+}
+#content .scene.accountant ul.tallies li.tally:nth-child(even) {
+	background-color: #f2f2f2;
+}
+#content .scene.accountant h3 {
+	padding: 12px 0 0 0;
+	margin: 0 18px;
+	margin-bottom: 12px;
+	border-bottom: 1px solid #000000;
+}
+#content .scene.accountant .info dl {width: 100%;}
+#content .scene.accountant .info dt,
+#content .scene.accountant .info dd {
+	display: block;
+	line-height: 1.4em;
+	text-align: left;
+}
+#content .scene.accountant .info dt {padding: 0;}
+#content .scene.accountant .info dd {padding-bottom: 12px;}
+#content .scene.accountant dl {width: 50%; font-size: 0;}
+#content .scene.accountant dt,
+#content .scene.accountant dd {
+	display: inline-block;
+	width: 50%;
+	line-height: 1.3em;
+	padding-bottom: 12px;
+}
+#content .scene.accountant dd {text-align: right;}
+#content .scene.accountant dl.subtotal >* {font-weight: 600;}
+#content .scene.accountant .calculated {padding-bottom: 46px; border-bottom: 1px;}
+
 /*s-departments.css*/
 #content .scene.departments ul.departments {list-style: none; margin: 0; padding: 0 0 50px; font-size: 0;}
 #content .scene.departments ul.departments li {padding: 0; font-size: 14px; line-height: 24px;}
@@ -1146,18 +1381,6 @@ div.overlay .close:after {
 
 
 /*s-general.css*/
-#navigation ul.navigation li.path > h4, 
-#navigation ul.navigation li.path > h5, 
-#navigation ul.navigation li.path > a, 
-#navigation ul.navigation li.selected > h4, 
-#navigation ul.navigation li.selected > h5, 
-#navigation ul.navigation li.selected > a {
-	background-color: #fff;
-	border: 2px solid #3e8e17;
-	padding: 5px 12px 7px;
-	color: #3e8e17;
-	border-bottom: none;
-}
 #navigation ul.navigation h5:hover, 
 #navigation ul.navigation li:not(.selected) a:hover {
 	background-color: #357914;
@@ -1206,4 +1429,8 @@ div.overlay .close:after {
 	text-transform: uppercase;
 	font-family: "voresfont";
 }
-
+#content .scene.post .article .articlebody > p:first-child,
+#content .scene.post .article .articlebody > h3:first-child,
+#content .scene.post .article .articlebody > .c-wrapper:first-child {padding-top: 30px;}
+#content .scene.post .article > ul.info {display: block; width: 100%; margin: 0 auto; padding: 16px 12px 0 18px;  box-sizing: border-box;}
+#content .scene.post .article > ul.info li {padding-left: 0; color: #666;}

@@ -1,4 +1,4 @@
-CREATE TABLE `SITE_DB`.`system_departments` (
+CREATE TABLE `SITE_DB`.`project_departments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `abbreviation` varchar(3) NOT NULL,

@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-01-21 19:38:41
+asset-builder @ 2020-03-27 10:53:54
 */
 
 /*seg_desktop_include.js*/
@@ -2126,6 +2126,7 @@ Util.Form = u.f = new function() {
 				field.filelist.field = field;
 				field.uploaded_files = u.qsa("li.uploaded", field.filelist);
 				this._update_filelist.bind(field.input)();
+				u.e.addEvent(field.input, "change", this._update_filelist);
 				u.e.addEvent(field.input, "change", this._updated);
 				u.e.addEvent(field.input, "change", this._changed);
 				if(u.e.event_support != "touch") {
@@ -2133,7 +2134,6 @@ Util.Form = u.f = new function() {
 					u.e.addEvent(field.input, "dragleave", this._blur);
 					u.e.addEvent(field.input, "drop", this._blur);
 				}
-				u.e.addEvent(field.input, "change", this._update_filelist);
 				this.activateInput(field.input);
 			}
 			else {
@@ -2337,6 +2337,9 @@ Util.Form = u.f = new function() {
 					u.ae(this.field.filelist, this.field.uploaded_files[i]);
 				}
 			}
+			else {
+				this.field.uploaded_files = [];
+			}
 		}
 		else if(this.field.uploaded_files && this.field.uploaded_files.length) {
 			u.rc(this.field, "has_new_files");
@@ -2503,7 +2506,7 @@ Util.Form = u.f = new function() {
 				}
 			}
 		}
-		var action_name = action.name ? action.name : (action.parentNode.className ? u.normalize(action.parentNode.className) : (action.value ? u.normalize(action.value) : u.normalize(u.text(action))));
+		var action_name = action.name ? action.name : (action.parentNode.className ? u.superNormalize(action.parentNode.className) : (action.value ? u.superNormalize(action.value) : u.superNormalize(u.text(action))));
 		if(action_name && !action._form.actions[action_name]) {
 			action._form.actions[action_name] = action;
 		}
@@ -3538,17 +3541,17 @@ Util.History = u.h = new function() {
 		return !location.hash ? this.getCleanUrl(location.href) : this.getCleanHash(location.hash);
 	}
 }
-Util.Objects = u.o = new Object();
+Util.Modules = u.m = new Object();
 Util.init = function(scope) {
-	var i, node, nodes, object;
+	var i, node, nodes, module;
 	scope = scope && scope.nodeName ? scope : document;
 	nodes = u.ges("i\:([_a-zA-Z0-9])+", scope);
 	for(i = 0; i < nodes.length; i++) {
 		node = nodes[i];
-		while((object = u.cv(node, "i"))) {
-			u.rc(node, "i:"+object);
-			if(object && obj(u.o[object])) {
-				u.o[object].init(node);
+		while((module = u.cv(node, "i"))) {
+			u.rc(node, "i:"+module);
+			if(module && obj(u.m[module])) {
+				u.m[module].init(node);
 			}
 		}
 	}
@@ -3930,9 +3933,10 @@ Util.request = function(node, url, _options) {
 						node[request_id].HTTPRequest.setRequestHeader(header, node[request_id].request_headers[header]);
 					}
 				}
+				node[request_id].HTTPRequest.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 				node[request_id].HTTPRequest.send("");
 			}
-			else if(node[request_id].request_method.match(/POST|PUT|PATCH/i)) {
+			else if(node[request_id].request_method.match(/POST|PUT|PATCH|DELETE/i)) {
 				var params;
 				if(obj(node[request_id].request_data) && node[request_id].request_data.constructor.toString().match(/function Object/i)) {
 					params = JSON.stringify(node[request_id].request_data);
@@ -3959,6 +3963,7 @@ Util.request = function(node, url, _options) {
 						node[request_id].HTTPRequest.setRequestHeader(header, node[request_id].request_headers[header]);
 					}
 				}
+				node[request_id].HTTPRequest.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 				node[request_id].HTTPRequest.send(params);
 			}
 		}
@@ -4294,11 +4299,89 @@ Util.lowerCaseFirst = u.lcfirst = function(string) {
 	return string.replace(/^(.){1}/, function($1) {return $1.toLowerCase()});
 }
 Util.normalize = function(string) {
+	var table = {
+		'À':'A',  'à':'a',
+		'Á':'A',  'á':'a',
+		'Â':'A',  'â':'a',
+		'Ã':'A',  'ã':'a',
+		'Ä':'A',  'ä':'a',
+		'Å':'Aa', 'å':'aa',
+		'Æ':'Ae', 'æ':'ae',
+		'Ç':'C',  'ç':'c',
+		'Č':'C',  'ć':'c',
+		'Ć':'C',  'č':'c',
+		'Đ':'D',  'đ':'d',  'ð':'d',
+		'È':'E',  'è':'e',
+		'É':'E',  'é':'e',
+		'Ê':'E',  'ê':'e',
+		'Ë':'E',  'ë':'e',
+		'Ģ':'G',  'ģ':'g',
+		'Ğ':'G',  'ğ':'g',
+		'Ì':'I',  'ì':'i',
+		'Í':'I',  'í':'i',
+		'Î':'I',  'î':'i',
+		'Ï':'I',  'ï':'i',
+		'Ī':'I',  'ī':'i',
+		'Ķ':'K',  'ķ':'k',
+		'Ļ':'L',  'ļ':'l',
+		'Ñ':'N',  'ñ':'n',
+		'Ņ':'N',  'ņ':'n',
+		'Ò':'O',  'ò':'o',
+		'Ó':'O',  'ó':'o',
+		'Ô':'O',  'ô':'o',
+		'Õ':'O',  'õ':'o',
+		'Ö':'O',  'ö':'o',
+		'Ō':'O',  'ō':'o',
+		'Ø':'Oe', 'ø':'oe',
+		'Ŕ':'R',  'ŕ':'r',
+		'Š':'S',  'š':'s',
+		'Ş':'S',  'ş':'s',
+		'Ṩ':'S',  'ṩ':'s',
+		'Ù':'U',  'ù':'u',
+		'Ú':'U',  'ú':'u',
+		'Û':'U',  'û':'u',
+		'Ü':'U',  'ü':'u',
+		'Ū':'U',  'ū':'u',
+		'Ų':'U',  'ų':'u',
+		'Ŭ':'U',  'ŭ':'u',
+		'Ý':'Y',  'ý':'y',
+		'Ÿ':'Y',  'ÿ':'y',
+		'Ž':'Z',  'ž':'z',
+		'Þ':'B',  'þ':'b',
+		'ß':'Ss',
+		'@':' at ',
+		'&':'and',
+		'%':' percent',
+		'\\$':'USD',
+		'¥':'JPY',
+		'€':'EUR',
+		'£':'GBP',
+		'™':'trademark',
+		'©':'copyright',
+		'§':'s',
+		'\\*':'x',
+		'×':'x'
+	}
+	var char, regex;
+	for(char in table) {
+		regex = new RegExp(char, "g");
+		string = string.replace(regex, table[char]);
+	}
+	return string;
+}
+Util.superNormalize = function(string) {
+	string = u.normalize(string);
 	string = string.toLowerCase();
+	string = u.stripTags(string);
 	string = string.replace(/[^a-z0-9\_]/g, '-');
 	string = string.replace(/-+/g, '-');
 	string = string.replace(/^-|-$/g, '');
 	return string;
+}
+Util.stripTags = function(string) {
+	var node = document.createElement("div");
+	node.innerHTML = string;
+	return u.text(node);
 }
 Util.pluralize = function(count, singular, plural) {
 	if(count != 1) {
@@ -4663,7 +4746,7 @@ Util.getVar = function(param, url) {
 		return "";
 	}
 }
-Util.Objects["page"] = new function() {
+Util.Modules["page"] = new function() {
 	this.init = function(page) {
 		page.hN = u.qs("#header");
 		page.hN.ul_service = u.qs("ul.servicenavigation", page.hN);
@@ -4703,8 +4786,6 @@ Util.Objects["page"] = new function() {
 			}
 		}
 		page.initHeader = function() {
-			var logo = u.ie(this.hN, "a", {"class":"logo", "href":"/","html": 'KBHFF <span class="highlight">' + document.title + '</span>'});
-			u.ce(logo, {"type":"link"});
 		}
 		page.initNavigation = function() {
 			page.nN_nodes = u.qsa("li.indent0", page.nN);
@@ -4750,7 +4831,7 @@ Util.Objects["page"] = new function() {
 	}
 }
 u.e.addDOMReadyEvent(u.init);
-Util.Objects["scene"] = new function() {
+Util.Modules["scene"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -4761,7 +4842,7 @@ Util.Objects["scene"] = new function() {
 		scene.ready();
 	}
 }
-Util.Objects["banner"] = new function() {
+Util.Modules["banner"] = new function() {
 	this.init = function(div) {
 		var variant = u.cv(div, "variant");
 		var format = u.cv(div, "format");
@@ -4853,8 +4934,10 @@ u.overlay = function (_options) {
 	}
 	u.e.addWindowEvent(overlay, "resize", "_resized");
 	overlay.div_header = u.ae(overlay, "div", {class:"header"});
-	overlay.div_header.h2 = u.ae(overlay.div_header, "h2", {html: title});
-	overlay.div_header.overlay = overlay;
+	if(title) {
+		overlay.div_header.h2 = u.ae(overlay.div_header, "h2", {html: title});
+		overlay.div_header.overlay = overlay;
+	}
 	overlay.div_content = u.ae(overlay, "div", {class: "content"});
 	overlay.div_content.overlay = overlay;
 	overlay.div_footer = u.ae(overlay, "div", {class: "footer"});
@@ -5391,8 +5474,160 @@ u.googlemaps = new function() {
 }
 
 
-/*i-article.js*/
-Util.Objects["article"] = new function() {
+/*u-object.js*/
+u.objectValues = function(obj) {
+	var key, values = [];
+	for(key in obj) {
+		if(obj.hasOwnProperty(key)) {
+			values.push(obj[key]);
+		}
+	}
+	return values;
+}
+
+/*beta-u-form-onebuttonform.js*/
+Util.Modules["oneButtonForm"] = new function() {
+	this.init = function(node) {
+		if(!node.childNodes.length) {
+			var csrf_token = node.getAttribute("data-csrf-token");
+			if(csrf_token) {
+				if(node.nodeName.toLowerCase() === "form") {
+					node._ob_form = node;
+				}
+				else {
+					var form_action = node.getAttribute("data-form-action");
+					var form_target = node.getAttribute("data-form-target");
+					if(form_action) {
+						var form_options = {"action":form_action, "class":"confirm_action_form"};
+						if(form_target) {
+							form_options["target"] = form_target;
+						}
+						node._ob_form = u.f.addForm(node, form_options);
+					}
+					else {
+						u.bug("oneButtonForm missin information");
+						return;
+					}
+				}
+				u.ae(node._ob_form, "input", {"type":"hidden","name":"csrf-token", "value":csrf_token});
+				var inputs = node.getAttribute("data-inputs");
+				if(inputs) {
+					inputs = JSON.parse(inputs);
+					for(input_name in inputs) {
+						u.ae(node._ob_form, "input", {"type":"hidden","name":input_name, "value":inputs[input_name]});
+					}
+				}
+				var button_value = node.getAttribute("data-button-value");
+				var button_name = node.getAttribute("data-button-name");
+				var button_class = node.getAttribute("data-button-class");
+				u.f.addAction(node._ob_form, {"value":button_value, "class":"button" + (button_class ? " "+button_class : ""), "name":u.stringOr(button_name, "save")});
+			}
+		}
+		else {
+			if(node.nodeName.toLowerCase() === "form") {
+				node._ob_form = node;
+			}
+			else {
+				node._ob_form = u.qs("form", node);
+			}
+		}
+		if(node._ob_form) {
+			u.f.init(node._ob_form);
+			node._ob_form._ob_node = node;
+			node._ob_form._ob_submit_button = u.qs("input[type=submit]", node._ob_form);
+			if(u.objectValues(node._ob_form.actions).indexOf(node._ob_form._ob_submit_button) === -1) {
+				u.f.initButton(node._ob_form, node._ob_form._ob_submit_button);
+			}
+			node._ob_form._ob_submit_button.org_value = node._ob_form._ob_submit_button.value;
+			node._ob_form._ob_submit_button.confirm_value = node.getAttribute("data-confirm-value");
+			node._ob_form._ob_submit_button.wait_value = node.getAttribute("data-wait-value");
+			node._ob_form._ob_success_function = node.getAttribute("data-success-function");
+			node._ob_form._ob_success_location = node.getAttribute("data-success-location");
+			node._ob_form._ob_error_function = node.getAttribute("data-error-function");
+			node._ob_form._ob_dom_submit = node.getAttribute("data-dom-submit");
+			node._ob_form._ob_download = node.getAttribute("data-download");
+			node._ob_form.restore = function(event) {
+				u.t.resetTimer(this.t_confirm);
+				u.rc(this._ob_submit_button, "confirm");
+				delete this._ob_submit_button._ob_wait_for_confirm;
+				this._ob_submit_button.value = this._ob_submit_button.org_value;
+			}
+			node._ob_form.submitted = function(action) {
+				if(!this._ob_submit_button._ob_wait_for_confirm && this._ob_submit_button.confirm_value) {
+					u.ac(this._ob_submit_button, "confirm");
+					this._ob_submit_button._ob_wait_for_confirm = true;
+					this._ob_submit_button.value = this._ob_submit_button.confirm_value;
+					this.t_confirm = u.t.setTimer(this, this.restore, 3000);
+				}
+				else {
+					u.t.resetTimer(this.t_confirm);
+					this.response = function(response) {
+						u.rc(this, "submitting");
+						u.rc(this._ob_submit_button, "disabled");
+						if(fun(page.notify)) {
+							page.notify(response);
+						}
+						this.restore();
+						if(!response.cms_status || response.cms_status == "success") {
+							if(response.cms_object && response.cms_object.constraint_error) {
+								this._ob_submit_button.value = this._ob_submit_button.org_value;
+								u.ac(this, "disabled");
+							}
+							else {
+								if(this._ob_success_location) {
+									u.ass(this._ob_submit_button, {
+										"display": "none"
+									});
+									location.href = this._ob_success_location;
+								}
+								else if(this._ob_success_function) {
+									if(fun(this._ob_node[this._ob_success_function])) {
+										this._ob_node[this._ob_success_function](response);
+									}
+								}
+								else if(fun(this._ob_node.confirmed)) {
+									this._ob_node.confirmed(response);
+								}
+								else {
+									u.bug("default return handling" + this._ob_success_location)
+								}
+							}
+						}
+						else {
+							if(this._ob_error_function) {
+								u.bug("error function:" + this._ob_error_function);
+								if(fun(this._ob_node[this._ob_error_function])) {
+									this._ob_node[this._ob_error_function](response);
+								}
+							}
+							else if(fun(this._ob_node.confirmedError)) {
+								u.bug("confirmedError");
+								this._ob_node.confirmedError(response);
+							}
+						}
+					}
+					u.ac(this._ob_submit_button, "disabled");
+					u.ac(this, "submitting");
+					this._ob_submit_button.value = u.stringOr(this._ob_submit_button.wait_value, "Wait");
+					if(this._ob_dom_submit) {
+						u.bug("should submit:" + this._ob_download);
+						if(this._ob_download) {
+							this.response({"cms_status":"success"});
+							u.bug("wait for download");
+						}
+						this.DOMsubmit();
+					}
+					else {
+						u.request(this, this.action, {"method":"post", "data":this.getData()});
+					}
+				}
+			}
+		}
+	}
+}
+
+/*m-article.js*/
+Util.Modules["article"] = new function() {
 	this.init = function(article) {
 		u.bug("article init:", article);
 		article.csrf_token = article.getAttribute("data-csrf-token");
@@ -5465,8 +5700,8 @@ Util.Objects["article"] = new function() {
 }
 
 
-/*i-articles.js*/
-Util.Objects["articles"] = new function() {
+/*m-articles.js*/
+Util.Modules["articles"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5505,8 +5740,8 @@ Util.Objects["articles"] = new function() {
 }
 
 
-/*i-front.js*/
-Util.Objects["front"] = new function() {
+/*m-front.js*/
+Util.Modules["front"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5545,8 +5780,8 @@ Util.Objects["front"] = new function() {
 }
 
 
-/*i-faq.js*/
-Util.Objects["faq"] = new function() {
+/*m-faq.js*/
+Util.Modules["faq"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5594,8 +5829,8 @@ Util.Objects["faq"] = new function() {
 }
 
 
-/*i-login.js*/
-Util.Objects["login"] = new function() {
+/*m-login.js*/
+Util.Modules["login"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5610,8 +5845,8 @@ Util.Objects["login"] = new function() {
 }
 
 
-/*i-accept_terms.js*/
-Util.Objects["accept_terms"] = new function() {
+/*m-accept_terms.js*/
+Util.Modules["accept_terms"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5695,8 +5930,8 @@ Util.Objects["accept_terms"] = new function() {
 }
 
 
-/*i-confirm_account.js*/
-Util.Objects["confirm_account"] = new function() {
+/*m-confirm_account.js*/
+Util.Modules["confirm_account"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5712,8 +5947,8 @@ Util.Objects["confirm_account"] = new function() {
 }
 
 
-/*i-create_password.js*/
-Util.Objects["create_password"] = new function() {
+/*m-create_password.js*/
+Util.Modules["create_password"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5729,8 +5964,8 @@ Util.Objects["create_password"] = new function() {
 }
 
 
-/*i-update_department.js*/
-Util.Objects["update_department"] = new function() {
+/*m-update_department.js*/
+Util.Modules["update_department"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5745,8 +5980,8 @@ Util.Objects["update_department"] = new function() {
 }
 
 
-/*i-update_user_information.js*/
-Util.Objects["user_information"] = new function() {
+/*m-update_user_information.js*/
+Util.Modules["user_information"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5761,8 +5996,8 @@ Util.Objects["user_information"] = new function() {
 }
 
 
-/*i-update_user_password.js*/
-Util.Objects["user_password"] = new function() {
+/*m-update_user_password.js*/
+Util.Modules["user_password"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5777,8 +6012,8 @@ Util.Objects["user_password"] = new function() {
 }
 
 
-/*i-delete_user_information.js*/
-Util.Objects["delete_user_information"] = new function() {
+/*m-delete_user_information.js*/
+Util.Modules["delete_user_information"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5795,48 +6030,25 @@ Util.Objects["delete_user_information"] = new function() {
 }
 
 
-/*i-signupfees.js*/
-Util.Objects["signupfees"] = new function() {
+/*m-signupfees.js*/
+Util.Modules["signupfees"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
 		scene.scrolled = function() {
 		}
 		scene.ready = function() {
-			var signupfees = u.qsa("ul.offer li.description");
-			var largestHeight = 0;
-			for (var i = 0; i < signupfees.length; i++) {
-				if (u.actualHeight(signupfees[i]) > largestHeight) {
-					var largestHeight = u.actualHeight(signupfees[i]);
-				}
-			}
-			var j = signupfees.length;
-			while (j--) {
-				u.ass(signupfees[j], {"height":largestHeight+"px"})
-			}
-			var bg1 = u.ae(scene, "div", {class:"bg volunteer"});
-			var bg2 = u.ae(scene, "div", {class:"bg supporter"});
-			page.resized();
-			u.ass(bg1, {
-				height: page.offsetHeight + "px",
-				top: -(u.absY(scene)) + "px",
-				right: -(page.browser_w - u.absX(scene) - scene.offsetWidth) + "px",
-				width: (page.browser_w / 2) + "px",
-			});
-			u.ass(bg2, {
-				height: page.offsetHeight + "px",
-				top: -(u.absY(scene)) + "px",
-				left: -(page.browser_w - u.absX(scene) - scene.offsetWidth) + "px",
-				width: (page.browser_w / 2) + "px",
-			});
+		// 	
+		// 	
+		// 	
 		}
 		scene.ready();
 	}
 }
 
 
-/*i-signup.js*/
-Util.Objects["signup"] = new function() {
+/*m-signup.js*/
+Util.Modules["signup"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -5864,8 +6076,8 @@ Util.Objects["signup"] = new function() {
 }
 
 
-/*i-comments.js*/
-Util.Objects["comments"] = new function() {
+/*m-comments.js*/
+Util.Modules["comments"] = new function() {
 	this.init = function(div) {
 		div.item_id = u.cv(div, "item_id");
 		div.list = u.qs("ul.comments", div);
@@ -5955,8 +6167,8 @@ Util.Objects["comments"] = new function() {
 }
 
 
-/*i-stripe.js*/
-Util.Objects["stripe"] = new function() {
+/*m-stripe.js*/
+Util.Modules["stripe"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6076,8 +6288,8 @@ Util.Objects["stripe"] = new function() {
 	}
 }
 
-/*i-member_help_accept_terms.js*/
-Util.Objects["member_help_accept_terms"] = new function() {
+/*m-member_help_accept_terms.js*/
+Util.Modules["member_help_accept_terms"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6092,8 +6304,8 @@ Util.Objects["member_help_accept_terms"] = new function() {
 }
 
 
-/*i-member_help_signup.js*/
-Util.Objects["member_help_signup"] = new function() {
+/*m-member_help_signup.js*/
+Util.Modules["member_help_signup"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6112,8 +6324,8 @@ Util.Objects["member_help_signup"] = new function() {
 }
 
 
-/*i-member_help_payment.js*/
-Util.Objects["member_help_payment"] = new function() {
+/*m-member_help_payment.js*/
+Util.Modules["member_help_payment"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6300,8 +6512,8 @@ Util.Objects["member_help_payment"] = new function() {
 }
 
 
-/*i-member_help_index.js*/
-Util.Objects["member_help"] = new function() {
+/*m-member_help_index.js*/
+Util.Modules["member_help"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6374,8 +6586,8 @@ Util.Objects["member_help"] = new function() {
 }
 
 
-/*i-newsletter.js*/
-Util.Objects["newsletter"] = new function() {
+/*m-newsletter.js*/
+Util.Modules["newsletter"] = new function() {
 	this.init = function(div) {
 		var form = u.qs("form", div);
 		form.div = div;
@@ -6391,8 +6603,8 @@ Util.Objects["newsletter"] = new function() {
 	}
 }
 
-/*i-departments.js*/
-Util.Objects["departments"] = new function() {
+/*m-departments.js*/
+Util.Modules["departments"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6433,8 +6645,8 @@ Util.Objects["departments"] = new function() {
 }
 
 
-/*i-department_view.js*/
-Util.Objects["departmentView"] = new function() {
+/*m-department_view.js*/
+Util.Modules["departmentView"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6449,8 +6661,8 @@ Util.Objects["departmentView"] = new function() {
 }
 
 
-/*i-user_profile.js*/
-Util.Objects["user_profile"] = new function() {
+/*m-user_profile.js*/
+Util.Modules["user_profile"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6730,8 +6942,8 @@ Util.Objects["user_profile"] = new function() {
 }
 
 
-/*i-profile.js*/
-Util.Objects["profile"] = new function() {
+/*m-profile.js*/
+Util.Modules["profile"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -7095,8 +7307,8 @@ Util.Objects["profile"] = new function() {
 }
 
 
-/*i-forgot.js*/
-Util.Objects["forgot"] = new function() {
+/*m-forgot.js*/
+Util.Modules["forgot"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -7159,6 +7371,252 @@ Util.Objects["forgot"] = new function() {
 					u.a.transition(this, "all 0.15s linear");
 					u.a.scale(this, 1);
 				}
+			}
+		}
+		scene.ready();
+	}
+}
+
+
+/*m-tally.js*/
+Util.Modules["tally"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			if(!u.qs(".section.tally.closed")) {
+				this.tally_id = u.cv(this, "tally_id");
+				this.initStartCash();
+				this.initEndCash();
+				this.initDeposited();
+				this.initPayouts();
+				this.initMiscRevenues();
+				this.comment_form = u.qs("form.comment", this);
+				this.comment_form.scene = this;
+				u.f.init(this.comment_form);
+				this.comment_form.submitted = function(iN) {
+					if(iN.hasAttribute("formaction")) {
+						this.action = iN.getAttribute("formaction");
+					}
+					this.response = function(response) {
+						var error_message = u.qs(".messages .error", response);
+						if(error_message) {
+							if(this.p_error) {
+								this.p_error.parentNode.removeChild(this.p_error);
+							} 
+							this.p_error = u.ie(u.qs(".section.tally"), "p", {
+								html:error_message.innerHTML,
+								class:"error"
+							})
+						}
+						else if(u.qs(".scene.shop_shift", response)) {
+							location.href = "/butiksvagt"; 
+						}
+						else {
+							location.href = "/butiksvagt/kasse/"+this.scene.tally_id;
+						}
+					} 
+					u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this)});
+				}
+				this.calculated_sales_by_the_piece = u.qs(".calculated_sales span.sum", this);
+				this.change = u.qs(".change span.sum", this);
+			}
+			// 
+			page.resized();
+		}
+		scene.initStartCash = function() {
+			this.start_cash_view = u.qs(".start_cash .view");
+			this.start_cash_view.edit_btn = u.qs(".edit_btn", this.start_cash_view);
+			this.start_cash_view.amount = u.qs(".amount", this.start_cash_view);
+			this.start_cash_view.edit_btn.scene = this;
+			this.start_cash_edit = u.qs(".start_cash .edit");
+			this.start_cash_edit.form = u.qs("form", this.start_cash_edit);
+			this.start_cash_edit.form.scene = this;
+			u.f.init(this.start_cash_edit.form);
+			u.clickableElement(this.start_cash_view.edit_btn);
+			this.start_cash_view.edit_btn.clicked = function() {
+				u.as(this.scene.start_cash_view, "display", "none");
+				u.as(this.scene.start_cash_edit, "display", "block");
+				this.scene.start_cash_edit.form.inputs["start_cash"].focus()
+			}
+			this.start_cash_edit.form.submitted = function() {
+				this.response = function(response) {
+					this.is_requesting = false;
+					u.rc(this, "loading");
+					var new_amount = u.text(u.qs(".start_cash .view .amount", response));
+					this.scene.start_cash_view.amount.innerText = new_amount;
+					u.as(this.scene.start_cash_edit, "display", "none");
+					u.as(this.scene.start_cash_view, "display", "block");
+					this.scene.updateCalculatedValues(response);
+				}
+				u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+			}
+		}
+		scene.initEndCash = function() {
+			this.end_cash_view = u.qs(".end_cash .view");
+			this.end_cash_view.edit_btn = u.qs(".edit_btn", this.end_cash_view);
+			this.end_cash_view.amount = u.qs(".amount", this.end_cash_view);
+			this.end_cash_view.edit_btn.scene = this;
+			this.end_cash_edit = u.qs(".end_cash .edit");
+			this.end_cash_edit.form = u.qs("form", this.end_cash_edit);
+			this.end_cash_edit.form.scene = this;
+			u.f.init(this.end_cash_edit.form);
+			u.clickableElement(this.end_cash_view.edit_btn);
+			this.end_cash_view.edit_btn.clicked = function() {
+				u.as(this.scene.end_cash_view, "display", "none");
+				u.as(this.scene.end_cash_edit, "display", "block");
+				this.scene.end_cash_edit.form.inputs["end_cash"].focus()
+			}
+			this.end_cash_edit.form.submitted = function() {
+				this.response = function(response) {
+					this.is_requesting = false;
+					u.rc(this, "loading");
+					u.bug(response);
+					var new_amount = u.text(u.qs(".end_cash .view .amount", response));
+					this.scene.end_cash_view.amount.innerText = new_amount;
+					u.as(this.scene.end_cash_edit, "display", "none");
+					u.as(this.scene.end_cash_view, "display", "block");
+					this.scene.updateCalculatedValues(response);
+				}
+				u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+			}
+		}
+		scene.initDeposited = function() {
+			this.deposited_view = u.qs(".deposited .view");
+			this.deposited_view.edit_btn = u.qs(".edit_btn", this.deposited_view);
+			this.deposited_view.amount = u.qs(".amount", this.deposited_view);
+			this.deposited_view.edit_btn.scene = this;
+			this.deposited_edit = u.qs(".deposited .edit");
+			this.deposited_edit.form = u.qs("form", this.deposited_edit);
+			this.deposited_edit.form.scene = this;
+			u.f.init(this.deposited_edit.form);
+			u.clickableElement(this.deposited_view.edit_btn);
+			this.deposited_view.edit_btn.clicked = function() {
+				u.as(this.scene.deposited_view, "display", "none");
+				u.as(this.scene.deposited_edit, "display", "block");
+				this.scene.deposited_edit.form.inputs["deposited"].focus()
+			}
+			this.deposited_edit.form.submitted = function() {
+				this.response = function(response) {
+					this.is_requesting = false;
+					u.rc(this, "loading");
+					var new_amount = u.text(u.qs(".deposited .view .amount", response));
+					this.scene.deposited_view.amount.innerText = new_amount;
+					u.as(this.scene.deposited_edit, "display", "none");
+					u.as(this.scene.deposited_view, "display", "block");
+					this.scene.updateCalculatedValues(response);
+				}
+				u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+			}
+		}
+		scene.initPayouts = function() {
+			this.tally_section = u.qs(".section.tally", this);
+			this.payouts = u.qs(".payouts", this);
+			this.calculated_sales_by_the_piece = u.qs(".calculated_sales span.sum", this);
+			this.payouts.delete_forms = u.qsa("ul.payout .delete");
+				if(this.payouts.delete_forms) {
+				for (let i = 0; i < this.payouts.delete_forms.length; i++) {
+					var delete_form = this.payouts.delete_forms[i];
+					delete_form.scene = this;
+					u.m.oneButtonForm.init(delete_form);
+					delete_form.confirmed = function(response) {
+						this.payouts = u.qs("div.payouts", response);
+						this.scene.tally_section.replaceChild(this.payouts, this.scene.payouts);
+						this.scene.updateCalculatedValues(response);
+						this.scene.initPayouts();
+					}
+				}
+			}
+			this.payouts.div_add = u.qs("div.add_payout", this.payouts);
+			this.payouts.div_add.ul = u.qs("ul.actions", this.payouts.div_add);
+			this.payouts.btn_add = u.qs("li.add_payout", this.payouts);
+			this.payouts.btn_add.scene = this;
+			u.e.resetClickEvents(this.payouts.btn_add);
+			u.ce(this.payouts.btn_add);
+			this.payouts.btn_add.clicked = function() {
+				this.response = function(response) {
+					this.scene.payouts.div_add.form = u.qs("form.add_payout", response);
+					this.scene.payouts.div_add.form.scene = this.scene;
+					u.f.init(this.scene.payouts.div_add.form);
+					this.scene.payouts.div_add.replaceChild(this.scene.payouts.div_add.form, this.scene.payouts.div_add.ul); 
+					this.scene.payouts.div_add.form.inputs["payout_name"].focus();
+					this.scene.payouts.div_add.form.submitted = function() {
+						this.response = function(response) {
+							this.scene.payouts.div_add.replaceChild(this.scene.payouts.div_add.ul, this.scene.payouts.div_add.form); 
+							this.response = function(response) {
+								this.payouts = u.qs("div.payouts", response);
+								this.scene.tally_section.replaceChild(this.payouts, this.scene.payouts);
+								this.scene.updateCalculatedValues(response);
+								this.scene.initPayouts();
+							}
+							u.request(this, "/butiksvagt/kasse/" + this.scene.tally_id);
+						}
+						u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+					}
+				}
+				u.request(this, "/butiksvagt/kasse/" + this.scene.tally_id + "/udbetaling");
+			}
+		}
+		scene.initMiscRevenues = function() {
+			this.tally_section = u.qs(".section.tally", this);
+			this.revenues = u.qs(".misc_revenues", this);
+			this.calculated_sales_by_the_piece = u.qs(".calculated_sales span.sum", this);
+			this.revenues.delete_forms = u.qsa("ul.revenue .delete");
+				if(this.revenues.delete_forms) {
+				for (let i = 0; i < this.revenues.delete_forms.length; i++) {
+					var delete_form = this.revenues.delete_forms[i];
+					delete_form.scene = this;
+					u.m.oneButtonForm.init(delete_form);
+					delete_form.confirmed = function(response) {
+						this.revenues = u.qs("div.misc_revenues", response);
+						this.scene.tally_section.replaceChild(this.revenues, this.scene.revenues);
+						this.scene.updateCalculatedValues(response);
+					this.scene.initMiscRevenues();
+					}
+				}
+			}
+			this.revenues.div_add = u.qs("div.add_revenue", this.revenues);
+			this.revenues.div_add.ul = u.qs("ul.actions", this.revenues.div_add);
+			this.revenues.btn_add = u.qs("li.add_revenue", this.revenues);
+			this.revenues.btn_add.scene = this;
+			u.e.resetClickEvents(this.revenues.btn_add);
+			u.ce(this.revenues.btn_add);
+			this.revenues.btn_add.clicked = function() {
+				this.response = function(response) {
+					this.scene.revenues.div_add.form = u.qs("form.add_revenue", response);
+					this.scene.revenues.div_add.form.scene = this.scene;
+					u.f.init(this.scene.revenues.div_add.form);
+					this.scene.revenues.div_add.replaceChild(this.scene.revenues.div_add.form, this.scene.revenues.div_add.ul); 
+					this.scene.revenues.div_add.form.inputs["revenue_name"].focus();
+					this.scene.revenues.div_add.form.submitted = function() {
+						this.response = function(response) {
+							this.scene.revenues.div_add.replaceChild(this.scene.revenues.div_add.ul, this.scene.revenues.div_add.form); 
+							this.response = function(response) {
+								this.revenues = u.qs("div.misc_revenues", response);
+								this.scene.tally_section.replaceChild(this.revenues, this.scene.revenues);
+								this.scene.updateCalculatedValues(response);
+								this.scene.initMiscRevenues();
+							}
+							u.request(this, "/butiksvagt/kasse/" + this.scene.tally_id);
+						}
+						u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+					}
+				}
+				u.request(this, "/butiksvagt/kasse/" + this.scene.tally_id + "/andre-indtaegter");
+			}
+		}
+		scene.updateCalculatedValues = function(response) {
+			var calculated_sales_by_the_piece = u.qs(".calculated_sales span.sum", response);
+			if(calculated_sales_by_the_piece) {
+				u.pn(this.calculated_sales_by_the_piece).replaceChild(calculated_sales_by_the_piece, this.calculated_sales_by_the_piece);
+				this.calculated_sales_by_the_piece = calculated_sales_by_the_piece;
+			}
+			var change = u.qs(".change span.sum", response);
+			if(change) {
+				u.pn(this.change).replaceChild(change, this.change);
+				this.change = change;
 			}
 		}
 		scene.ready();

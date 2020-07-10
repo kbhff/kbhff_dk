@@ -22,15 +22,18 @@ class TypePage extends Itemtype {
 		// Published
 		$this->addToModel("published_at", array(
 			"type" => "datetime",
-			"hint_message" => "Publication date and time of page. This will be shown on website. Leave empty for current time"
+			"label" => "Publish date (yyyy-mm-dd hh:mm)",
+			"hint_message" => "Publication date and time of page. This will be shown on website. Leave empty for current time",
+			"error_message" => "Datetime must be of format (yyyy-mm-dd hh:mm)"
 		));
 
 		// Name
 		$this->addToModel("name", array(
 			"type" => "string",
 			"label" => "Title",
+			"searchable" => true,
 			"required" => true,
-			"hint_message" => "Title of your page", 
+			"hint_message" => "Title of your page.", 
 			"error_message" => "Title must be filled out."
 		));
 
@@ -38,29 +41,49 @@ class TypePage extends Itemtype {
 		$this->addToModel("subheader", array(
 			"type" => "string",
 			"label" => "Secondary headline",
-			"hint_message" => "Secondary headline of your page", 
+			"searchable" => true,
+			"hint_message" => "Secondary headline of your page.",
 			"error_message" => "Secondary headline contains illigal characters."
 		));
 
 		// Description
 		$this->addToModel("description", array(
 			"type" => "text",
-			"label" => "Short description",
-			"hint_message" => "Write a short description of the page. It is used for page listings and SEO.",
-			"error_message" => "Your page needs a description"
+			"label" => "Short SEO description",
+			"max" => 155,
+			"hint_message" => "Write a short description of the page for SEO and listings.",
+			"error_message" => "Your page needs a description – max 155 characters."
 		));
 
 		// HTML
 		$this->addToModel("html", array(
-			"hint_message" => "Write your the post",
+			"type" => "html",
+			"label" => "Full page text",
+			"searchable" => true,
 			"allowed_tags" => "p,h2,h3,h4,ul,ol,download,jpg,png,vimeo,youtube", //,mp4,code",
+			"hint_message" => "Write!",
+			"error_message" => "No words? How weird."
 		));
 
 		// Single media
 		$this->addToModel("single_media", array(
+			"type" => "files",
+			"label" => "Add media here",
 			"allowed_sizes" => "960x540",
+			"max" => 1,
 			"allowed_formats" => "png,jpg",
-			"hint_message" => "Add single image by dragging it here. PNG or JPG allowed in 960x540"
+			"hint_message" => "Add single image by dragging it here. PNG or JPG allowed in 960x540.",
+			"error_message" => "Media does not fit requirements."
+		));
+
+		// Mediae
+		$this->addToModel("mediae", array(
+			"type" => "files",
+			"label" => "Add media here",
+			"max" => 20,
+			"allowed_formats" => "png,jpg",
+			"hint_message" => "Add images or videos here. Use png or jpg.",
+			"error_message" => "Media does not fit requirements."
 		));
 
 	}

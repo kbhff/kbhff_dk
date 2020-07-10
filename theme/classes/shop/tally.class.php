@@ -20,10 +20,10 @@ class Tally extends Model {
 
 
 		// Define the name of tallies table in database
-		$this->db = SITE_DB.".shop_tallies";
-		$this->db_payouts = SITE_DB.".shop_tally_payouts";
-		$this->db_misc_revenues = SITE_DB.".shop_tally_misc_revenues";
-		$this->db_cash_payments = SITE_DB.".shop_tally_cash_payments";
+		$this->db = SITE_DB.".project_tallies";
+		$this->db_payouts = SITE_DB.".project_tally_payouts";
+		$this->db_misc_revenues = SITE_DB.".project_tally_misc_revenues";
+		$this->db_cash_payments = SITE_DB.".project_tally_cash_payments";
 
 
 		// Name
@@ -129,6 +129,7 @@ class Tally extends Model {
 
 
 
+
 	}
 	
 	/**
@@ -140,18 +141,57 @@ class Tally extends Model {
 
 		// define default sorting order
 		$order = "name ASC";
+		
+		$department_id = false;
+		$creation_date = false;
+		$status = false;
 
 
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
-					case "order"        : $order             = $_value; break;
+					case "order"           : $order                = $_value; break;
+					case "department_id"   : $department_id        = $_value; break;
+					case "status"          : $status               = $_value; break;
+					case "creation_date"   : $creation_date        = $_value; break;
 				}
 			}
 		}
 
 		$query = new Query();
-		$sql = "SELECT * FROM ".$this->db . " ORDER BY $order";		
+		$sql = "SELECT * FROM ".$this->db;		
+		$where = [];
+
+		if($department_id || $status || $creation_date) {
+			$sql .= " WHERE ";
+		}
+
+		if($department_id) {
+
+			$sql .= "department_id = $department_id";
+		}
+		if($creation_date) {
+
+			if($department_id) {
+				
+				$sql .= " AND ";
+			}
+
+			$sql .= "created_at LIKE '$creation_date%'";
+		}
+		if($status) {
+
+			if($creation_date || $department_id) {
+				
+				$sql .= " AND ";
+			}
+
+			$sql .= "status = $status";
+		}
+
+		$sql .= " ORDER BY $order";
+
+
 		if($query->sql($sql)) {
 			return $query->results();
 		}
@@ -192,7 +232,6 @@ class Tally extends Model {
 				
 				// if successful, add message and return tally id
 				if($query->sql($sql)) {
-					message()->addMessage("Tally created");
 					return $query->lastInsertId();
 				}
 			}
@@ -562,7 +601,7 @@ class Tally extends Model {
 		$start_cash = $this->getStartCash($tally_id);
 		$end_cash = $this->getEndCash($tally_id);
 		
-		$cash_sales_sum = $this->calculateCashSalesSum($this->cashOrderItemsSummary($tally_id));
+		$cash_sales_sum = $this->calculateCashSalesSum($this->cashOrderItemsSummary($tally_id)) ?: 0;
 		
 		$misc_revenues = $this->getMiscRevenuesSum($tally_id);
 		$payouts = $this->getPayoutsSum($tally_id);
@@ -656,6 +695,20 @@ class Tally extends Model {
 
 	}
 
+	function getTotalCashRevenue($tally_id) {
+		
+		$misc_revenues = $this->getMiscRevenuesSum($tally_id);
+		$cash_sales = $this->calculateCashSalesSum($this->cashOrderItemsSummary($tally_id)) ?: 0;
+
+		if($misc_revenues !== false) {
+
+			return $misc_revenues + $cash_sales;
+		}
+
+		return false;
+		
+	}
+
 	function getStartCash($tally_id) {
 
 		$query = new Query();
@@ -687,23 +740,27 @@ class Tally extends Model {
 		if(count($action) == 3)	{
 
 			$tally_id = $action[1];
+			$user_id = session()->value("user_id");
 	
 			$this->getPostedEntities();
 	
-			$tally = $this->updateTally(["updateTally", $tally_id]);
-	
-			$query = new Query();
-			$sql = "UPDATE ".$this->db." SET status = 2 WHERE id = $tally_id";
-			if($query->sql($sql)) {
+			$tally = $this->updateTally(["kasse", $tally_id, "updateTally"]);
 
-				global $page;
-				$user_id = session()->value("user_id");
-				$page->addLog("Tally: tally_id:$tally_id closed by user_id:$user_id");
+			if(isset($tally["start_cash"]) && isset($tally["end_cash"])) {
+
+				$query = new Query();
+				$sql = "UPDATE ".$this->db." SET status = 2, closed_by = $user_id WHERE id = $tally_id";
+				if($query->sql($sql)) {
 	
-				return $tally_id;
+					global $page;
+					$page->addLog("Tally: tally_id:$tally_id closed by user_id:$user_id");
+		
+					return $tally_id;
+				}
 			}
 		}
 
+		message()->addMessage("Kunne ikke lukke regnskabet. Tjek at startbeholdning og slutbeholdning er udfyldt.", ["type" => "error"]);
 		return false;
 	}
 
@@ -748,36 +805,35 @@ class Tally extends Model {
 		$IC = new Items();
 		$query = new Query();
 		$cash_orders = [];
-		$first_run = true;
-
+		
 		$registered_cash_payments = $this->getRegisteredCashPayments($tally_id);
 		$cash_order_items_summary = [];
-
+		
 		if($registered_cash_payments) {
-
+			
 			// create list of orders
 			foreach($registered_cash_payments as $registered_cash_payment) {
-	
+				
 				$sql = "SELECT order_id FROM ".SITE_DB.".shop_payments WHERE id = ".$registered_cash_payment["payment_id"];
 				if($query->sql($sql)) {
-	
+					
 					$order_id = $query->result(0, "order_id");
 					$cash_orders[] = $SC->getOrders(["order_id" => $order_id]);
 				}
-	
+				
 			}
-
+			
 			// create list of items
 			foreach($cash_orders as $cash_order) {
 				
-
+				
 				foreach($cash_order["items"] as $order_item) {
-
-
+					
+					
 					$cash_order_items_summary[$order_item["item_id"]]["items"][] = $order_item;
 
 					
-					if($first_run) {
+					if(count($cash_order_items_summary[$order_item["item_id"]]["items"]) == 1) {
 						$item = $IC->getItem(["id" => $order_item["item_id"], "extend" => true]);
 
 						$cash_order_items_summary[$order_item["item_id"]]["count"] = 1;
@@ -786,7 +842,6 @@ class Tally extends Model {
 						$cash_order_items_summary[$order_item["item_id"]]["unit_price"] = $order_item["unit_price"];	
 						$cash_order_items_summary[$order_item["item_id"]]["total_price"] = $order_item["unit_price"];	
 						
-						$first_run = false;
 					}
 					else {
 						
@@ -805,6 +860,107 @@ class Tally extends Model {
 
 	}
 
+	function getPreviousTally($tally_id) {
+
+		$query = new Query();
+
+		$tally = $this->getTally(["id" => $tally_id]);
+		$department_id = $tally["department_id"];
+		$tallies = $this->getTallies(["department_id" => $department_id, "status" => 2, "order" => "created_at ASC"]);
+
+		$tally_index = arrayKeyValue($tallies, "id", $tally["id"]);
+		if($tally_index) {
+
+			$previous_tally = $tallies[$tally_index - 1];
+
+			return $previous_tally;
+		}
+
+		return false; 
+	}
+
+	function createCsv($creation_date) {
+
+		include_once("classes/system/department.class.php");
+		$DC = new Department();
+		include_once("classes/users/superuser.class.php");
+		
+		$UC = new SuperUser();
+
+
+		$tallies = $this->getTallies(["creation_date" => $creation_date, "status" => 2, "order" => "department_id ASC"]);
+
+		$csv_arr = [];
+
+		foreach($tallies as $tally) {
+
+			$department = $DC->getDepartment(["id" => $tally["department_id"]]);
+			$opened_by = $UC->getUser(["user_id" => $tally["opened_by"]]);
+			$closed_by = $UC->getUser(["user_id" => $tally["closed_by"]]);
+			$previous_tally = $this->getPreviousTally($tally["id"]);
+			if($previous_tally) {
+
+				$previous_tally_change = $this->calculateChange($previous_tally["id"]);
+			}
+
+			$payouts = $this->getPayouts($tally["id"]);
+			$revenues = $this->getMiscRevenues($tally["id"]);
+			$calculated_sales_by_the_piece = $this->calculateSalesByThePiece($tally["id"]);
+			$cash_order_items_summary = $this->cashOrderItemsSummary($tally["id"]);
+
+			$csv_arr[] = $department["name"].",Åbnet af,".$opened_by["nickname"]." (".$opened_by["email"].")";
+			$csv_arr[] = $department["name"].",Åbningstidspunkt,".date("d/m-Y H:i", strtotime($tally["created_at"]));
+			$csv_arr[] = $department["name"].",Lukket af,".$closed_by["nickname"]." (".$closed_by["email"].")";
+			$csv_arr[] = $department["name"].",Lukningstidspunkt,".date("d/m-Y H:i", strtotime($tally["modified_at"]));
+			$csv_arr[] = $department["name"].",Forrige kasseåbning,".($previous_tally ? date("d/m-Y H:i", strtotime($previous_tally["created_at"])) : "Ikke tilgængelig");
+			$csv_arr[] = $department["name"].",Byttepenge efter forrige kasselukning (kr.),".($previous_tally_change ?? "Ikke tilgængelig");
+			$csv_arr[] = $department["name"].",Kassebeholdning ved vagtstart (kr.),".$tally["start_cash"];
+			$csv_arr[] = $department["name"].",Kassebeholdning ved vagtafslutning (kr.),".$tally["end_cash"];
+			$csv_arr[] = $department["name"].",Evt. deponeret (kr.),".($tally["deposited"] ?? 0);
+			$csv_arr[] = $department["name"].",Udbetalinger fra kassen I ALT (kr.),".$this->getPayoutsSum($tally["id"]);
+			
+			if($payouts) {
+				
+				foreach($payouts as $payout) {
+					
+					$csv_arr[] = $department["name"].",Udbetaling: ".$payout["name"]." (kr.),".$payout["amount"];
+					
+				}
+			}
+			
+			
+			$csv_arr[] = $department["name"].",Andre kontante indtægter I ALT (kr.),".$this->getMiscRevenuesSum($tally["id"]);
+			
+			if($revenues) {
+				
+				foreach($revenues as $revenue) {
+					
+					$csv_arr[] = $department["name"].",Indtægt: ".$revenue["name"]." (kr.),".$revenue["amount"];
+					
+				}
+			}
+			
+			$csv_arr[] = $department["name"].",Registreret kontantsalg I ALT (kr.),".($this->calculateCashSalesSum($cash_order_items_summary) ?: "0");
+			
+			if($cash_order_items_summary) {
+				
+				foreach($cash_order_items_summary as $item_id => $values) {
+					
+					$csv_arr[] = $department["name"].",".$values["count"]."x ".$values["name"]." (".$values["itemtype"].") á ".$values["unit_price"]."kr. (kr.),".$values["total_price"];
+				}
+			}
+			
+			$csv_arr[] = $department["name"].",Beregnet løssalg I ALT (kr.),".$this->calculateSalesByThePiece($tally["id"]);
+			$csv_arr[] = $department["name"].",Byttepenge til næste uge (kassebeholdning ved slut minus deponerede penge) (kr.),".$this->calculateChange($tally["id"]);
+			$csv_arr[] = $department["name"].",Noter,".$tally["comment"];
+			
+
+		}
+
+		$csv = implode($csv_arr, "\n");
+
+		return $csv;
+	}
 }
 
 ?>

@@ -57,7 +57,7 @@ class Page extends PageCore {
 			$query = new Query();
 			// only allow valid department
 			// look for department in DB
-			if($query->sql("SELECT * FROM ".SITE_DB.".system_departments WHERE id = '".$value."'")) {
+			if($query->sql("SELECT * FROM ".SITE_DB.".project_departments WHERE id = '".$value."'")) {
 				session()->value("department", $value);
 			}
 			// $value is not a valid department
@@ -92,7 +92,7 @@ class Page extends PageCore {
 		if(!cache()->value("departments")) {
 
 			$query = new Query();
-			$query->sql("SELECT * FROM ".SITE_DB.".system_departments");
+			$query->sql("SELECT * FROM ".SITE_DB.".project_departments");
 			cache()->value("departments", $query->results());
 		}
 

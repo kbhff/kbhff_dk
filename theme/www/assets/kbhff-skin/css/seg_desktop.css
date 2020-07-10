@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-01-14 12:31:50
+asset-builder @ 2020-03-17 22:26:18
 */
 
 /*seg_desktop_include.css*/
@@ -18,6 +18,7 @@ body {
 #page {}
 body span.highlight,
 #page span.highlight {color: #3e8e17;}
+#header span.highlight {display: block;}
 body p.error,
 body p.errormessage,
 #page p.error,
@@ -77,8 +78,8 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 form {}
 div.field {
 	padding: 0 0 25px; position: relative; font-size: 0; z-index: 1;
-	padding-left: 10px;
-	padding-right: 10px;
+	padding-left: 16px;
+	padding-right: 16px;
 }
 div.field label {display: block; margin: 0 0 0 2px; line-height: 12px; font-size: 11px; text-transform: uppercase;}
 div.field input,
@@ -93,6 +94,11 @@ div.field select {width: calc(100% - 4px); padding: 2px 3px 2px 2px;
 }
 div.field select:not(*:root) {
 	padding: 3px 3px 3px 6px;
+}
+@-moz-document url-prefix() { 
+	div.field select {
+		padding: 3px 3px 3px 6px;
+	}
 }
 div.field select option {height: 24px;}
 div.field textarea {width: calc(100% - 4px); height: 100px; resize: none; overflow: auto; padding: 3px 0 2px 6px;}
@@ -230,23 +236,26 @@ input[type="submit"] {
 	position: relative;
 	width: 936px;
 	margin: 0 auto;
-	padding: 18px 0 18px;
+	padding: 36px 0 18px;
 }
 #header .logo {
 	box-sizing: border-box;
-	height: 48px;
-	padding: 8px 0 0 54px;
+	height: 66px;
+	padding: 0 0 0 68px;
 	display: inline-block;
-	background: transparent url(../img/logos/logo-stempel_sort_lille_gulerod.png) no-repeat top left;
+	background: transparent url(../img/logos/logo-stempel_sort_stor.png) no-repeat center left;
+	background-size: 60px;
+	letter-spacing: 1px;
 	font-family: 'voresfont';
-	font-size: 28px;
+	font-size: 30px;
 	line-height: 32px;
+	letter-spacing: 1px;
 	text-transform: uppercase;
 }
 #header ul.servicenavigation {
 	position: absolute;
 	line-height: 6px;
-	top: 6px;
+	top: 36px;
 	right: 0px;
 }
 #header ul.servicenavigation li {
@@ -287,7 +296,7 @@ position: relative;
 }
 #navigation ul.navigation li {
 	display: inline-block;
-	margin-right: 5px;
+	margin-right: 3px;
 	position: relative;
 }
 #navigation ul.navigation li.path > h4,
@@ -297,6 +306,9 @@ position: relative;
 #navigation ul.navigation li.selected > h5,
 #navigation ul.navigation li.selected > a {
 	background-color: #3e8e17;
+	border: 0px solid #3e8e17;
+	padding: 5px 12px;
+	color: #fff;
 }
 #navigation ul.navigation ul li {
 	display: block;
@@ -309,7 +321,8 @@ position: relative;
 	text-transform: uppercase;
 	font-size: 14px;
 	line-height: 22px;
-	padding: 7px 14px;
+	letter-spacing: 0.5px;
+	padding: 5px 12px;
 	display: block;
 	color: #ffffff;
 	background-color: #000000;
@@ -348,11 +361,12 @@ position: relative;
 #content h1 {
 	font-family: 'voresfont', Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
-	font-size: 40px;
-	line-height: 48px;
-	box-shadow: 0px -5px black inset;
+	font-size: 36px;
+	line-height: 42px;
 	padding-bottom: 2px;
 	padding-top: 13px;
+	box-sizing: border-box;
+	border-bottom: 2px solid #000;
 }
 #content h2 {
 	font-family: 'voresfont', Arial, Helvetica, sans-serif;
@@ -474,8 +488,8 @@ position: relative;
 #content ol,
 #content ul,
 #content dl {
-	padding-left: 12px;
-	padding-right: 12px;
+	padding-left: 18px;
+	padding-right: 18px;
 }
 #content div.c-wrapper {
 	display: block;
@@ -513,13 +527,14 @@ position: relative;
 	box-sizing: border-box;
 	margin-left: 12px;
 	margin-right: 12px;
-	margin-bottom: 24px;
+	margin-bottom: 12px;
 }
 #content div.c-box {
 	background: #f2f2f2;
-	border-top: 5px solid #000000;
 }
-#content div.c-box.obs {border-top: 5px solid #3e8e17;}
+#content div.c-box.obs {
+	border-top: 2px solid #3e8e17;
+}
 #content div.c-primary-box {
 	background: #3e8e17;
 }

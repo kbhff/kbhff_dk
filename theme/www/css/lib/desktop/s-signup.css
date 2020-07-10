@@ -1,13 +1,39 @@
-#content .signupfees h1 {color: #ffffff; box-shadow: 0px -5px white inset;}
-#content .signupfees h3 {padding-bottom: 8px; margin-right: 12px; margin-left: 12px; margin-top: 12px; border-bottom: 1px solid #000000; font-size: 26px;}
+/*#content .signupfees h1 {color: #ffffff; box-shadow: 0px -5px white inset;}
+*/
+#content .signupfees h3 {padding-bottom: 8px;
+	/*margin-right: 12px; margin-left: 12px; margin-top: 12px;*/
+	padding-left: 0px; padding-right: 0px; margin-left: 18px; margin-right: 18px;
+	border-bottom: 1px solid #000000; font-size: 26px;
+}
+
+#content .signupfees li.supporter {padding-top: 200px; /*height: 30px; color: #ffffff;*/
+	background: transparent url(/img/signup/bg_supporter.jpg) no-repeat center top;
+}
+#content .signupfees li.volunteer {padding-top: 200px; /*height: 30px; color: #ffffff;*/
+	background: transparent url(/img/signup/bg_volunteer.jpg) no-repeat center top;
+}
+
+#content .signupfees h3.price {border: none; font-size: 20px; padding-top: 0; padding-bottom: 30px;
+/*	padding-left: 0; padding-right: 0; color: #000000;
+	height: auto;
+	background: none;
+*/	font-family: Arial, sans-serif;
+}
+#content .signupfees h3.price + h3.price {margin-top: -25px;}
+
+
 #content .signupfees ul.signupfees {font-size: 0; margin-left: 0;}
-#content .signupfees li.signupfee {display: inline-block; width: calc(50% - 14px - 12px); vertical-align: top; text-align: center; background-color: rgba(255, 255, 255, 0.9); margin-top: 48px; margin-right: 12px; margin-left: 12px; padding-left: 0;}
-#content .signupfees li.signupfee + li {padding-top: 0;}
+#content .signupfees li.signupfee {display: inline-block; width: calc(50% - 14px - 12px); vertical-align: top; 
+/*	text-align: center;*/
+/*	background-color: rgba(255, 255, 255, 0.9);*/
+	margin-top: 48px; margin-right: 12px; margin-left: 12px; padding-left: 0;
+}
+#content .signupfees li.signupfee + li.signupfee {padding-top: 200px;}
 
 #content .signupfees ul.actions {margin: 0 auto; padding-top: 5px; text-align: center;}
 #content .signupfees ul.actions input {margin: 0 auto;}
 #content .signupfees ul.actions li {display: block; width: 100%; padding-left: 0;}
-#content .signupfees ul.actions li.readmore {padding-bottom: 20px;}
+#content .signupfees ul.actions li.readmore {/*padding-top: 20px;*/ padding-bottom: 10px;}
 
 
 /* PPRICE */
@@ -16,13 +42,15 @@
 #content .signupfees ul.offer li {font-size: 20px; display: inline-block; vertical-align: top; padding: 12px 5px 0 0px;}
 #content .signupfees ul.offer li.name,
 #content .signupfees ul.offer li.currency,
-#content .signupfees ul.offer li.url {display: none;}
+#content .signupfees ul.offer li.url,
+#content .signupfees ul.offer li.subscription_price,
+#content .signupfees ul.offer li.price {display: none;}
 #content .signupfees ul.offer li.default {text-decoration: line-through;}
 #content .signupfees ul.offer li.description {padding-top: 4px; display: block;}
 
 #content .signupfees ul.offer li.description ul {list-style: disc;}
 #content .signupfees ul.offer li.description ul li {display: list-item; padding: 0 0 3px; font-size: 13px;}
-#content .signupfees ul.offer li.subscription_price > p {padding: 0; font-size: 20px;}
+#content .signupfees ul.offer li.subscription_price > p {padding: 0 0 0 18px; font-size: 20px;}
 
 
 /* Signup form */

@@ -76,23 +76,70 @@ class TypeSignupfee extends Itemtype {
 			"error_message" => "A signup fee must be associated with a membership type"
 			
 		));
-		
+
 		// Description
 		$this->addToModel("description", array(
 			"type" => "text",
-			"label" => "SEO description",
-			"hint_message" => "Write a short description of the signup fee for SEO.",
-			"error_message" => "A short description without any words? How weird."
+			"label" => "Short SEO description",
+			"max" => 155,
+			"hint_message" => "Write a short description of the post for SEO and listings.",
+			"error_message" => "Your post needs a description – max 155 characters."
 		));
-		
+
 		// HTML
-		$this->addToModel("html", array(
+		$this->addToModel("html", [
 			"type" => "html",
 			"label" => "Full description",
+			"allowed_tags" => "p,h2,h3,h4,ul,ol,code,download,jpg,png", //,mp4,vimeo,youtube",
 			"hint_message" => "Write a full description of the signup fee.",
 			"error_message" => "A full description without any words? How weird."
+		]);
+
+		// Single media
+		$this->addToModel("single_media", array(
+			"type" => "files",
+			"label" => "Add media here",
+			"allowed_sizes" => "960x540",
+			"max" => 1,
+			"allowed_formats" => "png,jpg",
+			"hint_message" => "Add single image by dragging it here. PNG or JPG allowed in 960x540",
+			"error_message" => "Media does not fit requirements."
 		));
+
+		// Fixed url id (to allow for prettier and fixed url's – because sindex must be unique, and signupfees and memberships have identical names)
+		$this->addToModel("fixed_url_identifier", array(
+			"type" => "string",
+			"label" => "Fixed URL identifier",
+			"hint_message" => "The URL identifier is used for linking to topics. If left empty, this will be based on Signupfee name.", 
+			"error_message" => "Fixed URL identifier has invalid value."
+		));
+
+	}
+
+	function saved($item_id) {
+
+		$IC = new Items();
+		$item = $IC->getItem(["id" => $item_id, "extend" => true]);
 		
+		// update fixed_url_identifier based on sindex (if not defined)
+		if(!$item["fixed_url_identifier"]) {
+			$_POST["fixed_url_identifier"] = $item["sindex"];
+			$this->update(["update", $item_id]);			
+		}
+	}
+
+	// update fixed_url_identifier based on sindex (if not defined)
+	function updated($item_id) {
+
+		$IC = new Items();
+		$item = $IC->getItem(["id" => $item_id, "extend" => true]);
+
+		if(!$item["fixed_url_identifier"]) {
+			$_POST["fixed_url_identifier"] = $item["sindex"];
+			// TODO: risky - can cause endless loop
+			$this->update(["update", $item_id]);
+		}
+
 	}
 
 	function ordered($order_item, $order) {

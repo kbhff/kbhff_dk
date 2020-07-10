@@ -63,6 +63,7 @@
 <div id="page" class="i:page">
 
 	<div id="header">
+		<a class="logo" href="/">Københavns <span class="highlight">Fødevarefællesskab</span></a>
 		<ul class="servicenavigation">
 			<li class="keynav navigation nofollow"><a href="#navigation">To navigation</a></li>
 		</ul>

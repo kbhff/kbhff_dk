@@ -73,7 +73,7 @@ if($item) {
 				<ul class="actions">
 					<li><a href="http://kbhffwiki.org/tiki-index.php?page=Vagtplaner" class="shift">Ta' en vagt</a></li>
 					<li><a href="https://medlem.kbhff.dk" class="order">Bestil en pose</a></li>
-					<li><a href="http://kbhff.dk/for-medlemmer-2/bliv-medlem/" class="member">Bliv medlem</a></li>
+					<li><a href="/om/bliv-medlem" class="member">Bliv medlem</a></li>
 				</ul>
 			</div>
 

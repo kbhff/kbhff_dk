@@ -19,6 +19,9 @@ $membership = $MC->getMembership();
 $is_membership = false;
 $subscription_method = false;
 
+$order_paid = false;
+
+
 
 if($order) {
 	$total_order_price = $model->getTotalOrderPrice($order["id"]);
@@ -49,7 +52,7 @@ else {
 ?>
 <div class="scene shopPayment stripe <?= $order ? "i:stripe" : "i:scene" ?>">
 
-<? if($order): ?>
+<? if($order && $order["payment_status"] != 2): ?>
 
 	<h1>Betal dit medlemskab</h1>
 
@@ -96,6 +99,11 @@ if(message()->hasMessages(array("type" => "error"))): ?>
 		Vi opbevarer ingen kortinformationer på vores server. <br />
 		Al kommunikation er krypteret. <br />
 	</p>
+
+<? elseif($order && $order["payment_status"] == 2): ?>
+	
+	<h1>Hovsa?</h1>
+	<p>Denne ordre (<?= $order["order_no"] ?>) er allerede betalt, så der er intet at gøre her.</p>
 
 <? else: ?>
 

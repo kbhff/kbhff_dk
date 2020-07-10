@@ -51,8 +51,8 @@
 	<link type="text/css" rel="stylesheet" media="all" href="/css/lib/seg_<?= $this->segment() ?>_include.css?cb=<?=randomKey(4); ?>" />
 	<script type="text/javascript" src="/js/lib/seg_<?= $this->segment() ?>_include.js?cb=<?=randomKey(4); ?>"></script>
 <? } else { ?>
-	<link type="text/css" rel="stylesheet" media="all" href="/css/seg_<?= $this->segment() ?>.css?rev=20200121-193841" />
-	<script type="text/javascript" src="/js/seg_<?= $this->segment() ?>.js?rev=20200121-193841"></script>
+	<link type="text/css" rel="stylesheet" media="all" href="/css/seg_<?= $this->segment() ?>.css?rev=20200327-105354" />
+	<script type="text/javascript" src="/js/seg_<?= $this->segment() ?>.js?rev=20200327-105354"></script>
 <? } ?>
 
 	<?= $this->headerIncludes() ?>
@@ -63,6 +63,7 @@
 <div id="page" class="i:page">
 
 	<div id="header">
+		<a class="logo" href="/">Københavns <span class="highlight">Fødevarefællesskab</span></a>
 		<ul class="servicenavigation">
 			<li class="keynav navigation nofollow"><a href="#navigation">To navigation</a></li>
 			<li class="keynav kontakt"><a href="/kontakt">Kontakt</a></li>
@@ -72,7 +73,7 @@
 			<?= $HTML->link("Janitor", "/janitor", ["wrapper" => "li.keynav.front"]) ?>
 			<li class="keynav user nofollow"><a href="/login/logoff">Logoff</a></li>
 <?		else: ?>
-			<li class="keynav user nofollow"><a href="/login">Login</a></li>
+			<li class="keynav user nofollow"><a href="https://medlem.kbhff.dk/">Login</a></li>
 <?		endif; ?>
 		</ul>
 	</div>

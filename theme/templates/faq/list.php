@@ -7,7 +7,7 @@ include_once("classes/items/taglist.class.php");
 $TC = new Taglist();
 
 $taglist = $TC->getTaglist(["handle" => "faq"]);
-$categories = $TC->getTaglistTags(["taglist_id" => $taglist["id"]]);
+$categories = $taglist["tags"];
 // debug([$categories]);
 
 

@@ -9,7 +9,18 @@ if($page_item) {
 $WBC = $IC->typeObject("weeklybag");
 $weeklybag_item = $WBC->getWeeklyBag();
 
-$post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage", "status" => 1, "extend" => array("tags" => true, "readstate" => true, "user" => true, "mediae" => true)));
+$post_items = $IC->getItems([
+	"itemtype" => "post",
+	"tags" => "on:frontpage",
+	"status" => 1,
+	"limit" => 12,
+	"extend" => [
+		"tags" => true,
+		"readstate" => true,
+		"user" => true,
+		"mediae" => true
+	]
+]);
 ?>
 <div class="scene front i:scene i:front">
 	<div class="banner i:banner variant:random format:jpg"></div>
@@ -104,7 +115,7 @@ $post_items = $IC->getItems(array("itemtype" => "post", "tags" => "on:frontpage"
 				<ul class="actions">
 					<li><a href="http://kbhffwiki.org/tiki-index.php?page=Vagtplaner" class="shift">Ta' en vagt</a></li>
 					<li><a href="https://medlem.kbhff.dk" class="order">Bestil en pose</a></li>
-					<li><a href="http://kbhff.dk/for-medlemmer-2/bliv-medlem/" class="member">Bliv medlem</a></li>
+					<li><a href="/om/bliv-medlem" class="member">Bliv medlem</a></li>
 				</ul>
 			</div>
 

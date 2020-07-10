@@ -21,7 +21,10 @@ class TypePost extends Itemtype {
 
 		// Published
 		$this->addToModel("published_at", array(
-			"hint_message" => "Publishing date of the post. Leave empty for current time",
+			"type" => "datetime",
+			"label" => "Publishing time (yyyy-mm-dd hh:mm)",
+			"hint_message" => "Date of the post publication (yyyy-mm-dd hh:mm). Leave empty for current time.", 
+			"error_message" => "Date of the post publication must be a valid date (yyyy-mm-dd hh:mm). Leave empty for current time.", 
 		));
 
 		// Name
@@ -29,6 +32,7 @@ class TypePost extends Itemtype {
 			"type" => "string",
 			"label" => "Name",
 			"required" => true,
+			"searchable" => true,
 			"hint_message" => "Name your post", 
 			"error_message" => "Name must be filled out."
 		));
@@ -43,22 +47,30 @@ class TypePost extends Itemtype {
 		// description
 		$this->addToModel("description", array(
 			"type" => "text",
-			"label" => "Short description",
-			"hint_message" => "Write a short description of the post",
-			"error_message" => "A short description without any words? How weird."
+			"label" => "Short SEO description",
+			"max" => 155,
+			"hint_message" => "Write a short description of the post for SEO and listings.",
+			"error_message" => "Your post needs a description – max 155 characters."
 		));
 
 		// HTML
 		$this->addToModel("html", array(
-			"hint_message" => "Write your the post",
+			"type" => "html",
+			"label" => "Full post",
+			"searchable" => true,
 			"allowed_tags" => "p,h2,h3,h4,ul,ol,download,jpg,png,vimeo,youtube", //,mp4,code",
+			"hint_message" => "Write your the post",
+			"error_message" => "No words? How weird."
 		));
 
-		// Files
+		// Mediae
 		$this->addToModel("mediae", array(
+			"type" => "files",
 			"label" => "Add media here",
+			"max" => 20,
 			"allowed_formats" => "png,jpg,mp4",
 			"hint_message" => "Add images or videos here. Use png, jpg or mp4.",
+			"error_message" => "Media does not fit requirements."
 		));
 
 	}

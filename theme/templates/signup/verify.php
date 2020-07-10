@@ -30,7 +30,7 @@ if(message()->hasMessages(array("type" => "error"))): ?>
 <?	endif; ?>
 
 	<fieldset>
-		<?= $model->input("verification_code", array("label" => "Verificeringskode", "hint_message" => "Indtast verificeringskoden som blev sendt til din email.", "error_message" => "Forkert verificeringskode")); ?>
+		<?= $model->input("verification_code", array("label" => "Verificeringskode", "required" => true, "hint_message" => "Indtast verificeringskoden som blev sendt til din email.", "error_message" => "Indtast korrekt verificeringskode")); ?>
 	</fieldset>
 
 	<ul class="actions">

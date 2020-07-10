@@ -63,13 +63,14 @@
 <div id="page" class="i:page">
 
 	<div id="header">
+		<a class="logo" href="/">Københavns <span class="highlight">Fødevarefællesskab</span></a>
 		<ul class="servicenavigation">
 			<li class="keynav navigation nofollow"><a href="#navigation">To navigation</a></li>
 <?		if(session()->value("user_id") && session()->value("user_group_id") > 1): ?>
 			<?= $HTML->link("Janitor", "/janitor", ["wrapper" => "li.keynav.front"]) ?>
 			<li class="keynav user nofollow"><a href="/login/logoff">Logoff</a></li>
 <?		else: ?>
-			<li class="keynav user nofollow"><a href="/login">Login</a></li>
+			<li class="keynav user nofollow"><a href="https://medlem.kbhff.dk">Login</a></li>
 <?		endif; ?>
 		</ul>
 	</div>
