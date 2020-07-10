@@ -27,7 +27,7 @@ $items = $IC->paginate([
 		]
 	],
 	"page" => $page,
-	"limit" => 12
+	"limit" => 20
 ]);
 
 
