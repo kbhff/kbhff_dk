@@ -116,7 +116,7 @@ class TypeMembership extends Itemtype {
 		$this->addToModel("fixed_url_identifier", array(
 			"type" => "string",
 			"label" => "Fixed URL identifier",
-			"hint_message" => "The URL identifier is used for linking to topics. If left empty, this will be based on Topic name.", 
+			"hint_message" => "The URL identifier is used for linking to topics. If left empty, this will be based on Membership name.", 
 			"error_message" => "Fixed URL identifier has invalid value."
 		));
 

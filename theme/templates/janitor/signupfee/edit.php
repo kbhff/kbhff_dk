@@ -23,6 +23,7 @@ $memberships = $IC->getItems(array("itemtype" => "membership", "extend" => true)
 
 			<fieldset>
 				<?= $model->input("name", array("value" => $item["name"])) ?>
+				<?= $model->input("fixed_url_identifier", array("value" => $item["fixed_url_identifier"])) ?>
 				<?= $model->input("associated_membership_id", array("type" => "select", "options" => $HTML->toOptions($memberships, "id", "name", ["add" => ["" => "Choose associated membership type"]]), "value" => $item["associated_membership_id"])) ?>
 				<?= $model->input("description", array("class" => "autoexpand short", "value" => $item["description"])) ?>
 				<?= $model->input("html", array("value" => $item["html"])) ?>

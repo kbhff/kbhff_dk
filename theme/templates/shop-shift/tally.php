@@ -241,7 +241,7 @@ $this->pageTitle("Kasseregnskab");
 					</fieldset>
 				
 					<ul class="actions">
-						<?= $TC->submit("Gem og gå tilbage", ["wrapper" => "li.save"]); ?>
+						<?= $TC->submit("Gem og gå tilbage", ["wrapper" => "li.save", "formaction" => "kasse/$tally_id/saveTally"]); ?>
 						<?= $TC->submit("Godkend regnskab og luk kasse", ["wrapper" => "li.save", "class" => "primary", "formaction" => "$tally_id/closeTally"]) ?>
 					</ul>
 				<?= $TC->formEnd(); ?>

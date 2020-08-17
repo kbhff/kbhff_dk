@@ -9,6 +9,7 @@ CREATE TABLE `SITE_DB`.`item_signupfee` (
   `html` text NOT NULL DEFAULT '',
 
   `position` int(11) NOT NULL DEFAULT '0',
+  `fixed_url_identifier` varchar(100) DEFAULT NULL,
 
   PRIMARY KEY (`id`),
   KEY `item_id` (`item_id`),
