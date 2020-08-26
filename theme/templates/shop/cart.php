@@ -27,10 +27,11 @@ $IC = new Items();
 	?>
 	<div class="checkout">
 		<ul class="actions">
-			<?= $HTML->oneButtonForm("Gå til betaling", "/butik/betaling", array(
+			<?= $HTML->oneButtonForm("Gå til betaling", "/butik/betal", array(
+				"wait-value" => "Vent venligst",
 				"confirm-value" => false,
 				"dom-submit" => true,
-				"success-location" => "/butik/betaling",
+				"success-location" => "/butik/betal",
 				"class" => "primary",
 				"name" => "continue",
 				"wrapper" => "li.continue",
@@ -58,11 +59,12 @@ $IC = new Items();
 							<?= $model->input("quantity", array(
 								"type" => "integer",
 								"value" =>  $cart_item["quantity"],
+								"label" => "Antal",
 								"hint_message" => "State the quantity of this item"
 							)) ?>
 						</fieldset>
 						<ul class="actions">
-							<?= $model->submit("Update", array("name" => "update", "wrapper" => "li.save")) ?>
+							<?= $model->submit("Opdatér", array("name" => "update", "wrapper" => "li.save")) ?>
 						</ul>
 					<?= $model->formEnd() ?>
 					<span class="x">x </span>
@@ -97,7 +99,7 @@ $IC = new Items();
 
 				<ul class="actions">
 					<? // generate delete button to item 
-					print $HTML->oneButtonForm("Delete", "/butik/deleteFromCart/".$cart["cart_reference"]."/".$cart_item["id"], array(
+					print $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/".$cart_item["id"], array(
 						"wrapper" => "li.delete",
 						"static" => true
 					)) ?>
@@ -134,8 +136,9 @@ $IC = new Items();
 	if($cart["items"]) :?>
 	<div class="checkout">
 		<ul class="actions">
-			<?= $HTML->oneButtonForm("Gå til betaling", "/butik/betaling", array(
+			<?= $HTML->oneButtonForm("Gå til betaling", "/butik/betal", array(
 				"confirm-value" => false,
+				"wait-value" => "Vent venligst",
 				"dom-submit" => true,
 				"class" => "primary",
 				"name" => "continue",

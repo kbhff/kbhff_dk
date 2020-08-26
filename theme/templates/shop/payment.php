@@ -173,7 +173,7 @@ elseif($order && $remaining_order_price["price"] === 0): ?>
 elseif($user_id > 1): ?>
 
 	<h2>Ordren blev ikke fundet</h2>
-	<p>Tjek, om du har nogen <a href="/shop/payments">udestående betalinger</a>.</p>
+	<p>Tjek, om du har nogen <a href="/butik/betalinger">udestående betalinger</a>.</p>
 
 <? 
 // User not logged in
@@ -195,8 +195,8 @@ else:
 
 
 		<fieldset>
-			<?= $model->input("username", array("required" => true, "value" => $username)); ?>
-			<?= $model->input("password", array("required" => true)); ?>
+			<?= $model->input("username", array("required" => true, "value" => $username, "label" => "Brugernavn", "hint_message" => "Brug dit medlemsnr., email eller telefonnummer som brugernavn", "error_message" => "Det ligner ikke et gyldigt brugernavn",)); ?>
+			<?= $model->input("password", array("required" => true, "label" => "Adgangskode", "hint_message" => "Skriv din adgangskode","error_message" => "Ugyldig adgangskode",)); ?>
 		</fieldset>
 
 		<ul class="actions">

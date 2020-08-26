@@ -34,9 +34,9 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 
 <? if($order && $remaining_order_price["price"]): ?>
 
-	<h1>Din ordre, <?= $order["order_no"]  ?>, er bekræftet.</h1>
+	<h1>Din ordre (<?= $order["order_no"]  ?>) er bekræftet</h1>
 	<p>
-		Din ordre er bekræftet og indholdet af din ordre er reserveret til dig.
+		Din ordre er bekræftet og ordrens indhold er reserveret til dig.
 		Du modtager snarligst en bekræftelsesmail.
 	</p>
 	<p>
@@ -44,14 +44,14 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 	</p>
 
 	<dl class="amount">
-		<dt class="amount">Due amount</dt>
+		<dt class="amount">Skyldigt beløb</dt>
 		<dd class="amount"><?= formatPrice($remaining_order_price) ?></dd>
 	</dl>
 
 
 	<ul class="orders">
 		<li>
-			<h3>Ordernummer: <?= $order["order_no"] . ($order["comment"] ? (" – " . $order["comment"]) : "") ?></h3>
+			<h3>Ordrenummer: <?= $order["order_no"] . ($order["comment"] ? (" – " . $order["comment"]) : "") ?></h3>
 			<ul class="orderitems">
 			<? foreach($order["items"] as $order_item): ?>
 				<li><?= $order_item["quantity"] ?> x <?= $order_item["name"] ?></li>
@@ -74,7 +74,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 			<ul class="payment_methods">
 
 			<? foreach($user_payment_methods as $user_payment_method): ?>
-			<? debug([$user_payment_method]) ?>
+			<!-- <? debug([$user_payment_method]) ?> -->
 
 				<? if($user_payment_method && $user_payment_method["cards"]): ?>
 
@@ -82,8 +82,8 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 				<li class="payment_method user_payment_method<?= $user_payment_method["classname"] ? " ".$user_payment_method["classname"] : "" ?>">
 					<ul class="actions">
 						<?= $HTML->oneButtonForm(
-						"Pay order with card ending in " . $card["last4"], 
-						"/shop/selectUserPaymentMethodForOrder",
+						"Betal ordre med kort, der ender på " . $card["last4"], 
+						"/butik/selectUserPaymentMethodForOrder",
 						array(
 							"inputs" => array(
 								"order_id" => $order["id"], 
@@ -106,8 +106,8 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 				<li class="payment_method user_payment_method<?= $user_payment_method["classname"] ? " ".$user_payment_method["classname"] : "" ?>">
 					<ul class="actions">
 						<?= $HTML->oneButtonForm(
-						"Pay order with " . $user_payment_method["name"], 
-						"/shop/selectUserPaymentMethodForOrder",
+						"Betal ordre med " . $user_payment_method["name"], 
+						"/butik/selectUserPaymentMethodForOrder",
 						array(
 							"inputs" => array(
 								"order_id" => $order["id"], 
@@ -132,7 +132,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 
 		<? if($payment_methods): ?>
 			<h3>Vores <?= $user_payment_methods ? "øvrige " : "" ?>betalingsmuligheder</h3>
-			<p><?= $user_payment_methods ? "Eller v" : "V" ?>vælg en betalingsmetode til fortsat behandling af din ordre.</p>
+			<p><?= $user_payment_methods ? "Eller v" : "V" ?>ælg en betalingsmetode til fortsat behandling af din ordre.</p>
 			<ul class="payment_methods">
 
 			<? foreach($payment_methods as $payment_method): ?>
@@ -142,8 +142,8 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 
 					<ul class="actions">
 						<?= $HTML->oneButtonForm(
-						"Pay with " . $payment_method["name"], 
-						"/shop/selectPaymentMethodForOrder", 
+						"Betal med " . $payment_method["name"], 
+						"/butik/selectPaymentMethodForOrder", 
 						array(
 							"inputs" => array(
 								"order_id" => $order["id"], 
@@ -202,8 +202,8 @@ else:
 
 
 		<fieldset>
-			<?= $model->input("username", array("required" => true, "value" => $username)); ?>
-			<?= $model->input("password", array("required" => true)); ?>
+			<?= $model->input("username", array("required" => true, "value" => $username, "label" => "Brugernavn", "hint_message" => "Brug dit medlemsnr., email eller telefonnummer som brugernavn", "error_message" => "Det ligner ikke et gyldigt brugernavn",)); ?>
+			<?= $model->input("password", array("required" => true, "label" => "Adgangskode", "hint_message" => "Skriv din adgangskode","error_message" => "Ugyldig adgangskode",)); ?>
 		</fieldset>
 
 		<ul class="actions">
@@ -214,4 +214,4 @@ else:
 
 <? endif;?>
 
-</div>
+</div>	

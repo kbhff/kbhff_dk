@@ -36,12 +36,12 @@ if($cart) {
 	<?= $HTML->serverMessages() ?>
 
 
-	<?= $model->formStart("/shop/payment-gateway/stripe/cart/".$cart["cart_reference"]."/process", array("class" => "card")) ?>
+	<?= $model->formStart("/butik/betalingsgateway/stripe/kurv/".$cart["cart_reference"]."/process", array("class" => "card")) ?>
 	
 		<fieldset>
-			<?= $model->input("card_number", array("type" => "tel")); ?>
-			<?= $model->input("card_exp_month", array("type" => "tel")); ?><span class="slash">/</span><?= $model->input("card_exp_year", array("type" => "tel")); ?>
-			<?= $model->input("card_cvc", array("type" => "tel")); ?>
+			<?= $model->input("card_number", array("label" => "Kortnummer", "hint_message" => "Indtast dit kortnummer", "error_message" => "Ugyldigt kortnummer", "type" => "tel")); ?>
+			<?= $model->input("card_exp_month", array("label" => "Måned", "type" => "tel", "hint_message" => "Måned", "error_message" => "Ugyldig")); ?><span class="slash">/</span><?= $model->input("card_exp_year", array("label" => "År", "type" => "tel", "hint_message" => "År", "error_message" => "Ugyldig")); ?>
+			<?= $model->input("card_cvc", array("type" => "tel", "hint_message" => "Kontrolnummer", "error_message" => "Ugyldig")); ?>
 			
 		</fieldset>
 
@@ -61,7 +61,7 @@ if($cart) {
 		</ul>
 
 		<ul class="actions">
-			<?= $model->link("Ændr din ordre", "/shop/cart", array("class" => "button", "wrapper" => "li.modify")) ?>
+			<?= $model->link("Ændr din ordre", "/butik/kurv", array("class" => "button", "wrapper" => "li.modify")) ?>
 		</ul>
 
 	</div>
@@ -71,7 +71,7 @@ if($cart) {
 		<h2>Eller bekræft din ordre og betal senere</h2>
 		<p>Du kan også vælge at færdiggøre din ordre og betale senere.</p>
 		<ul class="actions">
-			<?= $HTML->oneButtonForm("Bekræft ordre", "/shop/confirmOrder/".$cart["cart_reference"], array(
+			<?= $HTML->oneButtonForm("Bekræft ordre", "/butik/confirmOrder/".$cart["cart_reference"], array(
 				"confirm-value" => false,
 				"wait-value" => "Bekræfter",
 				"dom-submit" => true,
@@ -85,18 +85,20 @@ if($cart) {
 	<? endif; ?>
 
 	<p class="note">
-		Vi bruger <a href="https://stripe.com" target="_blank">Stripe</a> til at behandle betalingen. <br />Ingen kortoplysninger gemmes på vores servere. <br />Al kommunikation er krypteret.
+		Vi bruger <a href="https://stripe.com" target="_blank">Stripe</a> til at behandle betalingen. 
+		<br />Ingen kortoplysninger gemmes på vores servere. 
+		<br />Al kommunikation er krypteret.
 	</p>
 
 <? elseif($user_id > 1 && !$cart): ?>
 
 	<h1>Kurven blev ikke fundet</h1>
-	<p>Gå til <a href="/shop/cart">din kurv</a> for at fortsætte en eventuelt afbrudt betalingsproces.</p>
+	<p>Gå til <a href="/butik/kurv">din kurv</a> for at fortsætte en eventuelt afbrudt betalingsproces.</p>
 
 <? else: ?>
 
 	<h1>Leder du efter betalingssiden?</h1>
-	<p>Du skal først <a href="/login?login_forward=/shop/payments">logge ind</a> på din konto og betale derfra.</p>
+	<p>Du skal først <a href="/login?login_forward=/butik/betalinger">logge ind</a> på din konto og betale derfra.</p>
 
 <? endif;?>
 

@@ -36,16 +36,16 @@ if($order) {
 	<?= $HTML->serverMessages() ?>
 
 
-	<?= $model->formStart("/shop/payment-gateway/stripe/order/".$order_no."/process", array("class" => "card")) ?>
+	<?= $model->formStart("/butik/betalingsgateway/stripe/ordre/".$order_no."/process", array("class" => "card")) ?>
 	
 		<fieldset>
-			<?= $model->input("card_number", array("type" => "tel")); ?>
-			<?= $model->input("card_exp_month", array("type" => "tel")); ?><span class="slash">/</span><?= $model->input("card_exp_year", array("type" => "tel")); ?>
-			<?= $model->input("card_cvc", array("type" => "tel")); ?>
+			<?= $model->input("card_number", array("label" => "Kortnummer", "hint_message" => "Indtast dit kortnummer", "error_message" => "Ugyldigt kortnummer", "type" => "tel")); ?>
+			<?= $model->input("card_exp_month", array("label" => "Måned", "type" => "tel", "hint_message" => "Måned", "error_message" => "Ugyldig")); ?><span class="slash">/</span><?= $model->input("card_exp_year", array("label" => "År", "type" => "tel", "hint_message" => "År", "error_message" => "Ugyldig")); ?>
+			<?= $model->input("card_cvc", array("type" => "tel", "hint_message" => "Kontrolnummer", "error_message" => "Ugyldig")); ?>
 		</fieldset>
 
 		<ul class="actions">
-			<?= $model->submit("Pay ".formatPrice($remaining_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
+			<?= $model->submit("Betal ".formatPrice($remaining_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
 		</ul>
 	<?= $model->formEnd() ?>
 
@@ -68,12 +68,12 @@ if($order) {
 <? elseif($user_id > 1 && !$order): ?>
 
 	<h1>Ordren blev ikke fundet</h1>
-	<p>Tjek, om du har andre <a href="/shop/payments">udeståender</a>.</p>
+	<p>Tjek, om du har andre <a href="/butik/betalinger">udeståender</a>.</p>
 
 <? else: ?>
 
 	<h1>Leder du efter betalingssiden?</h1>
-	<p>Du skal først <a href="/login?login_forward=/shop/payments">logge ind</a> på din konto og betale derfra.</p>
+	<p>Du skal først <a href="/login?login_forward=/butik/betalinger">logge ind</a> på din konto og betale derfra.</p>
 
 <? endif;?>
 

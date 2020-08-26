@@ -64,7 +64,7 @@ if($orders && $total_payment): ?>
 	<? foreach($orders as $order): 
 		$full_order = $model->getOrders(["order_id" => $order["id"]]); ?>
 		<li>
-			<h3>Ordrenummer: <a href="/shop/payment/<?= $full_order["order_no"] ?>"><?= $full_order["order_no"] ?></a> <?= ($full_order["comment"] ? (" – " . $full_order["comment"]) : "") ?>, <?= formatPrice($order["price"]) ?></h3>
+			<h3>Ordrenummer: <a href="/butik/payment/<?= $full_order["order_no"] ?>"><?= $full_order["order_no"] ?></a> <?= ($full_order["comment"] ? (" – " . $full_order["comment"]) : "") ?>, <?= formatPrice($order["price"]) ?></h3>
 			<ul class="orderitems">
 			<? foreach($full_order["items"] as $order_item): ?>
 				<li><?= $order_item["quantity"] ?> x <?= $order_item["name"] ?></li>
@@ -92,7 +92,7 @@ if($orders && $total_payment): ?>
 					<ul class="actions">
 						<?= $HTML->oneButtonForm(
 						"Betal alle ordrer med kort, der ender på " . $card["last4"], 
-						"/shop/selectUserPaymentMethodForOrders",
+						"/butik/selectUserPaymentMethodForOrders",
 						array(
 							"inputs" => array(
 								"order_ids" => implode($order_list, ","), 
@@ -117,7 +117,7 @@ if($orders && $total_payment): ?>
 					<ul class="actions">
 						<?= $HTML->oneButtonForm(
 						"Betal alle ordrer med " . $user_payment_method["name"], 
-						"/shop/selectUserPaymentMethodForOrders",
+						"/butik/selectUserPaymentMethodForOrders",
 						array(
 							"inputs" => array(
 								"order_ids" => implode($order_list, ","), 
@@ -154,7 +154,7 @@ if($orders && $total_payment): ?>
 					<ul class="actions">
 						<?= $HTML->oneButtonForm(
 						"Betal alle ordrer med " . $payment_method["name"], 
-						"/shop/selectPaymentMethodForOrders", 
+						"/butik/selectPaymentMethodForOrders", 
 						array(
 							"inputs" => array(
 								"order_ids" => implode($order_list, ","), 
@@ -189,7 +189,7 @@ if($orders && $total_payment): ?>
 		<li class="payment_method<?= $payment_method["classname"] ? " ".$payment_method["classname"] : "" ?>">
 
 			<ul class="actions">
-				<?= $HTML->oneButtonForm("Betal med " . $payment_method["name"], "/shop/selectBulkPaymentMethod", array(
+				<?= $HTML->oneButtonForm("Betal med " . $payment_method["name"], "/butik/selectBulkPaymentMethod", array(
 					"inputs" => array(
 						"order_ids" => implode($order_list, ","), 
 						"payment_method" => $payment_method["id"]
@@ -236,8 +236,8 @@ else:
 
 
 		<fieldset>
-			<?= $model->input("username", array("required" => true, "value" => $username)); ?>
-			<?= $model->input("password", array("required" => true)); ?>
+			<?= $model->input("username", array("required" => true, "value" => $username, "label" => "Brugernavn", "hint_message" => "Brug dit medlemsnr., email eller telefonnummer som brugernavn", "error_message" => "Det ligner ikke et gyldigt brugernavn",)); ?>
+			<?= $model->input("password", array("required" => true, "label" => "Adgangskode", "hint_message" => "Skriv din adgangskode","error_message" => "Ugyldig adgangskode",)); ?>
 		</fieldset>
 
 		<ul class="actions">

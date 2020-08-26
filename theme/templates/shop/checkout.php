@@ -204,7 +204,7 @@ else {
 		<h2>Vælg en betalingsmetode</h2>
 
 		<? if($user_payment_methods): ?>
-			<h3>Your payment methods</h3>
+			<h3>Dine betalingsmetoder</h3>
 			<p>Vælg en af dine eksisterende betalingsmetoder for at fortsætte behandlingen af denne ordre.</p>
 			<ul class="payment_methods">
 
@@ -226,7 +226,7 @@ else {
 								"gateway_payment_method_id" => $card["id"]
 							),
 							"confirm-value" => false,
-							"wait-value" => "Please wait",
+							"wait-value" => "Vent venligst",
 							"dom-submit" => true,
 							"class" => "primary",
 							"name" => "continue",
@@ -250,7 +250,7 @@ else {
 								"payment_method_id" => $user_payment_method["payment_method_id"]
 							),
 							"confirm-value" => false,
-							"wait-value" => "Please wait",
+							"wait-value" => "Vent venligst",
 							"dom-submit" => true,
 							"class" => "primary",
 							"name" => "continue",
@@ -268,7 +268,7 @@ else {
 
 		<? if($payment_methods): ?>
 			<h3>Vores <?= $user_payment_methods ? "øvrige " : "" ?>betalingsmuligheder</h3>
-			<p><?= $user_payment_methods ? "Eller v" : "V" ?>ælg en betalingsmetode til forsat behandling af din order.</p>
+			<p><?= $user_payment_methods ? "Eller v" : "V" ?>ælg en betalingsmetode til forsat behandling af din ordre.</p>
 			<ul class="payment_methods">
 
 			<? foreach($payment_methods as $payment_method): ?>
@@ -278,7 +278,7 @@ else {
 
 					<ul class="actions">
 						<?= $HTML->oneButtonForm(
-						"Pay with " . $payment_method["name"], 
+						"Betal med " . $payment_method["name"], 
 						"/butik/confirmCartAndSelectPaymentMethod", 
 						array(
 							"inputs" => array(
@@ -335,52 +335,52 @@ else {
 
 		<? if($cart["delivery_address_id"]): ?>
 		<dl class="list">
-			<dt>Name</dt>
+			<dt>Navn</dt>
 			<dd><?= $delivery_address["address_name"] ?></dd>
 			<dt>Att</dt>
 			<dd><?= $delivery_address["att"] ?></dd>
-			<dt>Address 1</dt>
+			<dt>Adresse 1</dt>
 			<dd><?= $delivery_address["address1"] ?></dd>
-			<dt>Addresse 2</dt>
+			<dt>Adresse 2</dt>
 			<dd><?= $delivery_address["address2"] ?></dd>
-			<dt>Postal and city</dt>
+			<dt>Postnummer og by</dt>
 			<dd><?= $delivery_address["postal"] ?> <?= $delivery_address["city"] ?></dd>
-			<dt>State</dt>
+			<dt>Stat</dt>
 			<dd><?= $delivery_address["state"] ?></dd>
-			<dt>Country</dt>
+			<dt>Land</dt>
 			<dd><?= $delivery_address["country"] ?></dd>
 		</dl>
 
 		<? else: ?>
 
-		<p>You can <a href="/butik/address/delivery">add a delivery address</a> if you want it to be shown on your invoice, but this is not required.</p>
+		<p>Du kan <a href="/butik/address/delivery">tilføje en leveringsadresse</a>, hvis du vil have den vist på din faktura, men det er ikke et krav.</p>
 		
 		<? endif; ?>
 	</div>
 
 	<div class="billing">
-		<h2>Billing address <a href="/butik/address/billing">(Edit)</a></h2>
+		<h2>Faktureringsadresse <a href="/butik/address/billing">(Redigér)</a></h2>
 
 		<? if($cart["billing_address_id"]): ?>
 		<dl class="list">
-			<dt>Name</dt>
+			<dt>Navn</dt>
 			<dd><?= $billing_address["address_name"] ?></dd>
 			<dt>Att</dt>
 			<dd><?= $billing_address["att"] ?></dd>
-			<dt>Address 1</dt>
+			<dt>Adresse 1</dt>
 			<dd><?= $billing_address["address1"] ?></dd>
-			<dt>Addresse 2</dt>
+			<dt>Adresse 2</dt>
 			<dd><?= $billing_address["address2"] ?></dd>
-			<dt>Postal and city</dt>
+			<dt>Postnummer og by</dt>
 			<dd><?= $billing_address["postal"] ?> <?= $billing_address["city"] ?></dd>
-			<dt>State</dt>
+			<dt>Stat</dt>
 			<dd><?= $billing_address["state"] ?></dd>
-			<dt>Country</dt>
+			<dt>Land</dt>
 			<dd><?= $billing_address["country"] ?></dd>
 		</dl>
 		<? else: ?>
 
-		<p>You can <a href="/butik/address/billing">add a billing address</a> if you want it to be shown on your invoice, but this is not required. </p>
+		<p>Du kan <a href="/butik/address/billing">tilføje en faktureringsadresse</a>, hvis du vil have den vist på din faktura, men det er ikke et krav. </p>
 		
 		<? endif; ?>
 	</div>
