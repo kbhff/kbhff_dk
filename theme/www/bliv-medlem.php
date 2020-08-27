@@ -40,8 +40,15 @@ if($action) {
 		$cart = $SC->addToCart(array("addToCart"));
 		// if successful creation
 		if($cart) {
-			// redirect to leave POST state
-			header("Location: /bliv-medlem/tilmelding/");
+
+			if($cart["user_id"]) {
+				// redirect to leave POST state
+				header("Location: /butik/betal");
+			}
+			else {
+				// redirect to leave POST state
+				header("Location: tilmelding");
+			}
 			exit();
 			
 		}
@@ -55,9 +62,30 @@ if($action) {
 		}
 	}
 	
-	// membership was successfully converted to order
 	// bliv-medlem/tilmelding
 	else if($action[0] == "tilmelding") {
+
+		$user_id = session()->value("user_id");
+		if($user_id > 1) {
+
+			// check if user is already a member
+			$membership = $MC->getMembership();
+			if($membership && $membership["subscription_id"]) {
+
+				header("Location: allerede-medlem");
+				exit();
+
+			}
+
+		}
+
+		$cart = $SC->getCart();
+
+		// cart already has user, redirect to shop checkout
+		if($cart && $cart["user_id"]) {
+			header("Location: /butik/betal");
+			exit();
+		}
 
 		$page->page(array(
 			"templates" => "signup/signup.php"
@@ -66,7 +94,7 @@ if($action) {
 
 	}
 
-	// user is already a member with a subsription 
+	// user is already a member with a subscription 
 	// bliv-medlem/allerece-medlem
 	else if($action[0] == "allerede-medlem") {
 
@@ -97,21 +125,10 @@ if($action) {
 
 		// if successful creation
 		if(isset($user["user_id"])) {
-			// Converts cart to order and updates cookie with cart-reference. 
-			$order = $SC->newOrderFromCart(array("newOrderFromCart", $_COOKIE["cart_reference"]));
-			// if successful order creation
-			if($order) {
-				// redirect to leave POST state
-				header("Location: verificer/".$order["order_no"]);
-				exit(); 
-			}
-			// Something went wrong
-			else {
-				message()->addMessage("Der skete en fejl, og ordren blev ikke oprettet.", array("type" => "error"));
-				// redirect to leave POST state
-				header("Location: /butik/kurv");
-				exit();
-			}
+
+			// redirect to leave POST state
+			header("Location: verificer");
+			exit();
 			
 		}
 
@@ -154,15 +171,14 @@ if($action) {
 	else if($action[0] == "spring-over") {
 
 		// redirect to leave POST state
-		header("Location: /butik/betaling/".$action[1]);
+		header("Location: /butik/betal");
 		exit();
 	}
-		
 
 	// bliv-medlem/bekraeft
 	else if($action[0] == "bekraeft") {
 
-		if (count($action) == 2 && $page->validateCsrfToken()) {
+		if (count($action) == 1 && $page->validateCsrfToken()) {
 
 			$username = session()->value("signup_email");
 			$verification_code = getPost("verification_code");
@@ -185,18 +201,34 @@ if($action) {
 					exit();
 				}
 				
-				
 			}
 
-			// code is valid and user is verified and enabled.
+			// verification code is valid
 			else if($result) {	
+
+				// check if there is a cart
+				$cart = $SC->getCart();
+
+				// cart exists
+				if($cart) {
+					
+					// redirect to leave POST state
+					// to checkout and confirm order
+					message()->addMessage("Dit brugernavn er verificeret – du kan nu bekræfte din ordre.", array("type" => "message"));
+					header("Location: /butik/betal");
+					exit();
+					
+				}
+				// no cart - go to cart
+				else {
+					message()->addMessage("Dit brugernavn er verificeret", array("type" => "message"));
+					header("Location: /butik/kurv");
+					exit();
+				}
 			
-				// redirect to leave POST state
-				header("Location: /butik/betaling/".$action[1]);
-				exit();
 			}
 
-			// code is not valid and user is not verified and enabled.
+			// invalid verification code
 			else {
 				message()->addMessage("Forkert verificeringskode. Prøv igen!", array("type" => "error"));
 				// redirect to leave POST state
@@ -206,7 +238,28 @@ if($action) {
 			}
 		}
 
-		// /bliv-medlem/bekraeft/#email|#verification_code# (submitted from link in email)
+		else if(count($action) == 2) {
+
+			// /bliv-medlem/bekraeft/fejl 
+			if($action[1] == "fejl") {
+	
+				$page->page(array(
+					"templates" => "signup/confirmation_failed.php"
+				));
+				exit();
+			}
+	
+			// /bliv/medlem/bekraeft/kvittering
+			else if($action[1] == "kvittering") {
+	
+				$page->page(array(
+					"templates" => "signup/confirmed.php"
+				));
+				exit();
+			}
+		}
+
+		// /bliv-medlem/bekraeft/#email/#verification_code# (submitted from link in email)
 		else if(count($action) == 3) {
 			
 			$username = $action[1];
@@ -308,22 +361,10 @@ if($action) {
 
 
 		}
-		
-		// /bliv-medlem/bekraeft/fejl 
-		else if($action[1] == "fejl") {
 
-			$page->page(array(
-				"templates" => "signup/confirmation_failed.php"
-			));
-			exit();
-		}
-
-		// /bliv/medlem/bekraeft/kvittering
-		else if($action[1] == "kvittering") {
-
-			$page->page(array(
-				"templates" => "signup/confirmed.php"
-			));
+		else {
+			// /verificer
+			header("Location: /bliv-medlem/verificer");
 			exit();
 		}
 

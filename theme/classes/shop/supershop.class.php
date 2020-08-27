@@ -32,7 +32,7 @@ class SuperShop extends SuperShopCore {
 			$order_id = $this->getProperty("order_id", "value");
 			$transaction_id = $this->getProperty("transaction_id", "value");
 			$payment_amount = $this->getProperty("payment_amount", "value");
-			$payment_method_id = $this->getProperty("payment_method", "value");
+			$payment_method_id = $this->getProperty("payment_method_id", "value");
 			$receiving_user_id = $this->getProperty("receiving_user_id", "value");
 
 			$order = $this->getOrders(array("order_id" => $order_id));
@@ -41,12 +41,13 @@ class SuperShop extends SuperShopCore {
 
 				$query = new Query();
 
-				$sql = "INSERT INTO ".$this->db_payments." SET order_id=$order_id, currency='".$order["currency"]."', payment_amount=$payment_amount, transaction_id='$transaction_id', payment_method=$payment_method_id";
+				$sql = "INSERT INTO ".$this->db_payments." SET order_id=$order_id, currency='".$order["currency"]."', payment_amount=$payment_amount, transaction_id='$transaction_id', payment_method_id=$payment_method_id";
 				if($query->sql($sql)) {
 					$payment_id = $query->lastInsertId();
 					$this->validateOrder($order["id"]);
 
 					global $page;
+
 					$payment_method = $page->paymentMethods($payment_method_id);
 
 					if($payment_method && $payment_method["name"] == "Cash") {
@@ -66,8 +67,6 @@ class SuperShop extends SuperShopCore {
 						
 					}
 
-
-					global $page;
 					$page->addLog("SuperShop->addPayment: order_id:$order_id, payment_method_id:$payment_method_id, payment_amount:$payment_amount");
 
 					message()->addMessage("Payment added");
