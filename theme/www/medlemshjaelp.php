@@ -386,28 +386,163 @@ if($action) {
 			exit();
 		} 
 		
-		// /medlemshjaelp/betaling/#order_no#/stripe/process
-		else if(count($action) === 4 && $action[3] == "process" && $page->validateCsrfToken()) {
-			// process gateway data and create payment-id
-			$payment_id = $SC->processOrderPayment($action);
-			// successful payment and creation of payment-id
-			if($payment_id) {
-				message()->resetMessages();
+		// /medlemshjaelp/betaling/stripe/ordre/#order_no#/process
+		else if(count($action) === 5 && $action[4] == "process" && $page->validateCsrfToken()) {
+			
+			$gateway = $action[1];
+			$order_no = $action[3];
+
+
+			$payment_method_result = $SC->processCardForOrder($action);
+			if($payment_method_result) {
+
+				if($payment_method_result["status"] === "success") {
+
+					$return_url = SITE_URL."/medlemshjaelp/betaling/stripe/register-paid-intent";
+					$result = payments()->requestPaymentIntentForOrder(
+						$payment_method_result["order"], 
+						$payment_method_result["card"]["id"], 
+						$return_url
+					);
+					if($result) {
+
+						if($result["status"] === "PAYMENT_CAPTURED") {
+
+							// redirect to leave POST state
+							header("Location: $return_url/?payment_intent=".$result["payment_intent_id"]);
+								exit();
+
+						}
+						else if($result["status"] === "ACTION_REQUIRED") {
+
+							// redirect to leave POST state
+							header("Location: ".$result["action"]);
+							exit();
+					
+						}
+
+						else if($result["status"] === "CARD_ERROR") {
+
+							// Janitor Validation failed
+							message()->addMessage($result["message"], ["type" => "error"]);
+							// redirect to leave POST state
+							header("Location: /medlemshjaelp/betalingsgateway/".$gateway."/ordre/".$order_no);
+							exit();
+
+						}
+
+					}
+
+				}
+				else if($payment_method_result["status"] === "STRIPE_ERROR" || $payment_method_result["status"] === "ORDER_NOT_FOUND") {
+
+					if($payment_method_result["status"] === "STRIPE_ERROR")	{
+						$payment_method_result["message"] = "Der skete en fejl i behandlingen af din betaling.";
+					}
+					else if($payment_method_result["status"] === "ORDER_NOT_FOUND")	{
+						$payment_method_result["message"] = "Ordren blev ikke fundet.";
+					}
+
+					message()->addMessage($payment_method_result["message"], ["type" => "error"]);
+					// redirect to leave POST state
+					header("Location: /medlemshjaelp/betaling/$order_no");
+					exit();
+
+				}
+				else if($payment_method_result["status"] === "CARD_ERROR") {
+
+					switch($payment_method_result["code"]) {
+
+						case "incorrect_number"         : $message = "Forkert kortnummer."; break;
+						case "invalid_number"           : $message = "Kortnummeret er ikke et gyldigt kreditkortnummer."; break;
+						case "invalid_expiry_month"     : $message = "Ugyldig udløbsdato."; break;
+						case "invalid_expiry_year"      : $message = "Ugyldigt udløbsår."; break;
+						case "invalid_cvc"              : $message = "Ugyldig sikkerhedskode."; break;
+						case "expired_card"             : $message = "Kortet er udløbet."; break;
+						case "incorrect_cvc"            : $message = "Forkert sikkerhedskode."; break;
+						case "incorrect_zip"            : $message = "Kortets postnummer kunne ikke bekræftes."; break;
+						case "card_declined"            : $message = "Kortet blev afvist."; break;
+					}
+
+
+					message()->addMessage($message, ["type" => "error"]);
+					// redirect to leave POST state
+					header("Location: /medlemshjaelp/betaling/$order_no");
+					exit();
+				}
+
+			}
+
+
+			// Janitor Validation failed
+			message()->addMessage($payment_method_result["message"], ["type" => "error"]);
+			// redirect to leave POST state
+			header("Location: /medlemshjaelp/betaling/$order_no");
+			exit();	
+			
+		}
+
+		// /medlemshjaelp/betaling/stripe/register-paid-intent
+		else if(count($action) == 3 && $action[2] == "register-paid-intent") {
+
+			$payment_intent_id = getVar("payment_intent");
+
+			$id_result = payments()->identifyPaymentIntent($payment_intent_id);
+			if($id_result && $id_result["status"] === "success") {
+
+				// Single order
+				if($id_result["order_no"]) {
+
+					$order = $SC->getOrders(["order_no" => $id_result["order_no"]]);
+					if($order) {
+
+						// Register intent for order (and subscription)
+						$intent_registration_result = payments()->updatePaymentIntent($payment_intent_id, $order);
+						if($intent_registration_result["status"] === "success") {
+
+							// Register payment for order (if paid)
+							if($id_result["payment_status"] === "succeeded") {
+
+								$payment_registration_result = payments()->registerPayment($order, $id_result["payment_intent"]);
+
+								// Clear messages
+								message()->resetMessages();
+
+								// Successful registration of payment
+								if($payment_registration_result && $payment_registration_result["status"] === "REGISTERED") {
+
+									// redirect to leave POST state
+									header("Location: /medlemshjaelp/betaling/".$order["order_no"]."/".$payment_registration_result["payment_id"]."/kvittering");
+									exit();
+								}
+							}
+
+						}
+
+					}
+
+				}
+
+			}
+			else if($id_result && $id_result["status"] === "error") {
+
+				if($id_result["code"] === "payment_intent_authentication_failure") {
+					$id_result["message"] = "Tredjepartsautentificeringen slog fejl. Prøv igen eller brug et andet kort.";
+				}
+
+				message()->addMessage($id_result["message"], ["type" => "error"]);
 				// redirect to leave POST state
-				// header("Location: /butik/kvittering/".$action[1]."/".$action[2]."/".$payment_id);
-				header("Location: /medlemshjaelp/betaling/".$payment_id."/".$action[1]."/kvittering");
+				header("Location: /medlemshjaelp/betaling/".$id_result["order_no"]);
 				exit();
 
 			}
-			// Something went wrong
-			else {
-				message()->resetMessages();
-				message()->addMessage("Der skete en fejl i registreringen af betalingen.", array("type" => "error"));
-				// redirect to leave POST state
-				header("Location: /butik/kvittering/".$action[1]."/fejl");
-				exit();
 
-			}
+			// Fatal error
+			message()->addMessage("Det mislykkedes at behandle din betalingsanmodning. Prøv igen eller <a href=\"mailto:it@kbhff.dk?subject=Payment%20error&body=Payment%20Intent:%20$payment_intent_id\">kontakt os</a>, så vi kan løse problemet.", ["type" => "error"]);
+			// redirect to leave POST state
+			header("Location: /butik/kvittering/fejl");
+			exit();
+
 		}
 		
 		// /medlemshjaelp/betaling/#order_no/#payment_id#/kvittering

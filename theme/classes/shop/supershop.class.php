@@ -26,7 +26,7 @@ class SuperShop extends SuperShopCore {
 		// Get posted values to make them available for models
 		$this->getPostedEntities();
 
-		if(count($action) == 1 && $this->validateList(array("payment_amount", "payment_method", "order_id", "transaction_id"))) {
+		if(count($action) == 1 && $this->validateList(array("payment_amount", "payment_method_id", "order_id", "transaction_id"))) {
 
 
 			$order_id = $this->getProperty("order_id", "value");
