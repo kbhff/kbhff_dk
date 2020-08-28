@@ -108,7 +108,7 @@ else {
 		<?= $model->formStart("registerPayment/".$order_no, ["class" => "mobilepay"]) ?>
 			<fieldset class="mobilepay">
 				<?= $model->input("payment_amount", array("type" => "hidden", "value" => $total_order_price["price"])); ?>
-				<?= $model->input("payment_method", array("type" => "hidden", "value" => $mobilepay_payment_method_id)); ?>
+				<?= $model->input("payment_method_id", array("type" => "hidden", "value" => $mobilepay_payment_method_id)); ?>
 				<?= $model->input("order_id", array("type" => "hidden", "value" => $order["id"])); ?>
 				<?= $model->input("transaction_id", array("type" => "hidden", "value" => $transaction_id)); ?>
 				<div class="mobilepay qr">
@@ -133,7 +133,7 @@ else {
 		</ul>
 		<?= $model->formEnd() ?>
 
-		<?= $model->formStart("betaling/".$order_no."/stripe/process", array("class" => "card")) ?>
+		<?= $model->formStart("betaling/stripe/ordre/".$order_no."/process", array("class" => "card")) ?>
 
 			<fieldset>
 				<?= $model->input("card_number", array("type" => "tel", "label" => "Kortnummer", "hint_message" => "Indtast dit kortnummer", "error_message" => "Ugyldigt kortnummer")); ?>
@@ -152,7 +152,7 @@ else {
 		<?= $model->formStart("registerPayment/".$order_no, ["class" => "cash"]) ?>
 			<fieldset class="cash">
 				<?= $model->input("payment_amount", array("type" => "hidden", "value" => $total_order_price["price"])); ?>
-				<?= $model->input("payment_method", array("type" => "hidden", "value" => $cash_payment_method_id)); ?>
+				<?= $model->input("payment_method_id", array("type" => "hidden", "value" => $cash_payment_method_id)); ?>
 				<?= $model->input("order_id", array("type" => "hidden", "value" => $order["id"])); ?>
 				<?= $model->input("transaction_id", array("type" => "hidden", "value" => $transaction_id)); ?>
 				<?= $model->input("receiving_user_id", array("type" => "hidden", "value" => session()->value("user_id"))); ?>
