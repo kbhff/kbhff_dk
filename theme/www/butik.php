@@ -17,8 +17,18 @@ $page->pageTitle("Butik");
 
 if($action) {
 	
-	// butik/betal
-	if($action[0] == "betal") {
+	
+
+	# /butik/betal [POST]
+	if($action[0] == "betal" && $_SERVER['REQUEST_METHOD'] === "POST") {
+
+		// redirect to leave POST state
+		header("Location: /butik/betal");
+		exit();
+	}
+
+	// /butik/betal
+	else if($action[0] == "betal") {
 
 		$page->page(array(
 			"templates" => "shop/checkout.php"
@@ -26,6 +36,7 @@ if($action) {
 		exit();
 		
 	}
+
 	// butik/kvittering
 	else if($action[0] == "kvittering") {
 
@@ -902,8 +913,121 @@ if($action) {
 			"templates" => "shop/payments.php"
 		));
 		exit();
-	}	
+	}
+	
+	# /butik/profil
+	else if($action[0] == "profil") {
 
+		$page->page(array(
+			"templates" => "shop/profile.php"
+		));
+		exit();
+	}
+
+	# /butik/updateProfile
+	else if($action[0] == "updateProfile" && $page->validateCsrfToken()) {
+
+		// create new user
+		$UC = new User();
+		$user = $UC->update(array("update"));
+
+		// redirect to leave POST state
+		header("Location: /butik/betal");
+		exit();
+	}
+
+	# /butik/updateCartItemQuantity
+	else if($action[0] == "updateCartItemQuantity" && $page->validateCsrfToken()) {
+
+		message()->resetMessages();
+
+
+		// create new user
+		$cart = $model->updateCartItemQuantity($action);
+
+		// successful creation
+		if($cart) {
+
+			if(!message()->hasMessages()) {
+				message()->addMessage("Mængde opdateret");
+			}
+			header("Location: /butik/kurv");
+			exit();
+		}
+		// something went wrong
+		else {
+			message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
+		}
+
+	}
+
+	# /butik/deleteFromCart
+	else if($action[0] == "deleteFromCart" && $page->validateCsrfToken()) {
+
+		// create new user
+		$cart = $model->deleteFromCart($action);
+
+		// successful creation
+		if($cart) {
+
+			message()->addMessage("Varen blev slettet fra kurven.");
+			header("Location: /butik/kurv");
+			exit();
+		}
+		// something went wrong
+		else {
+			message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
+		}
+
+	}
+
+	# /butik/selectAddress
+	else if($action[0] == "selectAddress" && $page->validateCsrfToken()) {
+
+		if($model->updateCart(array("updateCart"))) {
+			// redirect to leave POST state
+			header("Location: /butik/betal");
+			exit();
+		}
+		else {
+			$page->page(array(
+				"templates" => "shop/address.php"
+			));
+			exit();
+		}
+
+	}
+
+	# /butik/addAddress
+	else if($action[0] == "addAddress" && count($action) == 2 && $page->validateCsrfToken()) {
+
+		$UC = new User();
+		$address = $UC->addAddress(array("addAddress"));
+		if($address) {
+			$_POST[$action[1]."_address_id"] = $address["id"];
+
+			if($model->updateCart(array("updateCart"))) {
+
+				// redirect to leave POST state
+				header("Location: /butik/betal");
+				exit();
+			}
+		}
+
+		$page->page(array(
+			"templates" => "shop/address.php"
+		));
+		exit();
+	}
+
+	# /butik/adresse
+	else if($action[0] == "adresse" && count($action) == 2) {
+
+		$page->page(array(
+			"templates" => "shop/address.php"
+		));
+		exit();
+	}
 
 
 }

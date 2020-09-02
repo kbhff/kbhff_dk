@@ -125,7 +125,7 @@ else {
 	else: ?>
 
 	<div class="contact">
-		<h2>Dine brugerinformationer <a href="/profil">(Redigér)</a></h2>
+		<h2>Dine brugeroplysninger <a href="/butik/profil">(Redigér)</a></h2>
 		<dl class="list">
 			<dt>Fulde navn</dt>
 			<dd><?= $user["firstname"] ?> <?= $user["lastname"] ?></dd>
@@ -331,7 +331,7 @@ else {
 
 
 	<div class="delivery">
-		<h2>Leveringsadresse <a href="/butik/address/delivery">(Redigér)</a></h2>
+		<h2>Leveringsadresse <a href="/butik/adresse/levering">(Redigér)</a></h2>
 
 		<? if($cart["delivery_address_id"]): ?>
 		<dl class="list">
@@ -345,21 +345,19 @@ else {
 			<dd><?= $delivery_address["address2"] ?></dd>
 			<dt>Postnummer og by</dt>
 			<dd><?= $delivery_address["postal"] ?> <?= $delivery_address["city"] ?></dd>
-			<dt>Stat</dt>
-			<dd><?= $delivery_address["state"] ?></dd>
 			<dt>Land</dt>
 			<dd><?= $delivery_address["country"] ?></dd>
 		</dl>
 
 		<? else: ?>
 
-		<p>Du kan <a href="/butik/address/delivery">tilføje en leveringsadresse</a>, hvis du vil have den vist på din faktura, men det er ikke et krav.</p>
+		<p>Du kan <a href="/butik/adresse/levering">tilføje en leveringsadresse</a>, hvis du vil have den vist på din faktura, men det er ikke et krav.</p>
 		
 		<? endif; ?>
 	</div>
 
 	<div class="billing">
-		<h2>Faktureringsadresse <a href="/butik/address/billing">(Redigér)</a></h2>
+		<h2>Faktureringsadresse <a href="/butik/adresse/fakturering">(Redigér)</a></h2>
 
 		<? if($cart["billing_address_id"]): ?>
 		<dl class="list">
@@ -380,7 +378,7 @@ else {
 		</dl>
 		<? else: ?>
 
-		<p>Du kan <a href="/butik/address/billing">tilføje en faktureringsadresse</a>, hvis du vil have den vist på din faktura, men det er ikke et krav. </p>
+		<p>Du kan <a href="/butik/adresse/fakturering">tilføje en faktureringsadresse</a>, hvis du vil have den vist på din faktura, men det er ikke et krav. </p>
 		
 		<? endif; ?>
 	</div>

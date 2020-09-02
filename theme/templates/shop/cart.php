@@ -41,8 +41,8 @@ $IC = new Items();
 <? endif; ?>
 
 	<div class="all_items">
-		<h2>Kurven indeholder</h2>
 		<? if($cart["items"]): ?>
+		<h2>Kurven indeholder</h2>
 		<ul class="items">
 			<? 
 			// Loop through all cart items and show information and editing options of each item.
@@ -118,7 +118,8 @@ $IC = new Items();
 			</li>
 		</ul>
 		<? else: ?>
-		<p>Din indkøbskurv er tom. <br />Gå til <a href="/bliv-medlem">medlemskaber </a>for at se, hvad vi tilbyder.</p>
+		<h2>Din indkøbskurv er tom</h2>
+		<p>Gå til <a href="/bliv-medlem">medlemskaber </a>for at se, hvad vi tilbyder.</p>
 		<ul class="items">
 			<li class="total">
 				<h3>
