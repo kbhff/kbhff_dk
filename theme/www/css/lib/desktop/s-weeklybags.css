@@ -12,24 +12,17 @@
 	text-overflow: ellipsis;
 }
 
-/* Weekly bags overview */
-#content .scene.weeklybags .c-one-half .c-box {margin-top: 12px;}
-#content .scene.weeklybags .c-one-half .c-box:first-child {margin-top: 58px; border-top: 5px solid #000;}
 
-#content .scene.weeklybags .c-box.weeklybag ul {list-style: none; margin: 0 0 24px; padding: 0;}
-#content .scene.weeklybags .c-box.weeklybag li {
-	padding: 0 18px 12px;
-}
-#content .scene.weeklybags .c-box.weeklybag li h3 {padding-bottom: 2px;}
-#content .scene.weeklybags .c-box.weeklybag li p {padding-bottom: 12px;}
+#content .scene.weeklybags .c-one-third .c-box {margin-top: 12px;}
+#content .scene.weeklybags .c-one-third .c-box:first-child {margin-top: 58px; border-top: 5px solid #000;}
 
-/* Weekly bag */
-#content .scene.weeklybag .c-one-half .c-box {margin-top: 12px;}
-#content .scene.weeklybag .c-one-half .c-box:first-child {margin-top: 58px; border-top: 5px solid #000;}
 
-#content .scene.weeklybag .c-box.weeklybag ul {list-style: none; margin: 0 0 24px; padding: 0;}
+#content .scene.weeklybag .c-one-third .c-box {margin-top: 12px;}
+#content .scene.weeklybag .c-one-third .c-box:first-child {margin-top: 58px; border-top: 5px solid #000;}
+
+#content .scene.weeklybag .c-box.weeklybag ul {list-style: none; margin: 0; padding: 0;}
 #content .scene.weeklybag .c-box.weeklybag li {
-	padding: 0 18px 12px;
+	padding: 0;
 }
 #content .scene.weeklybag .c-box.weeklybag li h3 {padding-bottom: 2px;}
 #content .scene.weeklybag .c-box.weeklybag li p {padding-bottom: 12px;}

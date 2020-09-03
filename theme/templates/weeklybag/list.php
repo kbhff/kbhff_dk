@@ -35,7 +35,7 @@ $weeklybag_item = $WBC->getWeeklyBag();
 
 	<div class="c-wrapper">
 
-		<div class="c-one-half">
+		<div class="c-two-thirds">
 
 			<h1>Ugens poser</h1>
 
@@ -72,20 +72,18 @@ $weeklybag_item = $WBC->getWeeklyBag();
 			<? endif; ?>
 
 		<? else: ?>
-			<p>Ingen poser</p>
+			<p>Ingen nyheder</p>
 		<? endif; ?>
 
 		</div>
 
 
-		<div class="c-one-half">
+		<div class="c-one-third">
 
 			<div class="c-box weeklybag">
 			<? if($weeklybag_item): ?>
 				<h3>Ugens pose - <?= $weeklybag_item["name"] ?></h3>
 				<?= $weeklybag_item["html"] ?>
-
-				<p class="readmore"><a href="/ugens-pose/<?= $weeklybag_item["sindex"] ?>">Læs mere om ugens pose</a></p>
 			<? else: ?>
 				<h3>Ugens pose</h3>
 				<p>Ugens pose er endnu ikke oprettet.</p>
