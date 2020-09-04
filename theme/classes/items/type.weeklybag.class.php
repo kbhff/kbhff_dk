@@ -152,11 +152,6 @@ class TypeWeeklybag extends Itemtype {
 		$this->getProperty("week", "value"));
 	}
 
-	function saved($item_id){
-		
-		$this->sindex($this->sindexBase(), $item_id);
-	}
-
 	function updated($item_id) {
 		
 		$this->sindex($this->sindexBase(), $item_id);
