@@ -12,6 +12,7 @@ $member_subnavigation = $this->navigation("sub-member");
 ?>
 
 <div class="scene member i:scene">
+	<div class="banner i:banner variant:random format:jpg"></div>
 
 	<? if($member_subnavigation && isset($member_subnavigation["nodes"])) { ?>
 	<ul class="subnavigation">
