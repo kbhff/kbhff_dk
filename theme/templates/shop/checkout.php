@@ -109,7 +109,7 @@ else {
 			</fieldset>
 
 			<ul class="actions">
-				<?= $UC->submit("Log in", array("class" => "primary", "wrapper" => "li.login")) ?>
+				<?= $UC->submit("Log ind", array("class" => "primary", "wrapper" => "li.login")) ?>
 				<li class="forgot">Har du <a href="/login/forgot" target="_blank">glemt dit password</a>?</li>
 			</ul>
 		<?= $UC->formEnd() ?>
