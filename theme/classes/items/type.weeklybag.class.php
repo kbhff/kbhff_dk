@@ -144,6 +144,18 @@ class TypeWeeklybag extends Itemtype {
 		return false;
 
 	}
+
+	function sindexBase(){
+		
+		return sprintf("pose-%04d-uge-%02d",
+		$this->getProperty("year", "value"),
+		$this->getProperty("week", "value"));
+	}
+
+	function updated($item_id) {
+		
+		$this->sindex($this->sindexBase(), $item_id);
+	}
 }
 
 ?>

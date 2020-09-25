@@ -13,6 +13,7 @@ if($item) {
 ?>
 
 <div class="scene page i:scene">
+	<div class="banner i:banner variant:random format:jpg"></div>
 
 	<div class="c-wrapper">
 

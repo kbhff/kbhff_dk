@@ -39,13 +39,6 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 			$media = $IC->sliceMediae($item, "mediae"); ?>
 			<div class="article i:article id:<?= $item["item_id"] ?><?= $item["classname"] ? " ".$item["classname"] : "" ?>" itemscope itemtype="http://schema.org/NewsArticle">
 	
-				<? if($media): ?>
-				<div class="image item_id:<?= $item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>">
-					<p>Image: <a href="/images/<?= $item["item_id"] ?>/<?= $media["variant"] ?>/500x.<?= $media["format"] ?>"><?= $media["name"] ?></a></p>
-				</div>
-				<? endif; ?>
-	
-	
 				<?= $HTML->articleTags($item, [
 					"context" => [$itemtype],
 					"url" => "/nyheder/tag",

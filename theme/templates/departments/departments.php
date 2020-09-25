@@ -16,6 +16,7 @@ $departments = $model->getDepartments(["order" => "name ASC"]);
 ?>
 
 <div class="scene departments i:departments">
+	<div class="banner i:banner variant:random format:jpg"></div>
 
 	<?	if($item):
 	$media = $IC->sliceMediae($item, "single_media"); ?>
