@@ -42,23 +42,26 @@ if($user_id != 1) {
 
 
 	$user = $UC->getUser();
-
+	$department = $UC->getUserDepartment();
 
 	// Only get payment methods if cart has items
 	if($cart["items"]) {
-
+		
 		// Get the total cart price
 		$total_cart_price = $model->getTotalCartPrice($cart["id"]);
-
+		
 		if($total_cart_price && $total_cart_price["price"] > 0) {
-
+			
 			// Get payment methods
 			$payment_methods = $this->paymentMethods();
-
+			
 			// Get payment methods
 			$user_payment_methods = $UC->getPaymentMethods(["extend" => true]);
-
+			
 		}
+		
+		$cart_pickupdates = $model->getCartPickupdates();
+		$cart_items_without_pickupdate = $model->getCartItemsWithoutPickupdate();
 
 	}
 
@@ -138,14 +141,15 @@ else {
 
 	<div class="all_items">
 		<h2>Din kurv <a href="/butik/kurv">(Redigér)</a></h2>
-		<? if($cart["items"]): ?>
+		<? if($cart["items"] && $cart_items_without_pickupdate): ?>
 		<ul class="items">
-			<? foreach($cart["items"] as $cart_item):
+			<? foreach($cart_items_without_pickupdate as $cart_item):
 				$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true))); 
 				$price = $model->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
+				$cart_item_id = $cart_item["id"];
 			?>
 			<li class="item id:<?= $item["id"] ?>">
-				<h3>
+				<p>
 					<span class="quantity"><?= $cart_item["quantity"] ?></span>
 					<span class="x">x </span>
 					<span class="name"><?= $item["name"] ?> </span>
@@ -161,7 +165,7 @@ else {
 							array("vat" => true)
 						) ?>
 					</span>
-				</h3>
+				</p>
 				<? if($item["subscription_method"] && $price["price"]): ?>
 				<p class="subscription_method">
 					Tilbagevendende betaling hver <?= strtolower($item["subscription_method"]["name"]) ?>.
@@ -177,18 +181,73 @@ else {
 					<? endif; ?>
 				</p>
 				<? endif; ?>
+				
+				<ul class="actions">
+					<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
+						"confirm-value" => "Sikker?",
+						"wrapper" => "li.delete",
+						"success-location" => "/butik"
+						]) ?>
+				</ul>
+				
 			</li>
 			<? endforeach; ?>
-
-			<li class="total">
-				<h3>
-					<span class="name">I alt</span>
-					<span class="total_price">
-						<?= formatPrice($total_cart_price, array("vat" => true)) ?>
-					</span>
-				</h3>
-			</li>
 		</ul>
+		<? if($cart["items"] && $cart_pickupdates): ?>
+		<ul class="pickupdates">
+					
+			<? foreach($cart_pickupdates as $pickupdate): 
+
+				$pickupdate_cart_items = $model->getCartPickupdateItems($pickupdate["id"]);
+
+			?>
+				<? if($pickupdate_cart_items): ?>
+				
+			<li class="pickupdate">
+				<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?></h4>
+				<p class="department">Afhentningssted: <span class="name"><?= $department["name"] ?></span></p>
+				
+				<ul class="items">
+					
+					<? foreach($pickupdate_cart_items as $cart_item):
+					$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true))); 
+					$price = $model->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
+					$cart_item_id = $cart_item["id"];
+					?>
+
+					<li class="item id:<?= $item["id"] ?>">
+						<p>
+							<span class="quantity"><?= $cart_item["quantity"] ?></span>
+							<span class="x">x </span>
+							<span class="name"><?= $item["name"] ?> </span>
+							<span class="a">á </span>
+							<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
+						</p>
+						<ul class="actions">
+							<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
+								"confirm-value" => "Sikker?",
+								"wrapper" => "li.delete",
+								"success-location" => "/butik"
+								]) ?>
+						</ul>
+					</li>
+
+					<? endforeach; ?>
+				</ul>
+			</li>
+
+				<? endif; ?>
+			<? endforeach; ?>
+		</ul>
+		<div class="total">
+			<h3>
+				<span class="name">I alt</span>
+				<span class="total_price">
+					<?= formatPrice($total_cart_price) ?>
+				</span>
+			</h3>
+		</div>
+		<? endif; ?>
 		<? else: ?>
 		<p>Du har ingenting i kurven endnu. <br />Tag et kig på vores <a href="/memberships">medlemskaber</a>.</p>
 		<? endif; ?>

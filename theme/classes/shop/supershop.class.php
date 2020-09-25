@@ -140,7 +140,39 @@ class SuperShop extends SuperShopCore {
             return "&lock=1";
         else
             return "";
-    }
+	}
+	
+
+	/**
+	 * Remove cart items that belongs to a past pickupdate
+	 *
+	 * Run by cron job
+	 * 
+	 * @return boolean
+	 */
+	function removePastPickupdateCartItems($action) {
+
+		if(count($action) == 1) {
+
+			$query = new Query();
+
+			$sql = "DELETE cart_items 
+			FROM ".$this->db_cart_items." AS cart_items
+			JOIN ".$this->db_pickupdate_cart_items." AS pickupdate_cart_items 
+			ON cart_items.id = pickupdate_cart_items.cart_item_id 
+			JOIN ".$this->db_pickupdates." AS pickupdates 
+			ON pickupdates.id = pickupdate_cart_items.pickupdate_id
+			WHERE pickupdates.pickupdate < CURDATE()"; 
+
+			if($query->sql($sql)) {
+
+				return true;
+			}
+
+		}
+
+		return false;
+	}
 
 }
 

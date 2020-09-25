@@ -167,6 +167,10 @@ u.paymentCards = new function() {
 					matches.shift();
 					card_number = matches.join(" ").trim();
 				}
+				else if(matches.length > 1 && matches[0].length < card_number.length) {
+					matches.shift();
+					card_number = matches.join(" ").trim();
+				}
 				else {
 					card_number = matches.join(" ");
 				}

@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-03-27 10:53:54
+asset-builder @ 2020-09-21 17:19:49
 */
 
 /*seg_desktop_include.js*/
@@ -5108,6 +5108,10 @@ u.paymentCards = new function() {
 			var matches = card_number.match(card.format);
 			if(matches) {
 				if(matches.length > 1 && matches[0] == card_number) {
+					matches.shift();
+					card_number = matches.join(" ").trim();
+				}
+				else if(matches.length > 1 && matches[0].length < card_number.length) {
 					matches.shift();
 					card_number = matches.join(" ").trim();
 				}

@@ -10,6 +10,12 @@ include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 $action = $page->actions();
 $model = new Shop();
 
+include_once("classes/shop/pickupdate.class.php");
+$PC = new Pickupdate();
+
+include_once("classes/system/department.class.php");
+$DC = new Department();
+
 
 $page->bodyClass("shop");
 $page->pageTitle("Butik");
@@ -17,10 +23,82 @@ $page->pageTitle("Butik");
 
 if($action) {
 	
-	
+	// /butik/kurv
+	if($action[0] == "kurv") {
+
+		$page->page(array(
+			"templates" => "shop/cart.php"
+		));
+		exit();
+		
+	}
+
+	# /butik/addToCart
+	else if($action[0] == "addToCart" && $page->validateCsrfToken()) {
+
+		$cart = $model->addToCart(array("addToCart"));
+
+		// successful creation
+		if($cart) {
+
+			message()->addMessage("Item added");
+			header("Location: /butik/betal/");
+			exit();
+		}
+		// something went wrong
+		else {
+			message()->addMessage("Noget gik galt.", array("type" => "error"));
+		}
+
+	}
+
+	# /butik/updateCartItemQuantity
+	else if($action[0] == "updateCartItemQuantity" && $page->validateCsrfToken()) {
+
+		message()->resetMessages();
+
+
+		// create new user
+		$cart = $model->updateCartItemQuantity($action);
+
+		// successful creation
+		if($cart) {
+
+			if(!message()->hasMessages()) {
+				message()->addMessage("Mængde opdateret");
+			}
+			header("Location: /butik/kurv");
+			exit();
+		}
+		// something went wrong
+		else {
+			message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
+		}
+
+	}
+
+	# /butik/deleteFromCart
+	else if($action[0] == "deleteFromCart" && $page->validateCsrfToken()) {
+
+		// create new user
+		$cart = $model->deleteFromCart($action);
+
+		// successful creation
+		if($cart) {
+
+			message()->addMessage("Varen blev slettet fra kurven.");
+			header("Location: /butik/kurv");
+			exit();
+		}
+		// something went wrong
+		else {
+			message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
+		}
+
+	}
 
 	# /butik/betal [POST]
-	if($action[0] == "betal" && $_SERVER['REQUEST_METHOD'] === "POST") {
+	else if($action[0] == "betal" && $_SERVER['REQUEST_METHOD'] === "POST") {
 
 		// redirect to leave POST state
 		header("Location: /butik/betal");
@@ -880,7 +958,7 @@ if($action) {
 			message()->addMessage("Ordren kunne ikke behandles – prøv igen.", ["type" => "error"]);
 
 			// redirect to leave POST state
-			header("Location: //butik/kurv");
+			header("Location: /butik/kurv");
 			exit();
 
 		}
@@ -936,51 +1014,6 @@ if($action) {
 		exit();
 	}
 
-	# /butik/updateCartItemQuantity
-	else if($action[0] == "updateCartItemQuantity" && $page->validateCsrfToken()) {
-
-		message()->resetMessages();
-
-
-		// create new user
-		$cart = $model->updateCartItemQuantity($action);
-
-		// successful creation
-		if($cart) {
-
-			if(!message()->hasMessages()) {
-				message()->addMessage("Mængde opdateret");
-			}
-			header("Location: /butik/kurv");
-			exit();
-		}
-		// something went wrong
-		else {
-			message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
-		}
-
-	}
-
-	# /butik/deleteFromCart
-	else if($action[0] == "deleteFromCart" && $page->validateCsrfToken()) {
-
-		// create new user
-		$cart = $model->deleteFromCart($action);
-
-		// successful creation
-		if($cart) {
-
-			message()->addMessage("Varen blev slettet fra kurven.");
-			header("Location: /butik/kurv");
-			exit();
-		}
-		// something went wrong
-		else {
-			message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
-		}
-
-	}
-
 	# /butik/selectAddress
 	else if($action[0] == "selectAddress" && $page->validateCsrfToken()) {
 
@@ -1029,13 +1062,24 @@ if($action) {
 		exit();
 	}
 
+	// Class interface
+	else if(preg_match("/^removePastPickupdateCartItems$/", $action[0])) {
+
+		include_once("classes/shop/supershop.class.php");
+		$SC = new SuperShop();
+
+		$output = new Output();
+		$output->screen($SC->removePastPickupdateCartItems($action));
+		exit();
+
+	}
 
 }
 
-// go to cart directly
+// go to shop index directly
 // /butik
 $page->page(array(
-	"templates" => "shop/cart.php"
+	"templates" => "shop/index.php"
 ));
 
 ?>

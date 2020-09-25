@@ -93,9 +93,9 @@ if(!$UC->hasAcceptedTerms()) {
 $order_no = $UC->hasUnpaidMembership();
 if($order_no) {
 
-	message()->addMessage("Du mangler at betale dit medlemskab. Betal venligst før du kan gå videre.", array("type" => "error"));
-	header("Location: /butik/betaling/".$order_no);
-	exit();
+	// message()->addMessage("Du mangler at betale dit medlemskab. Betal venligst før du kan gå videre.", array("type" => "error"));
+	// header("Location: /butik/betaling/".$order_no);
+	// exit();
 }
 
 

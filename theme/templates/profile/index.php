@@ -43,6 +43,15 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 					Du kan også se og rette dine eksisterende bestillinger og lave en ny bestilling (åbner GrøntShoppen).
 					På sigt er det desuden meningen at du her skal kunne book frivillig-vagter og se nyheder og beskeder fra din lokalafdeling.
 				</p>
+				<? if($UC->hasUnpaidMembership()): ?>
+				<div class="c-box alert unpaid_membership">
+					<h3>OBS! Du mangler at betale kontingent</h3>
+					<p>Kontingentbetaling vil automatisk blive tilføjet din næste bestilling. Du kan også betale det separat ved at klikke nedenfor.</p>
+					<ul class="actions">
+						<li class="pay"><a href="/butik/betaling/<?= $user["membership"]["order"]["order_no"] ?>" class="button">Betal kontingent nu</a></li>
+					</ul>
+				</div>
+				<? endif; ?>
 				<div class="c-box obs">
 					<p>
 						<span class="highlight">OBS!</span> Østerbro lokalafdeling mangler en ny team-koordinator.

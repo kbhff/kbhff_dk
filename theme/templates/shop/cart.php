@@ -13,6 +13,7 @@ $cart = $model->getCart();
 
 
 $IC = new Items();
+$UC = new User();
 
 ?>
 <div class="scene cart i:cart">
@@ -22,8 +23,28 @@ $IC = new Items();
 	print $HTML->serverMessages();
 	?>
 	<? 
-	// Generate checkout button
 	if($cart["items"]) :
+
+		// Get the total cart price
+		$total_cart_price = $model->getTotalCartPrice($cart["id"]);
+		
+		if($total_cart_price && $total_cart_price["price"] > 0) {
+			
+			// Get payment methods
+			$payment_methods = $this->paymentMethods();
+			
+			// Get payment methods
+			$user_payment_methods = $UC->getPaymentMethods(["extend" => true]);
+			
+		}
+		
+		$cart_pickupdates = $model->getCartPickupdates();
+		$cart_items_without_pickupdate = $model->getCartItemsWithoutPickupdate();
+		
+		if($user_id != 1) {
+			$department = $UC->getUserDepartment();
+		}
+
 	?>
 	<div class="checkout">
 		<ul class="actions">
@@ -43,10 +64,11 @@ $IC = new Items();
 	<div class="all_items">
 		<? if($cart["items"]): ?>
 		<h2>Kurven indeholder</h2>
+		<? if($cart_items_without_pickupdate): ?>
 		<ul class="items">
 			<? 
 			// Loop through all cart items and show information and editing options of each item.
-			foreach($cart["items"] as $cart_item):
+			foreach($cart_items_without_pickupdate as $cart_item):
 				$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true)));
 				$price = $model->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
 			?>
@@ -106,17 +128,76 @@ $IC = new Items();
 				</ul>
 			</li>
 			<? endforeach; ?>
-
-			<li class="total">
+		</ul>
+		<? endif; ?>
+		<? if($cart_pickupdates): ?>
+			<ul class="pickupdates">
+					
+				<? foreach($cart_pickupdates as $pickupdate): 
+	
+					$pickupdate_cart_items = $model->getCartPickupdateItems($pickupdate["id"]);
+	
+				?>
+					<? if($pickupdate_cart_items): ?>
+					
+				<li class="pickupdate">
+					<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?></h4>
+					<p class="department">Afhentningssted: <span class="name"><?= $department["name"] ?></span></p>
+					
+					<ul class="items">
+						
+						<? foreach($pickupdate_cart_items as $cart_item):
+						$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true))); 
+						$price = $model->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
+						$cart_item_id = $cart_item["id"];
+						?>
+	
+						<li class="item id:<?= $item["id"] ?>">
+							<p>
+								<?= $model->formStart("/butik/updateCartItemQuantity/".$cart["cart_reference"]."/".$cart_item["id"], array("class" => "updateCartItemQuantity labelstyle:inject")) ?>
+									<fieldset>
+										<?= $model->input("quantity", array(
+											"type" => "integer",
+											"value" =>  $cart_item["quantity"],
+											"label" => "Antal",
+											"hint_message" => "State the quantity of this item"
+										)) ?>
+									</fieldset>
+									<ul class="actions">
+										<?= $model->submit("Opdatér", array("name" => "update", "wrapper" => "li.save")) ?>
+									</ul>
+								<?= $model->formEnd() ?>
+								<span class="x">x </span>
+								<span class="name"><?= $item["name"] ?> </span>
+								<span class="a">á </span>
+								<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
+							</p>
+							<ul class="actions">
+								<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
+									"confirm-value" => "Sikker?",
+									"wrapper" => "li.delete",
+									"success-location" => "/butik"
+									]) ?>
+							</ul>
+						</li>
+	
+						<? endforeach; ?>
+					</ul>
+				</li>
+	
+					<? endif; ?>
+				<? endforeach; ?>
+			</ul>
+			<div class="total">
 				<h3>
-					<span class="name">Total</span>
+					<span class="name">I alt</span>
 					<span class="total_price">
-						<? // generate total price of cart
-						print formatPrice($model->getTotalCartPrice($cart["id"]), array("vat" => true)) ?>
+						<?= formatPrice($total_cart_price) ?>
 					</span>
 				</h3>
-			</li>
-		</ul>
+			</div>
+		<? endif; ?>
+		
 		<? else: ?>
 		<h2>Din indkøbskurv er tom</h2>
 		<p>Gå til <a href="/bliv-medlem">medlemskaber </a>for at se, hvad vi tilbyder.</p>

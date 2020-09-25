@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-03-24 19:25:53
+asset-builder @ 2020-09-21 17:45:36
 */
 
 /*seg_desktop_include.js*/
@@ -441,7 +441,7 @@ Util.getNodeCookie = function(node, name, _options) {
 	var mem = JSON.parse(u.getCookie("man_mem"));
 	if(mem && mem[ref]) {
 		if(name) {
-			return mem[ref][name] ? mem[ref][name] : "";
+			return (typeof(mem[ref][name]) != "undefined") ? mem[ref][name] : false;
 		}
 		else {
 			return mem[ref];
@@ -7589,15 +7589,19 @@ if(document.documentMode && document.documentMode <= 11 && document.documentMode
 		return false;
 	}
 	Util.addClass = u.ac = function(node, classname, dom_update) {
-		var regexp = new RegExp("(^|\\s)" + classname + "(\\s|$)");
-		if(node instanceof SVGElement) {
-			if(!regexp.test(node.className.baseVal)) {
-				node.className.baseVal += node.className.baseVal ? " " + classname : classname;
+		var classnames = classname.split(" ");
+		while(classnames.length) {
+			classname = classnames.shift();
+			var regexp = new RegExp("(^|\\s)" + classname + "(\\s|$)");
+			if(node instanceof SVGElement) {
+				if(!regexp.test(node.className.baseVal)) {
+					node.className.baseVal += node.className.baseVal ? " " + classname : classname;
+				}
 			}
-		}
-		else {
-			if(!regexp.test(node.className)) {
-				node.className += node.className ? " " + classname : classname;
+			else {
+				if(!regexp.test(node.className)) {
+					node.className += node.className ? " " + classname : classname;
+				}
 			}
 		}
 		dom_update = (!dom_update) || (node.offsetTop);
@@ -7658,7 +7662,7 @@ Util.Modules["collapseHeader"] = new function() {
 				}
 			}
 			var state = u.getNodeCookie(div, "open", {"ignore_classvars":true, "ignore_classnames":"open"});
-			if(!state) {
+			if(state === 0 || (state === false && !u.hc(div, "open"))) {
 				div._toggle_header.clicked();
 			}
 			else {
@@ -7794,7 +7798,7 @@ u.defaultSortableList = function(list) {
 			u.request(this, this.div.save_order_url, {
 				"callback":"orderResponse", 
 				"method":"post", 
-				"params":"csrf-token=" + this.div.csrf_token + "&order=" + order.join(",")
+				"data":"csrf-token=" + this.div.csrf_token + "&order=" + order.join(",")
 			});
 		}
 	}
@@ -7887,7 +7891,7 @@ u.activateTagging = function(node) {
 				u.activateTag(tag_node);
 			}
 		}
-		u.request(this, this.action+"/"+this.node._item_id, {"method":"post", "params" : u.f.getParams(this)});
+		u.request(this, this.action+"/"+this.node._item_id, {"method":"post", "data" : this.getData()});
 	}
 	node._tag_form.inputs["tags"].focus();
 	node._new_tags = u.ae(node._tag_options, "ul", {"class":"tags"});
@@ -7938,7 +7942,7 @@ u.activateTag = function(tag_node) {
 						u.ae(this.node._new_tags, this);
 					}
 				}
-				u.request(this, this.node.data_div.delete_tag_url+"/"+this.node._item_id+"/" + this._id, {"method":"post", "params":"csrf-token=" + this.node.data_div.csrf_token});
+				u.request(this, this.node.data_div.delete_tag_url+"/"+this.node._item_id+"/" + this._id, {"method":"post", "data":"csrf-token=" + this.node.data_div.csrf_token});
 			}
 			else {
 				this.response = function(response) {
@@ -7947,7 +7951,7 @@ u.activateTag = function(tag_node) {
 						u.ie(this.node._tags, this)
 					}
 				}
-				u.request(this, this.node.data_div.add_tag_url+"/"+this.node._item_id, {"method":"post", "params":"tags="+this._id+"&csrf-token=" + this.node.data_div.csrf_token});
+				u.request(this, this.node.data_div.add_tag_url+"/"+this.node._item_id, {"method":"post", "data":"tags="+this._id+"&csrf-token=" + this.node.data_div.csrf_token});
 			}
 		}
 	}
@@ -8786,7 +8790,7 @@ Util.Modules["defaultList"] = new function() {
 									u.rc(this.parentNode, "enabled");
 								}
 							}
-							u.request(this, this.action, {"method":"post", "params":u.f.getParams(this)});
+							u.request(this, this.action, {"method":"post", "data":this.getData()});
 						}
 						u.f.init(form_enable);
 						form_enable.submitted = function() {
@@ -8797,7 +8801,7 @@ Util.Modules["defaultList"] = new function() {
 									u.ac(this.parentNode, "enabled");
 								}
 							}
-							u.request(this, this.action, {"method":"post", "params":u.f.getParams(this)});
+							u.request(this, this.action, {"method":"post", "data":this.getData()});
 						}
 					}
 				}
@@ -8907,7 +8911,7 @@ Util.Modules["defaultList"] = new function() {
 						u.enableTagging(node);
 					}
 				}
-				u.request(div, div.get_tags_url, {"callback":"tagsResponse", "method":"post", "params":"csrf-token=" + div.csrf_token});
+				u.request(div, div.get_tags_url, {"callback":"tagsResponse", "method":"post", "data":"csrf-token=" + div.csrf_token});
 			}
 		}
 		if(u.hc(div, "filters")) {
@@ -9101,7 +9105,7 @@ Util.Modules["sendMessage"] = new function() {
 						}
 					}
 				}
-				u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this, {"send_as":"formdata"})});
+				u.request(this, this.action, {"method":"post", "data" : this.getData({"format":"formdata"})});
 			}
 			else {
 				u.f.inputHasError(this.inputs["recipients"]);
@@ -9161,7 +9165,7 @@ Util.Modules["defaultNew"] = new function() {
 				}
 			}
 			u.ac(this, "submitting");
-			u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this, {"send_as":"formdata"})});
+			u.request(this, this.action, {"method":"post", "data" : this.getData({"format":"formdata"})});
 		}
 	}
 }
@@ -9198,7 +9202,7 @@ Util.Modules["defaultEditStatus"] = new function() {
 							u.rc(this.parentNode, "enabled");
 						}
 					}
-					u.request(this, this.action, {"method":this.method, "params":u.f.getParams(this)});
+					u.request(this, this.action, {"method":this.method, "data":this.getData()});
 				}
 				u.f.init(form_enable);
 				form_enable.submitted = function() {
@@ -9209,7 +9213,7 @@ Util.Modules["defaultEditStatus"] = new function() {
 							u.ac(this.parentNode, "enabled");
 						}
 					}
-					u.request(this, this.action, {"method":this.method, "params":u.f.getParams(this)});
+					u.request(this, this.action, {"method":this.method, "data":this.getData()});
 				}
 			}
 		}
@@ -9258,7 +9262,7 @@ Util.Modules["defaultTags"] = new function() {
 				this._bn_add.node = this;
 				u.enableTagging(this);
 			}
-			u.request(div, div.get_tags_url + (div._tags_context ? "/"+div._tags_context : ""), {"callback":"tagsResponse", "method":"post", "params":"csrf-token=" + div.csrf_token});
+			u.request(div, div.get_tags_url + (div._tags_context ? "/"+div._tags_context : ""), {"callback":"tagsResponse", "method":"post", "data":"csrf-token=" + div.csrf_token});
 		}
 	}
 }
@@ -9625,7 +9629,8 @@ Util.Modules["defaultComments"] = new function() {
 						this.inputs["item_comment"].val("");
 					}
 				}
-				u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this)});
+				u.bug("defaultComments save");
+				u.request(this, this.action, {"method":"post", "data" : this.getData()});
 			}
 		}
 		div.initComment = function(node) {
@@ -9656,7 +9661,7 @@ Util.Modules["defaultComments"] = new function() {
 									this.parentNode.removeChild(this);
 								}
 							}
-							u.request(this, this.action, {"method":"post", "params":u.f.getParams(this)});
+							u.request(this, this.action, {"method":"post", "data":this.getData()});
 						}
 						u.ce(bn_cancel);
 						bn_cancel.clicked = function(event) {
@@ -9696,7 +9701,7 @@ Util.Modules["defaultComments"] = new function() {
 									}
 								}
 							}
-							u.request(this, this.action, {"method":"post", "params":u.f.getParams(this)});
+							u.request(this, this.action, {"method":"post", "data":this.getData()});
 						}
 					}
 				}
@@ -9706,6 +9711,83 @@ Util.Modules["defaultComments"] = new function() {
 		var i, node;
 		for(i = 0; node = div.comments[i]; i++) {
 			div.initComment(node);
+		}
+	}
+}
+
+
+/*m-default_editors.js*/
+Util.Modules["defaultEditors"] = new function() {
+	this.init = function(div) {
+		div.item_id = u.cv(div, "item_id");
+		div.remove_editor_url = div.getAttribute("data-editor-remove");
+		div.csrf_token = div.getAttribute("data-csrf-token");
+		div._form_editors = u.qs("form.editors", div);
+		div._list_editors = u.qs("ul.editors", div);
+		if(div._form_editors) {
+			div._form_editors.div = div;
+			u.f.init(div._form_editors);
+			div._form_editors.submitted = function(iN) {
+				this.response = function(response) {
+					page.notify(response);
+					if(response.cms_status == "success" && response.cms_object && response.cms_object !== true) {
+						if(!this.div._list_editors) {
+							this.div._list_editors = u.ae(this.parentNode, "ul", {"class":"items editors"});
+							this.parentNode.insertBefore(this.div._list_editors, this);
+							var p_no_editors = u.qs("p", this.div);
+							if(p_no_editors) {
+								p_no_editors.parentNode.removeChild(p_no_editors);
+							}
+						}
+						var editor_li = u.ae(this.div._list_editors, "li", {"class":"editor editor_id:"+response.cms_object["id"]});
+						u.ae(editor_li, "h3", {"html":response.cms_object["nickname"]});
+						this.div.initEditor(editor_li);
+						this.reset();
+					}
+					else if(response.cms_status == "success" && response.cms_object && response.cms_object === true) {
+						this.reset();
+					}
+				}
+				u.request(this, this.action, {"method":"post", "data" : this.getData()});
+			}
+		}
+		div.initEditor = function(node) {
+			node.div = this;
+			if(this.remove_editor_url) {
+				node.editor_id = u.cv(node, "editor_id");
+				node._ul_actions = u.ae(node, "ul", {"class":"actions"});
+				node._li_remove = u.ae(node._ul_actions, "li", {"class":"remove"});
+				node._form_remove = u.f.addForm(node._li_remove, {
+					"action":this.remove_editor_url, 
+					"class":"remove"
+				});
+				node._form_remove.node = node;
+				u.f.addField(node._form_remove, {
+					"type":"hidden",
+					"name":"csrf-token", 
+					"value":div.csrf_token
+				});
+				u.f.addField(node._form_remove, {
+					"type":"hidden",
+					"name":"editor_id", 
+					"value":node.editor_id
+				});
+				u.f.addAction(node._form_remove, {
+					"value":"Remove",
+					"class":"button remove"
+				});
+				node._form_remove.setAttribute("data-success-function", "removed");
+				node._form_remove.setAttribute("data-confirm-value", "Are you sure?");
+				u.m.oneButtonForm.init(node._form_remove);
+				node._form_remove.removed = function(response) {
+					this.node.parentNode.removeChild(this.node);
+				}
+			}
+		}
+		div.editors = u.qsa("li.editor", div._list_editors);
+		var i, node;
+		for(i = 0; node = div.editors[i]; i++) {
+			div.initEditor(node);
 		}
 	}
 }
@@ -9762,8 +9844,8 @@ Util.Modules["defaultPrices"] = new function() {
 						this.reset();
 					}
 				}
-				u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this)});
-			}			
+				u.request(this, this.action, {"method":"post", "data" : this.getData()});
+			}
 		}
 		div._prices_list = u.qs("ul.prices", div);
 		div.initPrice = function(node) {
@@ -9802,7 +9884,7 @@ Util.Modules["defaultPrices"] = new function() {
 									}
 								}
 							}
-							u.request(this, this.action, {"method":"post", "params":u.f.getParams(this)});
+							u.request(this, this.action, {"method":"post", "data":this.getData()});
 						}
 					}
 				}
@@ -9859,7 +9941,7 @@ Util.Modules["defaultSubscriptionmethod"] = new function() {
 						});
 					}
 				}
-				u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this)});
+				u.request(this, this.action, {"method":"post", "data" : this.getData()});
 			}
 		}
 	}
@@ -9896,7 +9978,7 @@ Util.Modules["defaultSindex"] = new function() {
 						this.div.current_sindex_input.val(response.cms_object);
 					}
 				}
-				u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this, {"send_as":"formdata"})});
+				u.request(this, this.action, {"method":"post", "data" : this.getData({"format":"formdata"})});
 			}
 			div.form_manual.updated = function() {
 				u.t.resetTimer(this.t_check_sindex);
@@ -9937,7 +10019,7 @@ Util.Modules["defaultOwner"] = new function() {
 						this.div.current_owner.innerHTML = response.cms_object["nickname"];
 					}
 				}
-				u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this, {"send_as":"formdata"})});
+				u.request(this, this.action, {"method":"post", "data" : this.getData({"format":"formdata"})});
 			}
 		}
 	}
@@ -9954,7 +10036,7 @@ Util.Modules["defaultDeveloper"] = new function() {
 				this.response = function(response) {
 					page.notify(response);
 				}
-				u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this, {"send_as":"formdata"})});
+				u.request(this, this.action, {"method":"post", "data" : this.getData({"format":"formdata"})});
 			}
 		}
 	}
@@ -10025,7 +10107,7 @@ Util.Modules["newNavigationNode"] = new function() {
 					page.notify(response);
 				}
 			}
-			u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this, {"send_as":"formdata"})});
+			u.request(this, this.action, {"method":"post", "data" : this.getData({"format":"formdata"})});
 		}
 	}
 }
@@ -10040,7 +10122,7 @@ Util.Modules["editNavigationNode"] = new function() {
 			this.response = function(response) {
 				page.notify(response);
 			}
-			u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this, {"send_as":"formdata"})});
+			u.request(this, this.action, {"method":"post", "data" : this.getData({"format":"formdata"})});
 		}
 		form.cancelBackspace = function(event) {
 			if(event.keyCode == 8 && !u.qsa(".field.focus").length) {
@@ -10155,7 +10237,7 @@ Util.Modules["usernames"] = new function() {
 					u.ac(this.actions["save"], "disabled");
 					if(response.cms_object.email_status == "UPDATED") {
 						this.inputs.username_id.val(response.cms_object.username_id);
-						if(send_verification_link.form.action == "/janitor/admin/user/sendVerificationLink/") {
+						if(send_verification_link.form.action.match(/sendVerificationLink\/$/)) {
 							send_verification_link.form.action += this.inputs.username_id.val();
 						}
 						if(response.cms_object.verification_status == "VERIFIED") {
@@ -10191,7 +10273,7 @@ Util.Modules["usernames"] = new function() {
 					page.notify(response);
 				}
 			}
-			u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this)});
+			u.request(this, this.action, {"method":"post", "data" : this.getData()});
 		}
 		form = u.qs("form.mobile", div);
 		u.f.init(form);
@@ -10208,7 +10290,7 @@ Util.Modules["usernames"] = new function() {
 					u.rc(this.actions["save"], "primary");
 				}
 			}
-			u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this)});
+			u.request(this, this.action, {"method":"post", "data" : this.getData()});
 		}
 	}
 }
@@ -10245,7 +10327,7 @@ Util.Modules["password"] = new function() {
 				}
 				page.notify(response);
 			}
-			u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this)});
+			u.request(this, this.action, {"method":"post", "data" : this.getData()});
 			this.reset();
 		}
 	}
@@ -10274,7 +10356,7 @@ Util.Modules["apitoken"] = new function() {
 						page.notify({"isJSON":true, "cms_status":"error", "cms_message":"API token could not be updated"});
 					}
 				}
-				u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this)});
+				u.request(this, this.action, {"method":"post", "data" : this.getData()});
 			}
 		}
 		if(disable_form) {
@@ -10291,7 +10373,7 @@ Util.Modules["apitoken"] = new function() {
 						page.notify({"isJSON":true, "cms_status":"error", "cms_message":"API token could not be disabled"});
 					}
 				}
-				u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this)});
+				u.request(this, this.action, {"method":"post", "data" : this.getData()});
 			}
 		}
 	}
@@ -10309,7 +10391,32 @@ Util.Modules["editAddress"] = new function() {
 					location.href = this.actions["cancel"].url;
 				}
 			}
-			u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this)});
+			u.request(this, this.action, {"method":"post", "data" : this.getData()});
+		}
+	}
+}
+Util.Modules["customPrice"] = new function() {
+	this.init = function(div) {
+		div.info_price = u.qs("div.item dl.info span.price");
+		div.custom_price = u.qs("h3.current_price span.price");
+		var form = u.qs("form", div);
+		if(form) {
+			form.div = div;
+			u.f.init(form);
+			form.submitted = function(iN) {
+				this.response = function(response) {
+					page.notify(response);
+					if(response.cms_status == "success") {
+						if(this.div.info_price) {
+							this.div.info_price.innerHTML = response.cms_object;
+						}
+						if(this.div.custom_price) {
+							this.div.custom_price.innerHTML = response.cms_object;
+						}
+					}
+				}
+				u.request(this, this.action, {"method":"post", "data" : this.getData()});
+			}
 		}
 	}
 }
@@ -10351,7 +10458,7 @@ Util.Modules["accessEdit"] = new function() {
 			this.response = function(response) {
 				page.notify(response);
 			}
-			u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this)});
+			u.request(this, this.action, {"method":"post", "data" : this.getData()});
 		}
 		var i, group;
 		var groups = u.qsa("li.action", form);
@@ -10385,7 +10492,7 @@ Util.Modules["flushUserSession"] = new function() {
 				this.response = function(response) {
 					page.notify(response);
 				}
-				u.request(this, this.div.flush_url+"/"+this.user_id, {"method":"post", "params" : "csrf-token="+this.div.csrf_token});
+				u.request(this, this.div.flush_url+"/"+this.user_id, {"method":"post", "data" : "csrf-token="+this.div.csrf_token});
 			}
 		}
 	}
@@ -10409,7 +10516,7 @@ Util.Modules["newSubscription"] = new function() {
 					location.href = this.actions["cancel"].url;
 				}
 			}
-			u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this)});
+			u.request(this, this.action, {"method":"post", "data" : this.getData()});
 		}
 	}
 }
@@ -10478,38 +10585,41 @@ Util.Modules["unverifiedUsernamesSelected"] = new function() {
 
 /*m-shop.js*/
 Util.Modules["editDataSection"] = new function() {
-	this.init = function(form) {
-		var header = u.qs("h2", form.parentNode);
-		var action = u.ae(header, "span", {"html":"edit"});
-		action.change_form = form;
-		u.ce(action);
-		u.f.init(form);
-		action.clicked = function(event) {
-			if(this.change_form.is_open) {
-				this.change_form.is_open = false;
-				this.innerHTML = "Edit";
-				this.change_form.reset();
-				u.ass(this.change_form, {
-					"display":"none"
-				})
-			}
-			else {
-				this.change_form.is_open = true;
-				this.innerHTML = "Cancel";
-				u.ass(this.change_form, {
-					"display":"block"
-				})
-				u.f.init(this.change_form);
-			}
-		}
-		form.submitted = function() {
-			this.response = function(response) {
-				page.notify(response);
-				if(response && response.cms_status == "success") {
-					location.reload(true);
+	this.init = function(div) {
+		var header = u.qs("h2", div);
+		var form = u.qs("form", div);
+		if(header && form) {
+			var action = u.ae(header, "span", {"html":"edit"});
+			action.change_form = form;
+			u.ce(action);
+			u.f.init(form);
+			action.clicked = function(event) {
+				if(this.change_form.is_open) {
+					this.change_form.is_open = false;
+					this.innerHTML = "Edit";
+					this.change_form.reset();
+					u.ass(this.change_form, {
+						"display":"none"
+					})
+				}
+				else {
+					this.change_form.is_open = true;
+					this.innerHTML = "Cancel";
+					u.ass(this.change_form, {
+						"display":"block"
+					})
+					u.f.init(this.change_form);
 				}
 			}
-			u.request(this, this.action, {"method":"post", "params":u.f.getParams(this)});
+			form.submitted = function() {
+				this.response = function(response) {
+					page.notify(response);
+					if(response && response.cms_status == "success") {
+						location.reload(true);
+					}
+				}
+				u.request(this, this.action, {"method":"post", "data":this.getData()});
+			}
 		}
 	}
 }
@@ -10552,7 +10662,7 @@ Util.Modules["cartItemsList"] = new function() {
 				 			u.rc(this.actions["update"], "primary");
 						}
 					}
-					u.request(this, this.action, {"method":"post", "params":u.f.getParams(this)});
+					u.request(this, this.action, {"method":"post", "data":this.getData()});
 				}
 			}
 			var bn_delete = u.qs("ul.actions li.delete", node);
@@ -10599,7 +10709,7 @@ Util.Modules["orderItemsList"] = new function() {
 				 			u.rc(this.actions["update"], "primary");
 						}
 					}
-					u.request(this, this.action, {"method":"post", "params":u.f.getParams(this)});
+					u.request(this, this.action, {"method":"post", "data":this.getData()});
 				}
 			}
 			var bn_delete = u.qs("ul.actions li.delete", node);
@@ -10662,24 +10772,81 @@ Util.Modules["orderList"] = new function() {
 			bn_ship = u.qs("ul.actions li.ship", node);
 			if(bn_ship) {
 				bn_ship.node = node;
+				node.bn_ship = bn_ship;
+				bn_ship.dd_shipping_status = u.qs("dd.shipping_status", node);
 				bn_ship.confirmed = function(response) {
-					console.log("yes", response);
-					if(response.cms_status == "success") {
-						this.node.transitioned = function() {
-							this.transitioned = function() {
-								this.parentNode.removeChild(this);
+					if(response.cms_status === "success") {
+						if(!this.node.bn_capture || u.hc(div, "pending")) {
+							this.node.transitioned = function() {
+								this.transitioned = function() {
+									this.parentNode.removeChild(this);
+								}
+								u.a.transition(this, "all 0.3s ease-in-out");
+								u.ass(this, {
+									height: 0,
+								});
 							}
-							u.a.transition(this, "all 0.3s ease-in-out");
-							u.ass(this, {
-								height: 0,
+							u.a.transition(this.node, "all 0.3s ease-in-out");
+							u.ass(this.node, {
+								opacity: 0,
+								height: this.node.offsetHeight+"px",
 							});
-						}	
-						u.a.transition(this.node, "all 0.3s ease-in-out");
-						u.ass(this.node, {
-							opacity: 0,
-							height: this.node.offsetHeight+"px",
-						});
+						}
+						else {
+							delete this.node.bn_ship;
+							this.parentNode.removeChild(this);
+							this.dd_shipping_status.innerHTML = "Shipped";
+							u.rc(this.dd_shipping_status, "unshipped");
+							u.ac(this.dd_shipping_status, "shipped");
+						}
 					}
+				}
+			}
+			bn_capture = u.qs("ul.actions li.capture", node);
+			if(bn_capture) {
+				bn_capture.node = node;
+				node.bn_capture = bn_capture;
+				bn_capture.dd_payment_status = u.qs("dd.payment_status", node);
+				bn_capture.confirmed = function(response) {
+					if(response.cms_status == "success") {
+						if(!this.node.bn_ship || u.hc(div, "pending")) {
+							this.node.transitioned = function() {
+								this.transitioned = function() {
+									this.parentNode.removeChild(this);
+								}
+								u.a.transition(this, "all 0.3s ease-in-out");
+								u.ass(this, {
+									height: 0,
+								});
+							}
+							u.a.transition(this.node, "all 0.3s ease-in-out");
+							u.ass(this.node, {
+								opacity: 0,
+								height: this.node.offsetHeight+"px",
+							});
+						}
+						else {
+							delete this.node.bn_capture;
+							this.parentNode.removeChild(this);
+							this.dd_payment_status.innerHTML = "Paid";
+							u.rc(this.dd_payment_status, "unpaid");
+							u.ac(this.dd_payment_status, "paid");
+						}
+					}
+				}
+			}
+		}
+	}
+}
+Util.Modules["capturePaymentNew"] = new function() {
+	this.init = function(div) {
+		var bn_capture = u.qs("li.capture", div)
+		if(bn_capture) {
+			var bn_back = u.qs("li.back a")
+			bn_capture.bn_back = bn_back;
+			bn_capture.confirmed = function(response) {
+				if(response.cms_status == "success") {
+					location.href = this.bn_back.href;
 				}
 			}
 		}
@@ -10720,7 +10887,7 @@ Util.Modules["cacheList"] = new function() {
 						this.entry.parentNode.removeChild(this.entry);
 					}
 				}
-				u.request(this, this.div.flush_url, {"method":"post", "params" : "csrf-token="+this.div.csrf_token+"&cache-key="+this.cache_key});
+				u.request(this, this.div.flush_url, {"method":"post", "data" : "csrf-token="+this.div.csrf_token+"&cache-key="+this.cache_key});
 			}
 		}
 	}
@@ -10743,7 +10910,7 @@ Util.Modules["editProfile"] = new function() {
 				}
 				page.notify(response);
 			}
-			u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this, {"send_as":"formdata"})});
+			u.request(this, this.action, {"method":"post", "data" : this.getData({"format":"formdata"})});
 		}
 	}
 }
@@ -10771,7 +10938,7 @@ Util.Modules["usernamesProfile"] = new function() {
 					page.notify({"isJSON":true, "cms_status":"success", "cms_message":["Email updated"]});
 				}
 			}
-			u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this)});
+			u.request(this, this.action, {"method":"post", "data" : this.getData()});
 		}
 		form = u.qs("form.mobile", div);
 		u.f.init(form);
@@ -10793,7 +10960,7 @@ Util.Modules["usernamesProfile"] = new function() {
 					page.notify({"isJSON":true, "cms_status":"success", "cms_message":["Mobile updated"]});
 				}
 			}
-			u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this)});
+			u.request(this, this.action, {"method":"post", "data" : this.getData()});
 		}
 	}
 }
@@ -10829,8 +10996,25 @@ Util.Modules["passwordProfile"] = new function() {
 					page.notify({"isJSON":true, "cms_status":"error", "cms_message":"Password could not be updated"});
 				}
 			}
-			u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this)});
+			u.request(this, this.action, {"method":"post", "data" : this.getData()});
 			this.reset();
+		}
+	}
+}
+Util.Modules["paymentMethods"] = new function() {
+	this.init = function(div) {
+		var payment_methods = u.qsa("li.payment_method", div);
+		var i, payment_method;
+		for(i = 0; i < payment_methods.length; i++) {
+			payment_method = payment_methods[i];
+			payment_method.action = u.qs("li.delete", payment_method);
+			payment_method.action.payment_method = payment_method;
+			payment_method.action.confirmed = function(response) {
+				page.notify(response);
+				if(response.cms_status && response.cms_status === "success") {
+					this.payment_method.parentNode.removeChild(this.payment_method);
+				}
+			}
 		}
 	}
 }
@@ -10851,7 +11035,7 @@ Util.Modules["apitokenProfile"] = new function() {
 						page.notify({"isJSON":true, "cms_status":"error", "cms_message":"API token could not be updated"});
 					}
 				}
-				u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this)});
+				u.request(this, this.action, {"method":"post", "data" : this.getData()});
 			}
 		}
 	}
@@ -10871,7 +11055,7 @@ Util.Modules["addressProfile"] = new function() {
 					page.notify({"isJSON":true, "cms_status":"error", "cms_message":"Address could not be updated"});
 				}
 			}
-			u.request(this, this.action, {"method":"post", "params" : u.f.getParams(this)});
+			u.request(this, this.action, {"method":"post", "data" : this.getData()});
 		}
 	}
 }
@@ -10921,7 +11105,7 @@ Util.Modules["resetPassword"] = new function() {
 					page.notify({"isJSON":true, "cms_status":"error", "cms_message":"Password could not be updated"});
 				}
 			}
-			u.request(this, this.action, {"method":"post", "params":u.f.getParams(this)});
+			u.request(this, this.action, {"method":"post", "data":this.getData()});
 		}
 	}
 }
@@ -10989,7 +11173,7 @@ Util.Modules["cancellationProfile"] = new function() {
 						}
 					}
 				}
-				u.request(this, this.action, {"method":"post", "params":u.f.getParams(this)});
+				u.request(this, this.action, {"method":"post", "data":this.getData()});
 			}
 		}
 	}
@@ -11048,3 +11232,24 @@ Util.Modules["generic"] = new function() {
 	}
 }
 
+
+/*m-departments.js*/
+Util.Modules["department_pickupdates"] = new function() {
+	this.init = function(div) {
+		var pickupdates = u.qsa("li.item", div);
+		for(var i = 0; i < pickupdates.length; i++) {
+			var pickupdate = pickupdates[i];
+			var add = u.qs("ul.actions li.add", pickupdate);
+			add.pickupdate = pickupdate;
+			var remove = u.qs("ul.actions li.remove", pickupdate);
+			remove.pickupdate = pickupdate;
+			add.added = function(response) {
+				console.log(response);
+				u.addClass(this.pickupdate, "added");
+			}
+			remove.removed = function(response) {
+				u.removeClass(this.pickupdate, "added");
+			}
+		}
+	}
+}

@@ -51,18 +51,24 @@ class Pickupdate extends Model {
 
 		// define default sorting order
 		$order = "pickupdate ASC";
+		$after = false;
 		
 
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
-					case "order"           : $order                = $_value; break;
+					case "order"             : $order                  = $_value; break;
+					case "after"             : $after                  = $_value; break;
 				}
 			}
 		}
 
 		$query = new Query();
-		$sql = "SELECT * FROM ".$this->db;		
+		$sql = "SELECT * FROM ".$this->db;
+		
+		if($after) {
+			$sql .= " WHERE pickupdate >= '$after'";
+		}
 
 		$sql .= " ORDER BY $order";
 
@@ -115,7 +121,7 @@ class Pickupdate extends Model {
 					$departments = $DC->getDepartments();
 					foreach($departments as $department) {
 						
-						$DC->addPickupdate($department["id"], $pickupdate_id);
+						$DC->addPickupdate(["addPickupdate", $department["id"], $pickupdate_id]);
 					}
 					
 					message()->addMessage("Pickup date created");
@@ -154,8 +160,8 @@ class Pickupdate extends Model {
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
-					case "id"                   : $id             = $_value; break;
-					case "pickupdate"                 : $pickupdate           = $_value; break;
+					case "id"                         : $id             = $_value; break;
+					case "pickupdate"                 : $pickupdate     = $_value; break;
 				}
 			}
 		}

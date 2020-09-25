@@ -3,11 +3,18 @@
 global $action;
 global $model;
 
+$department_id = $action[1];
+$department = $model->getDepartment(array("id" => $department_id));
+
 $IC = new Items();
 $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "extend" => true]);
 
-$department_id = $action[1];
-$department = $model->getDepartment(array("id" => $department_id));
+include_once("classes/shop/pickupdate.class.php");
+$PC = new Pickupdate();
+
+$upcoming_pickupdates = $PC->getPickupdates(["after" => date("Y-m-d")]);
+$department_pickupdates = $model->getDepartmentPickupdates($department_id);
+
 ?>
 <div class="scene i:scene defaultEdit departmentEdit">
 	<h1>Edit department</h1>
@@ -17,7 +24,7 @@ $department = $model->getDepartment(array("id" => $department_id));
 		<?= $JML->newList(array("label" => "List")) ?>
 	</ul>
 
-	<div class="products i:collapseHeader ">
+	<!-- <div class="products i:collapseHeader ">
 		<h2>Products</h2>
 		<ul class="products">
 			<? if($products): ?>
@@ -43,13 +50,8 @@ $department = $model->getDepartment(array("id" => $department_id));
 	
 		</ul>
 
-	</div>
+	</div> -->
 
-	<div class="pickupdates">
-			
-			<? // show upcoming pickupdates ?>
-
-	</div>
 
 
 
@@ -88,6 +90,47 @@ $department = $model->getDepartment(array("id" => $department_id));
 
 		<?= $model->formEnd() ?>
 	</div>
+
+	<div class="pickupdates all_items sortable i:department_pickupdates i:defaultList i:collapseHeader">
+		<h2>Department pickupdates</h2>
+		<? if($upcoming_pickupdates): ?>
+		<p>Displaying upcoming pickupdates. A pickupdate can be removed from a department, if the department will be closed. </p>
+		<ul class="items">
+			<? foreach($upcoming_pickupdates as $pickupdate): 
+			
+			$status = arrayKeyValue($department_pickupdates, "id", $pickupdate["id"]) ? "added" : "";
+
+			?>
+			<li class="item <?= $status ?>">
+				<h3><?= $pickupdate["pickupdate"] ?></h3>
+				<ul class="actions">
+					<?= $HTML->oneButtonForm("Add", "/janitor/department/addPickupdate/".$department_id."/".$pickupdate["id"], array(
+					"confirm-value" => false,
+					"wrapper" => "li.add",
+					"class" => "primary",
+					"success-function" => "added" 
+					));?>
+
+					<?= $HTML->oneButtonForm("Remove", "/janitor/department/removePickupdate/".$department_id."/".$pickupdate["id"], array(
+					"confirm-value" => "Confirm Removal",
+					"wrapper" => "li.remove",
+					"class" => "secondary",
+					"success-function" => "removed"
+					)) ?>
+				</ul>
+			</li>
+			<? endforeach; ?>
+		</ul>
+		
+		<? else: ?>
+		<p>No upcoming pickupdates.</p>
+		
+		<? endif; ?>
+		
+		
+
+	</div>
+
 
 
 </div>

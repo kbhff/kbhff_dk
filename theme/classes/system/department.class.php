@@ -204,20 +204,25 @@ class Department extends Model {
 					$department_id = $query->lastInsertId();
 
 					// add all products to the new department
-					$products = $IC->getItems(["where" => "itemtype REGEXP '^product'"]);
+					$products = $IC->getItems(["where" => "itemtype REGEXP '^product.*'"]);
 					foreach($products as $product) {
 						
 						$this->addProduct($department_id, $product["id"]);
 					}
 
 					// add all pickup dates to the new department
-					// only opening dates that after current date? 
 					include_once("classes/shop/pickupdate.class.php");
 					$PC = new Pickupdate();
 					$pickupdates = $PC->getPickupdates();
 					foreach($pickupdates as $pickupdate) {
+						
+						
+						// pickup date is on or after current date 
+						if($pickupdate["pickupdate"] >= date("Y-m-d")) {
 
-						$this->addPickupdate($department_id, $pickupdate["id"]);
+							$this->addPickupdate(["addPickupdate", $department_id, $pickupdate["id"]]);
+						}
+
 					}
 
 
@@ -423,14 +428,65 @@ class Department extends Model {
 
 		$query = new Query();
 		$query->checkDbExistence($this->db_products);
-
+		
 		$sql = "INSERT INTO ".$this->db_products." SET department_id = $department_id, product_id = $product_id";
 		if($query->sql($sql)) {
-
+			
 			return true;
+		}
+		
+		return false;
+	}
+	
+	function getDepartmentProducts($department_id) {
+		
+		$query = new Query();
+		$query->checkDbExistence($this->db_products);
+		
+		$IC = new Items();
+
+		$sql = "SELECT product_id FROM ".$this->db_products." WHERE department_id = $department_id";
+		if($query->sql($sql)) {
+
+			$results = $query->results("product_id");
+			$products = [];
+
+			foreach ($results as $product_id) {
+				
+				$products[] = $IC->getItem(["id" => $product_id, "extend" => ["all" => true]]);
+			}
+
+			return $products;
 		}
 
 		return false;
+
+	}
+
+	function getDepartmentPickupdates($department_id) {
+		
+		$query = new Query();
+		$query->checkDbExistence($this->db_pickupdates);
+		
+		include_once("classes/shop/pickupdate.class.php");
+		$PC = new Pickupdate();
+
+		$sql = "SELECT pickupdate_id FROM ".$this->db_pickupdates." WHERE department_id = $department_id";
+		if($query->sql($sql)) {
+
+			$results = $query->results("pickupdate_id");
+			$department_pickupdates = [];
+
+			foreach ($results as $pickupdate_id) {
+				
+				$department_pickupdates[] = $PC->getPickupdate(["id" => $pickupdate_id]);
+			}
+
+			return $department_pickupdates;
+		}
+
+		return false;
+
 	}
 
 	/**
@@ -461,15 +517,21 @@ class Department extends Model {
 	 * @param int $pickupdate_id
 	 * @return boolean
 	 */
-	function addPickupdate($department_id, $pickupdate_id) {
+	function addPickupdate($action) {
 
-		$query = new Query();
-		$query->checkDbExistence($this->db_pickupdates);
+		if(count($action) == 3) {
 
-		$sql = "INSERT INTO ".$this->db_pickupdates." SET department_id = $department_id, pickupdate_id = $pickupdate_id";
-		if($query->sql($sql)) {
+			$department_id = $action[1];
+			$pickupdate_id = $action[2];
 
-			return true;
+			$query = new Query();
+			$query->checkDbExistence($this->db_pickupdates);
+	
+			$sql = "INSERT INTO ".$this->db_pickupdates." SET department_id = $department_id, pickupdate_id = $pickupdate_id";
+			if($query->sql($sql)) {
+	
+				return true;
+			}
 		}
 
 		return false;
@@ -482,20 +544,28 @@ class Department extends Model {
 	 * @param int $pickupdate_id
 	 * @return boolean
 	 */
-	function removePickupdate($department_id, $pickupdate_id) {
-		
-		$query = new Query();
+	function removePickupdate($action) {
 
-		$sql = "DELETE FROM ".$this->db_pickupdates." WHERE department_id = $department_id AND pickupdate_id = $pickupdate_id";
+		if(count($action) == 3) {
 
-		if($query->sql($sql)) {
+			$department_id = $action[1];
+			$pickupdate_id = $action[2];
 
-			return true;
+			$query = new Query();
+	
+			$sql = "DELETE FROM ".$this->db_pickupdates." WHERE department_id = $department_id AND pickupdate_id = $pickupdate_id";
+	
+			if($query->sql($sql)) {
+	
+				return true;
+			}
 		}
+		
 
 		return false;
 
 	}
+
 }
 
 ?>
