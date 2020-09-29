@@ -49,6 +49,9 @@ class Pickupdate extends Model {
 	 */
 	function getPickupdates($_options = false) {
 
+		$query = new Query();
+		$query->checkDbExistence($this->db);
+
 		// define default sorting order
 		$order = "pickupdate ASC";
 		$after = false;
@@ -63,7 +66,6 @@ class Pickupdate extends Model {
 			}
 		}
 
-		$query = new Query();
 		$sql = "SELECT * FROM ".$this->db;
 		
 		if($after) {
@@ -140,6 +142,7 @@ class Pickupdate extends Model {
 		return false;
 	}
 
+	
 	/**
 	 * Get a single pickupdate from database.
 	 *
@@ -151,6 +154,9 @@ class Pickupdate extends Model {
 	 * @return array|false Pickupdate item (via callback to Query->result(0))
 	 */
 	function getPickupdate($_options = false) {
+		
+		$query = new Query();
+		$query->checkDbExistence($this->db);
 
 		// Define default values
 		$id = false;
@@ -169,14 +175,12 @@ class Pickupdate extends Model {
 
 		// Query database for pickupdate with specific id.
 		if($id) {
-			$query = new Query();
 			$sql = "SELECT * FROM ".$this->db." WHERE id = '$id'";
 			if($query->sql($sql)) {
 				return $query->result(0);
 			}
 		}
 		else if($pickupdate) {
-			$query = new Query();
 			$sql = "SELECT * FROM ".$this->db." WHERE pickupdate = '$pickupdate'";
 			if($query->sql($sql)) {
 				return $query->result(0);
