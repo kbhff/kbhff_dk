@@ -164,6 +164,7 @@ class Shop extends ShopCore {
 		if($cart && $cart["items"]) {
 
 			$query = new Query();
+			$query->checkDbExistence($this->db_pickupdates);
 			$query->checkDbExistence($this->db_pickupdate_cart_items);
 
 			$cart_id = $cart["id"];
