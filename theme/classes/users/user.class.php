@@ -304,11 +304,25 @@ class User extends UserCore {
 		$query = new Query();
 		$MC = new Member();
 		$user_id = session()->value("user_id");
+		$IC = new Items();
 		
 
 		$member = $MC->getMembership();
 		if($member && $member["order"] && $member["order"]["payment_status"] <= 1) {
-			return $member["order"]["order_no"];
+
+			$order_item = $IC->getItem(["id" => $member["order"]["items"][0]["item_id"]]);
+
+			if($order_item && $order_item["itemtype"] == "signupfee") {
+				$result["type"] = "signupfee";
+				$result["order_no"] = $member["order"]["order_no"];
+				return $result;
+			}
+			else if($order_item && $order_item["itemtype"] == "membership") {
+				$result["type"] = "membership";
+				$result["order_no"] = $member["order"]["order_no"];
+				return $result;
+			}
+ 
 		}
 
 		return false;

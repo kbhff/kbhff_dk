@@ -11,6 +11,8 @@ $department = $UC->getUserDepartment();
 $is_member = $user["membership"]["id"];
 $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"]["payment_status"] == 2 ? true : false;
 
+$unpaid_membership = $UC->hasUnpaidMembership();
+
 ?>
 
 
@@ -43,12 +45,21 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 					Du kan også se og rette dine eksisterende bestillinger og lave en ny bestilling (åbner GrøntShoppen).
 					På sigt er det desuden meningen at du her skal kunne book frivillig-vagter og se nyheder og beskeder fra din lokalafdeling.
 				</p>
-				<? if($UC->hasUnpaidMembership()): ?>
-				<div class="c-box alert unpaid_membership">
+				<? if($unpaid_membership && $unpaid_membership["type"] == "signupfee"): ?>
+				<div class="c-box alert unpaid signupfee">
+					<h3>OBS! Du mangler at betale dit indmeldelsesgebyr</h3>
+					<p>Indmeldelsesgebyret vil automatisk blive tilføjet din næste bestilling. Du kan også betale det separat ved at klikke nedenfor.</p>
+					<ul class="actions">
+						<li class="pay"><a href="/butik/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal indmeldelsesgebyr nu</a></li>
+					</ul>
+				</div>
+				<? endif; ?>
+				<? if($unpaid_membership && $unpaid_membership["type"] == "membership"): ?>
+				<div class="c-box alert unpaid membership">
 					<h3>OBS! Du mangler at betale kontingent</h3>
 					<p>Kontingentbetaling vil automatisk blive tilføjet din næste bestilling. Du kan også betale det separat ved at klikke nedenfor.</p>
 					<ul class="actions">
-						<li class="pay"><a href="/butik/betaling/<?= $user["membership"]["order"]["order_no"] ?>" class="button">Betal kontingent nu</a></li>
+						<li class="pay"><a href="/butik/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal kontingent nu</a></li>
 					</ul>
 				</div>
 				<? endif; ?>

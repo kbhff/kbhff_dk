@@ -89,15 +89,6 @@ if(!$UC->hasAcceptedTerms()) {
 
 }
 
-// Members with unpaid memberships will be directed to payment page
-$order_no = $UC->hasUnpaidMembership();
-if($order_no) {
-
-	// message()->addMessage("Du mangler at betale dit medlemskab. Betal venligst før du kan gå videre.", array("type" => "error"));
-	// header("Location: /butik/betaling/".$order_no);
-	// exit();
-}
-
 
 if($action) {
 

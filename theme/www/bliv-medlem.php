@@ -36,7 +36,7 @@ if($action) {
 
 			}
 		}
-		// add membership to new or existing cart
+		// add signupfee to new or existing cart
 		$cart = $SC->addToCart(array("addToCart"));
 		// if successful creation
 		if($cart) {
