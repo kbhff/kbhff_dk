@@ -75,7 +75,18 @@ if(isset($action[3])) {
 	<h1>Tak for din ordre!</h1>
 	<div class="order_info">
 
-		<h2>Din ordre er bekræftet <br />– betalingen behandles.</h2>
+		<h2>
+			Din ordre er bekræftet <br />
+			<? if($remaining_order_price["price"] > 0): ?>
+				<? if($receipt_type == "stripe"): ?>
+				– betalingen behandles
+				<? else: ?>
+				– afventer din betaling
+				<? endif; ?>
+			<? else: ?>
+			– og betalt
+			<? endif; ?>
+		</h2>
 
 		<ul class="orders">
 			<li>

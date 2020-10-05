@@ -507,6 +507,9 @@ if($action) {
 						$registration_result = payments()->registerPaymentIntent($payment_intent_id, $order);
 						if($registration_result["status"] === "success") {
 
+							$total_order_price = $model->getTotalOrderPrice($order["id"]);
+							payments()->capturePayment($payment_intent_id, $total_order_price["price"]);
+
 							// redirect to leave POST state
 							header("Location: /butik/kvittering/ny-ordre/".$order["order_no"]."/".superNormalize($id_result["gateway"]));
 							exit();
