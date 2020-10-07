@@ -33,6 +33,8 @@ if($user_id != 1) {
 	$pickupdates = $PC->getPickupdates(["after" => date("Y-m-d", strtotime("next wednesday"))]);
 	$department_pickupdates = $DC->getDepartmentPickupdates($department["id"]);
 	$orders = $model->getOrders();
+	$unpaid_membership = $UC->hasUnpaidMembership();
+
 
 
 	// Only get payment methods if cart has items
@@ -324,6 +326,24 @@ else {
 				<p>Du har ingenting i kurven endnu. <br />Føj en eller flere varer til kurven først.</p>
 				<? endif; ?>
 			</div>
+
+			<? if($unpaid_membership && $unpaid_membership["type"] == "signupfee"): ?>
+			<div class="c-box alert unpaid signupfee">
+				<h3>OBS! Du mangler at betale dit indmeldelsesgebyr</h3>
+				<p>Indmeldelsesgebyret vil automatisk blive tilføjet din næste bestilling. Du kan også betale det separat ved at klikke nedenfor.</p>
+				<ul class="actions">
+					<li class="pay"><a href="/butik/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal indmeldelsesgebyr nu</a></li>
+				</ul>
+			</div>
+			<? elseif($unpaid_membership && $unpaid_membership["type"] == "membership"): ?>
+			<div class="c-box alert unpaid membership">
+				<h3>OBS! Du mangler at betale kontingent</h3>
+				<p>Kontingentbetaling vil automatisk blive tilføjet din næste bestilling. Du kan også betale det separat ved at klikke nedenfor.</p>
+				<ul class="actions">
+					<li class="pay"><a href="/butik/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal kontingent nu</a></li>
+				</ul>
+			</div>
+			<? endif; ?>
 
 			<div class="orders c-box">
 				<h3>Dine aktuelle bestillinger</h3>

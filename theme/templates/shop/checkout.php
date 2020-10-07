@@ -43,6 +43,7 @@ if($user_id != 1) {
 
 	$user = $UC->getUser();
 	$department = $UC->getUserDepartment();
+	$unpaid_membership = $UC->hasUnpaidMembership();
 
 	// Only get payment methods if cart has items
 	if($cart["items"]) {
@@ -122,6 +123,16 @@ else {
 		<p>Eller <a href="/bliv-medlem">bliv medlem</a> nu.</p>
 	</div>
 
+	<? elseif($unpaid_membership): 
+		$unpaid_membership_type_dk = $unpaid_membership["type"] == "signupfee" ? "indmeldelsesgebyr" : "kontingent";
+	?>
+	<div class="unpaid_membership">
+		<h2>Før du går videre...</h2>
+		<p>Du mangler at betale <?= $unpaid_membership_type_dk ?>. Det skal betales før du kan lave en grøntsagsbestilling.</p>
+		<ul class="actions">
+			<li class="pay"><a href="/butik/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal <?= $unpaid_membership_type_dk ?> nu</a></li>
+		</ul>
+	</div>
 
 	<?
 	// user is already logged in, show checkout overview
@@ -141,7 +152,9 @@ else {
 
 	<div class="all_items">
 		<h2>Din kurv <a href="/butik/kurv">(Redigér)</a></h2>
-		<? if($cart["items"] && $cart_items_without_pickupdate): ?>
+		<? if($cart["items"]): ?>
+		
+		<? if($cart_items_without_pickupdate): ?>
 		<ul class="items">
 			<? foreach($cart_items_without_pickupdate as $cart_item):
 				$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true))); 
@@ -193,8 +206,10 @@ else {
 			</li>
 			<? endforeach; ?>
 		</ul>
-		<? if($cart["items"] && $cart_pickupdates): ?>
-		<ul class="pickupdates">
+		<? endif; ?>
+		
+		<? if($cart_pickupdates): ?>
+			<ul class="pickupdates">
 					
 			<? foreach($cart_pickupdates as $pickupdate): 
 
@@ -239,6 +254,7 @@ else {
 				<? endif; ?>
 			<? endforeach; ?>
 		</ul>
+		<? endif; ?>
 		<div class="total">
 			<h3>
 				<span class="name">I alt</span>
@@ -247,13 +263,14 @@ else {
 				</span>
 			</h3>
 		</div>
-		<? endif; ?>
 		<? else: ?>
 		<p>Du har ingenting i kurven endnu. <br />Tag et kig på vores <a href="/memberships">medlemskaber</a>.</p>
 		<? endif; ?>
 	</div>
 
 
+	
+	
 	<? 
 	// Only show payment options if cart has items
 	if($cart["items"] && $total_cart_price && $total_cart_price["price"] !== 0): ?>
