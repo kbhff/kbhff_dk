@@ -12,6 +12,7 @@ $is_member = $user["membership"]["id"];
 $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"]["payment_status"] == 2 ? true : false;
 
 $unpaid_membership = $UC->hasUnpaidMembership();
+$unpaid_orders = $SC->getUnpaidOrders();
 
 ?>
 
@@ -43,9 +44,29 @@ $unpaid_membership = $UC->hasUnpaidMembership();
 				<p>
 					På min side kan du se og rette oplysninger om dig og dit medlemskab.
 					Du kan også se og rette dine eksisterende bestillinger og lave en ny bestilling (åbner GrøntShoppen).
-					På sigt er det desuden meningen at du her skal kunne book frivillig-vagter og se nyheder og beskeder fra din lokalafdeling.
+					På sigt er det desuden meningen at du her skal kunne booke frivillig-vagter og se nyheder og beskeder fra din lokalafdeling.
 				</p>
-				<? if($unpaid_membership && $unpaid_membership["type"] == "signupfee"): ?>
+
+				<? if($unpaid_orders && count($unpaid_orders) > 1): ?>
+				<div class="c-box alert unpaid orders">
+					<h3>OBS! Du har ubetalte ordrer</h3>
+					<? if($unpaid_membership): ?>
+					<p>Hvis du har et ubetalt indmeldelsesgebyr eller kontingent, vil det automatisk blive tilføjet din næste grøntsagsbestilling.</p>
+					<? endif; ?>
+					<p>Ubetalte grøntsagsbestillinger vil blive automatisk slettet en uge inden den førstkommende afhentningsdag.</p>
+					<ul class="actions">
+						<li class="pay"><a href="/butik/betalinger" class="button">Betal dit udestående</a></li>
+					</ul>
+				</div>
+				<? elseif($unpaid_orders && count($unpaid_orders) == 1 && !$unpaid_membership): ?>
+				<div class="c-box alert unpaid orders">
+					<h3>OBS! Du har en ubetalt ordre</h3>
+					<p>Ubetalte grøntsagsbestillinger vil blive automatisk slettet en uge inden den førstkommende afhentningsdag.</p>
+					<ul class="actions">
+						<li class="pay"><a href="/butik/betalinger" class="button">Betal dit udestående</a></li>
+					</ul>
+				</div>
+				<? elseif($unpaid_membership && $unpaid_membership["type"] == "signupfee"): ?>
 				<div class="c-box alert unpaid signupfee">
 					<h3>OBS! Du mangler at betale dit indmeldelsesgebyr</h3>
 					<p>Indmeldelsesgebyret vil automatisk blive tilføjet din næste bestilling. Du kan også betale det separat ved at klikke nedenfor.</p>
@@ -53,8 +74,7 @@ $unpaid_membership = $UC->hasUnpaidMembership();
 						<li class="pay"><a href="/butik/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal indmeldelsesgebyr nu</a></li>
 					</ul>
 				</div>
-				<? endif; ?>
-				<? if($unpaid_membership && $unpaid_membership["type"] == "membership"): ?>
+				<? elseif($unpaid_membership && $unpaid_membership["type"] == "membership"): ?>
 				<div class="c-box alert unpaid membership">
 					<h3>OBS! Du mangler at betale kontingent</h3>
 					<p>Kontingentbetaling vil automatisk blive tilføjet din næste bestilling. Du kan også betale det separat ved at klikke nedenfor.</p>
@@ -63,6 +83,7 @@ $unpaid_membership = $UC->hasUnpaidMembership();
 					</ul>
 				</div>
 				<? endif; ?>
+
 				<div class="c-box obs">
 					<p>
 						<span class="highlight">OBS!</span> Østerbro lokalafdeling mangler en ny team-koordinator.
@@ -123,7 +144,7 @@ $unpaid_membership = $UC->hasUnpaidMembership();
 				</div>
 
 				<ul class="actions">
-					<li class="view-orders"><a href="#" class="button">Se gamle bestillinger</a></li>
+					<!-- <li class="view-orders"><a href="#" class="button">Se gamle bestillinger</a></li> -->
 					<li class="new-order"><a href="#" class="button primary">Ny bestilling</a></li>
 				</ul>
 			</div>
@@ -193,9 +214,12 @@ $unpaid_membership = $UC->hasUnpaidMembership();
 						</div>
 
 						<ul class="actions">
-							<li class="change-info third-width"><a href="/profil/afdeling" class="button">Ret</a></li>
-							<li class="cancel-membership third-width"><a href="/profil/opsig" class="button warning">Opsig</a></li>
-							<li class="pay-membership third-width"><a href="/butik/betaling<?= $is_membership_paid ? "" : "/".$user["membership"]["order"]["order_no"] ?>" class="button<?= $is_member && !$is_membership_paid ? " primary" : "" ?>"><?= $is_member && !$is_membership_paid ? "Betal" : "Ordrer" ?></a></li>
+							<? $unpaid_membership ? $width = "third-width" : $width = "half-width" ?>
+							<li class="change-info <?= $width ?>"><a href="/profil/afdeling" class="button">Ret</a></li>
+							<li class="cancel-membership <?= $width ?>"><a href="/profil/opsig" class="button warning">Opsig</a></li>
+							<? if($unpaid_membership): ?>
+							<li class="pay-membership <?= $width ?>"><a href="/butik/betaling/"<?=$user["membership"]["order"]["order_no"] ?>" class="button primary">Betal</a></li>"
+							<? endif; ?>
 						</ul>
 					</div>
 
