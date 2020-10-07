@@ -328,7 +328,7 @@ else {
 			<div class="orders c-box">
 				<h3>Dine aktuelle bestillinger</h3>
 				<? if($order_items_pickupdates): ?>
-				<p>Gå til <a href="/profil" class="profile">Min side</a> for at se gamle bestillinger og rette datoer for aktuelle bestillinger.</p>
+				<!-- <p>Gå til <a href="/profil" class="profile">Min side</a> for at se gamle bestillinger og rette datoer for aktuelle bestillinger.</p> -->
 					<ul class="list">
 						<li class="labels">
 							<span class="pickupdates">Afh.dato</span>
@@ -356,7 +356,7 @@ else {
 					
 				<? else: ?>
 				<p>Du har ingen aktuelle bestillinger.</p>
-				<p>Gå til <a href="/profil">Min side</a> for at se gamle bestillinger.</p>
+				<!-- <p>Gå til <a href="/profil">Min side</a> for at se gamle bestillinger.</p> -->
 				<? endif; ?>
 
 			</div>
