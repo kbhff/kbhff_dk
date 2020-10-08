@@ -174,6 +174,43 @@ class SuperShop extends SuperShopCore {
 		return false;
 	}
 
+	/**
+	 * Cancel orders that are unpaid on the deadline (1 week before the first coming pickup date)
+	 * Run by cronjob
+	 * 
+	 * 
+	 * @return void 
+	 */
+	function cancelUnpaidOrders($action) {
+
+		if(count($action == 1)) {
+
+			$query = new Query();
+
+
+			// get pickupdates that are less than a week from now
+			$pickupdates = [];
+
+			foreach ($pickupdates as $pickupdate) {
+
+				$order_items = $this->getPickupdateOrderItems($pickupdate["id"]);
+
+				foreach ($order_items as $order_item) {
+
+					$order = $this->getOrders(["id" => $order_item["order_id"]]);
+					
+					$this->cancelOrder(["cancelOrder", $order["id"], $order["user_id"]]);
+				}
+				
+				message()->resetMessages();
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
 }
 
 ?>
