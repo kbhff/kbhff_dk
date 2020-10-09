@@ -62,16 +62,26 @@ class Pickupdate extends Model {
 				switch($_option) {
 					case "order"             : $order                  = $_value; break;
 					case "after"             : $after                  = $_value; break;
+					case "before"            : $before                 = $_value; break;
 				}
 			}
 		}
 
 		$sql = "SELECT * FROM ".$this->db;
 		
-		if($after) {
+		if($before && $after) {
+			$sql .= " WHERE pickupdate < '$before' AND pickupdate >= '$after'";
+
+		}
+		elseif($after) {
 			$sql .= " WHERE pickupdate >= '$after'";
 		}
+		elseif($before) {
+			
+			$sql .= " WHERE pickupdate < '$before'";
+		}
 
+		
 		$sql .= " ORDER BY $order";
 
 

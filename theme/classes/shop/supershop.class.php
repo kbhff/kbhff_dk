@@ -185,11 +185,11 @@ class SuperShop extends SuperShopCore {
 
 		if(count($action == 1)) {
 
-			$query = new Query();
-
+			include_once("classes/shop/pickupdate.class.php");
+			$PC = new Pickupdate();
 
 			// get pickupdates that are less than a week from now
-			$pickupdates = [];
+			$pickupdates = $PC->getPickupdates(["before" => date("Y-m-d", strtotime("+1 weeks"))]);
 
 			foreach ($pickupdates as $pickupdate) {
 
