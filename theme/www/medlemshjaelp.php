@@ -44,6 +44,7 @@ if(!$UC->hasAcceptedTerms(["name" => "memberhelp"])) {
 
 if($action) {
 	
+	// /medlemshjaelp/soeg
 	if($action[0] == "soeg") {
 		
 		// users that are not allowed to make global searches can only search their own department
@@ -186,7 +187,7 @@ if($action) {
 	// /medlemshjaelp/brugerprofil
 	else if($action[0] == "brugerprofil") {
 		
-		//	/medlemshjaelp/brugerprofil/#user_id#
+		// /medlemshjaelp/brugerprofil/
 		if(count($action) == 2) {
 			$page->page(array(
 				"templates" => "member-help/user-profile.php",
@@ -194,8 +195,8 @@ if($action) {
 			));
 			exit();
 		}
-		// /medlemshjaelp/brugerprofil/#user_id#/
 		
+		// /medlemshjaelp/brugerprofil/#user_id#/...
 		else if(count($action) == 3) {
 			// /medlemshjaelp/brugerprofil/#user_id#/afdeling
 			if($action[2] == "afdeling") {
@@ -231,7 +232,7 @@ if($action) {
 				));
 				exit();
 			}
-			// medlemshjaelp/brugerprofil/#user_id#/kodeord lead to template
+			// /medlemshjaelp/brugerprofil/#user_id#/kodeord lead to template
 			else if($action[2] == "kodeord") {
 				$page->page(array(
 					"templates" => "member-help/update_user_password.php",
@@ -240,7 +241,7 @@ if($action) {
 				exit();
 			}
 			
-			// medlemshjaelp/brugerprofil/#user_id#/kodeord lead to template
+			// /medlemshjaelp/brugerprofil/#user_id#/kodeord lead to template
 			else if($action[2] == "accepter") {
 				//Method returns true
 				if($model->acceptedTerms(["user_id" => $action[1]])) {
@@ -256,7 +257,7 @@ if($action) {
 		}
 	}
 	
-	// profil/updateUserInformation
+	// /medlemshjaelp/updateUserInformation
 	else if($action[0] == "updateUserInformation" && $page->validateCsrfToken()) {
 
 		//Method returns true
@@ -271,8 +272,7 @@ if($action) {
 		}
 	}
 	
-	
-	// Handling updateUserDepartment method, specified in superuser.class.php
+	// /medlemshjaelp/updateUserDepartment
 	else if($action[0] == "updateUserDepartment" && $page->validateCsrfToken()) {
 
 		//Method returns true
@@ -291,7 +291,7 @@ if($action) {
 		}
 	}
 	
-	// Handling updateUserDepartment method, specified in superuser.class.php
+	// /medlemshjaelp/updateUserMembership
 	else if($action[0] == "updateUserMembership" && $page->validateCsrfToken()) {
 
 		//Method returns true
@@ -309,7 +309,7 @@ if($action) {
 	}
 	
 
-	// medlemshjaelp/deleteUserInformation
+	// /medlemshjaelp/deleteUserInformation
 	else if($action[0] == "deleteUserInformation") {
 		
 		// If the method is requested by JavaScript
@@ -347,7 +347,7 @@ if($action) {
 		
 	}
 
-	// profil/updateUserPassword
+	// /medlemshjaelp/updateUserPassword
 	else if($action[0] == "updateUserPassword" && $page->validateCsrfToken()) {
 
 		//Method returns true
@@ -366,6 +366,7 @@ if($action) {
 		}
 	}
 
+	// /medlemshjaelp/betaling
 	else if($action[0] == "betaling") {
 		
 		// /medlemshjaelp/betaling/#order_no#
