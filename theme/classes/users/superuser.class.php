@@ -773,6 +773,48 @@ class SuperUser extends SuperUserCore {
 
 		return false;
 	}
+
+	function hasUnpaidMembership($_options = false) {
+
+		$query = new Query();
+		$MC = new SuperMember();
+		$IC = new Items();
+
+		// default values
+		$user_id = false;
+
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+
+					case "user_id"        : $user_id          = $_value; break;
+				}
+			}
+		}
+		
+
+		$member = $MC->getMembers(["user_id"]);
+		if($member && $member["order"] && $member["order"]["payment_status"] <= 1) {
+
+			$order_item = $IC->getItem(["id" => $member["order"]["items"][0]["item_id"]]);
+
+			if($order_item && $order_item["itemtype"] == "signupfee") {
+				$result["type"] = "signupfee";
+				$result["order_no"] = $member["order"]["order_no"];
+				return $result;
+			}
+			else if($order_item && $order_item["itemtype"] == "membership") {
+				$result["type"] = "membership";
+				$result["order_no"] = $member["order"]["order_no"];
+				return $result;
+			}
+ 
+		}
+
+		return false;
+
+	}
+
 	
 	
 	// MEMBERSHIP

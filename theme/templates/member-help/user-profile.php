@@ -3,13 +3,14 @@ global $model;
 global $action;
 // Get methods for user and shop data manipulation
 $UC = new SuperUser();
-$SC = new Shop();
+$SC = new SuperShop();
 
 // Get current user and related department
 $user_id = $action[1];
 
 $user = $UC->getKbhffUser(["user_id" => $user_id]);
 $department = $UC->getUserDepartment(["user_id" => $user_id]);
+$user_name = $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'];
 
 // Get membership status
 $is_member = $user["membership"]["id"];
@@ -17,6 +18,9 @@ $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"][
 
 $has_accepted_terms = $UC->hasAcceptedTerms(["user_id" => $user_id]);
 
+
+$unpaid_membership = $UC->hasUnpaidMembership(["user_id" => $user_id]);
+$unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 ?>
 
 
@@ -46,7 +50,7 @@ $has_accepted_terms = $UC->hasAcceptedTerms(["user_id" => $user_id]);
 		<div class="c-two-thirds">
 			<? if(!$has_accepted_terms):?>
 			<div class="c-box obs">
-				<h3><span class="highlight">OBS! </span><?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?> har ikke accepteret betingelserne.</h3>
+				<h3><span class="highlight">OBS! </span><?= $user_name ?> har ikke accepteret betingelserne.</h3>
 				<?= $model->formStart("brugerprofil/$action[1]/accepter", array("class" => "accept_terms labelstyle:inject")) ?>
 				<fieldset>
 					<div class="terms">
@@ -65,12 +69,40 @@ $has_accepted_terms = $UC->hasAcceptedTerms(["user_id" => $user_id]);
 			
 			</div>
 			<? endif; ?>
-			<? if(!$is_membership_paid): ?>
-			<div class="c-box obs">
-				<p>
-					<span class="highlight">OBS! </span><?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?> mangler at betale kontingent.
-					Kontingentet skal betales før man kan lave nye bestillinger.<a href="/medlemshjaelp/betaling/<?=$user["membership"]["order"]["order_no"]?>" class="button primary"> Betal kontingent nu.</a>
-				</p>
+			<? if($unpaid_orders && count($unpaid_orders) > 1): ?>
+			<div class="c-box alert unpaid orders">
+				<h3>OBS! <?= $user_name ?> har ubetalte ordrer</h3>
+				<p>Ubetalte grøntsagsbestillinger vil blive automatisk slettet en uge inden den førstkommende afhentningsdag.</p>
+				<? if($unpaid_membership): ?>
+				<p>Hvis man har et ubetalt indmeldelsesgebyr eller kontingent, vil det blive indkrævet i forbindelse med den næste grøntsagsbestilling. Man kan også betale med det samme ved at klikke nedenfor.</p>
+				<? endif; ?>
+				<ul class="actions">
+					<li class="pay"><a href="/butik/betalinger" class="button">Betal udestående</a></li>
+				</ul>
+			</div>
+			<? elseif($unpaid_orders && count($unpaid_orders) == 1 && !$unpaid_membership): ?>
+			<div class="c-box alert unpaid orders">
+				<h3>OBS! <?= $user_name ?> har en ubetalt ordre</h3>
+				<p>Ubetalte grøntsagsbestillinger vil blive automatisk slettet en uge inden den førstkommende afhentningsdag.</p>
+				<ul class="actions">
+					<li class="pay"><a href="/butik/betalinger" class="button">Betal udestående</a></li>
+				</ul>
+			</div>
+			<? elseif($unpaid_membership && $unpaid_membership["type"] == "signupfee"): ?>
+			<div class="c-box alert unpaid signupfee">
+				<h3>OBS! <?= $user_name ?> mangler at betale sit indmeldelsesgebyr</h3>
+				<p>Indmeldelsesgebyret vil blive indkrævet i forbindelse med næste grøntsagsbestilling. Man kan også betale det separat ved at klikke nedenfor.</p>
+				<ul class="actions">
+					<li class="pay"><a href="/butik/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal indmeldelsesgebyr nu</a></li>
+				</ul>
+			</div>
+			<? elseif($unpaid_membership && $unpaid_membership["type"] == "membership"): ?>
+			<div class="c-box alert unpaid membership">
+				<h3>OBS! <?= $user_name ?> mangler at betale kontingent</h3>
+				<p>Kontingentbetaling vil blive indkrævet i forbindelse med næste grøntsagsbestilling. Man kan også betale det separat ved at klikke nedenfor.</p>
+				<ul class="actions">
+					<li class="pay"><a href="/butik/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal kontingent nu</a></li>
+				</ul>
 			</div>
 			<? endif; ?>
 			<div class="section orders">
@@ -124,8 +156,8 @@ $has_accepted_terms = $UC->hasAcceptedTerms(["user_id" => $user_id]);
 				</div>
 
 				<ul class="actions">
-					<li class="view-orders"><a href="#" class="button">Se gamle bestillinger</a></li>
-					<li class="new-order"><?= !$is_membership_paid | !$has_accepted_terms ? '<a class="button disabled link">' : '<a href="/" class="button primary">'?>Ny bestilling</a></li>
+					<!-- <li class="view-orders"><a href="#" class="button">Se gamle bestillinger</a></li> -->
+					<li class="new-order"><?= !$has_accepted_terms ? '<a class="button disabled link">' : '<a href="/medlemshjaelp/butik/'.$user_id.'" class="button primary">'?>Ny bestilling</a></li>
 				</ul>
 
 			</div>

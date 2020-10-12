@@ -23,7 +23,7 @@ $page->pageTitle("Butik");
 
 if($action) {
 	
-	// /butik/kurv
+	# /butik/kurv
 	if($action[0] == "kurv") {
 
 		$page->page(array(
@@ -105,7 +105,7 @@ if($action) {
 		exit();
 	}
 
-	// /butik/betal
+	# /butik/betal
 	else if($action[0] == "betal") {
 
 		$page->page(array(
@@ -115,10 +115,10 @@ if($action) {
 		
 	}
 
-	// butik/kvittering
+	# /butik/kvittering
 	else if($action[0] == "kvittering") {
 
-		// /butik/kvittering/fejl
+		# /butik/kvittering/fejl
 		if(count($action) == 2 && $action[1] == "fejl") {
 
 			$page->page(array(
@@ -167,9 +167,9 @@ if($action) {
 
 	}
 
-	// /butik/betalingsgateway/#gateway#/kurv/#cart_reference#/[process]
-	// /butik/betalingsgateway/#gateway#/ordre/#order_no#/[process]
-	// /butik/betalingsgateway/#gateway#/ordrer/#order_ids#/[process]
+	# /butik/betalingsgateway/#gateway#/kurv/#cart_reference#/[process]
+	# /butik/betalingsgateway/#gateway#/ordre/#order_no#/[process]
+	# /butik/betalingsgateway/#gateway#/ordrer/#order_ids#/[process]
 	else if($action[0] == "betalingsgateway") {
 
 		// specific gateway payment window for cart
@@ -1080,7 +1080,7 @@ if($action) {
 }
 
 // go to shop index directly
-// /butik
+# /butik
 $page->page(array(
 	"templates" => "shop/index.php"
 ));

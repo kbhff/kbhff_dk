@@ -299,7 +299,7 @@ class User extends UserCore {
 		return false;
 	}
 
-	function hasUnpaidMembership() {
+	function hasUnpaidMembership($_option = false) {
 
 		$query = new Query();
 		$MC = new Member();

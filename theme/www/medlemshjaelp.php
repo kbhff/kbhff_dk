@@ -18,6 +18,10 @@ $action = $page->actions();
 $model = new SuperUser();
 $SC = new SuperShop();
 $UC = new User();
+include_once("classes/shop/pickupdate.class.php");
+$PC = new Pickupdate();
+include_once("classes/system/department.class.php");
+$DC = new Department();
 
 // page info
 $page->bodyClass("member_help");
@@ -44,7 +48,7 @@ if(!$UC->hasAcceptedTerms(["name" => "memberhelp"])) {
 
 if($action) {
 	
-	// /medlemshjaelp/soeg
+	# /medlemshjaelp/soeg
 	if($action[0] == "soeg") {
 		
 		// users that are not allowed to make global searches can only search their own department
@@ -68,7 +72,7 @@ if($action) {
 	
 	
 	
-	// /medlemshjaelp/tilmelding
+	# /medlemshjaelp/tilmelding
 	if($action[0] == "tilmelding") {
 		// signup page
 		if(count($action) === 1) {
@@ -79,7 +83,7 @@ if($action) {
 			exit();
 		}
 
-		// /medlemshjaelp/tilmelding/fejl
+		# /medlemshjaelp/tilmelding/fejl
 		// signup error
 		else if($action[1] == "fejl") {
 			
@@ -94,7 +98,7 @@ if($action) {
 	}
 
 	
-	// /medlemshjaelp/save
+	# /medlemshjaelp/save
 	else if($action[0] == "save" && $page->validateCsrfToken()) {
 		
 		// create new user (with a "fake" $action-array)
@@ -184,10 +188,10 @@ if($action) {
 	}
 	
 	
-	// /medlemshjaelp/brugerprofil
+	# /medlemshjaelp/brugerprofil
 	else if($action[0] == "brugerprofil") {
 		
-		// /medlemshjaelp/brugerprofil/
+		# /medlemshjaelp/brugerprofil/#user_id#
 		if(count($action) == 2) {
 			$page->page(array(
 				"templates" => "member-help/user-profile.php",
@@ -196,9 +200,9 @@ if($action) {
 			exit();
 		}
 		
-		// /medlemshjaelp/brugerprofil/#user_id#/...
+		# /medlemshjaelp/brugerprofil/#user_id#/...
 		else if(count($action) == 3) {
-			// /medlemshjaelp/brugerprofil/#user_id#/afdeling
+			# /medlemshjaelp/brugerprofil/#user_id#/afdeling
 			if($action[2] == "afdeling") {
 				$page->page(array(
 					"templates" => "member-help/update_user_department.php",
@@ -206,7 +210,7 @@ if($action) {
 				));
 				exit();
 			}
-			// /medlemshjaelp/brugerprofil/#user_id#/opsig
+			# /medlemshjaelp/brugerprofil/#user_id#/opsig
 			elseif($action[2] == "opsig") {
 				$page->page(array(
 					"templates" => "member-help/delete_user_information.php",
@@ -215,7 +219,7 @@ if($action) {
 				exit();
 			}
 			
-			// /medlemshjaelp/brugerprofil/#user_id#/medlemsskab
+			# /medlemshjaelp/brugerprofil/#user_id#/medlemsskab
 			elseif($action[2] == "medlemsskab") {
 				$page->page(array(
 					"templates" => "member-help/update_user_membership.php",
@@ -224,7 +228,7 @@ if($action) {
 				exit();
 			}
 			
-			// /medlemshjaelp/brugerprofil/#user_id#/oplysninger lead to template
+			# /medlemshjaelp/brugerprofil/#user_id#/oplysninger
 			else if($action[2] == "oplysninger") {
 				$page->page(array(
 					"templates" => "member-help/update_user_information.php",
@@ -232,7 +236,7 @@ if($action) {
 				));
 				exit();
 			}
-			// /medlemshjaelp/brugerprofil/#user_id#/kodeord lead to template
+			# /medlemshjaelp/brugerprofil/#user_id#/kodeord
 			else if($action[2] == "kodeord") {
 				$page->page(array(
 					"templates" => "member-help/update_user_password.php",
@@ -241,7 +245,7 @@ if($action) {
 				exit();
 			}
 			
-			// /medlemshjaelp/brugerprofil/#user_id#/kodeord lead to template
+			# /medlemshjaelp/brugerprofil/#user_id#/kodeord
 			else if($action[2] == "accepter") {
 				//Method returns true
 				if($model->acceptedTerms(["user_id" => $action[1]])) {
@@ -257,7 +261,7 @@ if($action) {
 		}
 	}
 	
-	// /medlemshjaelp/updateUserInformation
+	# /medlemshjaelp/updateUserInformation
 	else if($action[0] == "updateUserInformation" && $page->validateCsrfToken()) {
 
 		//Method returns true
@@ -272,7 +276,7 @@ if($action) {
 		}
 	}
 	
-	// /medlemshjaelp/updateUserDepartment
+	# /medlemshjaelp/updateUserDepartment
 	else if($action[0] == "updateUserDepartment" && $page->validateCsrfToken()) {
 
 		//Method returns true
@@ -291,7 +295,7 @@ if($action) {
 		}
 	}
 	
-	// /medlemshjaelp/updateUserMembership
+	# /medlemshjaelp/updateUserMembership
 	else if($action[0] == "updateUserMembership" && $page->validateCsrfToken()) {
 
 		//Method returns true
@@ -309,7 +313,7 @@ if($action) {
 	}
 	
 
-	// /medlemshjaelp/deleteUserInformation
+	# /medlemshjaelp/deleteUserInformation
 	else if($action[0] == "deleteUserInformation") {
 		
 		// If the method is requested by JavaScript
@@ -347,7 +351,7 @@ if($action) {
 		
 	}
 
-	// /medlemshjaelp/updateUserPassword
+	# /medlemshjaelp/updateUserPassword
 	else if($action[0] == "updateUserPassword" && $page->validateCsrfToken()) {
 
 		//Method returns true
@@ -366,10 +370,25 @@ if($action) {
 		}
 	}
 
-	// /medlemshjaelp/betaling
+	# /medlemshjaelp/butik
+	else if($action[0] == "butik") {
+		
+		# /medlemshjaelp/butik/#user_id#
+		if(count($action) == 2) {
+
+
+			$page->page(array(
+				"templates" => "member-help/shop.php"
+			));	
+			exit();
+		}
+		
+	}
+
+	# /medlemshjaelp/betaling
 	else if($action[0] == "betaling") {
 		
-		// /medlemshjaelp/betaling/#order_no#
+		# /medlemshjaelp/betaling/#order_no#
 		if(count($action) === 2) {
 			$page->page(array(
 				"templates" => "member-help/payment.php",
@@ -378,7 +397,7 @@ if($action) {
 			exit();
 		}
 		
-		// /medlemshjaelp/betaling/spring-over/kvittering
+		# /medlemshjaelp/betaling/spring-over/kvittering
 		else if(count($action) === 3 && $action[1] == "spring-over") {
 			$page->page(array(
 				"templates" => "member-help/receipt/skipped.php",
@@ -387,7 +406,7 @@ if($action) {
 			exit();
 		} 
 		
-		// /medlemshjaelp/betaling/stripe/ordre/#order_no#/process
+		# /medlemshjaelp/betaling/stripe/ordre/#order_no#/process
 		else if(count($action) === 5 && $action[4] == "process" && $page->validateCsrfToken()) {
 			
 			$gateway = $action[1];
@@ -483,7 +502,7 @@ if($action) {
 			
 		}
 
-		// /medlemshjaelp/betaling/stripe/register-paid-intent
+		# /medlemshjaelp/betaling/stripe/register-paid-intent
 		else if(count($action) == 3 && $action[2] == "register-paid-intent") {
 
 			$payment_intent_id = getVar("payment_intent");
@@ -546,7 +565,7 @@ if($action) {
 
 		}
 		
-		// /medlemshjaelp/betaling/#order_no/#payment_id#/kvittering
+		# /medlemshjaelp/betaling/#order_no/#payment_id#/kvittering
 		else if(count($action) === 4 && $action[3] == "kvittering") {
 			$page->page(array(
 				"templates" => "member-help/receipt/index.php",
@@ -558,7 +577,7 @@ if($action) {
 		
 	}
 	
-	// /medlemshjaelp/registerPayment/#order_no#
+	# /medlemshjaelp/registerPayment/#order_no#
 	else if(count($action) === 2 && $action[0] == "registerPayment") {
 		
 		// create payment id
@@ -584,7 +603,7 @@ if($action) {
 
 	}
 	
-	// /medlemshjaelp/paymentError
+	# /medlemshjaelp/paymentError
 	else if($action[0] == "paymentError") {
 		$page->page(array(
 			"templates" => "member-help/payment.php",

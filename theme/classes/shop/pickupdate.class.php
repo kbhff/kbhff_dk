@@ -54,6 +54,7 @@ class Pickupdate extends Model {
 
 		// define default sorting order
 		$order = "pickupdate ASC";
+		$before = false;
 		$after = false;
 		
 
