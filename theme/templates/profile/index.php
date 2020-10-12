@@ -50,10 +50,10 @@ $unpaid_orders = $SC->getUnpaidOrders();
 				<? if($unpaid_orders && count($unpaid_orders) > 1): ?>
 				<div class="c-box alert unpaid orders">
 					<h3>OBS! Du har ubetalte ordrer</h3>
-					<? if($unpaid_membership): ?>
-					<p>Hvis du har et ubetalt indmeldelsesgebyr eller kontingent, vil det automatisk blive tilføjet din næste grøntsagsbestilling.</p>
-					<? endif; ?>
 					<p>Ubetalte grøntsagsbestillinger vil blive automatisk slettet en uge inden den førstkommende afhentningsdag.</p>
+					<? if($unpaid_membership): ?>
+					<p>Hvis du har et ubetalt indmeldelsesgebyr eller kontingent, vil det blive indkrævet i forbindelse med din næste grøntsagsbestilling. Du kan også betale med det samme ved at klikke nedenfor.</p>
+					<? endif; ?>
 					<ul class="actions">
 						<li class="pay"><a href="/butik/betalinger" class="button">Betal dit udestående</a></li>
 					</ul>
@@ -69,7 +69,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 				<? elseif($unpaid_membership && $unpaid_membership["type"] == "signupfee"): ?>
 				<div class="c-box alert unpaid signupfee">
 					<h3>OBS! Du mangler at betale dit indmeldelsesgebyr</h3>
-					<p>Indmeldelsesgebyret vil automatisk blive tilføjet din næste bestilling. Du kan også betale det separat ved at klikke nedenfor.</p>
+					<p>Indmeldelsesgebyret vil blive indkrævet i forbindelse med din næste grøntsagsbestilling. Du kan også betale det separat ved at klikke nedenfor.</p>
 					<ul class="actions">
 						<li class="pay"><a href="/butik/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal indmeldelsesgebyr nu</a></li>
 					</ul>
@@ -77,7 +77,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 				<? elseif($unpaid_membership && $unpaid_membership["type"] == "membership"): ?>
 				<div class="c-box alert unpaid membership">
 					<h3>OBS! Du mangler at betale kontingent</h3>
-					<p>Kontingentbetaling vil automatisk blive tilføjet din næste bestilling. Du kan også betale det separat ved at klikke nedenfor.</p>
+					<p>Kontingentbetaling vil blive indkrævet i forbindelse med din næste grøntsagsbestilling. Du kan også betale det separat ved at klikke nedenfor.</p>
 					<ul class="actions">
 						<li class="pay"><a href="/butik/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal kontingent nu</a></li>
 					</ul>
