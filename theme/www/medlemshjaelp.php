@@ -101,8 +101,8 @@ if($action) {
 	# /medlemshjaelp/save
 	else if($action[0] == "save" && $page->validateCsrfToken()) {
 		
-		// create new user (with a "fake" $action-array)
-		$user = $model->newUserFromMemberHelp(array("newUserFromMemberHelp"));
+		// create new user
+		$user = $model->newUserFromMemberHelp(["newUserFromMemberHelp"]);
 	
 		// successful creation
 		if(isset($user["user_id"])) {
