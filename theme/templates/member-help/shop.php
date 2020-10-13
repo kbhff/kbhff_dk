@@ -1,40 +1,40 @@
 <?php
 global $action;
-global $model;
+global $model; // SuperUser
+global $UC; // User
 global $SC;
 global $PC;
 global $DC;
 $IC = new Items();
-$UC = new User();
 
 $this->pageTitle("Grøntshoppen");
 
 
-$user_id = $action[1];
+// in the memberhelp scenario, we differentiate between clerk and member
+// the clerk is also a member but that is not relevant in this context
+// the clerk is acting on behalf of the member
+$clerk_user_id = session()->value("user_id");
+$member_user_id = $action[1];
 
-
-// get current cart
-$cart = $SC->getCart();
-// debug([$cart]);
 
 // User is logged in
-if($user_id != 1) {
+if($clerk_user_id != 1) {
+
+	$cart = $SC->getCarts(["user_id" => $member_user_id]);
+	$cart_reference = $cart["cart_reference"];
+
+	$SC->updateCart(["updateCart", $cart_reference]);
 
 
-	// update user on cart
-	$_POST["user_id"] = $user_id;
-	$SC->updateCart(array("updateCart"));
-	$cart = $SC->getCart();
-
-
-	$user = $UC->getUser();
-	$department = $UC->getUserDepartment();
-	$user_name = $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'];
+	$member_user = $model->getUser(["user_id" => $member_user_id]);
+	$department = $model->getUserDepartment(["user_id" => $member_user_id]);
+	$member_name = $member_user['nickname'] ? $member_user['nickname'] : $member_user['firstname'] . " " . $member_user['lastname'];
+	$member_name_possesive = 
 	$products = $DC->getDepartmentProducts($department["id"]);
 	$pickupdates = $PC->getPickupdates(["after" => date("Y-m-d", strtotime("next wednesday"))]);
 	$department_pickupdates = $DC->getDepartmentPickupdates($department["id"]);
-	$orders = $SC->getOrders();
-	$unpaid_membership = $UC->hasUnpaidMembership();
+	$orders = $SC->getOrders(["user_id" => $member_user_id]);
+	$unpaid_membership = $model->hasUnpaidMembership(["user_id" => $member_user_id]);
 
 
 
@@ -48,9 +48,6 @@ if($user_id != 1) {
 
 			// Get payment methods
 			$payment_methods = $this->paymentMethods();
-
-			// Get payment methods
-			$user_payment_methods = $UC->getPaymentMethods(["extend" => true]);
 
 		}
 
@@ -72,17 +69,10 @@ if($user_id != 1) {
 else {
 
 	// enable re-population of fields
-	$username = stringOr(getPost("username"));
-	$firstname = stringOr(getPost("firstname"));
-	$lastname = stringOr(getPost("lastname"));
-	$email = stringOr(getPost("email"));
-	$mobile = stringOr(getPost("mobile"));
-	$terms = stringOr(getPost("terms"));
-	$maillist = stringOr(getPost("maillist"));
+	$clerk_username = stringOr(getPost("username"));
 
 }
 
-// debug([$user_id, $cart, $membership]);
 
 ?>
 <div class="scene shop i:shop">
@@ -97,16 +87,16 @@ else {
 
 	<?
 	// User is not logged in yet
-	if($user_id == 1): ?>
+	if($clerk_user_id == 1): ?>
 
 
 	<div class="login">
 		<h2>Log ind</h2>
-		<p>Log ind nu, hvis du allerede er medlem.</p>
+		<p>Du skal logge ind før du kan fortsætte.</p>
 		<?= $UC->formStart("/butik?login=true", array("class" => "login labelstyle:inject")) ?>
 			<?= $UC->input("login_forward", ["type" => "hidden", "value" => "/butik"]); ?>
 			<fieldset>
-				<?= $UC->input("username", array("type" => "string", "label" => "Email or mobile number", "required" => true, "value" => $username, "pattern" => "[\w\.\-_]+@[\w\-\.]+\.\w{2,10}|([\+0-9\-\.\s\(\)]){5,18}", "hint_message" => "You can log in using either your email or mobile number.", "error_message" => "You entered an invalid email or mobile number.")); ?>
+				<?= $UC->input("username", array("type" => "string", "label" => "Email or mobile number", "required" => true, "value" => $clerk_username, "pattern" => "[\w\.\-_]+@[\w\-\.]+\.\w{2,10}|([\+0-9\-\.\s\(\)]){5,18}", "hint_message" => "You can log in using either your email or mobile number.", "error_message" => "You entered an invalid email or mobile number.")); ?>
 				<?= $UC->input("password", array("type" => "password", "label" => "Password", "required" => true, "hint_message" => "Type your password", "error_message" => "Your password should be between 8-20 characters.")); ?>
 			</fieldset>
 
@@ -117,18 +107,14 @@ else {
 		<?= $UC->formEnd() ?>
 	</div>
 
-	<div class="signup">
-		<p>Eller <a href="/bliv-medlem">bliv medlem</a> nu.</p>
-	</div>
-
 
 	<?
-	// user is already logged in, show checkout overview
+	// clerk is already logged in, show memberhelp-shop
 	else: ?>
 	<div class="c-wrapper">
 
 		<div class="c-box obs">
-			<h2 class="obs"><span class="highlight">OBS! </span>Handler på vegne af <span class="highlight"><?= $user_name ?></span></h2>
+			<h2 class="obs"><span class="highlight">OBS! </span>Handler på vegne af <span class="highlight"><?= $member_name ?></span></h2>
 		</div>
 		<div class="c-two-thirds">
 
@@ -179,7 +165,7 @@ else {
 									<? // check product availability ?>
 									<? if($product_available): ?>
 									
-									<?= $HTML->oneButtonForm("+", "/butik/addToCart", [
+									<?= $HTML->oneButtonForm("+", "/medlemshjaelp/butik/addToCart/".$cart_reference, [
 										"confirm-value" => "Sikker?",
 										"inputs" => [
 											"item_id" => $product["id"],
@@ -350,7 +336,7 @@ else {
 			<? endif; ?>
 
 			<div class="orders c-box">
-				<h3>Dine aktuelle bestillinger</h3>
+				<h3><?= $member_name_possesive ?>aktuelle bestillinger</h3>
 				<? if($order_items_pickupdates): ?>
 				<!-- <p>Gå til <a href="/profil" class="profile">Min side</a> for at se gamle bestillinger og rette datoer for aktuelle bestillinger.</p> -->
 					<ul class="list">
@@ -379,7 +365,7 @@ else {
 					</ul>
 					
 				<? else: ?>
-				<p>Du har ingen aktuelle bestillinger.</p>
+				<p><?= $member_name ?> har ingen aktuelle bestillinger.</p>
 				<!-- <p>Gå til <a href="/profil">Min side</a> for at se gamle bestillinger.</p> -->
 				<? endif; ?>
 
