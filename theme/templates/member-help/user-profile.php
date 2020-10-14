@@ -13,8 +13,8 @@ $department = $UC->getUserDepartment(["user_id" => $user_id]);
 $user_name = $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'];
 
 // Get membership status
-$is_member = $user["membership"]["id"];
-$is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"]["payment_status"] == 2 ? true : false;
+$is_member = $user["membership"] ? $user["membership"]["id"] : false;
+$is_membership_paid = $is_member && $user["membership"]["order"]["payment_status"] == 2 ? true : false;
 
 $has_accepted_terms = $UC->hasAcceptedTerms(["user_id" => $user_id]);
 

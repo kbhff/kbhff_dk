@@ -20,16 +20,16 @@ $member_user_id = $action[1];
 // User is logged in
 if($clerk_user_id != 1) {
 
-	$cart = $SC->getCarts(["user_id" => $member_user_id]);
+	$_POST["user_id"] = $member_user_id;
+	$cart = $SC->getCarts(["user_id" => $member_user_id]) ?: $SC->addCart(["addCart"]);
+	unset($_POST);
+
 	$cart_reference = $cart["cart_reference"];
-
-	$SC->updateCart(["updateCart", $cart_reference]);
-
 
 	$member_user = $model->getUser(["user_id" => $member_user_id]);
 	$department = $model->getUserDepartment(["user_id" => $member_user_id]);
 	$member_name = $member_user['nickname'] ? $member_user['nickname'] : $member_user['firstname'] . " " . $member_user['lastname'];
-	$member_name_possesive = 
+	$member_name_possesive = preg_match("/s$/", $member_name) ? $member_name."'" : $member_name."s";
 	$products = $DC->getDepartmentProducts($department["id"]);
 	$pickupdates = $PC->getPickupdates(["after" => date("Y-m-d", strtotime("next wednesday"))]);
 	$department_pickupdates = $DC->getDepartmentPickupdates($department["id"]);
@@ -336,7 +336,7 @@ else {
 			<? endif; ?>
 
 			<div class="orders c-box">
-				<h3><?= $member_name_possesive ?>aktuelle bestillinger</h3>
+				<h3><?= $member_name_possesive ?> aktuelle bestillinger</h3>
 				<? if($order_items_pickupdates): ?>
 				<!-- <p>Gå til <a href="/profil" class="profile">Min side</a> for at se gamle bestillinger og rette datoer for aktuelle bestillinger.</p> -->
 					<ul class="list">

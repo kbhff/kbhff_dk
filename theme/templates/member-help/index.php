@@ -11,13 +11,17 @@ $UC = new User();
 $user_department = $UC->getUserDepartment();
 $department_id = false;
 $users = false;
+$search_value = "";
 
 $global_search_allowed = $page->validatePath("/medlemshjaelp/globalSearch"); 
 
 $search_users = $model->searchUsers($action);
-$search_value = $search_users["search_value"];
-$users = $search_users["users"];
-$department_id = $search_users["department_id"];
+if($search_users) {
+
+	$search_value = $search_users["search_value"];
+	$users = $search_users["users"];
+	$department_id = $search_users["department_id"];
+}
 
 if (!$department_id) {
 	$department_id = $user_department["id"];
