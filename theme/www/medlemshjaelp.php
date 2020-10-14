@@ -426,25 +426,6 @@ if($action) {
 
 			}
 
-			# /medlemshjaelp/butik/deleteFromCart/#cart_reference#
-			else if($action[1] == "deleteFromCart" && $page->validateCsrfToken()) {
-
-				// create new user
-				$cart = $model->deleteFromCart($action);
-
-				// successful creation
-				if($cart) {
-
-					message()->addMessage("Varen blev slettet fra kurven.");
-					header("Location: /butik/kurv");
-					exit();
-				}
-				// something went wrong
-				else {
-					message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
-				}
-
-			}
 		}
 		
 	}

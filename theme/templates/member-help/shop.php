@@ -20,12 +20,18 @@ $member_user_id = $action[1];
 // User is logged in
 if($clerk_user_id != 1) {
 
-	$_POST["user_id"] = $member_user_id;
-	$cart = $SC->getCarts(["user_id" => $member_user_id]) ?: $SC->addCart(["addCart"]);
-	unset($_POST);
+	// get or add cart for member
+	$carts = $SC->getCarts(["user_id" => $member_user_id]);
+	if($carts) {
+		$cart = $carts[0];
+	}
+	else{
+		$_POST["user_id"] = $member_user_id;
+		$cart = $SC->addCart(["addCart"]);
+		unset($_POST);
+	}
 
 	$cart_reference = $cart["cart_reference"];
-
 	$member_user = $model->getUser(["user_id" => $member_user_id]);
 	$department = $model->getUserDepartment(["user_id" => $member_user_id]);
 	$member_name = $member_user['nickname'] ? $member_user['nickname'] : $member_user['firstname'] . " " . $member_user['lastname'];
@@ -51,8 +57,8 @@ if($clerk_user_id != 1) {
 
 		}
 
-		$cart_pickupdates = $SC->getCartPickupdates($cart["id"]);
-		$cart_items_without_pickupdate = $SC->getCartItemsWithoutPickupdate();
+		$cart_pickupdates = $SC->getCartPickupdates(["cart_reference" => $cart_reference]);
+		$cart_items_without_pickupdate = $SC->getCartItemsWithoutPickupdate(["cart_reference" => $cart_reference]);
 
 	}
 
@@ -82,10 +88,7 @@ else {
 	<h1>Bestilling af grøntsager</h1>
 
 
-	<?= $HTML->serverMessages() ?>
-
-
-	<?
+ 	<?
 	// User is not logged in yet
 	if($clerk_user_id == 1): ?>
 
@@ -93,8 +96,8 @@ else {
 	<div class="login">
 		<h2>Log ind</h2>
 		<p>Du skal logge ind før du kan fortsætte.</p>
-		<?= $UC->formStart("/butik?login=true", array("class" => "login labelstyle:inject")) ?>
-			<?= $UC->input("login_forward", ["type" => "hidden", "value" => "/butik"]); ?>
+		<?= $UC->formStart("/medlemshjaelp/butik/".$member_user_id."?login=true", array("class" => "login labelstyle:inject")) ?>
+			<?= $UC->input("login_forward", ["type" => "hidden", "value" => "/medlemshjaelp/butik/".$member_user_id]); ?>
 			<fieldset>
 				<?= $UC->input("username", array("type" => "string", "label" => "Email or mobile number", "required" => true, "value" => $clerk_username, "pattern" => "[\w\.\-_]+@[\w\-\.]+\.\w{2,10}|([\+0-9\-\.\s\(\)]){5,18}", "hint_message" => "You can log in using either your email or mobile number.", "error_message" => "You entered an invalid email or mobile number.")); ?>
 				<?= $UC->input("password", array("type" => "password", "label" => "Password", "required" => true, "hint_message" => "Type your password", "error_message" => "Your password should be between 8-20 characters.")); ?>
@@ -173,7 +176,7 @@ else {
 											"pickupdate_id" => $pickupdate["id"]
 										],
 										"wrapper" => "li.add",
-										"success-location" => "/butik"
+										"success-location" => "/medlemshjaelp/butik/".$member_user_id
 									]) ?>
 									
 									<? else: ?>
@@ -248,7 +251,7 @@ else {
 							print $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/".$cart_item["id"], array(
 								"confirm-value" => "Sikker?",
 								"wrapper" => "li.delete",
-								"success-location" => "/butik"
+								"success-location" => "/medlemshjaelp/butik/".$member_user_id
 							)) ?>
 						</ul>
 					</li>
@@ -286,10 +289,10 @@ else {
 									<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
 								</p>
 								<ul class="actions">
-									<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
+									<?= $HTML->oneButtonForm("Slet", "medlemshjaelp/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
 										"confirm-value" => "Sikker?",
 										"wrapper" => "li.delete",
-										"success-location" => "/butik"
+										"success-location" => "/medlemshjaelp/butik/".$member_user_id
 										]) ?>
 								</ul>
 							</li>
@@ -310,10 +313,10 @@ else {
 					</h3>
 				</div>
 				<ul class="actions">
-					<li ><a class="button" href="/butik/betal">Gå til betaling</a></li>
+					<li ><a class="button" href="medlemshjaelp/butik/betal">Gå til betaling</a></li>
 				</ul>
 				<? else: ?>
-				<p>Du har ingenting i kurven endnu. <br />Føj en eller flere varer til kurven først.</p>
+				<p><?= $member_name ?> har ingenting i kurven endnu. <br />Føj en eller flere varer til kurven først.</p>
 				<? endif; ?>
 			</div>
 
@@ -336,7 +339,7 @@ else {
 			<? endif; ?>
 
 			<div class="orders c-box">
-				<h3><?= $member_name_possesive ?> aktuelle bestillinger</h3>
+				<h3>Aktuelle bestillinger</h3>
 				<? if($order_items_pickupdates): ?>
 				<!-- <p>Gå til <a href="/profil" class="profile">Min side</a> for at se gamle bestillinger og rette datoer for aktuelle bestillinger.</p> -->
 					<ul class="list">
