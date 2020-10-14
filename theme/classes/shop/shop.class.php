@@ -70,14 +70,14 @@ class Shop extends ShopCore {
 				$query = new Query();
 				$IC = new Items();
 
+				$custom_name = $this->getProperty("custom_name", "value");
+				$custom_price = $this->getProperty("custom_price", "value");
 				$quantity = $this->getProperty("quantity", "value");
 				$item_id = $this->getProperty("item_id", "value");
-				$pickupdate_id = getPost("pickupdate_id", "value");
-				
 				$item = $IC->getItem(array("id" => $item_id));
+				$price = $this->getPrice($item_id);
 
-				// make sure only one membership exists in cart at any given time
-
+				
 				// are there any items in cart already?
 				if($cart["items"]) {
 
@@ -85,7 +85,7 @@ class Shop extends ShopCore {
 					// if it is a membership, then remove existing memberships from cart
 					if($item["itemtype"] == "signupfee") {
 
-						foreach($cart["items"] as $key => $cart_item) {
+						foreach($cart["items"] as $cart_item) {
 							$existing_item = $IC->getItem(array("id" => $cart_item["item_id"]));
 							if($existing_item["itemtype"] == "signupfee") {
 								$cart = $this->deleteFromCart(array("deleteFromCart", $cart_reference, $cart_item["id"]));
@@ -94,52 +94,87 @@ class Shop extends ShopCore {
 					}
 				}
 
-				// same item_id with same pickupdate is already in cart
-				$existing_cart_item = $this->getExistingCartItem($cart["id"], $item_id, $pickupdate_id);
-				if($cart["items"] && $existing_cart_item) {
+				// item has a price (price can be zero)
+				if ($price !== false) {
 					
-					$existing_quantity = $existing_cart_item["quantity"];
-					$new_quantity = intval($quantity) + intval($existing_quantity);
+					// look in cart to see if the added item is already there
+					// if added item already exists with a different custom_name or custom_price, create new line
+					if ($custom_price !== false && $custom_name) {
 
-					// update cart item quantity
-					$sql = "UPDATE ".$this->db_cart_items." SET quantity=$new_quantity WHERE id = ".$existing_cart_item["id"]." AND cart_id = ".$cart["id"];
-					// print $sql;
-					
-				}
-				else {
-					
-					// insert new cart item
-					$sql = "INSERT INTO ".$this->db_cart_items." SET cart_id=".$cart["id"].", item_id=$item_id, quantity=$quantity";
-					// print $sql;
-				}				
+						$existing_cart_item = $this->getCartItem($cart_reference, $item_id, ["custom_price" => $custom_price, "custom_name" => $custom_name]);
+					}
+					else if($custom_price !== false) {
 
-				if($query->sql($sql)) {
-					
-					if($existing_cart_item) {
-						$cart_item_id = $existing_cart_item["id"];
+						$existing_cart_item = $this->getCartItem($cart_reference, $item_id, ["custom_price" => $custom_price]);
+					}
+					else if($custom_name) {
+						
+						$existing_cart_item = $this->getCartItem($cart_reference, $item_id, ["custom_name" => $custom_name]);
 					}
 					else {
-						$cart_item_id = $query->lastInsertId();
-						if($pickupdate_id) {
-							$this->addPickupdateCartItem($pickupdate_id, $cart_item_id);
+						
+						$existing_cart_item = $this->getCartItem($cart_reference, $item_id);
+					}
+
+					if($existing_cart_item) {
+						
+						// check if same item_id with same pickupdate is already in cart
+						$existing_cart_item = $this->getExistingCartItem($cart["id"], $item_id, $pickupdate_id);
+					}
+					
+
+					// added item is already in cart
+					if($existing_cart_item) {
+						
+						$existing_quantity = $existing_cart_item["quantity"];
+						$new_quantity = intval($quantity) + intval($existing_quantity);
+	
+						// update item quantity
+						$sql = "UPDATE ".$this->db_cart_items." SET quantity=$new_quantity WHERE id = ".$existing_cart_item["id"]." AND cart_id = ".$cart["id"];
+	//					print $sql;
+					}
+					else {
+						
+						// insert new cart item
+						$sql = "INSERT INTO ".$this->db_cart_items." SET cart_id=".$cart["id"].", item_id=$item_id, quantity=$quantity";
+
+						if($custom_price !== false) {
+
+							// use correct decimal seperator
+							$custom_price = preg_replace("/,/", ".", $custom_price);
+
+							$sql .= ", custom_price=$custom_price";
 						}
+						if($custom_name) {
+							$sql .= ", custom_name='".$custom_name."'";
+						}
+						// print $sql;	
 					}
-					
-					
-					// update modified at time
-					$sql = "UPDATE ".$this->db_carts." SET modified_at=CURRENT_TIMESTAMP WHERE id = ".$cart["id"];
-					$query->sql($sql);
+	
+					if($query->sql($sql)) {
 
-					// add callback to addedToCart
-					$model = $IC->typeObject($item["itemtype"]);
-					if(method_exists($model, "addedToCart")) {
-						$model->addedToCart($item, $cart);
+						if($existing_cart_item) {
+							$cart_item_id = $existing_cart_item["id"];
+						}
+						else {
+							$cart_item_id = $query->lastInsertId();
+							if($pickupdate_id) {
+								$this->addPickupdateCartItem($pickupdate_id, $cart_item_id);
+							}
+						}
+	
+						// update modified at time
+						$sql = "UPDATE ".$this->db_carts." SET modified_at=CURRENT_TIMESTAMP WHERE id = ".$cart["id"];
+						$query->sql($sql);
+	
+						// add callback to addedToCart
+						$model = $IC->typeObject($item["itemtype"]);
+						if(method_exists($model, "addedToCart")) {
+							$model->addedToCart($item, $cart);
+						}
+	
+						return $this->getCart();	
 					}
-
-					
-
-					return $this->getCart();
-
 				}
 			}
 		}
@@ -157,7 +192,7 @@ class Shop extends ShopCore {
 		return false;	
 	}
 
-	function getCartPickupdates() {
+	function getCartPickupdates($_options = false) {
 		
 		$cart = $this->getCart();
 		
@@ -182,7 +217,7 @@ class Shop extends ShopCore {
 		return false;
 	}
 	
-	function getCartPickupdateItems($pickupdate_id) {
+	function getCartPickupdateItems($pickupdate_id, $_options = false) {
 
 		$query = new Query();
 		$cart = $this->getCart();
@@ -204,7 +239,7 @@ class Shop extends ShopCore {
 		return false;
 	}
 
-	function getCartItemsWithoutPickupdate() {
+	function getCartItemsWithoutPickupdate($_options = false) {
 
 		$query = new Query();
 		$cart = $this->getCart();
