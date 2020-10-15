@@ -1,6 +1,6 @@
 <?php
 global $action;
-$order_no = $action[2];
+$order_no = $action[1];
 $SC = new SuperShop();
 
 

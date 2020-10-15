@@ -263,7 +263,7 @@ else {
 					
 					<? foreach($cart_pickupdates as $pickupdate): 
 
-						$pickupdate_cart_items = $SC->getCartPickupdateItems($pickupdate["id"]);
+						$pickupdate_cart_items = $SC->getCartPickupdateItems($pickupdate["id"], ["cart_reference" => $cart_reference]);
 
 					?>
 						<? if($pickupdate_cart_items): ?>
@@ -289,7 +289,7 @@ else {
 									<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
 								</p>
 								<ul class="actions">
-									<?= $HTML->oneButtonForm("Slet", "medlemshjaelp/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
+									<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
 										"confirm-value" => "Sikker?",
 										"wrapper" => "li.delete",
 										"success-location" => "/medlemshjaelp/butik/".$member_user_id
