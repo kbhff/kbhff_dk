@@ -87,7 +87,7 @@ if($action) {
 		else if($action[1] == "fejl") {
 			
 			$page->page(array(
-				"templates" => "member-help/signup-error.php",
+				"templates" => "member-help/signup_error.php",
 				"type" => "admin"
 			));
 			exit();
@@ -436,7 +436,7 @@ if($action) {
 		# /medlemshjaelp/betaling/#order_no#
 		if(count($action) === 2) {
 			$page->page(array(
-				"templates" => "member-help/payment.php",
+				"templates" => "member-help/signup_payment.php",
 				"type" => "admin"
 			));
 			exit();
