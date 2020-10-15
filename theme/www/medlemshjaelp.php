@@ -436,7 +436,7 @@ if($action) {
 		# /medlemshjaelp/betaling/#order_no#
 		if(count($action) === 2) {
 			$page->page(array(
-				"templates" => "member-help/signup_payment.php",
+				"templates" => "member-help/payment.php",
 				"type" => "admin"
 			));
 			exit();
@@ -651,7 +651,7 @@ if($action) {
 	# /medlemshjaelp/paymentError
 	else if($action[0] == "paymentError") {
 		$page->page(array(
-			"templates" => "member-help/signup_payment.php",
+			"templates" => "member-help/payment.php",
 			"type" => "admin"
 		));
 		exit();
