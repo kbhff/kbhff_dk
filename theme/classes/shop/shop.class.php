@@ -291,7 +291,7 @@ class Shop extends ShopCore {
 		$sql = "INSERT INTO ".$this->db_pickupdate_cart_items." SET pickupdate_id = $pickupdate_id, cart_item_id = $cart_item_id";
 		if($query->sql($sql)) {
 
-			return $this->getCartPickupdateItems($pickupdate_id);
+			return true;
 		}
 
 		return false;
