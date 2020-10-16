@@ -351,30 +351,51 @@ class Shop extends ShopCore {
 		
 	}
 	
-	function getOrderItemsPickupdates($_options = false) {
-		
-		$after = false;
-		
-		if($_options !== false) {
-			foreach($_options as $_option => $_value) {
-				switch($_option) {
-					case "after"             : $after                  = $_value; break;
-				}
-			}
-		}
-
+	function getOrderPickupdates($order_id) {
 		
 		$query = new Query();
 		$query->checkDbExistence($this->db_pickupdate_order_items);
-
-		$user_id = session()->value("user_id");
 
 		$sql = "SELECT DISTINCT pickupdates.* 
 		FROM ".$this->db_pickupdates." AS pickupdates, "
 		.$this->db_pickupdate_order_items." AS pickupdate_order_items, "
 		.$this->db_order_items." AS order_items, "
 		.$this->db_orders." AS orders 
-		WHERE orders.user_id = $user_id
+		WHERE orders.id = $order_id 
+		AND order_items.order_id = orders.id
+		AND pickupdate_order_items.order_item_id = order_items.id 
+		AND pickupdates.id = pickupdate_order_items.pickupdate_id";
+
+		if($query->sql($sql)) {
+
+			$order_pickupdates = $query->results();
+
+			return $order_pickupdates;
+		}
+
+		return false;
+	}
+
+	function getOrderItemsPickupdates($user_id, $_options = false) {
+		
+		$query = new Query();
+		$query->checkDbExistence($this->db_pickupdate_order_items);
+
+		$after = false;
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+					case "after"          : $after               = $_value; break;
+				}
+			}
+		}
+
+		$sql = "SELECT DISTINCT pickupdates.* 
+		FROM ".$this->db_pickupdates." AS pickupdates, "
+		.$this->db_pickupdate_order_items." AS pickupdate_order_items, "
+		.$this->db_order_items." AS order_items, "
+		.$this->db_orders." AS orders 
+		WHERE orders.user_id = $user_id 
 		AND order_items.order_id = orders.id
 		AND pickupdate_order_items.order_item_id = order_items.id 
 		AND pickupdates.id = pickupdate_order_items.pickupdate_id";
@@ -393,21 +414,71 @@ class Shop extends ShopCore {
 		return false;
 	}
 
+	function getOrderItemsWithoutPickupdate($_options = false) {
+
+		$query = new Query();
+
+		$order_id = false;
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+					case "order_id"          : $order_id               = $_value; break;
+				}
+			}
+		}
+
+
+		$sql = "SELECT order_items.* 
+		FROM ".$this->db_order_items." AS order_items
+		WHERE order_items.id NOT IN (
+			SELECT pickupdate_order_items.order_item_id 
+			FROM ".$this->db_pickupdate_order_items." AS pickupdate_order_items 
+			)";
+
+		if($order_id) {
+			$sql .= " AND order_items.order_id = $order_id";
+		}
+
+		if($query->sql($sql)) {
+
+			$order_items_without_pickupdate = $query->results();
+
+			return $order_items_without_pickupdate;
+		}
+		
+
+		return false;
+	}
+
 	function getPickupdateOrderItems($pickupdate_id, $_options = false) {
 
 		$query = new Query();
 		
-		$user_id = session()->value("user_id");
-		
+		$order_id = false;
+		$user_id = false;
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+					case "order_id"          : $order_id               = $_value; break;
+					case "user_id"           : $user_id                = $_value; break;
+				}
+			}
+		}
+
 		$sql = "SELECT DISTINCT order_items.* 
 		FROM ".$this->db_pickupdates." AS pickupdates, "
 		.$this->db_pickupdate_order_items." AS pickupdate_order_items, "
 		.$this->db_order_items." AS order_items, "
 		.$this->db_orders." AS orders 
 		WHERE pickupdate_order_items.pickupdate_id = $pickupdate_id
-		AND pickupdate_order_items.order_item_id = order_items.id 
-		AND order_items.order_id = orders.id
-		AND orders.user_id = $user_id";
+		AND pickupdate_order_items.order_item_id = order_items.id"; 
+
+		if($order_id) {
+			$sql .= " AND order_items.order_id = $order_id";
+		}
+		if($user_id) {
+			$sql .= " AND orders.user_id = $user_id";
+		}
 
 		if($query->sql($sql)) {
 

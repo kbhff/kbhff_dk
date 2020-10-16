@@ -14,8 +14,8 @@ $amount = "";
 $order = $model->getOrders(array("order_no" => $order_no));
 $member_user_id = $order["user_id"];
 
-$order_items_without_pickupdates = $SC->getOrderItemsWithoutPickupdate($order_no);
-$order_pickupdates = $SC->getOrderItemsPickupdates(["after" => date("Y-m-d"), "user_id" => $member_user_id, "order_id" => $order["id"]]);
+$order_items_without_pickupdates = $SC->getOrderItemsWithoutPickupdate(["order_id" => $order["id"]]);
+$order_pickupdates = $SC->getOrderPickupdates($order["id"], ["user_id" => $member_user_id]);
 
 
 
@@ -105,11 +105,12 @@ else {
 	<?	endif; ?>
 	
 	<? if($order_items_without_pickupdates): ?>
-	<ul class="items">
-		<? foreach($order_items_without_pickupdates as $item): ?>
-		<li class="unit_price"> <?= $item["quantity"]." x ".$item["name"]." a ". formatPrice(array("price" => $item["unit_price"], "currency" => $order["currency"])) ?> <span class="price"><?= formatPrice(array("price" => $item["total_price"], "currency" => $order["currency"]))?></span></li> 
+	<ul class="items orders">
+		<? foreach($order_items_without_pickupdates as $order_item): ?>
+		<li class="unit_price"> <?= $order_item["quantity"]." x ".$order_item["name"]." a ". formatPrice(array("price" => $order_item["unit_price"], "currency" => $order["currency"])) ?> <span class="price"><?= formatPrice(array("price" => $order_item["total_price"], "currency" => $order["currency"]))?></span></li> 
 		<? endforeach; ?>
 	</ul>
+	
 	<? endif; ?>
 
 	<? if($order_pickupdates): ?>
@@ -117,7 +118,7 @@ else {
 					
 			<? foreach($order_pickupdates as $pickupdate): 
 
-				$pickupdate_order_items = $model->getPickupdateOrderItems($pickupdate["id"]);
+				$pickupdate_order_items = $model->getPickupdateOrderItems($pickupdate["id"], ["order_id" => $order["id"]]);
 
 			?>
 			<? if($pickupdate_order_items): ?>
@@ -126,7 +127,7 @@ else {
 			<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?></h4>
 			<p class="department">Afhentningssted: <span class="name"><?= $department["name"] ?></span></p>
 			
-			<ul class="items">
+			<ul class="items orders">
 				
 				<? foreach($pickupdate_order_items as $order_item):
 				$item = $IC->getItem(array("id" => $order_item["item_id"], "extend" => array("subscription_method" => true))); 
@@ -134,22 +135,7 @@ else {
 				$order_item_id = $order_item["id"];
 				?>
 
-				<li class="item id:<?= $item["id"] ?>">
-					<p>
-						<span class="quantity"><?= $cart_item["quantity"] ?></span>
-						<span class="x">x </span>
-						<span class="name"><?= $item["name"] ?> </span>
-						<span class="a">á </span>
-						<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
-					</p>
-					<ul class="actions">
-						<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
-							"confirm-value" => "Sikker?",
-							"wrapper" => "li.delete",
-							"success-location" => "/butik"
-							]) ?>
-					</ul>
-				</li>
+				<li class="unit_price"> <?= $order_item["quantity"]." x ".$order_item["name"]." a ". formatPrice(array("price" => $order_item["unit_price"], "currency" => $order["currency"])) ?> <span class="price"><?= formatPrice(array("price" => $order_item["total_price"], "currency" => $order["currency"]))?></span></li> 
 
 				<? endforeach; ?>
 			</ul>
@@ -157,16 +143,13 @@ else {
 
 			<? endif; ?>
 			<? endforeach; ?>
-		</ul>
-		<? endif; ?>
-	<!-- <ul class="orders">
-	<? foreach($order["items"] as $i => $item): ?>
-		<li class="unit_price"> <?= $item["quantity"]." x ".$item["name"]." a ". formatPrice(array("price" => $item["unit_price"], "currency" => $order["currency"])) ?> <span class="price"><?= formatPrice(array("price" => $item["total_price"], "currency" => $order["currency"]))?></span></li> 
-	<? endforeach; ?>
+	</ul>
+	<? endif; ?>
+	<ul class="total">
 		<li>Heraf moms <span class="price vat_price"><?= formatPrice(array("price" => $total_order_price["vat"], "currency" => $total_order_price["currency"])) ?></span></li>
 		<li class="total_price">I alt <span class="price"><?= formatPrice($total_order_price) ?> </span></li>
-	</ul> -->
 
+	</ul>
 
 	<div class="payment_options">
 		<?= $model->formStart("registerPayment/".$order_no, ["class" => "mobilepay"]) ?>

@@ -63,7 +63,7 @@ if($user_id != 1) {
 
 	if($orders) {
 		
-		$order_items_pickupdates = $model->getOrderItemsPickupdates(["after" => date("Y-m-d")]);
+		$order_items_pickupdates = $model->getOrderItemsPickupdates($user_id, ["after" => date("Y-m-d")]);
 	}
 
 
@@ -359,7 +359,7 @@ else {
 						</li>
 						<li class="listings-container">
 							<? foreach($order_items_pickupdates as $pickupdate): 
-							$pickupdate_order_items = $model->getPickupdateOrderItems($pickupdate["id"]);
+							$pickupdate_order_items = $model->getPickupdateOrderItems($pickupdate["id"], ["user_id" => $user_id]);
 							?>
 								<? if($pickupdate_order_items): ?>
 							
