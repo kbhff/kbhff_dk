@@ -15,7 +15,7 @@ $order = $model->getOrders(array("order_no" => $order_no));
 $member_user_id = $order["user_id"];
 
 $order_items_without_pickupdates = $SC->getOrderItemsWithoutPickupdate($order_no);
-$order_items_pickupdates = $SC->getOrderItemsPickupdates(["after" => date("Y-m-d"), "user_id" => $member_user_id]);
+$order_pickupdates = $SC->getOrderItemsPickupdates(["after" => date("Y-m-d"), "user_id" => $member_user_id, "order_id" => $order["id"]]);
 
 
 
@@ -112,12 +112,12 @@ else {
 	</ul>
 	<? endif; ?>
 
-	<? if($order_items_pickupdates): ?>
+	<? if($order_pickupdates): ?>
 	<ul class="pickupdates">
 					
 			<? foreach($order_pickupdates as $pickupdate): 
 
-				$pickupdate_order_items = $model->getOrderPickupdateItems($pickupdate["id"]);
+				$pickupdate_order_items = $model->getPickupdateOrderItems($pickupdate["id"]);
 
 			?>
 			<? if($pickupdate_order_items): ?>

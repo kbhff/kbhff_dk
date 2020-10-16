@@ -337,14 +337,13 @@ class SuperShop extends SuperShopCore {
 		return false;
 	}
 	
-	function getOrderItemsPickupdates($_options = false) {
+	function getOrderPickupdates($order_id, $_options = false) {
 		
-		$after = false;
+		$user_id = false;
 		
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
-					case "after"             : $after                  = $_value; break;
 					case "user_id"           : $user_id                = $_value; break;
 				}
 			}
@@ -359,20 +358,17 @@ class SuperShop extends SuperShopCore {
 		.$this->db_pickupdate_order_items." AS pickupdate_order_items, "
 		.$this->db_order_items." AS order_items, "
 		.$this->db_orders." AS orders 
-		WHERE orders.user_id = $user_id
+		WHERE orders.id = $order_id 
+		AND orders.user_id = $user_id
 		AND order_items.order_id = orders.id
 		AND pickupdate_order_items.order_item_id = order_items.id 
 		AND pickupdates.id = pickupdate_order_items.pickupdate_id";
 
-		if($after) {
-			$sql .= " AND pickupdates.pickupdate >= '$after'";
-		}
-
 		if($query->sql($sql)) {
 
-			$order_items_pickupdates = $query->results();
+			$order_pickupdates = $query->results();
 
-			return $order_items_pickupdates;
+			return $order_pickupdates;
 		}
 
 		return false;
@@ -382,10 +378,14 @@ class SuperShop extends SuperShopCore {
 
 		$query = new Query();
 		
+		$user_id = false;
+		$order_id = false;
+
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
 					case "user_id"           : $user_id                = $_value; break;
+					case "order_id"          : $order_id               = $_value; break;
 				}
 			}
 		}
@@ -399,6 +399,10 @@ class SuperShop extends SuperShopCore {
 		AND pickupdate_order_items.order_item_id = order_items.id 
 		AND order_items.order_id = orders.id
 		AND orders.user_id = $user_id";
+
+		if($order_id) {
+			$sql .= " AND orders.id = $order_id";
+		}
 
 		if($query->sql($sql)) {
 
