@@ -309,6 +309,108 @@ class SuperShop extends SuperShopCore {
 		return false;
 	}
 
+	function getOrderItemsWithoutPickupdate($order_no) {
+
+		$query = new Query();
+
+		$order = $this->getOrders(["order_no" => $order_no]);
+		
+		if($order) {
+
+			$order_id = $order["id"];
+			$sql = "SELECT order_items.* 
+			FROM ".$this->db_order_items." AS order_items
+			WHERE order_items.id NOT IN (
+				SELECT pickupdate_order_items.order_item_id 
+				FROM ".$this->db_pickupdate_order_items." AS pickupdate_order_items 
+				) 
+			AND order_items.order_id = $order_id";
+
+			if($query->sql($sql)) {
+
+				$order_items_without_pickupdate = $query->results();
+
+				return $order_items_without_pickupdate;
+			}
+		}
+
+		return false;
+	}
+	
+	function getOrderItemsPickupdates($_options = false) {
+		
+		$after = false;
+		
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+					case "after"             : $after                  = $_value; break;
+					case "user_id"           : $user_id                = $_value; break;
+				}
+			}
+		}
+
+		
+		$query = new Query();
+		$query->checkDbExistence($this->db_pickupdate_order_items);
+
+		$sql = "SELECT DISTINCT pickupdates.* 
+		FROM ".$this->db_pickupdates." AS pickupdates, "
+		.$this->db_pickupdate_order_items." AS pickupdate_order_items, "
+		.$this->db_order_items." AS order_items, "
+		.$this->db_orders." AS orders 
+		WHERE orders.user_id = $user_id
+		AND order_items.order_id = orders.id
+		AND pickupdate_order_items.order_item_id = order_items.id 
+		AND pickupdates.id = pickupdate_order_items.pickupdate_id";
+
+		if($after) {
+			$sql .= " AND pickupdates.pickupdate >= '$after'";
+		}
+
+		if($query->sql($sql)) {
+
+			$order_items_pickupdates = $query->results();
+
+			return $order_items_pickupdates;
+		}
+
+		return false;
+	}
+
+	function getPickupdateOrderItems($pickupdate_id, $_options = false) {
+
+		$query = new Query();
+		
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+					case "user_id"           : $user_id                = $_value; break;
+				}
+			}
+		}
+		
+		$sql = "SELECT DISTINCT order_items.* 
+		FROM ".$this->db_pickupdates." AS pickupdates, "
+		.$this->db_pickupdate_order_items." AS pickupdate_order_items, "
+		.$this->db_order_items." AS order_items, "
+		.$this->db_orders." AS orders 
+		WHERE pickupdate_order_items.pickupdate_id = $pickupdate_id
+		AND pickupdate_order_items.order_item_id = order_items.id 
+		AND order_items.order_id = orders.id
+		AND orders.user_id = $user_id";
+
+		if($query->sql($sql)) {
+
+			$pickupdate_order_items = $query->results();
+
+			return $pickupdate_order_items;
+		}
+
+		return false;
+	}
+
+
 	// Add item to cart
 	# /janitor/admin/shop/addToCart/#cart_reference#/
 	// Items and quantity in $_post

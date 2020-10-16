@@ -17,7 +17,7 @@ $clerk_user_id = session()->value("user_id");
 $member_user_id = $action[1];
 
 
-// User is logged in
+// Clerk is logged in
 if($clerk_user_id != 1) {
 
 	// get or add cart for member
@@ -63,15 +63,17 @@ if($clerk_user_id != 1) {
 	}
 
 	if($orders) {
+
+		$order_items_without_pickupdates = $SC->getCartItemsWithoutPickupdate()
 		
-		$order_items_pickupdates = $SC->getOrderItemsPickupdates(["after" => date("Y-m-d")]);
+		$order_items_pickupdates = $SC->getOrderItemsPickupdates(["after" => date("Y-m-d"), "user_id" => $member_user_id]);
 	}
 
 
 
 }
 
-// User not logged in yet
+// Clerk not logged in yet
 else {
 
 	// enable re-population of fields
@@ -313,7 +315,7 @@ else {
 					</h3>
 				</div>
 				<ul class="actions">
-					<li ><a class="button" href="medlemshjaelp/butik/betal">Gå til betaling</a></li>
+					<li ><a class="button" href="/medlemshjaelp/butik/kurv/<?= $cart_reference ?>">Gå til bekræftelse og betaling</a></li>
 				</ul>
 				<? else: ?>
 				<p><?= $member_name ?> har ingenting i kurven endnu. <br />Føj en eller flere varer til kurven først.</p>
@@ -349,7 +351,7 @@ else {
 						</li>
 						<li class="listings-container">
 							<? foreach($order_items_pickupdates as $pickupdate): 
-							$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate["id"]);
+							$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["user_id" => $member_user_id]);
 							?>
 								<? if($pickupdate_order_items): ?>
 							

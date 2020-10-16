@@ -383,8 +383,17 @@ if($action) {
 		}
 		else if(count($action) == 3) {
 
+			# /medlemshjaelp/butik/kurv/#cart_reference#
+			if($action[1] == "kurv") {
+				
+				$page->page(array(
+					"templates" => "member-help/cart.php"
+				));	
+				exit();
+			}
+			
 			# /medlemshjaelp/butik/addToCart/#cart_reference#
-			if($action[1] == "addToCart" && $page->validateCsrfToken()) {
+			else if($action[1] == "addToCart" && $page->validateCsrfToken()) {
 
 				$cart_reference = $action[2];
 				$cart = $SC->addToCart(["addToCart", $cart_reference]);
@@ -408,7 +417,7 @@ if($action) {
 
 
 				// create new user
-				$cart = $model->updateCartItemQuantity($action);
+				$cart = $SC->updateCartItemQuantity($action);
 
 				// successful creation
 				if($cart) {
@@ -426,6 +435,35 @@ if($action) {
 
 			}
 
+		}
+		else if(count($action) == 4) {
+			
+			# /medlemshjaelp/butik/newOrderFromCart/#cart_reference#/#cart_id#
+			if($action[1] == "newOrderFromCart") {
+
+				$cart_reference = $action[2];
+				$cart_id = $action[3];
+
+				// convert cart to order
+				$order = $SC->newOrderFromCart(["newOrderFromCart", $cart_id, $cart_reference]);
+				if($order) {						
+					
+					// redirect to payment
+					message()->resetMessages();
+					header("Location: /medlemshjaelp/betaling/".$order["order_no"]);
+					exit();
+				}
+				
+				// error
+				else {
+					message()->resetMessages();
+					message()->addMessage("Det mislykkedes at omdanne indkøbskurven til en ordre.", array("type" => "error"));
+					header("Location: /medlemshjaelp/fejl");
+					exit();
+				}
+
+				
+			}
 		}
 		
 	}

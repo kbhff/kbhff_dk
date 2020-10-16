@@ -25,6 +25,9 @@ if($user_id != 1) {
 	$_POST["user_id"] = $user_id;
 	$model->updateCart(array("updateCart"));
 	$cart = $model->getCart();
+	if(!$cart) {
+		$cart = $model->addCart(["addCart"]);
+	}
 
 
 	$user = $UC->getUser();
