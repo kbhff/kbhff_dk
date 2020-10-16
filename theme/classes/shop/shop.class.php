@@ -74,7 +74,7 @@ class Shop extends ShopCore {
 				$custom_price = $this->getProperty("custom_price", "value");
 				$quantity = $this->getProperty("quantity", "value");
 				$item_id = $this->getProperty("item_id", "value");
-				$pickupdate_id = $this->getProperty("pickupdate_id", "value");
+				$pickupdate_id = getPost("pickupdate_id", "value");
 				$item = $IC->getItem(array("id" => $item_id));
 				$price = $this->getPrice($item_id);
 
