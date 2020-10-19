@@ -367,6 +367,10 @@ else {
 									<? foreach($pickupdate_order_items as $order_item): ?>
 									<li class="listing">
 										<span class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?></span>
+										<? if($order_item["quantity"] > 1): ?>
+										<span class="quantity"><?= $order_item["quantity"] ?></span>
+										<span class="x"><?= " x " ?></span>
+										<? endif; ?>
 										<span class="product"><?= $order_item["name"] ?></span>
 									</li>
 									<? endforeach; ?>
