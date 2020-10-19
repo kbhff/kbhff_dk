@@ -58,7 +58,7 @@ else {
 	</div>
 	<?
 	//print all stored messages
-	print $HTML->serverMessages();
+	print $HTML->serverMessages(["type" => "error"]);
 	?>
 	<? 
 	if($cart["items"]) :

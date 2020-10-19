@@ -630,7 +630,7 @@ if($action) {
 			else if($id_result && $id_result["status"] === "error") {
 
 				if($id_result["code"] === "payment_intent_authentication_failure") {
-					$id_result["message"] = "Tredjepartsautentificeringen slog fejl. Prøv igen eller brug et andet kort.";
+					$id_result["message"] = "Tredjepartsautentificeringen slog fejl. Prøv igen eller brug en andet kort eller betalingsmetode.";
 				}
 
 				message()->addMessage($id_result["message"], ["type" => "error"]);
@@ -648,7 +648,7 @@ if($action) {
 
 		}
 		
-		# /medlemshjaelp/betaling/#payment_id#/#order_no/kvittering
+		# /medlemshjaelp/betaling/#order_no/#payment_id#/kvittering
 		else if(count($action) === 4 && $action[3] == "kvittering") {
 			$page->page(array(
 				"templates" => "member-help/receipt/index.php",
@@ -668,7 +668,7 @@ if($action) {
 		if($payment_id) {		
 			// redirect to receipt
 			message()->resetMessages();
-			header("Location: /medlemshjaelp/betaling/".$payment_id."/".$action[1]."/kvittering");
+			header("Location: /medlemshjaelp/betaling/".$action[1]."/".$payment_id."/kvittering");
 			exit();
 		}
 

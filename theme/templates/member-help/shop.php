@@ -119,7 +119,7 @@ else {
 	<div class="c-wrapper">
 
 		<div class="c-box obs">
-			<h2 class="obs"><span class="highlight">OBS! </span>Handler på vegne af <span class="highlight"><?= $member_name ?></span></h2>
+			<h2 class="obs"><span class="highlight">OBS! </span>Handler på vegne af <span class="highlight"><a href="/medlemshjaelp/brugerprofil/<?= $member_user_id ?>"><?= $member_name ?></a></span></h2>
 		</div>
 		<div class="c-two-thirds">
 
