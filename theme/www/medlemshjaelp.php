@@ -648,7 +648,7 @@ if($action) {
 
 		}
 		
-		# /medlemshjaelp/betaling/#order_no/#payment_id#/kvittering
+		# /medlemshjaelp/betaling/#payment_id#/#order_no/kvittering
 		else if(count($action) === 4 && $action[3] == "kvittering") {
 			$page->page(array(
 				"templates" => "member-help/receipt/index.php",
