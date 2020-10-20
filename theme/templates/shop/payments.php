@@ -64,7 +64,7 @@ if($orders && $total_payment): ?>
 	<? foreach($orders as $order): 
 		$full_order = $model->getOrders(["order_id" => $order["id"]]); ?>
 		<li>
-			<h3>Ordrenummer: <a href="/butik/payment/<?= $full_order["order_no"] ?>"><?= $full_order["order_no"] ?></a> <?= ($full_order["comment"] ? (" – " . $full_order["comment"]) : "") ?>, <?= formatPrice($order["price"]) ?></h3>
+			<h3>Ordrenummer: <a href="/butik/betaling/<?= $full_order["order_no"] ?>"><?= $full_order["order_no"] ?></a> <?= ($full_order["comment"] ? (" – " . $full_order["comment"]) : "") ?>, <?= formatPrice($order["price"]) ?></h3>
 			<ul class="orderitems">
 			<? foreach($full_order["items"] as $order_item): ?>
 				<li><?= $order_item["quantity"] ?> x <?= $order_item["name"] ?></li>
