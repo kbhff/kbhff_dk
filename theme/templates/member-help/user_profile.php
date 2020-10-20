@@ -77,7 +77,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 				<p>Hvis man har et ubetalt indmeldelsesgebyr eller kontingent, vil det blive indkrævet i forbindelse med den næste grøntsagsbestilling. Man kan også betale med det samme ved at klikke nedenfor.</p>
 				<? endif; ?>
 				<ul class="actions">
-					<li class="pay"><a href="/butik/betalinger" class="button">Betal udestående</a></li>
+					<li class="pay"><a href="/medlemshjaelp/betalinger/<?= $user_id ?>" class="button">Betal udestående</a></li>
 				</ul>
 			</div>
 			<? elseif($unpaid_orders && count($unpaid_orders) == 1 && !$unpaid_membership): ?>
@@ -85,7 +85,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 				<h3>OBS! <?= $user_name ?> har en ubetalt ordre</h3>
 				<p>Ubetalte grøntsagsbestillinger vil blive automatisk slettet en uge inden den førstkommende afhentningsdag.</p>
 				<ul class="actions">
-					<li class="pay"><a href="/butik/betalinger" class="button">Betal udestående</a></li>
+					<li class="pay"><a href="/medlemshjaelp/betalinger" class="button">Betal udestående</a></li>
 				</ul>
 			</div>
 			<? elseif($unpaid_membership && $unpaid_membership["type"] == "signupfee"): ?>

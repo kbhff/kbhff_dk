@@ -659,6 +659,15 @@ if($action) {
 
 		
 	}
+
+	# /medlemshjaelp/betalinger/#user_id#
+	else if($action[0] == "betalinger" && count($action) == 2) {
+
+		$page->page(array(
+			"templates" => "member-help/payments.php"
+		));
+		exit();
+	}
 	
 	# /medlemshjaelp/registerPayment/#order_no#
 	else if(count($action) === 2 && $action[0] == "registerPayment") {
