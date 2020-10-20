@@ -120,30 +120,33 @@ if($action) {
 
 		# /butik/kvittering/fejl
 		if(count($action) == 2 && $action[1] == "fejl") {
-
+			
 			$page->page(array(
 				"templates" => "shop/receipt/error.php"
 			));
 			exit();
-
+			
 		}
-
+		
+		# /butik/kvittering/ordrer
 		else if(count($action) >= 3 && $action[1] === "ordrer") {
-
+			
 			$page->page(array(
 				"templates" => "shop/receipt/orders.php"
 			));
 			exit();
-
+			
 		}
+		# /butik/kvittering/ny-ordre
 		else if(count($action) >= 3 && $action[1] === "ny-ordre") {
-
+			
 			$page->page(array(
 				"templates" => "shop/receipt/new-order.php"
 			));
 			exit();
-
+			
 		}
+		# /butik/kvittering/ordre
 		else if(count($action) >= 3 && $action[1] === "ordre") {
 
 			$page->page(array(
