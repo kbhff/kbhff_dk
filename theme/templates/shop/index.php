@@ -94,7 +94,7 @@ else {
 	<h1>Bestilling af grøntsager</h1>
 
 
-	<?= $HTML->serverMessages() ?>
+	<?= $HTML->serverMessages(["type" => "error"]) ?>
 
 
 	<?

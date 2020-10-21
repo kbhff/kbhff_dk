@@ -90,115 +90,16 @@ if($orders && $total_payment): ?>
 			<ul class="orderitems">
 			<? foreach($full_order["items"] as $order_item): ?>
 				<li><?= $order_item["quantity"] ?> x <?= $order_item["name"] ?></li>
+				<li>
+					<ul class="actions">
+						<li><a href="/medlemshjaelp/betaling/<?= $full_order["order_no"] ?>" class="button primary">Betal ordre</a></li>
+					</ul>
+				</li>
 			<? endforeach; ?>
 			</ul>
 		</li>
 	<? endforeach; ?>
 	</ul>
-
-	<div class="payment_options">
-		<?= $model->formStart("registerPayment/".$order["order_no"], ["class" => "mobilepay"]) ?>
-			<fieldset class="mobilepay">
-				<?= $model->input("payment_amount", array("type" => "hidden", "value" => $total_payment)); ?>
-				<?= $model->input("payment_method_id", array("type" => "hidden", "value" => $mobilepay_payment_method_id)); ?>
-				<?= $model->input("order_id", array("type" => "hidden", "value" => $order["id"])); ?>
-				<?= $model->input("transaction_id", array("type" => "hidden", "value" => $transaction_id)); ?>
-				<div class="mobilepay qr">
-					<h5>QR-kode</h5>
-					<img src="data:image/png;base64,<?= base64_encode(qr_codes()->create($SC->getMobilepayLink($total_payment, $department["mobilepay_id"], $order["order_no"]), ["size" => 158])); ?>" alt="QR-kode til indmeldelse i <?= $department["name"] ?>-afdelingen">
-				</div>
-				<div class="mobilepay code">
-					<h5>MobilePay-nummer</h5>
-					<p>(<?=$department["name"]?>)</p>
-					<p class="payment_info"><span class="highlight"><?=$department["mobilepay_id"]?></span></p>
-					<h5>Medlemsoprettelseskode</h5>
-					<p>(Skrives i kommentarfeltet)</p>
-					<p class="payment_info"><span class="highlight"><?=$transaction_id?></span></p>
-				</div>
-				<?= $model->input("confirm_mobilepay_payment", array("type" => "checkbox", "label" => "Personen har betalt ".formatPrice(["price" => $total_payment, "currency" => $remaining_order_price["currency"]])." med MobilePay.", "required" => true)); ?>
-			</fieldset>
-	
-		<ul class="actions">
-			<!-- <li class="cancel"><a href="/" class="button">Annullér</a></li> -->
-			<!-- <li class="cancel"><a href="/" class="button">Spring over</a></li> -->
-			<?= $model->submit("Godkend betaling af ".formatPrice(["price" => $total_payment, "currency" => $remaining_order_price["currency"]]), array("class" => "primary", "wrapper" => "li.pay")) ?>
-		</ul>
-		<?= $model->formEnd() ?>
-
-		<?= $model->formStart("betaling/stripe/ordre/".$order["order_no"]."/process", array("class" => "card")) ?>
-
-			<fieldset>
-				<?= $model->input("card_number", array("type" => "tel", "label" => "Kortnummer", "hint_message" => "Indtast dit kortnummer", "error_message" => "Ugyldigt kortnummer")); ?>
-				<?= $model->input("card_exp_month", array("type" => "tel", "hint_message" => "Måned", "error_message" => "Ugyldig")); ?>
-				<span class="slash">/</span>
-				<?= $model->input("card_exp_year", array("type" => "tel", "hint_message" => "År", "error_message" => "Ugyldig")); ?>
-				<?= $model->input("card_cvc", array("type" => "tel", "hint_message" => "Kontrolnummer", "error_message" => "Ugyldig")); ?>
-
-			</fieldset>
-
-			<ul class="actions">
-				<?= $model->submit("Betal ".formatPrice(["price" => $total_payment, "currency" => $remaining_order_price["currency"]]), array("class" => "primary", "wrapper" => "li.pay")) ?>
-			</ul>
-		<?= $model->formEnd() ?>
-	
-		<?= $model->formStart("registerPayment/".$order["order_no"], ["class" => "cash"]) ?>
-			<fieldset class="cash">
-				<?= $model->input("payment_amount", array("type" => "hidden", "value" => $total_order_price["price"])); ?>
-				<?= $model->input("payment_method_id", array("type" => "hidden", "value" => $cash_payment_method_id)); ?>
-				<?= $model->input("order_id", array("type" => "hidden", "value" => $order["id"])); ?>
-				<?= $model->input("transaction_id", array("type" => "hidden", "value" => $transaction_id)); ?>
-				<?= $model->input("receiving_user_id", array("type" => "hidden", "value" => session()->value("user_id"))); ?>
-				<div class="cash instructions">
-					<p>Bekræft nedenfor at personen har betalt kontant.</p>
-				</div>
-				<?= $model->input("confirm_cash_payment", array("type" => "checkbox", "label" => "Personen har betalt ".formatPrice(["price" => $total_payment, "currency" => $remaining_order_price["currency"]])." kontant.", "required" => true)); ?>
-			</fieldset>
-	
-		<ul class="actions">
-			<?= $model->submit("Godkend betaling af ".formatPrice(["price" => $total_payment, "currency" => $remaining_order_price["currency"]]), array("class" => "primary", "wrapper" => "li.pay")) ?>
-		</ul>
-		<?= $model->formEnd() ?>
-	</div>
-
-	<!-- <div class="payment_method">
-		<h2>Vælg en betalingsmetode</h2>
-
-		<? if($payment_methods): ?>
-			<h3>Vores betalingsmuligheder</h3>
-			<p><?= $user_payment_methods ? "Eller v" : "V" ?>ælg en betalingsmetode til fortsat behandling af disse ordrer.</p>
-			<ul class="payment_methods">
-
-			<? foreach($payment_methods as $payment_method): ?>
-				<? if($payment_method["state"] === "public" || $payment_method["state"] === "memberhelp"): ?>
-
-				<li class="payment_method<?= $payment_method["classname"] ? " ".$payment_method["classname"] : "" ?>">
-
-					<ul class="actions">
-						<?= $HTML->oneButtonForm(
-						"Betal alle ordrer med " . $payment_method["name"], 
-						"/butik/selectPaymentMethodForOrders", 
-						array(
-							"inputs" => array(
-								"order_ids" => implode(",", $order_list), 
-								"payment_method_id" => $payment_method["id"]
-							),
-							"confirm-value" => false,
-							"wait-value" => "Vent venligst",
-							"dom-submit" => true,
-							"class" => "primary",
-							"name" => "continue",
-							"wrapper" => "li.continue.".$payment_method["classname"],
-						)) ?>
-					</ul>
-					<p><?= $payment_method["description"] ?></p>
-
-				</li>
-				<? endif; ?>
-			<? endforeach; ?>
-
-			</ul>
-		<? endif; ?>
-	</div> -->
 
 <? 
 // No payments

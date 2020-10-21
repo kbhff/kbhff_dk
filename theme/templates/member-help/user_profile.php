@@ -27,25 +27,13 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 
 <div class="scene profile user_profile i:user_profile">
 
-
-	<? if(message()->hasMessages()): ?>
-	<div class="messages">
-	<?
-	$all_messages = message()->getMessages();
-	message()->resetMessages();
-	foreach($all_messages as $type => $messages):
-		foreach($messages as $message): ?>
-		<p class="<?= $type ?>"><?= $message ?></p>
-		<? endforeach;?>
-	<? endforeach;?>
-	</div>
-	<? endif; ?>
-
 	
 	<div class="c-wrapper">
 		<div class="c-box obs">
 			<h2 class="obs"><span class="highlight">OBS! </span>Handler på vegne af <span class="highlight"><?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?></span></h2>
 		</div>
+		
+		<?= $model->serverMessages(["type" => "error"]) ?>
 		
 		<div class="c-two-thirds">
 			<? if(!$has_accepted_terms):?>
@@ -85,7 +73,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 				<h3>OBS! <?= $user_name ?> har en ubetalt ordre</h3>
 				<p>Ubetalte grøntsagsbestillinger vil blive automatisk slettet en uge inden den førstkommende afhentningsdag.</p>
 				<ul class="actions">
-					<li class="pay"><a href="/medlemshjaelp/betalinger" class="button">Betal udestående</a></li>
+					<li class="pay"><a href="/medlemshjaelp/betaling/<?= $unpaid_orders[0]["order_no"] ?>" class="button">Betal udestående</a></li>
 				</ul>
 			</div>
 			<? elseif($unpaid_membership && $unpaid_membership["type"] == "signupfee"): ?>
