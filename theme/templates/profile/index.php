@@ -8,8 +8,8 @@ $user = $UC->getKbhffUser();
 $department = $UC->getUserDepartment();
 
 // Get membership status
-$is_member = $user["membership"]["id"];
-$is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"]["payment_status"] == 2 ? true : false;
+$is_member = $user["membership"] ? $user["membership"]["id"] : false;
+$is_membership_paid = $user["membership"] && $user["membership"]["id"] && $user["membership"]["order"]["payment_status"] == 2 ? true : false;
 
 $unpaid_membership = $UC->hasUnpaidMembership();
 $unpaid_orders = $SC->getUnpaidOrders();
@@ -158,9 +158,10 @@ $unpaid_orders = $SC->getUnpaidOrders();
 				<li class="book-shift full-width"><a href="#" class="button primary">Ta' en vagt</a></li>
 			</ul>
 
+			<? if($department): ?>
 			<div class="section department">
 				<div class="c-box">
-					<h3><?=$department["name"] ?> lokalafdeling</h3>
+					<h3><?= $department["name"] ?> lokalafdeling</h3>
 
 					<div class="fields">
 						<div class="department-info">
@@ -187,6 +188,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 
 				</div>
 			</div>
+			<? endif; ?>
 
 			<div class="section membership">
 				<div class="c-box">
@@ -210,7 +212,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 
 						<div class="membership-info">
 							<p class="over">Afdeling</p>
-							<p class="under"><?= $department["name"] ? $department["name"] : "(ingen)" ?></p>
+							<p class="under"><?= ($department && $department["name"]) ? $department["name"] : "(ingen)" ?></p>
 						</div>
 
 						<ul class="actions">

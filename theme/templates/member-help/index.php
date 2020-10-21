@@ -23,7 +23,7 @@ if($search_users) {
 	$department_id = $search_users["department_id"];
 }
 
-if (!$department_id) {
+if (!$department_id && $user_department) {
 	$department_id = $user_department["id"];
 }
 
