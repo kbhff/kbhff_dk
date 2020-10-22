@@ -101,10 +101,9 @@ $unpaid_orders = $SC->getUnpaidOrders();
 			<div class="section order_items">
 				<h2>Eksisterende bestillinger</h2>
 
-				<div class="order_item_headings">
-					<h4 class="pickup-date">AFH.DATO</h4>
-					<h4 class="orderitem-place">STED</h4>
-					<h4 class="orderitem-product">VARE(R)</h4>
+				<div class="order_item-headings">
+					<h4 class="pickupdate">AFH.DATO</h4>
+					<h4 class="order_item-product">VARE(R)</h4>
 					<h4 class="change-untill">RET INDTIL</h4>
 				</div>
 
@@ -116,11 +115,11 @@ $unpaid_orders = $SC->getUnpaidOrders();
 					<? if($pickupdate_order_items): ?>
 					<div class="order_items">
 						<? foreach($pickupdate_order_items as $order_item): ?>
-						<div class="orderitem">
+						<div class="order_item">
 							<p class="pickupdate"><?= $pickupdate["pickupdate"] ?></p>
-							<p class="orderitem-product"><?= $order_item["name"] ?></p>
-							<p class="change-untill"><span class="date"><?= date("d/m") ?></span> kl. <span class="time">23:59</span></p>
-							<ul class="actions change"><li class="change"><a href="#" class="button disabled">Ret</a></li></ul>
+							<p class="order_item-product"><?= $order_item["quantity"] > 1 ? $order_item["quantity"]." x " : ""?><?= $order_item["name"] ?></p>
+							<p class="change-untill"><span class="date"><?= date("d/m", strtotime($pickupdate["pickupdate"]." - 1 week")) ?></span> kl. <span class="time">23:59</span></p>
+							<ul class="actions change"><li class="change"><a href="#" class="button <?= date("Y-m-d") >= date("Y-m-d", strtotime($pickupdate["pickupdate"]." - 1 week")) ? "disabled" : "" ?>">Ret</a></li></ul>
 						</div>
 						<? endforeach; ?>
 					</div>
