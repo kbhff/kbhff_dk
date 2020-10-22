@@ -11,6 +11,11 @@ $department = $UC->getUserDepartment();
 $is_member = $user["membership"]["id"];
 $is_membership_paid = $user["membership"]["id"] && $user["membership"]["order"]["payment_status"] == 2 ? true : false;
 
+$orders = $SC->getOrders();
+if($orders) {
+	$order_items_pickupdates = $SC->getOrderItemsPickupdates($user["id"], ["after" => date("Y-m-d")]);
+}
+
 $unpaid_membership = $UC->hasUnpaidMembership();
 $unpaid_orders = $SC->getUnpaidOrders();
 
@@ -93,55 +98,35 @@ $unpaid_orders = $SC->getUnpaidOrders();
 				</div>
 			</div>
 
-			<div class="section orders">
+			<div class="section order_items">
 				<h2>Eksisterende bestillinger</h2>
 
-				<div class="order-headings">
+				<div class="order_item_headings">
 					<h4 class="pickup-date">AFH.DATO</h4>
-					<h4 class="order-place">STED</h4>
-					<h4 class="order-products">VARE(R)</h4>
+					<h4 class="orderitem-place">STED</h4>
+					<h4 class="orderitem-product">VARE(R)</h4>
 					<h4 class="change-untill">RET INDTIL</h4>
 				</div>
 
-				<div class="order">
-					<p class="pickup-date">23.05.2018</p>
-					<p class="order-place">Vesterbro</p>
-					<p class="order-products">
-						2x Ugens pose
-						Aspargespose
-						Frugtpose
-					</p>
-					<p class="change-untill">20/5 kl. 23.59</p>
-					<ul class="actions change"><li class="change"><a href="#" class="button disabled">ret</a></li></ul>
-				</div>
+				<? if($order_items_pickupdates): ?>
 
-				<div class="order">
-					<p class="pickup-date">30.05.2018</p>
-					<p class="order-place">Vesterbro</p>
-					<p class="order-products">Ugens pose</p>
-					<p class="change-untill">23/5 kl. 23.59</p>
-					<ul class="actions change"><li class="change"><a href="#" class="button disabled">ret</a></li></ul>
-				</div>
-
-				<div class="order">
-					<p class="pickup-date">06.06.2018</p>
-					<p class="order-place">Vesterbro</p>
-					<p class="order-products">Ugens pose</p>
-					<p class="change-untill">30/5 kl. 23.59</p>
-					<ul class="actions change"><li class="change"><a href="#" class="button disabled">ret</a></li></ul>
-				</div>
-
-				<div class="order">
-					<p class="pickup-date">13.06.2018</p>
-					<p class="order-place">Vesterbro</p>
-					<p class="order-products">
-						2x Ugens pose
-						Aspargespose
-						Frugtpose
-					</p>
-					<p class="change-untill">6/6 kl. 23.59</p>
-					<ul class="actions change"><li class="change"><a href="#" class="button">ret</a></li></ul>
-				</div>
+				<? foreach($order_items_pickupdates as $pickupdate): 
+					$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["user_id" => $user["id"]]);
+				?>
+					<? if($pickupdate_order_items): ?>
+					<div class="order_items">
+						<? foreach($pickupdate_order_items as $order_item): ?>
+						<div class="orderitem">
+							<p class="pickupdate"><?= $pickupdate["pickupdate"] ?></p>
+							<p class="orderitem-product"><?= $order_item["name"] ?></p>
+							<p class="change-untill"><span class="date"><?= date("d/m") ?></span> kl. <span class="time">23:59</span></p>
+							<ul class="actions change"><li class="change"><a href="#" class="button disabled">Ret</a></li></ul>
+						</div>
+						<? endforeach; ?>
+					</div>
+					<? endif; ?>
+				<? endforeach; ?>						
+				<? endif; ?>
 
 				<ul class="actions">
 					<!-- <li class="view-orders"><a href="#" class="button">Se gamle bestillinger</a></li> -->

@@ -38,7 +38,9 @@ if($user_id != 1) {
 	$orders = $model->getOrders();
 	$unpaid_membership = $UC->hasUnpaidMembership();
 
-
+	$cart_pickupdates = false;
+	$cart_items_without_pickupdate = false;
+	$order_items_pickupdates = false;
 
 	// Only get payment methods if cart has items
 	if($cart["items"]) {
