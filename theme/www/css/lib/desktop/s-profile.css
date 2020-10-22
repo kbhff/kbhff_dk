@@ -38,20 +38,20 @@
 
 
 /* LEFT COLUMN */
-#content div.profile .order,
-#content div.profile .order-headings {
+#content div.profile .orderitem,
+#content div.profile .orderitem-headings {
 	margin-left: 12px;
 	margin-right: 12px;
 }
 
-#content div.profile .order > p,
-#content div.profile .order-headings > h4 {
+#content div.profile .orderitem > p,
+#content div.profile .orderitem-headings > h4 {
 	padding: 0;
 }
 
-#content div.profile .orders,
-#content div.profile .order-headings,
-#content div.profile .order {
+#content div.profile .orderitems,
+#content div.profile .orderitem-headings,
+#content div.profile .orderitem {
 	font-size: 0;
 }
 
@@ -61,9 +61,9 @@
 	width: 100%;
 }
 
-#content div.profile .pickup-date,
-#content div.profile .order-place,
-#content div.profile .order-products,
+#content div.profile .pickupdate,
+#content div.profile .orderitem-place,
+#content div.profile .orderitem-product,
 #content div.profile .change-untill {
 	display: inline-block;
 	vertical-align: top;
