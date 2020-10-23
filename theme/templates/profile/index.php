@@ -9,7 +9,8 @@ $department = $UC->getUserDepartment();
 
 // Get membership status
 $is_member = $user["membership"] ? $user["membership"]["id"] : false;
-$is_membership_paid = $is_member && $user["membership"]["order"] && $user["membership"]["order"]["payment_status"] == 2 ? true : false;
+$is_active = isset($user["membership"]["subscription_id"]) ? true : false;
+$is_membership_paid = $is_member && $is_active && $user["membership"]["order"]["payment_status"] == 2 ? true : false;
 
 $orders = $SC->getOrders();
 if($orders) {
@@ -186,12 +187,18 @@ $unpaid_orders = $SC->getUnpaidOrders();
 
 						<div class="membership-info">
 							<p class="over">Kontingent</p>
-							<p class="under <?= $is_member ? ["unpaid", "partial", "paid"][$user["membership"]["order"]["payment_status"]] : "" ?>"><?= $is_member ? $SC->payment_statuses_dk[$user["membership"]["order"]["payment_status"]] : "(intet)" ?></p>
+							<p class="under <?= $is_member && $is_active ? ["unpaid", "partial", "paid"][$user["membership"]["order"]["payment_status"]] : "" ?>"><?= $is_member && $is_active ? $SC->payment_statuses_dk[$user["membership"]["order"]["payment_status"]] : "(intet)" ?></p>
 						</div>
 
 						<div class="membership-info">
 							<p class="over"><a href="/bliv-medlem">Medlemstype</a></p>
-							<p class="under"><?= $is_member ? $user["membership"]["item"]["name"] : "(ingen)" ?></p>
+							<? if($is_member && $is_active): ?>
+							<p class="under"><?= $user["membership"]["item"]["name"] ?></p>
+							<? elseif($is_member): ?>
+							<p class="under">Inaktivt medlem</p>
+							<? else: ?>
+							<p class="under">(intet))</p>
+							<? endif; ?>
 						</div>
 
 						<div class="membership-info">
