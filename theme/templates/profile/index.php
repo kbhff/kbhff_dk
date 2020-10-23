@@ -197,7 +197,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 							<? elseif($is_member): ?>
 							<p class="under">Inaktivt medlem</p>
 							<? else: ?>
-							<p class="under">(intet))</p>
+							<p class="under">(intet)</p>
 							<? endif; ?>
 						</div>
 
