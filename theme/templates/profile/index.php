@@ -9,7 +9,7 @@ $department = $UC->getUserDepartment();
 
 // Get membership status
 $is_member = $user["membership"] ? $user["membership"]["id"] : false;
-$is_membership_paid = $user["membership"] && $user["membership"]["id"] && $user["membership"]["order"]["payment_status"] == 2 ? true : false;
+$is_membership_paid = $is_member && $user["membership"]["order"] && $user["membership"]["order"]["payment_status"] == 2 ? true : false;
 
 $orders = $SC->getOrders();
 if($orders) {
