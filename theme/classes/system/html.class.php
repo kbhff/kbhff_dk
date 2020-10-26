@@ -267,9 +267,16 @@ class HTML extends HTMLCore {
 
 			$all_messages = message()->getMessages($type);
 			message()->resetMessages();
-			foreach($all_messages as $type => $messages) {
-				foreach($messages as $message) {
-					$_ .= '<p class="'.$type.'">'.$message.'</p>';
+			if($type) {
+				foreach($all_messages as $message) {
+					$_ .= '<p class="'.$type["type"].'">'.$message.'</p>';
+				}
+			}
+			else {
+				foreach($all_messages as $type => $messages) {
+					foreach($messages as $message) {
+						$_ .= '<p class="'.$type.'">'.$message.'</p>';
+					}
 				}
 			}
 			$_ .= '</div>';
