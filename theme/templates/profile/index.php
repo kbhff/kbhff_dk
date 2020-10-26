@@ -100,15 +100,15 @@ $unpaid_orders = $SC->getUnpaidOrders();
 			</div>
 
 			<div class="section order_items">
-				<h2>Eksisterende bestillinger</h2>
-
+				<h2>Bestillinger</h2>
+				
+				<? if($order_items_pickupdates): ?>
 				<div class="order_item-headings">
 					<h4 class="pickupdate">AFH.DATO</h4>
 					<h4 class="order_item-product">VARE(R)</h4>
 					<h4 class="change-untill">RET INDTIL</h4>
 				</div>
 
-				<? if($order_items_pickupdates): ?>
 
 				<? foreach($order_items_pickupdates as $pickupdate): 
 					$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["user_id" => $user["id"]]);
@@ -125,7 +125,9 @@ $unpaid_orders = $SC->getUnpaidOrders();
 						<? endforeach; ?>
 					</div>
 					<? endif; ?>
-				<? endforeach; ?>						
+				<? endforeach; ?>	
+				<? else: ?>
+				<p>Du har ingen aktuelle bestillinger.</p>					
 				<? endif; ?>
 
 				<ul class="actions">
