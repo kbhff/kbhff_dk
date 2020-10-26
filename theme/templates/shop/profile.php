@@ -18,7 +18,7 @@ $user = $UC->getUser();
 	<h1>Profil</h1>
 
 
-	<?= $HTML->serverMessages() ?>
+	<?= $HTML->serverMessages(["type" => "error"]) ?>
 
 
 	<div class="item">

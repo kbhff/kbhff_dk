@@ -77,7 +77,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 					<ul class="actions">
 						<?= $HTML->oneButtonForm(
 						"Betal ordre med kort, der ender på " . $card["last4"], 
-						"/shop/selectUserPaymentMethodForOrder",
+						"/butik/selectUserPaymentMethodForOrder",
 						array(
 							"inputs" => array(
 								"order_id" => $order["id"], 
@@ -102,7 +102,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 					<ul class="actions">
 						<?= $HTML->oneButtonForm(
 						"Betal ordre med " . $user_payment_method["name"], 
-						"/shop/selectUserPaymentMethodForOrder",
+						"/butik/selectUserPaymentMethodForOrder",
 						array(
 							"inputs" => array(
 								"order_id" => $order["id"], 

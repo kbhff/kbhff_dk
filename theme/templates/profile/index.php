@@ -9,7 +9,8 @@ $department = $UC->getUserDepartment();
 
 // Get membership status
 $is_member = $user["membership"] ? $user["membership"]["id"] : false;
-$is_membership_paid = $user["membership"] && $user["membership"]["id"] && $user["membership"]["order"]["payment_status"] == 2 ? true : false;
+$is_active = isset($user["membership"]["subscription_id"]) ? true : false;
+$is_membership_paid = $is_member && $is_active && $user["membership"]["order"]["payment_status"] == 2 ? true : false;
 
 $orders = $SC->getOrders();
 if($orders) {
@@ -101,10 +102,9 @@ $unpaid_orders = $SC->getUnpaidOrders();
 			<div class="section order_items">
 				<h2>Eksisterende bestillinger</h2>
 
-				<div class="order_item_headings">
-					<h4 class="pickup-date">AFH.DATO</h4>
-					<h4 class="orderitem-place">STED</h4>
-					<h4 class="orderitem-product">VARE(R)</h4>
+				<div class="order_item-headings">
+					<h4 class="pickupdate">AFH.DATO</h4>
+					<h4 class="order_item-product">VARE(R)</h4>
 					<h4 class="change-untill">RET INDTIL</h4>
 				</div>
 
@@ -116,11 +116,11 @@ $unpaid_orders = $SC->getUnpaidOrders();
 					<? if($pickupdate_order_items): ?>
 					<div class="order_items">
 						<? foreach($pickupdate_order_items as $order_item): ?>
-						<div class="orderitem">
+						<div class="order_item">
 							<p class="pickupdate"><?= $pickupdate["pickupdate"] ?></p>
-							<p class="orderitem-product"><?= $order_item["name"] ?></p>
-							<p class="change-untill"><span class="date"><?= date("d/m") ?></span> kl. <span class="time">23:59</span></p>
-							<ul class="actions change"><li class="change"><a href="#" class="button disabled">Ret</a></li></ul>
+							<p class="order_item-product"><?= $order_item["quantity"] > 1 ? $order_item["quantity"]." x " : ""?><?= $order_item["name"] ?></p>
+							<p class="change-untill"><span class="date"><?= date("d/m", strtotime($pickupdate["pickupdate"]." - 1 week")) ?></span> kl. <span class="time">23:59</span></p>
+							<ul class="actions change"><li class="change"><a href="#" class="button <?= date("Y-m-d") >= date("Y-m-d", strtotime($pickupdate["pickupdate"]." - 1 week")) ? "disabled" : "" ?>">Ret</a></li></ul>
 						</div>
 						<? endforeach; ?>
 					</div>
@@ -187,12 +187,18 @@ $unpaid_orders = $SC->getUnpaidOrders();
 
 						<div class="membership-info">
 							<p class="over">Kontingent</p>
-							<p class="under <?= $is_member ? ["unpaid", "partial", "paid"][$user["membership"]["order"]["payment_status"]] : "" ?>"><?= $is_member ? $SC->payment_statuses_dk[$user["membership"]["order"]["payment_status"]] : "(intet)" ?></p>
+							<p class="under <?= $is_member && $is_active ? ["unpaid", "partial", "paid"][$user["membership"]["order"]["payment_status"]] : "" ?>"><?= $is_member && $is_active ? $SC->payment_statuses_dk[$user["membership"]["order"]["payment_status"]] : "(intet)" ?></p>
 						</div>
 
 						<div class="membership-info">
 							<p class="over"><a href="/bliv-medlem">Medlemstype</a></p>
-							<p class="under"><?= $is_member ? $user["membership"]["item"]["name"] : "(ingen)" ?></p>
+							<? if($is_member && $is_active): ?>
+							<p class="under"><?= $user["membership"]["item"]["name"] ?></p>
+							<? elseif($is_member): ?>
+							<p class="under">Inaktivt medlem</p>
+							<? else: ?>
+							<p class="under">(intet)</p>
+							<? endif; ?>
 						</div>
 
 						<div class="membership-info">

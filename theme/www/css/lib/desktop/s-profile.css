@@ -38,20 +38,20 @@
 
 
 /* LEFT COLUMN */
-#content div.profile .orderitem,
-#content div.profile .orderitem-headings {
+#content div.profile .order_item,
+#content div.profile .order_item-headings {
 	margin-left: 12px;
 	margin-right: 12px;
 }
 
-#content div.profile .orderitem > p,
-#content div.profile .orderitem-headings > h4 {
+#content div.profile .order_item > p,
+#content div.profile .order_item-headings > h4 {
 	padding: 0;
 }
 
-#content div.profile .orderitems,
-#content div.profile .orderitem-headings,
-#content div.profile .orderitem {
+#content div.profile .order_items,
+#content div.profile .order_item-headings,
+#content div.profile .order_item {
 	font-size: 0;
 }
 
@@ -62,13 +62,12 @@
 }
 
 #content div.profile .pickupdate,
-#content div.profile .orderitem-place,
-#content div.profile .orderitem-product,
+#content div.profile .order_item-product,
 #content div.profile .change-untill {
 	display: inline-block;
 	vertical-align: top;
 	box-sizing: border-box;
-	width: 25%;
+	width: 33%;
 }
 
 #content div.profile p.change-untill {

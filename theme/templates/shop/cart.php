@@ -5,11 +5,11 @@ global $model;
 $user_id = session()->value("user_id");
 
 // if cart reference was passed to cart controller
-
 if(count($action) > 1) {
 	session()->value("cart_reference", $action[1]);
 }
 $cart = $model->getCart();
+$cart_id = $cart ? $cart["id"] : false;
 
 
 $IC = new Items();
@@ -23,10 +23,10 @@ $UC = new User();
 	print $HTML->serverMessages();
 	?>
 	<? 
-	if($cart["items"]) :
+	if($cart && $cart["items"]) :
 
 		// Get the total cart price
-		$total_cart_price = $model->getTotalCartPrice($cart["id"]);
+		$total_cart_price = $model->getTotalCartPrice($cart_id);
 		
 		if($total_cart_price && $total_cart_price["price"] > 0) {
 			
@@ -62,7 +62,7 @@ $UC = new User();
 <? endif; ?>
 
 	<div class="all_items">
-		<? if($cart["items"]): ?>
+		<? if($cart && $cart["items"]): ?>
 		<h2>Kurven indeholder</h2>
 		<? if($cart_items_without_pickupdate): ?>
 		<ul class="items">
@@ -206,7 +206,7 @@ $UC = new User();
 				<h3>
 					<span class="name">Total</span>
 					<span class="total_price">
-						<?= formatPrice($model->getTotalCartPrice($cart["id"]), array("vat" => true)) ?>
+						<?= formatPrice($model->getTotalCartPrice($cart_id), array("vat" => true)) ?>
 					</span>
 				</h3>
 			</li>
@@ -215,7 +215,7 @@ $UC = new User();
 	</div>
 
 	<? // Generate checkout button
-	if($cart["items"]) :?>
+	if($cart && $cart["items"]) :?>
 	<div class="checkout">
 		<ul class="actions">
 			<?= $HTML->oneButtonForm("Gå til betaling", "/butik/betal", array(
