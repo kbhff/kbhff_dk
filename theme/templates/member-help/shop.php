@@ -374,7 +374,7 @@ else {
 					</ul>
 					
 				<? else: ?>
-				<p><?= $member_name ?> har ingen aktuelle bestillinger.</p>
+				<p><?= $member_name ?> har ingen aktuelle grøntsagsbestillinger.</p>
 				<!-- <p>Gå til <a href="/profil">Min side</a> for at se gamle bestillinger.</p> -->
 				<? endif; ?>
 

@@ -128,7 +128,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 				<? endforeach; ?>	
 				<? else: ?>
 				<div>
-					<p>Du har ingen aktuelle bestillinger.</p>					
+					<p>Du har ingen aktuelle grøntsagsbestillinger.</p>					
 				</div>
 				<? endif; ?>
 

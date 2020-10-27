@@ -384,7 +384,7 @@ else {
 					</ul>
 					
 				<? else: ?>
-				<p>Du har ingen aktuelle bestillinger.</p>
+				<p>Du har ingen aktuelle grøntsagsbestillinger.</p>
 				<!-- <p>Gå til <a href="/profil">Min side</a> for at se gamle bestillinger.</p> -->
 				<? endif; ?>
 
