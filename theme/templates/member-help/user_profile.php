@@ -14,7 +14,13 @@ $user_name = $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . 
 
 // Get membership status
 $is_member = $user["membership"] ? $user["membership"]["id"] : false;
-$is_membership_paid = $is_member && $user["membership"]["order"]["payment_status"] == 2 ? true : false;
+$is_active = isset($user["membership"]["subscription_id"]) ? true : false;
+$is_membership_paid = $is_member && $is_active && $user["membership"]["order"]["payment_status"] == 2 ? true : false;
+
+$orders = $SC->getOrders(["user_id" => $user_id]);
+if($orders) {
+	$order_items_pickupdates = $SC->getOrderItemsPickupdates($user_id, ["after" => date("Y-m-d")]);
+}
 
 $has_accepted_terms = $UC->hasAcceptedTerms(["user_id" => $user_id]);
 
@@ -93,61 +99,43 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 				</ul>
 			</div>
 			<? endif; ?>
-			<div class="section orders">
-				<h2>Eksisterende bestillinger</h2>
-
-				<div class="order-headings">
-					<h4 class="pickup-date">AFH.DATO</h4>
-					<h4 class="order-place">STED</h4>
-					<h4 class="order-products">VARE(R)</h4>
+			<div class="section order_items">
+				<h2>Bestillinger</h2>
+				
+				<? if($order_items_pickupdates): ?>
+				<div class="order_item-headings">
+					<h4 class="pickupdate">AFH.DATO</h4>
+					<h4 class="order_item-product">VARE(R)</h4>
 					<h4 class="change-untill">RET INDTIL</h4>
 				</div>
 
-				<div class="order">
-					<p class="pickup-date">23.05.2018</p>
-					<p class="order-place">Vesterbro</p>
-					<p class="order-products">
-						2x Ugens pose
-						Aspargespose
-						Frugtpose
-					</p>
-					<p class="change-untill">20/5 kl. 23.59</p>
-					<ul class="actions change"><li class="change"><a href="#" class="button disabled">ret</a></li></ul>
-				</div>
 
-				<div class="order">
-					<p class="pickup-date">30.05.2018</p>
-					<p class="order-place">Vesterbro</p>
-					<p class="order-products">Ugens pose</p>
-					<p class="change-untill">23/5 kl. 23.59</p>
-					<ul class="actions change"><li class="change"><a href="#" class="button disabled">ret</a></li></ul>
+				<? foreach($order_items_pickupdates as $pickupdate): 
+					$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["user_id" => $user["id"]]);
+				?>
+					<? if($pickupdate_order_items): ?>
+					<div class="order_items">
+						<? foreach($pickupdate_order_items as $order_item): ?>
+						<div class="order_item">
+							<p class="pickupdate"><?= $pickupdate["pickupdate"] ?></p>
+							<p class="order_item-product"><?= $order_item["quantity"] > 1 ? $order_item["quantity"]." x " : ""?><?= $order_item["name"] ?></p>
+							<p class="change-untill"><span class="date"><?= date("d/m", strtotime($pickupdate["pickupdate"]." - 1 week")) ?></span> kl. <span class="time">23:59</span></p>
+							<ul class="actions change"><li class="change"><a href="#" class="button <?= date("Y-m-d") >= date("Y-m-d", strtotime($pickupdate["pickupdate"]." - 1 week")) ? "disabled" : "" ?>">Ret</a></li></ul>
+						</div>
+						<? endforeach; ?>
+					</div>
+					<? endif; ?>
+				<? endforeach; ?>	
+				<? else: ?>
+				<div>
+					<p>Du har ingen aktuelle bestillinger.</p>					
 				</div>
-
-				<div class="order">
-					<p class="pickup-date">06.06.2018</p>
-					<p class="order-place">Vesterbro</p>
-					<p class="order-products">Ugens pose</p>
-					<p class="change-untill">30/5 kl. 23.59</p>
-					<ul class="actions change"><li class="change"><a href="#" class="button disabled">ret</a></li></ul>
-				</div>
-
-				<div class="order">
-					<p class="pickup-date">13.06.2018</p>
-					<p class="order-place">Vesterbro</p>
-					<p class="order-products">
-						2x Ugens pose
-						Aspargespose
-						Frugtpose
-					</p>
-					<p class="change-untill">6/6 kl. 23.59</p>
-					<ul class="actions change"><li class="change"><a href="#" class="button">ret</a></li></ul>
-				</div>
+				<? endif; ?>
 
 				<ul class="actions">
 					<!-- <li class="view-orders"><a href="#" class="button">Se gamle bestillinger</a></li> -->
-					<li class="new-order"><?= !$has_accepted_terms ? '<a class="button disabled link">' : '<a href="/medlemshjaelp/butik/'.$user_id.'" class="button primary">'?>Ny bestilling</a></li>
+					<li class="new-order"><a href="/medlemshjaelp/butik/<?= $user_id ?>" class="button primary">Ny bestilling</a></li>
 				</ul>
-
 			</div>
 		</div>
 
