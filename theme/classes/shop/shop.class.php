@@ -476,8 +476,8 @@ class Shop extends ShopCore {
 		if($order_id) {
 			$sql .= " AND order_items.order_id = $order_id";
 		}
-		if($user_id) {
-			$sql .= " AND orders.user_id = $user_id";
+		else if($user_id) {
+			$sql .= " AND order_items.order_id = orders.id AND orders.user_id = $user_id";
 		}
 
 		if($query->sql($sql)) {
