@@ -37,7 +37,7 @@ if($clerk_user_id != 1) {
 	$member_name = $member_user['nickname'] ? $member_user['nickname'] : $member_user['firstname'] . " " . $member_user['lastname'];
 	$member_name_possesive = preg_match("/s$/", $member_name) ? $member_name."'" : $member_name."s";
 	$products = $DC->getDepartmentProducts($department["id"]);
-	$pickupdates = $PC->getPickupdates(["after" => date("Y-m-d", strtotime("next wednesday"))]);
+	$pickupdates = $PC->getPickupdates(["after" => date("Y-m-d", strtotime("+1 week"))]);
 	$department_pickupdates = $DC->getDepartmentPickupdates($department["id"]);
 	$orders = $SC->getOrders(["user_id" => $member_user_id]);
 	$unpaid_membership = $model->hasUnpaidMembership(["user_id" => $member_user_id]);
