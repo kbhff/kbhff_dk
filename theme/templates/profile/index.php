@@ -2,6 +2,7 @@
 // Get methods for user and shop data manipulation
 $UC = new User();
 $SC = new Shop();
+$HTML = new HTML();
 
 // Get current user and related department
 $user = $UC->getKbhffUser();
@@ -28,18 +29,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 
 	<div class="banner i:banner variant:1 format:jpg"></div>
 
-	<? if(message()->hasMessages()): ?>
-	<div class="messages">
-	<?
-	$all_messages = message()->getMessages();
-	message()->resetMessages();
-	foreach($all_messages as $type => $messages):
-		foreach($messages as $message): ?>
-		<p class="<?= $type ?>"><?= $message ?></p>
-		<? endforeach;?>
-	<? endforeach;?>
-	</div>
-	<? endif; ?>
+	<?= $HTML->serverMessages(["type" => "error"]); ?>
 
 	<div class="c-wrapper">
 
