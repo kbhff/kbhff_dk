@@ -33,7 +33,7 @@ if($user_id != 1) {
 	$user = $UC->getUser();
 	$department = $UC->getUserDepartment();
 	$products = $DC->getDepartmentProducts($department["id"]);
-	$pickupdates = $PC->getPickupdates(["after" => date("Y-m-d", strtotime("next wednesday"))]);
+	$pickupdates = $PC->getPickupdates(["after" => date("Y-m-d", strtotime("+1 week"))]);
 	$department_pickupdates = $DC->getDepartmentPickupdates($department["id"]);
 	$orders = $model->getOrders();
 	$unpaid_membership = $UC->hasUnpaidMembership();
