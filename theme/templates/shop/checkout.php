@@ -405,7 +405,7 @@ else {
 	<? endif; ?>
 
 
-
+<!-- 
 	<div class="delivery">
 		<h2>Leveringsadresse <a href="/butik/adresse/levering">(Redigér)</a></h2>
 
@@ -457,7 +457,7 @@ else {
 		<p>Du kan <a href="/butik/adresse/fakturering">tilføje en faktureringsadresse</a>, hvis du vil have den vist på din faktura, men det er ikke et krav. </p>
 		
 		<? endif; ?>
-	</div>
+	</div> -->
 
 	<? endif; ?>
 
