@@ -61,7 +61,7 @@ if($cart) {
 		</ul>
 
 		<ul class="actions">
-			<?= $model->link("Ændr din ordre", "/butik/kurv", array("class" => "button", "wrapper" => "li.modify")) ?>
+			<?= $model->link("Ret din ordre", "/butik/kurv", array("class" => "button", "wrapper" => "li.modify")) ?>
 		</ul>
 
 	</div>

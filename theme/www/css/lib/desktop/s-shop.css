@@ -40,6 +40,13 @@
 
 
 
+#content .scene.shopPayment div.cartitems {width: 450px; margin: 15px auto 20px;}
+#content .scene.shopPayment div.cartitems ul.cartitems {padding-bottom: 30px; padding-left: 0; padding-right: 0; margin: 0; list-style: none;}
+#content .scene.shopPayment div.cartitems ul.cartitems li {padding: 0;}
+#content .scene.shopPayment div.cartitems ul.actions {text-align: center;}
+#content .scene.shopPayment div.cartitems ul.actions li.modify {/*display: block;*/padding-right: 0; padding-left: 0;}
+#content .scene.shopPayment div.cartitems h3 {padding-left: 0; padding-right: 0;}
+
 /* ul orders */
 
 #content .scene.shopPayment ul.orders {padding-top: 50px; margin: 0 auto; width: 450px; padding-bottom: 0;}
@@ -50,15 +57,15 @@
 /* form card*/
 #content .scene.shopPayment form.card {width: 450px; margin: 0 auto; padding-top: 50px;}
 #content .scene.shopPayment form.card fieldset {background-color: #f2f2f2;}
-#content .scene.shopPayment form.card fieldset div.field.tel.card {width: 400px; margin: 0 auto; padding-top: 24px;}
-#content .scene.shopPayment form.card fieldset div.field.tel.exp_month {width: 65px; display: inline-block; margin-left: 15px;}
+#content .scene.shopPayment form.card fieldset div.field.tel.card {width: 418px; padding-top: 24px;}
+#content .scene.shopPayment form.card fieldset div.field.tel.exp_month {width: 65px; display: inline-block;}
 #content .scene.shopPayment form.card fieldset div.field.tel.exp_year {width: 65px; display: inline-block;}
-#content .scene.shopPayment form.card fieldset div.field.cvc {width: 85px; float: right; margin-right: 15px;}
+#content .scene.shopPayment form.card fieldset div.field.cvc {width: 85px; float: right;}
 #content .scene.shopPayment form.card fieldset span.slash {font-size: 26px; vertical-align: middle; position: relative; top: 10px;}
 #content .scene.shopPayment form.card ul.actions {text-align: center; padding-right: 0; padding-left: 0; margin-top: 12px;}
 #content .scene.shopPayment form.card ul.actions li {padding: 0;}
 
 
-#content .scene.shopPayment > p {width: 450px; margin: 0 auto; font-size: 12px; line-height: 12px; padding-bottom: 0;}
+#content .scene.shopPayment > p {width: 450px; margin: 0 auto; font-size: 12px; line-height: 12px; padding-bottom: 0; text-align: center;}
 
 #content .scene.shopReceipt ul.actions {text-align: center}
