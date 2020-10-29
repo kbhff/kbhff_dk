@@ -95,7 +95,7 @@ if($orders && $total_payment): ?>
 						"/butik/selectUserPaymentMethodForOrders",
 						array(
 							"inputs" => array(
-								"order_ids" => implode($order_list, ","), 
+								"order_ids" => implode(",", $order_list), 
 								"user_payment_method_id" => $user_payment_method["id"], 
 								"payment_method_id" => $user_payment_method["payment_method_id"],
 								"gateway_payment_method_id" => $card["id"]
