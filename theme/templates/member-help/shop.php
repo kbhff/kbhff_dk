@@ -123,7 +123,24 @@ else {
 		</div>
 		<div class="c-two-thirds">
 
-			<? if($products): ?>
+			<? if($unpaid_membership && $unpaid_membership["type"] == "signupfee"): ?>
+			<div class="c-box alert unpaid signupfee">
+				<h3>OBS! <?= $member_name ?> mangler at betale sit indmeldelsesgebyr</h3>
+				<p>Indmeldelsesgebyret skal betales før medlemmet kan bestille grøntsager.</p>
+				<ul class="actions">
+					<li class="pay"><a href="/medlemshjaelp/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal indmeldelsesgebyr nu</a></li>
+				</ul>
+			</div>
+			<? elseif($unpaid_membership && $unpaid_membership["type"] == "membership"): ?>
+			<div class="c-box alert unpaid membership">
+				<h3>OBS! <?= $member_name ?> mangler at betale kontingent</h3>
+				<p>Kontingentet skal betales før medlemmet kan bestille grøntsager.</p>
+				<ul class="actions">
+					<li class="pay"><a href="/medlemshjaelp/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal kontingent nu</a></li>
+				</ul>
+			</div>
+
+			<? elseif($products): ?>
 			<ul class="products i:products">
 
 				<? foreach($products as $product): 
@@ -318,27 +335,12 @@ else {
 					<li ><a class="button" href="/medlemshjaelp/butik/kurv/<?= $cart_reference ?>">Gå til bekræftelse og betaling</a></li>
 				</ul>
 				<? else: ?>
-				<p><?= $member_name ?> har ingenting i kurven endnu. <br />Føj en eller flere varer til kurven først.</p>
+				<p><?= $member_name ?> har ingenting i kurven endnu. </p>
+				<? if(!$unpaid_membership): ?>
+				<p>Føj en eller flere varer til kurven først.</p>
+				<? endif; ?>
 				<? endif; ?>
 			</div>
-
-			<? if($unpaid_membership && $unpaid_membership["type"] == "signupfee"): ?>
-			<div class="c-box alert unpaid signupfee">
-				<h3>OBS! Du mangler at betale dit indmeldelsesgebyr</h3>
-				<p>Indmeldelsesgebyret vil blive indkrævet i forbindelse med næste grøntsagsbestilling. Man kan også betale det separat ved at klikke nedenfor.</p>
-				<ul class="actions">
-					<li class="pay"><a href="/butik/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal indmeldelsesgebyr nu</a></li>
-				</ul>
-			</div>
-			<? elseif($unpaid_membership && $unpaid_membership["type"] == "membership"): ?>
-			<div class="c-box alert unpaid membership">
-				<h3>OBS! Du mangler at betale kontingent</h3>
-				<p>Kontingentbetaling vil blive indkrævet i forbindelse med næste grøntsagsbestilling. Man kan også betale det separat ved at klikke nedenfor.</p>
-				<ul class="actions">
-					<li class="pay"><a href="/butik/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal kontingent nu</a></li>
-				</ul>
-			</div>
-			<? endif; ?>
 
 			<div class="orders c-box">
 				<h3>Aktuelle bestillinger</h3>

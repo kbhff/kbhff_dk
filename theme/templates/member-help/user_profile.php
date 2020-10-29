@@ -68,7 +68,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 				<h3>OBS! <?= $user_name ?> har ubetalte ordrer</h3>
 				<p>Ubetalte grøntsagsbestillinger vil blive automatisk slettet en uge inden den førstkommende afhentningsdag.</p>
 				<? if($unpaid_membership): ?>
-				<p>Hvis man har et ubetalt indmeldelsesgebyr eller kontingent, vil det blive indkrævet i forbindelse med den næste grøntsagsbestilling. Man kan også betale med det samme ved at klikke nedenfor.</p>
+				<p>Hvis man har et ubetalt indmeldelsesgebyr eller kontingent, skal det betales før medlemmet kan bestille grøntsager.</p>
 				<? endif; ?>
 				<ul class="actions">
 					<li class="pay"><a href="/medlemshjaelp/betalinger/<?= $user_id ?>" class="button">Betal udestående</a></li>
@@ -85,7 +85,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 			<? elseif($unpaid_membership && $unpaid_membership["type"] == "signupfee"): ?>
 			<div class="c-box alert unpaid signupfee">
 				<h3>OBS! <?= $user_name ?> mangler at betale sit indmeldelsesgebyr</h3>
-				<p>Indmeldelsesgebyret vil blive indkrævet i forbindelse med næste grøntsagsbestilling. Man kan også betale det separat ved at klikke nedenfor.</p>
+				<p>Indmeldelsesgebyret skal betales før medlemmet kan bestille grøntsager.</p>
 				<ul class="actions">
 					<li class="pay"><a href="/medlemshjaelp/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal indmeldelsesgebyr nu</a></li>
 				</ul>
@@ -93,7 +93,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 			<? elseif($unpaid_membership && $unpaid_membership["type"] == "membership"): ?>
 			<div class="c-box alert unpaid membership">
 				<h3>OBS! <?= $user_name ?> mangler at betale kontingent</h3>
-				<p>Kontingentbetaling vil blive indkrævet i forbindelse med næste grøntsagsbestilling. Man kan også betale det separat ved at klikke nedenfor.</p>
+				<p>Kontingentet skal betales før medlemmet kan bestille grøntsager.</p>
 				<ul class="actions">
 					<li class="pay"><a href="/medlemshjaelp/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal kontingent nu</a></li>
 				</ul>
@@ -134,7 +134,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 
 				<ul class="actions">
 					<!-- <li class="view-orders"><a href="#" class="button">Se gamle bestillinger</a></li> -->
-					<li class="new-order"><a href="/medlemshjaelp/butik/<?= $user_id ?>" class="button primary">Ny bestilling</a></li>
+					<li class="new-order"><a href="/medlemshjaelp/butik/<?= $user_id ?>" class="button primary <?= $unpaid_membership ? "disabled" : "" ?>">Ny bestilling</a></li>
 				</ul>
 			</div>
 		</div>
