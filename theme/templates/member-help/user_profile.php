@@ -87,7 +87,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 				<h3>OBS! <?= $user_name ?> mangler at betale sit indmeldelsesgebyr</h3>
 				<p>Indmeldelsesgebyret vil blive indkrævet i forbindelse med næste grøntsagsbestilling. Man kan også betale det separat ved at klikke nedenfor.</p>
 				<ul class="actions">
-					<li class="pay"><a href="/butik/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal indmeldelsesgebyr nu</a></li>
+					<li class="pay"><a href="/medlemshjaelp/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal indmeldelsesgebyr nu</a></li>
 				</ul>
 			</div>
 			<? elseif($unpaid_membership && $unpaid_membership["type"] == "membership"): ?>
@@ -95,7 +95,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 				<h3>OBS! <?= $user_name ?> mangler at betale kontingent</h3>
 				<p>Kontingentbetaling vil blive indkrævet i forbindelse med næste grøntsagsbestilling. Man kan også betale det separat ved at klikke nedenfor.</p>
 				<ul class="actions">
-					<li class="pay"><a href="/butik/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal kontingent nu</a></li>
+					<li class="pay"><a href="/medlemshjaelp/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal kontingent nu</a></li>
 				</ul>
 			</div>
 			<? endif; ?>

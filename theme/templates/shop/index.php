@@ -335,7 +335,7 @@ else {
 			<? if($unpaid_membership && $unpaid_membership["type"] == "signupfee"): ?>
 			<div class="c-box alert unpaid signupfee">
 				<h3>OBS! Du mangler at betale dit indmeldelsesgebyr</h3>
-				<p>Indmeldelsesgebyret vil automatisk blive tilføjet din næste bestilling. Du kan også betale det separat ved at klikke nedenfor.</p>
+				<p>Indmeldelsesgebyret vil blive indkrævet i forbindelse med næste grøntsagsbestilling. Man kan også betale det separat ved at klikke nedenfor.</p>
 				<ul class="actions">
 					<li class="pay"><a href="/butik/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal indmeldelsesgebyr nu</a></li>
 				</ul>
@@ -343,7 +343,7 @@ else {
 			<? elseif($unpaid_membership && $unpaid_membership["type"] == "membership"): ?>
 			<div class="c-box alert unpaid membership">
 				<h3>OBS! Du mangler at betale kontingent</h3>
-				<p>Kontingentbetaling vil automatisk blive tilføjet din næste bestilling. Du kan også betale det separat ved at klikke nedenfor.</p>
+				<p>Kontingentbetaling vil blive indkrævet i forbindelse med næste grøntsagsbestilling. Man kan også betale det separat ved at klikke nedenfor.</p>
 				<ul class="actions">
 					<li class="pay"><a href="/butik/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal kontingent nu</a></li>
 				</ul>
