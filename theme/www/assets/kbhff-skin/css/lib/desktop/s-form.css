@@ -35,9 +35,11 @@ div.field select option {height: 24px;}
 div.field textarea {width: calc(100% - 4px); height: 100px; resize: none; overflow: auto; padding: 3px 0 2px 6px;}
 div.field textarea.autoexpand {width: calc(100% - 4px); padding: 3px 6px 2px; overflow: hidden;}
 
+div.field .pseudolabel {display: none;}
+
 div.field.checkbox {}
 div.field.checkbox label {display: inline-block; vertical-align: top; text-transform: none; font-size: 14px; line-height: 24px; padding: 0 0 0 28px;
-	background: transparent url(../../../img/gx_checkbox_unchecked.svg) no-repeat left center;
+	background: transparent url(../../../img/gx_checkbox_unchecked.svg) no-repeat left 2px;
 	background-size: 20px 20px;
 }
 div.field.checkbox input:checked + label {
@@ -47,7 +49,7 @@ div.field.checkbox input {z-index: 2; position: absolute; top: 0; left: 0; width
 
 div.field.radiobuttons .item {padding: 3px 0 0; position: relative;}
 div.field.radiobuttons .item label {display: block; text-transform: none; font-size: 14px; line-height: 24px;  padding: 0 0 0 28px;
-	background: transparent url(../../../img/gx_radiobutton_unchecked.svg) no-repeat left center;
+	background: transparent url(../../../img/gx_radiobutton_unchecked.svg) no-repeat left 2px;
 	background-size: 20px 20px;
 }
 div.field.radiobuttons .item input:checked + label {
