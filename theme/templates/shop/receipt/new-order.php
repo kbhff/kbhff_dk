@@ -124,10 +124,15 @@ if(isset($action[3])) {
 	<div class="activation_info">
 		<p>Husk, at du skal aktivere din konto før du kan bestille grøntsager. Aktiveringskoden er blevet sendt til <em><?= $user["email"] ?></em>.</p>
 	</div>
+	<? elseif($user_id == 1): ?>
+	<ul class="actions">
+		<li><a class="button primary clickable" href="/login">Log ind</a></li>
+	</ul>
 	<? else: ?>
-			<ul class="actions">
-				<li><a class="button primary clickable" href="/login">Log ind</a></li>
-			</ul>
+	<ul class="actions">
+		<li><a class="button primary clickable" href="/profil">Gå til Min Side</a></li>
+	</ul>
+	
 	<? endif; ?>
 
 <? elseif($user_id > 1):?>
