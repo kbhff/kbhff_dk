@@ -133,7 +133,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 		<div class="c-one-third">
 
 			<ul class="actions">
-				<li class="new-order full-width"><a href="#" class="button primary">Ny bestilling</a></li>
+				<li class="new-order full-width"><a href="/butik" class="button primary">Ny bestilling</a></li>
 				<li class="book-shift full-width"><a href="#" class="button primary">Ta' en vagt</a></li>
 			</ul>
 
