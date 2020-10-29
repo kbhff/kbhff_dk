@@ -89,6 +89,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 				</div>
 			</div>
 
+			<? if($is_member): ?>
 			<div class="section order_items">
 				<h2>Bestillinger</h2>
 				
@@ -128,14 +129,26 @@ $unpaid_orders = $SC->getUnpaidOrders();
 				</ul>
 			</div>
 
+			<? else: ?>
+
+			<div class="section not_member">
+				<h2>Du har ikke et aktivt medlemsskab</h2>
+				<p>Meld dig ind nu – <a href="/bliv-medlem">se vores medlemsskaber her</a>.</p>
+
+			</div>
+
+			<? endif; ?>
+
 		</div>
 
 		<div class="c-one-third">
 
+			<? if($is_member): ?>
 			<ul class="actions">
 				<li class="new-order full-width"><a href="/butik" class="button primary">Ny bestilling</a></li>
 				<li class="book-shift full-width"><a href="#" class="button primary">Ta' en vagt</a></li>
 			</ul>
+			<? endif; ?>
 
 			<? if($department): ?>
 			<div class="section department">
@@ -169,6 +182,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 			</div>
 			<? endif; ?>
 
+			<? if($is_member): ?>
 			<div class="section membership">
 				<div class="c-box">
 					<h3>Dit medlemskab</h3>
@@ -212,6 +226,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 
 				</div>
 			</div>
+			<? endif; ?>
 
 			<div class="section user">
 				<div class="c-box">
