@@ -793,7 +793,7 @@ class SuperUser extends SuperUserCore {
 		}
 		
 
-		$member = $MC->getMembers(["user_id"]);
+		$member = $MC->getMembers(["user_id" => $user_id]);
 		if($member && $member["order"] && $member["order"]["payment_status"] <= 1) {
 
 			$order_item = $IC->getItem(["id" => $member["order"]["items"][0]["item_id"]]);
