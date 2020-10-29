@@ -128,7 +128,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 				<? endforeach; ?>	
 				<? else: ?>
 				<div>
-					<p><?= $member_name ?> har ingen aktuelle grøntsagsbestillinger.</p>					
+					<p><?= $user_name ?> har ingen aktuelle grøntsagsbestillinger.</p>					
 				</div>
 				<? endif; ?>
 
