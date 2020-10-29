@@ -105,8 +105,8 @@ else {
 	<div class="login">
 		<h2>Log ind</h2>
 		<p>Log ind nu, hvis du allerede er medlem.</p>
-		<?= $UC->formStart("/butik/betaling?login=true", array("class" => "login labelstyle:inject")) ?>
-			<?= $UC->input("login_forward", ["type" => "hidden", "value" => "/butik/betaling"]); ?>
+		<?= $UC->formStart("/butik/betal?login=true", array("class" => "login labelstyle:inject")) ?>
+			<?= $UC->input("login_forward", ["type" => "hidden", "value" => "/butik/betal"]); ?>
 			<fieldset>
 				<?= $UC->input("username", array("type" => "string", "label" => "Email or mobile number", "required" => true, "value" => $username, "pattern" => "[\w\.\-_]+@[\w\-\.]+\.\w{2,10}|([\+0-9\-\.\s\(\)]){5,18}", "hint_message" => "You can log in using either your email or mobile number.", "error_message" => "You entered an invalid email or mobile number.")); ?>
 				<?= $UC->input("password", array("type" => "password", "label" => "Password", "required" => true, "hint_message" => "Type your password", "error_message" => "Your password should be between 8-20 characters.")); ?>
@@ -114,13 +114,10 @@ else {
 
 			<ul class="actions">
 				<?= $UC->submit("Log ind", array("class" => "primary", "wrapper" => "li.login")) ?>
-				<li class="forgot">Har du <a href="/login/forgot" target="_blank">glemt dit password</a>?</li>
 			</ul>
 		<?= $UC->formEnd() ?>
-	</div>
-
-	<div class="signup">
-		<p>Eller <a href="/bliv-medlem">bliv medlem</a> nu.</p>
+		<p class="forgot">Har du <a href="/login/glemt" target="_blank">glemt din adgangskode</a>?</p>
+		<p class="signup">Endnu ikke medlem? <a href="/bliv-medlem">Meld dig ind nu</a>.</p>
 	</div>
 
 	<? elseif($unpaid_membership): 
@@ -138,20 +135,8 @@ else {
 	// user is already logged in, show checkout overview
 	else: ?>
 
-	<div class="contact">
-		<h2>Dine brugeroplysninger <a href="/butik/profil">(Redigér)</a></h2>
-		<dl class="list">
-			<dt>Fulde navn</dt>
-			<dd><?= $user["firstname"] ?> <?= $user["lastname"] ?></dd>
-			<dt>Email</dt>
-			<dd><?= $user["email"] ?></dd>
-			<dt>Mobiltelefon</dt>
-			<dd><?= $user["mobile"] ?></dd>
-		</dl>
-	</div>
-
 	<div class="all_items">
-		<h2>Din kurv <a href="/butik/kurv">(Redigér)</a></h2>
+		<h2>Din kurv</h2>
 		<? if($cart["items"]): ?>
 		
 		<? if($cart_items_without_pickupdate): ?>
@@ -162,23 +147,21 @@ else {
 				$cart_item_id = $cart_item["id"];
 			?>
 			<li class="item id:<?= $item["id"] ?>">
-				<p>
-					<span class="quantity"><?= $cart_item["quantity"] ?></span>
-					<span class="x">x </span>
-					<span class="name"><?= $item["name"] ?> </span>
-					<span class="a">á </span>
-					<span class="unit_price"><?= formatPrice($price) ?></span>
-					<span class="total_price">
-						<?= formatPrice(array(
-								"price" => $price["price"]*$cart_item["quantity"], 
-								"vat" => $price["vat"]*$cart_item["quantity"], 
-								"currency" => $cart["currency"], 
-								"country" => $cart["country"]
-							), 
-							array("vat" => true)
-						) ?>
-					</span>
-				</p>
+				<span class="quantity"><?= $cart_item["quantity"] ?></span>
+				<span class="x">x </span>
+				<span class="name"><?= $item["name"] ?> </span>
+				<span class="a">á </span>
+				<span class="unit_price"><?= formatPrice($price) ?></span>
+				<span class="total_price">
+					<?= formatPrice(array(
+							"price" => $price["price"]*$cart_item["quantity"], 
+							"vat" => $price["vat"]*$cart_item["quantity"], 
+							"currency" => $cart["currency"], 
+							"country" => $cart["country"]
+						), 
+						array("vat" => false)
+					) ?>
+				</span>
 				<? if($item["subscription_method"] && $price["price"]): ?>
 				<p class="subscription_method">
 					Tilbagevendende betaling hver <?= strtolower($item["subscription_method"]["name"]) ?>.
@@ -198,8 +181,9 @@ else {
 				<ul class="actions">
 					<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
 						"confirm-value" => "Sikker?",
+						"wait-value" => "Vent ...",
 						"wrapper" => "li.delete",
-						"success-location" => "/butik"
+						"success-location" => "/butik/betal"
 						]) ?>
 				</ul>
 				
@@ -231,18 +215,16 @@ else {
 					?>
 
 					<li class="item id:<?= $item["id"] ?>">
-						<p>
-							<span class="quantity"><?= $cart_item["quantity"] ?></span>
-							<span class="x">x </span>
-							<span class="name"><?= $item["name"] ?> </span>
-							<span class="a">á </span>
-							<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
-						</p>
+						<span class="quantity"><?= $cart_item["quantity"] ?></span>
+						<span class="x">x </span>
+						<span class="name"><?= $item["name"] ?> </span>
+						<span class="a">á </span>
+						<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
 						<ul class="actions">
 							<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
 								"confirm-value" => "Sikker?",
 								"wrapper" => "li.delete",
-								"success-location" => "/butik"
+								"success-location" => "/butik/betal"
 								]) ?>
 						</ul>
 					</li>
@@ -263,14 +245,29 @@ else {
 				</span>
 			</h3>
 		</div>
+
 		<? else: ?>
-		<p>Du har ingenting i kurven endnu. <br />Tag et kig på vores <a href="/memberships">medlemskaber</a>.</p>
+		<p>Du har ingenting i kurven endnu. <br />Tag et kig på vores <a href="/bliv-medlem">medlemskaber</a>.</p>
 		<? endif; ?>
 	</div>
 
 
-	
-	
+	<div class="contact">
+		<h2>Dine brugeroplysninger </h2>
+		<dl class="list">
+			<dt>Fulde navn</dt>
+			<dd><?= $user["firstname"] || $user["lastname"] ? $user["firstname"] . " " . $user["lastname"] : "N/A" ?></dd>
+			<dt>Email</dt>
+			<dd><?= $user["email"] ? $user["email"] : "N/A" ?></dd>
+			<dt>Mobiltelefon</dt>
+			<dd><?= $user["mobile"] ? $user["mobile"] : "N/A" ?></dd>
+		</dl>
+		<ul class="actions">
+			<li><a href="/butik/profil" class="button">Ret oplysninger</a></li>
+		</ul>
+	</div>
+
+
 	<? 
 	// Only show payment options if cart has items
 	if($cart["items"] && $total_cart_price && $total_cart_price["price"] !== 0): ?>
@@ -404,60 +401,6 @@ else {
 
 	<? endif; ?>
 
-
-<!-- 
-	<div class="delivery">
-		<h2>Leveringsadresse <a href="/butik/adresse/levering">(Redigér)</a></h2>
-
-		<? if($cart["delivery_address_id"]): ?>
-		<dl class="list">
-			<dt>Navn</dt>
-			<dd><?= $delivery_address["address_name"] ?></dd>
-			<dt>Att</dt>
-			<dd><?= $delivery_address["att"] ?></dd>
-			<dt>Adresse 1</dt>
-			<dd><?= $delivery_address["address1"] ?></dd>
-			<dt>Adresse 2</dt>
-			<dd><?= $delivery_address["address2"] ?></dd>
-			<dt>Postnummer og by</dt>
-			<dd><?= $delivery_address["postal"] ?> <?= $delivery_address["city"] ?></dd>
-			<dt>Land</dt>
-			<dd><?= $delivery_address["country"] ?></dd>
-		</dl>
-
-		<? else: ?>
-
-		<p>Du kan <a href="/butik/adresse/levering">tilføje en leveringsadresse</a>, hvis du vil have den vist på din faktura, men det er ikke et krav.</p>
-		
-		<? endif; ?>
-	</div>
-
-	<div class="billing">
-		<h2>Faktureringsadresse <a href="/butik/adresse/fakturering">(Redigér)</a></h2>
-
-		<? if($cart["billing_address_id"]): ?>
-		<dl class="list">
-			<dt>Navn</dt>
-			<dd><?= $billing_address["address_name"] ?></dd>
-			<dt>Att</dt>
-			<dd><?= $billing_address["att"] ?></dd>
-			<dt>Adresse 1</dt>
-			<dd><?= $billing_address["address1"] ?></dd>
-			<dt>Adresse 2</dt>
-			<dd><?= $billing_address["address2"] ?></dd>
-			<dt>Postnummer og by</dt>
-			<dd><?= $billing_address["postal"] ?> <?= $billing_address["city"] ?></dd>
-			<dt>Stat</dt>
-			<dd><?= $billing_address["state"] ?></dd>
-			<dt>Land</dt>
-			<dd><?= $billing_address["country"] ?></dd>
-		</dl>
-		<? else: ?>
-
-		<p>Du kan <a href="/butik/adresse/fakturering">tilføje en faktureringsadresse</a>, hvis du vil have den vist på din faktura, men det er ikke et krav. </p>
-		
-		<? endif; ?>
-	</div> -->
 
 	<? endif; ?>
 

@@ -1,3 +1,45 @@
+#content .scene.checkout div.login {
+	width: 380px;
+	margin: 0 auto;
+	padding-top: 20px;
+}
+#content .scene.checkout div.login ul.actions,
+#content .scene.checkout div.login p.forgot,
+#content .scene.checkout div.login p.signup {
+	text-align: center;
+}
+#content .scene.checkout div.contact ul.actions {
+	text-align: left;
+}
+#content .scene.checkout div.contact ul.actions li {
+	padding-left: 0;
+}
+
+#content .scene.checkout ul.items {list-style: none; padding: 0;}
+#content .scene.checkout ul.items > li {padding: 20px 0 10px; position: relative;}
+#content .scene.checkout ul.items li > span {display: inline-block; vertical-align: top; padding-top: 4px; font-size: 16px;}
+#content .scene.checkout ul.items li p {padding-bottom: 10px;}
+#content .scene.checkout ul.items li p.subscription_method+p.membership {margin-top: -10px;}
+#content .scene.checkout ul.items li span.total_price {float: right; padding-right: 100px;}
+
+#content .scene.checkout ul.items li.total {border-top: 1px solid #dedede; /*border-bottom: 1px solid #dedede;*/}
+#content .scene.checkout ul.items li.total h3 {font-size: 20px;}
+
+#content .scene.checkout ul.items li ul.actions {padding: 0; top: 18px; position: absolute; right: 15px;}
+
+#content .scene.checkout ul.payment_methods {padding: 0; margin: 0; list-style: none;}
+#content .scene.checkout ul.payment_methods li.payment_method {padding-bottom: 10px;}
+#content .scene.checkout ul.payment_methods li.payment_method ul.actions {padding: 0; text-align: left;}
+#content .scene.checkout ul.payment_methods li.payment_method ul.actions li {padding-left: 0;}
+#content .scene.checkout ul.payment_methods li.payment_method.stripe p {
+	background: url(/img/checkout/gx_creditcards.png) no-repeat 0px top;
+	background-size: auto 17px;
+	padding-left: 100px;
+}
+
+
+
+
 /* ul orders */
 
 #content .scene.shopPayment ul.orders {padding-top: 50px; margin: 0 auto; width: 450px; padding-bottom: 0;}

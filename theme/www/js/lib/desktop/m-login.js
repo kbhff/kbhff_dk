@@ -14,6 +14,8 @@ Util.Modules["login"] = new function() {
 
 			var form_login = u.qs("form.login", this);
 			u.f.init(form_login);
+
+			form_login.inputs["username"].focus();
 		}
 
 		// scene is ready
