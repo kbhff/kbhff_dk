@@ -410,22 +410,24 @@ if($action) {
 
 			}
 
-			# /medlemshjaelp/butik/updateCartItemQuantity/#cart_reference#
-			else if($action[1] == "updateCartItemQuantity" && $page->validateCsrfToken()) {
+			
+		}
+		else if(count($action) == 4) {
+
+			# /medlemshjaelp/butik/updateCartItemQuantity/#cart_reference#/#cart_item_id#
+			if($action[1] == "updateCartItemQuantity" && $page->validateCsrfToken()) {
 
 				message()->resetMessages();
 
 
-				// create new user
-				$cart = $SC->updateCartItemQuantity($action);
+				$item = $SC->updateCartItemQuantity(["updateCartItemQuantity", $action[2], $action[3]]);
 
-				// successful creation
-				if($cart) {
+				if($item) {
 
 					if(!message()->hasMessages()) {
 						message()->addMessage("Mængde opdateret");
 					}
-					header("Location: /butik/kurv");
+					header("Location: /medlemshjaelp/butik/kurv/".$action[2]);
 					exit();
 				}
 				// something went wrong
@@ -435,11 +437,26 @@ if($action) {
 
 			}
 
-		}
-		else if(count($action) == 4) {
+			# /medlemshjaelp/butik/deleteFromCart/#cart_reference#/#cart_item_id#
+			else if($action[1] == "deleteFromCart" && $page->validateCsrfToken()) {
+
+				$cart = $SC->deleteFromCart(["deleteFromCart", $action[2], $action[3]]);
+
+				if($cart) {
+
+					message()->addMessage("Varen blev slettet fra kurven.");
+					header("Location: /medlemshjaelp/butik/kurv/".$cart["cart_reference"]);
+					exit();
+				}
+				// something went wrong
+				else {
+					message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
+				}
+
+			}
 			
 			# /medlemshjaelp/butik/newOrderFromCart/#cart_reference#/#cart_id#
-			if($action[1] == "newOrderFromCart") {
+			else if($action[1] == "newOrderFromCart") {
 
 				$cart_reference = $action[2];
 				$cart_id = $action[3];

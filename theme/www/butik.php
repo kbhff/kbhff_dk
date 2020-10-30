@@ -52,17 +52,17 @@ if($action) {
 
 	}
 
-	# /butik/updateCartItemQuantity
+	# /butik/updateCartItemQuantity/#cart_reference#/#cart_item_id#
 	else if($action[0] == "updateCartItemQuantity" && $page->validateCsrfToken()) {
 
 		message()->resetMessages();
 
 
 		// create new user
-		$cart = $model->updateCartItemQuantity($action);
+		$item = $model->updateCartItemQuantity($action);
 
 		// successful creation
-		if($cart) {
+		if($item) {
 
 			if(!message()->hasMessages()) {
 				message()->addMessage("Mængde opdateret");
@@ -77,7 +77,7 @@ if($action) {
 
 	}
 
-	# /butik/deleteFromCart
+	# /butik/deleteFromCart/#cart_reference#/#cart_item_id#
 	else if($action[0] == "deleteFromCart" && $page->validateCsrfToken()) {
 
 		// create new user

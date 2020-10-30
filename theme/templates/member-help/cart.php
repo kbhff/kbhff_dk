@@ -98,7 +98,7 @@ else {
 				<h3>
 					<?
 					// add option of updating item quantity to item 
-					print $SC->formStart("/butik/updateCartItemQuantity/".$cart["cart_reference"]."/".$cart_item["id"], array("class" => "updateCartItemQuantity labelstyle:inject")) ?>
+					print $SC->formStart("/medlemshjaelp/butik/updateCartItemQuantity/".$cart["cart_reference"]."/".$cart_item["id"], array("class" => "updateCartItemQuantity labelstyle:inject")) ?>
 						<fieldset>
 							<?= $SC->input("quantity", array(
 								"type" => "integer",
@@ -143,7 +143,7 @@ else {
 
 				<ul class="actions">
 					<? // generate delete button to item 
-					print $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/".$cart_item["id"], array(
+					print $HTML->oneButtonForm("Slet", "/medlemshjaelp/butik/deleteFromCart/".$cart["cart_reference"]."/".$cart_item["id"], array(
 						"wrapper" => "li.delete",
 						"static" => true
 					)) ?>
@@ -176,7 +176,7 @@ else {
 	
 						<li class="item id:<?= $item["id"] ?>">
 							<p>
-								<?= $SC->formStart("/butik/updateCartItemQuantity/".$cart["cart_reference"]."/".$cart_item["id"], array("class" => "updateCartItemQuantity labelstyle:inject")) ?>
+								<?= $SC->formStart("/medlemshjaelp/butik/updateCartItemQuantity/".$cart["cart_reference"]."/".$cart_item["id"], array("class" => "updateCartItemQuantity labelstyle:inject")) ?>
 									<fieldset>
 										<?= $SC->input("quantity", array(
 											"type" => "integer",
@@ -195,7 +195,7 @@ else {
 								<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
 							</p>
 							<ul class="actions">
-								<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
+								<?= $HTML->oneButtonForm("Slet", "/medlemshjaelp/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
 									"confirm-value" => "Sikker?",
 									"wrapper" => "li.delete",
 									"success-location" => "/medlemshjaelp/butik/kurv/".$cart_reference
