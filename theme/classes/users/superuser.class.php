@@ -58,41 +58,16 @@ class SuperUser extends SuperUserCore {
  			}
  		}
 		
-		$user = $this->getUser(["user_id" => $user_id]);
-		$user["department"] = $this->getUserDepartment();
-		// print_r($user);
+		$user = $this->getUsers(["user_id" => $user_id]);
 
-		return $user;
-	}
+		if($user) {
 
-
-	function getUser($_options=false) {
-		
-		// default values
-		$user_id = false;
-
-		if($_options !== false) {
-			foreach($_options as $_option => $_value) {
-				switch($_option) {
-
-					case "user_id"        : $user_id          = $_value; break;
-				}
-			}
-		}
-
-		// default values
-
-		$query = new Query();
-		
-		$sql = "SELECT * FROM ".$this->db." WHERE id = $user_id";
-//			print $sql;
-		if($query->sql($sql)) {
-			$user = $query->result(0);
-
+			 
+			$query = new Query();
 
 			$user["mobile"] = "";
 			$user["email"] = "";
-
+	
 			$sql = "SELECT * FROM ".$this->db_usernames." WHERE user_id = $user_id";
 			if($query->sql($sql)) {
 				$usernames = $query->results();
@@ -100,23 +75,79 @@ class SuperUser extends SuperUserCore {
 					$user[$username["type"]] = $username["username"];
 				}
 			}
-
-
+	
+	
 			$user["addresses"] = $this->getAddresses();
-
+	
 			$user["maillists"] = $this->getMaillists();
-
+	
 			if((defined("SITE_SHOP") && SITE_SHOP)) {
 				include_once("classes/users/supermember.class.php");
 				$MC = new SuperMember();
 				$user["membership"] = $MC->getMembers(["user_id" => $user_id]);
 			}
-
+	
+			$user["department"] = $this->getUserDepartment(["user_id" => $user_id]);
+			// print_r($user);
+	
 			return $user;
 		}
 
 		return false;
 	}
+
+
+// 	function getUser($_options=false) {
+		
+// 		// default values
+// 		$user_id = false;
+
+// 		if($_options !== false) {
+// 			foreach($_options as $_option => $_value) {
+// 				switch($_option) {
+
+// 					case "user_id"        : $user_id          = $_value; break;
+// 				}
+// 			}
+// 		}
+
+// 		// default values
+
+// 		$query = new Query();
+		
+// 		$sql = "SELECT * FROM ".$this->db." WHERE id = $user_id";
+// //			print $sql;
+// 		if($query->sql($sql)) {
+// 			$user = $query->result(0);
+
+
+// 			$user["mobile"] = "";
+// 			$user["email"] = "";
+
+// 			$sql = "SELECT * FROM ".$this->db_usernames." WHERE user_id = $user_id";
+// 			if($query->sql($sql)) {
+// 				$usernames = $query->results();
+// 				foreach($usernames as $username) {
+// 					$user[$username["type"]] = $username["username"];
+// 				}
+// 			}
+
+
+// 			$user["addresses"] = $this->getAddresses();
+
+// 			$user["maillists"] = $this->getMaillists();
+
+// 			if((defined("SITE_SHOP") && SITE_SHOP)) {
+// 				include_once("classes/users/supermember.class.php");
+// 				$MC = new SuperMember();
+// 				$user["membership"] = $MC->getMembers(["user_id" => $user_id]);
+// 			}
+
+// 			return $user;
+// 		}
+
+// 		return false;
+// 	}
 	/**
 	 * Delete kbhff account
 	 *

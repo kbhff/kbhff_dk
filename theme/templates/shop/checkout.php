@@ -245,7 +245,9 @@ else {
 				</span>
 			</h3>
 		</div>
-
+		
+		<? elseif($user_id > 1 && $membership): ?>
+		<p>Du har ingenting i kurven endnu. <br />Tag et kig på vores <a href="/bliv-medlem">medlemskaber</a>.</p>
 		<? else: ?>
 		<p>Du har ingenting i kurven endnu. <br />Tag et kig på vores <a href="/bliv-medlem">medlemskaber</a>.</p>
 		<? endif; ?>

@@ -32,7 +32,7 @@ if($clerk_user_id != 1) {
 	}
 
 	$cart_reference = $cart["cart_reference"];
-	$member_user = $model->getUser(["user_id" => $member_user_id]);
+	$member_user = $model->getKbhffUser(["user_id" => $member_user_id]);
 	$department = $model->getUserDepartment(["user_id" => $member_user_id]);
 	$member_name = $member_user['nickname'] ? $member_user['nickname'] : $member_user['firstname'] . " " . $member_user['lastname'];
 	$member_name_possesive = preg_match("/s$/", $member_name) ? $member_name."'" : $member_name."s";

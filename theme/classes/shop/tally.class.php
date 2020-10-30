@@ -895,8 +895,8 @@ class Tally extends Model {
 		foreach($tallies as $tally) {
 
 			$department = $DC->getDepartment(["id" => $tally["department_id"]]);
-			$opened_by = $UC->getUser(["user_id" => $tally["opened_by"]]);
-			$closed_by = $UC->getUser(["user_id" => $tally["closed_by"]]);
+			$opened_by = $UC->getKbhffUser(["user_id" => $tally["opened_by"]]);
+			$closed_by = $UC->getKbhffUser(["user_id" => $tally["closed_by"]]);
 			$previous_tally = $this->getPreviousTally($tally["id"]);
 			if($previous_tally) {
 
