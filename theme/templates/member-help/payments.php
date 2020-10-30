@@ -90,12 +90,12 @@ if($orders && $total_payment): ?>
 			<ul class="orderitems">
 			<? foreach($full_order["items"] as $order_item): ?>
 				<li><?= $order_item["quantity"] ?> x <?= $order_item["name"] ?></li>
-				<li>
-					<ul class="actions">
-						<li><a href="/medlemshjaelp/betaling/<?= $full_order["order_no"] ?>" class="button primary">Betal ordre</a></li>
-					</ul>
-				</li>
-			<? endforeach; ?>
+				<? endforeach; ?>
+			</ul>
+		</li>
+		<li>
+			<ul class="actions">
+				<li><a href="/medlemshjaelp/betaling/<?= $full_order["order_no"] ?>" class="button primary">Betal ordre</a></li>
 			</ul>
 		</li>
 	<? endforeach; ?>
