@@ -259,7 +259,8 @@ class SuperShop extends SuperShopCore {
 
 		if($cart && $cart["items"]) {
 
-			$sql = "SELECT cart_items.* FROM ".$this->db_pickupdate_cart_items." AS pickupdate_cart_items, ".$this->db_cart_items." AS cart_items WHERE pickupdate_cart_items.pickupdate_id = $pickupdate_id AND cart_items.id = pickupdate_cart_items.cart_item_id AND cart_items.cart_id = ".$cart["id"];
+			$sql = "
+				SELECT cart_items.* FROM ".$this->db_pickupdate_cart_items." AS pickupdate_cart_items, ".$this->db_cart_items." AS cart_items, ".$this->db_pickupdates." AS pickupdates  WHERE pickupdates.id = $pickupdate_id AND pickupdate_cart_items.pickupdate_id = pickupdates.id AND cart_items.id = pickupdate_cart_items.cart_item_id AND cart_items.cart_id = ".$cart["id"]. " ORDER BY pickupdates.pickupdate";
 			if($query->sql($sql)) {
 				
 				$cart_pickupdate_items = $query->results();
