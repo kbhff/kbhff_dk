@@ -2,7 +2,7 @@
 global $action;
 global $model;
 
-$this->pageTitle("Stripe");
+$this->pageTitle("Betaling");
 
 $IC = new Items();
 

@@ -88,21 +88,38 @@ if($cart && $cart["items"]) {
 							"currency" => $cart["currency"],
 							"country" => $cart["country"]
 						),
-						array("vat" => true)
+						array("vat" => false)
 					) ?>
 				</span>
 
-				<? // print subscription information 
-				if($item["subscription_method"] && $price["price"]): ?>
-				<p class="subscription_method">
-					Betaling gentages hver <?= strtolower($item["subscription_method"]["name"]) ?>.
+				<? if($item["itemtype"] == "signupfee"): ?>
+				<p class="membership">
+					<? if($price["price"]): ?>
+					Dette køb indeholder et medlemskab.
+					<? else: ?>
+					Bekræft ordren for at tilmelde dig nyhedsbrevet.
+					<? endif; ?>
 				</p>
 				<? endif; ?>
 
-				<? // print membership information
-				if($item["itemtype"] == "signupfee"): ?>
-				<p class="membership">
-					Dit køb inkluderer et medlemskab.
+				<? if(isset($item["associated_membership_id"])):
+					 $membership = $IC->getItem(["id" => $item["associated_membership_id"], "extend" => ["subscription_method" => true]]); 
+				?>
+				<p class="subscription_method">
+					<? if($membership["subscription_method"]["duration"] == "annually"): ?>
+					Tilbagevendende betaling hvert <?= strtolower($membership["subscription_method"]["name"]) ?>.
+					<? else: ?>
+					Tilbagevendende betaling hver <?= strtolower($membership["subscription_method"]["name"]) ?>.
+					<? endif; ?>
+				</p>
+
+				<? elseif($item["subscription_method"]): ?>
+				<p class="subscription_method">
+					<? if($item["subscription_method"]["duration"] == "annually"): ?>
+					Tilbagevendende betaling hvert <?= strtolower($item["subscription_method"]["name"]) ?>.
+					<? else: ?>
+					Tilbagevendende betaling hver <?= strtolower($item["subscription_method"]["name"]) ?>.
+					<? endif; ?>
 				</p>
 				<? endif; ?>
 
@@ -160,6 +177,28 @@ if($cart && $cart["items"]) {
 						<span class="name"><?= $item["name"] ?> </span>
 						<span class="a">á </span>
 						<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
+						<span class="total_price">
+							<? // generate total price and vat to item 
+							print formatPrice(array(
+									"price" => $price["price"]*$cart_item["quantity"],
+									"vat" => $price["vat"]*$cart_item["quantity"],
+									"currency" => $cart["currency"],
+									"country" => $cart["country"]
+								),
+								array("vat" => false)
+							) ?>
+						</span>
+
+						<? if($item["subscription_method"]): ?>
+						<p class="subscription_method">
+							<? if($item["subscription_method"]["duration"] == "annually"): ?>
+							Tilbagevendende betaling hvert <?= strtolower($item["subscription_method"]["name"]) ?>.
+							<? else: ?>
+							Tilbagevendende betaling hver <?= strtolower($item["subscription_method"]["name"]) ?>.
+							<? endif; ?>
+						</p>
+						<? endif; ?>
+
 						<ul class="actions">
 							<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
 								"confirm-value" => "Sikker?",

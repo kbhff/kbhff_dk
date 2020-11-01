@@ -184,7 +184,7 @@ else {
 					<? endif; ?>
 				</p>
 
-				<? elseif(isset($item["associated_membership_id"])): ?>
+				<? elseif($item["subscription_method"]): ?>
 				<p class="subscription_method">
 					<? if($item["subscription_method"]["duration"] == "annually"): ?>
 					Tilbagevendende betaling hvert <?= strtolower($item["subscription_method"]["name"]) ?>.
@@ -235,6 +235,29 @@ else {
 						<span class="name"><?= $item["name"] ?> </span>
 						<span class="a">á </span>
 						<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
+						<span class="total_price">
+							<? // generate total price and vat to item 
+							print formatPrice(array(
+									"price" => $price["price"]*$cart_item["quantity"],
+									"vat" => $price["vat"]*$cart_item["quantity"],
+									"currency" => $cart["currency"],
+									"country" => $cart["country"]
+								),
+								array("vat" => false)
+							) ?>
+						</span>
+
+
+						<? if($item["subscription_method"]): ?>
+						<p class="subscription_method">
+							<? if($item["subscription_method"]["duration"] == "annually"): ?>
+							Tilbagevendende betaling hvert <?= strtolower($item["subscription_method"]["name"]) ?>.
+							<? else: ?>
+							Tilbagevendende betaling hver <?= strtolower($item["subscription_method"]["name"]) ?>.
+							<? endif; ?>
+						</p>
+						<? endif; ?>
+
 						<ul class="actions">
 							<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
 								"confirm-value" => "Sikker?",

@@ -73,7 +73,7 @@
 
 
 
-
+/* PAYMENT */
 #content .scene.shopPayment div.cartitems {width: 450px; margin: 15px auto 20px;}
 #content .scene.shopPayment div.cartitems ul.cartitems {padding-bottom: 30px; padding-left: 0; padding-right: 0; margin: 0; list-style: none;}
 #content .scene.shopPayment div.cartitems ul.cartitems li {padding: 0;}
@@ -99,7 +99,29 @@
 #content .scene.shopPayment form.card ul.actions {text-align: center; padding-right: 0; padding-left: 0; margin-top: 12px;}
 #content .scene.shopPayment form.card ul.actions li {padding: 0;}
 
+#content .scene.shopPayment.stripe form div.field.card input.visa {
+	background: url(/img/checkout/gx_visa_small.png) no-repeat right 7px;
+}
+#content .scene.shopPayment.stripe form div.field.card input.amex {
+	background: url(../../../img/gx_amex_small.png) no-repeat right 7px;
+}
+#content .scene.shopPayment.stripe form div.field.card input.mastercard {
+	background: url(../../../img/gx_mastercard_small.png) no-repeat right 7px;
+}
+
 
 #content .scene.shopPayment > p {width: 450px; margin: 0 auto; font-size: 12px; line-height: 12px; padding-bottom: 0; text-align: center;}
 
+
+#content .scene.shopReceipt ul.orders {margin: 0; list-style: none; padding: 0;}
+#content .scene.shopReceipt ul.orders > li {list-style-type: none; padding-left: 0; font-size: 16px;}
+#content .scene.shopReceipt ul.orders > li span.price {float: right;}
+#content .scene.shopReceipt ul.orders > li.total_price {font-size: 18px; font-weight: 700; border-top: 1px solid #000000; padding-top: 12px; margin-top: 12px;}
+
+#content .scene.shopReceipt div.membership_info,
+#content .scene.shopReceipt div.activation_info,
+#content .scene.shopReceipt div.order_info {padding: 0 0 20px;}
+
 #content .scene.shopReceipt ul.actions {text-align: center}
+
+
