@@ -91,7 +91,7 @@ if($item) {
 		
 				<?= $model->formStart("/bliv-medlem/addToCart", array("class" => "signup labelstyle:inject")) ?>
 					<?= $model->input("quantity", array("value" => 1, "type" => "hidden")); ?>
-					<?= $model->input("item_id", array("value" => $item["item_id"], "type" => "hidden")); ?>
+					<?= $model->input("item_id", array("value" => $signupfee_item["item_id"], "type" => "hidden")); ?>
 	
 					<ul class="actions">
 						<?= $model->submit("Tilmeld", array("class" => "primary", "wrapper" => "li.signup")) ?>
