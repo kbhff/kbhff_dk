@@ -8,14 +8,14 @@ $SC = new SuperShop();
 // Get current user and related department
 $user_id = $action[1];
 
-$user = $UC->getKbhffUser(["user_id" => $user_id]);
+$member_user = $UC->getKbhffUser(["user_id" => $user_id]);
 $department = $UC->getUserDepartment(["user_id" => $user_id]);
-$user_name = $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'];
+$user_name = $member_user['nickname'] ? $member_user['nickname'] : $member_user['firstname'] . " " . $member_user['lastname'];
 
 // Get membership status
-$is_member = $user["membership"] ? $user["membership"]["id"] : false;
-$is_active = isset($user["membership"]["subscription_id"]) ? true : false;
-$is_membership_paid = $is_member && $is_active && $user["membership"]["order"]["payment_status"] == 2 ? true : false;
+$is_member = $member_user["membership"] ? $member_user["membership"]["id"] : false;
+$is_active = isset($member_user["membership"]["subscription_id"]) ? true : false;
+$is_membership_paid = $is_member && $is_active && $member_user["membership"]["order"]["payment_status"] == 2 ? true : false;
 
 $orders = $SC->getOrders(["user_id" => $user_id]);
 if($orders) {
@@ -33,12 +33,16 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 
 <div class="scene profile user_profile i:user_profile">
 
-	
 	<div class="c-wrapper">
 		<div class="c-box obs">
-			<h2 class="obs"><span class="highlight">OBS! </span>Handler på vegne af <span class="highlight"><?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?></span></h2>
+			<h2 class="obs"><span class="highlight">OBS! </span>Handler på vegne af <span class="highlight"><?= $member_user['nickname'] ? $member_user['nickname'] : $member_user['firstname'] . " " . $member_user['lastname'] ?></span></h2>
 		</div>
-		
+	</div>
+
+	<h1>Bruger profil</h1>
+	
+	<div class="c-wrapper">
+
 		<?= $model->serverMessages(["type" => "error"]) ?>
 		
 		<div class="c-two-thirds">
@@ -148,17 +152,17 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 					<div class="fields">
 						<div class="membership-info">
 							<p class="over">Medlemsnummer</p>
-							<p class="under"><?= $is_member ? $user["membership"]["id"] : "(intet)" ?></p>
+							<p class="under"><?= $is_member ? $member_user["membership"]["id"] : "(intet)" ?></p>
 						</div>
 
 						<div class="membership-info">
 							<p class="over">Kontingent</p>
-							<p class="under <?= $is_member ? ["unpaid", "partial", "paid"][$user["membership"]["order"]["payment_status"]] : "" ?>"><?= $is_member ? $SC->payment_statuses_dk[$user["membership"]["order"]["payment_status"]] : "(intet)" ?></p>
+							<p class="under <?= $is_member ? ["unpaid", "partial", "paid"][$member_user["membership"]["order"]["payment_status"]] : "" ?>"><?= $is_member ? $SC->payment_statuses_dk[$member_user["membership"]["order"]["payment_status"]] : "(intet)" ?></p>
 						</div>
 
 						<div class="membership-info">
 							<p class="over">Medlemstype</p>
-							<p class="under"><?= $is_member ? $user["membership"]["item"]["name"] : "(ingen)" ?></p>
+							<p class="under"><?= $is_member ? $member_user["membership"]["item"]["name"] : "(ingen)" ?></p>
 						</div>
 
 						<div class="membership-info">
@@ -184,24 +188,24 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 
 						<div class="user-info">
 							<p class="over">Kaldenavn</p>
-							<p class="under"><?= $user['nickname'] ? $user['nickname'] : "(Ikke angivet)" ?></p>
+							<p class="under"><?= $member_user['nickname'] ? $member_user['nickname'] : "(Ikke angivet)" ?></p>
 						</div>
 
 						<div class="user-info">
 							<p class="over"> Fulde navn</p>
 							<p class="under">
-								<?= $user['firstname'] ? $user['firstname'] : "(Ikke angivet)", " ", $user["lastname"] ? $user["lastname"] : "(Ikke angivet)" ?>
+								<?= $member_user['firstname'] ? $member_user['firstname'] : "(Ikke angivet)", " ", $member_user["lastname"] ? $member_user["lastname"] : "(Ikke angivet)" ?>
 							</p>
 						</div>
 
 						<div class="user-info">
 							<p class="over">Email</p>
-							<p class="under"><?= $user["email"] ? $user["email"] : "(Ikke angivet)" ?></p>
+							<p class="under"><?= $member_user["email"] ? $member_user["email"] : "(Ikke angivet)" ?></p>
 						</div>
 
 						<div class="user-info">
 							<p class="over">Mobil</p>
-							<p class="under"><?= $user["mobile"] ? $user["mobile"] : "(Ikke angivet)" ?></p>
+							<p class="under"><?= $member_user["mobile"] ? $member_user["mobile"] : "(Ikke angivet)" ?></p>
 						</div>
 
 						<ul class="actions">

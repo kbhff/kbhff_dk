@@ -48,39 +48,40 @@ else {
 
 }
 
+if($cart["items"]) {
+
+	// Get the total cart price
+	$total_cart_price = $SC->getTotalCartPrice($cart["id"]);
+	
+	if($total_cart_price && $total_cart_price["price"] > 0) {
+		
+		// Get payment methods
+		$payment_methods = $this->paymentMethods();
+		
+	}
+	
+	$cart_pickupdates = $SC->getCartPickupdates(["cart_reference" => $cart_reference]);
+	$cart_items_without_pickupdate = $SC->getCartItemsWithoutPickupdate(["cart_reference" => $cart_reference]);
+	
+	if($member_user_id != 1) {
+		$department = $model->getUserDepartment(["user_id" => $member_user_id]);
+	}
+}
 
 ?>
 <? if($cart): ?>
 <div class="scene cart">
-	<div class="c-box obs">
-		<h2 class="obs"><span class="highlight">OBS! </span>Handler på vegne af <span class="highlight"><?= $member_name ?></span></h2>
+
+	<div class="c-wrapper">
+		<div class="c-box obs">
+			<h2 class="obs"><span class="highlight">OBS! </span>Handler på vegne af <span class="highlight"><a href="/medlemshjaelp/brugerprofil/<?= $member_user_id ?>"><?= $member_user['nickname'] ? $member_user['nickname'] : $member_user['firstname'] . " " . $member_user['lastname'] ?></a></span></h2>
+		</div>
 	</div>
+
 	<?
 	//print all stored messages
 	print $HTML->serverMessages(["type" => "error"]);
 	?>
-	<? 
-	if($cart["items"]) :
-
-		// Get the total cart price
-		$total_cart_price = $SC->getTotalCartPrice($cart["id"]);
-		
-		if($total_cart_price && $total_cart_price["price"] > 0) {
-			
-			// Get payment methods
-			$payment_methods = $this->paymentMethods();
-			
-		}
-		
-		$cart_pickupdates = $SC->getCartPickupdates(["cart_reference" => $cart_reference]);
-		$cart_items_without_pickupdate = $SC->getCartItemsWithoutPickupdate(["cart_reference" => $cart_reference]);
-		
-		if($member_user_id != 1) {
-			$department = $model->getUserDepartment(["user_id" => $member_user_id]);
-		}
-
-	?>
-<? endif; ?>
 
 	<div class="all_items">
 		<? if($cart["items"]): ?>

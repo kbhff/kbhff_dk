@@ -84,7 +84,11 @@ else {
 ?>
 <div class="scene shop i:shop">
 
-	<div class="banner i:banner variant:random format:jpg"></div>
+	<div class="c-wrapper">
+		<div class="c-box obs">
+			<h2 class="obs"><span class="highlight">OBS! </span>Handler på vegne af <span class="highlight"><a href="/medlemshjaelp/brugerprofil/<?= $member_user_id ?>"><?= $member_user['nickname'] ? $member_user['nickname'] : $member_user['firstname'] . " " . $member_user['lastname'] ?></a></span></h2>
+		</div>
+	</div>
 	
 	<h1>Bestilling af grøntsager</h1>
 
@@ -106,7 +110,7 @@ else {
 
 			<ul class="actions">
 				<?= $UC->submit("Log ind", array("class" => "primary", "wrapper" => "li.login")) ?>
-				<li class="forgot">Har du <a href="/login/forgot" target="_blank">glemt dit password</a>?</li>
+				<li class="forgot">Har du <a href="/login/glemt" target="_blank">glemt dit password</a>?</li>
 			</ul>
 		<?= $UC->formEnd() ?>
 	</div>
@@ -117,9 +121,6 @@ else {
 	else: ?>
 	<div class="c-wrapper">
 
-		<div class="c-box obs">
-			<h2 class="obs"><span class="highlight">OBS! </span>Handler på vegne af <span class="highlight"><a href="/medlemshjaelp/brugerprofil/<?= $member_user_id ?>"><?= $member_name ?></a></span></h2>
-		</div>
 		<div class="c-two-thirds">
 
 			<? if($unpaid_membership && $unpaid_membership["type"] == "signupfee"): ?>
@@ -235,48 +236,28 @@ else {
 
 			<div class="cart i:shopfrontCart c-primary-box">
 				<h3>Indkøbskurv</h3>
-				<? if($cart["items"] && $cart_items_without_pickupdate): ?>
+				<? if($cart["items"]): ?>
+					<? if($cart_items_without_pickupdate): ?>
 				<ul class="items">
 					<? 
-					// Loop through all cart items and show information and editing options of each item.
-					foreach($cart_items_without_pickupdate as $cart_item):
-						$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true)));
-						$price = $SC->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
-						$cart_item_id = $cart_item["id"];
+						// Loop through all cart items and show information and editing options of each item.
+						foreach($cart_items_without_pickupdate as $cart_item):
+							$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true)));
+							$price = $SC->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
+							$cart_item_id = $cart_item["id"];
 					?>
 					<li class="item id:<?= $item["id"] ?>">
-						<p>
-							<span class="quantity"><?= $cart_item["quantity"] ?></span>
-							<span class="x">x </span>
-							<span class="name"><?= $item["name"] ?> </span>
-							<span class="a">á </span>
-							<span class="unit_price"><?= formatPrice($price) ?></span>
-							<span class="total_price">
-								<? // generate total price and vat to item 
-								print formatPrice(array(
-										"price" => $price["price"]*$cart_item["quantity"],
-										"vat" => $price["vat"]*$cart_item["quantity"],
-										"currency" => $cart["currency"],
-										"country" => $cart["country"]
-									),
-									array("vat" => true)
-								) ?>
-							</span>
-						</p>
-
-						<ul class="actions">
-							<? // generate delete button to item 
-							print $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/".$cart_item["id"], array(
-								"confirm-value" => "Sikker?",
-								"wrapper" => "li.delete",
-								"success-location" => "/medlemshjaelp/butik/".$member_user_id
-							)) ?>
-						</ul>
+						<span class="quantity"><?= $cart_item["quantity"] ?></span>
+						<span class="x">x </span>
+						<span class="name"><?= $item["name"] ?> </span>
+						<span class="a">á </span>
+						<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
 					</li>
-					<? endforeach; ?>
+					<? 	endforeach; ?>
 				</ul>
-				<? endif; ?>
-				<? if($cart["items"] && $cart_pickupdates): ?>
+					<? endif; ?>
+
+					<? if($cart_pickupdates): ?>
 				<ul class="pickupdates">
 					
 					<? foreach($cart_pickupdates as $pickupdate): 
@@ -299,20 +280,11 @@ else {
 							?>
 
 							<li class="item id:<?= $item["id"] ?>">
-								<p>
-									<span class="quantity"><?= $cart_item["quantity"] ?></span>
-									<span class="x">x </span>
-									<span class="name"><?= $item["name"] ?> </span>
-									<span class="a">á </span>
-									<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
-								</p>
-								<ul class="actions">
-									<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
-										"confirm-value" => "Sikker?",
-										"wrapper" => "li.delete",
-										"success-location" => "/medlemshjaelp/butik/".$member_user_id
-										]) ?>
-								</ul>
+								<span class="quantity"><?= $cart_item["quantity"] ?></span>
+								<span class="x">x </span>
+								<span class="name"><?= $item["name"] ?> </span>
+								<span class="a">á </span>
+								<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
 							</li>
 
 							<? endforeach; ?>
@@ -322,22 +294,20 @@ else {
 						<? endif; ?>
 					<? endforeach; ?>
 				</ul>
-				<div class="total">
-					<h3>
-						<span class="name">I alt</span>
-						<span class="total_price">
-							<?= formatPrice($total_cart_price) ?>
-						</span>
-					</h3>
-				</div>
+					<? endif; ?>
+
 				<ul class="actions">
 					<li ><a class="button" href="/medlemshjaelp/butik/kurv/<?= $cart_reference ?>">Gå til bekræftelse og betaling</a></li>
 				</ul>
+
 				<? else: ?>
+
 				<p><?= $member_name ?> har ingenting i kurven endnu. </p>
-				<? if(!$unpaid_membership): ?>
+
+					<? if(!$unpaid_membership): ?>
 				<p>Føj en eller flere varer til kurven først.</p>
-				<? endif; ?>
+					<? endif; ?>
+
 				<? endif; ?>
 			</div>
 
