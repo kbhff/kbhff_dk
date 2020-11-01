@@ -5,23 +5,21 @@ global $UC; // User
 global $SC;
 $IC = new Items();
 
-
 $cart_reference = $action[2];
 $cart = $SC->getCarts(["cart_reference" => $cart_reference]);
-
 $clerk_user_id = session()->value("user_id");
-$member_user_id = $cart["user_id"];
 
 // Clerk is logged in
-if($clerk_user_id != 1) {
-
+if($clerk_user_id != 1 && $cart) {
+	
+	$member_user_id = $cart["user_id"];
 	$member_user = $model->getKbhffUser(["user_id" => $member_user_id]);
 	$department = $model->getUserDepartment(["user_id" => $member_user_id]);
 	$member_name = $member_user['nickname'] ? $member_user['nickname'] : $member_user['firstname'] . " " . $member_user['lastname'];
 	$member_name_possesive = preg_match("/s$/", $member_name) ? $member_name."'" : $member_name."s";
 
 	// Only get payment methods if cart has items
-	if($cart["items"]) {
+	if($cart && $cart["items"]) {
 
 		// Get the total cart price
 		$total_cart_price = $SC->getTotalCartPrice($cart["id"]);
@@ -52,6 +50,7 @@ else {
 
 
 ?>
+<? if($cart): ?>
 <div class="scene cart">
 	<div class="c-box obs">
 		<h2 class="obs"><span class="highlight">OBS! </span>Handler på vegne af <span class="highlight"><?= $member_name ?></span></h2>
@@ -252,3 +251,11 @@ else {
 	</div>
 <? 	endif; ?>
 </div>
+<? else: ?>
+<div>
+	<h1>Hovsa?</h1>
+	<p>Denne kurv eksisterer ikke. Det kan skyldes at den er blevet omdannet til en ordre.</p>
+</div>
+
+<? endif; ?>
+

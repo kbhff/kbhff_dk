@@ -481,6 +481,26 @@ if($action) {
 
 				
 			}
+
+			# /medlemshjaelp/butik/cancelOrder/#order_no#/#user_id#
+			else if($action[1] == "cancelOrder") {
+
+				$order_no = $action[2];
+				$user_id = $action[3];
+
+				$order = $SC->getOrders(["order_no" => $order_no]);
+
+				if($SC->cancelOrder(["cancelOrder", $order["id"], $user_id])) {
+
+					message()->addMessage("Ordren ".$order_no." blev annulleret.");
+					header("Location: /medlemshjaelp/butik/".$user_id);
+					exit();
+				}
+				// something went wrong
+				else {
+					message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
+				}
+			}
 		}
 		
 	}
