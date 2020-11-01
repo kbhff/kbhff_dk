@@ -81,6 +81,11 @@ else {
 		<h1>Hovsa?</h1>
 		<p>Denne ordre (<?= $order["order_no"] ?>) er allerede betalt, så der er intet at gøre her.</p>
 	</div>
+<? elseif($order && $order["status"] == 3): ?>
+	<div>
+		<h1>Hovsa?</h1>
+		<p>Denne order (<?= $order["order_no"] ?>) er annulleret, så der er intet at gøre her.</p>
+	</div>
 <? else: ?>
 
 <div class="scene member_help_payment <?= $order ? "i:member_help_payment" : "i:scene" ?>">
@@ -194,9 +199,9 @@ else {
 			<ul class="actions">
 				<?= $model->submit("Betal ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
 			</ul>
-		<?= $model->formEnd() ?>
-	
-		<?= $model->formStart("registerPayment/".$order_no, ["class" => "cash"]) ?>
+			<?= $model->formEnd() ?>
+			
+			<?= $model->formStart("registerPayment/".$order_no, ["class" => "cash"]) ?>
 			<fieldset class="cash">
 				<?= $model->input("payment_amount", array("type" => "hidden", "value" => $total_order_price["price"])); ?>
 				<?= $model->input("payment_method_id", array("type" => "hidden", "value" => $cash_payment_method_id)); ?>
@@ -208,11 +213,14 @@ else {
 				</div>
 				<?= $model->input("confirm_cash_payment", array("type" => "checkbox", "label" => "Personen har betalt ".formatPrice($total_order_price)." kontant.", "required" => true)); ?>
 			</fieldset>
-	
-		<ul class="actions">
-			<?= $model->submit("Godkend betaling af ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
-		</ul>
+			
+			<ul class="actions">
+				<?= $model->submit("Godkend betaling af ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
+			</ul>
 		<?= $model->formEnd() ?>
+		<ul class="actions">
+			<li class="cancel"><a href="/medlemshjaelp/butik/cancelOrder/<?= $order_no ?>/<?= $member_user_id ?>" class="button">Annullér ordre</a></li>
+		</ul>
 	</div>
 
 	<? else: ?>

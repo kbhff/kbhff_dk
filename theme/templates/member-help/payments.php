@@ -23,7 +23,6 @@ if($orders) {
 	
 	// Loop through all orders to get total payment amount
 	foreach($orders as $index => $order) {
-		$department = $UC->getUserDepartment(["user_id" => $order["user_id"]]);
 		$total_order_price = $SC->getTotalOrderPrice($order["id"]);
 		if($total_order_price) {
 			$amount = formatPrice($total_order_price);
@@ -40,25 +39,6 @@ if($orders) {
 
 		$total_payment += $remaining_order_price["price"];
 
-
-		$payment_methods = $this->paymentMethods();
-
-		$mobilepay_payment_method_id = false; 
-		$cash_payment_method_id = false; 
-
-		if($payment_methods) {
-			foreach ($payment_methods as $payment_method) {
-				if($payment_method["classname"] == "mobilepay") {
-					$mobilepay_payment_method_id = $payment_method["id"];
-				}
-				elseif ($payment_method["classname"] == "cash") {
-					$cash_payment_method_id = $payment_method["id"]; 
-				}
-			}
-		}
-
-		// Get payment methods
-		$user_payment_methods = $UC->getPaymentMethods(["extend" => true]);
 
 	}
 }
@@ -95,6 +75,11 @@ if($orders && $total_payment): ?>
 		</li>
 		<li>
 			<ul class="actions">
+				<?= $HTML->oneButtonForm("Annullér ordre", "/medlemshjaelp/butik/cancelOrder/".$order["order_no"]."/$user_id", [
+					"wrapper" => "li.cancel",
+					"success-location" => "/medlemshjaelp/butik/$user_id"
+
+				]) ?>
 				<li><a href="/medlemshjaelp/betaling/<?= $full_order["order_no"] ?>" class="button primary">Betal ordre</a></li>
 			</ul>
 		</li>
@@ -105,8 +90,8 @@ if($orders && $total_payment): ?>
 // No payments
 elseif($user_id > 1): ?>
 
-	<h2>Storartede nyheder</h2>
-	<p>Du har ingen udeståender.</p>
+	<h2>Intet at se her</h2>
+	<p>Medlemmet har ingen udeståender.</p>
 
 <? 
 // User not logged in

@@ -397,6 +397,7 @@ class Shop extends ShopCore {
 		.$this->db_orders." AS orders 
 		WHERE orders.user_id = $user_id 
 		AND order_items.order_id = orders.id
+		AND orders.status < 3
 		AND pickupdate_order_items.order_item_id = order_items.id 
 		AND pickupdates.id = pickupdate_order_items.pickupdate_id";
 
@@ -471,13 +472,15 @@ class Shop extends ShopCore {
 		.$this->db_order_items." AS order_items, "
 		.$this->db_orders." AS orders 
 		WHERE pickupdate_order_items.pickupdate_id = $pickupdate_id
-		AND pickupdate_order_items.order_item_id = order_items.id"; 
+		AND pickupdate_order_items.order_item_id = order_items.id
+		AND order_items.order_id = orders.id
+		AND orders.status < 3"; 
 
 		if($order_id) {
-			$sql .= " AND order_items.order_id = $order_id";
+			$sql .= " AND orders.id = $order_id";
 		}
 		else if($user_id) {
-			$sql .= " AND order_items.order_id = orders.id AND orders.user_id = $user_id";
+			$sql .= " AND orders.user_id = $user_id";
 		}
 
 		if($query->sql($sql)) {
