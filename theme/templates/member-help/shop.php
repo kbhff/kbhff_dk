@@ -59,7 +59,6 @@ if($clerk_user_id != 1) {
 
 		$cart_pickupdates = $SC->getCartPickupdates(["cart_reference" => $cart_reference]);
 		$cart_items_without_pickupdate = $SC->getCartItemsWithoutPickupdate(["cart_reference" => $cart_reference]);
-		debug($cart_pickupdates);
 	}
 
 	if($orders) {
