@@ -116,7 +116,7 @@ else {
 
 			<ul class="actions">
 				<?= $UC->submit("Log ind", array("class" => "primary", "wrapper" => "li.login")) ?>
-				<li class="forgot">Har du <a href="/login/forgot" target="_blank">glemt dit password</a>?</li>
+				<li class="forgot">Har du <a href="/login/glemt" target="_blank">glemt dit password</a>?</li>
 			</ul>
 		<?= $UC->formEnd() ?>
 	</div>
@@ -229,7 +229,8 @@ else {
 
 			<div class="cart i:shopfrontCart c-primary-box">
 				<h3>Indkøbskurv</h3>
-				<? if($cart["items"] && $cart_items_without_pickupdate): ?>
+				<? if($cart["items"]): ?>
+					<? if($cart_items_without_pickupdate): ?>
 				<ul class="items">
 					<? 
 					// Loop through all cart items and show information and editing options of each item.
@@ -239,46 +240,22 @@ else {
 						$cart_item_id = $cart_item["id"];
 					?>
 					<li class="item id:<?= $item["id"] ?>">
-						<p>
-							<span class="quantity"><?= $cart_item["quantity"] ?></span>
-							<span class="x">x </span>
-							<span class="name"><?= $item["name"] ?> </span>
-							<span class="a">á </span>
-							<span class="unit_price"><?= formatPrice($price) ?></span>
-							<span class="total_price">
-								<? // generate total price and vat to item 
-								print formatPrice(array(
-										"price" => $price["price"]*$cart_item["quantity"],
-										"vat" => $price["vat"]*$cart_item["quantity"],
-										"currency" => $cart["currency"],
-										"country" => $cart["country"]
-									),
-									array("vat" => true)
-								) ?>
-							</span>
-						</p>
-
-						<ul class="actions">
-							<? // generate delete button to item 
-							print $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/".$cart_item["id"], array(
-								"confirm-value" => "Sikker?",
-								"wrapper" => "li.delete",
-								"success-location" => "/butik"
-							)) ?>
-						</ul>
+						<span class="quantity"><?= $cart_item["quantity"] ?></span>
+						<span class="x">x </span>
+						<span class="name"><?= $item["name"] ?> </span>
+						<span class="a">á </span>
+						<span class="unit_price"><?= formatPrice($price) ?></span>
 					</li>
 					<? endforeach; ?>
 				</ul>
-				<? endif; ?>
-				<? if($cart["items"] && $cart_pickupdates): ?>
+					<? endif; ?>
+
+					<? if($cart_pickupdates): ?>
 				<ul class="pickupdates">
 					
-					<? foreach($cart_pickupdates as $pickupdate): 
-
-						$pickupdate_cart_items = $model->getCartPickupdateItems($pickupdate["id"]);
-
-					?>
-						<? if($pickupdate_cart_items): ?>
+						<? foreach($cart_pickupdates as $pickupdate): 
+							$pickupdate_cart_items = $model->getCartPickupdateItems($pickupdate["id"]);
+							if($pickupdate_cart_items): ?>
 						
 					<li class="pickupdate">
 						<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?></h4>
@@ -293,40 +270,26 @@ else {
 							?>
 
 							<li class="item id:<?= $item["id"] ?>">
-								<p>
-									<span class="quantity"><?= $cart_item["quantity"] ?></span>
-									<span class="x">x </span>
-									<span class="name"><?= $item["name"] ?> </span>
-									<span class="a">á </span>
-									<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
-								</p>
-								<ul class="actions">
-									<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
-										"confirm-value" => "Sikker?",
-										"wrapper" => "li.delete",
-										"success-location" => "/butik"
-										]) ?>
-								</ul>
+								<span class="quantity"><?= $cart_item["quantity"] ?></span>
+								<span class="x">x </span>
+								<span class="name"><?= $item["name"] ?> </span>
+								<span class="a">á </span>
+								<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
 							</li>
 
 							<? endforeach; ?>
 						</ul>
 					</li>
 
-						<? endif; ?>
-					<? endforeach; ?>
+							<? endif; ?>
+						<? endforeach; ?>
 				</ul>
-				<div class="total">
-					<h3>
-						<span class="name">I alt</span>
-						<span class="total_price">
-							<?= formatPrice($total_cart_price) ?>
-						</span>
-					</h3>
-				</div>
+					<? endif; ?>
+
 				<ul class="actions">
-					<li ><a class="button" href="/butik/betal">Gå til betaling</a></li>
+					<li ><a class="button" href="/butik/kurv">Gå til kurven</a></li>
 				</ul>
+
 				<? else: ?>
 				<p>Du har ingenting i kurven endnu. <br />Føj en eller flere varer til kurven først.</p>
 				<? endif; ?>

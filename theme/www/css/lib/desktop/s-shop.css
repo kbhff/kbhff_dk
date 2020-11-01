@@ -1,3 +1,9 @@
+/* SHOP - GENERAL */
+#content .scene.shop div.cart ul.items {margin: 0; list-style: none;}
+#content .scene.shop div.cart ul.items li {padding-left: 0;}
+#content .scene.shop div.cart ul.actions {padding-bottom: 0;}
+
+
 /* SHOP CART */
 #content .scene.cart .messages {display: none;}
 
