@@ -257,6 +257,8 @@ class SuperShop extends SuperShopCore {
 		$query = new Query();
 		$cart = $this->getCarts(["cart_reference" => $cart_reference]);
 
+		debug("hej");
+
 		if($cart && $cart["items"]) {
 
 			$sql = "
