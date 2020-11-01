@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-01 09:32:05
+asset-builder @ 2020-11-01 18:38:54
 */
 
 /*seg_desktop_include.css*/
@@ -141,6 +141,16 @@ div.field.radiobuttons .item input.focus:checked + label {
 div.field.checkbox.focus input,
 div.field.radiobuttons .item input.focus {
 	width: 20px;
+}
+div.field input[type="integer"],
+div.field input[type="number"] {
+	-moz-appearance: textfield;
+}
+div.field input[type="integer"]::-webkit-inner-spin-button,
+div.field input[type="integer"]::-webkit-outer-spin-button,
+div.field input[type="number"]::-webkit-inner-spin-button,
+div.field input[type="number"]::-webkit-outer-spin-button {margin: 0;
+	-webkit-appearance: none;
 }
 div.field.error input,
 div.field.error select,
