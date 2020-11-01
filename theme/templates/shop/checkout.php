@@ -171,7 +171,7 @@ else {
 				<? if($item["itemtype"] == "membership"): ?>
 				<p class="membership">
 					<? if($price["price"]): ?>
-					Dette køb omfatter et medlemskab.
+					Dette køb indeholder et medlemskab.
 					<? else: ?>
 					Bekræft ordren for at tilmelde dig nyhedsbrevet.
 					<? endif; ?>
@@ -254,25 +254,9 @@ else {
 	</div>
 
 
-	<div class="contact">
-		<h2>Dine brugeroplysninger </h2>
-		<dl class="list">
-			<dt>Fulde navn</dt>
-			<dd><?= $user["firstname"] || $user["lastname"] ? $user["firstname"] . " " . $user["lastname"] : "N/A" ?></dd>
-			<dt>Email</dt>
-			<dd><?= $user["email"] ? $user["email"] : "N/A" ?></dd>
-			<dt>Mobiltelefon</dt>
-			<dd><?= $user["mobile"] ? $user["mobile"] : "N/A" ?></dd>
-		</dl>
-		<ul class="actions">
-			<li><a href="/butik/profil" class="button">Ret oplysninger</a></li>
-		</ul>
-	</div>
-
-
-	<? 
-	// Only show payment options if cart has items
-	if($cart["items"] && $total_cart_price && $total_cart_price["price"] !== 0): ?>
+		<? 
+		// Only show payment options if cart has items
+		if($cart["items"] && $total_cart_price && $total_cart_price["price"] !== 0): ?>
 
 
 	<div class="payment_method">
@@ -379,9 +363,9 @@ else {
 	</div>
 
 
-	<? 
-	// Cart has items but total price is 0 – skip payment and confirm order
-	elseif($cart["items"] && $total_cart_price && $total_cart_price["price"] === 0): ?>
+		<? 
+		// Cart has items but total price is 0 – skip payment and confirm order
+		elseif($cart["items"] && $total_cart_price && $total_cart_price["price"] === 0): ?>
 
 
 	<div class="confirm">
@@ -401,7 +385,23 @@ else {
 	</div>
 
 
-	<? endif; ?>
+		<? endif; ?>
+
+
+	<div class="contact">
+		<h2>Dine brugeroplysninger </h2>
+		<dl class="list">
+			<dt>Fulde navn</dt>
+			<dd><?= $user["firstname"] || $user["lastname"] ? $user["firstname"] . " " . $user["lastname"] : "N/A" ?></dd>
+			<dt>Email</dt>
+			<dd><?= $user["email"] ? $user["email"] : "N/A" ?></dd>
+			<dt>Mobiltelefon</dt>
+			<dd><?= $user["mobile"] ? $user["mobile"] : "N/A" ?></dd>
+		</dl>
+		<ul class="actions">
+			<li><a href="/butik/profil" class="button">Ret oplysninger</a></li>
+		</ul>
+	</div>
 
 
 	<? endif; ?>

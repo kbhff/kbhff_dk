@@ -2,24 +2,24 @@
 #content .scene.membership .c-one-third .c-box:first-child {
 	margin-top: 58px;
 }
-#content .membership .c-one-third .c-box {text-align: center;}
-#content .membership .c-one-third .c-box ul.actions {text-align: center; padding-bottom: 22px}
-#content .membership .c-one-third .c-box ul.actions li {padding: 0;}
+#content .scene.membership .c-one-third .c-box {text-align: center;}
+#content .scene.membership .c-one-third .c-box ul.actions {text-align: center; padding-bottom: 22px}
+#content .scene.membership .c-one-third .c-box ul.actions li {padding: 0;}
 
 /* PRICE */
-#content .membership ul.offer,
-#content .membership ul.offer {font-size: 0; padding: 0; margin: 0; list-style: none;}
-#content .membership ul.offer li {font-size: 20px; display: inline-block; vertical-align: top; padding: 0 0 10px;}
-#content .membership ul.offer li.name,
-#content .membership ul.offer li.currency,
-#content .membership ul.offer li.url {display: none;}
+#content .scene.membership ul.offer,
+#content .scene.membership ul.offer {font-size: 0; padding: 0; margin: 0; list-style: none;}
+#content .scene.membership ul.offer li {font-size: 20px; display: inline-block; vertical-align: top; padding: 0 0 10px;}
+#content .scene.membership ul.offer li.name,
+#content .scene.membership ul.offer li.currency,
+#content .scene.membership ul.offer li.url {display: none;}
 
 /* RELATED MEMBERSHIPS */
-#content .membership div.related {padding-bottom: 20px;}
-#content .membership div.related ul.items.membership {padding: 0; margin: 0; list-style-type: none;}
-#content .membership div.related ul.items.membership > li {padding-left: 0;}
+#content .scene.membership div.related {padding-bottom: 20px;}
+#content .scene.membership div.related ul.items.membership {padding: 0; margin: 0; list-style-type: none;}
+#content .scene.membership div.related ul.items.membership > li {padding-left: 0;}
 
 /* RELATED MEMBERSHIPS PRICE */
-#content .membership div.related ul.offer {padding-bottom: 20px;}
-#content .membership div.related ul.offer li {font-size: 16px; padding: 0; padding-left: 18px;}
-#content .membership div.related ul.actions {text-align: left;}
+#content .scene.membership div.related ul.offer {padding-bottom: 20px;}
+#content .scene.membership div.related ul.offer li {font-size: 16px; padding: 0; padding-left: 12px;}
+#content .scene.membership div.related ul.actions {text-align: left;}

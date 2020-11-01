@@ -15,17 +15,17 @@
 	padding-left: 0;
 }
 
-#content .scene.checkout ul.items {list-style: none; padding: 0;}
-#content .scene.checkout ul.items > li {padding: 20px 0 10px; position: relative;}
+#content .scene.checkout ul.items {list-style: none; padding: 0 12px; margin: 0;}
+#content .scene.checkout ul.items > li {padding: 10px 0; position: relative;}
 #content .scene.checkout ul.items li > span {display: inline-block; vertical-align: top; padding-top: 4px; font-size: 16px;}
-#content .scene.checkout ul.items li p {padding-bottom: 10px;}
+#content .scene.checkout ul.items li p {padding: 0 0 10px;}
 #content .scene.checkout ul.items li p.subscription_method+p.membership {margin-top: -10px;}
-#content .scene.checkout ul.items li span.total_price {float: right; padding-right: 100px;}
+#content .scene.checkout ul.items li span.total_price {float: right; padding-right: 70px;}
+#content .scene.checkout ul.items li ul.actions {padding: 0; top: 8px; position: absolute; right: 0;}
 
-#content .scene.checkout ul.items li.total {border-top: 1px solid #dedede; /*border-bottom: 1px solid #dedede;*/}
-#content .scene.checkout ul.items li.total h3 {font-size: 20px;}
+#content .scene.checkout div.total {margin: 0 12px; border-top: 1px dotted #000; /*border-bottom: 1px solid #dedede;*/}
+#content .scene.checkout div.total h3 {font-size: 20px; padding-left: 0; padding-right: 0; text-align: right;}
 
-#content .scene.checkout ul.items li ul.actions {padding: 0; top: 18px; position: absolute; right: 15px;}
 
 #content .scene.checkout ul.payment_methods {padding: 0; margin: 0; list-style: none;}
 #content .scene.checkout ul.payment_methods li.payment_method {padding-bottom: 10px;}
