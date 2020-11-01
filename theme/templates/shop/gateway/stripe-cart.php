@@ -98,7 +98,7 @@ if($cart) {
 <? else: ?>
 
 	<h1>Leder du efter betalingssiden?</h1>
-	<p>Du skal først <a href="/login?login_forward=/butik/betalinger">logge ind</a> på din konto og betale derfra.</p>
+	<p>Du skal først <a href="/login?forward_url=<?= $this->url ?>">logge ind</a> på din konto og betale derfra.</p>
 
 <? endif;?>
 
