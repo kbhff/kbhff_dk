@@ -162,13 +162,8 @@ else {
 						array("vat" => false)
 					) ?>
 				</span>
-				<? if($item["subscription_method"] && $price["price"]): ?>
-				<p class="subscription_method">
-					Tilbagevendende betaling hver <?= strtolower($item["subscription_method"]["name"]) ?>.
-				</p>
-				<? endif; ?>
 
-				<? if($item["itemtype"] == "membership"): ?>
+				<? if($item["itemtype"] == "signupfee"): ?>
 				<p class="membership">
 					<? if($price["price"]): ?>
 					Dette køb indeholder et medlemskab.
@@ -177,7 +172,28 @@ else {
 					<? endif; ?>
 				</p>
 				<? endif; ?>
-				
+
+				<? if(isset($item["associated_membership_id"])):
+					 $membership = $IC->getItem(["id" => $item["associated_membership_id"], "extend" => ["subscription_method" => true]]); 
+				?>
+				<p class="subscription_method">
+					<? if($membership["subscription_method"]["duration"] == "annually"): ?>
+					Tilbagevendende betaling hvert <?= strtolower($membership["subscription_method"]["name"]) ?>.
+					<? else: ?>
+					Tilbagevendende betaling hver <?= strtolower($membership["subscription_method"]["name"]) ?>.
+					<? endif; ?>
+				</p>
+
+				<? elseif(isset($item["associated_membership_id"])): ?>
+				<p class="subscription_method">
+					<? if($item["subscription_method"]["duration"] == "annually"): ?>
+					Tilbagevendende betaling hvert <?= strtolower($item["subscription_method"]["name"]) ?>.
+					<? else: ?>
+					Tilbagevendende betaling hver <?= strtolower($item["subscription_method"]["name"]) ?>.
+					<? endif; ?>
+				</p>
+				<? endif; ?>
+
 				<ul class="actions">
 					<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
 						"confirm-value" => "Sikker?",
