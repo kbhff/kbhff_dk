@@ -215,8 +215,7 @@ else {
 
 				$pickupdate_cart_items = $model->getCartPickupdateItems($pickupdate["id"]);
 
-			?>
-				<? if($pickupdate_cart_items): ?>
+				if($pickupdate_cart_items): ?>
 				
 			<li class="pickupdate">
 				<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?></h4>
@@ -253,6 +252,7 @@ else {
 			<? endforeach; ?>
 		</ul>
 		<? endif; ?>
+
 		<div class="total">
 			<h3>
 				<span class="name">I alt</span>
@@ -261,9 +261,7 @@ else {
 				</span>
 			</h3>
 		</div>
-		
-		<? elseif($user_id > 1 && $membership): ?>
-		<p>Du har ingenting i kurven endnu. <br />Tag et kig på vores <a href="/bliv-medlem">medlemskaber</a>.</p>
+
 		<? else: ?>
 		<p>Du har ingenting i kurven endnu. <br />Tag et kig på vores <a href="/bliv-medlem">medlemskaber</a>.</p>
 		<? endif; ?>
