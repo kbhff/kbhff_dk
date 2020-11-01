@@ -1,7 +1,6 @@
 Util.Modules["cart"] = new function() {
 	this.init = function(scene) {
-//		u.bug("scene init:", this);
-		
+		// u.bug("scene init:", this);
 
 		scene.resized = function() {
 //			u.bug("scene.resized:", this);
@@ -18,14 +17,8 @@ Util.Modules["cart"] = new function() {
 		scene.ready = function() {
 //			u.bug("scene.ready:", this);
 
-
-			// page.cN.scene = this;
-
-			this.isHTML = true;
-			page.notify(this);
-
-			this.header_cart = u.qs("li.cart span.total", page.hN);
-			this.total_cart_price = u.qs("li.total span.total_price", this);
+			this.total_cart_price = u.qs("div.total span.total_price", this);
+			u.bug("this.total_cart_price", this.total_cart_price);
 			this.cart_nodes = u.qsa("ul.items li.item", this);
 
 
@@ -60,12 +53,10 @@ Util.Modules["cart"] = new function() {
 					quantity_form.submitted = function() {
 
 						this.response = function(response) {
-							page.notify(response);
 
 							if(response) {
 
-								var total_price = u.qs("div.scene li.total span.total_price", response);
-								var header_cart = u.qs("div#header li.cart span.total", response);
+								var total_price = u.qs("div.scene div.total span.total_price", response);
 								var item_row = u.ge("id:"+this.node.item_id, response);
 								var item_total_price = u.qs("span.total_price", item_row);
 								var item_unit_price = u.qs("span.unit_price", item_row);
@@ -74,7 +65,6 @@ Util.Modules["cart"] = new function() {
 
 								// update prices and quantity
 								this.node.scene.total_cart_price.innerHTML = total_price.innerHTML;
-								this.node.scene.header_cart.innerHTML = header_cart.innerHTML;
 								this.node.total_price.innerHTML = item_total_price.innerHTML;
 								this.node.unit_price.innerHTML = item_unit_price.innerHTML;
 								this.node.quantity.value = item_quantity.value;
@@ -101,12 +91,10 @@ Util.Modules["cart"] = new function() {
 
 						if(response) {
 
-							var total_price = u.qs("div.scene li.total span.total_price", response);
-							var header_cart = u.qs("div#header li.cart span.total", response);
+							var total_price = u.qs("div.scene div.total span.total_price", response);
 
 							// update total price
-							this.node.scene.total_cart_price.innerHTML = total_price.innerHTML;
-							this.node.scene.header_cart.innerHTML = header_cart.innerHTML;
+							this.node.scene.total_cart_price.innerHTML = total_price ? total_price.innerHTML : "0,00 DKK";
 
 							this.node.parentNode.removeChild(this.node);
 						}
@@ -116,16 +104,9 @@ Util.Modules["cart"] = new function() {
 
 			}
 
-			u.showScene(this);
-
-
-			// page.resized();
 		}
 
-
-		// Map scene – page will call scene.ready
-		page.cN.scene = scene;
-
+		scene.ready();
 	}
 }
 
@@ -134,7 +115,6 @@ Util.Modules["cart"] = new function() {
 Util.Modules["checkout"] = new function() {
 	this.init = function(scene) {
 //		u.bug("scene init:", this);
-		
 
 		scene.resized = function() {
 //			u.bug("scene.resized:", this);
@@ -147,35 +127,14 @@ Util.Modules["checkout"] = new function() {
 		scene.ready = function() {
 //			u.bug("scene.ready:", this);
 
-
-
 			var form_login = u.qs("form.login", this);
 			if(form_login) {
 				u.f.init(form_login);
 			}
 
-
-			var form_signup = u.qs("form.signup", this);
-			if(form_signup) {
-				u.f.init(form_signup);
-
-				form_signup.preSubmitted = function() {
-					this.actions["signup"].value = "Wait";
-					u.ac(this, "submitting");
-					u.ac(this.actions["signup"], "disabled");
-//					this.DOMsubmit();
-				}
-			}
-
-
-			u.showScene(this);
-
 		}
 
-
-		// Map scene – page will call scene.ready
-		page.cN.scene = scene;
-
+		scene.ready();
 	}
 }
 
@@ -183,8 +142,7 @@ Util.Modules["checkout"] = new function() {
 
 Util.Modules["shopProfile"] = new function() {
 	this.init = function(scene) {
-//		u.bug("scene init:", this);
-		
+		// u.bug("scene init:", this);
 
 		scene.resized = function() {
 //			u.bug("scene.resized:", this);
@@ -197,28 +155,14 @@ Util.Modules["shopProfile"] = new function() {
 		scene.ready = function() {
 //			u.bug("scene.ready:", this);
 
-
-
-			this.isHTML = true;
-//			page.notify(this);
-
-//			this.header_cart = u.qs("li.cart span.total", page.hN);
-//			this.total_cart_price = u.qs(".total_cart_price", this);
-
-
 			var form = u.qs("form.details", this);
 			if(form) {
 				u.f.init(form);
 			}
 
-
-			u.showScene(this);
 		}
 
-
-		// Map scene – page will call scene.ready
-		page.cN.scene = scene;
-
+		scene.ready();
 	}
 }
 
@@ -266,15 +210,9 @@ Util.Modules["shopAddress"] = new function() {
 				u.f.init(form);
 			}
 
-
-			u.showScene(this);
-
 		}
 
-
-		// Map scene – page will call scene.ready
-		page.cN.scene = scene;
-
+		scene.ready();
 	}
 }
 

@@ -11,7 +11,8 @@
 #content .scene.cart ul.items li form div.field label,
 #content .scene.cart ul.items li form div.field .indicator {display: none;}
 #content .scene.cart ul.items li form div.field .help {left: 47px; display: none;}
-#content .scene.cart ul.items li form div.field input {height: 30px; width: 40px; text-align: right;}
+#content .scene.cart ul.items li form div.field input {height: 28px; width: 40px; text-align: right;}
+#content .scene.cart ul.items li form div.field input.focus {height: 32px; width: 44px;}
 
 #content .scene.cart ul.items li form > ul.actions {padding: 0; right: 45px; top: 0;}
 #content .scene.cart ul.items li form > ul.actions li {padding: 8px 0 0;}
