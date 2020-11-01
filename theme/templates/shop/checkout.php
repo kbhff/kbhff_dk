@@ -184,7 +184,7 @@ else {
 					<? endif; ?>
 				</p>
 
-				<? elseif(isset($item["associated_membership_id"])): ?>
+				<? elseif($item["subscription_method"]): ?>
 				<p class="subscription_method">
 					<? if($item["subscription_method"]["duration"] == "annually"): ?>
 					Tilbagevendende betaling hvert <?= strtolower($item["subscription_method"]["name"]) ?>.
@@ -215,8 +215,7 @@ else {
 
 				$pickupdate_cart_items = $model->getCartPickupdateItems($pickupdate["id"]);
 
-			?>
-				<? if($pickupdate_cart_items): ?>
+				if($pickupdate_cart_items): ?>
 				
 			<li class="pickupdate">
 				<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?></h4>
@@ -236,6 +235,29 @@ else {
 						<span class="name"><?= $item["name"] ?> </span>
 						<span class="a">á </span>
 						<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
+						<span class="total_price">
+							<? // generate total price and vat to item 
+							print formatPrice(array(
+									"price" => $price["price"]*$cart_item["quantity"],
+									"vat" => $price["vat"]*$cart_item["quantity"],
+									"currency" => $cart["currency"],
+									"country" => $cart["country"]
+								),
+								array("vat" => false)
+							) ?>
+						</span>
+
+
+						<? if($item["subscription_method"]): ?>
+						<p class="subscription_method">
+							<? if($item["subscription_method"]["duration"] == "annually"): ?>
+							Tilbagevendende betaling hvert <?= strtolower($item["subscription_method"]["name"]) ?>.
+							<? else: ?>
+							Tilbagevendende betaling hver <?= strtolower($item["subscription_method"]["name"]) ?>.
+							<? endif; ?>
+						</p>
+						<? endif; ?>
+
 						<ul class="actions">
 							<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
 								"confirm-value" => "Sikker?",
@@ -253,6 +275,7 @@ else {
 			<? endforeach; ?>
 		</ul>
 		<? endif; ?>
+
 		<div class="total">
 			<h3>
 				<span class="name">I alt</span>
@@ -261,9 +284,7 @@ else {
 				</span>
 			</h3>
 		</div>
-		
-		<? elseif($user_id > 1 && $membership): ?>
-		<p>Du har ingenting i kurven endnu. <br />Tag et kig på vores <a href="/bliv-medlem">medlemskaber</a>.</p>
+
 		<? else: ?>
 		<p>Du har ingenting i kurven endnu. <br />Tag et kig på vores <a href="/bliv-medlem">medlemskaber</a>.</p>
 		<? endif; ?>

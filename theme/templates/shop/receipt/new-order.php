@@ -2,7 +2,7 @@
 global $action;
 global $model;
 
-$this->pageTitle("Receipt");
+$this->pageTitle("Kvittering");
 
 $UC = new User();
 $MC = new Member();
@@ -102,7 +102,7 @@ if(isset($action[3])) {
 		<h3>
 			<span class="name">I alt</span>
 			<span class="total_price">
-				<?= formatPrice($total_order_price, array("vat" => true)) ?>
+				<?= formatPrice($total_order_price, array("vat" => false)) ?>
 			</span>
 		</h3>
 
@@ -143,7 +143,7 @@ if(isset($action[3])) {
 <? else: ?>
 
 	<h1>Leder du efter din kvittering?</h1>
-	<p>Du skal <a href="/login?login_forward=<?= $this->url ?>">logge ind</a> på din konto, før du kan se kvitteringer.</p>
+	<p>Du skal <a href="/login?forward_url=<?= $this->url ?>">logge ind</a> på din konto, før du kan se kvitteringer.</p>
 
 <? endif; ?>
 

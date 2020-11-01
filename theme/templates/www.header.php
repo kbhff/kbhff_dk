@@ -13,8 +13,8 @@
     mail: bestyrelse@kbhff.dk
 
     think.dk
-    Æbeløgade 4
-    2100 København Ø
+    Charlotte Ammundsens Plads 3
+    1359 København K
     Denmark
     mail: start@think.dk
 
@@ -31,7 +31,7 @@
     You should have received a copy of the GNU General Public License
 	along with this source code.  If not, see <http://www.gnu.org/licenses/>. -->
 
-	<!-- If you want to use or contribute to this code, visit http://parentnode.dk -->
+	<!-- If you want to use or contribute to this code, visit https://parentnode.dk -->
 
 
 	<title><?= $this->pageTitle() ?></title>
