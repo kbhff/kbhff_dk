@@ -214,7 +214,7 @@ if($action) {
 					
 					// redirect to leave POST state
 					// to checkout and confirm order
-					message()->addMessage("Dit brugernavn er verificeret – du kan nu bekræfte din ordre.", array("type" => "message"));
+					message()->addMessage("Dit brugernavn er verificeret.", array("type" => "message"));
 					header("Location: /butik/betal");
 					exit();
 					
