@@ -47,8 +47,8 @@ LOCK TABLES `kbhff_dk`.`item_membership` WRITE;
 
 INSERT INTO `kbhff_dk`.`item_membership` (`id`, `item_id`, `name`, `classname`, `subscribed_message_id`, `description`, `introduction`, `html`, `fixed_url_identifier`, `position`)
 VALUES
-	(1,6,'Frivillig','volunteer',5,'','<p>Frivillig medlem introduction – this text can be edited via Janitor</p>','<p>Frivillig medlem introduction TEST – this text can be edited via Janitor</p>\r\n<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>','frivillig',0),
-	(2,7,'Støttemedlem','supporter',3,'','<p>Støttemedlem introduction TEST – this text can be edited via Janitor under members&gt;memberships&gt;støttemedlem (overview)</p>','<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>','stoettemedlem',0);
+	(2,7,'Støttemedlem','supporter',3,'','<p>Støttemedlem introduction TEST – this text can be edited via Janitor under members&gt;memberships&gt;støttemedlem (overview)</p>','<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>','stoettemedlem',0),
+	(1,8,'Frivillig','volunteer',4,'','<p>Frivillig medlem introduction – this text can be edited via Janitor</p>','<p>Frivillig medlem introduction TEST – this text can be edited via Janitor</p>\r\n<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>','frivillig',0);
 
 /*!40000 ALTER TABLE `kbhff_dk`.`item_membership` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -75,7 +75,7 @@ LOCK TABLES `kbhff_dk`.`item_message` WRITE;
 INSERT INTO `kbhff_dk`.`item_message` (`id`, `item_id`, `name`, `description`, `html`, `layout`)
 VALUES
 	(1,3,'Velkommen som støttemedlem','','<p>Hej {NICKNAME}</p>\n<p>Velkommen som støttemedlem.</p>\n<p>This text can be edited via Janitor</p>','template-b.html'),
-	(2,5,'Velkommen som Frivillig medlem','','<p>Hej {NICKNAME}</p>\n<p>Velkommen som frivillig medlem.</p>\n<p>This text can be edited via Janitor</p>','template-b.html');
+	(2,4,'Velkommen som Frivillig medlem','','<p>Hej {NICKNAME}</p>\n<p>Velkommen som frivillig medlem.</p>\n<p>This text can be edited via Janitor</p>','template-b.html');
 
 /*!40000 ALTER TABLE `kbhff_dk`.`item_message` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -140,8 +140,8 @@ LOCK TABLES `kbhff_dk`.`item_signupfee` WRITE;
 
 INSERT INTO `kbhff_dk`.`item_signupfee` (`id`, `item_id`, `name`, `classname`, `associated_membership_id`, `description`, `html`, `position`, `fixed_url_identifier`)
 VALUES
-	(1,4,'Støttemedlem','supporter',7,'','<p>Alle medlemmer betaler et indmeldelsesgebyr for at blive oprettet, som går til driften af KBHFF.</p>\r\n<h3 class=\"price\">Indmeldelsesgebyr: <span class=\"price\">100,00 DKK</span></h3>\r\n<p>Derefter kræves et årligt kontingent af til tiden 200kr. hver år i maj måned. Når du melder dig ind i KBHFF støtter du en forening, der støtter små økologiske og biodynamiske avlere.</p>\r\n<h3 class=\"price\">Årligt kontingent:<span class=\"price\"> 200,00 DKK</span></h3>\r\n<p>Som støttemedlem betaler du en lidt højere pris for en grøntsagspose, men du behøver ikke lægge 3 timers frivilligt arbejde hver måned.</p>\r\n<h3 class=\"price\">Pris for ugens pose: <span class=\"price\">140,00 DKK<br /></span></h3>',2,NULL),
-	(2,8,'Frivillig','volunteer',6,'','<p>Alle medlemmer betaler et indmeldelsesgebyr for at blive oprettet, som går til driften af KBHFF.</p>\r\n<h3 class=\"price\">Indmeldelsesgebyr: <span class=\"price\">100,00 DKK</span></h3>\r\n<p>Derefter kræves et årligt kontingent af til tiden 200kr. hver år i maj måned. Når du melder dig ind i KBHFF støtter du en forening, der støtter små økologiske og biodynamiske avlere.</p>\r\n<h3 class=\"price\">Årligt kontingent:<span class=\"price\"> 200,00 DKK</span></h3>\r\n<p>Som frivillig forpligter du dig til at lægge 3 timers frivilligt arbejde i foreningen hver måned – til gengæld du ugens pose lidt billigere.</p>\r\n<h3 class=\"price\">Pris for ugens pose: <span class=\"price\">115,00 DKK</span></h3>',1,NULL);
+	(1,5,'Støttemedlem','supporter',7,'','<p>Alle medlemmer betaler et indmeldelsesgebyr for at blive oprettet, som går til driften af KBHFF.</p>\r\n<h3 class=\"price\">Indmeldelsesgebyr: <span class=\"price\">100,00 DKK</span></h3>\r\n<p>Derefter kræves et årligt kontingent af til tiden 200kr. hver år i maj måned. Når du melder dig ind i KBHFF støtter du en forening, der støtter små økologiske og biodynamiske avlere.</p>\r\n<h3 class=\"price\">Årligt kontingent:<span class=\"price\"> 200,00 DKK</span></h3>\r\n<p>Som støttemedlem betaler du en lidt højere pris for en grøntsagspose, men du behøver ikke lægge 3 timers frivilligt arbejde hver måned.</p>\r\n<h3 class=\"price\">Pris for ugens pose: <span class=\"price\">140,00 DKK<br /></span></h3>',2,NULL),
+	(2,6,'Frivillig','volunteer',8,'','<p>Alle medlemmer betaler et indmeldelsesgebyr for at blive oprettet, som går til driften af KBHFF.</p>\r\n<h3 class=\"price\">Indmeldelsesgebyr: <span class=\"price\">100,00 DKK</span></h3>\r\n<p>Derefter kræves et årligt kontingent af til tiden 200kr. hver år i maj måned. Når du melder dig ind i KBHFF støtter du en forening, der støtter små økologiske og biodynamiske avlere.</p>\r\n<h3 class=\"price\">Årligt kontingent:<span class=\"price\"> 200,00 DKK</span></h3>\r\n<p>Som frivillig forpligter du dig til at lægge 3 timers frivilligt arbejde i foreningen hver måned – til gengæld du ugens pose lidt billigere.</p>\r\n<h3 class=\"price\">Pris for ugens pose: <span class=\"price\">115,00 DKK</span></h3>',1,NULL);
 
 /*!40000 ALTER TABLE `kbhff_dk`.`item_signupfee` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -203,11 +203,11 @@ INSERT INTO `kbhff_dk`.`items` (`id`, `sindex`, `status`, `itemtype`, `user_id`,
 VALUES
 	(2,'persondata',1,'page',2,'2018-06-23 00:53:17','2020-02-05 19:11:22','2018-08-16 17:37:00'),
 	(3,'velkommen-som-stoettemedlem',1,'message',2,'2018-08-07 20:34:01','2019-04-30 11:43:53','2018-08-07 20:33:01'),
-	(4,'stoettemedlem',1,'signupfee',2,'2018-12-19 21:47:09','2020-03-30 13:28:59','2020-03-30 13:28:00'),
-	(5,'velkommen-som-frivillig-medlem',1,'message',2,'2018-12-19 21:48:34','2019-05-01 02:47:00','2018-12-19 21:48:34'),
-	(6,'frivillig',1,'membership',2,'2018-12-19 21:49:17','2020-03-30 13:18:20','2020-03-30 13:18:00'),
-	(7,'stoettemedlem-2',1,'membership',2,'2018-12-20 10:56:34','2020-03-30 13:14:45','2020-03-30 13:14:00'),
-	(8,'frivillig-2',1,'signupfee',2,'2018-12-20 10:58:01','2020-03-30 13:28:35','2020-03-30 13:28:00'),
+	(4,'velkommen-som-frivillig-medlem',1,'message',2,'2018-12-19 21:48:34','2019-05-01 02:47:00','2018-12-19 21:48:34'),
+	(5,'stoettemedlem-signupfee',1,'signupfee',2,'2018-12-19 21:47:09','2020-03-30 13:28:59','2020-03-30 13:28:00'),
+	(6,'frivillig-signupfee',1,'signupfee',2,'2018-12-20 10:58:01','2020-03-30 13:28:35','2020-03-30 13:28:00'),
+	(7,'stoettemedlem',1,'membership',2,'2018-12-20 10:56:34','2020-03-30 13:14:45','2020-03-30 13:14:00'),
+	(8,'frivillig',1,'membership',2,'2018-12-19 21:49:17','2020-03-30 13:18:20','2020-03-30 13:18:00'),
 	(9,'allerede-medlem',1,'page',2,'2018-12-20 11:02:44','2018-12-20 18:12:59','2018-12-20 11:02:59'),
 	(10,'tilmelding',1,'page',2,'2018-12-20 11:06:27','2018-12-20 11:22:22','2018-12-20 11:06:22'),
 	(11,'vaelg-medlemskab',1,'page',2,'2018-12-20 11:10:00','2020-01-13 18:17:09','2018-12-20 11:10:00'),
@@ -250,14 +250,39 @@ LOCK TABLES `kbhff_dk`.`items_prices` WRITE;
 
 INSERT INTO `kbhff_dk`.`items_prices` (`id`, `item_id`, `price`, `currency`, `vatrate_id`, `type_id`, `quantity`)
 VALUES
-	(1,6,200,'DKK',1,1,NULL),
-	(2,7,200,'DKK',1,1,NULL),
-	(3,8,100,'DKK',1,1,NULL),
-	(4,4,100,'DKK',1,1,NULL);
+	(1,7,200,'DKK',1,1,NULL),
+	(2,8,200,'DKK',1,1,NULL),
+	(3,5,100,'DKK',1,1,NULL),
+	(4,6,100,'DKK',1,1,NULL);
 
 /*!40000 ALTER TABLE `kbhff_dk`.`items_prices` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+# Dump of table items_subscription_method
+# ------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `items_subscription_method` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `item_id` int(11) NOT NULL,
+  `subscription_method_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `item_id` (`item_id`),
+  KEY `subscription_method_id` (`subscription_method_id`),
+  CONSTRAINT `items_subscription_method_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `items_subscription_method_ibfk_2` FOREIGN KEY (`subscription_method_id`) REFERENCES `system_subscription_methods` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `items_subscription_method` WRITE;
+/*!40000 ALTER TABLE `items_subscription_method` DISABLE KEYS */;
+
+INSERT INTO `items_subscription_method` (`id`, `item_id`, `subscription_method_id`)
+VALUES
+	(1,7,2),
+	(2,8,2);
+
+/*!40000 ALTER TABLE `kbhff_dk`.`items_subscription_method` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
