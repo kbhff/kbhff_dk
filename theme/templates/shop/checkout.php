@@ -48,6 +48,8 @@ if($user_id != 1) {
 	// Only get payment methods if cart has items
 	if($cart["items"]) {
 		
+
+
 		// Get the total cart price
 		$total_cart_price = $model->getTotalCartPrice($cart["id"]);
 		
@@ -261,6 +263,7 @@ else {
 						<ul class="actions">
 							<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
 								"confirm-value" => "Sikker?",
+								"wait-value" => "Vent ...",
 								"wrapper" => "li.delete",
 								"success-location" => "/butik/betal"
 								]) ?>

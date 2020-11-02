@@ -188,7 +188,8 @@ else {
 									<? if($product_available): ?>
 									
 									<?= $HTML->oneButtonForm("+", "/medlemshjaelp/butik/addToCart/".$cart_reference, [
-										"confirm-value" => "Sikker?",
+										"confirm-value" => false,
+										"wait-value" => "Vent",
 										"inputs" => [
 											"item_id" => $product["id"],
 											"quantity" => 1,

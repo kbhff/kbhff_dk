@@ -21,6 +21,15 @@ class Shop extends ShopCore {
 			"error_message" => "Error"
 		));
 
+		$this->addToModel("quantity", array(
+			"type" => "integer",
+			"label" => "Quantity",
+			"min" => 1,
+			"required" => true,
+			"hint_message" => "Quantity of items.", 
+			"error_message" => "Quantity must be a number."
+		));	
+
 		parent::__construct(get_class());
 
 		$this->db_pickupdates = SITE_DB.".project_pickupdates";
