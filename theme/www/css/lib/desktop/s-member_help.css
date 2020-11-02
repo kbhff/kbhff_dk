@@ -1,6 +1,9 @@
 /* GENERAL */
 #content .member_help h1 {display: none;}
 
+/* SPECIAL NOTICE */ 
+#content .c-wrapper > div.c-box.obs {margin-top: 5px;}
+
 /* SEARCH */ 
 #content .member_help h2 {padding: 0; margin-left: 12px; margin-right: 12px; margin-top: 20px; margin-bottom: 12px; border-bottom: 2px solid #000000;}
 
@@ -113,8 +116,6 @@
 #content .member_help_payment form ul.actions {width: 100%; margin-left: 0; padding-left: 0; margin-top: 12px;}
 #content .member_help ul.actions {text-align:center}
 
-/* USER PROFILE */ 
-#content .profile .c-wrapper > div.c-box.obs {margin-top: 5px;}
 
 
 #content .user_profile p.view-orders {float: right; text-decoration: underline #3e8e17;}

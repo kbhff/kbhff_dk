@@ -4,6 +4,19 @@
 #content .scene.shop div.cart ul.actions {padding-bottom: 0;}
 
 
+#content .scene.shop div.login {
+	width: 380px;
+	margin: 0 auto;
+	padding-top: 20px;
+}
+#content .scene.shop div.login ul.actions,
+#content .scene.shop div.login p.forgot,
+#content .scene.shop div.login p.signup {
+	text-align: center;
+}
+
+
+
 /* SHOP CART */
 #content .scene.cart .messages {display: none;}
 
@@ -109,10 +122,10 @@
 	background: url(/img/checkout/gx_visa_small.png) no-repeat right 7px;
 }
 #content .scene.shopPayment.stripe form div.field.card input.amex {
-	background: url(../../../img/gx_amex_small.png) no-repeat right 7px;
+	background: url(/img/checkout/gx_amex_small.png) no-repeat right 7px;
 }
 #content .scene.shopPayment.stripe form div.field.card input.mastercard {
-	background: url(../../../img/gx_mastercard_small.png) no-repeat right 7px;
+	background: url(/img/checkout/img/gx_mastercard_small.png) no-repeat right 7px;
 }
 
 

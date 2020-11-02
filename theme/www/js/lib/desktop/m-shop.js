@@ -1,3 +1,29 @@
+Util.Modules["shop"] = new function() {
+	this.init = function(scene) {
+//		u.bug("scene init:", this);
+
+		scene.resized = function() {
+//			u.bug("scene.resized:", this);
+		}
+
+		scene.scrolled = function() {
+//			u.bug("scrolled:", this);;
+		}
+
+		scene.ready = function() {
+//			u.bug("scene.ready:", this);
+
+			var form_login = u.qs("form.login", this);
+			if(form_login) {
+				u.f.init(form_login);
+			}
+
+		}
+
+		scene.ready();
+	}
+}
+
 Util.Modules["cart"] = new function() {
 	this.init = function(scene) {
 		// u.bug("scene init:", this);

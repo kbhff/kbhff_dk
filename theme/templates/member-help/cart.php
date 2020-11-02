@@ -95,38 +95,38 @@ if($cart["items"]) {
 				$price = $SC->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
 			?>
 			<li class="item id:<?= $item["id"] ?>">
-				<h3>
-					<?
-					// add option of updating item quantity to item 
-					print $SC->formStart("/medlemshjaelp/butik/updateCartItemQuantity/".$cart["cart_reference"]."/".$cart_item["id"], array("class" => "updateCartItemQuantity labelstyle:inject")) ?>
-						<fieldset>
-							<?= $SC->input("quantity", array(
-								"type" => "integer",
-								"value" =>  $cart_item["quantity"],
-								"label" => "Antal",
-								"hint_message" => "State the quantity of this item"
-							)) ?>
-						</fieldset>
-						<ul class="actions">
-							<?= $SC->submit("Opdatér", array("name" => "update", "wrapper" => "li.save")) ?>
-						</ul>
-					<?= $SC->formEnd() ?>
-					<span class="x">x </span>
-					<span class="name"><?= $item["name"] ?> </span>
-					<span class="a">á </span>
-					<span class="unit_price"><?= formatPrice($price) ?></span>
-					<span class="total_price">
-						<? // generate total price and vat to item 
-						print formatPrice(array(
-								"price" => $price["price"]*$cart_item["quantity"],
-								"vat" => $price["vat"]*$cart_item["quantity"],
-								"currency" => $cart["currency"],
-								"country" => $cart["country"]
-							),
-							array("vat" => true)
-						) ?>
-					</span>
-				</h3>
+				<?
+				// add option of updating item quantity to item 
+				print $SC->formStart("/medlemshjaelp/butik/updateCartItemQuantity/".$cart["cart_reference"]."/".$cart_item["id"], array("class" => "updateCartItemQuantity labelstyle:inject")) ?>
+					<fieldset>
+						<?= $SC->input("quantity", array(
+							"type" => "integer",
+							"value" =>  $cart_item["quantity"],
+							"label" => "Antal",
+							"hint_message" => "State the quantity of this item"
+						)) ?>
+					</fieldset>
+					<ul class="actions">
+						<?= $SC->submit("Opdatér", array("name" => "update", "wrapper" => "li.save")) ?>
+					</ul>
+				<?= $SC->formEnd() ?>
+				<span class="x">x </span>
+				<span class="name"><?= $item["name"] ?> </span>
+				<span class="a">á </span>
+				<span class="unit_price"><?= formatPrice($price) ?></span>
+				<span class="total_price">
+					<? // generate total price and vat to item 
+					print formatPrice(array(
+							"price" => $price["price"]*$cart_item["quantity"],
+							"vat" => $price["vat"]*$cart_item["quantity"],
+							"currency" => $cart["currency"],
+							"country" => $cart["country"]
+						),
+						array("vat" => true)
+					) ?>
+				</span>
+
+
 				<? // print subscription information 
 				if($item["subscription_method"] && $price["price"]): ?>
 				<p class="subscription_method">
@@ -175,25 +175,35 @@ if($cart["items"]) {
 						?>
 	
 						<li class="item id:<?= $item["id"] ?>">
-							<p>
-								<?= $SC->formStart("/medlemshjaelp/butik/updateCartItemQuantity/".$cart["cart_reference"]."/".$cart_item["id"], array("class" => "updateCartItemQuantity labelstyle:inject")) ?>
-									<fieldset>
-										<?= $SC->input("quantity", array(
-											"type" => "integer",
-											"value" =>  $cart_item["quantity"],
-											"label" => "Antal",
-											"hint_message" => "State the quantity of this item"
-										)) ?>
-									</fieldset>
-									<ul class="actions">
-										<?= $SC->submit("Opdatér", array("name" => "update", "wrapper" => "li.save")) ?>
-									</ul>
-								<?= $SC->formEnd() ?>
-								<span class="x">x </span>
-								<span class="name"><?= $item["name"] ?> </span>
-								<span class="a">á </span>
-								<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
-							</p>
+							<?= $SC->formStart("/medlemshjaelp/butik/updateCartItemQuantity/".$cart["cart_reference"]."/".$cart_item["id"], array("class" => "updateCartItemQuantity labelstyle:inject")) ?>
+								<fieldset>
+									<?= $SC->input("quantity", array(
+										"type" => "integer",
+										"value" =>  $cart_item["quantity"],
+										"label" => "Antal",
+										"hint_message" => "State the quantity of this item"
+									)) ?>
+								</fieldset>
+								<ul class="actions">
+									<?= $SC->submit("Opdatér", array("name" => "update", "wrapper" => "li.save")) ?>
+								</ul>
+							<?= $SC->formEnd() ?>
+							<span class="x">x </span>
+							<span class="name"><?= $item["name"] ?> </span>
+							<span class="a">á </span>
+							<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
+							<span class="total_price">
+								<? // generate total price and vat to item 
+								print formatPrice(array(
+										"price" => $price["price"]*$cart_item["quantity"],
+										"vat" => $price["vat"]*$cart_item["quantity"],
+										"currency" => $cart["currency"],
+										"country" => $cart["country"]
+									),
+									array("vat" => true)
+								) ?>
+							</span>
+
 							<ul class="actions">
 								<?= $HTML->oneButtonForm("Slet", "/medlemshjaelp/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
 									"confirm-value" => "Sikker?",
@@ -210,6 +220,8 @@ if($cart["items"]) {
 					<? endif; ?>
 				<? endforeach; ?>
 			</ul>
+			<? endif; ?>
+
 			<div class="total">
 				<h3>
 					<span class="name">I alt</span>
@@ -218,22 +230,13 @@ if($cart["items"]) {
 					</span>
 				</h3>
 			</div>
-		<? endif; ?>
 		
 		<? else: ?>
+
 		<h2>Din indkøbskurv er tom</h2>
 		<p>Gå til <a href="/bliv-medlem">medlemskaber </a>for at se, hvad vi tilbyder.</p>
-		<ul class="items">
-			<li class="total">
-				<h3>
-					<span class="name">Total</span>
-					<span class="total_price">
-						<?= formatPrice($SC->getTotalCartPrice($cart["id"]), array("vat" => true)) ?>
-					</span>
-				</h3>
-			</li>
-		</ul>
-		<? endif; ?>
+
+	<? endif; ?>
 	</div>
 
 	<? // Generate checkout button
