@@ -1,9 +1,12 @@
 <?php
 global $action;
 global $model;
+$IC = new Items();
+$UC = new User();
 
 $this->pageTitle("Kurv");
 
+$user = $UC->getUser();
 
 $user_id = session()->value("user_id");
 
@@ -15,8 +18,7 @@ $cart = $model->getCart();
 $cart_id = $cart ? $cart["id"] : false;
 
 
-$IC = new Items();
-$UC = new User();
+
 
 
 if($cart && $cart["items"]) {
@@ -37,6 +39,7 @@ if($cart && $cart["items"]) {
 	$cart_pickupdates = $model->getCartPickupdates();
 	$cart_items_without_pickupdate = $model->getCartItemsWithoutPickupdate();
 	
+	$department = false;
 	if($user_id != 1) {
 		$department = $UC->getUserDepartment();
 	}
@@ -149,7 +152,7 @@ if($cart && $cart["items"]) {
 				
 			<li class="pickupdate">
 				<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?></h4>
-				<p class="department">Afhentningssted: <span class="name"><?= $department["name"] ?></span></p>
+				<p class="department">Afhentningssted: <span class="name"><?= $department ? $department["name"] : "-" ?></span></p>
 				
 				<ul class="items">
 					
@@ -242,7 +245,12 @@ if($cart && $cart["items"]) {
 	<? else: ?>
 
 		<h2>Din indkøbskurv er tom</h2>
+		<? if(isset($user["membership"]) && $user["membership"]): ?>
+		<p>Du har ingenting i kurven endnu. <br />Gå til <a href="/butik">Grøntshoppen</a>.</p>
+		<? else: ?>
+		
 		<p>Du har ingenting i kurven endnu. <br />Tag et kig på vores <a href="/bliv-medlem">medlemskaber</a>.</p>
+		<? endif; ?>
 
 	<? endif; ?>
 	</div>
