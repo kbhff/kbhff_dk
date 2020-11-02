@@ -10,7 +10,11 @@ $pickupdate = $model->getPickupdate(array("id" => $pickupdate_id));
 	<h1>Edit pickup date</h1>
 	<h2><?= strip_tags($pickupdate["pickupdate"]) ?></h2>
 
-	<?= $JML->editGlobalActions($pickupdate) ?>
+	<?= $JML->editGlobalActions($pickupdate, [
+			"modify" => [
+				"delete"=>[
+					"url"=>"/janitor/pickupdate/deletePickupdate/".$pickupdate["id"]
+		]]]) ?>
 
 	<div class="pickupdate i:defaultEdit">
 		<h2>Pickup date details</h2>
