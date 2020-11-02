@@ -66,71 +66,7 @@ Util.Form.customHintPosition["html"] = function(field) {
 
 // inject HTML editor
 u.f.textEditor = function(field) {
-
-//	u.bug("init custom editor")
-
-	// show help?
-	var hint_has_been_shown = u.getCookie("html-editor-hint-v1", {"path":"/"});
-	if(!hint_has_been_shown) {
-
-		// editor help info
-		var editor_hint = u.ie(field, "div", {"class":"html_editor_hint"});
-
-		var editor_hint_open = u.ae(editor_hint, "div", {"class":"open", "html":"I'd like to know more about the Editor"});
-		var editor_hint_content = u.ae(editor_hint, "div", {"class":"html_editor_hint_content"});
-
-		editor_hint_open.editor_hint_content = editor_hint_content;
-		u.ce(editor_hint_open);
-		editor_hint_open.clicked = function() {
-			if(this.editor_hint_content.is_shown) {
-				this.innerHTML = "I'd like to know more about the Editor";
-				u.as(editor_hint_content, "display", "none");
-				this.editor_hint_content.is_shown = false;
-			}
-			else {
-				this.innerHTML = "Hide help for now";
-				u.as(editor_hint_content, "display", "block");
-				this.editor_hint_content.is_shown = true;
-			}
-		}
-
-
-		u.ae(editor_hint_content, "p", {"html":"If you are new to using the Janitor HTML editor here are a few tips to working better with the editor."});
-		u.ae(editor_hint_content, "p", {"html":"This HTML editor has been developed to maintain a strict control of the design - therefore it looks different from other HTML editors. The features available are aligned with the design of the specific page, and the Editor might not have the same features available in every context."});
-
-		u.ae(editor_hint_content, "h4", {"html":"General use:"});
-		u.ae(editor_hint_content, "p", {"html":"All HTML nodes can be deleted using the Trashcan in the Right side. The Editor always requires one node to exist and you cannot delete the last remaining node."});
-		u.ae(editor_hint_content, "p", {"html":"HTML nodes can be re-ordered by dragging the bubble in the Left side."});
-		u.ae(editor_hint_content, "p", {"html":"You can add new nodes by clicking on the + below the editor. The options availble are the ones allowed for the current content type."});
-
-		u.ae(editor_hint_content, "h4", {"html":"Text nodes:"});
-		u.ae(editor_hint_content, "p", {"html":"&lt;H1&gt;,&lt;H2&gt;,&lt;H3&gt;,&lt;H4&gt;,&lt;H5&gt;,&lt;H6&gt;,&lt;P&gt;,&lt;CODE&gt;"});
-		u.ae(editor_hint_content, "p", {"html":"Text nodes are for headlines and paragraphs - regular text."});
-		u.ae(editor_hint_content, "p", {"html":"You can activate the inline formatting tool by selecting text in your Text node."});
-		u.ae(editor_hint_content, "p", {"html":"If you press ENTER inside a Text node, a new Text node will be created below the current one."});
-		u.ae(editor_hint_content, "p", {"html":"If you press BACKSPACE twice inside an empty Text node it will be deleted"});
-
-		u.ae(editor_hint_content, "h4", {"html":"List nodes:"});
-		u.ae(editor_hint_content, "p", {"html":"&lt;UL&gt;,&lt;OL&gt;"});
-		u.ae(editor_hint_content, "p", {"html":"There are two types of list nodes: Unordered lists (UL w/ bullets) and Ordered lists (OL w/ numbers). Each of them can have one or many List items."});
-		u.ae(editor_hint_content, "p", {"html":"You can activate the inline formatting tool by selecting text in your List item."});
-		u.ae(editor_hint_content, "p", {"html":"If you press ENTER inside a List item, a new List item will be created below the current one."});
-		u.ae(editor_hint_content, "p", {"html":"If you press BACKSPACE twice inside an empty List item it will be deleted. If it is the last List item in the List node, the List node will be deleted as well."});
-
-		u.ae(editor_hint_content, "h4", {"html":"File nodes:"});
-		u.ae(editor_hint_content, "p", {"html":"Drag you file to the node or click the node to select your file."});
-		u.ae(editor_hint_content, "p", {"html":"If you add other file-types than PDF's, the file will be zipped on the server and made availble for download as ZIP file."});
-
-		var editor_hint_close = u.ae(editor_hint_content, "div", {"class":"close", "html":"I got it, don't tell me again"});
-
-		u.ce(editor_hint_close);
-		editor_hint_close.editor_hint = editor_hint;
-		editor_hint_close.clicked = function() {
-			u.saveCookie("html-editor-hint-v1", 1, {"path":"/"});
-			this.editor_hint.parentNode.removeChild(this.editor_hint);
-		}
-
-	}
+	// u.bug("init custom editor");
 
 
 	// Editor support specs
@@ -609,7 +545,10 @@ u.f.textEditor = function(field) {
 			tag.parentNode.removeChild(tag);
 
 			// enable dragging of html-tags
-			u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+			// u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+			this._editor.updateTargets();
+			this._editor.updateDraggables();
+
 
 			// global update
 			this.update();
@@ -853,7 +792,9 @@ u.f.textEditor = function(field) {
 		u.e.addEvent(tag._input, "blur", tag.field._blurred_content);
 
 		// enable dragging of html-tags
-		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		// u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 
 		return tag;
 		
@@ -967,7 +908,9 @@ u.f.textEditor = function(field) {
 		}
 
 		// enable dragging of html-tags
-		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		// u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 
 		return tag;
 		
@@ -997,7 +940,7 @@ u.f.textEditor = function(field) {
 				this.field.update();
 			}
 		}
-		u.request(tag, this.file_delete_action+"/"+tag._item_id+"/"+tag._variant, {"method":"post", "params":form_data});
+		u.request(tag, this.file_delete_action+"/"+tag._item_id+"/"+tag._variant, {"method":"post", "data":form_data});
 
 	}
 
@@ -1072,7 +1015,7 @@ u.f.textEditor = function(field) {
 				this.tag.field._form.submit();
 			}
 		}
-		u.request(this, this.field.media_add_action+"/"+this.field.item_id, {"method":"post", "params":form_data});
+		u.request(this, this.field.media_add_action+"/"+this.field.item_id, {"method":"post", "data":form_data});
 
 	}
 
@@ -1175,7 +1118,9 @@ u.f.textEditor = function(field) {
 		}
 
 		// enable dragging of html-tags
-		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		// u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 
 		return tag;
 	}
@@ -1204,7 +1149,7 @@ u.f.textEditor = function(field) {
 				this.field.update();
 			}
 		}
-		u.request(tag, this.file_delete_action+"/"+tag._item_id+"/"+tag._variant, {"method":"post", "params":form_data});
+		u.request(tag, this.file_delete_action+"/"+tag._item_id+"/"+tag._variant, {"method":"post", "data":form_data});
 
 	}
 
@@ -1272,7 +1217,7 @@ u.f.textEditor = function(field) {
 				this.tag.field._form.submit();
 			}
 		}
-		u.request(this, this.field.file_add_action+"/"+this.field.item_id, {"method":"post", "params":form_data});
+		u.request(this, this.field.file_add_action+"/"+this.field.item_id, {"method":"post", "data":form_data});
 
 	}
 
@@ -1344,7 +1289,9 @@ u.f.textEditor = function(field) {
 		}
 
 		// enable dragging of html-tags
-		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		// u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 
 		return tag;
 	}
@@ -1446,7 +1393,9 @@ u.f.textEditor = function(field) {
 
 
 				// enable dragging of html-tags
-				u.sortable(this.field._editor, {"draggables":".tag", "targets":".editor"});
+				// u.sortable(this.field._editor, {"draggables":".tag", "targets":".editor"});
+				this.field._editor.updateTargets();
+				this.field._editor.updateDraggables();
 
 
 			}
@@ -1524,12 +1473,15 @@ u.f.textEditor = function(field) {
 	field.addListTag = function(type, value) {
 
 		var tag = this.createTag(this.list_allowed, type);
+		// tag.list = u.ae(tag, "div", {"class":"list"});
 
 		this.addListItem(tag, value);
 
 
 		// enable dragging of html-tags
-		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		// u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 
 		return tag;
 	}
@@ -1538,8 +1490,16 @@ u.f.textEditor = function(field) {
 	field.addListItem = function(tag, value) {
 
 		var li = u.ae(tag, "div", {"class":"li"});
+		// var li = u.ae(tag.list, "div", {"class":"li"});
 		li.tag = tag;
 		li.field = this;
+		// li.list = tag.list;
+
+		// add drag handle
+		// li._drag = u.ae(tag, "div", {"class":"drag"});
+		// li._drag.field = this;
+		// li._drag.tag = li;
+
 
 		// text input
 		li._input = u.ae(li, "div", {"class":"text", "contentEditable":true});
@@ -1580,6 +1540,11 @@ u.f.textEditor = function(field) {
 
 		// add paste event handler
 		u.e.addEvent(li._input, "paste", this._pasted_content);
+
+		// enable dragging of html-tags
+		// u.sortable(li, {"draggables":".li", "targets":".editor,div.list"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 
 		return li;
 	}
@@ -1642,7 +1607,9 @@ u.f.textEditor = function(field) {
 		}
 
 		// enable dragging of html-tags
-		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		// u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 
 		return tag;
 	}
@@ -1798,7 +1765,9 @@ u.f.textEditor = function(field) {
 
 
 				// enable dragging of html-tags
-				u.sortable(this.field._editor, {"draggables":".tag", "targets":".editor"});
+				// u.sortable(this.field._editor, {"draggables":".tag", "targets":".editor"});
+				this.field._editor.updateTargets();
+				this.field._editor.updateDraggables();
 
 				// set focus on prev element
 				if(prev) {
@@ -1953,7 +1922,9 @@ u.f.textEditor = function(field) {
 		u.e.kill(event);
 
 		var i, node;
+
 		var paste_content = event.clipboardData.getData("text/plain");
+		// u.bug("paste_content", paste_content);
 
 		// u.bug("paste_content:", paste_content, "yes");
 		// only do anything if paste content is not empty
@@ -1972,36 +1943,47 @@ u.f.textEditor = function(field) {
 			// add break tags for newlines
 			// split string by newlines
 			var paste_parts = paste_content.trim().split(/\n\r|\n|\r/g);
-//			alert(paste_parts.join(","))
-			var text_nodes = [];
-			for(i = 0; i < paste_parts.length; i++) {
-				text = paste_parts[i];
+			// if(paste_parts.length > 1) {
+			//
+			// 	console.log("formatting");
+			//
+			// }
+			// else {
+			//
+			// 	console.log("no formatting");
 
-				text_nodes.push(document.createTextNode(text));
+				var text_nodes = [];
+				for(i = 0; i < paste_parts.length; i++) {
+					text = paste_parts[i];
+					u.bug("text part", text);
+					text_nodes.push(document.createTextNode(text));
 
-				// only insert br-tag if there is more than one paste-part and not after the last one
-				if(paste_parts.length && i < paste_parts.length-1) {
-					text_nodes.push(document.createElement("br"));
+					// only insert br-tag if there is more than one paste-part and not after the last one
+					if(paste_parts.length && i < paste_parts.length-1) {
+						text_nodes.push(document.createElement("br"));
+					}
 				}
-			}
 
-			// loop through nodes in opposite order
-			// webkit collapses space after selection if I don't 
-			for(i = text_nodes.length-1; i >= 0; i--) {
-				node = text_nodes[i];
+				// loop through nodes in opposite order
+				// webkit collapses space after selection if I don't 
+				for(i = text_nodes.length-1; i >= 0; i--) {
+					node = text_nodes[i];
 
-				// get current range
-				var range = selection.getRangeAt(0);
-				// insert new node
-				range.insertNode(node);
+					// get current range
+					var range = selection.getRangeAt(0);
+					// insert new node
+					range.insertNode(node);
 
-				// add range to to selection
-				selection.addRange(range);
+					// add range to to selection
+					selection.addRange(range);
 
-			}
+				}
 
-			// now collapse selection to end, to have cursor after selection
-			selection.collapseToEnd();
+				// now collapse selection to end, to have cursor after selection
+				selection.collapseToEnd();
+
+			// }
+//			alert(paste_parts.join(","))
 
 		}
 	}
@@ -2153,7 +2135,7 @@ u.f.textEditor = function(field) {
 		}
 
 		// EM option
-		this.selection_options._em = u.ae(ul, "li", {"class":"em", "html":"Itallic"});
+		this.selection_options._em = u.ae(ul, "li", {"class":"em", "html":"Italic"});
 		this.selection_options._em.field = this;
 		this.selection_options._em.tag = node;
 		this.selection_options._em.selection = selection;
@@ -2574,6 +2556,11 @@ u.f.textEditor = function(field) {
 	field._viewer.innerHTML = field.input.val();
 
 
+	// enable dragging of html-tags
+	// u.sortable(field._editor, {"draggables":"div.tag,div.li", "targets":"div.editor,div.list", "layout": "vertical"});
+	u.sortable(field._editor, {"draggables":"div.tag", "targets":"div.editor"});
+
+
 	// TODO: Consider 
 	// if value of textarea is not HTML formatted
 	// change double linebreak to </p><p> (or fitting) once you are sure text is wrapped in node
@@ -2762,9 +2749,10 @@ u.f.textEditor = function(field) {
 
 	// TODO: put a note here about why I don't update the textarea right away - because I don't remember
 
+	field._editor.updateTargets();
+	field._editor.updateDraggables();
 
-	// enable dragging of html-tags
-	u.sortable(field._editor, {"draggables":".tag", "targets":".editor"});
+
 
 	// update viewer after indexing
 	field.updateViewer();
