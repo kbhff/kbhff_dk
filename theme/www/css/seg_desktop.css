@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-10-26 20:31:53
+asset-builder @ 2020-11-02 14:21:49
 */
 
 /*seg_desktop_include.css*/
@@ -69,8 +69,8 @@ sup {line-height: 1em; font-family: inherit; color: inherit;}
 form {}
 div.field {
 	padding: 0 0 25px; position: relative; font-size: 0; z-index: 1;
-	padding-left: 16px;
-	padding-right: 16px;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 div.field label {display: block; margin: 0 0 0 2px; line-height: 12px; font-size: 11px; text-transform: uppercase;}
 div.field input,
@@ -94,9 +94,10 @@ div.field select:not(*:root) {
 div.field select option {height: 24px;}
 div.field textarea {width: calc(100% - 4px); height: 100px; resize: none; overflow: auto; padding: 3px 0 2px 6px;}
 div.field textarea.autoexpand {width: calc(100% - 4px); padding: 3px 6px 2px; overflow: hidden;}
+div.field .pseudolabel {display: none;}
 div.field.checkbox {}
 div.field.checkbox label {display: inline-block; vertical-align: top; text-transform: none; font-size: 14px; line-height: 24px; padding: 0 0 0 28px;
-	background: transparent url(../assets/kbhff-skin/img/gx_checkbox_unchecked.svg) no-repeat left center;
+	background: transparent url(../assets/kbhff-skin/img/gx_checkbox_unchecked.svg) no-repeat left 2px;
 	background-size: 20px 20px;
 }
 div.field.checkbox input:checked + label {
@@ -105,7 +106,7 @@ div.field.checkbox input:checked + label {
 div.field.checkbox input {z-index: 2; position: absolute; top: 0; left: 0; width: 20px; height: 20px; opacity: 0;}
 div.field.radiobuttons .item {padding: 3px 0 0; position: relative;}
 div.field.radiobuttons .item label {display: block; text-transform: none; font-size: 14px; line-height: 24px;  padding: 0 0 0 28px;
-	background: transparent url(../assets/kbhff-skin/img/gx_radiobutton_unchecked.svg) no-repeat left center;
+	background: transparent url(../assets/kbhff-skin/img/gx_radiobutton_unchecked.svg) no-repeat left 2px;
 	background-size: 20px 20px;
 }
 div.field.radiobuttons .item input:checked + label {
@@ -131,6 +132,16 @@ div.field.radiobuttons .item input.focus:checked + label {
 div.field.checkbox.focus input,
 div.field.radiobuttons .item input.focus {
 	width: 20px;
+}
+div.field input[type="integer"],
+div.field input[type="number"] {
+	-moz-appearance: textfield;
+}
+div.field input[type="integer"]::-webkit-inner-spin-button,
+div.field input[type="integer"]::-webkit-outer-spin-button,
+div.field input[type="number"]::-webkit-inner-spin-button,
+div.field input[type="number"]::-webkit-outer-spin-button {margin: 0;
+	-webkit-appearance: none;
 }
 div.field.error input,
 div.field.error select,
@@ -470,8 +481,8 @@ position: relative;
 #content ol,
 #content ul,
 #content dl {
-	padding-left: 18px;
-	padding-right: 18px;
+	padding-left: 12px;
+	padding-right: 12px;
 }
 #content div.c-wrapper {
 	display: block;
@@ -677,15 +688,20 @@ position: relative;
 }
 #content div.profile .pickupdate,
 #content div.profile .order_item-product,
+#content div.profile .order-status,
 #content div.profile .change-untill {
 	display: inline-block;
 	vertical-align: top;
 	box-sizing: border-box;
-	width: 33%;
+	width: 25%;
 }
 #content div.profile p.change-untill {
 	width: 17%;
 	padding-right: 0;
+}
+#content div.profile p.order-status .unpaid {
+	color: #C22414;
+	font-weight: bold;
 }
 #content div.profile ul.actions.change {
 	display: inline-block;
@@ -712,6 +728,9 @@ position: relative;
 	padding-bottom: 12px;
 	padding-left: 12px;
 	padding-right: 12px;
+}
+#content div.profile .c-wrapper > .c-one-third .section:first-child {
+	margin-top: 36px;
 }
 #content div.profile .c-box,
 #content div.profile .fields {
@@ -765,53 +784,44 @@ position: relative;
 }
 
 /*s-signup.css*/
-#content .signupfees h3 {padding-bottom: 8px;
-	padding-left: 0px; padding-right: 0px; margin-left: 18px; margin-right: 18px;
+#content .scene.signupfees h3 {padding-bottom: 8px;
+	padding-left: 0px; padding-right: 0px; 
 	border-bottom: 1px solid #000000; font-size: 26px;
 }
-#content .signupfees li.supporter {padding-top: 200px; 
+#content .scene.signupfees li.supporter {padding-top: 200px; 
 	background: transparent url(../img/signup/bg_supporter.jpg) no-repeat center top;
 }
-#content .signupfees li.volunteer {padding-top: 200px; 
+#content .scene.signupfees li.volunteer {padding-top: 200px; 
 	background: transparent url(../img/signup/bg_volunteer.jpg) no-repeat center top;
 }
-#content .signupfees h3.price {border: none; font-size: 20px; padding-top: 0; padding-bottom: 30px;
+#content .scene.signupfees h3.price {border: none; font-size: 20px; padding-top: 0; padding-bottom: 30px;
 	font-family: Arial, sans-serif;
 }
-#content .signupfees h3.price + h3.price {margin-top: -25px;}
-#content .signupfees ul.signupfees {font-size: 0; margin-left: 0;}
+#content .scene.signupfees h3.price + h3.price {margin-top: -25px;}
+#content .signupfees ul.signupfees {font-size: 0; margin-left: 0; padding: 0;}
 #content .signupfees li.signupfee {display: inline-block; width: calc(50% - 14px - 12px); vertical-align: top; 
 	margin-top: 48px; margin-right: 12px; margin-left: 12px; padding-left: 0;
 }
-#content .signupfees li.signupfee + li.signupfee {padding-top: 200px;}
-#content .signupfees ul.actions {margin: 0 auto; padding-top: 5px; text-align: center;}
-#content .signupfees ul.actions input {margin: 0 auto;}
-#content .signupfees ul.actions li {display: block; width: 100%; padding-left: 0;}
-#content .signupfees ul.actions li.readmore { padding-bottom: 10px;}
-#content .signupfees ul.offer,
-#content .signupfees .articlebody ul.offer {font-size: 0; padding: 0; margin: 0; list-style: none;}
-#content .signupfees ul.offer li {font-size: 20px; display: inline-block; vertical-align: top; padding: 12px 5px 0 0px;}
-#content .signupfees ul.offer li.name,
-#content .signupfees ul.offer li.currency,
-#content .signupfees ul.offer li.url,
-#content .signupfees ul.offer li.subscription_price,
-#content .signupfees ul.offer li.price {display: none;}
-#content .signupfees ul.offer li.default {text-decoration: line-through;}
-#content .signupfees ul.offer li.description {padding-top: 4px; display: block;}
-#content .signupfees ul.offer li.description ul {list-style: disc;}
-#content .signupfees ul.offer li.description ul li {display: list-item; padding: 0 0 3px; font-size: 13px;}
-#content .signupfees ul.offer li.subscription_price > p {padding: 0 0 0 18px; font-size: 20px;}
-#content .signup form {width: 380px; margin: 0 auto; padding-top: 20px;}
-#content .signup ul.actions li { padding: 0 2.5px 10px 2.5px; }
-#content .signup p {box-sizing: border-box; width: 380px; margin: 0 auto;}
-#content .signup h2 {text-align: center;}
-#content .signupfees div.article {position: relative; z-index: 11;}
-#content .signupfees div.article div.articlebody {background-color: rgba(255, 255, 255, 0.9);}
-#content .signupfees div.article div.articlebody p {padding-top: 24px; margin-top: 22px;}
-#content .signupfees ul.signupfees {position: relative; z-index: 11;}
-#content .signupfees div.bg {z-index: 10; position: absolute; top: 63px; width: calc(50% - 12px); background-repeat: no-repeat; background-color: transparent; background-position: left top; background-size: cover; height: calc(100% - 63px);}
-#content .signupfees div.bg.supporter {left: 12px; background-image: url(../img/signup/bg_supporter.jpg);}
-#content .signupfees div.bg.volunteer {right: 12px; background-image: url(../img/signup/bg_volunteer.jpg);}
+#content .scene.signupfees li.signupfee + li.signupfee {padding-top: 200px;}
+#content .scene.signupfees ul.actions {padding-top: 5px; text-align: center;}
+#content .scene.signupfees ul.actions input {margin: 0 auto;}
+#content .scene.signupfees ul.actions li {display: block; padding-left: 0;}
+#content .scene.signupfees ul.actions li.readmore { padding-bottom: 10px;}
+#content .scene.signupfees ul.offer,
+#content .scene.signupfees .articlebody ul.offer {font-size: 0; padding: 0; margin: 0; list-style: none;}
+#content .scene.signupfees ul.offer li {font-size: 20px; display: inline-block; vertical-align: top; padding: 12px 5px 0 0px;}
+#content .scene.signupfees ul.offer li.name,
+#content .scene.signupfees ul.offer li.currency,
+#content .scene.signupfees ul.offer li.url,
+#content .scene.signupfees ul.offer li.subscription_price,
+#content .scene.signupfees ul.offer li.price {display: none;}
+#content .scene.signupfees ul.offer li.default {text-decoration: line-through;}
+#content .scene.signupfees ul.offer li.description {padding-top: 4px; display: block;}
+#content .scene.signupfees ul.offer li.description p {padding-left: 0; padding-right: 0;}
+#content .scene.signupfees ul.offer li.description ul {list-style: disc;}
+#content .scene.signupfees ul.offer li.description ul li {display: list-item; padding: 0 0 3px; font-size: 13px;}
+#content .scene.signupfees ul.offer li.subscription_price > p {padding: 0 0 0 18px; font-size: 20px;}
+#content .scene.signup form {width: 450px; margin: 0 auto; padding-top: 40px;}
 #content .signup fieldset p.terms_summary {font-weight: 700;}
 
 /*s-front.css*/
@@ -876,21 +886,21 @@ position: relative;
 #content .scene.membership .c-one-third .c-box:first-child {
 	margin-top: 58px;
 }
-#content .membership .c-one-third .c-box {text-align: center;}
-#content .membership .c-one-third .c-box ul.actions {text-align: center; padding-bottom: 22px}
-#content .membership .c-one-third .c-box ul.actions li {padding: 0;}
-#content .membership ul.offer,
-#content .membership ul.offer {font-size: 0; padding: 0; margin: 0; list-style: none;}
-#content .membership ul.offer li {font-size: 20px; display: inline-block; vertical-align: top; padding: 0 0 10px;}
-#content .membership ul.offer li.name,
-#content .membership ul.offer li.currency,
-#content .membership ul.offer li.url {display: none;}
-#content .membership div.related {padding-bottom: 20px;}
-#content .membership div.related ul.items.membership {padding: 0; margin: 0; list-style-type: none;}
-#content .membership div.related ul.items.membership > li {padding-left: 0;}
-#content .membership div.related ul.offer {padding-bottom: 20px;}
-#content .membership div.related ul.offer li {font-size: 16px; padding: 0; padding-left: 18px;}
-#content .membership div.related ul.actions {text-align: left;}
+#content .scene.membership .c-one-third .c-box {text-align: center;}
+#content .scene.membership .c-one-third .c-box ul.actions {text-align: center; padding-bottom: 22px}
+#content .scene.membership .c-one-third .c-box ul.actions li {padding: 0;}
+#content .scene.membership ul.offer,
+#content .scene.membership ul.offer {font-size: 0; padding: 0; margin: 0; list-style: none;}
+#content .scene.membership ul.offer li {font-size: 20px; display: inline-block; vertical-align: top; padding: 0 0 10px;}
+#content .scene.membership ul.offer li.name,
+#content .scene.membership ul.offer li.currency,
+#content .scene.membership ul.offer li.url {display: none;}
+#content .scene.membership div.related {padding-bottom: 20px;}
+#content .scene.membership div.related ul.items.membership {padding: 0; margin: 0; list-style-type: none;}
+#content .scene.membership div.related ul.items.membership > li {padding-left: 0;}
+#content .scene.membership div.related ul.offer {padding-bottom: 20px;}
+#content .scene.membership div.related ul.offer li {font-size: 16px; padding: 0; padding-left: 12px;}
+#content .scene.membership div.related ul.actions {text-align: left;}
 
 
 /*s-posts.css*/
@@ -939,20 +949,103 @@ position: relative;
 
 
 /*s-shop.css*/
+#content .scene.shop div.cart ul.items {margin: 0; list-style: none;}
+#content .scene.shop div.cart ul.items li {padding-left: 0;}
+#content .scene.shop div.cart ul.actions {padding-bottom: 0;}
+#content .scene.cart .messages {display: none;}
+#content .scene.cart div.all_items h2 {padding-bottom: 15px;}
+#content .scene.cart ul.items {list-style: none; padding: 0 12px 10px; margin: 0;}
+#content .scene.cart ul.items > li {padding: 10px 0; position: relative;}
+#content .scene.cart ul.items li > span {display: inline-block; vertical-align: top; padding-top: 4px; font-size: 16px;}
+#content .scene.cart ul.items li form {display: inline-block; vertical-align: top; position: relative;}
+#content .scene.cart ul.items li form div.field {padding: 0;}
+#content .scene.cart ul.items li form div.field label,
+#content .scene.cart ul.items li form div.field .indicator {display: none;}
+#content .scene.cart ul.items li form div.field .help {left: 47px; display: none;}
+#content .scene.cart ul.items li form div.field input {height: 28px; width: 40px; text-align: right;}
+#content .scene.cart ul.items li form div.field input.focus {height: 32px; width: 44px;}
+#content .scene.cart ul.items li form > ul.actions {padding: 0; right: 45px; top: 0;}
+#content .scene.cart ul.items li form > ul.actions li {padding: 8px 0 0;}
+#content .scene.cart ul.items li form > ul.actions input.button {width: 16px; height: 16px; padding: 0; text-indent: -9999px; border-radius: 15px;
+	background-image: url(../img/checkout/gx_refresh.png);
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+#content .scene.cart ul.items li p {padding: 0;}
+#content .scene.cart ul.items li span.total_price {float: right; padding-right: 70px;}
+#content .scene.cart ul.items li ul.actions {padding: 0; top: 8px; position: absolute; right: 0;}
+#content .scene.cart div.total {margin: 0 12px; border-top: 1px dotted #000;}
+#content .scene.cart div.total h3 {font-size: 20px; padding-left: 0; padding-right: 0; text-align: right;}
+#content .scene.cart div.checkout {padding: 20px 0;}
+#content .scene.checkout div.login {
+	width: 380px;
+	margin: 0 auto;
+	padding-top: 20px;
+}
+#content .scene.checkout div.login ul.actions,
+#content .scene.checkout div.login p.forgot,
+#content .scene.checkout div.login p.signup {
+	text-align: center;
+}
+#content .scene.checkout div.contact ul.actions {
+	text-align: left;
+}
+#content .scene.checkout div.contact ul.actions li {
+	padding-left: 0;
+}
+#content .scene.checkout ul.items {list-style: none; padding: 0 12px 10px; margin: 0;}
+#content .scene.checkout ul.items > li {padding: 10px 0; position: relative;}
+#content .scene.checkout ul.items li > span {display: inline-block; vertical-align: top; padding-top: 4px; font-size: 16px;}
+#content .scene.checkout ul.items li p {padding: 0;}
+#content .scene.checkout ul.items li span.total_price {float: right; padding-right: 70px;}
+#content .scene.checkout ul.items li ul.actions {padding: 0; top: 8px; position: absolute; right: 0;}
+#content .scene.checkout div.total {margin: 0 12px; border-top: 1px dotted #000;}
+#content .scene.checkout div.total h3 {font-size: 20px; padding-left: 0; padding-right: 0; text-align: right;}
+#content .scene.checkout ul.payment_methods {padding: 0; margin: 0; list-style: none;}
+#content .scene.checkout ul.payment_methods li.payment_method {padding-bottom: 10px;}
+#content .scene.checkout ul.payment_methods li.payment_method ul.actions {padding: 0; text-align: left;}
+#content .scene.checkout ul.payment_methods li.payment_method ul.actions li {padding-left: 0;}
+#content .scene.checkout ul.payment_methods li.payment_method.stripe p {
+	background: url(../img/checkout/gx_creditcards.png) no-repeat 0px top;
+	background-size: auto 17px;
+	padding-left: 100px;
+}
+#content .scene.shopPayment div.cartitems {width: 450px; margin: 15px auto 20px;}
+#content .scene.shopPayment div.cartitems ul.cartitems {padding-bottom: 30px; padding-left: 0; padding-right: 0; margin: 0; list-style: none;}
+#content .scene.shopPayment div.cartitems ul.cartitems li {padding: 0;}
+#content .scene.shopPayment div.cartitems ul.actions {text-align: center;}
+#content .scene.shopPayment div.cartitems ul.actions li.modify {padding-right: 0; padding-left: 0;}
+#content .scene.shopPayment div.cartitems h3 {padding-left: 0; padding-right: 0;}
 #content .scene.shopPayment ul.orders {padding-top: 50px; margin: 0 auto; width: 450px; padding-bottom: 0;}
 #content .scene.shopPayment ul.orders > li {list-style-type: none; padding-left: 0; font-size: 16px;}
 #content .scene.shopPayment ul.orders > li span.price {float: right;}
 #content .scene.shopPayment ul.orders > li.total_price {font-size: 18px; font-weight: 700; border-top: 1px solid #000000; padding-top: 12px; margin-top: 12px;}
 #content .scene.shopPayment form.card {width: 450px; margin: 0 auto; padding-top: 50px;}
 #content .scene.shopPayment form.card fieldset {background-color: #f2f2f2;}
-#content .scene.shopPayment form.card fieldset div.field.tel.card {width: 400px; margin: 0 auto; padding-top: 24px;}
-#content .scene.shopPayment form.card fieldset div.field.tel.exp_month {width: 65px; display: inline-block; margin-left: 15px;}
+#content .scene.shopPayment form.card fieldset div.field.tel.card {padding-top: 24px;}
+#content .scene.shopPayment form.card fieldset div.field.tel.exp_month {width: 65px; display: inline-block;}
 #content .scene.shopPayment form.card fieldset div.field.tel.exp_year {width: 65px; display: inline-block;}
-#content .scene.shopPayment form.card fieldset div.field.cvc {width: 85px; float: right; margin-right: 15px;}
+#content .scene.shopPayment form.card fieldset div.field.cvc {width: 85px; float: right;}
 #content .scene.shopPayment form.card fieldset span.slash {font-size: 26px; vertical-align: middle; position: relative; top: 10px;}
 #content .scene.shopPayment form.card ul.actions {text-align: center; padding-right: 0; padding-left: 0; margin-top: 12px;}
 #content .scene.shopPayment form.card ul.actions li {padding: 0;}
-#content .scene.shopPayment > p {width: 450px; margin: 0 auto; font-size: 12px; line-height: 12px; padding-bottom: 0;}
+#content .scene.shopPayment.stripe form div.field.card input.visa {
+	background: url(../img/checkout/gx_visa_small.png) no-repeat right 7px;
+}
+#content .scene.shopPayment.stripe form div.field.card input.amex {
+	background: url(../../../img/gx_amex_small.png) no-repeat right 7px;
+}
+#content .scene.shopPayment.stripe form div.field.card input.mastercard {
+	background: url(../../../img/gx_mastercard_small.png) no-repeat right 7px;
+}
+#content .scene.shopPayment > p {width: 450px; margin: 0 auto; font-size: 12px; line-height: 12px; padding-bottom: 0; text-align: center;}
+#content .scene.shopReceipt ul.orders {margin: 0; list-style: none; padding: 0;}
+#content .scene.shopReceipt ul.orders > li {list-style-type: none; padding-left: 0; font-size: 16px;}
+#content .scene.shopReceipt ul.orders > li span.price {float: right;}
+#content .scene.shopReceipt ul.orders > li.total_price {font-size: 18px; font-weight: 700; border-top: 1px solid #000000; padding-top: 12px; margin-top: 12px;}
+#content .scene.shopReceipt div.membership_info,
+#content .scene.shopReceipt div.activation_info,
+#content .scene.shopReceipt div.order_info {padding: 0 0 20px;}
 #content .scene.shopReceipt ul.actions {text-align: center}
 
 

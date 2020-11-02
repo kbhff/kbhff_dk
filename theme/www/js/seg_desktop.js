@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-10-26 20:31:53
+asset-builder @ 2020-11-02 14:21:49
 */
 
 /*seg_desktop_include.js*/
@@ -5843,6 +5843,7 @@ Util.Modules["login"] = new function() {
 		scene.ready = function() {
 			var form_login = u.qs("form.login", this);
 			u.f.init(form_login);
+			form_login.inputs["username"].focus();
 		}
 		scene.ready();
 	}
@@ -6045,6 +6046,130 @@ Util.Modules["signupfees"] = new function() {
 		// 	
 		// 	
 		// 	
+		}
+		scene.ready();
+	}
+}
+
+
+/*m-cart.js*/
+Util.Modules["cart"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			this.total_cart_price = u.qs("div.total span.total_price", this);
+			u.bug("this.total_cart_price", this.total_cart_price);
+			this.cart_nodes = u.qsa("ul.items li.item", this);
+			var i, node;
+			for(i = 0; node = this.cart_nodes[i]; i++) {
+				node.scene = this;
+				node.item_id = u.cv(node, "id");
+				node.unit_price = u.qs("span.unit_price", node);
+				node.total_price = u.qs("span.total_price", node);
+				node.quantity = u.qs("#input_quantity", node);
+				var quantity_form = u.qs("form.updateCartItemQuantity", node)
+				if(quantity_form) {
+					quantity_form.node = node;
+					u.f.init(quantity_form);
+					quantity_form.inputs["quantity"].updated = function() {
+						u.ac(this._form.actions["update"], "primary");
+						this._form.submit();
+					}
+					quantity_form.submitted = function() {
+						this.response = function(response) {
+							if(response) {
+								var total_price = u.qs("div.scene div.total span.total_price", response);
+								var item_row = u.ge("id:"+this.node.item_id, response);
+								var item_total_price = u.qs("span.total_price", item_row);
+								var item_unit_price = u.qs("span.unit_price", item_row);
+								var item_quantity = u.qs("#input_quantity", response);
+								this.node.scene.total_cart_price.innerHTML = total_price.innerHTML;
+								this.node.total_price.innerHTML = item_total_price.innerHTML;
+								this.node.unit_price.innerHTML = item_unit_price.innerHTML;
+								this.node.quantity.value = item_quantity.value;
+					 			u.rc(this.actions["update"], "primary");
+							}
+						}
+						u.request(this, this.action, {"method":"post", "data":this.getData()});
+					}
+				}
+				var bn_delete = u.qs("ul.actions li.delete", node);
+				if(bn_delete) {
+					u.m.oneButtonForm.init(bn_delete);
+					bn_delete.node = node;	
+					bn_delete.confirmed = function(response) {
+						if(response) {
+							var total_price = u.qs("div.scene div.total span.total_price", response);
+							this.node.scene.total_cart_price.innerHTML = total_price ? total_price.innerHTML : "0,00 DKK";
+							this.node.parentNode.removeChild(this.node);
+						}
+					}
+				}
+			}
+		}
+		scene.ready();
+	}
+}
+Util.Modules["checkout"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			var form_login = u.qs("form.login", this);
+			if(form_login) {
+				u.f.init(form_login);
+			}
+		}
+		scene.ready();
+	}
+}
+Util.Modules["shopProfile"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			var form = u.qs("form.details", this);
+			if(form) {
+				u.f.init(form);
+			}
+		}
+		scene.ready();
+	}
+}
+Util.Modules["shopAddress"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			var addresses = u.qsa("ul.addresses li.address", this);
+			if(addresses) {
+				var i, address, highest = 0;
+				for(i = 0; i < addresses.length; i++) {
+					address = addresses[i];
+					if(address.offsetHeight > highest) {
+						highest = address.offsetHeight;
+					}
+				}
+				for(i = 0; i < addresses.length; i++) {
+					address = addresses[i];
+					u.ass(address, {
+						height: highest+"px"
+					})
+				}
+			}
+			var form = u.qs("form.address", this);
+			if(form) {
+				u.f.init(form);
+			}
 		}
 		scene.ready();
 	}
@@ -6962,347 +7087,355 @@ Util.Modules["profile"] = new function() {
 			var box_membership = u.qs(".membership > .c-box", this);
 			var button_membership = u.qs(".membership li.change-info", this);
 			var button_cancel = u.qs(".membership li.cancel-membership", this);
-			button_membership.scene = this;
-			button_cancel.scene = this; 
 			var right_panel = u.qs(".c-one-third", this);
 			var box_department = u.qs(".department", this);
-			u.clickableElement(button_membership); 
-			button_membership.clicked = function() {
-				this.response = function(response) {
-					this.is_requesting = false;
-					u.rc(this, "loading");
-					var form_department = u.qs(".form_department", response);
-					form_department.scene = this.scene;
-					var div_fields = u.qs("div.fields", box_membership);
-					var divs_membership = u.qsa(".membership-info", div_fields);
-					var ul_buttons = u.qs("ul.actions", div_fields);
-					u.ass(divs_membership[3], {"display":"none"});
-					u.ass(ul_buttons, {"display":"none"});
-					u.ae(box_membership, form_department);
-					u.f.init(form_department);
-					u.ae(div_fields, form_department);
-					form_department.submitted = function() {
-						var data = this.getData();
-						this.response = function(response) {
-							this.is_requesting = false;
-							u.rc(this, "loading");
-							var new_fields = u.qs(".membership .fields", response);
-							box_membership.replaceChild(new_fields, div_fields);
-							var new_department_box = u.qs(".department", response);
-							right_panel.replaceChild(new_department_box, box_department);
-							if (message = u.qs("p.message", response)) {
-								var fields = u.qs("div.fields", box_membership)
-								u.ie(fields, message);
-								if (message.t_done) {
-									u.t.resetTimer(t_done);
-								}
-								message.done = function() {
-									u.ass(this, {
-										"transition":"all .5s ease",
-										"transform":"translate3d(0px, -10px, 0px)",
-										"opacity":"0"
-									});
-									u.t.setTimer(this, function() {
-										this.parentNode.removeChild(this);
-									}, 500);
-								}
-								message.transitioned = function() {
-									this.t_done = u.t.setTimer(this, this.done, 2400);
-								}
-								u.ass(message, {
-									"color":"#3e8e17",
-									"padding-bottom":"5px",
-									"transform":"translate3d(0px, -10px, 0px)",
-									"opacity":"0"
-								});
-								u.a.transition(message, "all .5s ease");
-								u.ass(message, {
-									"transform":"translate3d(0px, 0, 0px)",
-									"opacity":"1"
-								});
-							}
-							this.scene.initMembershipBox();
-						}
-						if (!this.is_requesting) {
-							this.is_requesting = true;
-							u.ac(this, "loading");
-							u.request(this, this.action, {"data":data, "method":"POST"});
-						}
-					}
-					form_department.actions["cancel"].clicked = function() {
-						this.response = function(response) {
-							this.is_requesting = false;
-							u.rc(this, "loading");
-							var new_fields = u.qs(".membership .fields", response);
-							box_membership.replaceChild(new_fields, div_fields);
-							this._form.scene.initMembershipBox();
-						}
-						if (!this.is_requesting) {
-							this.is_requesting = true;
-							u.ac(this, "loading");
-							u.request(this, "/profil");
-						}
-					}
-				}
-				if (!this.is_requesting) {
-					this.is_requesting = true;
-					u.ac(this, "loading");
-					u.request(this, "/profil/afdeling");
-				}
-			}
-			u.clickableElement(button_cancel);
-			button_cancel.clicked = function() {
-				this.scene.overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600, class:"confirm_cancel_membership"});
-				var p_warning = u.ae(this.scene.overlay.div_content, "p", {
-					html:"Du er ved at melde dig ud af KBHFF. Er du sikker?"
-				});
-				var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
-					class:"actions"
-				});
-				var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"button delete_me","value":"Meld mig ud af KBHFF"});
-				var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"button regret primary", "value":"Fortryd udmelding"});
-				delete_me.scene = this.scene;
-				regret.scene = this.scene;
-				u.e.click(delete_me)
-				delete_me.clicked = function () {
+			if(button_membership) {
+				button_membership.scene = this;
+				u.clickableElement(button_membership); 
+				button_membership.clicked = function() {
 					this.response = function(response) {
 						this.is_requesting = false;
 						u.rc(this, "loading");
-						var form_confirm_cancellation = u.qs(".confirm_cancellation", response);
-						form_confirm_cancellation.scene = this.scene;
-						u.ass(p_warning, {"display":"none"});
-						u.ass(ul_actions, {"display":"none"});
-						u.ae(this.scene.overlay.div_content, form_confirm_cancellation);
-						u.f.init(form_confirm_cancellation);
-						form_confirm_cancellation.submitted = function () {
+						var form_department = u.qs(".form_department", response);
+						form_department.scene = this.scene;
+						var div_fields = u.qs("div.fields", box_membership);
+						var divs_membership = u.qsa(".membership-info", div_fields);
+						var ul_buttons = u.qs("ul.actions", div_fields);
+						u.ass(divs_membership[3], {"display":"none"});
+						u.ass(ul_buttons, {"display":"none"});
+						u.ae(box_membership, form_department);
+						u.f.init(form_department);
+						u.ae(div_fields, form_department);
+						form_department.submitted = function() {
 							var data = this.getData();
 							this.response = function(response) {
 								this.is_requesting = false;
 								u.rc(this, "loading");
-								if (response.cms_object == "JS-request") {
-									console.log(response);
-									location.href = "/";
-								}
-								else if (response != "JS-request") {
-									if (message = u.qs("div.messages", response)) {
-										u.ass(this, {"display":"none"})
-										console.log(this);
-										u.ae(this.scene.overlay.div_content, message);
-										var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
-											class:"actions"
+								var new_fields = u.qs(".membership .fields", response);
+								box_membership.replaceChild(new_fields, div_fields);
+								var new_department_box = u.qs(".department", response);
+								right_panel.replaceChild(new_department_box, box_department);
+								if (message = u.qs("p.message", response)) {
+									var fields = u.qs("div.fields", box_membership)
+									u.ie(fields, message);
+									if (message.t_done) {
+										u.t.resetTimer(t_done);
+									}
+									message.done = function() {
+										u.ass(this, {
+											"transition":"all .5s ease",
+											"transform":"translate3d(0px, -10px, 0px)",
+											"opacity":"0"
 										});
-										var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
-										button_close.scene = this.scene;
-										u.e.click(button_close)
-										button_close.clicked = function () {
-											this.scene.overlay.close ();
-										}
+										u.t.setTimer(this, function() {
+											this.parentNode.removeChild(this);
+										}, 500);
 									}
-									else {
-										location.href = "/";
+									message.transitioned = function() {
+										this.t_done = u.t.setTimer(this, this.done, 2400);
 									}
+									u.ass(message, {
+										"color":"#3e8e17",
+										"padding-bottom":"5px",
+										"transform":"translate3d(0px, -10px, 0px)",
+										"opacity":"0"
+									});
+									u.a.transition(message, "all .5s ease");
+									u.ass(message, {
+										"transform":"translate3d(0px, 0, 0px)",
+										"opacity":"1"
+									});
 								}
+								this.scene.initMembershipBox();
 							}
 							if (!this.is_requesting) {
 								this.is_requesting = true;
 								u.ac(this, "loading");
-								u.request(this, this.action, {"data":data, "method":"POST", "headers":{"X-Requested-With":"XMLHttpRequest"}});
+								u.request(this, this.action, {"data":data, "method":"POST"});
+							}
+						}
+						form_department.actions["cancel"].clicked = function() {
+							this.response = function(response) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								var new_fields = u.qs(".membership .fields", response);
+								box_membership.replaceChild(new_fields, div_fields);
+								this._form.scene.initMembershipBox();
+							}
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, "/profil");
 							}
 						}
 					}
 					if (!this.is_requesting) {
 						this.is_requesting = true;
 						u.ac(this, "loading");
-						u.request(this, "/profil/opsig");
+						u.request(this, "/profil/afdeling");
 					}
 				}
-				u.e.click(regret)
-				regret.clicked = function () {
-					this.scene.overlay.close ();
+			}
+			if(button_cancel) {
+				button_cancel.scene = this; 
+				u.clickableElement(button_cancel);
+				button_cancel.clicked = function() {
+					this.scene.overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600, class:"confirm_cancel_membership"});
+					var p_warning = u.ae(this.scene.overlay.div_content, "p", {
+						html:"Du er ved at melde dig ud af KBHFF. Er du sikker?"
+					});
+					var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
+						class:"actions"
+					});
+					var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"button delete_me","value":"Meld mig ud af KBHFF"});
+					var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"button regret primary", "value":"Fortryd udmelding"});
+					delete_me.scene = this.scene;
+					regret.scene = this.scene;
+					u.e.click(delete_me)
+					delete_me.clicked = function () {
+						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
+							var form_confirm_cancellation = u.qs(".confirm_cancellation", response);
+							form_confirm_cancellation.scene = this.scene;
+							u.ass(p_warning, {"display":"none"});
+							u.ass(ul_actions, {"display":"none"});
+							u.ae(this.scene.overlay.div_content, form_confirm_cancellation);
+							u.f.init(form_confirm_cancellation);
+							form_confirm_cancellation.submitted = function () {
+								var data = this.getData();
+								this.response = function(response) {
+									this.is_requesting = false;
+									u.rc(this, "loading");
+									if (response.cms_object == "JS-request") {
+										console.log(response);
+										location.href = "/";
+									}
+									else if (response != "JS-request") {
+										if (message = u.qs("div.messages", response)) {
+											u.ass(this, {"display":"none"})
+											console.log(this);
+											u.ae(this.scene.overlay.div_content, message);
+											var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
+												class:"actions"
+											});
+											var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
+											button_close.scene = this.scene;
+											u.e.click(button_close)
+											button_close.clicked = function () {
+												this.scene.overlay.close ();
+											}
+										}
+										else {
+											location.href = "/";
+										}
+									}
+								}
+								if (!this.is_requesting) {
+									this.is_requesting = true;
+									u.ac(this, "loading");
+									u.request(this, this.action, {"data":data, "method":"POST", "headers":{"X-Requested-With":"XMLHttpRequest"}});
+								}
+							}
+						}
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, "/profil/opsig");
+						}
+					}
+					u.e.click(regret)
+					regret.clicked = function () {
+						this.scene.overlay.close ();
+					}
 				}
 			}
 		}
 		scene.initUserinfoBox = function() {
 			var box_userinfo = u.qs(".user > .c-box", this);
 			var button_userinfo = u.qs(".user li", this);
-			button_userinfo.scene = this;
 			var intro_header = u.qs(".section.intro > h2", this);
 			var span_name = u.qs("span.name", this);
-			u.clickableElement(button_userinfo);
-			button_userinfo.clicked = function() {
-				this.response = function(response) {
-					this.is_requesting = false;
-					u.rc(this, "loading");
-					var form_userinfo = u.qs(".form_user", response);
-					form_userinfo.scene = this.scene;
-					var div_fields = u.qs("div.fields", box_userinfo);
-					box_userinfo.replaceChild(form_userinfo, div_fields);
-					u.f.init(form_userinfo);
-					form_userinfo.submitted = function() {
-						var data = this.getData();
-						this.response = function(response) {
-							this.is_requesting = false;
-							u.rc(this, "loading");
-							var div_userinfo = u.qs(".user .fields", response);
-							box_userinfo.replaceChild(div_userinfo, form_userinfo);
-							var new_name = u.qs("span.name", response);
-							intro_header.replaceChild(new_name, span_name);
-							if (message = u.qs("p.message", response)) {
-								var fields = u.qs("div.fields", box_userinfo);
-								u.ie(fields, message);
-								if (message.t_done) {
-									u.t.resetTimer(t_done);
-								}
-								message.done = function() {
-									u.ass(this, {
-										"transition":"all .5s ease",
+			if(button_userinfo) {
+				button_userinfo.scene = this;
+				u.clickableElement(button_userinfo);
+				button_userinfo.clicked = function() {
+					this.response = function(response) {
+						this.is_requesting = false;
+						u.rc(this, "loading");
+						var form_userinfo = u.qs(".form_user", response);
+						form_userinfo.scene = this.scene;
+						var div_fields = u.qs("div.fields", box_userinfo);
+						box_userinfo.replaceChild(form_userinfo, div_fields);
+						u.f.init(form_userinfo);
+						form_userinfo.submitted = function() {
+							var data = this.getData();
+							this.response = function(response) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								var div_userinfo = u.qs(".user .fields", response);
+								box_userinfo.replaceChild(div_userinfo, form_userinfo);
+								var new_name = u.qs("span.name", response);
+								intro_header.replaceChild(new_name, span_name);
+								if (message = u.qs("p.message", response)) {
+									var fields = u.qs("div.fields", box_userinfo);
+									u.ie(fields, message);
+									if (message.t_done) {
+										u.t.resetTimer(t_done);
+									}
+									message.done = function() {
+										u.ass(this, {
+											"transition":"all .5s ease",
+											"transform":"translate3d(0px, -10px, 0px)",
+											"opacity":"0"
+										});
+										u.t.setTimer(this, function() {
+											this.parentNode.removeChild(this);
+										}, 500);
+									}
+									message.transitioned = function() {
+										this.t_done = u.t.setTimer(this, this.done, 2400);
+									}
+									u.ass(message, {
+										"color":"#3e8e17",
+										"padding-bottom":"5px",
 										"transform":"translate3d(0px, -10px, 0px)",
 										"opacity":"0"
 									});
-									u.t.setTimer(this, function() {
-										this.parentNode.removeChild(this);
-									}, 500);
+									u.a.transition(message, "all .5s ease");
+									u.ass(message, {
+										"transform":"translate3d(0px, 0, 0px)",
+										"opacity":"1"
+									});
 								}
-								message.transitioned = function() {
-									this.t_done = u.t.setTimer(this, this.done, 2400);
-								}
-								u.ass(message, {
-									"color":"#3e8e17",
-									"padding-bottom":"5px",
-									"transform":"translate3d(0px, -10px, 0px)",
-									"opacity":"0"
-								});
-								u.a.transition(message, "all .5s ease");
-								u.ass(message, {
-									"transform":"translate3d(0px, 0, 0px)",
-									"opacity":"1"
-								});
+								this.scene.initUserinfoBox();
 							}
-							this.scene.initUserinfoBox();
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.action, {"data":data, "method":"POST"});
+							}
 						}
-						if (!this.is_requesting) {
-							this.is_requesting = true;
-							u.ac(this, "loading");
-							u.request(this, this.action, {"data":data, "method":"POST"});
+						form_userinfo.actions["cancel"].clicked = function() {
+							this.response = function(response) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								var div_userinfo = u.qs(".user .fields", response);
+								box_userinfo.replaceChild(div_userinfo, form_userinfo);
+								this._form.scene.initUserinfoBox();
+							}
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, "/profil");
+							}
 						}
 					}
-					form_userinfo.actions["cancel"].clicked = function() {
-						this.response = function(response) {
-							this.is_requesting = false;
-							u.rc(this, "loading");
-							var div_userinfo = u.qs(".user .fields", response);
-							box_userinfo.replaceChild(div_userinfo, form_userinfo);
-							this._form.scene.initUserinfoBox();
-						}
-						if (!this.is_requesting) {
-							this.is_requesting = true;
-							u.ac(this, "loading");
-							u.request(this, "/profil");
-						}
+					if (!this.is_requesting) {
+						this.is_requesting = true;
+						u.ac(this, "loading");
+						u.request(this, "/profil/bruger");
 					}
-				}
-				if (!this.is_requesting) {
-					this.is_requesting = true;
-					u.ac(this, "loading");
-					u.request(this, "/profil/bruger");
 				}
 			}
 		}
 		scene.initPasswordBox = function() {
 			var box_password = u.qs(".password > .c-box", this);
 			var button_password = u.qs(".password li", this);
-			button_password.scene = this;
-			u.clickableElement(button_password);
-			button_password.clicked = function() {
-				this.response = function(response) {
-					this.is_requesting = false;
-					u.rc(this, "loading");
-					var form_password = u.qs(".form_password", response);
-					form_password.scene = this.scene;
-					var div_fields = u.qs("div.fields", box_password);
-					box_password.replaceChild(form_password, div_fields);
-					u.f.init(form_password);
-					form_password.submitted = function() {
-						var data = this.getData();
-						this.response = function(response) {
-							this.is_requesting = false;
-							u.rc(this, "loading");
-							if (message = u.qs("p.error", this)) {
-								message.parentNode.removeChild(message);
-							}
-							if (message = u.qs("div.messages > p.error", response)) {
-								u.ass(message, {
-									"padding-bottom":"5px",
-									"transform":"translate3d(0px, -10px, 0px)",
-									"opacity":"0"
-								});
-								u.ie(this, message);	
-								u.a.transition(message, "all .5s ease");
-								u.ass(message, {
-									"transform":"translate3d(0px, 0, 0px)",
-									"opacity":"1"
-								});
-							}
-							var div_password = u.qs(".password .fields", response);
-							box_password.replaceChild(div_password, this);
-							if (message = u.qs("p.message", response)) {
-								var fields = u.qs("div.fields", box_password);
-								u.ie(fields, message);
-								if (message.t_done) {
-									u.t.resetTimer(t_done);
+			if(button_password) {
+				button_password.scene = this;
+				u.clickableElement(button_password);
+				button_password.clicked = function() {
+					this.response = function(response) {
+						this.is_requesting = false;
+						u.rc(this, "loading");
+						var form_password = u.qs(".form_password", response);
+						form_password.scene = this.scene;
+						var div_fields = u.qs("div.fields", box_password);
+						box_password.replaceChild(form_password, div_fields);
+						u.f.init(form_password);
+						form_password.submitted = function() {
+							var data = this.getData();
+							this.response = function(response) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								if (message = u.qs("p.error", this)) {
+									message.parentNode.removeChild(message);
 								}
-								message.done = function() {
-									u.ass(this, {
-										"transition":"all .5s ease",
+								if (message = u.qs("div.messages > p.error", response)) {
+									u.ass(message, {
+										"padding-bottom":"5px",
 										"transform":"translate3d(0px, -10px, 0px)",
 										"opacity":"0"
 									});
-									u.t.setTimer(this, function() {
-										this.parentNode.removeChild(this);
-									}, 500);
+									u.ie(this, message);	
+									u.a.transition(message, "all .5s ease");
+									u.ass(message, {
+										"transform":"translate3d(0px, 0, 0px)",
+										"opacity":"1"
+									});
 								}
-								message.transitioned = function() {
-									this.t_done = u.t.setTimer(this, this.done, 2400);
+								var div_password = u.qs(".password .fields", response);
+								box_password.replaceChild(div_password, this);
+								if (message = u.qs("p.message", response)) {
+									var fields = u.qs("div.fields", box_password);
+									u.ie(fields, message);
+									if (message.t_done) {
+										u.t.resetTimer(t_done);
+									}
+									message.done = function() {
+										u.ass(this, {
+											"transition":"all .5s ease",
+											"transform":"translate3d(0px, -10px, 0px)",
+											"opacity":"0"
+										});
+										u.t.setTimer(this, function() {
+											this.parentNode.removeChild(this);
+										}, 500);
+									}
+									message.transitioned = function() {
+										this.t_done = u.t.setTimer(this, this.done, 2400);
+									}
+									u.ass(message, {
+										"color":"#3e8e17",
+										"padding-bottom":"5px",
+										"transform":"translate3d(0px, -10px, 0px)",
+										"opacity":"0"
+									});
+									u.a.transition(message, "all 1s ease");
+									u.ass(message, {
+										"transform":"translate3d(0px, 0, 0px)",
+										"opacity":"1"
+									});
 								}
-								u.ass(message, {
-									"color":"#3e8e17",
-									"padding-bottom":"5px",
-									"transform":"translate3d(0px, -10px, 0px)",
-									"opacity":"0"
-								});
-								u.a.transition(message, "all 1s ease");
-								u.ass(message, {
-									"transform":"translate3d(0px, 0, 0px)",
-									"opacity":"1"
-								});
+								this.scene.initPasswordBox();
 							}
-							this.scene.initPasswordBox();
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.action, {"data":data, "method":"POST"});
+							}
 						}
-						if (!this.is_requesting) {
-							this.is_requesting = true;
-							u.ac(this, "loading");
-							u.request(this, this.action, {"data":data, "method":"POST"});
+						form_password.actions["cancel"].clicked = function() {
+							this.response = function(response) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								var div_userinfo = u.qs(".password .fields", response);
+								box_password.replaceChild(div_userinfo, this._form);
+								this._form.scene.initPasswordBox();
+							}
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, "/profil");
+							}
 						}
 					}
-					form_password.actions["cancel"].clicked = function() {
-						this.response = function(response) {
-							this.is_requesting = false;
-							u.rc(this, "loading");
-							var div_userinfo = u.qs(".password .fields", response);
-							box_password.replaceChild(div_userinfo, this._form);
-							this._form.scene.initPasswordBox();
-						}
-						if (!this.is_requesting) {
-							this.is_requesting = true;
-							u.ac(this, "loading");
-							u.request(this, "/profil");
-						}
+					if (!this.is_requesting) {
+						this.is_requesting = true;
+						u.ac(this, "loading");
+						u.request(this, "/profil/kodeord");
 					}
-				}
-				if (!this.is_requesting) {
-					this.is_requesting = true;
-					u.ac(this, "loading");
-					u.request(this, "/profil/kodeord");
 				}
 			}
 		}

@@ -63,17 +63,24 @@
 
 #content div.profile .pickupdate,
 #content div.profile .order_item-product,
+#content div.profile .order-status,
 #content div.profile .change-untill {
 	display: inline-block;
 	vertical-align: top;
 	box-sizing: border-box;
-	width: 33%;
+	width: 25%;
 }
 
 #content div.profile p.change-untill {
 	width: 17%;
 	padding-right: 0;
 }
+
+#content div.profile p.order-status .unpaid {
+	color: #C22414;
+	font-weight: bold;
+}
+
 #content div.profile ul.actions.change {
 	display: inline-block;
 	padding: 0;

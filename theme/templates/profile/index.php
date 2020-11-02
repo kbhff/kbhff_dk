@@ -97,6 +97,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 				<div class="order_item-headings">
 					<h4 class="pickupdate">AFH.DATO</h4>
 					<h4 class="order_item-product">VARE(R)</h4>
+					<h4 class="order-status">STATUS</h4>
 					<h4 class="change-untill">RET INDTIL</h4>
 				</div>
 
@@ -107,9 +108,15 @@ $unpaid_orders = $SC->getUnpaidOrders();
 					<? if($pickupdate_order_items): ?>
 					<div class="order_items">
 						<? foreach($pickupdate_order_items as $order_item): ?>
+						<? $order = $SC->getOrders(["order_id" => $order_item["order_id"]]) ?>
 						<div class="order_item">
 							<p class="pickupdate"><?= $pickupdate["pickupdate"] ?></p>
 							<p class="order_item-product"><?= $order_item["quantity"] > 1 ? $order_item["quantity"]." x " : ""?><?= $order_item["name"] ?></p>
+							<? if($order["payment_status"] == 2): ?>
+							<p class="order-status"><span class='paid'>Betalt</span></p>
+							<? else: ?>
+							<p class="order-status"><a href="/medlemshjaelp/betaling/<?= $order["order_no"] ?>" class="unpaid">Ikke betalt</a></p>
+							<? endif; ?>
 							<p class="change-untill"><span class="date"><?= date("d/m", strtotime($pickupdate["pickupdate"]." - 1 week")) ?></span> kl. <span class="time">23:59</span></p>
 							<ul class="actions change"><li class="change"><a href="#" class="button <?= date("Y-m-d") >= date("Y-m-d", strtotime($pickupdate["pickupdate"]." - 1 week")) ? "disabled" : "" ?>">Ret</a></li></ul>
 						</div>
