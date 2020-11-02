@@ -405,6 +405,8 @@ class Shop extends ShopCore {
 			$sql .= " AND pickupdates.pickupdate >= '$after'";
 		}
 
+		$sql .= " ORDER BY pickupdates.pickupdate ASC";
+
 		if($query->sql($sql)) {
 
 			$order_items_pickupdates = $query->results();
