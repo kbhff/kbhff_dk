@@ -115,7 +115,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 
 
 				<? foreach($order_items_pickupdates as $pickupdate): 
-					$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["user_id" => $user["id"]]);
+					$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["user_id" => $member_user["id"]]);
 				?>
 					<? if($pickupdate_order_items): ?>
 					<div class="order_items">
