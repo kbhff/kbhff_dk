@@ -205,6 +205,7 @@ if($cart && $cart["items"]) {
 						<ul class="actions">
 							<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
 								"confirm-value" => "Sikker?",
+								"wait-value" => "Vent",
 								"wrapper" => "li.delete",
 								"success-location" => "/butik"
 								]) ?>

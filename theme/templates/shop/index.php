@@ -181,7 +181,7 @@ else {
 									<? if($product_available): ?>
 									
 									<?= $HTML->oneButtonForm("+", "/butik/addToCart", [
-										"confirm-value" => "Sikker?",
+										"confirm-value" => false,
 										"inputs" => [
 											"item_id" => $product["id"],
 											"quantity" => 1,
