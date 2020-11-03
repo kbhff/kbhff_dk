@@ -305,6 +305,7 @@ class User extends UserCore {
 		$MC = new Member();
 		$user_id = session()->value("user_id");
 		$IC = new Items();
+		$SC = new Shop();
 		
 
 		$member = $MC->getMembership();
@@ -323,6 +324,23 @@ class User extends UserCore {
 				return $result;
 			}
  
+		}
+		// handle odd cases where an unpaid signupfee exists but no membership
+		else {
+
+			$unpaid_orders = $SC->getUnpaidOrders();
+
+			if($unpaid_orders && count($unpaid_orders) == 1) {
+				
+				$unpaid_order = $SC->getOrders(["order_id" => $unpaid_orders[0]["id"]]);
+				$item = $IC->getItem(["id" => $unpaid_order["items"][0]["item_id"]]);
+
+				if($item && $item["itemtype"] == "signupfee") {
+					$result["type"] = "signupfee";
+					$result["order_no"] = $unpaid_order["order_no"];
+					return $result;
+				}
+			}
 		}
 
 		return false;

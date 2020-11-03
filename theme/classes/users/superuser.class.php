@@ -759,6 +759,7 @@ class SuperUser extends SuperUserCore {
 		$query = new Query();
 		$MC = new SuperMember();
 		$IC = new Items();
+		$SC = new SuperShop();
 
 		// default values
 		$user_id = false;
@@ -789,6 +790,23 @@ class SuperUser extends SuperUserCore {
 				return $result;
 			}
  
+		}
+		// handle odd cases where an unpaid signupfee exists but no membership
+		else {
+
+			$unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
+
+			if($unpaid_orders && count($unpaid_orders) == 1) {
+				
+				$unpaid_order = $SC->getOrders(["order_id" => $unpaid_orders[0]["id"]]);
+				$item = $IC->getItem(["id" => $unpaid_order["items"][0]["item_id"]]);
+
+				if($item && $item["itemtype"] == "signupfee") {
+					$result["type"] = "signupfee";
+					$result["order_no"] = $unpaid_order["order_no"];
+					return $result;
+				}
+			}
 		}
 
 		return false;
