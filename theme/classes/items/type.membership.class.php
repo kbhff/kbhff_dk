@@ -96,7 +96,7 @@ class TypeMembership extends Itemtype {
 		$this->addToModel("html", [
 			"type" => "html",
 			"label" => "Full description",
-			"allowed_tags" => "p,h2,h3,h4,ul,ol,code,download,jpg,png", //,mp4,vimeo,youtube",
+			"allowed_tags" => "p,h2,h3,h4,ul,ol,code,download,jpg,png,vimeo", //,mp4,vimeo,youtube",
 			"hint_message" => "Write a full description of the membership.",
 			"error_message" => "A full description without any words? How weird."
 		]);
