@@ -20,7 +20,7 @@ if($page_item) {
 	
 <? else:?>
 	<h1>Du er allerede medlem</h1>
-	<p>Log ind og ret dit medlemskab via din <a href="/profil">profil</a>.</p>
+	<p>For at ændre dit medlemskab skal du møde op i din lokale afdeling eller kontakte dem via mail.</p>
 <? endif; ?>
 
 </div>

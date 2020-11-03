@@ -95,9 +95,11 @@ if($cart["items"]) {
 				$price = $SC->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
 			?>
 			<li class="item id:<?= $item["id"] ?>">
+				<? if($item["itemtype"] != "signupfee"): ?>
 				<?
 				// add option of updating item quantity to item 
 				print $SC->formStart("/medlemshjaelp/butik/updateCartItemQuantity/".$cart["cart_reference"]."/".$cart_item["id"], array("class" => "updateCartItemQuantity labelstyle:inject")) ?>
+<<<<<<< Updated upstream
 					<fieldset>
 						<?= $SC->input("quantity", array(
 							"id" => "input_quantity_".$item["id"],
@@ -106,10 +108,24 @@ if($cart["items"]) {
 							"label" => "Antal",
 							"hint_message" => "State the quantity of this item"
 						)) ?>
+=======
+					
+						<fieldset>
+							<?= $SC->input("quantity", array(
+								"type" => "integer",
+								"value" =>  $cart_item["quantity"],
+								"label" => "Antal",
+								"hint_message" => "State the quantity of this item"
+								)) ?>
+>>>>>>> Stashed changes
 					</fieldset>
 					<ul class="actions">
 						<?= $SC->submit("Opdatér", array("name" => "update", "wrapper" => "li.save")) ?>
 					</ul>
+				<? else: ?>
+				
+				<span class="quantity"><?= $cart_item["quantity"] ?></span>
+				<? endif; ?>
 				<?= $SC->formEnd() ?>
 				<span class="x">x </span>
 				<span class="name"><?= $item["name"] ?> </span>
@@ -154,7 +170,11 @@ if($cart["items"]) {
 				</p>
 				<? endif; ?>
 
+<<<<<<< Updated upstream
 
+=======
+				<? if($item["itemtype"] != "signupfee"): ?>
+>>>>>>> Stashed changes
 				<ul class="actions">
 					<? // generate delete button to item 
 					print $HTML->oneButtonForm("Slet", "/medlemshjaelp/butik/deleteFromCart/".$cart["cart_reference"]."/".$cart_item["id"], array(
@@ -162,6 +182,8 @@ if($cart["items"]) {
 						"static" => true
 					)) ?>
 				</ul>
+				<? endif; ?>
+
 			</li>
 			<? endforeach; ?>
 		</ul>
