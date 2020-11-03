@@ -83,9 +83,10 @@ if($item) {
 				<h2>Meld dig ind</h2>
 			
 				<h3>Indmeldelsesgebyr:</h3>
-				<?= $HTML->frontendOffer($item, SITE_URL."/bliv-medlem") ?>
-				<h3>Årligt kontingent:</h3>
 				<?= $HTML->frontendOffer($signupfee_item, SITE_URL."/bliv-medlem") ?>
+				<h3>Årligt kontingent:</h3>
+				<?= $HTML->frontendOffer($item, SITE_URL."/bliv-medlem") ?>
+				<p>Indmeldelsesgebyret betales ved indmelding i KBHFF. Herefter betales kontingent hvert år ved medlemskabets fornyelse i maj måned.</p>
 			
 			
 		
@@ -125,10 +126,10 @@ if($item) {
 						<? endif; ?>
 
 						<h4>Indmeldelsesgebyr:</h4>
-						<?= $HTML->frontendOffer($item, SITE_URL."/bliv-medlem") ?>
+						<?= $HTML->frontendOffer($related_signupfee_item, SITE_URL."/bliv-medlem") ?>
 
 						<h4>Årligt kontingent:</h4>
-						<?= $HTML->frontendOffer($related_signupfee_item, SITE_URL."/bliv-medlem") ?>
+						<?= $HTML->frontendOffer($item, SITE_URL."/bliv-medlem") ?>
 
 						<ul class="actions">
 							<?= $model->link("Læs mere her", "/bliv-medlem/medlemskaber/".$item["fixed_url_identifier"], array("wrapper" => "li.readmore")) ?>
