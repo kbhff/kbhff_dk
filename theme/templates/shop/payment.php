@@ -57,6 +57,15 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 			<? endforeach; ?>
 			</ul>
 		</li>
+		<li>
+			<ul class="actions">
+				<?= $HTML->oneButtonForm("Annuller", "/butik/cancelOrder/".$order["id"], [
+					"confirm-value" => "Sikker?",
+					"wait-value" => "Vent ...",
+					"success-location" => "/butik"
+				]) ?>
+			</ul>
+		</li>
 	</ul>
 
 

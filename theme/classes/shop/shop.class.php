@@ -573,6 +573,22 @@ class Shop extends ShopCore {
 		return false;
 	}
 
+	// cancel order (adapter to SuperShop::cancelOrder)
+	// changes order status to cancelled
+	// cancels any subscriptions or memberships included in order
+	# /#controller#/cancelOrder/#order_id#
+	function cancelOrder($action) {
+
+		include_once("classes/shop/supershop.class.php");
+		$SC = new SuperShop;
+
+		$user_id = session()->value("user_id");
+		$order_id = $action[1];
+
+		return $SC->cancelOrder(["cancelOrder", $order_id, $user_id]);
+		
+	}
+
 
 	
 
