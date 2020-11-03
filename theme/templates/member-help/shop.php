@@ -145,7 +145,7 @@ else {
 			<ul class="products i:products">
 
 				<? foreach($products as $product): 
-					$price = $SC->getPrice($product["id"]);
+					$price = $SC->getPrice($product["id"], ["user_id" => $member_user_id]);
 					$media = $IC->sliceMediae($product, "single_media");
 					
 

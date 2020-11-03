@@ -409,7 +409,6 @@ class SuperShop extends SuperShopCore {
 	
 						// update item quantity
 						$sql = "UPDATE ".$this->db_cart_items." SET quantity=$new_quantity WHERE id = ".$existing_cart_item["id"]." AND cart_id = ".$cart["id"];
-	//					print $sql;
 					}
 					else {
 						
@@ -465,6 +464,105 @@ class SuperShop extends SuperShopCore {
 		return false;
 	}
 
+	// get best available price for item
+	function getPrice($item_id, $_options = false) {
+		global $page;
+		$IC = new Items();
+		include_once("classes/users/supermember.class.php");
+		$MC = new SuperMember();
+
+		$quantity = false;
+		$currency = false;
+
+		// when different vat rates apply
+		$country = false;
+
+
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+					case "quantity"           : $quantity             = $_value; break;
+					case "currency"           : $currency             = $_value; break;
+
+					case "country"            : $country              = $_value; break;
+				
+					case "user_id"            : $user_id              = $_value; break;
+				}
+			}
+		}
+
+		if(!$currency) {
+			$currency = $page->currency();
+		}
+
+		if(!$country) {
+			$country = $page->country();
+		}
+
+		// get prices
+		$prices = $IC->getPrices(array("item_id" => $item_id, "currency" => $currency, "country" => $country));
+
+		if($prices && $user_id) {
+
+			$offer = arrayKeyValue($prices, "type", "offer");
+			if($offer !== false) {
+				$offer_price = $prices[arrayKeyValue($prices, "type", "offer")];
+			}
+
+			$default = arrayKeyValue($prices, "type", "default");
+			if($default !== false) {
+
+				$default_price = $prices[arrayKeyValue($prices, "type", "default")];
+			}
+
+			// use membership-specific price if applicable
+			$membership = $MC->getMembers(["user_id" => $user_id]);
+			if($membership && $membership["item"]) {
+				$price_types = $page->price_types();
+				$where_pricetype_matches_membership = arrayKeyValue($price_types, "item_id", $membership["item"]["item_id"]);
+				$membership_price_type_id = $price_types[$where_pricetype_matches_membership]["id"];
+				$where_price_matches_membership_price_type = arrayKeyValue($prices, "type_id", $membership_price_type_id);
+				if($user_id != 1 && $membership["item"]["status"] == 1 && $where_price_matches_membership_price_type !== false) {
+					$membership_price = $prices[$where_price_matches_membership_price_type];
+				}
+			}
+
+
+
+			if($quantity && arrayKeyValue($prices, "type", "bulk") !== false) {
+				$current_best_price = false;
+				foreach($prices as $price) {
+					if($price["type"] == "bulk" && $quantity >= $price["quantity"]) {
+						$bulk_price = $price;
+					}
+				} 
+			}
+
+			if(isset($default_price)) {
+				$return_price = $default_price;
+			}
+
+			if(isset($offer_price) && (!isset($return_price) || $return_price["price"] > $offer_price["price"])) {
+				$return_price = $offer_price;
+			}
+
+			if(isset($bulk_price) && (!isset($return_price) || $return_price["price"] > $bulk_price["price"])) {
+				$return_price = $bulk_price;
+			}
+			
+			if(isset($membership_price) && (!isset($return_price) || $return_price["price"] > $membership_price["price"])) {
+				$return_price = $membership_price;
+			}
+			
+
+			if(isset($return_price)) {
+				return $return_price;
+			} 
+
+		}
+
+		return false;
+	}
 }
 
 ?>
