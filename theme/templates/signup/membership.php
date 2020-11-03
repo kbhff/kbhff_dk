@@ -104,37 +104,41 @@ if($item) {
 
 	<? // list of other memberships
 	if($related_items): ?>
-	<div class="related">
-		<h2><a href="/bliv-medlem">Andre medlemskaber</a></h2>
-		<ul class="items membership">
-		<?	foreach($related_items as $item):
-				$media = $IC->sliceMediae($item, "single_media");
-				$related_signupfee_item = $IC->getItem(["status" => 1, "itemtype" => "signupfee", "where" => "signupfee.associated_membership_id=".$item["item_id"], "extend" => ["prices" => true]]);
-		?>
+	<div class="c-wrapper">
+		<div class="c-two-thirds">
+			<div class="related">
+				<h2><a href="/bliv-medlem">Andre medlemskaber</a></h2>
+				<ul class="items membership">
+				<?	foreach($related_items as $item):
+						$media = $IC->sliceMediae($item, "single_media");
+						$related_signupfee_item = $IC->getItem(["status" => 1, "itemtype" => "signupfee", "where" => "signupfee.associated_membership_id=".$item["item_id"], "extend" => ["prices" => true]]);
+				?>
 
-			<li class="item membership item_id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle" data-readstate="<?= $item["readstate"] ?>">
+					<li class="item membership item_id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle" data-readstate="<?= $item["readstate"] ?>">
 
-				<h3 itemprop="headline"><a href="/bliv-medlem/medlemskaber/<?= $item["fixed_url_identifier"] ?>"><?= strip_tags($item["name"]) ?></a></h3>
+						<h3 itemprop="headline"><a href="/bliv-medlem/medlemskaber/<?= $item["fixed_url_identifier"] ?>"><?= strip_tags($item["name"]) ?></a></h3>
 
-				<? if($item["introduction"]): ?>
-				<div class="description" itemprop="description">
-					<?= nl2br($item["introduction"]) ?>
-				</div>
-				<? endif; ?>
+						<? if($item["introduction"]): ?>
+						<div class="description" itemprop="description">
+							<?= nl2br($item["introduction"]) ?>
+						</div>
+						<? endif; ?>
 
-				<h4>Indmeldelsesgebyr:</h4>
-				<?= $HTML->frontendOffer($item, SITE_URL."/bliv-medlem") ?>
+						<h4>Indmeldelsesgebyr:</h4>
+						<?= $HTML->frontendOffer($item, SITE_URL."/bliv-medlem") ?>
 
-				<h4>Årligt kontingent:</h4>
-				<?= $HTML->frontendOffer($related_signupfee_item, SITE_URL."/bliv-medlem") ?>
+						<h4>Årligt kontingent:</h4>
+						<?= $HTML->frontendOffer($related_signupfee_item, SITE_URL."/bliv-medlem") ?>
 
-				<ul class="actions">
-					<?= $model->link("Læs mere her", "/bliv-medlem/medlemskaber/".$item["fixed_url_identifier"], array("wrapper" => "li.readmore")) ?>
+						<ul class="actions">
+							<?= $model->link("Læs mere her", "/bliv-medlem/medlemskaber/".$item["fixed_url_identifier"], array("wrapper" => "li.readmore")) ?>
+						</ul>
+
+					</li>
+				<?	endforeach; ?>
 				</ul>
-
-			</li>
-		<?	endforeach; ?>
-		</ul>
+			</div>
+		</div>
 	</div>
 	<? endif; ?>
 
