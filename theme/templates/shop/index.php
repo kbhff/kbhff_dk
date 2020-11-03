@@ -16,25 +16,31 @@ $user_id = session()->value("user_id");
 // get current cart
 $cart = $model->getCart();
 // debug([$cart]);
+$products = false;
 
 // User is logged in
 if($user_id != 1) {
 
 
 	// update user on cart
-	$_POST["user_id"] = $user_id;
-	$model->updateCart(array("updateCart"));
-	$cart = $model->getCart();
-	if(!$cart) {
-		$cart = $model->addCart(["addCart"]);
+	if($cart) {
+		$_POST["user_id"] = $user_id;
+		$model->updateCart(array("updateCart"));
+		$cart = $model->getCart();
 	}
+	// if(!$cart) {
+	// 	$cart = $model->addCart(["addCart"]);
+	// }
 
 
 	$user = $UC->getUser();
 	$department = $UC->getUserDepartment();
-	$products = $DC->getDepartmentProducts($department["id"]);
-	$pickupdates = $PC->getPickupdates(["after" => date("Y-m-d", strtotime("+1 week"))]);
-	$department_pickupdates = $DC->getDepartmentPickupdates($department["id"]);
+	if($department) {
+		$products = $DC->getDepartmentProducts($department["id"]);
+		$pickupdates = $PC->getPickupdates(["after" => date("Y-m-d", strtotime("+1 week"))]);
+		$department_pickupdates = $DC->getDepartmentPickupdates($department["id"]);
+		
+	}
 	$orders = $model->getOrders();
 	$unpaid_membership = $UC->hasUnpaidMembership();
 
@@ -43,7 +49,7 @@ if($user_id != 1) {
 	$order_items_pickupdates = false;
 
 	// Only get payment methods if cart has items
-	if($cart["items"]) {
+	if($cart && $cart["items"]) {
 
 		// Get the total cart price
 		$total_cart_price = $model->getTotalCartPrice($cart["id"]);
@@ -77,12 +83,12 @@ else {
 
 	// enable re-population of fields
 	$username = stringOr(getPost("username"));
-	$firstname = stringOr(getPost("firstname"));
-	$lastname = stringOr(getPost("lastname"));
-	$email = stringOr(getPost("email"));
-	$mobile = stringOr(getPost("mobile"));
-	$terms = stringOr(getPost("terms"));
-	$maillist = stringOr(getPost("maillist"));
+	// $firstname = stringOr(getPost("firstname"));
+	// $lastname = stringOr(getPost("lastname"));
+	// $email = stringOr(getPost("email"));
+	// $mobile = stringOr(getPost("mobile"));
+	// $terms = stringOr(getPost("terms"));
+	// $maillist = stringOr(getPost("maillist"));
 
 }
 
@@ -96,9 +102,6 @@ else {
 	<h1>Bestilling af grøntsager</h1>
 
 
-	<?= $HTML->serverMessages(["type" => "error"]) ?>
-
-
 	<?
 	// User is not logged in yet
 	if($user_id == 1): ?>
@@ -107,6 +110,9 @@ else {
 	<div class="login">
 		<h2>Log ind</h2>
 		<p>Log ind nu, hvis du allerede er medlem.</p>
+
+		<?= $HTML->serverMessages(["type" => "error"]) ?>
+
 		<?= $UC->formStart("/butik?login=true", array("class" => "login labelstyle:inject")) ?>
 			<?= $UC->input("login_forward", ["type" => "hidden", "value" => "/butik"]); ?>
 			<fieldset>
@@ -127,6 +133,9 @@ else {
 	<?
 	// user is already logged in, show checkout overview
 	else: ?>
+
+	<?= $HTML->serverMessages(["type" => "error"]) ?>
+
 	<div class="c-wrapper">
 
 		<div class="c-two-thirds">
@@ -143,74 +152,83 @@ else {
 
 				<li class="product">
 					<div class="c-box">
-						<h3><span class="name"><?= $product["name"] ?></span> <span class="price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span></h3>
-						<? if($media): ?>
-						<div class="image item_id:<?= $media["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>"></div>
-						<? endif; ?>
-						<p><?= $product["description"] ?></p>
-						
-						<h4>Tilføj bestillinger til afhentning på bestemte datoer:</h4>
-						<? if($pickupdates): ?>
-						
-						<ul class="pickupdates">
-							<? foreach($pickupdates as $pickupdate): 
-								$product_available = false;
-								
-								// check if product is available on pickupdate
-								if($product["end_availability_date"]) {
-									if($pickupdate["pickupdate"] >= $product["start_availability_date"] && $pickupdate["pickupdate"] <= $product["end_availability_date"]) {
-										$product_available = true;
-									}
-								}
-								else {
-									if($pickupdate["pickupdate"] >= $product["start_availability_date"]) {
-										$product_available = true;
-									}
-								}
-							?>
-								
-							<li>
-								<ul class="pickupdate">
-								
-								<? // check if department is open on given pickupdate ?>
-								<? if(arrayKeyValue($department_pickupdates, "id", $pickupdate["id"])): ?>
 
-									<? // check product availability ?>
-									<? if($product_available): ?>
+						<div class="product">
+							<? if($media): ?>
+							<div class="image item_id:<?= $media["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>"></div>
+							<? else: ?>
+							<div class="image"></div>
+							<? endif; ?>
+
+							<h3><span class="name"><?= $product["name"] ?></span> <span class="price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span></h3>
+							<p><?= $product["description"] ?></p>
+						</div>
+
+						<div class="pickupdates">
+							<h4>Tilføj bestillinger til afhentning på bestemte datoer:</h4>
+							<? if($pickupdates): ?>
+						
+							<ul class="pickupdates">
+								<? foreach($pickupdates as $pickupdate): 
+									$product_available = false;
+								
+									// check if product is available on pickupdate
+									if($product["end_availability_date"]) {
+										if($pickupdate["pickupdate"] >= $product["start_availability_date"] && $pickupdate["pickupdate"] <= $product["end_availability_date"]) {
+											$product_available = true;
+										}
+									}
+									else {
+										if($pickupdate["pickupdate"] >= $product["start_availability_date"]) {
+											$product_available = true;
+										}
+									}
+								?>
+								
+								<li>
+									<ul class="pickupdate">
+								
+									<? // check if department is open on given pickupdate ?>
+									<? if(arrayKeyValue($department_pickupdates, "id", $pickupdate["id"])): ?>
+
+										<? // check product availability ?>
+										<? if($product_available): ?>
 									
-									<?= $HTML->oneButtonForm("+", "/butik/addToCart", [
-										"confirm-value" => false,
-										"wait-value" => "Vent ...",
-										"inputs" => [
-											"item_id" => $product["id"],
-											"quantity" => 1,
-											"pickupdate_id" => $pickupdate["id"]
-										],
-										"wrapper" => "li.add",
-										"success-location" => "/butik"
-									]) ?>
+										<?= $HTML->oneButtonForm("+", "/butik/addToCart", [
+											"confirm-value" => false,
+											"wait-value" => "Vent ...",
+											"inputs" => [
+												"item_id" => $product["id"],
+												"quantity" => 1,
+												"pickupdate_id" => $pickupdate["id"]
+											],
+											"wrapper" => "li.add",
+											"success-location" => "/butik"
+										]) ?>
 									
+										<? else: ?>
+										<li class="unavailable">Ikke tilgængelig</li>
+										<? endif; ?>	
+
 									<? else: ?>
-									<li class="unavailable">Ikke tilgængelig</li>
-									<? endif; ?>	
-
-								<? else: ?>
 									
-									<li class="closed">Afdelingen er lukket</li>
+										<li class="closed">Afdelingen er lukket</li>
 									
-								<? endif; ?>
+									<? endif; ?>
 							
-									<li class="date"><?= date("d/m", strtotime($pickupdate["pickupdate"])) ?></li>
+										<li class="date"><?= date("d/m", strtotime($pickupdate["pickupdate"])) ?></li>
 								
-								</ul>
-							</li>
+									</ul>
+								</li>
 
-							<? endforeach; ?>
-						</ul>
+								<? endforeach; ?>
+							</ul>
 
-						<? else: ?>
-						<p>Ingen aktuelle afhentningsdage.</p>
-						<? endif; ?>
+							<? else: ?>
+							<p>Ingen aktuelle afhentningsdage.</p>
+							<? endif; ?>
+						</div>
+
 					</div>
 				</li>
 
@@ -218,7 +236,7 @@ else {
 			</ul>
 			
 			<? else: ?>
-			<p>Ingen produkter.</p>
+			<p>Ingen produkter til salg i <?= $department ? $department["name"] : "ukendt afdeling" ?>.</p>
 			<? endif; ?>
 			
 
@@ -228,7 +246,7 @@ else {
 
 			<div class="cart i:shopfrontCart c-primary-box">
 				<h3>Indkøbskurv</h3>
-				<? if($cart["items"]): ?>
+				<? if($cart && $cart["items"]): ?>
 					<? if($cart_items_without_pickupdate): ?>
 				<ul class="items">
 					<? 
@@ -257,11 +275,10 @@ else {
 							if($pickupdate_cart_items): ?>
 						
 					<li class="pickupdate">
-						<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?></h4>
-						<p class="department">Afhentningssted: <span class="name"><?= $department["name"] ?></span></p>
-						
+						<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?> – Afhentning <span class="name"><?= $department["name"] ?></span></h4>
+
 						<ul class="items">
-							
+
 							<? foreach($pickupdate_cart_items as $cart_item):
 							$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true))); 
 							$price = $model->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
