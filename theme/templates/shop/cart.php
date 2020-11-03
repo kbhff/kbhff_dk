@@ -132,7 +132,7 @@ if($cart && $cart["items"]) {
 						"confirm-value" => "Sikker?",
 						"wait-value" => "Vent ...",
 						"wrapper" => "li.delete",
-						"static" => true
+						"success-location" => count($cart["items"]) > 1 ? $this->url : "/butik"
 					)) ?>
 				</ul>
 			</li>

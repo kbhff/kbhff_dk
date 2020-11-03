@@ -201,7 +201,7 @@ else {
 						"confirm-value" => "Sikker?",
 						"wait-value" => "Vent ...",
 						"wrapper" => "li.delete",
-						"success-location" => "/butik/betal"
+						"success-location" => count($cart["items"]) > 1 ? $this->url : "/butik"
 						]) ?>
 				</ul>
 				
@@ -265,7 +265,7 @@ else {
 								"confirm-value" => "Sikker?",
 								"wait-value" => "Vent ...",
 								"wrapper" => "li.delete",
-								"success-location" => "/butik/betal"
+								"success-location" => count($cart["items"]) > 1 ? $this->url : "/butik"
 								]) ?>
 						</ul>
 					</li>
