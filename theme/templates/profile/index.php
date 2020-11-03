@@ -139,7 +139,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 			<? else: ?>
 
 			<div class="section not_member">
-				<h2>Du har ikke et aktivt medlemsskab</h2>
+				<h2>Du er ikke medlem</h2>
 				<p>Meld dig ind nu – <a href="/bliv-medlem">se vores medlemsskaber her</a>.</p>
 
 			</div>

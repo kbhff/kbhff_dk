@@ -110,7 +110,7 @@ if($cart && $cart["items"]) {
 				?>
 				<p class="subscription_method">
 					<? if($membership["subscription_method"]["duration"] == "annually"): ?>
-					Tilbagevendende betaling hvert <?= strtolower($membership["subscription_method"]["name"]) ?>.
+					Tilbagevendende betaling hvert år.
 					<? else: ?>
 					Tilbagevendende betaling hver <?= strtolower($membership["subscription_method"]["name"]) ?>.
 					<? endif; ?>
@@ -119,13 +119,14 @@ if($cart && $cart["items"]) {
 				<? elseif($item["subscription_method"]): ?>
 				<p class="subscription_method">
 					<? if($item["subscription_method"]["duration"] == "annually"): ?>
-					Tilbagevendende betaling hvert <?= strtolower($item["subscription_method"]["name"]) ?>.
+					Tilbagevendende betaling hvert år.
 					<? else: ?>
 					Tilbagevendende betaling hver <?= strtolower($item["subscription_method"]["name"]) ?>.
 					<? endif; ?>
 				</p>
 				<? endif; ?>
 
+				<? if($item["itemtype"] != "signupfee"): ?>
 				<ul class="actions">
 					<? // generate delete button to item 
 					print $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/".$cart_item["id"], array(
@@ -135,6 +136,8 @@ if($cart && $cart["items"]) {
 						"success-location" => count($cart["items"]) > 1 ? $this->url : "/butik"
 					)) ?>
 				</ul>
+				<? endif; ?>
+
 			</li>
 			<? endforeach; ?>
 		</ul>
@@ -195,7 +198,7 @@ if($cart && $cart["items"]) {
 						<? if($item["subscription_method"]): ?>
 						<p class="subscription_method">
 							<? if($item["subscription_method"]["duration"] == "annually"): ?>
-							Tilbagevendende betaling hvert <?= strtolower($item["subscription_method"]["name"]) ?>.
+							Tilbagevendende betaling hvert år.
 							<? else: ?>
 							Tilbagevendende betaling hver <?= strtolower($item["subscription_method"]["name"]) ?>.
 							<? endif; ?>
