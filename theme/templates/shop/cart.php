@@ -64,6 +64,8 @@ if($cart && $cart["items"]) {
 				$price = $model->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
 			?>
 			<li class="item id:<?= $item["id"] ?>">
+				<? if($item["itemtype"] != "signupfee"): ?>
+				 
 				<?
 				// add option of updating item quantity to item 
 				print $model->formStart("/butik/updateCartItemQuantity/".$cart["cart_reference"]."/".$cart_item["id"], array("class" => "updateCartItemQuantity labelstyle:inject")) ?>
@@ -80,6 +82,9 @@ if($cart && $cart["items"]) {
 						<?= $model->submit("Opdatér", array("name" => "update", "wrapper" => "li.save")) ?>
 					</ul>
 				<?= $model->formEnd() ?>
+				<? else: ?>
+				<span class="quantity"><?= $cart_item["quantity"] ?> </span>
+				<? endif; ?>
 				<span class="x">x </span>
 				<span class="name"><?= $item["name"] ?> </span>
 				<span class="a">á </span>
