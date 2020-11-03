@@ -170,11 +170,7 @@ if($cart["items"]) {
 				</p>
 				<? endif; ?>
 
-<<<<<<< Updated upstream
-
-=======
 				<? if($item["itemtype"] != "signupfee"): ?>
->>>>>>> Stashed changes
 				<ul class="actions">
 					<? // generate delete button to item 
 					print $HTML->oneButtonForm("Slet", "/medlemshjaelp/butik/deleteFromCart/".$cart["cart_reference"]."/".$cart_item["id"], array(
