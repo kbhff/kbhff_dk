@@ -589,6 +589,25 @@ class Shop extends ShopCore {
 		
 	}
 
+	function hasSignupfeeInCart($cart_id) {
+
+		$query = new Query();
+
+		$sql = "SELECT cart_items.* 
+		FROM "
+		.$this->db_cart_items." AS cart_items, "
+		.SITE_DB.".items AS items 
+		WHERE cart_items.cart_id = $cart_id
+		AND cart_items.item_id = items.id
+		AND items.itemtype = 'signupfee'";
+
+		if($query->sql($sql)) {
+
+			return true;
+		}
+
+		return false;
+	}
 
 	
 
