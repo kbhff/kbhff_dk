@@ -50,14 +50,15 @@ Util.Modules["cart"] = new function() {
 
 			var i, node;
 			for(i = 0; node = this.cart_nodes[i]; i++) {
-				
+
 
 				node.scene = this;
 				node.item_id = u.cv(node, "id");
+				node.pickupdate = u.cv(node, "date");
 
 				node.unit_price = u.qs("span.unit_price", node);
 				node.total_price = u.qs("span.total_price", node);
-				node.quantity = u.qs("#input_quantity", node);
+				node.quantity = u.qs("input[name=quantity]", node);
 
 				// look for quantity update form
 				var quantity_form = u.qs("form.updateCartItemQuantity", node)
@@ -70,9 +71,13 @@ Util.Modules["cart"] = new function() {
 
 
 					quantity_form.inputs["quantity"].updated = function() {
-						u.ac(this._form.actions["update"], "primary");
-
-						this._form.submit();
+						if(parseInt(this.val()) < 1) {
+							this.val(1);
+						}
+						else {
+							u.ac(this._form.actions["update"], "primary");
+							this._form.submit();
+						}
 					}
 
 
@@ -83,10 +88,16 @@ Util.Modules["cart"] = new function() {
 							if(response) {
 
 								var total_price = u.qs("div.scene div.total span.total_price", response);
-								var item_row = u.ge("id:"+this.node.item_id, response);
+								var item_row;
+								if(this.node.pickupdate) {
+									item_row = u.ge("id:"+this.node.item_id+" date:"+this.node.pickupdate, response);
+								}
+								else {
+									item_row = u.ge("id:"+this.node.item_id, response);
+								}
 								var item_total_price = u.qs("span.total_price", item_row);
 								var item_unit_price = u.qs("span.unit_price", item_row);
-								var item_quantity = u.qs("#input_quantity", response);
+								var item_quantity = u.qs("input[name=quantity]", item_row);
 								
 
 								// update prices and quantity

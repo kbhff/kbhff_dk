@@ -69,6 +69,7 @@ if($cart && $cart["items"]) {
 				print $model->formStart("/butik/updateCartItemQuantity/".$cart["cart_reference"]."/".$cart_item["id"], array("class" => "updateCartItemQuantity labelstyle:inject")) ?>
 					<fieldset>
 						<?= $model->input("quantity", array(
+							"id" => "input_quantity_".$item["id"],
 							"type" => "integer",
 							"value" =>  $cart_item["quantity"],
 							"label" => "Antal",
@@ -97,11 +98,7 @@ if($cart && $cart["items"]) {
 
 				<? if($item["itemtype"] == "signupfee"): ?>
 				<p class="membership">
-					<? if($price["price"]): ?>
 					Dette køb indeholder et medlemskab.
-					<? else: ?>
-					Bekræft ordren for at tilmelde dig nyhedsbrevet.
-					<? endif; ?>
 				</p>
 				<? endif; ?>
 
@@ -151,8 +148,8 @@ if($cart && $cart["items"]) {
 				<? if($pickupdate_cart_items): ?>
 				
 			<li class="pickupdate">
-				<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?></h4>
-				<p class="department">Afhentningssted: <span class="name"><?= $department ? $department["name"] : "-" ?></span></p>
+				<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?> – Afhentning <span class="name"><?= $department ? $department["name"] : "ukendt afdeling" ?></span></h4>
+				<p class="department"></p>
 				
 				<ul class="items">
 					
@@ -162,10 +159,11 @@ if($cart && $cart["items"]) {
 					$cart_item_id = $cart_item["id"];
 					?>
 
-					<li class="item id:<?= $item["id"] ?>">
+					<li class="item id:<?= $item["id"] ?> date:<?= date("Ymd", strtotime($pickupdate["pickupdate"])) ?>">
 						<?= $model->formStart("/butik/updateCartItemQuantity/".$cart["cart_reference"]."/".$cart_item["id"], array("class" => "updateCartItemQuantity labelstyle:inject")) ?>
 							<fieldset>
 								<?= $model->input("quantity", array(
+									"id" => "input_quantity_".$item["id"]."_".date("Ymd", strtotime($pickupdate["pickupdate"])),
 									"type" => "integer",
 									"value" =>  $cart_item["quantity"],
 									"label" => "Antal",

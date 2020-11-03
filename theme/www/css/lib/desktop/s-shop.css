@@ -39,6 +39,12 @@
 
 #content .scene.cart div.all_items h2 {padding-bottom: 15px;}
 
+#content .scene.cart ul.pickupdates {margin: 0; list-style: none;}
+#content .scene.cart ul.pickupdates li {padding-left: 0;}
+#content .scene.cart ul.pickupdates li h4 {padding: 12px 0 0; font-size: 20px;}
+#content .scene.cart ul.pickupdates li p {padding: 0;}
+#content .scene.cart ul.pickupdates li ul.items {padding: 0;}
+
 #content .scene.cart ul.items {list-style: none; padding: 0 12px 10px; margin: 0;}
 #content .scene.cart ul.items > li {padding: 10px 0; position: relative;}
 #content .scene.cart ul.items li > span {display: inline-block; vertical-align: top; padding-top: 4px; font-size: 16px;}
@@ -48,7 +54,8 @@
 #content .scene.cart ul.items li form div.field .indicator {display: none;}
 #content .scene.cart ul.items li form div.field .help {left: 47px; display: none;}
 #content .scene.cart ul.items li form div.field input {height: 28px; width: 40px; text-align: right;}
-#content .scene.cart ul.items li form div.field input.focus {height: 32px; width: 44px;}
+#content .scene.cart ul.items li form div.field input.focus,
+#content .scene.cart ul.items li form div.field input.error {height: 32px; width: 44px;}
 
 #content .scene.cart ul.items li form > ul.actions {padding: 0; right: 45px; top: 0;}
 #content .scene.cart ul.items li form > ul.actions li {padding: 8px 0 0;}

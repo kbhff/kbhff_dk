@@ -100,6 +100,7 @@ if($cart["items"]) {
 				print $SC->formStart("/medlemshjaelp/butik/updateCartItemQuantity/".$cart["cart_reference"]."/".$cart_item["id"], array("class" => "updateCartItemQuantity labelstyle:inject")) ?>
 					<fieldset>
 						<?= $SC->input("quantity", array(
+							"id" => "input_quantity_".$item["id"],
 							"type" => "integer",
 							"value" =>  $cart_item["quantity"],
 							"label" => "Antal",
@@ -126,20 +127,33 @@ if($cart["items"]) {
 					) ?>
 				</span>
 
-
-				<? // print subscription information 
-				if($item["subscription_method"] && $price["price"]): ?>
-				<p class="subscription_method">
-					Betaling gentages hver <?= strtolower($item["subscription_method"]["name"]) ?>.
-				</p>
-				<? endif; ?>
-
-				<? // print membership information
-				if($item["itemtype"] == "signupfee"): ?>
+				<? if($item["itemtype"] == "signupfee"): ?>
 				<p class="membership">
-					Dit køb inkluderer et medlemskab.
+					Dette køb indeholder et medlemskab.
 				</p>
 				<? endif; ?>
+
+				<? if(isset($item["associated_membership_id"])):
+					 $membership = $IC->getItem(["id" => $item["associated_membership_id"], "extend" => ["subscription_method" => true]]); 
+				?>
+				<p class="subscription_method">
+					<? if($membership["subscription_method"]["duration"] == "annually"): ?>
+					Tilbagevendende betaling hvert <?= strtolower($membership["subscription_method"]["name"]) ?>.
+					<? else: ?>
+					Tilbagevendende betaling hver <?= strtolower($membership["subscription_method"]["name"]) ?>.
+					<? endif; ?>
+				</p>
+
+				<? elseif($item["subscription_method"]): ?>
+				<p class="subscription_method">
+					<? if($item["subscription_method"]["duration"] == "annually"): ?>
+					Tilbagevendende betaling hvert <?= strtolower($item["subscription_method"]["name"]) ?>.
+					<? else: ?>
+					Tilbagevendende betaling hver <?= strtolower($item["subscription_method"]["name"]) ?>.
+					<? endif; ?>
+				</p>
+				<? endif; ?>
+
 
 				<ul class="actions">
 					<? // generate delete button to item 
@@ -154,7 +168,7 @@ if($cart["items"]) {
 		<? endif; ?>
 		<? if($cart_pickupdates): ?>
 			<ul class="pickupdates">
-					
+
 				<? foreach($cart_pickupdates as $pickupdate): 
 	
 					$pickupdate_cart_items = $SC->getCartPickupdateItems($pickupdate["id"], ["cart_reference" => $cart_reference]);
@@ -178,6 +192,7 @@ if($cart["items"]) {
 							<?= $SC->formStart("/medlemshjaelp/butik/updateCartItemQuantity/".$cart["cart_reference"]."/".$cart_item["id"], array("class" => "updateCartItemQuantity labelstyle:inject")) ?>
 								<fieldset>
 									<?= $SC->input("quantity", array(
+										"id" => "input_quantity_".$item["id"]."_".date("Ymd", strtotime($pickupdate["pickupdate"])),
 										"type" => "integer",
 										"value" =>  $cart_item["quantity"],
 										"label" => "Antal",
@@ -203,6 +218,16 @@ if($cart["items"]) {
 									array("vat" => true)
 								) ?>
 							</span>
+
+							<? if($item["subscription_method"]): ?>
+							<p class="subscription_method">
+								<? if($item["subscription_method"]["duration"] == "annually"): ?>
+								Tilbagevendende betaling hvert <?= strtolower($item["subscription_method"]["name"]) ?>.
+								<? else: ?>
+								Tilbagevendende betaling hver <?= strtolower($item["subscription_method"]["name"]) ?>.
+								<? endif; ?>
+							</p>
+							<? endif; ?>
 
 							<ul class="actions">
 								<?= $HTML->oneButtonForm("Slet", "/medlemshjaelp/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
@@ -241,7 +266,7 @@ if($cart["items"]) {
 	</div>
 
 	<? // Generate checkout button
-	if($cart["items"]) :?>
+	if($cart && $cart["items"]) :?>
 	<div class="checkout">
 		<ul class="actions">
 			<?= $HTML->oneButtonForm("Bekræft og gå til betaling", "/medlemshjaelp/butik/newOrderFromCart/".$cart_reference."/".$cart["id"], array(
