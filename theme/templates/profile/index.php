@@ -140,7 +140,16 @@ $unpaid_orders = $SC->getUnpaidOrders();
 
 			<div class="section not_member">
 				<h2>Du er ikke medlem</h2>
+				<? 
+				$cart = $SC->getCart();
+				if($cart && $SC->hasSignupfeeInCart($cart["id"])): ?>
+				<p>Du er endnu ikke medlem, men du har et indmeldelsesgebyr i din kurv.</p>
+				<ul class="actions">
+					<li class="pay"><a href="/butik/betal" class="button primary">Gå til betaling</a></li>
+				</ul>
+				<? else: ?>
 				<p>Meld dig ind nu – <a href="/bliv-medlem">se vores medlemsskaber her</a>.</p>
+				<? endif; ?>
 
 			</div>
 
