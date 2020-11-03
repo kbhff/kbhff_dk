@@ -18,6 +18,7 @@ $is_active = isset($member_user["membership"]["subscription_id"]) ? true : false
 $is_membership_paid = $is_member && $is_active && $member_user["membership"]["order"]["payment_status"] == 2 ? true : false;
 
 $orders = $SC->getOrders(["user_id" => $user_id]);
+$order_items_pickupdates = false;
 if($orders) {
 	$order_items_pickupdates = $SC->getOrderItemsPickupdates($user_id, ["after" => date("Y-m-d")]);
 }
@@ -103,6 +104,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 				</ul>
 			</div>
 			<? endif; ?>
+			<? if($is_member): ?>
 			<div class="section order_items">
 				<h2>Bestillinger</h2>
 				
@@ -148,6 +150,20 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 					<li class="new-order"><a href="/medlemshjaelp/butik/<?= $user_id ?>" class="button primary <?= $unpaid_membership ? "disabled" : "" ?>">Ny bestilling</a></li>
 				</ul>
 			</div>
+			<? else: ?>
+			<div class="section not_member">
+			<h3><?= $user_name ?> er ikke medlem</h3>
+			<? 
+
+			$carts = $SC->getCarts(["user_id" => $user_id]);
+			$cart = $carts ? $carts[0] : false;
+
+			if($SC->hasSignupfeeInCart($cart["id"])): ?>
+			<p><?= $user_name ?> er endnu ikke medlem, men har et indmeldelsesgebyr i sin kurv – <a href="/medlemshjaelp/butik/kurv/<?= $cart["cart_reference"] ?>">Gå til kurv</a></p>
+			<? endif; ?>
+			</div>
+			<? endif; ?>
+
 		</div>
 
 		<div class="c-one-third">

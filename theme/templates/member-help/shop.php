@@ -61,6 +61,7 @@ if($clerk_user_id != 1) {
 		$cart_items_without_pickupdate = $SC->getCartItemsWithoutPickupdate(["cart_reference" => $cart_reference]);
 	}
 
+	$order_items_pickupdates = false;
 	if($orders) {
 
 		// $order_items_without_pickupdates = $SC->getOrderItemsWithoutPickupdate($member_user_id);
