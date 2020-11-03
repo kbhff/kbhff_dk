@@ -52,6 +52,25 @@ if($action) {
 
 	}
 
+	# /butik/cancelOrder/#order_id#
+	else if(count($action) == 2 && $action[0] == "cancelOrder" && $page->validateCsrfToken()) {
+
+		$result = $model->cancelOrder(["cancelOrder", $action[1]]);
+
+		// successful creation
+		if($result) {
+
+			message()->addMessage("Order cancelled");
+			header("Location: /butik");
+			exit();
+		}
+		// something went wrong
+		else {
+			message()->addMessage("Noget gik galt.", array("type" => "error"));
+		}
+
+	}
+
 	# /butik/updateCartItemQuantity/#cart_reference#/#cart_item_id#
 	else if($action[0] == "updateCartItemQuantity" && $page->validateCsrfToken()) {
 

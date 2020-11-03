@@ -59,7 +59,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 					<h3>OBS! Du har en ubetalt ordre</h3>
 					<p>Ubetalte grøntsagsbestillinger vil blive automatisk slettet en uge inden den førstkommende afhentningsdag.</p>
 					<ul class="actions">
-						<li class="pay"><a href="/butik/betalinger" class="button">Betal dit udestående</a></li>
+						<li class="pay"><a href="/butik/betaling/<?= $unpaid_orders[0]["order_no"] ?>" class="button">Betal dit udestående</a></li>
 					</ul>
 				</div>
 				<? elseif($unpaid_membership && $unpaid_membership["type"] == "signupfee"): ?>
@@ -115,7 +115,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 							<? if($order["payment_status"] == 2): ?>
 							<p class="order-status"><span class='paid'>Betalt</span></p>
 							<? else: ?>
-							<p class="order-status"><a href="/medlemshjaelp/betaling/<?= $order["order_no"] ?>" class="unpaid">Ikke betalt</a></p>
+							<p class="order-status"><a href="/butik/betaling/<?= $order["order_no"] ?>" class="unpaid">Ikke betalt</a></p>
 							<? endif; ?>
 							<p class="change-untill"><span class="date"><?= date("d/m", strtotime($pickupdate["pickupdate"]." - 1 week")) ?></span> kl. <span class="time">23:59</span></p>
 							<ul class="actions change"><li class="change"><a href="#" class="button <?= date("Y-m-d") >= date("Y-m-d", strtotime($pickupdate["pickupdate"]." - 1 week")) ? "disabled" : "" ?>">Ret</a></li></ul>
@@ -139,7 +139,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 			<? else: ?>
 
 			<div class="section not_member">
-				<h2>Du har ikke et aktivt medlemsskab</h2>
+				<h2>Du er ikke medlem</h2>
 				<p>Meld dig ind nu – <a href="/bliv-medlem">se vores medlemsskaber her</a>.</p>
 
 			</div>

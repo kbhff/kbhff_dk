@@ -39,7 +39,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 		</div>
 	</div>
 
-	<h1>Bruger profil</h1>
+	<h1>Brugerprofil</h1>
 	
 	<div class="c-wrapper">
 

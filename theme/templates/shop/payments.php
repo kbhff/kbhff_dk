@@ -68,6 +68,15 @@ if($orders && $total_payment): ?>
 			<ul class="orderitems">
 			<? foreach($full_order["items"] as $order_item): ?>
 				<li><?= $order_item["quantity"] ?> x <?= $order_item["name"] ?></li>
+				<li>
+					<ul class="actions">
+						<?= $HTML->oneButtonForm("Annuller", "/butik/cancelOrder/".$order["id"], [
+							"confirm-value" => "Sikker?",
+							"wait-value" => "Vent ...",
+							"success-location" => $this->url
+						]) ?>
+					</ul>
+				</li>
 			<? endforeach; ?>
 			</ul>
 		</li>

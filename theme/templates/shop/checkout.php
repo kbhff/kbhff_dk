@@ -180,7 +180,7 @@ else {
 				?>
 				<p class="subscription_method">
 					<? if($membership["subscription_method"]["duration"] == "annually"): ?>
-					Tilbagevendende betaling hvert <?= strtolower($membership["subscription_method"]["name"]) ?>.
+					Tilbagevendende betaling hvert år.
 					<? else: ?>
 					Tilbagevendende betaling hver <?= strtolower($membership["subscription_method"]["name"]) ?>.
 					<? endif; ?>
@@ -189,21 +189,24 @@ else {
 				<? elseif($item["subscription_method"]): ?>
 				<p class="subscription_method">
 					<? if($item["subscription_method"]["duration"] == "annually"): ?>
-					Tilbagevendende betaling hvert <?= strtolower($item["subscription_method"]["name"]) ?>.
+					Tilbagevendende betaling hvert år.
 					<? else: ?>
 					Tilbagevendende betaling hver <?= strtolower($item["subscription_method"]["name"]) ?>.
 					<? endif; ?>
 				</p>
 				<? endif; ?>
 
+				<? if($item["itemtype"] != "signupfee"): ?>
+				
 				<ul class="actions">
 					<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
 						"confirm-value" => "Sikker?",
 						"wait-value" => "Vent ...",
 						"wrapper" => "li.delete",
-						"success-location" => "/butik/betal"
+						"success-location" => count($cart["items"]) > 1 ? $this->url : "/butik"
 						]) ?>
 				</ul>
+				<? endif; ?>
 				
 			</li>
 			<? endforeach; ?>
@@ -265,7 +268,7 @@ else {
 								"confirm-value" => "Sikker?",
 								"wait-value" => "Vent ...",
 								"wrapper" => "li.delete",
-								"success-location" => "/butik/betal"
+								"success-location" => count($cart["items"]) > 1 ? $this->url : "/butik"
 								]) ?>
 						</ul>
 					</li>
