@@ -60,7 +60,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 						<?= $HTML->oneButtonForm("Annuller", "/butik/cancelOrder/".$order["id"], [
 							"confirm-value" => "Sikker?",
 							"wait-value" => "Vent ...",
-							"success-location" => $this->url
+							"success-location" => "/profil"
 						]) ?>
 					</ul>
 				</li>

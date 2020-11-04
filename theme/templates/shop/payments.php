@@ -73,7 +73,7 @@ if($orders && $total_payment): ?>
 						<?= $HTML->oneButtonForm("Annuller", "/butik/cancelOrder/".$order["id"], [
 							"confirm-value" => "Sikker?",
 							"wait-value" => "Vent ...",
-							"success-location" => $this->url
+							"success-location" => count($orders) > 1 ? $this->url : "/profil"
 						]) ?>
 					</ul>
 				</li>

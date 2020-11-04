@@ -158,7 +158,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 			$carts = $SC->getCarts(["user_id" => $user_id]);
 			$cart = $carts ? $carts[0] : false;
 
-			if($SC->hasSignupfeeInCart($cart["id"])): ?>
+			if($cart && $SC->hasSignupfeeInCart($cart["id"])): ?>
 			<p><?= $user_name ?> er endnu ikke medlem, men har et indmeldelsesgebyr i sin kurv – <a href="/medlemshjaelp/butik/kurv/<?= $cart["cart_reference"] ?>">Gå til kurv</a></p>
 			<? endif; ?>
 			</div>
