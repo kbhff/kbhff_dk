@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-04 10:51:31
+asset-builder @ 2020-11-04 23:16:38
 */
 
 /*seg_desktop_include.js*/
@@ -6051,6 +6051,28 @@ Util.Modules["shop"] = new function() {
 			var form_login = u.qs("form.login", this);
 			if(form_login) {
 				u.f.init(form_login);
+			}
+			var products = u.qsa("li.product", this);
+			var i, product;
+			for(i = 0; i < products.length; i++) {
+				var i, image;
+				var images = u.qsa("div.image,div.media", product);
+				for(i = 0; image = images[i]; i++) {
+					image.product = product;
+					image._id = u.cv(image, "item_id");
+					image._format = u.cv(image, "format");
+					image._variant = u.cv(image, "variant");
+					if(image._id && image._format) {
+						image._image_src = "/images/" + image._id + "/" + (image._variant ? image._variant+"/" : "") + "200x." + image._format;
+						image.loaded = function(queue) {
+							u.ac(this, "loaded");
+							u.ass(this, {
+								"backgroundImage": "url("+queue[0].image.src+")"
+							})
+						}
+						u.preloader(image, [image._image_src]);
+					}
+				}
 			}
 		}
 		scene.ready();
