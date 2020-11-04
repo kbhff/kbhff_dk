@@ -151,6 +151,13 @@
 #content .scene.shopPayment ul.orders > li ul.actions {padding: 0; position: absolute; top: 6px; right: 0;}
 #content .scene.shopPayment ul.orders > li ul.actions li {padding: 0;}
 
+#content .scene.shopPayment div.orderitems {width: 450px; margin: 15px auto 20px;}
+#content .scene.shopPayment div.orderitems ul.orderitems {padding-bottom: 30px; padding-left: 0; padding-right: 0; margin: 0; list-style: none;}
+#content .scene.shopPayment div.orderitems ul.orderitems li {padding: 0;}
+#content .scene.shopPayment div.orderitems h3 {padding-left: 0; padding-right: 0;}
+#content .scene.shopPayment div.orderitems p {padding-left: 0; padding-right: 0;}
+
+
 /* FORM PAYMENT CARD */
 #content .scene.shopPayment form.card {width: 450px; margin: 0 auto; padding-top: 50px;}
 #content .scene.shopPayment form.card fieldset {background-color: #f2f2f2;}
@@ -173,7 +180,7 @@
 }
 
 
-#content .scene.shopPayment > p {width: 450px; margin: 0 auto; font-size: 12px; line-height: 12px; padding-bottom: 0; text-align: center;}
+#content .scene.shopPayment.stripe > p {width: 450px; margin: 0 auto; font-size: 12px; line-height: 12px; padding-bottom: 0; text-align: center;}
 
 
 #content .scene.shopReceipt ul.orders {margin: 0; list-style: none; padding: 0;}

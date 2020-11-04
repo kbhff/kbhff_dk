@@ -34,7 +34,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 <div class="scene shopPayment i:payment">
 	<h1>Betaling</h1>
 
-<? if($order && $remaining_order_price["price"]): ?>
+<? if($order && $remaining_order_price && $remaining_order_price["price"]): ?>
 
 
 	<?= $HTML->serverMessages() ?>
@@ -173,7 +173,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 	</div>
 
 <? // No payments
-elseif($order && $remaining_order_price["price"] === 0): ?>
+elseif($order && $remaining_order_price && $remaining_order_price["price"] === 0): ?>
 
 	<h2>Storartede nyheder</h2>
 	<p>Du har ingen udeståender.</p>
