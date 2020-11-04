@@ -73,7 +73,7 @@ class TypeProductAssorted extends Itemtype {
 		$this->addToModel("end_availability_date", array(
 			"type" => "string",
 			"label" => "End availability date",
-			"hint_message" => "When does the product become available?.",
+			"hint_message" => "When does the product stop being available?.",
 			"error_message" => "Invalid end availability date."
 		));
 
