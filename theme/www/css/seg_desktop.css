@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-04 10:49:13
+asset-builder @ 2020-11-04 10:51:31
 */
 
 /*seg_desktop_include.css*/
@@ -1061,7 +1061,7 @@ position: relative;
 	background: url(../img/checkout/gx_amex_small.png) no-repeat right 7px;
 }
 #content .scene.shopPayment.stripe form div.field.card input.mastercard {
-	background: url(/img/checkout/img/gx_mastercard_small.png) no-repeat right 7px;
+	background: url(../img/checkout/gx_mastercard_small.png) no-repeat right 7px;
 }
 #content .scene.shopPayment > p {width: 450px; margin: 0 auto; font-size: 12px; line-height: 12px; padding-bottom: 0; text-align: center;}
 #content .scene.shopReceipt ul.orders {margin: 0; list-style: none; padding: 0;}
