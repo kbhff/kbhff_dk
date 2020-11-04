@@ -28,12 +28,10 @@ if($cart && $cart["items"]) {
 			$signupfee_item = $IC->getItem(["id" => $cart_item["item_id"], "extend" => ["prices" => true]]);
 			$membership_item = $IC->getItem(["id" => $signupfee_item["associated_membership_id"], "extend" => ["prices" => true]]);
 		}
-		
 
 	}
 
 }
-
 
 ?>
 <div class="scene signup i:signup">
