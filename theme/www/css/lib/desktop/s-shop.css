@@ -116,7 +116,7 @@
 
 
 
-/* PAYMENT */
+/* PAYMENT CART */
 #content .scene.shopPayment div.cartitems {width: 450px; margin: 15px auto 20px;}
 #content .scene.shopPayment div.cartitems ul.cartitems {padding-bottom: 30px; padding-left: 0; padding-right: 0; margin: 0; list-style: none;}
 #content .scene.shopPayment div.cartitems ul.cartitems li {padding: 0;}
@@ -124,14 +124,34 @@
 #content .scene.shopPayment div.cartitems ul.actions li.modify {/*display: block;*/padding-right: 0; padding-left: 0;}
 #content .scene.shopPayment div.cartitems h3 {padding-left: 0; padding-right: 0;}
 
-/* ul orders */
 
-#content .scene.shopPayment ul.orders {padding-top: 50px; margin: 0 auto; width: 450px; padding-bottom: 0;}
-#content .scene.shopPayment ul.orders > li {list-style-type: none; padding-left: 0; font-size: 16px;}
-#content .scene.shopPayment ul.orders > li span.price {float: right;}
-#content .scene.shopPayment ul.orders > li.total_price {font-size: 18px; font-weight: 700; border-top: 1px solid #000000; padding-top: 12px; margin-top: 12px;}
+/* PAYMENT ORDERS */
+#content .scene.shopPayment dl.amount {padding-top: 48px;}
+#content .scene.shopPayment dl.amount dt {font-size: 24px;}
+#content .scene.shopPayment dl.amount dd {font-size: 48px; padding-top: 12px;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+}
 
-/* form card*/
+#content .scene.shopPayment ul.payment_methods {padding: 0; margin: 0; list-style: none;}
+#content .scene.shopPayment ul.payment_methods li.payment_method {padding-bottom: 10px;}
+#content .scene.shopPayment ul.payment_methods li.payment_method ul.actions {padding: 0; text-align: left;}
+#content .scene.shopPayment ul.payment_methods li.payment_method ul.actions li {padding-left: 0;}
+#content .scene.shopPayment ul.payment_methods li.payment_method.stripe p {
+	background: url(/img/checkout/gx_creditcards.png) no-repeat 0px top;
+	background-size: auto 17px;
+	padding-left: 100px;
+}
+
+#content .scene.shopPayment ul.orders {margin: 0; list-style: none; padding-bottom: 0;}
+#content .scene.shopPayment ul.orders > li {padding-left: 0; padding-top: 0; font-size: 16px; position: relative;}
+#content .scene.shopPayment ul.orders > li h3 {padding-left: 0; padding-right: 0;}
+#content .scene.shopPayment ul.orders > li ul.orderitems {margin: 0; list-style: none; padding-left: 0; padding-right: 0;}
+#content .scene.shopPayment ul.orders > li ul.orderitems > li {padding-left: 0; font-size: 16px;}
+
+#content .scene.shopPayment ul.orders > li ul.actions {padding: 0; position: absolute; top: 6px; right: 0;}
+#content .scene.shopPayment ul.orders > li ul.actions li {padding: 0;}
+
+/* FORM PAYMENT CARD */
 #content .scene.shopPayment form.card {width: 450px; margin: 0 auto; padding-top: 50px;}
 #content .scene.shopPayment form.card fieldset {background-color: #f2f2f2;}
 #content .scene.shopPayment form.card fieldset div.field.tel.card {padding-top: 24px;}

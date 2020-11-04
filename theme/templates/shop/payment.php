@@ -41,7 +41,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 
 
 	<dl class="amount">
-		<dt class="amount">Skyldigt beløb</dt>
+		<dt class="amount">Udestående:</dt>
 		<dd class="amount"><?= formatPrice($remaining_order_price) ?></dd>
 	</dl>
 
@@ -56,8 +56,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 				<li><?= $order_item["quantity"] ?> x <?= $order_item["name"] ?></li>
 			<? endforeach; ?>
 			</ul>
-		</li>
-		<li>
+
 			<ul class="actions">
 				<?= $HTML->oneButtonForm("Annuller", "/butik/cancelOrder/".$order["id"], [
 					"confirm-value" => "Sikker?",
@@ -65,6 +64,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 					"success-location" => "/profil"
 				]) ?>
 			</ul>
+
 		</li>
 	</ul>
 
