@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-04 23:16:38
+asset-builder @ 2020-11-04 23:25:13
 */
 
 /*seg_desktop_include.css*/
@@ -1061,6 +1061,11 @@ position: relative;
 #content .scene.shopPayment ul.orders > li ul.orderitems > li {padding-left: 0; font-size: 16px;}
 #content .scene.shopPayment ul.orders > li ul.actions {padding: 0; position: absolute; top: 6px; right: 0;}
 #content .scene.shopPayment ul.orders > li ul.actions li {padding: 0;}
+#content .scene.shopPayment div.orderitems {width: 450px; margin: 15px auto 20px;}
+#content .scene.shopPayment div.orderitems ul.orderitems {padding-bottom: 30px; padding-left: 0; padding-right: 0; margin: 0; list-style: none;}
+#content .scene.shopPayment div.orderitems ul.orderitems li {padding: 0;}
+#content .scene.shopPayment div.orderitems h3 {padding-left: 0; padding-right: 0;}
+#content .scene.shopPayment div.orderitems p {padding-left: 0; padding-right: 0;}
 #content .scene.shopPayment form.card {width: 450px; margin: 0 auto; padding-top: 50px;}
 #content .scene.shopPayment form.card fieldset {background-color: #f2f2f2;}
 #content .scene.shopPayment form.card fieldset div.field.tel.card {padding-top: 24px;}
@@ -1079,7 +1084,7 @@ position: relative;
 #content .scene.shopPayment.stripe form div.field.card input.mastercard {
 	background: url(../img/checkout/gx_mastercard_small.png) no-repeat right 7px;
 }
-#content .scene.shopPayment > p {width: 450px; margin: 0 auto; font-size: 12px; line-height: 12px; padding-bottom: 0; text-align: center;}
+#content .scene.shopPayment.stripe > p {width: 450px; margin: 0 auto; font-size: 12px; line-height: 12px; padding-bottom: 0; text-align: center;}
 #content .scene.shopReceipt ul.orders {margin: 0; list-style: none; padding: 0;}
 #content .scene.shopReceipt ul.orders > li {list-style-type: none; padding-left: 0; font-size: 16px;}
 #content .scene.shopReceipt ul.orders > li span.price {float: right;}
