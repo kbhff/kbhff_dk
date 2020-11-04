@@ -28,7 +28,7 @@
 /*	background-color: rgba(255, 255, 255, 0.9);*/
 	margin-top: 48px; margin-right: 12px; margin-left: 12px; padding-left: 0;
 }
-#content .scene.signupfees li.signupfee + li.signupfee {padding-top: 200px;}
+/*#content .scene.signupfees li.signupfee + li.signupfee {padding-top: 200px;}*/
 
 #content .scene.signupfees ul.actions {/*margin: 0 auto;*/padding-top: 5px; text-align: center;}
 #content .scene.signupfees ul.actions input {margin: 0 auto;}
