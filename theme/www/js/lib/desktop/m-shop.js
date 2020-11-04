@@ -18,6 +18,50 @@ Util.Modules["shop"] = new function() {
 				u.f.init(form_login);
 			}
 
+			var products = u.qsa("li.product", this);
+			var i, product;
+			for(i = 0; i < products.length; i++) {
+
+				// INIT IMAGES
+				var i, image;
+				var images = u.qsa("div.image,div.media", product);
+				for(i = 0; image = images[i]; i++) {
+
+					image.product = product;
+
+					// get image variables
+					image._id = u.cv(image, "item_id");
+					image._format = u.cv(image, "format");
+					image._variant = u.cv(image, "variant");
+
+
+					// if image
+					if(image._id && image._format) {
+
+						// add image
+						image._image_src = "/images/" + image._id + "/" + (image._variant ? image._variant+"/" : "") + "200x." + image._format;
+
+						// u.ass(image, {
+						// 	"opacity": 0
+						// });
+
+						image.loaded = function(queue) {
+
+							u.ac(this, "loaded");
+							u.ass(this, {
+								"backgroundImage": "url("+queue[0].image.src+")"
+							})
+							// this._image = u.ie(this, "img");
+							// this._image.image = this;
+							// this._image.src = ;
+
+						}
+						u.preloader(image, [image._image_src]);
+					}
+				}
+
+			}
+
 		}
 
 		scene.ready();

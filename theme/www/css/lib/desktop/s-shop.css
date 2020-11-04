@@ -18,16 +18,16 @@
 
 
 #content .scene.shop ul.products {margin: 0; list-style: none; padding-left: 0; padding-right: 0;}
-#content .scene.shop ul.products li.product {padding: 0; margin-bottom: 12ps;}
+#content .scene.shop ul.products li.product {padding: 0; margin-bottom: 12px}
 
 #content .scene.shop ul.products li.product div.product div.image {width: 200px; height: 200px; float: left;}
-#content .scene.shop ul.products li.product div.product h3 {padding-left: 224px;}
+#content .scene.shop ul.products li.product div.product h3 {padding-left: 212px;}
 #content .scene.shop ul.products li.product div.product h3 span.price {float: right;}
 
-#content .scene.shop ul.products li.product div.product p {padding-left: 224px;}
+#content .scene.shop ul.products li.product div.product p {padding-left: 212px;}
 
 
-#content .scene.shop ul.products li.product div.pickupdates {clear: both;}
+#content .scene.shop ul.products li.product div.pickupdates {clear: both; padding-top: 24px; text-align: center;}
 #content .scene.shop ul.products li.product div.pickupdates ul.pickupdates {margin: 0; list-style: none; padding-left: 0; padding-right: 0;}
 #content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li {display: inline-block;}
 
