@@ -166,17 +166,19 @@ class SuperUser extends SuperUserCore {
 		// Get posted values to make them available for models
 		$this->getPostedEntities();
 
-
 		// does values validate
 		if(count($action) == 2 && $this->validateList(array("item_id"))) {
 
 			$query = new Query();
 			$IC = new Items();
 			
+			include_once("classes/users/supermember.class.php");
+			$MC = new SuperMember();
+
 			$user_id = $action[1];
 			$item_id = $this->getProperty("item_id", "value");
 
-			$member = $this->getMembers(array("user_id" => $user_id));
+			$member = $MC->getMembers(array("user_id" => $user_id));
 		
 			if($member) {
 				$sql = "UPDATE ".SITE_DB.".user_item_subscriptions SET item_id = $item_id WHERE user_id = $user_id";
