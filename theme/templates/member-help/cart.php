@@ -92,14 +92,13 @@ if($cart["items"]) {
 			// Loop through all cart items and show information and editing options of each item.
 			foreach($cart_items_without_pickupdate as $cart_item):
 				$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true)));
-				$price = $SC->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
+				$price = $SC->getPrice($cart_item["item_id"], array("user_id" => $member_user_id, "quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
 			?>
 			<li class="item id:<?= $item["id"] ?>">
 				<? if($item["itemtype"] != "signupfee"): ?>
 				<?
 				// add option of updating item quantity to item 
 				print $SC->formStart("/medlemshjaelp/butik/updateCartItemQuantity/".$cart["cart_reference"]."/".$cart_item["id"], array("class" => "updateCartItemQuantity labelstyle:inject")) ?>
-<<<<<<< Updated upstream
 					<fieldset>
 						<?= $SC->input("quantity", array(
 							"id" => "input_quantity_".$item["id"],
@@ -108,16 +107,6 @@ if($cart["items"]) {
 							"label" => "Antal",
 							"hint_message" => "State the quantity of this item"
 						)) ?>
-=======
-					
-						<fieldset>
-							<?= $SC->input("quantity", array(
-								"type" => "integer",
-								"value" =>  $cart_item["quantity"],
-								"label" => "Antal",
-								"hint_message" => "State the quantity of this item"
-								)) ?>
->>>>>>> Stashed changes
 					</fieldset>
 					<ul class="actions">
 						<?= $SC->submit("Opdatér", array("name" => "update", "wrapper" => "li.save")) ?>
@@ -202,7 +191,7 @@ if($cart["items"]) {
 						
 						<? foreach($pickupdate_cart_items as $cart_item):
 						$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true))); 
-						$price = $SC->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
+						$price = $SC->getPrice($cart_item["item_id"], array("user_id" => $member_user_id, "quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
 						$cart_item_id = $cart_item["id"];
 						?>
 	

@@ -190,7 +190,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 
 						<div class="membership-info">
 							<p class="over">Afdeling</p>
-							<p class="under"><?= $department["name"] ? $department["name"] : "(ingen)" ?></p>
+							<p class="under"><?= $department ? $department["name"] : "(ingen)" ?></p>
 						</div>
 
 						<ul class="actions">

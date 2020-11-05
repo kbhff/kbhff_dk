@@ -136,7 +136,7 @@ else {
 				
 				<? foreach($pickupdate_order_items as $order_item):
 				$item = $IC->getItem(array("id" => $order_item["item_id"], "extend" => array("subscription_method" => true))); 
-				$price = $model->getPrice($order_item["item_id"], array("quantity" => $order_item["quantity"], "currency" => $order["currency"], "country" => $order["country"]));
+				$price = $model->getPrice($order_item["item_id"], array("user_id" => $member_user_id, "quantity" => $order_item["quantity"], "currency" => $order["currency"], "country" => $order["country"]));
 				$order_item_id = $order_item["id"];
 				?>
 
