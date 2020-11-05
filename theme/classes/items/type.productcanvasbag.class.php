@@ -91,9 +91,12 @@ class TypeProductCanvasbag extends Itemtype {
 		$this->addToModel("single_media", array(
 			"type" => "files",
 			"label" => "Add media here",
+			"min_width" => 960,
+			"min_height" => 960,
+			"allowed_proportion" => 1,
 			"max" => 1,
 			"allowed_formats" => "png,jpg",
-			"hint_message" => "Add single image by dragging it here. PNG or JPG allowed.",
+			"hint_message" => "Add single image by dragging it here. Minimum 960x960 PNG or JPG allowed.",
 			"error_message" => "Media does not fit requirements."
 		));
 
