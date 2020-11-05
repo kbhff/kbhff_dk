@@ -275,7 +275,7 @@ else {
 							if($pickupdate_cart_items): ?>
 						
 					<li class="pickupdate">
-						<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?> – Afhentning <span class="name"><?= $department["name"] ?></span></h4>
+						<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?> – <span class="name"><?= $department["name"] ?></span></h4>
 
 						<ul class="items">
 

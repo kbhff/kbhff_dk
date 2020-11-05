@@ -283,11 +283,10 @@ else {
 						<? if($pickupdate_cart_items): ?>
 						
 					<li class="pickupdate">
-						<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?></h4>
-						<p class="department">Afhentningssted: <span class="name"><?= $department["name"] ?></span></p>
-						
+						<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?> – <span class="name"><?= $department["name"] ?></span></h4>
+
 						<ul class="items">
-							
+
 							<? foreach($pickupdate_cart_items as $cart_item):
 							$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true))); 
 							$price = $SC->getPrice($cart_item["item_id"], array("user_id" => $member_user_id, "quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
