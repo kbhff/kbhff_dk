@@ -23,21 +23,21 @@
 #content .scene.shop ul.products {margin: 0; list-style: none; padding-left: 0; padding-right: 0;}
 #content .scene.shop ul.products li.product {padding: 0; margin-bottom: 12px}
 
-#content .scene.shop ul.products li.product div.product div.image {width: 200px; height: 200px; float: left;}
-#content .scene.shop ul.products li.product div.product h3 {padding-left: 212px;}
+#content .scene.shop ul.products li.product div.product div.image {width: 160px; height: 160px; margin: 12px; float: left;}
+#content .scene.shop ul.products li.product div.product h3 {padding-left: 184px;}
 #content .scene.shop ul.products li.product div.product h3 span.price {float: right;}
 
-#content .scene.shop ul.products li.product div.product p {padding-left: 212px;}
+#content .scene.shop ul.products li.product div.product p {padding-left: 184px;}
 
 
-#content .scene.shop ul.products li.product div.pickupdates {clear: both; padding-top: 24px;}
+#content .scene.shop ul.products li.product div.pickupdates {clear: both; padding-top: 12px;}
 #content .scene.shop ul.products li.product div.pickupdates ul.pickupdates {margin: 0; list-style: none;}
-#content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate {display: inline-block; padding-left: 0; text-align: center;}
+#content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate {display: inline-block; padding-left: 0; padding-top: 0; text-align: center;}
 #content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate div.add {}
 
 #content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate div.unavailable {}
 #content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate div.closed {}
-#content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate p.date {}
+#content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate p.date {padding-bottom: 0;}
 
 
 
