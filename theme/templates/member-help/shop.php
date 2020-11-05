@@ -245,7 +245,7 @@ else {
 						// Loop through all cart items and show information and editing options of each item.
 						foreach($cart_items_without_pickupdate as $cart_item):
 							$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true)));
-							$price = $SC->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
+							$price = $SC->getPrice($cart_item["item_id"], array("user_id" => $member_user_id, "quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
 							$cart_item_id = $cart_item["id"];
 					?>
 					<li class="item id:<?= $item["id"] ?>">
@@ -277,7 +277,7 @@ else {
 							
 							<? foreach($pickupdate_cart_items as $cart_item):
 							$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true))); 
-							$price = $SC->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
+							$price = $SC->getPrice($cart_item["item_id"], array("user_id" => $member_user_id, "quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
 							$cart_item_id = $cart_item["id"];
 							?>
 
