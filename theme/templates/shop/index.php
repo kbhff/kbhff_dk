@@ -184,48 +184,48 @@ else {
 										}
 									}
 								?>
-								
-								<li>
-									<ul class="pickupdate">
-								
-									<? // check if department is open on given pickupdate ?>
-									<? if(arrayKeyValue($department_pickupdates, "id", $pickupdate["id"])): ?>
 
-										<? // check product availability ?>
-										<? if($product_available): ?>
-									
-										<?= $HTML->oneButtonForm("+", "/butik/addToCart", [
-											"confirm-value" => false,
-											"wait-value" => "Vent ...",
-											"inputs" => [
-												"item_id" => $product["id"],
-												"quantity" => 1,
-												"pickupdate_id" => $pickupdate["id"]
-											],
-											"wrapper" => "li.add",
-											"success-location" => "/butik"
-										]) ?>
-									
-										<? else: ?>
-										<li class="unavailable">Ikke tilgængelig</li>
-										<? endif; ?>	
+								<li class="pickupdate">
+
+								<? // check if department is open on given pickupdate ?>
+								<? if(arrayKeyValue($department_pickupdates, "id", $pickupdate["id"])): ?>
+
+									<? // check product availability ?>
+									<? if($product_available): ?>
+								
+									<?= $HTML->oneButtonForm("+", "/butik/addToCart", [
+										"confirm-value" => false,
+										"wait-value" => "Vent ...",
+										"inputs" => [
+											"item_id" => $product["id"],
+											"quantity" => 1,
+											"pickupdate_id" => $pickupdate["id"]
+										],
+										"wrapper" => "div.add",
+										"success-location" => "/butik"
+									]) ?>
 
 									<? else: ?>
-									
-										<li class="closed">Afdelingen er lukket</li>
-									
-									<? endif; ?>
-							
-										<li class="date"><?= date("d/m", strtotime($pickupdate["pickupdate"])) ?></li>
-								
-									</ul>
+
+									<div class="unavailable">Ikke tilgængelig</div>
+
+									<? endif; ?>	
+
+								<? else: ?>
+
+									<div class="closed">Afdelingen er lukket</div>
+
+								<? endif; ?>
+
+									<p class="date"><?= date("d/m", strtotime($pickupdate["pickupdate"])) ?></p>
+
 								</li>
 
 								<? endforeach; ?>
 							</ul>
 
 							<? else: ?>
-							<p>Ingen aktuelle afhentningsdage.</p>
+							<p class="no_dates">Ingen aktuelle afhentningsdage.</p>
 							<? endif; ?>
 						</div>
 
@@ -301,6 +301,15 @@ else {
 						<? endforeach; ?>
 				</ul>
 					<? endif; ?>
+
+				<div class="total">
+					<h3>
+						<span class="name">I alt</span>
+						<span class="total_price">
+							<?= formatPrice($total_cart_price) ?>
+						</span>
+					</h3>
+				</div>
 
 				<ul class="actions">
 					<li ><a class="button" href="/butik/kurv">Gå til kurven</a></li>
