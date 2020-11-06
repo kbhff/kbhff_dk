@@ -207,7 +207,7 @@ else {
 											"pickupdate_id" => $pickupdate["id"]
 										],
 										"wrapper" => "div.add",
-										"success-location" => "/medlemshjaelp/butik/".$member_user_id
+										// "success-location" => "/medlemshjaelp/butik/".$member_user_id
 									]) ?>
 							
 									<? else: ?>
@@ -247,7 +247,7 @@ else {
 
 		</div>
 
-		<div class="c-one-third ">
+		<div class="c-one-third sidebar">
 
 			<div class="cart i:shopfrontCart c-primary-box">
 				<h3>Indkøbskurv</h3>

@@ -1,4 +1,7 @@
 /* SHOP - GENERAL */
+#content .scene.shop div.sidebar.fixed {position: relative; top: 0;}
+#content .scene.shop .c-wrapper {overflow: hidden;}
+
 #content .scene.shop div.cart ul.pickupdates {margin: 0; list-style: none;}
 #content .scene.shop div.cart ul.pickupdates li {padding-left: 0;}
 #content .scene.shop div.cart ul.pickupdates li h4 {padding: 0; font-size: 16px;}

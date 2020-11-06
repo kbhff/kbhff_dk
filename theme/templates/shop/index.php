@@ -242,7 +242,7 @@ else {
 
 		</div>
 
-		<div class="c-one-third ">
+		<div class="c-one-third sidebar">
 
 			<div class="cart i:shopfrontCart c-primary-box">
 				<h3>Indkøbskurv</h3>
