@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-06 07:07:09
+asset-builder @ 2020-11-06 08:16:51
 */
 
 /*seg_desktop_include.js*/
@@ -6046,6 +6046,19 @@ Util.Modules["shop"] = new function() {
 		scene.resized = function() {
 		}
 		scene.scrolled = function() {
+			if(this.sidebar.start_y < page.scrolled_y) {
+				if(!this.sidebar.is_fixed) {
+					this.sidebar.is_fixed = true;
+					u.ac(this.sidebar, "fixed");
+				}
+				u.ass(this.sidebar, {
+					top: page.scrolled_y - this.sidebar.start_y + "px"
+				});
+			}
+			else if(this.sidebar.is_fixed) {
+				this.sidebar.is_fixed = false;
+				u.rc(this.sidebar, "fixed");
+			}
 		}
 		scene.ready = function() {
 			var form_login = u.qs("form.login", this);
@@ -6057,7 +6070,8 @@ Util.Modules["shop"] = new function() {
 			for(i = 0; i < products.length; i++) {
 				var i, image;
 				var images = u.qsa("div.image,div.media", product);
-				for(i = 0; image = images[i]; i++) {
+				for(i = 0; i < images.length; i++) {
+					image = images[i];
 					image.product = product;
 					image._id = u.cv(image, "item_id");
 					image._format = u.cv(image, "format");
@@ -6073,7 +6087,26 @@ Util.Modules["shop"] = new function() {
 						u.preloader(image, [image._image_src]);
 					}
 				}
+				var pickupdate;
+				var pickupdates = u.qsa("li.pickupdate", product);
+				for(i = 0; i < pickupdates.length; i++) {
+					pickupdate = pickupdates[i];
+					pickupdate.scene = this;
+					pickupdate.bn_add = u.qs("div.add", pickupdate);
+					if(pickupdate.bn_add) {
+						pickupdate.bn_add.pickupdate = pickupdate;
+						pickupdate.bn_add.confirmed = function(response) {
+							if(response.isHTML) {
+								var scene_cart = u.qs("div.cart", this.pickupdate.scene);
+								var response_cart = u.qs("div.cart", response);
+								scene_cart.parentNode.replaceChild(response_cart, scene_cart);
+							}
+						}
+					}
+				}
 			}
+			this.sidebar = u.qs("div.sidebar", this);
+			this.sidebar.start_y = u.absY(this.sidebar);
 		}
 		scene.ready();
 	}
