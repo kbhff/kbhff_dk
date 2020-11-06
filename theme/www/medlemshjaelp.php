@@ -377,7 +377,8 @@ if($action) {
 
 
 			$page->page(array(
-				"templates" => "member-help/shop.php"
+				"templates" => "member-help/shop.php",
+				"type" => "admin"
 			));	
 			exit();
 		}
@@ -387,7 +388,8 @@ if($action) {
 			if($action[1] == "kurv") {
 				
 				$page->page(array(
-					"templates" => "member-help/cart.php"
+					"templates" => "member-help/cart.php",
+					"type" => "admin"
 				));	
 				exit();
 			}
@@ -410,7 +412,6 @@ if($action) {
 
 			}
 
-			
 		}
 		else if(count($action) == 4) {
 
@@ -550,7 +551,7 @@ if($action) {
 
 							// redirect to leave POST state
 							header("Location: $return_url/?payment_intent=".$result["payment_intent_id"]);
-								exit();
+							exit();
 
 						}
 						else if($result["status"] === "ACTION_REQUIRED") {
@@ -701,7 +702,8 @@ if($action) {
 	else if($action[0] == "betalinger" && count($action) == 2) {
 
 		$page->page(array(
-			"templates" => "member-help/payments.php"
+			"templates" => "member-help/payments.php",
+			"type" => "admin"
 		));
 		exit();
 	}
