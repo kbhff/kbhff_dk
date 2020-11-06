@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-05 15:28:23
+asset-builder @ 2020-11-06 07:07:09
 */
 
 /*seg_desktop_include.js*/
@@ -6160,6 +6160,7 @@ Util.Modules["checkout"] = new function() {
 			var form_login = u.qs("form.login", this);
 			if(form_login) {
 				u.f.init(form_login);
+				form_login.inputs["username"].focus();
 			}
 		}
 		scene.ready();
