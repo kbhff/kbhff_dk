@@ -71,6 +71,8 @@ if($cart && $cart["items"]) {
 ?>
 <div class="scene cart">
 
+<? if($cart): ?>
+
 	<div class="c-wrapper">
 		<div class="c-box obs">
 			<h2 class="obs"><span class="highlight">OBS! </span>Handler på vegne af <span class="highlight"><a href="/medlemshjaelp/brugerprofil/<?= $member_user_id ?>"><?= $member_user['nickname'] ? $member_user['nickname'] : $member_user['firstname'] . " " . $member_user['lastname'] ?></a></span></h2>
@@ -78,8 +80,6 @@ if($cart && $cart["items"]) {
 	</div>
 
 	<?= $HTML->serverMessages(["type" => "error"]); ?>
-
-<? if($cart): ?>
 
 	<div class="all_items">
 		<? if($cart["items"]): ?>
@@ -274,6 +274,7 @@ if($cart && $cart["items"]) {
 	if($cart && $cart["items"]) :?>
 	<div class="checkout">
 		<ul class="actions">
+			<li class="shop"><a class="button" href="/medlemshjaelp/butik/<?= $member_user_id ?>">Køb mere</a></li>
 			<?= $HTML->oneButtonForm("Bekræft og gå til betaling", "/medlemshjaelp/butik/newOrderFromCart/".$cart_reference."/".$cart["id"], array(
 				"confirm-value" => false,
 				"wait-value" => "Vent venligst",
@@ -292,4 +293,4 @@ if($cart && $cart["items"]) {
 	<p>Denne kurv eksisterer ikke. Det kan skyldes at den er blevet omdannet til en ordre.</p>
 
 <? endif; ?>
-
+</div>

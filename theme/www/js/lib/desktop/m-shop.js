@@ -211,6 +211,7 @@ Util.Modules["checkout"] = new function() {
 			var form_login = u.qs("form.login", this);
 			if(form_login) {
 				u.f.init(form_login);
+				form_login.inputs["username"].focus();
 			}
 
 		}

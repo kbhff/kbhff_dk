@@ -13,6 +13,9 @@
 
 #content .scene.shop div.cart ul.actions {padding-bottom: 0; padding-top: 12px;}
 
+#content .scene.shop div.orders ul.list {margin: 0; list-style: none;}
+#content .scene.shop div.orders ul.list li {padding-left: 0;}
+
 
 #content .scene.shop div.login {width: 380px; margin: 0 auto; padding-top: 20px;}
 #content .scene.shop div.login ul.actions,
@@ -80,6 +83,7 @@
 
 
 #content .scene.cart div.checkout {padding: 20px 0;}
+#content .scene.cart div.checkout ul.actions li.shop {float: left;}
 
 
 /* CHECKOUT */
