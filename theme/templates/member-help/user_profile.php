@@ -160,6 +160,9 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 
 			if($cart && $SC->hasSignupfeeInCart($cart["id"])): ?>
 			<p><?= $user_name ?> er endnu ikke medlem, men har et indmeldelsesgebyr i sin kurv – <a href="/medlemshjaelp/butik/kurv/<?= $cart["cart_reference"] ?>">Gå til kurv</a></p>
+			<? else: ?>
+			<p>Denne bruger er oprettet i systemet, men har ikke tilknyttet et medlemskab. Kontakt gerne <a href="mailto:it@kbhff.dk">IT-gruppen</a> og send dem et screenshot af dette skærmbillede.
+			</p><p>Brugeren kan selv oprette et medlemskab ved at logge ind på sin egen konto med brugernavnet <em><?= $member_user["email"] ?></em>.</p>
 			<? endif; ?>
 			</div>
 			<? endif; ?>
