@@ -147,7 +147,7 @@ else {
 			</div>
 
 			<? elseif($products): ?>
-			<ul class="products i:products">
+			<ul class="products">
 
 				<? foreach($products as $product): 
 					$price = $SC->getPrice($product["id"], ["user_id" => $member_user_id]);
@@ -249,7 +249,7 @@ else {
 
 		<div class="c-one-third sidebar">
 
-			<div class="cart i:shopfrontCart c-primary-box">
+			<div class="cart c-primary-box">
 				<h3>Indkøbskurv</h3>
 				<? if($cart["items"]): ?>
 					<? if($cart_items_without_pickupdate): ?>
@@ -344,12 +344,12 @@ else {
 							<span class="products">Vare(r)</span>
 						</li>
 						<li class="listings-container">
+							<ul class="listings">
 							<? foreach($order_items_pickupdates as $pickupdate): 
 							$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["user_id" => $member_user_id]);
 							?>
 								<? if($pickupdate_order_items): ?>
 							
-								<ul class="listings">
 									<? foreach($pickupdate_order_items as $order_item): ?>
 									<li class="listing">
 										<span class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?></span>
@@ -360,10 +360,10 @@ else {
 										<span class="product"><?= $order_item["name"] ?></span>
 									</li>
 									<? endforeach; ?>
-								</ul>
 
 								<? endif; ?>	
 							<? endforeach; ?>
+							</ul>
 						</li>
 					</ul>
 					

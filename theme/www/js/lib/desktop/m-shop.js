@@ -4,12 +4,17 @@ Util.Modules["shop"] = new function() {
 
 		scene.resized = function() {
 //			u.bug("scene.resized:", this);
+			this.sidebar.start_y = u.absY(this.sidebar);
+
 		}
 
 		scene.scrolled = function() {
-//			u.bug("scrolled:", this);
+			// u.bug("scrolled:", this, this.sidebar.start_y, page.offsetHeight, page.scrolled_y, this.sidebar.offsetHeight);
 
-			if(this.sidebar.start_y < page.scrolled_y) {
+			if(page.offsetHeight - 52 - page.scrolled_y < this.sidebar.offsetHeight) {
+				// do nothing
+			}
+			else if(this.sidebar.start_y < page.scrolled_y) {
 				if(!this.sidebar.is_fixed) {
 					this.sidebar.is_fixed = true;
 					u.ac(this.sidebar, "fixed");
@@ -90,10 +95,19 @@ Util.Modules["shop"] = new function() {
 						pickupdate.bn_add.pickupdate = pickupdate;
 
 						pickupdate.bn_add.confirmed = function(response) {
+
 							if(response.isHTML) {
 								var scene_cart = u.qs("div.cart", this.pickupdate.scene);
 								var response_cart = u.qs("div.cart", response);
+								u.ass(response_cart, {
+									opacity: 0.5
+								});
 								scene_cart.parentNode.replaceChild(response_cart, scene_cart);
+								u.ass(response_cart, {
+									transition: "opacity 0.1s ease-in-out",
+									opacity: 1
+								});
+
 							}
 						}
 					}

@@ -18,6 +18,7 @@
 
 #content .scene.shop div.orders ul.list {margin: 0; list-style: none;}
 #content .scene.shop div.orders ul.list li {padding-left: 0;}
+#content .scene.shop div.orders ul.list ul.listings {margin: 0; padding: 0; list-style: none;}
 
 
 #content .scene.shop div.login {width: 380px; margin: 0 auto; padding-top: 20px;}
