@@ -8,8 +8,25 @@ Util.Modules["banner"] = new function() {
 			variant = u.random(1, 4);
 		}
 
-		u.ae(div, "img", {class:"fit-width", src:"/img/banners/desktop/pi_" + variant + "." + format});	
+		
+		var image = u.ae(div, "img", {class:"fit-width"});	
 		u.ae(div, "div", {class:"logo"});
+
+		image.loaded = function(queue) {
+
+			this.src = queue[0].image.src;
+
+			if(page) {
+				page.resized();
+			}
+
+			// this._image = u.ie(this, "img");
+			// this._image.image = this;
+			// this._image.src = ;
+
+		}
+		u.preloader(image, ["/img/banners/desktop/pi_" + variant + "." + format]);
+
 
 	}
 }
