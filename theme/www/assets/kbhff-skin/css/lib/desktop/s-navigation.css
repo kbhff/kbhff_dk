@@ -46,7 +46,7 @@ position: relative;
 #navigation ul.navigation h5,
 #navigation ul.navigation h4,
 #navigation ul.navigation a {
-	font-family: 'voresfont';
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
 	font-size: 14px;
 	line-height: 22px;
