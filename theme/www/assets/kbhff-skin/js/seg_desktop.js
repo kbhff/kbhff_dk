@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-05 15:28:11
+asset-builder @ 2020-11-06 23:53:23
 */
 
 /*seg_desktop_include.js*/
@@ -5309,8 +5309,15 @@ Util.Modules["banner"] = new function() {
 		if (variant == "random" || !variant) {
 			variant = u.random(1, 4);
 		}
-		u.ae(div, "img", {class:"fit-width", src:"/img/banners/desktop/pi_" + variant + "." + format});	
+		var image = u.ae(div, "img", {class:"fit-width"});	
 		u.ae(div, "div", {class:"logo"});
+		image.loaded = function(queue) {
+			this.src = queue[0].image.src;
+			if(page) {
+				page.resized();
+			}
+		}
+		u.preloader(image, ["/img/banners/desktop/pi_" + variant + "." + format]);
 	}
 }
 
