@@ -248,18 +248,6 @@ class TypeSignupfee extends Itemtype {
 		
 	}
 
-	function order_cancelled($order_item, $order) {
-
-		include_once("classes/users/supermember.class.php");
-		$MC = new SuperMember();
-
-		$signupfee_item = $IC->getItem(["id" => $order_item["item_id"], "extend" => true]);
-
-		// cancel membership - also deletes related subscription
-		$MC->cancelMembership(array("cancelMembership", $order["user_id"], $signupfee_item["associated_membership_id"]));
-
-	}
-
 }
 
 ?>
