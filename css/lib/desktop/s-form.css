@@ -178,7 +178,7 @@ ul.actions a.button,
 #content ul.actions a.button {font-size: 14px; display: block; padding: 7px 14px; line-height: 22px; background-color: #999999; color: #ffffff; border: none; cursor: pointer;
 	font-weight: 400;
 	text-transform: uppercase;
-	font-family: "voresfont";
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
 }
 
 ul.actions input.button {width: auto; height: auto;}
