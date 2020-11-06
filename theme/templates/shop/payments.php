@@ -3,7 +3,7 @@ global $action;
 global $model;
 $UC = new User();
 
-$this->pageTitle("Payments");
+$this->pageTitle("Betalinger");
 
 // get current user id
 $user_id = session()->value("user_id");

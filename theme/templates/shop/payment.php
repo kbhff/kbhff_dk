@@ -2,7 +2,7 @@
 global $action;
 global $model;
 
-$this->pageTitle("Payment");
+$this->pageTitle("Betaling");
 
 $UC = new User();
 $MC = new Member();

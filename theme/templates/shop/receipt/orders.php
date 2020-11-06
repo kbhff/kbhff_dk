@@ -2,7 +2,7 @@
 global $action;
 global $model;
 
-$this->pageTitle("Receipt");
+$this->pageTitle("Kvittering");
 
 $orders = [];
 $order_no_list = false;

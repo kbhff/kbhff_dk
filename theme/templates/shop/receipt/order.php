@@ -2,7 +2,7 @@
 global $action;
 global $model;
 
-$this->pageTitle("Receipt");
+$this->pageTitle("Kvittering");
 
 $IC = new Items();
 $MC = new Member();
