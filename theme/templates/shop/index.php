@@ -341,41 +341,35 @@ else {
 			<div class="orders c-box">
 				<h3>Dine aktuelle bestillinger</h3>
 				<? if($order_items_pickupdates): ?>
-				<!-- <p>Gå til <a href="/profil" class="profile">Min side</a> for at se gamle bestillinger og rette datoer for aktuelle bestillinger.</p> -->
-					<ul class="list">
-						<li class="labels">
-							<span class="pickupdates">Afh.dato</span>
-							<span class="products">Vare(r)</span>
-						</li>
-						<li class="listings-container">
-							<? foreach($order_items_pickupdates as $pickupdate): 
-							$pickupdate_order_items = $model->getPickupdateOrderItems($pickupdate["id"], ["user_id" => $user_id]);
-							?>
-								<? if($pickupdate_order_items): ?>
-							
-								<ul class="listings">
-									<? foreach($pickupdate_order_items as $order_item): ?>
-									<li class="listing">
-										<span class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?></span>
-										<? if($order_item["quantity"] > 1): ?>
-										<span class="quantity"><?= $order_item["quantity"] ?></span>
-										<span class="x"><?= " x " ?></span>
-										<? endif; ?>
-										<span class="product"><?= $order_item["name"] ?></span>
-									</li>
-									<? endforeach; ?>
-								</ul>
+				<ul class="list">
+					<li class="header">
+						<span class="pickupdate">Afh.dato</span>
+						<span class="product">Vare(r)</span>
+					</li>
+					<? foreach($order_items_pickupdates as $pickupdate): 
+						$pickupdate_order_items = $model->getPickupdateOrderItems($pickupdate["id"], ["user_id" => $user_id]);
+						if($pickupdate_order_items):
+							foreach($pickupdate_order_items as $order_item): ?>
+							<li class="listing">
+								<span class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?></span>
+								<? if($order_item["quantity"] > 1): ?>
+								<span class="quantity"><?= $order_item["quantity"] ?></span>
+								<span class="x"><?= " x " ?></span>
+								<? endif; ?>
+								<span class="product"><?= $order_item["name"] ?></span>
+							</li>
+							<? endforeach;
+						endif;
+					endforeach; ?>
+				</ul>
 
-								<? endif; ?>	
-							<? endforeach; ?>
-						</li>
-					</ul>
-					
 				<? else: ?>
+
 				<p>Du har ingen aktuelle grøntsagsbestillinger.</p>
-				<!-- <p>Gå til <a href="/profil">Min side</a> for at se gamle bestillinger.</p> -->
+
 				<? endif; ?>
 
+				<p>Gå til <a href="/profil" class="profile">Min side</a> for at se gamle bestillinger og rette datoer for aktuelle bestillinger.</p>
 			</div>
 		</div>
 	</div>

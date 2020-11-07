@@ -4,30 +4,36 @@ Util.Modules["shop"] = new function() {
 
 		scene.resized = function() {
 //			u.bug("scene.resized:", this);
-			this.sidebar.start_y = u.absY(this.sidebar);
+
+			if(this.sidebar) {
+				this.sidebar.start_y = u.absY(this.sidebar);
+			}
 
 		}
 
 		scene.scrolled = function() {
 			// u.bug("scrolled:", this, this.sidebar.start_y, page.offsetHeight, page.scrolled_y, this.sidebar.offsetHeight);
 
-			if(page.offsetHeight - 52 - page.scrolled_y < this.sidebar.offsetHeight) {
-				// do nothing
-			}
-			else if(this.sidebar.start_y < page.scrolled_y) {
-				if(!this.sidebar.is_fixed) {
-					this.sidebar.is_fixed = true;
-					u.ac(this.sidebar, "fixed");
-				}
-				u.ass(this.sidebar, {
-					top: page.scrolled_y - this.sidebar.start_y + "px"
-				});
-			}
-			else if(this.sidebar.is_fixed) {
-				this.sidebar.is_fixed = false;
-				u.rc(this.sidebar, "fixed");
-			}
+			if(this.sidebar) {
 
+				if(page.offsetHeight - 52 - page.scrolled_y < this.sidebar.offsetHeight) {
+					// do nothing
+				}
+				else if(this.sidebar.start_y < page.scrolled_y) {
+					if(!this.sidebar.is_fixed) {
+						this.sidebar.is_fixed = true;
+						u.ac(this.sidebar, "fixed");
+					}
+					u.ass(this.sidebar, {
+						top: page.scrolled_y - this.sidebar.start_y + "px"
+					});
+				}
+				else if(this.sidebar.is_fixed) {
+					this.sidebar.is_fixed = false;
+					u.rc(this.sidebar, "fixed");
+				}
+
+			}
 
 		}
 
@@ -37,79 +43,83 @@ Util.Modules["shop"] = new function() {
 			var form_login = u.qs("form.login", this);
 			if(form_login) {
 				u.f.init(form_login);
+				form_login.inputs["username"].focus();
 			}
 
 			var products = u.qsa("li.product", this);
-			var i, product;
-			for(i = 0; i < products.length; i++) {
+			if(products) {
+				var i, product;
+				for(i = 0; i < products.length; i++) {
 
-				// Images
-				var i, image;
-				var images = u.qsa("div.image,div.media", product);
-				for(i = 0; i < images.length; i++) {
+					// Images
+					var i, image;
+					var images = u.qsa("div.image,div.media", product);
+					for(i = 0; i < images.length; i++) {
 
-					image = images[i];
-					image.product = product;
+						image = images[i];
+						image.product = product;
 
-					// get image variables
-					image._id = u.cv(image, "item_id");
-					image._format = u.cv(image, "format");
-					image._variant = u.cv(image, "variant");
+						// get image variables
+						image._id = u.cv(image, "item_id");
+						image._format = u.cv(image, "format");
+						image._variant = u.cv(image, "variant");
 
 
-					// if image
-					if(image._id && image._format) {
+						// if image
+						if(image._id && image._format) {
 
-						// add image
-						image._image_src = "/images/" + image._id + "/" + (image._variant ? image._variant+"/" : "") + "200x." + image._format;
+							// add image
+							image._image_src = "/images/" + image._id + "/" + (image._variant ? image._variant+"/" : "") + "200x." + image._format;
 
-						// u.ass(image, {
-						// 	"opacity": 0
-						// });
+							// u.ass(image, {
+							// 	"opacity": 0
+							// });
 
-						image.loaded = function(queue) {
+							image.loaded = function(queue) {
 
-							u.ac(this, "loaded");
-							u.ass(this, {
-								"backgroundImage": "url("+queue[0].image.src+")"
-							})
-							// this._image = u.ie(this, "img");
-							// this._image.image = this;
-							// this._image.src = ;
-
-						}
-						u.preloader(image, [image._image_src]);
-					}
-				}
-
-				// Pickup dates
-				var pickupdate;
-				var pickupdates = u.qsa("li.pickupdate", product);
-				for(i = 0; i < pickupdates.length; i++) {
-
-					pickupdate = pickupdates[i];
-					pickupdate.scene = this;
-
-					pickupdate.bn_add = u.qs("div.add", pickupdate);
-					if(pickupdate.bn_add) {
-						pickupdate.bn_add.pickupdate = pickupdate;
-
-						pickupdate.bn_add.confirmed = function(response) {
-
-							if(response.isHTML) {
-								var scene_cart = u.qs("div.cart", this.pickupdate.scene);
-								var response_cart = u.qs("div.cart", response);
-								u.ass(response_cart, {
-									opacity: 0.5
-								});
-								scene_cart.parentNode.replaceChild(response_cart, scene_cart);
-								u.ass(response_cart, {
-									transition: "opacity 0.1s ease-in-out",
-									opacity: 1
-								});
+								u.ac(this, "loaded");
+								u.ass(this, {
+									"backgroundImage": "url("+queue[0].image.src+")"
+								})
+								// this._image = u.ie(this, "img");
+								// this._image.image = this;
+								// this._image.src = ;
 
 							}
+							u.preloader(image, [image._image_src]);
 						}
+					}
+
+					// Pickup dates
+					var pickupdate;
+					var pickupdates = u.qsa("li.pickupdate", product);
+					for(i = 0; i < pickupdates.length; i++) {
+
+						pickupdate = pickupdates[i];
+						pickupdate.scene = this;
+
+						pickupdate.bn_add = u.qs("div.add", pickupdate);
+						if(pickupdate.bn_add) {
+							pickupdate.bn_add.pickupdate = pickupdate;
+
+							pickupdate.bn_add.confirmed = function(response) {
+
+								if(response.isHTML) {
+									var scene_cart = u.qs("div.cart", this.pickupdate.scene);
+									var response_cart = u.qs("div.cart", response);
+									u.ass(response_cart, {
+										opacity: 0.5
+									});
+									scene_cart.parentNode.replaceChild(response_cart, scene_cart);
+									u.ass(response_cart, {
+										transition: "opacity 0.1s ease-in-out",
+										opacity: 1
+									});
+
+								}
+							}
+						}
+
 					}
 
 				}
@@ -117,7 +127,9 @@ Util.Modules["shop"] = new function() {
 			}
 
 			this.sidebar = u.qs("div.sidebar", this);
-			this.sidebar.start_y = u.absY(this.sidebar);
+			if(this.sidebar) {
+				this.sidebar.start_y = u.absY(this.sidebar);
+			}
 		}
 
 		scene.ready();

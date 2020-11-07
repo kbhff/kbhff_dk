@@ -119,7 +119,7 @@ else {
 
 	<div class="c-wrapper">
 		<div class="c-box obs">
-			<h2 class="obs"><span class="highlight">OBS! </span>Handler på vegne af <span class="highlight"><a href="/medlemshjaelp/brugerprofil/<?= $member_user_id ?>"><?= $member_user['nickname'] ? $member_user['nickname'] : $member_user['firstname'] . " " . $member_user['lastname'] ?></a></span></h2>
+			<h2 class="obs"><span class="highlight">OBS! </span>Handler på vegne af <span class="highlight"><a href="/medlemshjaelp/brugerprofil/<?= $member_user_id ?>"><?= $member_name ?></a></span></h2>
 		</div>
 	</div>
 	
@@ -337,40 +337,32 @@ else {
 			<div class="orders c-box">
 				<h3>Aktuelle bestillinger</h3>
 				<? if($order_items_pickupdates): ?>
-				<!-- <p>Gå til <a href="/profil" class="profile">Min side</a> for at se gamle bestillinger og rette datoer for aktuelle bestillinger.</p> -->
-					<ul class="list">
-						<li class="labels">
-							<span class="pickupdates">Afh.dato</span>
-							<span class="products">Vare(r)</span>
-						</li>
-						<li class="listings-container">
-							<ul class="listings">
-							<? foreach($order_items_pickupdates as $pickupdate): 
-							$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["user_id" => $member_user_id]);
-							?>
-								<? if($pickupdate_order_items): ?>
-							
-									<? foreach($pickupdate_order_items as $order_item): ?>
-									<li class="listing">
-										<span class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?></span>
-										<? if($order_item["quantity"] > 1): ?>
-										<span class="quantity"><?= $order_item["quantity"] ?></span>
-										<span class="x"><?= " x " ?></span>
-										<? endif; ?>
-										<span class="product"><?= $order_item["name"] ?></span>
-									</li>
-									<? endforeach; ?>
-
-								<? endif; ?>	
-							<? endforeach; ?>
-							</ul>
-						</li>
-					</ul>
-					
+				<ul class="list">
+					<li class="header">
+						<span class="pickupdate">Afh.dato</span>
+						<span class="product">Vare(r)</span>
+					</li>
+					<? foreach($order_items_pickupdates as $pickupdate): 
+						$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["user_id" => $member_user_id]);
+						if($pickupdate_order_items):
+							foreach($pickupdate_order_items as $order_item): ?>
+					<li class="listing">
+						<span class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?></span>
+						<? if($order_item["quantity"] > 1): ?>
+						<span class="quantity"><?= $order_item["quantity"] ?></span>
+						<span class="x"><?= " x " ?></span>
+						<? endif; ?>
+						<span class="product"><?= $order_item["name"] ?></span>
+					</li>
+						<? endforeach;
+						endif;
+					endforeach; ?>
+				</ul>
 				<? else: ?>
 				<p><?= $member_name ?> har ingen aktuelle grøntsagsbestillinger.</p>
-				<!-- <p>Gå til <a href="/profil">Min side</a> for at se gamle bestillinger.</p> -->
 				<? endif; ?>
+
+				<p>Gå til <a href="/medlemshjaelp/brugerprofil/<?= $member_user_id ?>" class="profile"><?= $member_name_possesive ?> side</a> for at se gamle bestillinger og rette datoer for aktuelle bestillinger.</p>
 
 			</div>
 		</div>
