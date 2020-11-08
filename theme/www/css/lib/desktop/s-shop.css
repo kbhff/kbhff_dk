@@ -34,7 +34,12 @@
 #content .scene.shop ul.products {margin: 0; list-style: none; padding-left: 0; padding-right: 0;}
 #content .scene.shop ul.products li.product {padding: 0; margin-bottom: 12px}
 
-#content .scene.shop ul.products li.product div.product div.image {width: 160px; height: 160px; margin: 12px; float: left;}
+#content .scene.shop ul.products li.product div.product div.image {width: 160px; height: 160px; margin: 12px; float: left;
+	background-repeat: no-repeat;
+	background-position: top left;
+	background-color: transparent;
+	background-size: 100% auto;
+}
 #content .scene.shop ul.products li.product div.product h3 {padding-left: 184px;}
 #content .scene.shop ul.products li.product div.product h3 span.price {float: right;}
 
