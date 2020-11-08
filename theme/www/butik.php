@@ -42,7 +42,7 @@ if($action) {
 		if($cart) {
 
 			message()->addMessage("Item added");
-			header("Location: /butik/betal/");
+			header("Location: /butik");
 			exit();
 		}
 		// something went wrong

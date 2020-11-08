@@ -141,7 +141,7 @@ else {
 		<div class="c-two-thirds">
 
 			<? if($products): ?>
-			<ul class="products i:products">
+			<ul class="products">
 
 				<? foreach($products as $product): 
 					$price = $model->getPrice($product["id"]);
@@ -202,7 +202,7 @@ else {
 											"pickupdate_id" => $pickupdate["id"]
 										],
 										"wrapper" => "div.add",
-										"success-location" => "/butik"
+										// "success-location" => "/butik"
 									]) ?>
 
 									<? else: ?>
@@ -244,7 +244,7 @@ else {
 
 		<div class="c-one-third sidebar">
 
-			<div class="cart i:shopfrontCart c-primary-box">
+			<div class="cart c-primary-box">
 				<h3>Indkøbskurv</h3>
 				<? if($cart && $cart["items"]): ?>
 					<? if($cart_items_without_pickupdate): ?>
