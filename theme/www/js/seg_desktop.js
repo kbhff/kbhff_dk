@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-06 08:16:51
+asset-builder @ 2020-11-08 22:04:10
 */
 
 /*seg_desktop_include.js*/
@@ -5300,8 +5300,15 @@ Util.Modules["banner"] = new function() {
 		if (variant == "random" || !variant) {
 			variant = u.random(1, 4);
 		}
-		u.ae(div, "img", {class:"fit-width", src:"/img/banners/desktop/pi_" + variant + "." + format});	
+		var image = u.ae(div, "img", {class:"fit-width"});	
 		u.ae(div, "div", {class:"logo"});
+		image.loaded = function(queue) {
+			this.src = queue[0].image.src;
+			if(page) {
+				page.resized();
+			}
+		}
+		u.preloader(image, ["/img/banners/desktop/pi_" + variant + "." + format]);
 	}
 }
 u.f.fixFieldHTML = function(field) {
@@ -6044,69 +6051,88 @@ Util.Modules["signupfees"] = new function() {
 Util.Modules["shop"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
+			if(this.sidebar) {
+				this.sidebar.start_y = u.absY(this.sidebar);
+			}
 		}
 		scene.scrolled = function() {
-			if(this.sidebar.start_y < page.scrolled_y) {
-				if(!this.sidebar.is_fixed) {
-					this.sidebar.is_fixed = true;
-					u.ac(this.sidebar, "fixed");
+			if(this.sidebar) {
+				if(page.offsetHeight - 52 - page.scrolled_y < this.sidebar.offsetHeight) {
 				}
-				u.ass(this.sidebar, {
-					top: page.scrolled_y - this.sidebar.start_y + "px"
-				});
-			}
-			else if(this.sidebar.is_fixed) {
-				this.sidebar.is_fixed = false;
-				u.rc(this.sidebar, "fixed");
+				else if(this.sidebar.start_y < page.scrolled_y) {
+					if(!this.sidebar.is_fixed) {
+						this.sidebar.is_fixed = true;
+						u.ac(this.sidebar, "fixed");
+					}
+					u.ass(this.sidebar, {
+						top: page.scrolled_y - this.sidebar.start_y + "px"
+					});
+				}
+				else if(this.sidebar.is_fixed) {
+					this.sidebar.is_fixed = false;
+					u.rc(this.sidebar, "fixed");
+				}
 			}
 		}
 		scene.ready = function() {
 			var form_login = u.qs("form.login", this);
 			if(form_login) {
 				u.f.init(form_login);
+				form_login.inputs["username"].focus();
 			}
 			var products = u.qsa("li.product", this);
-			var i, product;
-			for(i = 0; i < products.length; i++) {
-				var i, image;
-				var images = u.qsa("div.image,div.media", product);
-				for(i = 0; i < images.length; i++) {
-					image = images[i];
-					image.product = product;
-					image._id = u.cv(image, "item_id");
-					image._format = u.cv(image, "format");
-					image._variant = u.cv(image, "variant");
-					if(image._id && image._format) {
-						image._image_src = "/images/" + image._id + "/" + (image._variant ? image._variant+"/" : "") + "200x." + image._format;
-						image.loaded = function(queue) {
-							u.ac(this, "loaded");
-							u.ass(this, {
-								"backgroundImage": "url("+queue[0].image.src+")"
-							})
+			if(products) {
+				var i, product;
+				for(i = 0; i < products.length; i++) {
+					var i, image;
+					var images = u.qsa("div.image,div.media", product);
+					for(i = 0; i < images.length; i++) {
+						image = images[i];
+						image.product = product;
+						image._id = u.cv(image, "item_id");
+						image._format = u.cv(image, "format");
+						image._variant = u.cv(image, "variant");
+						if(image._id && image._format) {
+							image._image_src = "/images/" + image._id + "/" + (image._variant ? image._variant+"/" : "") + "380x." + image._format;
+							image.loaded = function(queue) {
+								u.ac(this, "loaded");
+								u.ass(this, {
+									"backgroundImage": "url("+queue[0].image.src+")"
+								})
+							}
+							u.preloader(image, [image._image_src]);
 						}
-						u.preloader(image, [image._image_src]);
 					}
-				}
-				var pickupdate;
-				var pickupdates = u.qsa("li.pickupdate", product);
-				for(i = 0; i < pickupdates.length; i++) {
-					pickupdate = pickupdates[i];
-					pickupdate.scene = this;
-					pickupdate.bn_add = u.qs("div.add", pickupdate);
-					if(pickupdate.bn_add) {
-						pickupdate.bn_add.pickupdate = pickupdate;
-						pickupdate.bn_add.confirmed = function(response) {
-							if(response.isHTML) {
-								var scene_cart = u.qs("div.cart", this.pickupdate.scene);
-								var response_cart = u.qs("div.cart", response);
-								scene_cart.parentNode.replaceChild(response_cart, scene_cart);
+					var pickupdate;
+					var pickupdates = u.qsa("li.pickupdate", product);
+					for(i = 0; i < pickupdates.length; i++) {
+						pickupdate = pickupdates[i];
+						pickupdate.scene = this;
+						pickupdate.bn_add = u.qs("div.add", pickupdate);
+						if(pickupdate.bn_add) {
+							pickupdate.bn_add.pickupdate = pickupdate;
+							pickupdate.bn_add.confirmed = function(response) {
+								if(response.isHTML) {
+									var scene_cart = u.qs("div.cart", this.pickupdate.scene);
+									var response_cart = u.qs("div.cart", response);
+									u.ass(response_cart, {
+										opacity: 0.5
+									});
+									scene_cart.parentNode.replaceChild(response_cart, scene_cart);
+									u.ass(response_cart, {
+										transition: "opacity 0.1s ease-in-out",
+										opacity: 1
+									});
+								}
 							}
 						}
 					}
 				}
 			}
 			this.sidebar = u.qs("div.sidebar", this);
-			this.sidebar.start_y = u.absY(this.sidebar);
+			if(this.sidebar) {
+				this.sidebar.start_y = u.absY(this.sidebar);
+			}
 		}
 		scene.ready();
 	}
