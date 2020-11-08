@@ -157,10 +157,8 @@ if($cart && $cart["items"]) {
 				
 			<li class="pickupdate">
 				<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?> – Afhentning <span class="name"><?= $department ? $department["name"] : "ukendt afdeling" ?></span></h4>
-				<p class="department"></p>
-				
+
 				<ul class="items">
-					
 					<? foreach($pickupdate_cart_items as $cart_item):
 					$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true))); 
 					$price = $model->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
