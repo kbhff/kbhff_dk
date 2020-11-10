@@ -45,14 +45,42 @@
 
 #content .scene.shop ul.products li.product div.product p {padding-left: 184px;}
 
+#content .scene.shop ul.products li.product h4.pickupdates {clear: both;}
+#content .scene.shop ul.products li.product div.pickupdates {position: relative; margin: 0px; padding: 12px 0; overflow: hidden;}
+#content .scene.shop ul.products li.product div.pickupdates.scroll {margin: 0 12px; padding: 12px 15px;}
+#content .scene.shop ul.products li.product div.pickupdates span.left {position: absolute; top: 0px; left: 0;
+	width: 20px; height: 78px;
+	background: #f2f2f2 url(/img/shop/gx_arrow_left.svg) no-repeat center 20px;
+	background-size: 10px auto;
 
-#content .scene.shop ul.products li.product div.pickupdates {clear: both; padding-top: 12px;}
-#content .scene.shop ul.products li.product div.pickupdates ul.pickupdates {margin: 0; list-style: none;}
-#content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate {display: inline-block; padding-left: 0; padding-top: 0; text-align: center;}
-#content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate div.add {}
+}
+#content .scene.shop ul.products li.product div.pickupdates span.right {position: absolute; top: 0px; right: 0;
+	width: 20px; height: 78px;
+	background: #f2f2f2 url(/img/shop/gx_arrow_right.svg) no-repeat center 20px;
+	background-size: 10px auto;
 
-#content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate div.unavailable {}
-#content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate div.closed {}
+}
+
+#content .scene.shop ul.products li.product div.pickupdates ul.pickupdates {margin: 0; padding: 0; list-style: none; font-size: 0;}
+#content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate {width: 56px; display: inline-block; vertical-align: top; padding-left: 0; padding-top: 0; text-align: center;}
+#content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate div.add form.submitting {opacity: 0.5;}
+#content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate div.add input.button {cursor: pointer; border: none; width: 26px; height: 26px;
+	background: transparent url(/img/shop/gx_add.svg) no-repeat center top; font-size: 0;
+	background-size: auto 100%;
+}
+#content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate div.add input.button:hover {
+	background: url(/img/shop/gx_add_over.svg);
+}
+#content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate div.unavailable {width: 26px; height: 26px; margin: 0 auto;
+	text-indent: -9999px;
+	background: transparent url(/img/shop/gx_unavailable.svg) no-repeat center top;
+	background-size: auto 100%;
+}
+#content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate div.closed {width: 26px; height: 26px; margin: 0 auto;
+	text-indent: -9999px;
+	background: transparent url(/img/shop/gx_closed.svg) no-repeat center top;
+	background-size: auto 100%;
+}
 #content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate p.date {padding-bottom: 0;}
 
 

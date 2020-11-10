@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-08 23:40:09
+asset-builder @ 2020-11-11 00:16:00
 */
 
 /*seg_desktop_include.js*/
@@ -6082,12 +6082,12 @@ Util.Modules["shop"] = new function() {
 			}
 			var products = u.qsa("li.product", this);
 			if(products) {
-				var i, product;
+				var i, j, pickupdate, product, image;
 				for(i = 0; i < products.length; i++) {
-					var i, image;
+					product = products[i];
 					var images = u.qsa("div.image,div.media", product);
-					for(i = 0; i < images.length; i++) {
-						image = images[i];
+					for(j = 0; j < images.length; j++) {
+						image = images[j];
 						image.product = product;
 						image._id = u.cv(image, "item_id");
 						image._format = u.cv(image, "format");
@@ -6104,12 +6104,64 @@ Util.Modules["shop"] = new function() {
 						}
 					}
 					var pickupdate;
-					var pickupdates = u.qsa("li.pickupdate", product);
-					for(i = 0; i < pickupdates.length; i++) {
-						pickupdate = pickupdates[i];
+					var div_pickupdates = u.qs("div.pickupdates", product);
+					div_pickupdates.ul_pickupdates = u.qs("ul.pickupdates", product);
+					div_pickupdates.pickupdates = u.qsa("li.pickupdate", product);
+					div_pickupdates.total_width = div_pickupdates.pickupdates.length*56;
+					if(div_pickupdates.total_width >= div_pickupdates.offsetWidth) {
+						div_pickupdates.current_x = 0;
+						u.ac(div_pickupdates, "scroll");
+						u.ass(div_pickupdates.ul_pickupdates, {
+							width: div_pickupdates.total_width+"px"
+						});
+						div_pickupdates.bn_left = u.ae(div_pickupdates, "span", {"class":"left"});
+						div_pickupdates.bn_left.div_pickupdates = div_pickupdates;
+						u.ce(div_pickupdates.bn_left);
+						div_pickupdates.bn_left.clicked = function() {
+							if(this.div_pickupdates.current_x < 0) {
+								this.div_pickupdates.current_x = this.div_pickupdates.current_x + 56;
+								u.ass(this.div_pickupdates.ul_pickupdates, {
+									transition: "all 0.5s ease-in-out",
+									transform: "translate(" + this.div_pickupdates.current_x + "px, 0)"
+								});
+							}
+							this.div_pickupdates.updateArrows();
+						}
+						div_pickupdates.bn_right = u.ae(div_pickupdates, "span", {"class":"right"});
+						div_pickupdates.bn_right.div_pickupdates = div_pickupdates;
+						u.ce(div_pickupdates.bn_right);
+						div_pickupdates.bn_right.clicked = function() {
+							if(this.div_pickupdates.current_x > this.div_pickupdates.offsetWidth - this.div_pickupdates.total_width) {
+								this.div_pickupdates.current_x = this.div_pickupdates.current_x - 56;
+								u.ass(this.div_pickupdates.ul_pickupdates, {
+									transition: "all 0.5s ease-in-out",
+									transform: "translate(" + this.div_pickupdates.current_x + "px, 0)"
+								});
+							}
+							this.div_pickupdates.updateArrows();
+						};
+					}
+					div_pickupdates.updateArrows = function() {
+						if(this.current_x <= this.offsetWidth - this.total_width) {
+							u.ass(this.bn_right, {opacity: 0.3});
+						}
+						else {
+							u.ass(this.bn_right, {opacity: 1});
+						}
+						if(this.current_x >= 0) {
+							u.ass(this.bn_left, {opacity: 0.3});
+						}
+						else {
+							u.ass(this.bn_left, {opacity: 1});
+						}
+					}
+					div_pickupdates.updateArrows();
+					for(j = 0; j < div_pickupdates.pickupdates.length; j++) {
+						pickupdate = div_pickupdates.pickupdates[j];
 						pickupdate.scene = this;
 						pickupdate.bn_add = u.qs("div.add", pickupdate);
 						if(pickupdate.bn_add) {
+							pickupdate.bn_add.title = "Tilføj til kurven";
 							pickupdate.bn_add.pickupdate = pickupdate;
 							pickupdate.bn_add.confirmed = function(response) {
 								if(response.isHTML) {

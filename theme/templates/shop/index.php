@@ -164,9 +164,9 @@ else {
 							<p><?= $product["description"] ?></p>
 						</div>
 
+						<h4 class="pickupdates">Tilføj bestillinger til afhentning på bestemte datoer:</h4>
+						<? if($pickupdates): ?>
 						<div class="pickupdates">
-							<h4>Tilføj bestillinger til afhentning på bestemte datoer:</h4>
-							<? if($pickupdates): ?>
 						
 							<ul class="pickupdates">
 								<? foreach($pickupdates as $pickupdate): 
@@ -207,13 +207,13 @@ else {
 
 									<? else: ?>
 
-									<div class="unavailable">Ikke tilgængelig</div>
+									<div class="unavailable" title="Ikke tilgængelig">Ikke tilgængelig</div>
 
 									<? endif; ?>	
 
 								<? else: ?>
 
-									<div class="closed">Afdelingen er lukket</div>
+									<div class="closed" title="Afdelingen er lukket">Afdelingen er lukket</div>
 
 								<? endif; ?>
 
@@ -224,10 +224,10 @@ else {
 								<? endforeach; ?>
 							</ul>
 
-							<? else: ?>
-							<p class="no_dates">Ingen aktuelle afhentningsdage.</p>
-							<? endif; ?>
 						</div>
+						<? else: ?>
+						<p class="no_dates">Ingen aktuelle afhentningsdage.</p>
+						<? endif; ?>
 
 					</div>
 				</li>
