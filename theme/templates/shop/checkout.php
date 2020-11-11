@@ -281,6 +281,12 @@ else {
 		<? endif; ?>
 
 		<div class="total">
+			<p>
+				<span class="name">Heraf moms</span>
+				<span class="total_price">
+					<?= formatPrice(array("price" => $total_cart_price["vat"], "currency" => $total_cart_price["currency"])) ?>
+				</span>
+			</p>
 			<h3>
 				<span class="name">I alt</span>
 				<span class="total_price">

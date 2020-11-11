@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-11 00:16:00
+asset-builder @ 2020-11-11 09:09:08
 */
 
 /*seg_desktop_include.css*/
@@ -1046,6 +1046,7 @@ position: relative;
 #content .scene.cart ul.items li ul.actions {padding: 0; top: 8px; position: absolute; right: 0;}
 #content .scene.cart div.total {margin: 0 12px; border-top: 1px dotted #000;}
 #content .scene.cart div.total h3 {font-size: 20px; padding-left: 0; padding-right: 0; text-align: right;}
+#content .scene.cart div.total p {text-align: right; padding: 10px 0 0; font-size: 16px;}
 #content .scene.cart div.checkout {padding: 20px 0;}
 #content .scene.cart div.checkout ul.actions li.shop {float: left;}
 #content .scene.checkout div.login {width: 380px; margin: 0 auto; padding-top: 20px;}
@@ -1067,6 +1068,7 @@ position: relative;
 #content .scene.checkout ul.items li ul.actions {padding: 0; top: 8px; position: absolute; right: 0;}
 #content .scene.checkout div.total {margin: 0 12px; border-top: 1px dotted #000;}
 #content .scene.checkout div.total h3 {font-size: 20px; padding-left: 0; padding-right: 0; text-align: right;}
+#content .scene.checkout div.total p {text-align: right; padding: 10px 0 0; font-size: 16px;}
 #content .scene.checkout ul.payment_methods {padding: 0; margin: 0; list-style: none;}
 #content .scene.checkout ul.payment_methods li.payment_method {padding-bottom: 10px;}
 #content .scene.checkout ul.payment_methods li.payment_method ul.actions {padding: 0; text-align: left;}
