@@ -126,7 +126,7 @@ if($cart && $cart["items"]) {
 							"currency" => $cart["currency"],
 							"country" => $cart["country"]
 						),
-						array("vat" => true)
+						array("vat" => false)
 					) ?>
 				</span>
 
@@ -220,7 +220,7 @@ if($cart && $cart["items"]) {
 										"currency" => $cart["currency"],
 										"country" => $cart["country"]
 									),
-									array("vat" => true)
+									array("vat" => false)
 								) ?>
 							</span>
 
