@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-11 09:09:08
+asset-builder @ 2020-11-11 12:30:23
 */
 
 /*seg_desktop_include.js*/
@@ -6244,18 +6244,7 @@ Util.Modules["cart"] = new function() {
 						u.request(this, this.action, {"method":"post", "data":this.getData()});
 					}
 				}
-				var bn_delete = u.qs("ul.actions li.delete", node);
-				if(bn_delete) {
-					u.m.oneButtonForm.init(bn_delete);
-					bn_delete.node = node;	
-					bn_delete.confirmed = function(response) {
-						if(response) {
-							var total_price = u.qs("div.scene div.total span.total_price", response);
-							this.node.scene.total_cart_price.innerHTML = total_price ? total_price.innerHTML : "0,00 DKK";
-							this.node.parentNode.removeChild(this.node);
-						}
-					}
-				}
+				// 			
 			}
 		}
 		scene.ready();
