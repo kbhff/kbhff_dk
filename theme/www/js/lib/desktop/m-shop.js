@@ -293,25 +293,25 @@ Util.Modules["cart"] = new function() {
 
 			
 
-				var bn_delete = u.qs("ul.actions li.delete", node);
-				if(bn_delete) {
-					u.m.oneButtonForm.init(bn_delete);
-
-					bn_delete.node = node;	
-					bn_delete.confirmed = function(response) {
-
-						if(response) {
-
-							var total_price = u.qs("div.scene div.total span.total_price", response);
-
-							// update total price
-							this.node.scene.total_cart_price.innerHTML = total_price ? total_price.innerHTML : "0,00 DKK";
-
-							this.node.parentNode.removeChild(this.node);
-						}
-					}
-
-				}
+				// var bn_delete = u.qs("ul.actions li.delete", node);
+				// if(bn_delete) {
+				// 	u.m.oneButtonForm.init(bn_delete);
+				//
+				// 	bn_delete.node = node;
+				// 	bn_delete.confirmed = function(response) {
+				//
+				// 		if(response) {
+				//
+				// 			var total_price = u.qs("div.scene div.total span.total_price", response);
+				//
+				// 			// update total price
+				// 			this.node.scene.total_cart_price.innerHTML = total_price ? total_price.innerHTML : "0,00 DKK";
+				//
+				// 			this.node.parentNode.removeChild(this.node);
+				// 		}
+				// 	}
+				//
+				// }
 
 			}
 

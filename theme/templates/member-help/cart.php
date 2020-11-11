@@ -69,7 +69,7 @@ if($cart && $cart["items"]) {
 }
 
 ?>
-<div class="scene cart">
+<div class="scene cart i:cart">
 
 <? if($cart): ?>
 
@@ -161,8 +161,10 @@ if($cart && $cart["items"]) {
 				<ul class="actions">
 					<? // generate delete button to item 
 					print $HTML->oneButtonForm("Slet", "/medlemshjaelp/butik/deleteFromCart/".$cart["cart_reference"]."/".$cart_item["id"], array(
+						"confirm-value" => "Sikker?",
+						"wait-value" => "Vent ...",
 						"wrapper" => "li.delete",
-						"static" => true
+						"success-location" => count($cart["items"]) > 1 ? $this->url : "/medlemshjaelp/butik/".$member_user_id
 					)) ?>
 				</ul>
 				<? endif; ?>
@@ -239,8 +241,8 @@ if($cart && $cart["items"]) {
 									"confirm-value" => "Sikker?",
 									"wait-value" => "Vent ...",
 									"wrapper" => "li.delete",
-									"success-location" => "/medlemshjaelp/butik/kurv/".$cart_reference
-									]) ?>
+									"success-location" => count($cart["items"]) > 1 ? $this->url : "/medlemshjaelp/butik/".$member_user_id
+								]) ?>
 							</ul>
 						</li>
 	
@@ -265,7 +267,7 @@ if($cart && $cart["items"]) {
 		<? else: ?>
 
 		<h2>Din indkøbskurv er tom</h2>
-		<p>Gå til <a href="/bliv-medlem">medlemskaber </a>for at se, hvad vi tilbyder.</p>
+		<p>Du har ingenting i kurven endnu. <br />Gå til <a href="/medlemshjaelp/butik/<?= $member_user_id ?>">Grøntshoppen</a>.</p>
 
 	<? endif; ?>
 	</div>
