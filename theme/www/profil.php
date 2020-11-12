@@ -105,8 +105,31 @@ if($action) {
 		));
 		exit();
 	}
+	
+	else if($action[0] == "medlemskab") {
 
-	// ../profil/bruger lead to template
+
+		// ../profil/medlemskab/fornyelse
+		if(count($action) == 2 && $action[1] == "fornyelse") {
+			$page->page(array(
+				"templates" => "profile/update_membership_renewal.php",
+				"type" => "member"
+			));
+			exit();
+		}
+		// ../profil/medlemskab/genaktiver
+		else if(count($action) == 2 && $action[1] == "genaktiver") {
+			$page->page(array(
+				"templates" => "profile/reactivate_membership.php",
+				"type" => "member"
+			));
+			exit();
+		}
+
+	}
+
+
+	// ../profil/bruger 
 	else if($action[0] == "bruger") {
 		$page->page(array(
 			"templates" => "profile/update_user_information.php",
@@ -115,7 +138,7 @@ if($action) {
 		exit();
 	}
 
-	// ../profil/kodeord lead to template
+	// ../profil/kodeord 
 	else if($action[0] == "kodeord") {
 		$page->page(array(
 			"templates" => "profile/update_user_password.php",
@@ -124,6 +147,7 @@ if($action) {
 		exit();
 	}
 
+	// /profil/updateUserDepartment
 	// Handling updateUserDepartment method, specified in user.class.php
 	else if($action[0] == "updateUserDepartment" && $page->validateCsrfToken()) {
 
@@ -141,6 +165,49 @@ if($action) {
 			));
 			exit();
 		}
+	}
+
+	// /profil/updateMembershipRenewal
+	else if($action[0] == "updateMembershipRenewal") {
+
+		$result = $UC->updateRenewalOptOut($action);
+
+		if($result === "REACTIVATION REQUIRED") {
+
+			header("Location: /profil/medlemskab/genaktiver");
+			exit();
+
+		}
+		else {
+
+			header("Location: /profil");
+		}
+	}
+
+	// profil/reactivateMembership
+	else if($action[0] == "reactivateMembership" && $page->validateCsrfToken()) {
+
+		$order = $MC->switchMembership($action);
+
+		if($order) {
+
+			$_POST["membership_renewal"] = 1;
+			$result = $UC->updateRenewalOptOut(["updateRenewalOptOut"]);
+			unset($_POST);
+			if($result) {
+
+				header("Location: /butik/betaling/".$order["order_no"]);
+				exit();
+			}
+			
+		}
+
+		message()->addMessage("Der skete en fejl.", array("type" => "error"));
+		$page->page([
+			"templates" => "profile/reactive_membership.php",
+			"type" => "member"
+		]);
+		exit();
 	}
 
 	// profil/updateUserInformation

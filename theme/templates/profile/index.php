@@ -204,17 +204,19 @@ $unpaid_orders = $SC->getUnpaidOrders();
 					<h3>Dit medlemskab</h3>
 
 					<div class="fields">
-						<div class="membership-info">
+						<div class="membership-info member_no">
 							<p class="over">Medlemsnummer</p>
 							<p class="under"><?= $is_member ? $user["membership"]["id"] : "(intet)" ?></p>
 						</div>
 
-						<div class="membership-info">
+						<div class="membership-info payment_status">
 							<p class="over">Kontingent</p>
 							<p class="under <?= $is_member && $is_active ? ["unpaid", "partial", "paid"][$user["membership"]["order"]["payment_status"]] : "" ?>"><?= $is_member && $is_active ? $SC->payment_statuses_dk[$user["membership"]["order"]["payment_status"]] : "(intet)" ?></p>
 						</div>
+						
+						
 
-						<div class="membership-info">
+						<div class="membership-info membership_type">
 							<p class="over"><a href="/bliv-medlem">Medlemstype</a></p>
 							<? if($is_member && $is_active): ?>
 							<p class="under"><?= $user["membership"]["item"]["name"] ?></p>
@@ -225,7 +227,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 							<? endif; ?>
 						</div>
 
-						<div class="membership-info">
+						<div class="membership-info department">
 							<p class="over">Afdeling</p>
 							<p class="under"><?= ($department && $department["name"]) ? $department["name"] : "(ingen)" ?></p>
 						</div>
@@ -243,6 +245,25 @@ $unpaid_orders = $SC->getUnpaidOrders();
 				</div>
 			</div>
 			<? endif; ?>
+
+			<div class="section renewal">
+				<div class="c-box">
+					<h3>Medlemskabsfornyelse</h3>
+
+					<div class="fields">
+						<div class="membership-info renewal">
+
+							<p class="over">Automatisk fornyelse</p>
+							<p class="under"><?= $UC->getRenewalOptOut() ? "Nej" : "Ja" ?></p>
+							
+						</div>
+						<ul class="actions">
+							<li class="change-renewal full-width"><a href="/profil/medlemskab/fornyelse" class="button">Ret</a></li>
+						</ul>
+					</div>
+
+				</div>
+			</div>
 
 			<div class="section user">
 				<div class="c-box">

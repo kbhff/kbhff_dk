@@ -128,6 +128,14 @@ else {
 		<p class="forgot">Har du <a href="/login/glemt" target="_blank">glemt din adgangskode</a>?</p>
 		<p class="signup">Endnu ikke medlem? <a href="/bliv-medlem">Meld dig ind nu</a>.</p>
 	</div>
+	
+	<? 
+	// user is inactive member
+	elseif($user["membership"] && !$user["membership"]["subscription_id"]): ?>
+	<div class="inactive_member">
+		<h2>Dit medlemskab er inaktivt</h2>
+		<p>For at kunne bestille grøntsager skal du først <a href="/profil/medlemskab/genaktiver">genaktivere dit medlemskab</a>.</p>
+	</div>
 
 
 	<?

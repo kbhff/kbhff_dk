@@ -68,12 +68,21 @@ class User extends UserCore {
 			"error_message" => "Du skal vælge en afdeling."
 		));
 		// Search field in order to search for members
-		 $this->addToModel("search_member", array(
+		$this->addToModel("search_member", array(
 		 	"type" => "string",
 		 	"label" => "Søg efter medlem", 
 		 	"hint_message" => "Navn, email, mobilnr eller medlemsnr. – min. 4 tegn.",
 		 	"error_message" => "Du skal som minimum angive 4 tegn."
 		 ));
+
+		// Search field in order to search for members
+		$this->addToModel("membership_renewal", array(
+			"type" => "select",
+			"options" => ["1" => "Ja", "0" => "Nej"],
+			"label" => "Automatisk fornyelse", 
+			"hint_message" => "Vil du have dit medlemskab automatisk fornyet og betalt hvert år?",
+			"error_message" => "Fejl"
+		));
 		 
 	}
 
@@ -240,7 +249,7 @@ class User extends UserCore {
 		// Get content of $_POST array that have been mapped to the model entities object
 		$this->getPostedEntities();
 
-		print_r ($action);
+		// print_r ($action);
 		// Check that the number of REST parameters is as expected and that the listed entries are valid.
 		if(count($action) == 1 && $this->validateList(array("department_id"))) {
 
@@ -279,6 +288,8 @@ class User extends UserCore {
 
 	}
 
+	
+
 	/**
 	 * Remove current user's acceptance of terms – for testing purposes
 	 *
@@ -290,7 +301,7 @@ class User extends UserCore {
 
 		$query = new Query();
 
-		$sql = "DELETE FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id";
+		$sql = "DELETE FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id AND name = 'terms'";
 
 		if($query->sql($sql)) {
 			return true;
@@ -642,6 +653,108 @@ class User extends UserCore {
 			}
 		}
 	}
+
+	function getRenewalOptOut() {
+
+		$user_id = session()->value("user_id");
+		$query = new Query();
+		$sql = "SELECT * FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id AND name = 'disable_membership_renewal'";
+		if($query->sql($sql)) {
+			
+			$renewal_optout_time = $query->result(0, "accepted_at");
+			return $renewal_optout_time;
+		}
+
+		return false;
+	}
+
+	function setRenewalOptOut() {
+
+		$user_id = session()->value("user_id");
+		$query = new Query();
+
+		if(!$this->getRenewalOptOut()) {
+			
+			$sql = "INSERT INTO ".SITE_DB.".user_log_agreements SET user_id = $user_id, name = 'disable_membership_renewal'";
+			if($query->sql($sql)) {
+				
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	function unsetRenewalOptOut() {
+
+		$user_id = session()->value("user_id");
+		$query = new Query();
+
+		if($this->getRenewalOptOut()) {
+
+			$sql = "DELETE FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id AND name = 'disable_membership_renewal'";
+			if($query->sql($sql)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Update or set the current user's associated department.
+	 *
+	 * @param array $action REST parameters of current request
+	 * @return boolean
+	 */
+	function updateRenewalOptOut($action){
+		// Get content of $_POST array that have been mapped to the model entities object
+		$this->getPostedEntities();
+
+		// print_r ($action);
+		// Check that the number of REST parameters is as expected and that the listed entries are valid.
+		if(count($action) == 1 && $this->validateList(array("membership_renewal"))) {
+
+			$user = $this->getKbhffUser();
+			$user_id = $user["id"];
+			$membership_renewal = $this->getProperty("membership_renewal", "value");
+
+			$query = new Query();
+
+			if($membership_renewal && $this->getRenewalOptOut()) {
+
+
+				// user is inactive member
+				if($user["membership"] && !$user["membership"]["subscription_id"]) {
+
+					return "REACTIVATION REQUIRED";
+				}	
+				
+				$this->unsetRenewalOptOut();
+
+				return "RENEWAL ENABLED";
+
+			}
+			elseif(!$membership_renewal && !$this->getRenewalOptOut()) {
+
+				$this->setRenewalOptOut();
+
+				return "RENEWAL DISABLED";
+			}
+			else {
+				return true;
+			}
+
+		}
+
+		return false;
+		
+		
+	}
+
 }
 
 ?>
