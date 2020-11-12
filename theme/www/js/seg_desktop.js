@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-11 12:30:23
+asset-builder @ 2020-11-12 14:25:19
 */
 
 /*seg_desktop_include.js*/
@@ -6140,22 +6140,22 @@ Util.Modules["shop"] = new function() {
 							}
 							this.div_pickupdates.updateArrows();
 						};
+						div_pickupdates.updateArrows = function() {
+							if(this.current_x <= this.offsetWidth - this.total_width) {
+								u.ass(this.bn_right, {opacity: 0.3});
+							}
+							else {
+								u.ass(this.bn_right, {opacity: 1});
+							}
+							if(this.current_x >= 0) {
+								u.ass(this.bn_left, {opacity: 0.3});
+							}
+							else {
+								u.ass(this.bn_left, {opacity: 1});
+							}
+						}
+						div_pickupdates.updateArrows();
 					}
-					div_pickupdates.updateArrows = function() {
-						if(this.current_x <= this.offsetWidth - this.total_width) {
-							u.ass(this.bn_right, {opacity: 0.3});
-						}
-						else {
-							u.ass(this.bn_right, {opacity: 1});
-						}
-						if(this.current_x >= 0) {
-							u.ass(this.bn_left, {opacity: 0.3});
-						}
-						else {
-							u.ass(this.bn_left, {opacity: 1});
-						}
-					}
-					div_pickupdates.updateArrows();
 					for(j = 0; j < div_pickupdates.pickupdates.length; j++) {
 						pickupdate = div_pickupdates.pickupdates[j];
 						pickupdate.scene = this;
