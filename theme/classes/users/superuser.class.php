@@ -185,7 +185,7 @@ class SuperUser extends SuperUserCore {
 				
 				if($query->sql($sql)) {
 					message()->resetMessages();
-					message()->addMessage("Medlemsskab er opdateret");
+					message()->addMessage("Medlemskab er opdateret");
 					return true;
 				}
 				else {

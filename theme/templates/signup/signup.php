@@ -112,7 +112,7 @@ if($cart && $cart["items"]) {
 
 	<h1>Meld dig ind</h1>
 
-	<h2>Der er ikke noget medlemsskab i din kurv</h2>
+	<h2>Der er ikke noget medlemskab i din kurv</h2>
 	<p>Tag et kig på vores <a href="/bliv-medlem">medlemskaber</a>.</p>
 
 <? endif; ?>

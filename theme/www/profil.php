@@ -204,7 +204,7 @@ if($action) {
 
 		message()->addMessage("Der skete en fejl.", array("type" => "error"));
 		$page->page([
-			"templates" => "profile/reactive_membership.php",
+			"templates" => "profile/reactivate_membership.php",
 			"type" => "member"
 		]);
 		exit();

@@ -145,7 +145,7 @@ Util.Modules["user_profile"] = new function() {
 
 			}
 			
-			// "Ret Medlemsskab" button
+			// "Ret Medlemskab" button
 			u.clickableElement(button_membership); // Add click event to button and ignore href redirect.
 			button_membership.clicked = function() {
 

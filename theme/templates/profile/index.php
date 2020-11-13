@@ -148,7 +148,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 					<li class="pay"><a href="/butik/betal" class="button primary">Gå til betaling</a></li>
 				</ul>
 				<? else: ?>
-				<p>Meld dig ind nu – <a href="/bliv-medlem">se vores medlemsskaber her</a>.</p>
+				<p>Meld dig ind nu – <a href="/bliv-medlem">se vores medlemskaber her</a>.</p>
 				<? endif; ?>
 
 			</div>

@@ -218,8 +218,8 @@ if($action) {
 				exit();
 			}
 			
-			# /medlemshjaelp/brugerprofil/#user_id#/medlemsskab
-			elseif($action[2] == "medlemsskab") {
+			# /medlemshjaelp/brugerprofil/#user_id#/medlemskab
+			elseif($action[2] == "medlemskab") {
 				$page->page(array(
 					"templates" => "member-help/update_user_membership.php",
 					"type" => "admin"

@@ -198,7 +198,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 
 						<ul class="actions">
 							<li class="change-department third-width"><a href="<?=$action[1]?>/afdeling" class="button">Ret afd.</a></li>
-							<li class="change-membership third-width"><a href="<?=$action[1]?>/medlemsskab" class="button">Ret Med.</a></li>
+							<li class="change-membership third-width"><a href="<?=$action[1]?>/medlemskab" class="button">Ret Med.</a></li>
 							<li class="cancel-membership third-width"><a href="<?=$action[1]?>/opsig" class="button warning">Opsig</a></li>
 							
 						</ul>
