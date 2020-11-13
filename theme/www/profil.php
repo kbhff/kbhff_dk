@@ -168,7 +168,7 @@ if($action) {
 	}
 
 	// /profil/updateMembershipRenewal
-	else if($action[0] == "updateMembershipRenewal") {
+	else if($action[0] == "updateMembershipRenewal" && $page->validateCsrfToken()) {
 
 		$result = $UC->updateRenewalOptOut($action);
 
@@ -181,6 +181,7 @@ if($action) {
 		else {
 
 			header("Location: /profil");
+			exit();
 		}
 	}
 

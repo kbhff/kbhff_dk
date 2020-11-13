@@ -216,7 +216,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 						
 						
 
-						<div class="membership-info">
+						<div class="membership-info type">
 							<p class="over"><a href="/om/bliv-medlem">Medlemstype</a></p>
 							<? if($is_member && $is_active): ?>
 							<p class="under"><?= $user["membership"]["item"]["name"] ?></p>

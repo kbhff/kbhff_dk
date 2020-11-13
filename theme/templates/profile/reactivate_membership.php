@@ -58,7 +58,7 @@ $this->pageTitle("Genaktiver medlemskab");
 		</fieldset>
 
 		<ul class="actions">
-			<li class="cancel"><a href="/" class="button">Annullér</a></li>
+			<li class="cancel"><a href="/profil" class="button">Annullér</a></li>
 			<?= $UC->submit("Genaktiver", array("class" => "primary", "wrapper" => "li.save")) ?>
 		</ul>
 

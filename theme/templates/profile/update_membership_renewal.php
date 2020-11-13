@@ -3,8 +3,6 @@ include_once("classes/system/department.class.php");
 $DC = new Department();
 $UC = new User();
 $user = $UC->getKbhffUser();
-$departments = $DC->getDepartmentsAcceptSignups();
-$user_department = $UC->getUserDepartment();
 
 $membership_renewal_value = $UC->getRenewalOptOut() ? 0 : 1;
 
