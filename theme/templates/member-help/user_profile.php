@@ -176,22 +176,28 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 					<h3>Medlemskabsinfo</h3>
 
 					<div class="fields">
-						<div class="membership-info">
+						<div class="membership-info member_no">
 							<p class="over">Medlemsnummer</p>
 							<p class="under"><?= $is_member ? $member_user["membership"]["id"] : "(intet)" ?></p>
 						</div>
 
-						<div class="membership-info">
+						<div class="membership-info payment_status">
 							<p class="over">Kontingent</p>
-							<p class="under <?= $is_member ? ["unpaid", "partial", "paid"][$member_user["membership"]["order"]["payment_status"]] : "" ?>"><?= $is_member ? $SC->payment_statuses_dk[$member_user["membership"]["order"]["payment_status"]] : "(intet)" ?></p>
+							<p class="under <?= $is_member && $is_active ? ["unpaid", "partial", "paid"][$member_user["membership"]["order"]["payment_status"]] : "" ?>"><?= $is_member && $is_active ? $SC->payment_statuses_dk[$member_user["membership"]["order"]["payment_status"]] : "(intet)" ?></p>
 						</div>
 
-						<div class="membership-info">
+						<div class="membership-info type">
 							<p class="over">Medlemstype</p>
-							<p class="under"><?= $is_member ? $member_user["membership"]["item"]["name"] : "(ingen)" ?></p>
+							<? if($is_member && $is_active): ?>
+							<p class="under"><?= $member_user["membership"]["item"]["name"] ?></p>
+							<? elseif($is_member): ?>
+							<p class="under">Inaktivt medlem</p>
+							<? else: ?>
+							<p class="under">(intet)</p>
+							<? endif; ?>
 						</div>
 
-						<div class="membership-info">
+						<div class="membership-info department">
 							<p class="over">Afdeling</p>
 							<p class="under"><?= $department ? $department["name"] : "(ingen)" ?></p>
 						</div>
@@ -205,6 +211,26 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 					</div>
 				</div>
 			</div>
+
+			<div class="section renewal">
+				<div class="c-box">
+					<h3>Medlemskabsfornyelse</h3>
+
+					<div class="fields">
+						<div class="membership-info renewal">
+
+							<p class="over">Automatisk fornyelse</p>
+							<p class="under"><?= $UC->getUserRenewalOptOut($user_id) ? "Nej" : "Ja" ?></p>
+							
+						</div>
+						<ul class="actions">
+							<li class="change-renewal full-width"><a href="/medlemshjaelp/brugerprofil/<?= $user_id ?>/fornyelse" class="button">Ret</a></li>
+						</ul>
+					</div>
+
+				</div>
+			</div>
+
 
 			<div class="section user">
 				<div class="c-box">

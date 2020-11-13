@@ -22,6 +22,8 @@ include_once("classes/shop/pickupdate.class.php");
 $PC = new Pickupdate();
 include_once("classes/system/department.class.php");
 $DC = new Department();
+include_once("classes/users/supermember.class.php");
+$MC = new SuperMember();
 
 // page info
 $page->bodyClass("member_help");
@@ -220,9 +222,28 @@ if($action) {
 			
 			# /medlemshjaelp/brugerprofil/#user_id#/medlemskab
 			elseif($action[2] == "medlemskab") {
+
 				$page->page(array(
 					"templates" => "member-help/update_user_membership.php",
 					"type" => "admin"
+				));
+				exit();
+			}
+
+			# /medlemshjaelp/brugerprofil/#user_id#/fornyelse
+			else if($action[2] == "fornyelse") {
+				$page->page(array(
+					"templates" => "member-help/update_user_membership_renewal.php",
+					"type" => "member"
+				));
+				exit();
+			}
+
+			# /medlemshjaelp/brugerprofil/#user_id#/genaktiver
+			else if($action[2] == "genaktiver") {
+				$page->page(array(
+					"templates" => "member-help/reactivate_user_membership.php",
+					"type" => "member"
 				));
 				exit();
 			}
@@ -257,6 +278,7 @@ if($action) {
 					exit();
 				}
 			}
+
 		}
 	}
 	
@@ -305,10 +327,56 @@ if($action) {
 		// Method returns false
 		else {
 			message()->resetMessages();
-			message()->addMessage("Medlemsskab blev ikke opdateret.", ["type" => "error"]);
+			message()->addMessage("Medlemskab blev ikke opdateret.", ["type" => "error"]);
 			header("Location: /medlemshjaelp/brugerprofil/$action[1]");
 			exit();
 		}
+	}
+
+	# /medlemshjaelp/updateUserMembershipRenewal/#user_id#
+	else if($action[0] == "updateUserMembershipRenewal" && count($action) == 2 && $page->validateCsrfToken()) {
+
+		$user_id = $action[1];
+		$result = $model->updateUserRenewalOptOut($action);
+
+		if($result === "REACTIVATION REQUIRED") {
+
+			header("Location: /medlemshjaelp/brugerprofil/$user_id/genaktiver");
+			exit();
+
+		}
+		else {
+
+			header("Location: /medlemshjaelp/brugerprofil/$user_id");
+			exit();
+		}
+	}
+
+	# /medlemshjaelp/reactivateUserMembership/#user_id#
+	else if($action[0] == "reactivateUserMembership" && count($action) == 2 && $page->validateCsrfToken()) {
+
+		$user_id = $action[1];
+		$order = $MC->switchMembership($action);
+
+		if($order) {
+
+			$_POST["membership_renewal"] = 1;
+			$result = $model->updateUserRenewalOptOut(["updateUserRenewalOptOut", $user_id]);
+			unset($_POST);
+			if($result) {
+
+				header("Location: /medlemshjaelp/betaling/".$order["order_no"]);
+				exit();
+			}
+			
+		}
+
+		message()->addMessage("Der skete en fejl.", array("type" => "error"));
+		$page->page([
+			"templates" => "member-help/reactivate_user_membership.php",
+			"type" => "member"
+		]);
+		exit();
 	}
 	
 

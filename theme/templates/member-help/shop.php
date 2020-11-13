@@ -112,6 +112,14 @@ else {
 		<p class="forgot">Har du <a href="/login/glemt" target="_blank">glemt din adgangskode</a>?</p>
 	</div>
 
+	<? 
+	// member_user is inactive member
+	elseif($member_user["membership"] && !$member_user["membership"]["subscription_id"]): ?>
+	<div class="inactive_member">
+		<h2><?= $member_name_possesive ?> medlemskab er inaktivt</h2>
+		<p>For at kunne bestille grøntsager skal man <a href="/medlemshjaelp/brugerprofil/<?= $member_user_id ?>/genaktiver">genaktivere medlemskabet</a>.</p>
+	</div>
+
 
 	<?
 	// clerk is already logged in, show memberhelp-shop

@@ -654,7 +654,7 @@ class User extends UserCore {
 		}
 	}
 
-	function getRenewalOptOut() {
+	function getRenewalOptOut($_options = false) {
 
 		$user_id = session()->value("user_id");
 		$query = new Query();
@@ -668,7 +668,7 @@ class User extends UserCore {
 		return false;
 	}
 
-	function setRenewalOptOut() {
+	function setRenewalOptOut($_options = false) {
 
 		$user_id = session()->value("user_id");
 		$query = new Query();
@@ -685,7 +685,7 @@ class User extends UserCore {
 		return false;
 	}
 
-	function unsetRenewalOptOut() {
+	function unsetRenewalOptOut($_options = false) {
 
 		$user_id = session()->value("user_id");
 		$query = new Query();

@@ -815,6 +815,113 @@ class SuperUser extends SuperUserCore {
 
 	}
 
+	function getUserRenewalOptOut($user_id) {
+
+		if($user_id) {
+			$query = new Query();
+			$sql = "SELECT * FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id AND name = 'disable_membership_renewal'";
+			if($query->sql($sql)) {
+				
+				$renewal_optout_time = $query->result(0, "accepted_at");
+				return $renewal_optout_time;
+			}
+		}
+
+		return false;
+	}
+
+	function setUserRenewalOptOut($user_id) {
+
+		if($user_id) {
+
+			$query = new Query();
+	
+			if(!$this->getUserRenewalOptOut($user_id)) {
+				
+				$sql = "INSERT INTO ".SITE_DB.".user_log_agreements SET user_id = $user_id, name = 'disable_membership_renewal'";
+				if($query->sql($sql)) {
+					
+					return true;
+				}
+			}
+		}
+	
+		return false;
+	}
+
+	function unsetUserRenewalOptOut($user_id) {
+		
+		if($user_id) {
+
+			$query = new Query();
+	
+			if($this->getUserRenewalOptOut($user_id)) {
+	
+				$sql = "DELETE FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id AND name = 'disable_membership_renewal'";
+				if($query->sql($sql)) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+	}
+
+	/**
+	 * Update or set the current user's associated department.
+	 *
+	 * @param array $action REST parameters of current request
+	 * @return boolean
+	 */
+	function updateUserRenewalOptOut($action){
+		// Get content of $_POST array that have been mapped to the model entities object
+		$this->getPostedEntities();
+
+		// print_r ($action);
+		// Check that the number of REST parameters is as expected and that the listed entries are valid.
+		if(count($action) == 2 && $this->validateList(array("membership_renewal"))) {
+
+			$user_id = $action[1];
+
+			$user = $this->getKbhffUser(["user_id" => $user_id]);
+			$membership_renewal = $this->getProperty("membership_renewal", "value");
+
+			$query = new Query();
+
+			if($membership_renewal && $this->getUserRenewalOptOut($user_id)) {
+
+
+				// user is inactive member
+				if($user["membership"] && !$user["membership"]["subscription_id"]) {
+
+					return "REACTIVATION REQUIRED";
+				}	
+				
+				$this->unsetUserRenewalOptOut($user_id);
+
+				return "RENEWAL ENABLED";
+
+			}
+			elseif(!$membership_renewal && !$this->getUserRenewalOptOut($user_id)) {
+
+				$this->setUserRenewalOptOut($user_id);
+
+				return "RENEWAL DISABLED";
+			}
+			else {
+				return true;
+			}
+
+		}
+
+		return false;
+		
+		
+	}
 	
 	
 	// MEMBERSHIP
