@@ -260,9 +260,12 @@ else {
 				<?= $model->submit("Godkend betaling af ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
 			</ul>
 		<?= $model->formEnd() ?>
+
+		<? if(!$model->hasSignupfeeInOrder($order["id"])): ?>
 		<ul class="actions">
 			<li class="cancel"><a href="/medlemshjaelp/butik/cancelOrder/<?= $order_no ?>/<?= $member_user_id ?>" class="button">Annullér ordre</a></li>
 		</ul>
+		<? endif; ?>
 	</div>
 
 	<? else: ?>
