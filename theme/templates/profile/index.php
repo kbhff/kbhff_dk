@@ -246,25 +246,6 @@ $unpaid_orders = $SC->getUnpaidOrders();
 			</div>
 			<? endif; ?>
 
-			<div class="section renewal">
-				<div class="c-box">
-					<h3>Medlemskabsfornyelse</h3>
-
-					<div class="fields">
-						<div class="membership-info renewal">
-
-							<p class="over">Automatisk fornyelse</p>
-							<p class="under"><?= $UC->getRenewalOptOut() ? "Nej" : "Ja" ?></p>
-							
-						</div>
-						<ul class="actions">
-							<li class="change-renewal full-width"><a href="/profil/medlemskab/fornyelse" class="button">Ret</a></li>
-						</ul>
-					</div>
-
-				</div>
-			</div>
-
 			<div class="section user">
 				<div class="c-box">
 					<h3>Dine brugeroplysninger</h3>
@@ -317,6 +298,27 @@ $unpaid_orders = $SC->getUnpaidOrders();
 
 				</div>
 			</div>
+
+			<? if($is_member): ?>
+			<div class="section renewal">
+				<div class="c-box">
+					<h3>Medlemskabsfornyelse</h3>
+
+					<div class="fields">
+						<div class="membership-info renewal">
+
+							<p class="over">Automatisk fornyelse</p>
+							<p class="under"><?= $UC->getRenewalOptOut() ? "Nej" : "Ja" ?></p>
+
+						</div>
+						<ul class="actions">
+							<li class="renewal full-width"><a href="/profil/medlemskab/fornyelse" class="button">Ret</a></li>
+						</ul>
+					</div>
+
+				</div>
+			</div>
+			<? endif; ?>
 
 		</div>
 
