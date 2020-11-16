@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-12 14:25:19
+asset-builder @ 2020-11-16 16:47:49
 */
 
 /*seg_desktop_include.js*/
@@ -5964,8 +5964,8 @@ Util.Modules["create_password"] = new function() {
 }
 
 
-/*m-update_department.js*/
-Util.Modules["update_department"] = new function() {
+/*m-update_userinfo_form.js*/
+Util.Modules["update_userinfo_form"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6938,6 +6938,7 @@ Util.Modules["user_profile"] = new function() {
 		scene.ready = function() {
 			this.initMembershipBox();
 			this.initUserinfoBox();
+			this.initRenewalBox();
 		}
 		scene.initMembershipBox = function() {
 			var box_membership = u.qs(".membership > .c-box", this);
@@ -7204,6 +7205,113 @@ Util.Modules["user_profile"] = new function() {
 				}
 			}
 		}
+		scene.initRenewalBox = function() {
+			var box_renewal = u.qs(".renewal > .c-box", this);
+			var button_renewal = u.qs(".renewal li", this);
+			if(button_renewal) {
+				button_renewal.scene = this;
+				u.clickableElement(button_renewal);
+				button_renewal.clicked = function() {
+					this.response = function(response) {
+						this.is_requesting = false;
+						u.rc(this, "loading");
+						var form_renewal = u.qs(".form_renewal", response);
+						form_renewal.scene = this.scene;
+						var div_fields = u.qs("div.fields", box_renewal);
+						box_renewal.replaceChild(form_renewal, div_fields);
+						u.f.init(form_renewal);
+						form_renewal.submitted = function() {
+							var data = this.getData();
+							this.response = function(response, request_id) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								if (message = u.qs("p.error", this)) {
+									message.parentNode.removeChild(message);
+								}
+								if (message = u.qs("div.messages > p.error", response)) {
+									u.ass(message, {
+										"padding-bottom":"5px",
+										"transform":"translate3d(0px, -10px, 0px)",
+										"opacity":"0"
+									});
+									u.ie(this, message);	
+									u.a.transition(message, "all .5s ease");
+									u.ass(message, {
+										"transform":"translate3d(0px, 0, 0px)",
+										"opacity":"1"
+									});
+								}
+								var div_renewal = u.qs(".renewal .fields", response);
+								if(div_renewal) {
+									box_renewal.replaceChild(div_renewal, this);
+									if (message = u.qs("p.message", response)) {
+										var fields = u.qs("div.fields", box_renewal);
+										u.ie(fields, message);
+										if (message.t_done) {
+											u.t.resetTimer(t_done);
+										}
+										message.done = function() {
+											u.ass(this, {
+												"transition":"all .5s ease",
+												"transform":"translate3d(0px, -10px, 0px)",
+												"opacity":"0"
+											});
+											u.t.setTimer(this, function() {
+												this.parentNode.removeChild(this);
+											}, 500);
+										}
+										message.transitioned = function() {
+											this.t_done = u.t.setTimer(this, this.done, 2400);
+										}
+										u.ass(message, {
+											"color":"#3e8e17",
+											"padding-bottom":"5px",
+											"transform":"translate3d(0px, -10px, 0px)",
+											"opacity":"0"
+										});
+										u.a.transition(message, "all 1s ease");
+										u.ass(message, {
+											"transform":"translate3d(0px, 0, 0px)",
+											"opacity":"1"
+										});
+									}
+									this.scene.initRenewalBox();
+								}
+								else {
+									if(this[request_id].request_url != this[request_id].response_url) {
+										location.href = this[request_id].response_url;
+									}
+								}
+							}
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.action, {"data":data, "method":"POST"});
+							}
+						}
+						form_renewal.actions["cancel"].clicked = function() {
+							this.response = function(response) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								var div_userinfo = u.qs(".renewal .fields", response);
+								box_renewal.replaceChild(div_userinfo, this._form);
+								this._form.scene.initRenewalBox();
+							}
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.url);
+							}
+						}
+					}
+					if (!this.is_requesting) {
+						this.is_requesting = true;
+						u.ac(this, "loading");
+						u.request(this, this.url);
+					}
+				}
+			}
+		}
 		scene.ready();
 	}
 }
@@ -7220,6 +7328,7 @@ Util.Modules["profile"] = new function() {
 			this.initMembershipBox();
 			this.initUserinfoBox();
 			this.initPasswordBox();
+			this.initRenewalBox();
 		}
 		scene.initMembershipBox = function() {
 			var box_membership = u.qs(".membership > .c-box", this);
@@ -7573,6 +7682,113 @@ Util.Modules["profile"] = new function() {
 						this.is_requesting = true;
 						u.ac(this, "loading");
 						u.request(this, "/profil/kodeord");
+					}
+				}
+			}
+		}
+		scene.initRenewalBox = function() {
+			var box_renewal = u.qs(".renewal > .c-box", this);
+			var button_renewal = u.qs(".renewal li", this);
+			if(button_renewal) {
+				button_renewal.scene = this;
+				u.clickableElement(button_renewal);
+				button_renewal.clicked = function() {
+					this.response = function(response) {
+						this.is_requesting = false;
+						u.rc(this, "loading");
+						var form_renewal = u.qs(".form_renewal", response);
+						form_renewal.scene = this.scene;
+						var div_fields = u.qs("div.fields", box_renewal);
+						box_renewal.replaceChild(form_renewal, div_fields);
+						u.f.init(form_renewal);
+						form_renewal.submitted = function() {
+							var data = this.getData();
+							this.response = function(response, request_id) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								if (message = u.qs("p.error", this)) {
+									message.parentNode.removeChild(message);
+								}
+								if (message = u.qs("div.messages > p.error", response)) {
+									u.ass(message, {
+										"padding-bottom":"5px",
+										"transform":"translate3d(0px, -10px, 0px)",
+										"opacity":"0"
+									});
+									u.ie(this, message);	
+									u.a.transition(message, "all .5s ease");
+									u.ass(message, {
+										"transform":"translate3d(0px, 0, 0px)",
+										"opacity":"1"
+									});
+								}
+								var div_renewal = u.qs(".renewal .fields", response);
+								if(div_renewal) {
+									box_renewal.replaceChild(div_renewal, this);
+									if (message = u.qs("p.message", response)) {
+										var fields = u.qs("div.fields", box_renewal);
+										u.ie(fields, message);
+										if (message.t_done) {
+											u.t.resetTimer(t_done);
+										}
+										message.done = function() {
+											u.ass(this, {
+												"transition":"all .5s ease",
+												"transform":"translate3d(0px, -10px, 0px)",
+												"opacity":"0"
+											});
+											u.t.setTimer(this, function() {
+												this.parentNode.removeChild(this);
+											}, 500);
+										}
+										message.transitioned = function() {
+											this.t_done = u.t.setTimer(this, this.done, 2400);
+										}
+										u.ass(message, {
+											"color":"#3e8e17",
+											"padding-bottom":"5px",
+											"transform":"translate3d(0px, -10px, 0px)",
+											"opacity":"0"
+										});
+										u.a.transition(message, "all 1s ease");
+										u.ass(message, {
+											"transform":"translate3d(0px, 0, 0px)",
+											"opacity":"1"
+										});
+									}
+									this.scene.initRenewalBox();
+								}
+								else {
+									if(this[request_id].request_url != this[request_id].response_url) {
+										location.href = this[request_id].response_url;
+									}
+								}
+							}
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.action, {"data":data, "method":"POST"});
+							}
+						}
+						form_renewal.actions["cancel"].clicked = function() {
+							this.response = function(response) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								var div_userinfo = u.qs(".renewal .fields", response);
+								box_renewal.replaceChild(div_userinfo, this._form);
+								this._form.scene.initRenewalBox();
+							}
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, "/profil");
+							}
+						}
+					}
+					if (!this.is_requesting) {
+						this.is_requesting = true;
+						u.ac(this, "loading");
+						u.request(this, this.url);
 					}
 				}
 			}

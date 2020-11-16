@@ -18,7 +18,7 @@ $user = $UC->getKbhffUser(["user_id" => $user_id]);
 $this->pageTitle("Afdelinger");
 ?>
 
-<div class="scene update_department i:update_department">
+<div class="scene update_userinfo_form i:update_userinfo_form">
 	<h1>Afdelinger</h1>
 	<h2>Her kan du skifte lokal afdeling for <?=$user["firstname"] ? $user["firstname"]: $user["nickname"]?>.</h2>
 

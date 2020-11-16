@@ -9,7 +9,7 @@ $membership_renewal_value = $UC->getRenewalOptOut() ? 0 : 1;
 $this->pageTitle("Fornyelse");
 ?>
 
-<div class="scene update_department i:update_department">
+<div class="scene update_renewal i:update_renewal">
 	<h1>Fornyelse</h1>
 	<h2>Automatisk eller ej?</h2>
 	<div class="info">
@@ -23,16 +23,7 @@ $this->pageTitle("Fornyelse");
 
 	<?= $UC->formStart("updateMembershipRenewal", ["class" => "form_renewal"]) ?> 
 
-<?	// print error messages
-	if(message()->hasMessages(array("type" => "error"))): ?>
-		<p class="errormessage">
-<?		$messages = message()->getMessages(array("type" => "error"));
-		message()->resetMessages();
-		foreach($messages as $message): ?>
-			<?= $message ?><br>
-<?		endforeach;?>
-		</p>
-<?	endif; ?>
+		<?= $HTML->serverMessages(["type" => "error"]); ?>
 
 		<fieldset>
 			

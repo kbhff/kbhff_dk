@@ -12,6 +12,7 @@ Util.Modules["user_profile"] = new function() {
 //			// u.bug("scene.ready", this);
 			this.initMembershipBox();
 			this.initUserinfoBox();
+			this.initRenewalBox();
 		}
 		
 		// Medlemskab box
@@ -480,6 +481,184 @@ Util.Modules["user_profile"] = new function() {
 			}
 		
 		}
+
+		// Renewal box
+		scene.initRenewalBox = function() {
+
+			var box_renewal = u.qs(".renewal > .c-box", this);
+			var button_renewal = u.qs(".renewal li", this);
+
+			if(button_renewal) {
+				button_renewal.scene = this;
+
+				u.clickableElement(button_renewal);
+				button_renewal.clicked = function() {
+
+					this.response = function(response) {
+						// Update request state
+						this.is_requesting = false;
+						u.rc(this, "loading");
+
+						// Query form and create reference to scene
+						var form_renewal = u.qs(".form_renewal", response);
+						form_renewal.scene = this.scene;
+
+						// Query current static content and replace with form
+						var div_fields = u.qs("div.fields", box_renewal);
+						box_renewal.replaceChild(form_renewal, div_fields);
+
+						// Init form
+						u.f.init(form_renewal);
+
+						// Update button
+						form_renewal.submitted = function() {
+							var data = this.getData();
+							this.response = function(response, request_id) {
+								// Update request state
+								this.is_requesting = false;
+								u.rc(this, "loading");
+							
+								// Prevent multiple errors
+								if (message = u.qs("p.error", this)) {
+									message.parentNode.removeChild(message);
+								}
+
+								// in case of error, the message needs to show in the form_renewal. 
+								if (message = u.qs("div.messages > p.error", response)) {
+							
+									// State before animation
+									u.ass(message, {
+										"padding-bottom":"5px",
+										"transform":"translate3d(0px, -10px, 0px)",
+										"opacity":"0"
+									});
+									// Insert message
+									u.ie(this, message);	
+							
+									// Animate
+									u.a.transition(message, "all .5s ease");
+									u.ass(message, {
+										"transform":"translate3d(0px, 0, 0px)",
+										"opacity":"1"
+									});
+								}
+
+								// Query new static content and replace with current form
+								var div_renewal = u.qs(".renewal .fields", response);
+								if(div_renewal) {
+
+									box_renewal.replaceChild(div_renewal, this);
+
+									// Message needs to show when form_renewal is replaced with box_renewal.
+									if (message = u.qs("p.message", response)) {
+								
+										// Insert
+										var fields = u.qs("div.fields", box_renewal);
+										u.ie(fields, message);
+
+										// If previous message didn't finnish deleting
+										if (message.t_done) {
+											u.t.resetTimer(t_done);
+										}
+
+										message.done = function() {
+											u.ass(this, {
+												"transition":"all .5s ease",
+												"transform":"translate3d(0px, -10px, 0px)",
+												"opacity":"0"
+											});
+
+											u.t.setTimer(this, function() {
+												this.parentNode.removeChild(this);
+											}, 500);
+										}
+
+										message.transitioned = function() {
+											this.t_done = u.t.setTimer(this, this.done, 2400);
+										}
+
+										// State before animation
+										u.ass(message, {
+											"color":"#3e8e17",
+											"padding-bottom":"5px",
+											"transform":"translate3d(0px, -10px, 0px)",
+											"opacity":"0"
+										});
+
+										// Animate
+										u.a.transition(message, "all 1s ease");
+										u.ass(message, {
+											"transform":"translate3d(0px, 0, 0px)",
+											"opacity":"1"
+										});
+									}
+							
+							
+									// Initialize the new passwordbox
+									this.scene.initRenewalBox();
+
+								}
+								else {
+
+									if(this[request_id].request_url != this[request_id].response_url) {
+										location.href = this[request_id].response_url;
+									}
+
+								}
+
+							}
+
+							// Prevent making the request more than once
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.action, {"data":data, "method":"POST"});
+							}
+
+						}
+
+						// Cancel button
+						form_renewal.actions["cancel"].clicked = function() {
+
+							this.response = function(response) {
+								// Update request state
+								this.is_requesting = false;
+								u.rc(this, "loading");
+
+								// Get div containing static content
+								var div_userinfo = u.qs(".renewal .fields", response);
+
+								// Replace form with static content
+								box_renewal.replaceChild(div_userinfo, this._form);
+
+								// Initialize the new passwordbox
+								this._form.scene.initRenewalBox();
+							}
+
+							// Prevent making the request more than once
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.url);
+							}
+
+						}
+
+					}
+
+					// Prevent making the request more than once
+					if (!this.is_requesting) {
+						this.is_requesting = true;
+						u.ac(this, "loading");
+						u.request(this, this.url);
+					}
+
+				}
+
+			}
+
+		}
+
 
 		// scene is ready
 		scene.ready();

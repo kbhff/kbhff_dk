@@ -15,7 +15,7 @@ document.write('<script type="text/javascript" src="/js/lib/desktop/m-login.js">
 document.write('<script type="text/javascript" src="/js/lib/desktop/m-accept_terms.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/m-confirm_account.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/m-create_password.js"></script>');
-document.write('<script type="text/javascript" src="/js/lib/desktop/m-update_department.js"></script>');
+document.write('<script type="text/javascript" src="/js/lib/desktop/m-update_userinfo_form.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/m-update_user_information.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/m-update_user_password.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/m-delete_user_information.js"></script>');

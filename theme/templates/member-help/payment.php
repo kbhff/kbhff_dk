@@ -107,9 +107,7 @@ else {
 	<ul class="items orders">
 		<? foreach($order_items_without_pickupdates as $order_item): ?>
 		<li class="unit_price">
-			 <?= $order_item["quantity"]." x ".$order_item["name"]." a ". formatPrice(array("price" => $order_item["unit_price"], "currency" => $order["currency"])) ?> <span class="price"><?= formatPrice(array("price" => $order_item["total_price"], "currency" => $order["currency"]))?>
-			 </span>
-		
+
 			<span class="quantity"><?= $order_item["quantity"] ?></span>
 			<span class="x">x </span>
 			<span class="name"><?= $order_item["name"] ?> </span>

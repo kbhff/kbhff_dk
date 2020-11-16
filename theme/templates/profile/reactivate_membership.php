@@ -27,7 +27,7 @@ foreach($memberships as $membership) {
 $this->pageTitle("Genaktiver medlemskab");
 ?>
 
-<div class="scene update_department i:update_department">
+<div class="scene update_userinfo_form i:update_userinfo_form">
 	<h1>Genaktivering af medlemskab</h1>
 	<? if($user["membership"] && !$user["membership"]["subscription_id"]): ?>	
 	<h2>Velkommen igen</h2>
