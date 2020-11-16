@@ -1,4 +1,4 @@
-Util.Modules["update_department"] = new function() {
+Util.Modules["update_userinfo_form"] = new function() {
 	this.init = function(scene) {
 
 		scene.resized = function() {

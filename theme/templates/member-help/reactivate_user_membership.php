@@ -27,7 +27,7 @@ foreach($memberships as $membership) {
 $this->pageTitle("Genaktiver medlemskab");
 ?>
 
-<div class="scene update_department i:update_department">
+<div class="scene update_userinfo_form i:update_userinfo_form">
 	<h1>Genaktivering af medlemskab</h1>
 	<? if($user["membership"] && !$user["membership"]["subscription_id"]): ?>	
 	<p>Ved genaktivering vil der blive oprettet en ordre på 1 stk. kontingent, og du vil blive ført til en betalingsside, hvor medlemmet kan betale.</p>

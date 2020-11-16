@@ -12,7 +12,7 @@ $membership_renewal_value = $UC->getUserRenewalOptOut($user_id) ? 0 : 1;
 $this->pageTitle("Fornyelse");
 ?>
 
-<div class="scene update_department i:update_department">
+<div class="scene update_userinfo_form i:update_userinfo_form">
 	<h1>Fornyelse</h1>
 	<h2>Automatisk eller ej?</h2>
 	<div class="info">
