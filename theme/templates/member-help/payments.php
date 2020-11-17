@@ -56,7 +56,7 @@ if($orders && $total_payment): ?>
 
 
 	<dl class="amount">
-		<dt class="amount">Skyldigt beløb</dt>
+		<dt class="amount">Samlet udestående</dt>
 		<dd class="amount"><?= formatPrice(["price" => $total_payment, "currency" => $remaining_order_price["currency"]]) ?></dd>
 	</dl>
 
@@ -70,10 +70,8 @@ if($orders && $total_payment): ?>
 			<ul class="orderitems">
 			<? foreach($full_order["items"] as $order_item): ?>
 				<li><?= $order_item["quantity"] ?> x <?= $order_item["name"] ?></li>
-				<? endforeach; ?>
+			<? endforeach; ?>
 			</ul>
-		</li>
-		<li>
 			<ul class="actions">
 				<?= $HTML->oneButtonForm("Annullér ordre", "/medlemshjaelp/butik/cancelOrder/".$order["order_no"]."/$user_id", [
 					"wrapper" => "li.cancel",
