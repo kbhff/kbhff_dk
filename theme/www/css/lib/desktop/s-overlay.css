@@ -37,10 +37,10 @@ div.overlay h2 {
 	padding-top: 17px;
 	text-align: center;
 }
-div.overlay .error{
+/*div.overlay .error{
 	padding: 10px 0;
 }
-div.overlay .header {
+*/div.overlay .header {
 	cursor: move;
 }
 div.overlay fieldset {
