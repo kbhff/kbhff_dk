@@ -249,10 +249,10 @@ Util.Modules["cart"] = new function() {
 						if(parseInt(this.val()) < 1) {
 							this.val(1);
 						}
-						else {
+						// else {
 							u.ac(this._form.actions["update"], "primary");
 							this._form.submit();
-						}
+						// }
 					}
 
 

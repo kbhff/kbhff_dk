@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-17 22:50:26
+asset-builder @ 2020-11-17 23:42:56
 */
 
 /*seg_desktop_include.js*/
@@ -6215,10 +6215,8 @@ Util.Modules["cart"] = new function() {
 						if(parseInt(this.val()) < 1) {
 							this.val(1);
 						}
-						else {
 							u.ac(this._form.actions["update"], "primary");
 							this._form.submit();
-						}
 					}
 					quantity_form.submitted = function() {
 						this.response = function(response) {

@@ -51,8 +51,8 @@
 	<link type="text/css" rel="stylesheet" media="all" href="/css/lib/seg_<?= $this->segment() ?>_include.css?cb=<?=randomKey(4); ?>" />
 	<script type="text/javascript" src="/js/lib/seg_<?= $this->segment() ?>_include.js?cb=<?=randomKey(4); ?>"></script>
 <? } else { ?>
-	<link type="text/css" rel="stylesheet" media="all" href="/css/seg_<?= $this->segment() ?>.css?rev=20201117-225026" />
-	<script type="text/javascript" src="/js/seg_<?= $this->segment() ?>.js?rev=20201117-225026"></script>
+	<link type="text/css" rel="stylesheet" media="all" href="/css/seg_<?= $this->segment() ?>.css?rev=20201117-234256" />
+	<script type="text/javascript" src="/js/seg_<?= $this->segment() ?>.js?rev=20201117-234256"></script>
 <? } ?>
 
 	<?= $this->headerIncludes() ?>
