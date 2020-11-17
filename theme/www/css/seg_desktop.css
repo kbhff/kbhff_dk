@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-16 16:47:49
+asset-builder @ 2020-11-17 22:37:06
 */
 
 /*seg_desktop_include.css*/
@@ -1400,9 +1400,6 @@ div.overlay h2 {
 	padding-bottom: 22px;
 	padding-top: 17px;
 	text-align: center;
-}
-div.overlay .error{
-	padding: 10px 0;
 }
 div.overlay .header {
 	cursor: move;
