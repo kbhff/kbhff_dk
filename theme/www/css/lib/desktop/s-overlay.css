@@ -85,3 +85,8 @@ div.overlay .close:before {
 div.overlay .close:after {
 	transform: rotate(-45deg);
 }
+
+div.overlay .field.password {
+	padding-top: 56px;
+	padding-bottom: 124px;
+}

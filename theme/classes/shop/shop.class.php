@@ -612,6 +612,30 @@ class Shop extends ShopCore {
 		return false;
 	}
 
+	function hasSignupfeeInOrder($order_id) {
+
+		$order = $this->getOrders(["order_id" => $order_id]);
+
+		if($order) {
+
+			$IC = new Items();
+
+			foreach ($order["items"] as $order_item) {
+
+				$item = $IC->getItem(["id" => $order_item["item_id"], "extend" => true]);
+				
+				if($item["itemtype"] == "signupfee") {
+
+					return true;
+				}
+			}
+
+		}
+
+		return false;
+
+	}
+
 	
 
 }

@@ -369,7 +369,8 @@ else {
 				<p><?= $member_name ?> har ingen aktuelle grøntsagsbestillinger.</p>
 				<? endif; ?>
 
-				<p>Gå til <a href="/medlemshjaelp/brugerprofil/<?= $member_user_id ?>" class="profile"><?= $member_name_possesive ?> side</a> for at se gamle bestillinger og rette datoer for aktuelle bestillinger.</p>
+				<!-- <p>Gå til <a href="/medlemshjaelp/brugerprofil/<?= $member_user_id ?>" class="profile"><?= $member_name_possesive ?> side</a> for at se gamle bestillinger og rette datoer for aktuelle bestillinger.</p> -->
+				<p>Gå til <a href="/medlemshjaelp/brugerprofil/<?= $member_user_id ?>" class="profile"><?= $member_name_possesive ?> side</a> for at rette datoer for aktuelle bestillinger.</p>
 
 			</div>
 		</div>

@@ -5,7 +5,7 @@ global $model;
 global $itemtype;
 
 $item_id = $action[1];
-$item = $IC->getItem(array("id" => $item_id, "extend" => ["tags" => true, "mediae" => true, "comments" => true, "subscription_method" => true]));
+$item = $IC->getItem(array("id" => $item_id, "extend" => ["tags" => true, "mediae" => true, "comments" => true, "subscription_method" => true, "prices" => true]));
 
 ?>
 <div class="scene i:scene defaultEdit <?= $itemtype ?>Edit">

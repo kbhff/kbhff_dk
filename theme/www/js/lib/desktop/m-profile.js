@@ -183,16 +183,22 @@ Util.Modules["profile"] = new function() {
 
 				u.clickableElement(button_cancel);
 				button_cancel.clicked = function() {
-					this.scene.overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600, class:"confirm_cancel_membership"});
+					this.scene.overlay = u.overlay({title:"Vil du virkelig udmeldes?", height:365,width:600, class:"confirm_cancel_membership"});
 					var p_warning = u.ae(this.scene.overlay.div_content, "p", {
-						html:"Du er ved at melde dig ud af KBHFF. Er du sikker?"
+						html:"Hvis du udmelder dig, bliver din konto slettet. Du vil ikke kunne logge ind, og du giver afkald på alle fremtidige bestillinger – også selv om du har betalt dem."
+					});
+					var p_alternative = u.ae(this.scene.overlay.div_content, "p", {
+						html:"Du kan i stedet vælge at deaktivere dit medlemskab, når det udløber. Dette gøres ved at fravælge automatisk fornyelse nederst til højre på Min Side. Som inaktivt medlem betaler du ikke kontingent, og du kan ikke lave nye bestillinger, men du kan stadig se dine eksisterende ordrer, vagter m.m."
+					});
+					p_confirmation = u.ae(this.scene.overlay.div_content, "p", {
+						html:"Er du sikker på, at du vil melde dig ud af KBHFF?"
 					});
 					var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
 						class:"actions"
 					});
 
 					// Add action buttons to cancel and confirm
-					var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"button delete_me","value":"Meld mig ud af KBHFF"});
+					var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"button delete_me","value":"Ja, slet mine data"});
 					var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"button regret primary", "value":"Fortryd udmelding"});
 
 					// Give references to scene on each button
@@ -212,9 +218,11 @@ Util.Modules["profile"] = new function() {
 							// Query form to inject
 							var form_confirm_cancellation = u.qs(".confirm_cancellation", response);
 							form_confirm_cancellation.scene = this.scene;
-
+							
 							// Hide elements to be replaced
 							u.ass(p_warning, {"display":"none"});
+							u.ass(p_alternative, {"display":"none"});
+							u.ass(p_confirmation, {"display":"none"});
 							u.ass(ul_actions, {"display":"none"});
 							// Append form and initialize it
 							u.ae(this.scene.overlay.div_content, form_confirm_cancellation);

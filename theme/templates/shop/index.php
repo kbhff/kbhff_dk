@@ -377,7 +377,8 @@ else {
 
 				<? endif; ?>
 
-				<p>Gå til <a href="/profil" class="profile">Min side</a> for at se gamle bestillinger og rette datoer for aktuelle bestillinger.</p>
+				<!-- <p>Gå til <a href="/profil" class="profile">Min side</a> for at se gamle bestillinger og rette datoer for aktuelle bestillinger.</p> -->
+				<p>Gå til <a href="/profil" class="profile">Min side</a> for at rette datoer for aktuelle bestillinger.</p>
 			</div>
 		</div>
 	</div>
