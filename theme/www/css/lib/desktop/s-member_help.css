@@ -89,6 +89,30 @@
 
 #content .scene.member_help_payment div.total p {text-align: right; padding: 10px 0 0; font-size: 16px;}
 
+
+/* PAYMENT ORDERS */
+#content .scene.member_help_payment dl.amount {padding-top: 48px;}
+#content .scene.member_help_payment dl.amount dt {font-size: 24px;}
+#content .scene.member_help_payment dl.amount dd {font-size: 48px; padding-top: 12px;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+}
+
+#content .scene.member_help_payment ul.orders {margin: 0; list-style: none; padding-bottom: 0;}
+#content .scene.member_help_payment ul.orders > li {padding-left: 0; padding-top: 0; font-size: 16px; position: relative;}
+#content .scene.member_help_payment ul.orders > li h3 {padding-left: 0; padding-right: 0;}
+#content .scene.member_help_payment ul.orders > li ul.orderitems {margin: 0; list-style: none; padding-left: 0; padding-right: 0;}
+#content .scene.member_help_payment ul.orders > li ul.orderitems > li {padding-left: 0; font-size: 16px;}
+
+#content .scene.member_help_payment ul.orders > li ul.actions {padding: 0; position: absolute; top: 6px; right: 0;}
+#content .scene.member_help_payment ul.orders > li ul.actions li {padding: 0 0 0 6px;}
+
+#content .scene.member_help_payment div.orderitems {width: 450px; margin: 15px auto 20px;}
+#content .scene.member_help_payment div.orderitems ul.orderitems {padding-bottom: 30px; padding-left: 0; padding-right: 0; margin: 0; list-style: none;}
+#content .scene.member_help_payment div.orderitems ul.orderitems li {padding: 0;}
+#content .scene.member_help_payment div.orderitems h3 {padding-left: 0; padding-right: 0;}
+#content .scene.member_help_payment div.orderitems p {padding-left: 0; padding-right: 0;}
+
+
 /* PAYMENT – Order summary */
 /*#content .member_help_payment ul.orders {padding-top: 50px; margin: 0 auto; width: 450px; padding-bottom: 0;}
 #content .member_help_payment ul.orders > li {list-style-type: none; padding-left: 0; font-size: 16px;}

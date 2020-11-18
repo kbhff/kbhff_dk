@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-16 16:47:49
+asset-builder @ 2020-11-17 23:42:56
 */
 
 /*seg_desktop_include.css*/
@@ -1332,6 +1332,23 @@ position: relative;
 #content .scene.member_help_payment div.total {margin: 0 12px; border-top: 1px dotted #000;}
 #content .scene.member_help_payment div.total h3 {font-size: 20px; padding-left: 0; padding-right: 0; text-align: right;}
 #content .scene.member_help_payment div.total p {text-align: right; padding: 10px 0 0; font-size: 16px;}
+#content .scene.member_help_payment dl.amount {padding-top: 48px;}
+#content .scene.member_help_payment dl.amount dt {font-size: 24px;}
+#content .scene.member_help_payment dl.amount dd {font-size: 48px; padding-top: 12px;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+}
+#content .scene.member_help_payment ul.orders {margin: 0; list-style: none; padding-bottom: 0;}
+#content .scene.member_help_payment ul.orders > li {padding-left: 0; padding-top: 0; font-size: 16px; position: relative;}
+#content .scene.member_help_payment ul.orders > li h3 {padding-left: 0; padding-right: 0;}
+#content .scene.member_help_payment ul.orders > li ul.orderitems {margin: 0; list-style: none; padding-left: 0; padding-right: 0;}
+#content .scene.member_help_payment ul.orders > li ul.orderitems > li {padding-left: 0; font-size: 16px;}
+#content .scene.member_help_payment ul.orders > li ul.actions {padding: 0; position: absolute; top: 6px; right: 0;}
+#content .scene.member_help_payment ul.orders > li ul.actions li {padding: 0 0 0 6px;}
+#content .scene.member_help_payment div.orderitems {width: 450px; margin: 15px auto 20px;}
+#content .scene.member_help_payment div.orderitems ul.orderitems {padding-bottom: 30px; padding-left: 0; padding-right: 0; margin: 0; list-style: none;}
+#content .scene.member_help_payment div.orderitems ul.orderitems li {padding: 0;}
+#content .scene.member_help_payment div.orderitems h3 {padding-left: 0; padding-right: 0;}
+#content .scene.member_help_payment div.orderitems p {padding-left: 0; padding-right: 0;}
 #content .member_help_payment div.payment_options {margin: 0 auto; margin-top: 32px; width: 450px; min-height: 452px;}
 #content .member_help_payment div.payment_options h4.tab {display: inline-block; background-color: #f2f2f2f2; padding: 6px calc(2.5% + 10px); margin-right: 6px; cursor:pointer;}
 #content .member_help_payment div.payment_options h4.cash_tab {background-color: #bbbbbb;}
@@ -1401,9 +1418,6 @@ div.overlay h2 {
 	padding-top: 17px;
 	text-align: center;
 }
-div.overlay .error{
-	padding: 10px 0;
-}
 div.overlay .header {
 	cursor: move;
 }
@@ -1444,6 +1458,10 @@ div.overlay .close:before {
 }
 div.overlay .close:after {
 	transform: rotate(-45deg);
+}
+div.overlay .field.password {
+	padding-top: 56px;
+	padding-bottom: 124px;
 }
 
 /*s-tally.css*/
