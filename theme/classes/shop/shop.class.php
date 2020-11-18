@@ -494,7 +494,6 @@ class Shop extends ShopCore {
 
 			$this->getPostedEntities();
 
-			$user_id = session()->value("user_id");
 			$order_item_id = $action[1];
 
 			$order_item = $this->getOrderItem($order_item_id);

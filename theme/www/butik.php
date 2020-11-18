@@ -1088,7 +1088,7 @@ if($action) {
 	}
 
 
-	# /butik/ret-bestilling
+	# /butik/ret-bestilling/#order_item_id#
 	else if($action[0] == "ret-bestilling" && count($action) == 2) {
 		$page->page(array(
 			"templates" => "shop/update_order_item_details.php",
@@ -1096,7 +1096,7 @@ if($action) {
 		exit();
 	}
 
-	# /butik/updateOrderItemDetails
+	# /butik/updateOrderItemDetails/#order_item_id#
 	else if($action[0] == "updateOrderItemDetails" && $page->validateCsrfToken()) {
 
 		if($model->updateOrderItemDetails($action)) {
@@ -1107,7 +1107,7 @@ if($action) {
 		// something went wrong
 		else {
 			message()->addMessage("Noget gik galt.", array("type" => "error"));
-			header("Location: /butik/ret-bestilling");
+			header("Location: /butik/ret-bestilling/".$action[1]);
 			exit();
 		}
 

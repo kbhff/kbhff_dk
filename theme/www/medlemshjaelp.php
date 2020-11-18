@@ -766,6 +766,36 @@ if($action) {
 		
 	}
 
+	# /medlemshjaelp/ret-bestilling
+	else if($action[0] == "ret-bestilling" && count($action) == 3) {
+		$page->page(array(
+			"templates" => "member-help/update_order_item_details.php",
+		));
+		exit();
+	}
+
+	# /medlemshjaelp/updateOrderItemDetails/#order_item_id#/#user_id#
+	else if($action[0] == "updateOrderItemDetails" && $page->validateCsrfToken()) {
+
+		$order_item_id = $action[1];
+		$order_item = $SC->getOrderItem($order_item_id);
+		$user_id = $action[2];
+
+
+		if($SC->updateOrderItemDetails(["updateOrderItemDetails", $order_item_id])) {
+
+			header("Location: /medlemshjaelp/brugerprofil/$user_id");
+			exit();
+		}
+		// something went wrong
+		else {
+			message()->addMessage("Noget gik galt.", array("type" => "error"));
+			header("Location: /medlemshjaelp/ret-bestilling/$order_item_id/$user_id");
+			exit();
+		}
+
+	}
+
 	# /medlemshjaelp/betalinger/#user_id#
 	else if($action[0] == "betalinger" && count($action) == 2) {
 
