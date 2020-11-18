@@ -445,7 +445,7 @@ class Department extends Model {
 		
 		$IC = new Items();
 
-		$sql = "SELECT product_id FROM ".$this->db_products." WHERE department_id = $department_id";
+		$sql = "SELECT product_id FROM ".$this->db_products." WHERE department_id = $department_id ORDER BY product_id ASC";
 		if($query->sql($sql)) {
 
 			$results = $query->results("product_id");
