@@ -1087,6 +1087,32 @@ if($action) {
 		exit();
 	}
 
+
+	# /butik/ret-bestilling
+	else if($action[0] == "ret-bestilling" && count($action) == 2) {
+		$page->page(array(
+			"templates" => "shop/update_order_item_details.php",
+		));
+		exit();
+	}
+
+	# /butik/updateOrderItemDetails
+	else if($action[0] == "updateOrderItemDetails" && $page->validateCsrfToken()) {
+
+		if($model->updateOrderItemDetails($action)) {
+
+			header("Location: /profil");
+			exit();
+		}
+		// something went wrong
+		else {
+			message()->addMessage("Noget gik galt.", array("type" => "error"));
+			header("Location: /butik/ret-bestilling");
+			exit();
+		}
+
+	}
+
 	// Class interface
 	else if(preg_match("/^removePastPickupdateCartItems$/", $action[0])) {
 

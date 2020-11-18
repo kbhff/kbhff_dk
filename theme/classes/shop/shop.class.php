@@ -359,6 +359,39 @@ class Shop extends ShopCore {
 		return false;
 		
 	}
+
+	function getPickupdates($_options = false) {
+		
+		$query = new Query();
+		$query->checkDbExistence($this->db_pickupdates);
+
+		$after = false;
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+					case "after"          : $after               = $_value; break;
+				}
+			}
+		}
+
+		$sql = "SELECT pickupdates.* 
+		FROM ".$this->db_pickupdates." AS pickupdates";
+
+		if($after) {
+			$sql .= " WHERE pickupdates.pickupdate >= '$after'";
+		}
+
+		$sql .= " ORDER BY pickupdates.pickupdate ASC";
+
+		if($query->sql($sql)) {
+
+			$pickupdates = $query->results();
+
+			return $pickupdates;
+		}
+
+		return false;
+	}
 	
 	function getOrderPickupdates($order_id) {
 		
@@ -382,6 +415,102 @@ class Shop extends ShopCore {
 			return $order_pickupdates;
 		}
 
+		return false;
+	}
+
+	function getOrderItemPickupdate($order_item_id) {
+		
+		$query = new Query();
+		$query->checkDbExistence($this->db_pickupdate_order_items);
+
+		$sql = "SELECT DISTINCT pickupdates.* 
+		FROM ".$this->db_pickupdates." AS pickupdates, "
+		.$this->db_pickupdate_order_items." AS pickupdate_order_items
+		WHERE pickupdate_order_items.order_item_id = $order_item_id
+		AND pickupdate_order_items.pickupdate_id = pickupdates.id 
+		LIMIT 1";
+
+		if($query->sql($sql)) {
+
+			$order_item_pickupdate = $query->result(0);
+
+			return $order_item_pickupdate;
+		}
+
+		return false;
+	}
+
+	function setOrderItemPickupdate($order_item_id, $pickupdate_id) {
+		
+		$query = new Query();
+		$query->checkDbExistence($this->db_pickupdate_order_items);
+
+		if($this->getOrderItemPickupdate($order_item_id)) {
+
+			$sql = "UPDATE ".$this->db_pickupdate_order_items." SET pickupdate_id = $pickupdate_id WHERE order_item_id = $order_item_id";
+		}
+		else {
+
+			$sql = "INSERT INTO ".$this->db_pickupdate_order_items." SET pickupdate_id = $pickupdate_id, order_item_id = $order_item_id";
+		}
+
+		if($query->sql($sql)) {
+
+			return $this->getOrderItemPickupdate($order_item_id);
+		}
+
+		return false;
+	}
+
+	function getOrderItem($order_item_id) {
+
+		$query = new Query();
+
+		$sql = "SELECT * FROM ".$this->db_order_items." WHERE id = $order_item_id";
+
+		if($query->sql($sql)) {
+
+			$order_item = $query->result(0);
+
+			return $order_item;
+		}
+
+		return false;
+	}
+
+	/**
+	 * updateOrderItemDetails
+	 * /butik/updateOrderItemDetails/#order_item_id#
+	 * 
+	 * Change pickupdate
+	 * Change pickup place (not implemented)
+	 *
+	 * @param array $action
+	 * @return boolean
+	 */
+	function updateOrderItemDetails($action) {
+
+		if(count($action) == 2) {
+
+			$this->getPostedEntities();
+
+			$user_id = session()->value("user_id");
+			$order_item_id = $action[1];
+
+			$order_item = $this->getOrderItem($order_item_id);
+
+			if($order_item) {
+
+				$pickupdate_id = getPost("pickupdate_id", "value");
+				
+				if($pickupdate_id) {
+					$this->setOrderItemPickupdate($order_item_id, $pickupdate_id);
+				}
+				
+				return true;
+			}
+		}
+		
 		return false;
 	}
 
