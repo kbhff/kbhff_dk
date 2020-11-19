@@ -254,8 +254,9 @@ else {
 
 		</div>
 
+		<? if(!$unpaid_membership): ?>
 		<div class="c-one-third sidebar">
-
+		
 			<div class="cart c-primary-box">
 				<h3>Indkøbskurv</h3>
 				<? if($cart["items"]): ?>
@@ -374,6 +375,8 @@ else {
 
 			</div>
 		</div>
+		<? endif; ?>
+
 	</div>
 	
 

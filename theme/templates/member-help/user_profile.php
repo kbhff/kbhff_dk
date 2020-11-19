@@ -147,7 +147,8 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 
 				<ul class="actions">
 					<!-- <li class="view-orders"><a href="#" class="button">Se gamle bestillinger</a></li> -->
-					<li class="new-order"><a href="/medlemshjaelp/butik/<?= $user_id ?>" class="button primary <?= $unpaid_membership ? "disabled" : "" ?>">Ny bestilling</a></li>
+					<li class="new-order"><a <?= $unpaid_membership ? "" : "href='/medlemshjaelp/butik/$user_id'" ?> class="button primary <?= $unpaid_membership ? "disabled" : "" ?>">Ny bestilling</a></li>
+
 				</ul>
 			</div>
 			<? else: ?>
