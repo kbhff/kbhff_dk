@@ -276,7 +276,9 @@ if($cart && $cart["items"]) {
 	if($cart && $cart["items"]) :?>
 	<div class="checkout">
 		<ul class="actions">
+			<? if($member_user["membership"]): ?>
 			<li class="shop"><a class="button" href="/medlemshjaelp/butik/<?= $member_user_id ?>">Køb mere</a></li>
+			<? endif; ?>
 			<?= $HTML->oneButtonForm("Bekræft og gå til betaling", "/medlemshjaelp/butik/newOrderFromCart/".$cart_reference."/".$cart["id"], array(
 				"confirm-value" => false,
 				"wait-value" => "Vent venligst",

@@ -137,6 +137,22 @@ else {
 		<p>For at kunne bestille grøntsager skal du først <a href="/profil/medlemskab/genaktiver">genaktivere dit medlemskab</a>.</p>
 	</div>
 
+	<? elseif(!$user["membership"]): ?>
+	<div class="section not_member">
+		<h2>Du er ikke medlem</h2>
+		<? 
+		$cart = $model->getCart();
+		if($cart && $model->hasSignupfeeInCart($cart["id"])): ?>
+		<p>Du er endnu ikke medlem, men du har et indmeldelsesgebyr i din kurv.</p>
+		<ul class="actions">
+			<li class="pay"><a href="/butik/betal" class="button primary">Gå til betaling</a></li>
+		</ul>
+		<? else: ?>
+		<p>Meld dig ind nu – <a href="/bliv-medlem">se vores medlemskaber her</a>.</p>
+		<? endif; ?>
+
+	</div>
+
 
 	<?
 	// user is already logged in, show checkout overview

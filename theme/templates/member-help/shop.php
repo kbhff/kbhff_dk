@@ -120,6 +120,22 @@ else {
 		<p>For at kunne bestille grøntsager skal man <a href="/medlemshjaelp/brugerprofil/<?= $member_user_id ?>/genaktiver">genaktivere medlemskabet</a>.</p>
 	</div>
 
+	<? elseif(!$member_user["membership"]): ?>
+	<div class="section not_member">
+	<h2><?= $member_name ?> er ikke medlem</h2>
+	<? 
+
+	$carts = $SC->getCarts(["user_id" => $member_user_id]);
+	$cart = $carts ? $carts[0] : false;
+
+	if($cart && $SC->hasSignupfeeInCart($cart["id"])): ?>
+	<p><?= $member_name ?> er endnu ikke medlem, men har et indmeldelsesgebyr i sin kurv – <a href="/medlemshjaelp/butik/kurv/<?= $cart["cart_reference"] ?>">Gå til kurv</a></p>
+	<? else: ?>
+	<p>Denne bruger er oprettet i systemet, men har ikke tilknyttet et medlemskab. Kontakt gerne <a href="mailto:it@kbhff.dk">IT-gruppen</a> og send dem et screenshot af dette skærmbillede.
+	</p><p>Brugeren kan selv oprette et medlemskab ved at logge ind på sin egen konto med brugernavnet <em><?= $member_user["email"] ?></em>.</p>
+	<? endif; ?>
+	</div>
+	
 
 	<?
 	// clerk is already logged in, show memberhelp-shop
