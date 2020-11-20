@@ -230,7 +230,7 @@ if($cart && $cart["items"]) {
 		<div class="total">
 			<p>
 				<span class="name">Heraf moms</span>
-				<span class="total_price">
+				<span class="total_vat">
 					<?= formatPrice(array("price" => $total_cart_price["vat"], "currency" => $total_cart_price["currency"])) ?>
 				</span>
 			</p>
