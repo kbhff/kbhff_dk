@@ -47,12 +47,12 @@ $weeklybag_item = $WBC->getWeeklyBag($item["week"], $item["year"]);
 				<h3>Ugens pose - <?= $weeklybag_item["name"] ?></h3>
 				<?= $weeklybag_item["html"] ?>
 
-				<p class="readmore"><a href="/ugens-pose/<?= $weeklybag_item["sindex"] ?>">Læs mere om uges pose</a></p>
+				<p class="readmore"><a href="/ugens-pose/<?= $weeklybag_item["sindex"] ?>">Læs mere om ugens pose</a></p>
 			<? else: ?>
 				<h3>Ugens pose</h3>
 				<p>Ugens pose er endnu ikke oprettet.</p>
 
-				<p class="readmore"><a href="/ugens-pose">Læs mere om uges pose</a></p>
+				<p class="readmore"><a href="/ugens-pose">Læs mere om ugens pose</a></p>
 			<? endif; ?>
 			</div>
 
