@@ -11,13 +11,12 @@ global $action;
 $user_id = $action[1];
 $user = $UC->getKbhffUser(["user_id" => $user_id]);
 
-$member = $MC->getMembership();
 $memberships = $IC->getItems(array("itemtype" => "membership", "status" => 1, "extend" => array("subscription_method" => true, "prices" => true)));
 
 $membership_options = array();
 foreach($memberships as $membership) {
 	// do not include current membership
-	if($membership["item_id"] != $member["item_id"])  {
+	if($membership["item_id"] != $user["membership"]["item_id"])  {
 		$price = $SC->getPrice($membership["item_id"], ["user_id" => $user_id]);
 		$membership_options[$membership["item_id"]] = strip_tags($membership["name"])." (".formatPrice($price).")";
 		
@@ -51,8 +50,7 @@ $this->pageTitle("Genaktiver medlemskab");
 				"label" => "Vælg et medlemskab",
 				"type" => "select",
 				"options" => $membership_options,
-				"value" => $member["item_id"]
-			)) ?>
+				)) ?>
 
 		</fieldset>
 
