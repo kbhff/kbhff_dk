@@ -25,6 +25,7 @@ class Shop extends ShopCore {
 			"type" => "integer",
 			"label" => "Quantity",
 			"min" => 1,
+			"max" => 1000,
 			"required" => true,
 			"hint_message" => "Quantity of items.", 
 			"error_message" => "Quantity must be a number."
@@ -764,7 +765,6 @@ class Shop extends ShopCore {
 
 	}
 
-	
 
 }
 

@@ -183,23 +183,26 @@ class SuperShop extends SuperShopCore {
 	 */
 	function cancelUnpaidOrders($action) {
 
-		if(count($action == 1)) {
+		if(count($action) == 1) {
 
 			include_once("classes/shop/pickupdate.class.php");
 			$PC = new Pickupdate();
 
 			// get pickupdates that are less than a week from now
-			$pickupdates = $PC->getPickupdates(["before" => date("Y-m-d", strtotime("+1 weeks"))]);
+			$pickupdates = $PC->getPickupdates(["after" => date("Y-m-d"), "before" => date("Y-m-d", strtotime("+1 weeks"))]);
 
 			foreach ($pickupdates as $pickupdate) {
 
 				$order_items = $this->getPickupdateOrderItems($pickupdate["id"]);
 
-				foreach ($order_items as $order_item) {
+				if($order_items) {
 
-					$order = $this->getOrders(["id" => $order_item["order_id"]]);
-					
-					$this->cancelOrder(["cancelOrder", $order["id"], $order["user_id"]]);
+					foreach ($order_items as $order_item) {
+	
+						$order = $this->getOrders(["order_id" => $order_item["order_id"]]);
+						
+						$this->cancelOrder(["cancelOrder", $order["id"], $order["user_id"]]);
+					}
 				}
 				
 				message()->resetMessages();
