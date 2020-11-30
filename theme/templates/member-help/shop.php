@@ -68,7 +68,7 @@ if($clerk_user_id != 1) {
 
 		// $order_items_without_pickupdates = $SC->getOrderItemsWithoutPickupdate($member_user_id);
 		
-		$order_items_pickupdates = $SC->getOrderItemsPickupdates($member_user_id);
+		$order_items_pickupdates = $SC->getOrderItemsPickupdates($member_user_id, ["after" => date("Y-m-d")]);
 	}
 
 
