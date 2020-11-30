@@ -532,7 +532,35 @@ if($action) {
 
 				// convert cart to order
 				$order = $SC->newOrderFromCart(["newOrderFromCart", $cart_id, $cart_reference]);
-				if($order) {						
+				if($order) {	
+					
+					$order_no = $order["order_no"];
+					$user_id = $order["user_id"];
+					$user = $model->getKbhffUser(["user_id" => $user_id]);
+
+					// send notification email to admin
+					mailer()->send(array(
+						"recipients" => SHOP_ORDER_NOTIFIES,
+						"subject" => SITE_URL . " - New order ($order_no) created on behalf of: $user_id",
+						"message" => "Check out the new order: " . SITE_URL . "/janitor/admin/user/orders/" . $user_id . "\n\nOrder content: ".implode(",", $admin_summary),
+						"tracking" => false
+						// "template" => "system"
+					));
+
+
+					// order confirmation mail
+					mailer()->send(array(
+						"recipients" => $user["email"],
+						"values" => array(
+							"NICKNAME" => $user["nickname"], 
+							"ORDER_NO" => $order_no, 
+							"ORDER_ID" => $order["id"], 
+							"ORDER_PRICE" => formatPrice($total_order_price) 
+						),
+						// "subject" => SITE_URL . " – Thank you for your order!",
+						"tracking" => false,
+						"template" => "order_confirmation"
+					));
 					
 					// redirect to payment
 					message()->resetMessages();
