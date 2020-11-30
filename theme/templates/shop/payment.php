@@ -102,7 +102,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 							"wrapper" => "li.continue.".$user_payment_method["classname"],
 						)) ?>
 					</ul>
-					<p><?= $user_payment_method["description"] ?></p>
+					<!-- <p><?= $user_payment_method["description"] ?></p> -->
 				</li>
 					<? endforeach; ?>
 
@@ -126,7 +126,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 							"wrapper" => "li.continue.".$user_payment_method["classname"],
 						)) ?>
 					</ul>
-					<p><?= $user_payment_method["description"] ?></p>
+					<!-- <p><?= $user_payment_method["description"] ?></p> -->
 				</li>
 				<? endif; ?>
 
