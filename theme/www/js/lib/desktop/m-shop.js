@@ -250,7 +250,6 @@ Util.Modules["cart"] = new function() {
 							this.val(1);
 						}
 						// else {
-							u.ac(this._form.actions["update"], "primary");
 							this._form.submit();
 						// }
 					}
@@ -259,6 +258,8 @@ Util.Modules["cart"] = new function() {
 					quantity_form.submitted = function() {
 
 						this.response = function(response) {
+
+				 			u.rc(this.actions["update"], "primary");
 
 							if(response) {
 
@@ -282,8 +283,10 @@ Util.Modules["cart"] = new function() {
 								this.node.quantity.value = item_quantity.value;
 
 
-					 			u.rc(this.actions["update"], "primary");
 
+							}
+							else {
+								u.ac(this._form.actions["update"], "primary");
 							}
 						}
 
