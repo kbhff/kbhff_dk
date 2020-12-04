@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-17 23:42:56
+asset-builder @ 2020-12-04 11:50:31
 */
 
 /*seg_desktop_include.js*/
@@ -6215,11 +6215,11 @@ Util.Modules["cart"] = new function() {
 						if(parseInt(this.val()) < 1) {
 							this.val(1);
 						}
-							u.ac(this._form.actions["update"], "primary");
 							this._form.submit();
 					}
 					quantity_form.submitted = function() {
 						this.response = function(response) {
+				 			u.rc(this.actions["update"], "primary");
 							if(response) {
 								var total_price = u.qs("div.scene div.total span.total_price", response);
 								var item_row;
@@ -6236,7 +6236,9 @@ Util.Modules["cart"] = new function() {
 								this.node.total_price.innerHTML = item_total_price.innerHTML;
 								this.node.unit_price.innerHTML = item_unit_price.innerHTML;
 								this.node.quantity.value = item_quantity.value;
-					 			u.rc(this.actions["update"], "primary");
+							}
+							else {
+								u.ac(this._form.actions["update"], "primary");
 							}
 						}
 						u.request(this, this.action, {"method":"post", "data":this.getData()});

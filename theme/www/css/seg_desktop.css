@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-17 23:42:56
+asset-builder @ 2020-12-04 11:50:31
 */
 
 /*seg_desktop_include.css*/
@@ -1036,11 +1036,12 @@ position: relative;
 #content .scene.cart ul.items li form div.field input.error {height: 32px; width: 44px;}
 #content .scene.cart ul.items li form > ul.actions {padding: 0; right: 45px; top: 0;}
 #content .scene.cart ul.items li form > ul.actions li {padding: 8px 0 0;}
-#content .scene.cart ul.items li form > ul.actions input.button {width: 16px; height: 16px; padding: 0; text-indent: -9999px; border-radius: 15px;
+#content .scene.cart ul.items li form > ul.actions input.button {width: 16px; height: 16px; padding: 0; text-indent: -9999px; border-radius: 15px; display: none;
 	background-image: url(../img/checkout/gx_refresh.png);
 	background-position: center center;
 	background-repeat: no-repeat;
 }
+#content .scene.cart ul.items li form > ul.actions input.button.primary {display: block;}
 #content .scene.cart ul.items li p {padding: 0;}
 #content .scene.cart ul.items li span.total_price {float: right; padding-right: 70px;}
 #content .scene.cart ul.items li ul.actions {padding: 0; top: 8px; position: absolute; right: 0;}
