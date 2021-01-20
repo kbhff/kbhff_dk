@@ -92,7 +92,7 @@ class SuperSubscription extends SuperSubscriptionCore {
 			include_once("classes/users/superuser.class.php");
 			$UC = new SuperUser();
 
-			$midnight_next_week = date("Y-m-d H:i:s", strtotime("midnight next week"));
+			$midnight_next_week = date("Y-m-d H:i:s", strtotime("midnight next week + 1 day"));
 
 			// send notice to specific user
 			if(count($action) == 2) {
@@ -115,6 +115,7 @@ class SuperSubscription extends SuperSubscriptionCore {
 					
 					$item = $IC->getItem(["id" => $subscription["item_id"], "extend" => true]);
 					$user = $UC->getKbhffUser(["user_id" => $subscription["user_id"]]);
+					$user_id = $user["id"];
 
 					// debug([$item]);
 
