@@ -541,6 +541,31 @@ class SuperShop extends SuperShopCore {
 		return false;
 	}
 	
+	function getOrderContentString($order_items) {
+		
+		$order_content = "";
+		foreach ($order_items as $order_item) {
+
+			$IC = new Items();
+
+			$item = $IC->getItem(["id" => $order_item["item_id"], "extend" => true]);
+
+			if($item["itemtype"] == "membership") {
+				$da_itemtype = " (medlemskab)";
+			}
+			else if($item["itemtype"] == "signupfee") {
+				$da_itemtype = " (indmeldelsesgebyr)";
+			}
+			else {
+				$da_itemtype = "";
+			}
+
+			$order_content .= $order_item["quantity"]." x ".$order_item["name"].$da_itemtype."<br />";
+
+		}
+
+		return $order_content;
+	}
 }
 
 ?>
