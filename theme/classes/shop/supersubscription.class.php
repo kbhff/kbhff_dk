@@ -92,7 +92,7 @@ class SuperSubscription extends SuperSubscriptionCore {
 			include_once("classes/users/superuser.class.php");
 			$UC = new SuperUser();
 
-			$midnight_next_week = date("Y-m-d H:i:s", strtotime("midnight next week + 1 day"));
+			$midnight_next_week = date("Y-m-d H:i:s", strtotime("+ 7 days midnight"));
 
 			// send notice to specific user
 			if(count($action) == 2) {
