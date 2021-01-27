@@ -29,6 +29,18 @@ $MC = new SuperMember();
 $page->bodyClass("member_help");
 $page->pageTitle("Medlemshjælp");
 
+// User must be active member
+$user = $UC->getKbhffUser();
+if($user["membership"] && !$user["membership"]["subscription_id"]) {
+
+	$page->page(array(
+		"templates" => "profile/inactive_membership.php",
+		"type" => "member",
+		"page_title" => "Inaktivt medlemskab"
+	));
+	exit();
+}
+
 // Allow accept terms
 if($action && count($action) == 1 && $action[0] == "accept" && $page->validateCsrfToken()) {
 
