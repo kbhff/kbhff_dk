@@ -554,7 +554,7 @@ if($action) {
 					mailer()->send(array(
 						"recipients" => SHOP_ORDER_NOTIFIES,
 						"subject" => SITE_URL . " - New order ($order_no) created on behalf of: $user_id",
-						"message" => "Check out the new order: " . SITE_URL . "/janitor/admin/user/orders/" . $user_id . "\n\nOrder content: ".implode(",", $admin_summary),
+						"message" => "Check out the new order: " . SITE_URL . "/janitor/admin/user/orders/" . $user_id,
 						"tracking" => false
 						// "template" => "system"
 					));
@@ -814,15 +814,15 @@ if($action) {
 		exit();
 	}
 
-	# /medlemshjaelp/updateOrderItemDetails/#order_item_id#/#user_id#
-	else if($action[0] == "updateOrderItemDetails" && $page->validateCsrfToken()) {
+	# /medlemshjaelp/setOrderItemDepartmentPickupdate/#order_item_id#
+	else if($action[0] == "setOrderItemDepartmentPickupdate" && $page->validateCsrfToken()) {
 
 		$order_item_id = $action[1];
-		$order_item = $SC->getOrderItem($order_item_id);
+		$order_item = $SC->getOrderItems(["order_item_id" => $order_item_id]);
 		$user_id = $action[2];
 
 
-		if($SC->updateOrderItemDetails(["updateOrderItemDetails", $order_item_id])) {
+		if($SC->setOrderItemDepartmentPickupdate(["setOrderItemDepartmentPickupdate", $order_item_id])) {
 
 			header("Location: /medlemshjaelp/brugerprofil/$user_id");
 			exit();

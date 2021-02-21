@@ -14,7 +14,7 @@ $amount = "";
 $order = $model->getOrders(array("order_no" => $order_no));
 $member_user_id = $order["user_id"];
 
-$order_items_without_pickupdates = $SC->getOrderItemsWithoutPickupdate(["order_id" => $order["id"]]);
+$order_items_without_pickupdates = $SC->getOrderItems(["order_id" => $order["id"], "department_pickupdate" => "none"]);
 $order_pickupdates = $SC->getOrderPickupdates($order["id"], ["user_id" => $member_user_id]);
 
 

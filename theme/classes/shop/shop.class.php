@@ -33,9 +33,12 @@ class Shop extends ShopCore {
 
 		parent::__construct(get_class());
 
+		$this->db_departments = SITE_DB.".project_departments";
 		$this->db_pickupdates = SITE_DB.".project_pickupdates";
-		$this->db_pickupdate_cart_items = SITE_DB.".project_pickupdate_cart_items";
-		$this->db_pickupdate_order_items = SITE_DB.".project_pickupdate_order_items";
+		$this->db_department_pickupdate_cart_items = SITE_DB.".project_department_pickupdate_cart_items";
+		$this->db_department_pickupdate_order_items = SITE_DB.".project_department_pickupdate_order_items";
+
+		$this->db_department_pickupdates = SITE_DB.".project_department_pickupdates";
 
 		$this->order_statuses_dk = array(0 => "Ny", 1 => "Afventer", 2 => "Færdig", 3 => "Annulleret");
 
@@ -79,6 +82,7 @@ class Shop extends ShopCore {
 
 				$query = new Query();
 				$IC = new Items();
+				$UC = new User();
 
 				$custom_name = $this->getProperty("custom_name", "value");
 				$custom_price = $this->getProperty("custom_price", "value");
@@ -87,6 +91,9 @@ class Shop extends ShopCore {
 				$pickupdate_id = getPost("pickupdate_id", "value");
 				$item = $IC->getItem(array("id" => $item_id));
 				$price = $this->getPrice($item_id);
+
+				$department = $UC->getUserDepartment();
+				$department_id = $department["id"];
 
 				
 				// are there any items in cart already?
@@ -130,7 +137,7 @@ class Shop extends ShopCore {
 					if($existing_cart_item) {
 						
 						// check if same item_id with same pickupdate is already in cart
-						$existing_cart_item = $this->getExistingCartItem($cart["id"], $item_id, $pickupdate_id);
+						$existing_cart_item = $this->getExistingCartItem($cart["id"], $item_id, $department_id, $pickupdate_id);
 					}
 					
 
@@ -170,7 +177,8 @@ class Shop extends ShopCore {
 						else {
 							$cart_item_id = $query->lastInsertId();
 							if($pickupdate_id) {
-								$this->addPickupdateCartItem($pickupdate_id, $cart_item_id);
+
+								$this->addDepartmentPickupdateCartItem($department_id, $pickupdate_id, $cart_item_id);
 							}
 						}
 	
@@ -211,11 +219,11 @@ class Shop extends ShopCore {
 
 			$query = new Query();
 			$query->checkDbExistence($this->db_pickupdates);
-			$query->checkDbExistence($this->db_pickupdate_cart_items);
+			$query->checkDbExistence($this->db_department_pickupdate_cart_items);
 
 			$cart_id = $cart["id"];
 
-			$sql = "SELECT DISTINCT pickupdates.* FROM ".$this->db_pickupdates." AS pickupdates, ".$this->db_pickupdate_cart_items." AS pickupdate_cart_items, ".$this->db_cart_items." AS cart_items WHERE cart_items.cart_id = $cart_id AND cart_items.id = pickupdate_cart_items.cart_item_id AND pickupdates.id = pickupdate_cart_items.pickupdate_id ORDER BY pickupdates.pickupdate ASC";
+			$sql = "SELECT DISTINCT pickupdates.* FROM ".$this->db_pickupdates." AS pickupdates, ".$this->db_department_pickupdate_cart_items." AS department_pickupdate_cart_items, ".$this->db_cart_items." AS cart_items WHERE cart_items.cart_id = $cart_id AND cart_items.id = department_pickupdate_cart_items.cart_item_id AND pickupdates.id = department_pickupdate_cart_items.pickupdate_id ORDER BY pickupdates.pickupdate ASC";
 			if($query->sql($sql)) {
 	
 				$cart_pickupdates = $query->results();
@@ -235,7 +243,7 @@ class Shop extends ShopCore {
 
 		if($cart && $cart["items"]) {
 
-			$sql = "SELECT cart_items.* FROM ".$this->db_pickupdate_cart_items." AS pickupdate_cart_items, ".$this->db_cart_items." AS cart_items WHERE pickupdate_cart_items.pickupdate_id = $pickupdate_id AND cart_items.id = pickupdate_cart_items.cart_item_id AND cart_items.cart_id = ".$cart["id"];
+			$sql = "SELECT cart_items.* FROM ".$this->db_department_pickupdate_cart_items." AS department_pickupdate_cart_items, ".$this->db_cart_items." AS cart_items WHERE department_pickupdate_cart_items.pickupdate_id = $pickupdate_id AND cart_items.id = department_pickupdate_cart_items.cart_item_id AND cart_items.cart_id = ".$cart["id"];
 			if($query->sql($sql)) {
 				
 				$cart_pickupdate_items = $query->results();
@@ -261,8 +269,8 @@ class Shop extends ShopCore {
 			$sql = "SELECT cart_items.* 
 			FROM ".$this->db_cart_items." AS cart_items
 			WHERE cart_items.id NOT IN (
-				SELECT pickupdate_cart_items.cart_item_id 
-				FROM ".$this->db_pickupdate_cart_items." AS pickupdate_cart_items 
+				SELECT department_pickupdate_cart_items.cart_item_id 
+				FROM ".$this->db_department_pickupdate_cart_items." AS department_pickupdate_cart_items 
 				) 
 			AND cart_items.cart_id = $cart_id";
 
@@ -281,9 +289,9 @@ class Shop extends ShopCore {
 		
 		
 		$query = new Query();
-		$query->checkDbExistence($this->db_pickupdate_cart_items);
+		$query->checkDbExistence($this->db_department_pickupdate_cart_items);
 
-		$sql = "SELECT pickupdates.* FROM ".$this->db_pickupdates." AS pickupdates, ".$this->db_pickupdate_cart_items." AS pickupdate_cart_items WHERE pickupdate_cart_items.cart_item_id = $cart_item_id AND pickupdates.id = pickupdate_cart_items.pickupdate_id";
+		$sql = "SELECT pickupdates.* FROM ".$this->db_pickupdates." AS pickupdates, ".$this->db_department_pickupdate_cart_items." AS department_pickupdate_cart_items WHERE department_pickupdate_cart_items.cart_item_id = $cart_item_id AND pickupdates.id = department_pickupdate_cart_items.pickupdate_id";
 		if($query->sql($sql)) {
 
 			$cart_item_pickupdate = $query->result(0);
@@ -294,12 +302,12 @@ class Shop extends ShopCore {
 		return false;
 	}
 
-	function addPickupdateCartItem($pickupdate_id, $cart_item_id) {
+	function addDepartmentPickupdateCartItem($department_id, $pickupdate_id, $cart_item_id) {
 		
 		$query = new Query();
-		$query->checkDbExistence($this->db_pickupdate_cart_items);
+		$query->checkDbExistence($this->db_department_pickupdate_cart_items);
 
-		$sql = "INSERT INTO ".$this->db_pickupdate_cart_items." SET pickupdate_id = $pickupdate_id, cart_item_id = $cart_item_id";
+		$sql = "INSERT INTO ".$this->db_department_pickupdate_cart_items." SET department_id = $department_id, pickupdate_id = $pickupdate_id, cart_item_id = $cart_item_id";
 		if($query->sql($sql)) {
 
 			return true;
@@ -309,18 +317,18 @@ class Shop extends ShopCore {
 		
 	}
 
-	function getExistingCartItem($cart_id, $item_id, $pickupdate_id) {
+	function getExistingCartItem($cart_id, $item_id, $department_id,$pickupdate_id) {
 
 		$query = new Query();
 
-		if($pickupdate_id) {
+		if($department_id && $pickupdate_id) {
 
 			$sql = "SELECT cart_items.* 
-			FROM ".$this->db_cart_items." AS cart_items, ".$this->db_pickupdate_cart_items." AS pickupdate_cart_items 
+			FROM ".$this->db_cart_items." AS cart_items, ".$this->db_department_pickupdate_cart_items." AS department_pickupdate_cart_items 
 			WHERE cart_items.cart_id = $cart_id 
 			AND cart_items.item_id = $item_id 
-			AND cart_items.id = pickupdate_cart_items.cart_item_id 
-			AND pickupdate_cart_items.pickupdate_id = $pickupdate_id";
+			AND cart_items.id = department_pickupdate_cart_items.cart_item_id 
+			AND department_pickupdate_cart_items.pickupdate_id = $pickupdate_id";
 		}
 		else {
 
@@ -329,8 +337,8 @@ class Shop extends ShopCore {
 			WHERE cart_items.cart_id = $cart_id 
 			AND cart_items.item_id = $item_id
 			AND cart_items.id NOT IN (
-				SELECT pickupdate_cart_items.cart_item_id 
-				FROM ".$this->db_pickupdate_cart_items." AS pickupdate_cart_items 
+				SELECT department_pickupdate_cart_items.cart_item_id 
+				FROM ".$this->db_department_pickupdate_cart_items." AS department_pickupdate_cart_items 
 				)
 			";
 		}
@@ -346,12 +354,12 @@ class Shop extends ShopCore {
 		return false;
 	}
 
-	function addPickupdateOrderItem($pickupdate_id, $order_item_id) {
+	function addDepartmentPickupdateOrderItem($department_id, $pickupdate_id, $order_item_id) {
 
 		$query = new Query();
-		$query->checkDbExistence($this->db_pickupdate_order_items);
+		$query->checkDbExistence($this->db_department_pickupdate_order_items);
 
-		$sql = "INSERT INTO ".$this->db_pickupdate_order_items." SET pickupdate_id = $pickupdate_id, order_item_id = $order_item_id";
+		$sql = "INSERT INTO ".$this->db_department_pickupdate_order_items." SET department_id = $department_id, pickupdate_id = $pickupdate_id, order_item_id = $order_item_id";
 		if($query->sql($sql)) {
 
 			return true;
@@ -397,17 +405,17 @@ class Shop extends ShopCore {
 	function getOrderPickupdates($order_id) {
 		
 		$query = new Query();
-		$query->checkDbExistence($this->db_pickupdate_order_items);
+		$query->checkDbExistence($this->db_department_pickupdate_order_items);
 
 		$sql = "SELECT DISTINCT pickupdates.* 
 		FROM ".$this->db_pickupdates." AS pickupdates, "
-		.$this->db_pickupdate_order_items." AS pickupdate_order_items, "
+		.$this->db_department_pickupdate_order_items." AS department_pickupdate_order_items, "
 		.$this->db_order_items." AS order_items, "
 		.$this->db_orders." AS orders 
 		WHERE orders.id = $order_id 
 		AND order_items.order_id = orders.id
-		AND pickupdate_order_items.order_item_id = order_items.id 
-		AND pickupdates.id = pickupdate_order_items.pickupdate_id";
+		AND department_pickupdate_order_items.order_item_id = order_items.id 
+		AND pickupdates.id = department_pickupdate_order_items.pickupdate_id";
 
 		if($query->sql($sql)) {
 
@@ -419,105 +427,141 @@ class Shop extends ShopCore {
 		return false;
 	}
 
-	function getOrderItemPickupdate($order_item_id) {
+	function getOrderItemDepartmentPickupdate($order_item_id) {
 		
 		$query = new Query();
-		$query->checkDbExistence($this->db_pickupdate_order_items);
+		$query->checkDbExistence($this->db_department_pickupdate_order_items);
 
-		$sql = "SELECT DISTINCT pickupdates.* 
-		FROM ".$this->db_pickupdates." AS pickupdates, "
-		.$this->db_pickupdate_order_items." AS pickupdate_order_items
-		WHERE pickupdate_order_items.order_item_id = $order_item_id
-		AND pickupdate_order_items.pickupdate_id = pickupdates.id 
-		LIMIT 1";
+		$sql = "SELECT 
+			department_pickupdate_order_items.*, 
+			pickupdates.pickupdate, 
+			departments.name AS department 
+		FROM ".$this->db_department_pickupdate_order_items." AS department_pickupdate_order_items, "
+		.$this->db_departments." AS departments, "
+		.$this->db_pickupdates." AS pickupdates
+		WHERE department_pickupdate_order_items.order_item_id = $order_item_id
+		AND department_pickupdate_order_items.pickupdate_id = pickupdates.id 
+		AND department_pickupdate_order_items.department_id = departments.id";
 
 		if($query->sql($sql)) {
 
-			$order_item_pickupdate = $query->result(0);
+			$order_item_department_pickupdate = $query->result(0);
 
-			return $order_item_pickupdate;
+			return $order_item_department_pickupdate;
 		}
 
 		return false;
 	}
 
-	function setOrderItemPickupdate($order_item_id, $pickupdate_id) {
+	function setOrderItemDepartmentPickupdate($action) {
 		
 		$query = new Query();
-		$query->checkDbExistence($this->db_pickupdate_order_items);
+		$query->checkDbExistence($this->db_department_pickupdate_order_items);
 
-		if($this->getOrderItemPickupdate($order_item_id)) {
+		$order_item_id = $action[1];
+		
+		$department_id = getPost("department_id", "value");
+		$pickupdate_id = getPost("pickupdate_id", "value");
 
-			$sql = "UPDATE ".$this->db_pickupdate_order_items." SET pickupdate_id = $pickupdate_id WHERE order_item_id = $order_item_id";
+		if($this->getOrderItemDepartmentPickupdate($order_item_id)) {
+
+			$sql = "UPDATE ".$this->db_department_pickupdate_order_items." SET department_id = $department_id, pickupdate_id = $pickupdate_id WHERE order_item_id = $order_item_id";
 		}
 		else {
 
-			$sql = "INSERT INTO ".$this->db_pickupdate_order_items." SET pickupdate_id = $pickupdate_id, order_item_id = $order_item_id";
+			$sql = "INSERT INTO ".$this->db_department_pickupdate_order_items." SET department_id = $department_id, pickupdate_id = $pickupdate_id, order_item_id = $order_item_id";
 		}
 
 		if($query->sql($sql)) {
 
-			return $this->getOrderItemPickupdate($order_item_id);
+			message()->addMessage("Pickup date and department was set");
+			return $this->getOrderItemDepartmentPickupdate($order_item_id);
 		}
 
+		message()->addMessage("Could not set pickupdate and department", ["type" => "error"]);
 		return false;
 	}
 
-	function getOrderItem($order_item_id) {
+	function getOrderItems($_options = false) {
 
 		$query = new Query();
 
-		$sql = "SELECT * FROM ".$this->db_order_items." WHERE id = $order_item_id";
+		$order_item_id = false;
+		$user_id = false;
+		$order_id = false;
+		$department_pickupdate = false;
+		$where = false;
+
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+					case "order_item_id"         : $order_item_id              = $_value; break;
+					case "user_id"               : $user_id                    = $_value; break;
+					case "order_id"              : $order_id                   = $_value; break;
+					case "department_pickupdate" : $department_pickupdate      = $_value; break;
+					case "where"                 : $where                      = $_value; break;
+				}
+			}
+		}
+
+		$sql = "SELECT 
+				order_items.*, orders.user_id, 
+				orders.order_no 
+			FROM "
+				.$this->db_order_items." AS order_items, "
+				.$this->db_orders." AS orders, "
+				.SITE_DB.".items AS items "." 
+			WHERE 
+				order_items.order_id = orders.id
+				AND orders.status < 3
+				AND order_items.item_id = items.id";
+				
+
+		if($order_item_id) {
+			$sql .= " AND order_items.id = ".$order_item_id;
+		}
+		if($user_id) {
+			$sql .= " AND orders.user_id = ".$user_id;
+		}
+		if($order_id) {
+			$sql .= " AND orders.id = ".$order_id;
+		}
+		if($department_pickupdate == "none") {
+			$sql .= " AND order_items.id NOT IN (
+				SELECT department_pickupdate_order_items.order_item_id 
+				FROM ".$this->db_department_pickupdate_order_items." AS department_pickupdate_order_items 
+				)";
+		}
+		if($department_pickupdate == "only") {
+			$sql .= " AND order_items.id IN (
+				SELECT department_pickupdate_order_items.order_item_id 
+				FROM ".$this->db_department_pickupdate_order_items." AS department_pickupdate_order_items 
+				)";
+		}
+		if($where) {
+			$sql .= " AND ".$where;
+		}
 
 		if($query->sql($sql)) {
 
-			$order_item = $query->result(0);
+			if($order_item_id) {
+				$order_item = $query->result(0);
 
-			return $order_item;
-		}
-
-		return false;
-	}
-
-	/**
-	 * updateOrderItemDetails
-	 * /butik/updateOrderItemDetails/#order_item_id#
-	 * 
-	 * Change pickupdate
-	 * Change pickup place (not implemented)
-	 *
-	 * @param array $action
-	 * @return boolean
-	 */
-	function updateOrderItemDetails($action) {
-
-		if(count($action) == 2) {
-
-			$this->getPostedEntities();
-
-			$order_item_id = $action[1];
-
-			$order_item = $this->getOrderItem($order_item_id);
-
-			if($order_item) {
-
-				$pickupdate_id = getPost("pickupdate_id", "value");
-				
-				if($pickupdate_id) {
-					$this->setOrderItemPickupdate($order_item_id, $pickupdate_id);
-				}
-				
-				return true;
+				return $order_item;
 			}
+
+			$order_items = $query->results();
+
+			return $order_items;
 		}
-		
+
 		return false;
 	}
 
 	function getOrderItemsPickupdates($user_id, $_options = false) {
 		
 		$query = new Query();
-		$query->checkDbExistence($this->db_pickupdate_order_items);
+		$query->checkDbExistence($this->db_department_pickupdate_order_items);
 
 		$after = false;
 		if($_options !== false) {
@@ -530,14 +574,14 @@ class Shop extends ShopCore {
 
 		$sql = "SELECT DISTINCT pickupdates.* 
 		FROM ".$this->db_pickupdates." AS pickupdates, "
-		.$this->db_pickupdate_order_items." AS pickupdate_order_items, "
+		.$this->db_department_pickupdate_order_items." AS department_pickupdate_order_items, "
 		.$this->db_order_items." AS order_items, "
 		.$this->db_orders." AS orders 
 		WHERE orders.user_id = $user_id 
 		AND order_items.order_id = orders.id
 		AND orders.status < 3
-		AND pickupdate_order_items.order_item_id = order_items.id 
-		AND pickupdates.id = pickupdate_order_items.pickupdate_id";
+		AND department_pickupdate_order_items.order_item_id = order_items.id 
+		AND pickupdates.id = department_pickupdate_order_items.pickupdate_id";
 
 		if($after) {
 			$sql .= " AND pickupdates.pickupdate >= '$after'";
@@ -555,72 +599,47 @@ class Shop extends ShopCore {
 		return false;
 	}
 
-	function getOrderItemsWithoutPickupdate($_options = false) {
-
-		$query = new Query();
-
-		$order_id = false;
-		if($_options !== false) {
-			foreach($_options as $_option => $_value) {
-				switch($_option) {
-					case "order_id"          : $order_id               = $_value; break;
-				}
-			}
-		}
-
-
-		$sql = "SELECT order_items.* 
-		FROM ".$this->db_order_items." AS order_items
-		WHERE order_items.id NOT IN (
-			SELECT pickupdate_order_items.order_item_id 
-			FROM ".$this->db_pickupdate_order_items." AS pickupdate_order_items 
-			)";
-
-		if($order_id) {
-			$sql .= " AND order_items.order_id = $order_id";
-		}
-
-		if($query->sql($sql)) {
-
-			$order_items_without_pickupdate = $query->results();
-
-			return $order_items_without_pickupdate;
-		}
-		
-
-		return false;
-	}
-
 	function getPickupdateOrderItems($pickupdate_id, $_options = false) {
 
 		$query = new Query();
 		
 		$order_id = false;
 		$user_id = false;
+		$item_id = false;
+		$department_id = false;
+		
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
 					case "order_id"          : $order_id               = $_value; break;
 					case "user_id"           : $user_id                = $_value; break;
+					case "item_id"           : $item_id                = $_value; break;
+					case "department_id"     : $department_id          = $_value; break;
 				}
 			}
 		}
 
-		$sql = "SELECT DISTINCT order_items.* 
+		$sql = "SELECT DISTINCT order_items.*, orders.user_id, department_pickupdate_order_items.status 
 		FROM ".$this->db_pickupdates." AS pickupdates, "
-		.$this->db_pickupdate_order_items." AS pickupdate_order_items, "
+		.$this->db_department_pickupdate_order_items." AS department_pickupdate_order_items, "
 		.$this->db_order_items." AS order_items, "
 		.$this->db_orders." AS orders 
-		WHERE pickupdate_order_items.pickupdate_id = $pickupdate_id
-		AND pickupdate_order_items.order_item_id = order_items.id
+		WHERE department_pickupdate_order_items.pickupdate_id = $pickupdate_id
+		AND department_pickupdate_order_items.order_item_id = order_items.id
 		AND order_items.order_id = orders.id
 		AND orders.status < 3"; 
 
 		if($order_id) {
 			$sql .= " AND orders.id = $order_id";
 		}
-		else if($user_id) {
+		if($user_id) {
 			$sql .= " AND orders.user_id = $user_id";
+		}
+		if($item_id) {
+			$sql .= " AND order_items.item_id = $item_id";
+		}
+		if($department_id) {
+			$sql .= " AND department_pickupdate_order_items.department_id = $department_id";
 		}
 
 		if($query->sql($sql)) {
@@ -639,6 +658,8 @@ class Shop extends ShopCore {
 
 			$query = new Query();
 			$IC = new Items();
+
+
 	
 			$quantity = $cart_item["quantity"];
 			$item_id = $cart_item["item_id"];
@@ -689,8 +710,12 @@ class Shop extends ShopCore {
 	
 						// add cart_item's pickupdate to order_item
 						$pickupdate = $this->getCartItemPickupdate($cart_item["id"]);
+						
+						$UC = new User();
+						$department = $UC->getUserDepartment();
+
 						if($pickupdate) {
-							$this->addPickupdateOrderItem($pickupdate["id"], $order_item_id);
+							$this->addDepartmentPickupdateOrderItem($department["id"], $pickupdate["id"], $order_item_id);
 						}
 	
 						return $order_item;

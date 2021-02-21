@@ -14,6 +14,9 @@ $action = $page->actions();
 include_once("classes/shop/tally.class.php");
 $TC = new Tally();
 
+include_once("classes/shop/supershop.class.php");
+$SC = new SuperShop();
+
 // page info
 $page->bodyClass("shop_shift");
 $page->pageTitle("Butiksvagt");

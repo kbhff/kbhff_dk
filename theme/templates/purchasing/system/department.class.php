@@ -581,36 +581,10 @@ class Department extends Model {
 			$pickupdate_id = $action[2];
 
 			$query = new Query();
-
-			$SC = new Shop();
-			$department_pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate_id, ["department_id" => $department_id]);
-
+	
 			$sql = "DELETE FROM ".$this->db_pickupdates." WHERE department_id = $department_id AND pickupdate_id = $pickupdate_id";
 	
 			if($query->sql($sql)) {
-
-				if($department_pickupdate_order_items) {
-
-					include_once("classes/shop/pickupdate.class.php");
-					$PC = new Pickupdate();
-					$pickupdate = $PC->getPickupdate(["id" => $pickupdate_id]);
-					$department = $this->getDepartment(["id" => $department_id]);
-
-					$order_item_links = [];
-					foreach ($department_pickupdate_order_items as $order_item) {
-						
-						$order_item_links[] = SITE_URL."/janitor/order-item/edit/".$order_item["id"];
-					}
-
-					// send notification email to admin
-					mailer()->send(array(
-						"recipients" => ADMIN_EMAIL,
-						"subject" => SITE_URL . " - ACTION NEEDED: Order items have been orphaned",
-						"message" => "The ".$department['name']." department has been closed on the pickupdate ".$pickupdate['pickupdate'].". This has caused ".count($department_pickupdate_order_items)." order items to lose their time and place of pickup. \n\nHere are links to each of the affected order items:\n\n".implode("\n", $order_item_links). ". \n\nFollow the links to assign a new department/pickupdate to each order item.",
-						"tracking" => false
-						// "template" => "system"
-					));
-				}
 	
 				return true;
 			}
@@ -619,46 +593,6 @@ class Department extends Model {
 
 		return false;
 
-	}
-
-	function updatePickupdateDepartments($action) {
-
-		
-		// Check that the number of REST parameters is as expected.
-		if(count($action) == 2) {
-
-			// Get content of $_POST array which have been "quality-assured" by Janitor 
-			$this->getPostedEntities();
-	
-			$pickupdate_id = $action[1];
-
-			$pickupdate_departments = $this->getPickupdateDepartments($pickupdate_id);
-			
-			$departments = $this->getDepartments();
-			foreach ($departments as $department) {
-
-				$department_open_current = arrayKeyValue($pickupdate_departments, "id", $department["id"]);	
-				$department_open_new = getPost("pickupdate_department_".$department["id"], "value");
-				
-				// department was changed to closed
-				if(($department_open_current !== false && !$department_open_new)) {
-
-					$this->removePickupdate(["removePickupdate", $department["id"], $pickupdate_id]);
-				}
-				// department was changed to open
-				else if($department_open_current === false && $department_open_new) {
-
-					$this->addPickupdate(["addPickupdate", $department["id"], $pickupdate_id]);
-				}
-
-			}
-
-			return true;
-
-		}
-
-		// something went wrong
-		return false;
 	}
 
 }

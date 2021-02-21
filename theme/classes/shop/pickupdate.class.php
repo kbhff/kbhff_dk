@@ -159,8 +159,7 @@ class Pickupdate extends Model {
 	 *
 	 * @param array|boolean $_options Associative array containing unsorted function parameters.
 	 * 		$id				int			Pickupdate id
-	 * 		$name			string		Pickupdate name
-	 * 		$department_id	int			Will search for active pickupdate for given department
+	 * 		$pickupdate 	string		Pickupdate (Y-m-d)
 	 * 
 	 * @return array|false Pickupdate item (via callback to Query->result(0))
 	 */
@@ -278,17 +277,39 @@ class Pickupdate extends Model {
 		// Checks for unexpected number of parameters
 		if(count($action) == 2) {
 			
-			// Ask the database to delete the row with the id that came from $action. 
-			$id = $action[1];
 			$query = new Query();
 			
-			$sql = "DELETE FROM ".$this->db." WHERE id = '$id'";
+			$pickupdate_id = $action[1];
+			$pickupdate = $this->getPickupdate(["id" => $pickupdate_id]);
+
+			$SC = new Shop();
+			$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate_id);
+			
+			$sql = "DELETE FROM ".$this->db." WHERE id = '$pickupdate_id'";
 			if($query->sql($sql)) {
 				message()->addMessage("Pickupdate deleted");
 
+				if($pickupdate_order_items) {
+
+					$order_item_links = [];
+					foreach ($pickupdate_order_items as $order_item) {
+						
+						$order_item_links[] = SITE_URL."/janitor/order-item/edit/".$order_item["id"];
+					}
+
+					// send notification email to admin
+					mailer()->send(array(
+						"recipients" => ADMIN_EMAIL,
+						"subject" => SITE_URL . " - ACTION NEEDED: Order items have been orphaned",
+						"message" => "The pickupdate ".$pickupdate['pickupdate']." has been deleted from the system. This has caused ".count($pickupdate_order_items)." order items to lose their time and place of pickup. \n\nHere are links to each of the affected order items:\n\n".implode("\n", $order_item_links). ". \n\nFollow the links to assign a new department/pickupdate to each order item.",
+						"tracking" => false
+						// "template" => "system"
+					));
+				}
+
 				global $page;
 				$user_id = session()->value("user_id");
-				$page->addLog("Pickupdate: pickupdate id:$id deleted by user_id:$user_id");
+				$page->addLog("Pickupdate: pickupdate id:$pickupdate_id deleted by user_id:$user_id");
 
 				return true;		
 			}

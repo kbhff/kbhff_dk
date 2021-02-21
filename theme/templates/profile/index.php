@@ -14,9 +14,9 @@ $is_active = isset($user["membership"]["subscription_id"]) ? true : false;
 $is_membership_paid = $is_member && $is_active && $user["membership"]["order"]["payment_status"] == 2 ? true : false;
 
 $orders = $SC->getOrders();
-if($orders) {
-	$order_items_pickupdates = $SC->getOrderItemsPickupdates($user["id"], ["after" => date("Y-m-d")]);
-}
+$order_items_pickupdates = $SC->getOrderItemsPickupdates($user["id"], ["after" => date("Y-m-d")]);
+
+$order_items_without_pickupdate = $SC->getOrderItems(["pickupdate_department" => "none"]);
 
 $unpaid_membership = $UC->hasUnpaidMembership();
 $unpaid_orders = $SC->getUnpaidOrders();

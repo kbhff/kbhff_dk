@@ -1091,15 +1091,15 @@ if($action) {
 	# /butik/ret-bestilling/#order_item_id#
 	else if($action[0] == "ret-bestilling" && count($action) == 2) {
 		$page->page(array(
-			"templates" => "shop/update_order_item_details.php",
+			"templates" => "shop/update_order_item_department_pickupdate.php",
 		));
 		exit();
 	}
 
-	# /butik/updateOrderItemDetails/#order_item_id#
-	else if($action[0] == "updateOrderItemDetails" && $page->validateCsrfToken()) {
+	# /butik/setOrderItemDepartmentPickupdate/#order_item_id#
+	else if($action[0] == "setOrderItemDepartmentPickupdate" && $page->validateCsrfToken()) {
 
-		if($model->updateOrderItemDetails($action)) {
+		if($model->setOrderItemDepartmentPickupdate($action)) {
 
 			header("Location: /profil");
 			exit();

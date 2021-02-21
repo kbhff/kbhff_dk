@@ -158,10 +158,10 @@ class SuperShop extends SuperShopCore {
 
 			$sql = "DELETE cart_items 
 			FROM ".$this->db_cart_items." AS cart_items
-			JOIN ".$this->db_pickupdate_cart_items." AS pickupdate_cart_items 
-			ON cart_items.id = pickupdate_cart_items.cart_item_id 
+			JOIN ".$this->db_department_pickupdate_cart_items." AS department_pickupdate_cart_items 
+			ON cart_items.id = department_pickupdate_cart_items.cart_item_id 
 			JOIN ".$this->db_pickupdates." AS pickupdates 
-			ON pickupdates.id = pickupdate_cart_items.pickupdate_id
+			ON pickupdates.id = department_pickupdate_cart_items.pickupdate_id
 			WHERE pickupdates.pickupdate < CURDATE()"; 
 
 			if($query->sql($sql)) {
@@ -230,11 +230,11 @@ class SuperShop extends SuperShopCore {
 
 			$query = new Query();
 			$query->checkDbExistence($this->db_pickupdates);
-			$query->checkDbExistence($this->db_pickupdate_cart_items);
+			$query->checkDbExistence($this->db_department_pickupdate_cart_items);
 
 			$cart_id = $cart["id"];
 
-			$sql = "SELECT DISTINCT pickupdates.* FROM ".$this->db_pickupdates." AS pickupdates, ".$this->db_pickupdate_cart_items." AS pickupdate_cart_items, ".$this->db_cart_items." AS cart_items WHERE cart_items.cart_id = $cart_id AND cart_items.id = pickupdate_cart_items.cart_item_id AND pickupdates.id = pickupdate_cart_items.pickupdate_id ORDER BY pickupdates.pickupdate ASC";
+			$sql = "SELECT DISTINCT pickupdates.* FROM ".$this->db_pickupdates." AS pickupdates, ".$this->db_department_pickupdate_cart_items." AS department_pickupdate_cart_items, ".$this->db_cart_items." AS cart_items WHERE cart_items.cart_id = $cart_id AND cart_items.id = department_pickupdate_cart_items.cart_item_id AND pickupdates.id = department_pickupdate_cart_items.pickupdate_id ORDER BY pickupdates.pickupdate ASC";
 			if($query->sql($sql)) {
 	
 				$cart_pickupdates = $query->results();
@@ -262,7 +262,7 @@ class SuperShop extends SuperShopCore {
 
 		if($cart && $cart["items"]) {
 
-			$sql = "SELECT cart_items.* FROM ".$this->db_pickupdate_cart_items." AS pickupdate_cart_items, ".$this->db_cart_items." AS cart_items WHERE pickupdate_cart_items.pickupdate_id = $pickupdate_id AND cart_items.id = pickupdate_cart_items.cart_item_id AND cart_items.cart_id = ".$cart["id"];
+			$sql = "SELECT cart_items.* FROM ".$this->db_department_pickupdate_cart_items." AS department_pickupdate_cart_items, ".$this->db_cart_items." AS cart_items WHERE department_pickupdate_cart_items.pickupdate_id = $pickupdate_id AND cart_items.id = department_pickupdate_cart_items.cart_item_id AND cart_items.cart_id = ".$cart["id"];
 			if($query->sql($sql)) {
 				
 				$cart_pickupdate_items = $query->results();
@@ -296,8 +296,8 @@ class SuperShop extends SuperShopCore {
 			$sql = "SELECT cart_items.* 
 			FROM ".$this->db_cart_items." AS cart_items
 			WHERE cart_items.id NOT IN (
-				SELECT pickupdate_cart_items.cart_item_id 
-				FROM ".$this->db_pickupdate_cart_items." AS pickupdate_cart_items 
+				SELECT department_pickupdate_cart_items.cart_item_id 
+				FROM ".$this->db_department_pickupdate_cart_items." AS department_pickupdate_cart_items 
 				) 
 			AND cart_items.cart_id = $cart_id";
 
@@ -439,7 +439,7 @@ class SuperShop extends SuperShopCore {
 						else {
 							$cart_item_id = $query->lastInsertId();
 							if($pickupdate_id) {
-								$this->addPickupdateCartItem($pickupdate_id, $cart_item_id);
+								$this->addDepartmentPickupdateCartItem($pickupdate_id, $cart_item_id);
 							}
 						}
 	
@@ -473,11 +473,15 @@ class SuperShop extends SuperShopCore {
 
 			$query = new Query();
 			$IC = new Items();
+
+			include_once("classes/users/superuser.class.php");
+			$UC = new SuperUser();
 	
 			$quantity = $cart_item["quantity"];
 			$item_id = $cart_item["item_id"];
 			$cart = $this->getCarts(["cart_id" => $cart_item["cart_id"]]);
 			$user_id = $cart ? $cart["user_id"] : false;
+			$user_department = $UC->getUserDepartment(["user_id" => $user_id]);
 	
 			// get item details
 			$item = $IC->getItem(["id" => $item_id, "extend" => true]);
@@ -526,7 +530,7 @@ class SuperShop extends SuperShopCore {
 						// add cart_item's pickupdate to order_item
 						$pickupdate = $this->getCartItemPickupdate($cart_item["id"]);
 						if($pickupdate) {
-							$this->addPickupdateOrderItem($pickupdate["id"], $order_item_id);
+							$this->addDepartmentPickupdateOrderItem($user_department["id"], $pickupdate["id"], $order_item_id);
 						}
 	
 						return $order_item;
