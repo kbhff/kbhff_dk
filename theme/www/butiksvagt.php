@@ -14,6 +14,9 @@ $action = $page->actions();
 include_once("classes/shop/tally.class.php");
 $TC = new Tally();
 
+include_once("classes/shop/pickupdate.class.php");
+$PC = new Pickupdate();
+
 include_once("classes/shop/supershop.class.php");
 $SC = new SuperShop();
 
@@ -267,7 +270,37 @@ if($action) {
 
 		
 	}
-	
+	else if($action[0] == "updateDeliveryStatus" && count($action) == 2) {
+		
+		$status = $SC->updateDeliveryStatus($action);
+		
+		if($status) {
+
+			// redirect to leave POST state
+			header("Location: /butiksvagt/");
+			exit();			
+		}
+
+	}
+	else if($action[0] == "selectPickupdate" && count($action) == 1) {
+		
+		$pickupdate_id = getPost("pickupdate_id", "value");
+
+		$pickupdate = $PC->getPickupdate(["id" => $pickupdate_id]);
+
+		if($pickupdate && $pickupdate["pickupdate"] == date("Y-m-d") ) {
+
+			// redirect to leave POST state
+			header("Location: /butiksvagt");
+			exit();			
+		}
+
+
+		// redirect to leave POST state
+		header("Location: /butiksvagt/".$pickupdate_id);
+		exit();			
+
+	}
 	
 
 	
