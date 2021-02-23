@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Handling påkrævet ifm. betaling af ordren {ORDER_NO}</title>
+	<title>Din ordre hos {SITE_NAME} blev annulleret</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 	<style type="text/css">
@@ -42,7 +42,7 @@
 <body style="color: #000000; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space; margin: 0; padding: 0;">
 
 <div class="preview ignore_text" style="display: none; font-size: 1px; color: #ffffff; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0.001; overflow: hidden">
-	Kontrollér venligst din betalingsmetode
+	Se ordredetaljer her.
 </div>
 
 <div style="background-color: #ffffff; text-align: center; padding: 0; margin: 0 10px;">
@@ -65,44 +65,22 @@
 			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 20px 0 30px;">
 				Hej <em>{NICKNAME}</em>,
 			</p>
-			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 20px 0 30px;">
-				Vi kunne ikke automatisk behandle betalingen af din ordre, {ORDER_NO}.
-			</p>
-			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 20px 0 30px;">
-				Dette kan have forskellige årsager. For eksempel kræver EU-lovgivning nu tofaktorgodkendelse af visse betalinger. Det kan også skyldes at dit kort er udløbet, eller måske er der ikke penge nok på kortet.
+			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
+				Din ordre, {ORDER_NO}, blev annulleret fordi du ikke nåede at betale den i tide. Betalings-deadline var d. {DEADLINE}, dvs. en uge før den førstkommende afhentningsdag. Ordren indeholdt følgende:
 			</p>
 			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
-				Den samlede pris er {ORDER_PRICE}. 
+				{ORDER_SUMMARY}
 			</p>
-			<p style="font-family: Verdana, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 20px;">
-				Klik på linket nedenfor og betal ordren nu:
+			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
+				Hvis du alligevel ønsker at bestille én eller flere af disse varer, kan du som medlem logge ind i Grøntshoppen og lave bestillingen påny.
 			</p>
-			<table>
-			<tr>
-				<td bgcolor="#ffffff" style="padding: 14px  0px; font-family: Arial, sans-serif; font-size: 28px; color: #3e8e17; margin: 30px 0;"><a href="{SITE_URL}/butik/betaling/{ORDER_NO}">Betal din ordre nu</td>
-			</tr>
-			</table>
-			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 20px 0 30px;">
-				Ordren indeholder følgende:
-			</p>
-			<p style="font-family: Arial, sans-serif; font-size: 15px; font-style: italic; color: #000000; padding: 0 30px; margin: 20px 0 30px;">
-				{ORDER_CONTENT}
-			</p>
-			<p style="font-family: Verdana, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 20px;">
-				Klik på linket for at se din ordre og faktura:
-			</p>
-			<table>
-			<tr>
-				<td bgcolor="#ffffff" style="padding: 14px  0px; font-family: Arial, sans-serif; font-size: 28px; color: #3e8e17; margin: 30px 0;"><a href="{SITE_URL}/janitor/admin/profile/orders/view/{ORDER_ID}">Se ordre og faktura</td>
-			</tr>
-			</table>
 			
-			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 20px 0 30px;">
-				Hvis du mener, at ovenstående ikke er korrekt, eller hvis du har spørgsmål vedrørende ordren eller betaling heraf, er du meget velkommen til at kontakte os ved at besvare denne mail. 
+			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
+				Tak fordi du støtter bæredygtig fødevaredistribution!
 			</p>
-				<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 15px 0;">
-				Grønne hilsener,
-				</p>
+			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 15px 0;">
+			Grønne hilsener
+			</p>
 		</td>
 	</tr>
 	<tr>

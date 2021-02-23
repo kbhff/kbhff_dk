@@ -1,6 +1,7 @@
 <?php
 $access_item["/sendRenewalNotices"] = true;
 $access_item["/cancelUnpaidOrders"] = true;
+$access_item["/sendCancellationWarnings"] = true;
 
 if(isset($read_access) && $read_access) {
 	return;
@@ -17,7 +18,6 @@ $page->pageTitle("Cronjobs");
 
 if(is_array($action) && count($action)) {
 
-	// Class interface
 	if(preg_match("/^cancelUnpaidOrders$/", $action[0])) {
 
 		include_once("classes/shop/supershop.class.php");
@@ -28,8 +28,18 @@ if(is_array($action) && count($action)) {
 		exit();
 
 	}
+	
+	else if(preg_match("/^sendCancellationWarnings$/", $action[0])) {
 
-	// Class interface
+		include_once("classes/shop/supershop.class.php");
+		$SC = new SuperShop();
+
+		$output = new Output();
+		$output->screen($SC->sendOrderCancellationWarnings($action));
+		exit();
+
+	}
+
 	else if(preg_match("/^sendRenewalNotices$/", $action[0])) {
 
 		include_once("classes/shop/supersubscription.class.php");

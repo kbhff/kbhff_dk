@@ -174,6 +174,92 @@ class SuperShop extends SuperShopCore {
 		return false;
 	}
 
+	// #controller#/sendOrderCancellationWarnings
+	function sendOrderCancellationWarnings($action) {
+
+		if(count($action) >= 1) {
+
+			global $page;
+
+			include_once("classes/users/superuser.class.php");
+			$UC = new SuperUser();
+
+			include_once("classes/shop/supershop.class.php");
+			$SC = new SuperShop();
+
+			include_once("classes/shop/pickupdate.class.php");
+			$PC = new Pickupdate();
+
+			// get pickupdate 9 days from now, if it exists
+			$pickupdate = $PC->getPickupdate(["pickupdate" => date("Y-m-d", strtotime("+9 days"))]);
+
+			if($pickupdate) {
+				
+				$pickupdate_order_items = $this->getPickupdateOrderItems($pickupdate["id"]);
+				if($pickupdate_order_items) {
+					
+					$pickupdate_day = (int)date("d", strtotime($pickupdate["pickupdate"]));
+					$pickupdate_month = (int)date("m", strtotime($pickupdate["pickupdate"]));
+					$pickupdate_year = (int)date("Y", strtotime($pickupdate["pickupdate"]));
+					$deadline_day = (int)date("d", strtotime($pickupdate["pickupdate"]." - 1 week"));
+					$deadline_month = (int)date("m", strtotime($pickupdate["pickupdate"]." - 1 week"));
+					$deadline_year = (int)date("Y", strtotime($pickupdate["pickupdate"]." - 1 week"));
+
+					$warned = [];
+					
+					foreach ($pickupdate_order_items as $pickupdate_order_item) {
+						
+						$order = $this->getOrders(["order_id" => $pickupdate_order_item["order_id"]]);
+						
+						// order is unpaid (or partially paid) and not cancelled and not already warned
+						if($order && !in_array($order["id"], $warned) && $order["status"] < 3 && $order["payment_status"] < 2) {
+							
+							$user = $UC->getUsers(["user_id" => $order["user_id"]]);
+							$username = $user ? $UC->getUsernames(["user_id" => $user["id"], "type" => "email"]) : false;
+	
+							$order_summary = [];
+	
+							foreach ($order["items"] as $order_item) {
+								
+								$order_item_department_pickupdate = $SC->getOrderItemDepartmentPickupdate($order_item["id"]);
+								$order_item_pickupdate_day = (int)date("d", strtotime($order_item_department_pickupdate["pickupdate"]));
+								$order_item_pickupdate_month = (int)date("m", strtotime($order_item_department_pickupdate["pickupdate"]));
+								$order_item_pickupdate_year = (int)date("Y", strtotime($order_item_department_pickupdate["pickupdate"]));
+								$order_summary[] = $order_item["quantity"]." x ".$order_item["name"]." (Afhentning d. ".$order_item_pickupdate_day."/".$order_item_pickupdate_month." ".$order_item_pickupdate_year." i afd. ".$order_item_department_pickupdate["department"].")";
+							}
+	
+							$order_summary = implode("<br />", $order_summary);
+	
+							mailer()->send(array(
+								"values" => array(
+									"FROM" => ADMIN_EMAIL,
+									"NICKNAME" => $user["nickname"],
+									"DEADLINE" => $deadline_day."/".$deadline_month." ".$deadline_year,
+									"PICKUPDATE" => $pickupdate_day."/".$pickupdate_month." ".$pickupdate_year,
+									"ORDER_SUMMARY" => $order_summary,
+									"ORDER_NO" => $order["order_no"]							),
+								"recipients" => $username ? $username["username"] : false,
+								"template" => "order_cancellation_warning",
+								"track_clicks" => false
+							));
+
+							$warned[] = $order["id"];
+	
+							$page->addLog("SuperShop->sendOrderCancellationWarnings: order cancellation warning sent to user_id:".$order["user_id"]);
+						}
+	
+					}
+					
+					message()->resetMessages();
+				}
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
 	/**
 	 * Cancel orders that are unpaid on the deadline (1 week before the first coming pickup date)
 	 * Run by cronjob
@@ -183,29 +269,84 @@ class SuperShop extends SuperShopCore {
 	 */
 	function cancelUnpaidOrders($action) {
 
-		if(count($action) == 1) {
+		if(count($action) >= 1) {
+
+			global $page;
+
+			include_once("classes/users/superuser.class.php");
+			$UC = new SuperUser();
+
+			include_once("classes/shop/supershop.class.php");
+			$SC = new SuperShop();
 
 			include_once("classes/shop/pickupdate.class.php");
 			$PC = new Pickupdate();
 
-			// get pickupdates that are less than a week from now
-			$pickupdates = $PC->getPickupdates(["after" => date("Y-m-d"), "before" => date("Y-m-d", strtotime("+1 weeks"))]);
+			// get pickupdate 6 days from now, if it exists
+			// 6 days because orders will only be cancelled when the deadline day has passed completely
+			$pickupdate = $PC->getPickupdate(["pickupdate" => date("Y-m-d", strtotime("+6 days"))]);
 
-			foreach ($pickupdates as $pickupdate) {
-
-				$order_items = $this->getPickupdateOrderItems($pickupdate["id"]);
-
-				if($order_items) {
-
-					foreach ($order_items as $order_item) {
-	
-						$order = $this->getOrders(["order_id" => $order_item["order_id"]]);
-						
-						$this->cancelOrder(["cancelOrder", $order["id"], $order["user_id"]]);
-					}
-				}
+			if($pickupdate) {
 				
-				message()->resetMessages();
+				$pickupdate_order_items = $this->getPickupdateOrderItems($pickupdate["id"]);
+				if($pickupdate_order_items) {
+
+					$pickupdate_day = (int)date("d", strtotime($pickupdate["pickupdate"]));
+					$pickupdate_month = (int)date("m", strtotime($pickupdate["pickupdate"]));
+					$pickupdate_year = (int)date("Y", strtotime($pickupdate["pickupdate"]));
+					$deadline_day = (int)date("d", strtotime($pickupdate["pickupdate"]." - 1 week"));
+					$deadline_month = (int)date("m", strtotime($pickupdate["pickupdate"]." - 1 week"));
+					$deadline_year = (int)date("Y", strtotime($pickupdate["pickupdate"]." - 1 week"));
+					
+					foreach ($pickupdate_order_items as $pickupdate_order_item) {
+						
+						$order = $this->getOrders(["order_id" => $pickupdate_order_item["order_id"]]);
+						
+						// order is unpaid (or partially paid) and not cancelled
+						if($order && $order["status"] < 3 && $order["payment_status"] < 2) {
+							
+							$user = $UC->getUsers(["user_id" => $order["user_id"]]);
+							$username = $user ? $UC->getUsernames(["user_id" => $user["id"], "type" => "email"]) : false;
+	
+							$order_summary = [];
+	
+							foreach ($order["items"] as $order_item) {
+								
+								$order_item_department_pickupdate = $SC->getOrderItemDepartmentPickupdate($order_item["id"]);
+								$order_item_pickupdate_day = (int)date("d", strtotime($order_item_department_pickupdate["pickupdate"]));
+								$order_item_pickupdate_month = (int)date("m", strtotime($order_item_department_pickupdate["pickupdate"]));
+								$order_item_pickupdate_year = (int)date("Y", strtotime($order_item_department_pickupdate["pickupdate"]));
+								
+								$order_summary[] = $order_item["quantity"]." x ".$order_item["name"]." (Afhentning d. ".$order_item_pickupdate_day."/".$order_item_pickupdate_month." ".$order_item_pickupdate_year." i afd. ".$order_item_department_pickupdate["department"].")";
+							}
+	
+							$order_summary = implode("<br />", $order_summary);
+
+							if($this->cancelOrder(["cancelOrder", $order["id"], $order["user_id"]])
+							) {
+
+								mailer()->send(array(
+									"values" => array(
+										"FROM" => ADMIN_EMAIL,
+										"NICKNAME" => $user["nickname"],
+										"PICKUPDATE" => $pickupdate_day."/".$pickupdate_month." ".$pickupdate_year,
+										"DEADLINE" => $deadline_day."/".$deadline_month." ".$deadline_year,
+										"ORDER_SUMMARY" => $order_summary,
+										"ORDER_NO" => $order["order_no"]							),
+									"recipients" => $username ? $username["username"] : false,
+									"template" => "order_cancellation_notice",
+									"track_clicks" => false
+								));
+	
+								$page->addLog("SuperShop->sendOrderCancellationNotices: order cancellation notice sent to user_id:".$order["user_id"]);
+							}
+	
+						}
+	
+					}
+					
+					message()->resetMessages();
+				}
 			}
 
 			return true;
