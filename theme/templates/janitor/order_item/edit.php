@@ -12,7 +12,7 @@ $order_item_id = $action[1];
 $order_item = $SC->getOrderItems(["order_item_id" => $order_item_id]);
 
 if($order_item) {
-	
+
 	$departments = $DC->getDepartments();
 	$upcoming_pickupdates = $PC->getPickupdates(["after" => date("Y-m-d")]);
 	
@@ -31,7 +31,8 @@ if($order_item) {
 	<h2><?= $order_item["name"] ?></h2>
 
 	<ul class="actions i:defaultEditActions">
-		<?= $HTML->link("Order item list", "/janitor/order-item/list", array("class" => "button", "wrapper" => "li.cancel")) ?>
+		<?= $HTML->link("Order item list", "/janitor/order-item/list", array("class" => "button", "wrapper" => "li.list")) ?>
+		<?= $HTML->link("Order", "/janitor/admin/shop/order/edit/".$order_item["order_id"], array("class" => "button", "wrapper" => "li.order")) ?>
 	</ul>
 
 	<div class="basics">

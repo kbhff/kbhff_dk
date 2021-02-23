@@ -192,8 +192,8 @@ else:
 	$username = stringOr(getPost("username"));
 	?>
 
-	<h2>Leder du efter betalingssiden?</h2>
-	<p>Du skal først logge ind på din konto.</p>
+	<h2>Log ind</h2>
+	<p>For at lave en betaling skal du først logge ind på din konto.</p>
 
 
 	<?= $model->formStart("?login=true", array("class" => "login labelstyle:inject")) ?>

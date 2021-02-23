@@ -809,7 +809,7 @@ if($action) {
 	# /medlemshjaelp/ret-bestilling
 	else if($action[0] == "ret-bestilling" && count($action) == 3) {
 		$page->page(array(
-			"templates" => "member-help/update_order_item_details.php",
+			"templates" => "member-help/update_order_item_department_pickupdate.php",
 		));
 		exit();
 	}
@@ -819,7 +819,7 @@ if($action) {
 
 		$order_item_id = $action[1];
 		$order_item = $SC->getOrderItems(["order_item_id" => $order_item_id]);
-		$user_id = $action[2];
+		$user_id = $order_item ? $order_item["user_id"] : false;
 
 
 		if($SC->setOrderItemDepartmentPickupdate(["setOrderItemDepartmentPickupdate", $order_item_id])) {

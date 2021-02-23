@@ -18,7 +18,7 @@ $this->pageTitle("Ret bestilling");
 
 <? if($order && $order["user_id"] == $user_id): ?>
 
-<div class="scene update_order_item_details_form i:update_order_item_details_form">
+<div class="scene update_order_item_department_pickupdate_form i:update_order_item_department_pickupdate_form">
 	<h1>Ret bestilling</h1>
 	<h2>Hvornår vil du hente dine grøntsager?</h2>
 
