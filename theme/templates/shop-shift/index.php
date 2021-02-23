@@ -60,8 +60,8 @@ if($department_pickupdate_order_items) {
 	<h1>Ordreliste</h1>
 	<div class="c-wrapper">
 		<div class="intro">
-			<p>I tabellen herunder kan du som kassemester se dagens bestillinger i din KBHFF afdeling. Hvert punkt svarer til en vare, og derfor kan der godt være flere linjer med samme navn, hvis der er bestilt flere varer (grøntsagspose og frugtpose fx).</p>
-			<p>Kassemestre kan bruge ‘Udlever’-knapperne til at registrere, at medlemmer har fået udleveret deres varer.</p>
+			<p>I tabellen herunder kan du som kassemester se aktuelle og fremtidige bestillinger i din KBHFF-afdeling. Hvert punkt svarer til en vare, og derfor kan der godt være flere linjer med samme navn, hvis der er bestilt flere varer (grøntsagspose og frugtpose fx).</p>
+			<p>Kassemestre kan på en aktuel afhentningsdag bruge ‘Udlever’-knapperne til at registrere, at medlemmer har fået udleveret deres varer.</p>
 		</div>
 		<div class="c-two-thirds info">
 			<ul>
