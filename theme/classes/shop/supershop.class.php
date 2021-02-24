@@ -503,7 +503,7 @@ class SuperShop extends SuperShopCore {
 
 				$item = $IC->getItem(array("id" => $item_id));
 
-				$department = $UC->getUserDepartment();
+				$department = $UC->getUserDepartment(["user_id" => $cart["user_id"]]);
 				$department_id = $department ? $department["id"] : false;
 
 				// are there any items in cart already?
