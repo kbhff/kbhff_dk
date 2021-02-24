@@ -13,4 +13,3 @@ CREATE TABLE `SITE_DB`.`project_department_pickupdate_cart_items` (
   CONSTRAINT `project_department_pickupdate_cart_items_ibfk_3` FOREIGN KEY (`cart_item_id`) REFERENCES `SITE_DB`.`shop_cart_items` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `project_department_pickupdate_cart_items_ibfk_4` FOREIGN KEY (`pickupdate_id`) REFERENCES `SITE_DB`.`project_department_pickupdates` (`pickupdate_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
