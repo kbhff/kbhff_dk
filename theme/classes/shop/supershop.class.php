@@ -491,6 +491,9 @@ class SuperShop extends SuperShopCore {
 				$query = new Query();
 				$IC = new Items();
 
+				include_once("classes/users/superuser.class.php");
+				$UC = new SuperUser();
+
 				$custom_name = $this->getProperty("custom_name", "value");
 				$custom_price = $this->getProperty("custom_price", "value");
 				$quantity = $this->getProperty("quantity", "value");
@@ -499,6 +502,9 @@ class SuperShop extends SuperShopCore {
 				$price = $this->getPrice($item_id, ["user_id" => $cart["user_id"]]);
 
 				$item = $IC->getItem(array("id" => $item_id));
+
+				$department = $UC->getUserDepartment();
+				$department_id = $department ? $department["id"] : false;
 
 				// are there any items in cart already?
 				if($cart["items"]) {
@@ -541,7 +547,7 @@ class SuperShop extends SuperShopCore {
 					if($existing_cart_item) {
 						
 						// check if same item_id with same pickupdate is already in cart
-						$existing_cart_item = $this->getExistingCartItem($cart["id"], $item_id, $pickupdate_id);
+						$existing_cart_item = $this->getExistingCartItem($cart["id"], $item_id, $department_id, $pickupdate_id);
 					}
 					
 

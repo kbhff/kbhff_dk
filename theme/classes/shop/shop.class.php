@@ -93,7 +93,7 @@ class Shop extends ShopCore {
 				$price = $this->getPrice($item_id);
 
 				$department = $UC->getUserDepartment();
-				$department_id = $department["id"];
+				$department_id = $department ? $department["id"] : false;
 
 				
 				// are there any items in cart already?
@@ -317,7 +317,7 @@ class Shop extends ShopCore {
 		
 	}
 
-	function getExistingCartItem($cart_id, $item_id, $department_id,$pickupdate_id) {
+	function getExistingCartItem($cart_id, $item_id, $department_id, $pickupdate_id) {
 
 		$query = new Query();
 
