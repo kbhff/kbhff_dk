@@ -586,7 +586,7 @@ class SuperShop extends SuperShopCore {
 						else {
 							$cart_item_id = $query->lastInsertId();
 							if($pickupdate_id) {
-								$this->addDepartmentPickupdateCartItem($pickupdate_id, $cart_item_id);
+								$this->addDepartmentPickupdateCartItem($department_id, $pickupdate_id, $cart_item_id);
 							}
 						}
 	
