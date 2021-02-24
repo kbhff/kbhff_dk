@@ -295,7 +295,6 @@ if($action) {
 			exit();			
 		}
 
-
 		// redirect to leave POST state
 		header("Location: /butiksvagt/".$pickupdate_id);
 		exit();			

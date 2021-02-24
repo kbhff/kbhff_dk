@@ -15,7 +15,10 @@ $tally = $TC->getTally(["department_id" => $department ? $department["id"] : fal
 $tally_id = $tally["id"];
 
 $pickupdate = false;
-$upcoming_pickupdates = $PC->getPickupdates(["after" => date("Y-m-d")]);
+$previous_pickupdate = $PC->getPickupdates(["after" => date("Y-m-d", strtotime("-8 days")), "before" => date("Y-m-d")]);
+$upcoming_pickupdates = $PC->getPickupdates(["after" => date("Y-m-d"), "before" => date("Y-m-d", strtotime("+15 days"))]);
+$all_pickupdates = array_merge($previous_pickupdate, $upcoming_pickupdates);
+
 $pickupdate_is_today = true;
 if($action) {
 	$pickupdate = $PC->getPickupdate(["id" => $action[0]]);
@@ -67,7 +70,7 @@ if($department_pickupdate_order_items) {
 			<ul>
 				<li class="date">Dato: 
 					<?= $PC->formStart("selectPickupdate", ["class" => "labelstyle:inject form"]); ?>
-					<?= $PC->input("pickupdate_id", ["type" => "select", "value" => $pickupdate["id"], "options" => $PC->toOptions($upcoming_pickupdates, "id", "pickupdate")]); ?>
+					<?= $PC->input("pickupdate_id", ["type" => "select", "value" => $pickupdate["id"], "options" => $PC->toOptions($all_pickupdates, "id", "pickupdate")]); ?>
 					
 					<ul class="actions">
 					<?= $PC->submit("Vælg", ["wrapper" => "li.select"]); ?>
