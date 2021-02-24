@@ -549,7 +549,8 @@ if($action) {
 					$order_no = $order["order_no"];
 					$user_id = $order["user_id"];
 					$user = $model->getKbhffUser(["user_id" => $user_id]);
-
+					$total_order_price = $SC->getTotalOrderPrice($order["id"]);
+					
 					// send notification email to admin
 					mailer()->send(array(
 						"recipients" => SHOP_ORDER_NOTIFIES,
@@ -558,7 +559,6 @@ if($action) {
 						"tracking" => false
 						// "template" => "system"
 					));
-
 
 					// order confirmation mail
 					mailer()->send(array(
