@@ -258,14 +258,17 @@ if($action) {
 
 		if($PC->savePickupdate($action)) {
 
+			message()->resetMessages();
 			message()->addMessage("Afhentningsdagen blev oprettet.");
 			header("Location: /indkoeb");
 		}
 		else {
 			
+			message()->resetMessages();
 			message()->addMessage("Noget gik galt.", array("type" => "error"));
+			header("Location: /indkoeb/ny-afhentningsdag");
 		}
-
+		
 		exit();
 
 	}

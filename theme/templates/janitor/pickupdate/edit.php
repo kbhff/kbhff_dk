@@ -21,7 +21,7 @@ $pickupdate = $model->getPickupdate(array("id" => $pickupdate_id));
 		<?= $model->formStart("updatePickupdate/".$pickupdate["id"], array("class" => "labelstyle:inject")) ?>
 
 			<fieldset>
-				<?= $model->input("pickupdate", array("value" => $pickupdate["pickupdate"])) ?>
+				<?= $model->input("pickupdate", array("type" => "date", "value" => $pickupdate["pickupdate"])) ?>
 				<?= $model->input("comment", array("value" => $pickupdate["comment"])) ?>
 			</fieldset>
 

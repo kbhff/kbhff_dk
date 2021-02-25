@@ -25,7 +25,7 @@ class Pickupdate extends Model {
 
 		// pickup date
 		$this->addToModel("pickupdate", array(
-			"type" => "date",
+			// "type" => "date",
 			"label" => "Pickup date",
 			"required" => true,
 			"hint_message" => "State the pickup date", 
