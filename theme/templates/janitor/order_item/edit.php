@@ -15,6 +15,10 @@ if($order_item) {
 
 	$departments = $DC->getDepartments();
 	$upcoming_pickupdates = $PC->getPickupdates(["after" => date("Y-m-d")]);
+
+	$order_item_department_pickupdate = $SC->getOrderItemDepartmentPickupdate($order_item_id);
+	$order_item_department_id = $order_item_department_pickupdate ? $order_item_department_pickupdate["department_id"] : "";
+	$order_item_pickupdate_id = $order_item_department_pickupdate ? $order_item_department_pickupdate["pickupdate_id"] : "";
 	
 	$order_item_user = $order_item["user_id"] ? $UC->getUsers(["user_id" => $order_item["user_id"]]) : false;
 	$order_item_user_email = $order_item["user_id"] ? $UC->getUsernames(["user_id" => $order_item["user_id"], "type" => "email"]) : false;
@@ -61,8 +65,8 @@ if($order_item) {
 		<div class="togglable_content">
 			<?= $SC->formStart("setOrderItemDepartmentPickupdate/".$order_item_id, ["class" => "labelstyle:inject form"]); ?>
 				<fieldset>
-					<?= $SC->input("department_id", ["type" => "select", "required" => true, "options" => $SC->toOptions($departments, "id", "name", ["add" => ["" => "Choose new pickup department"]])]); ?>
-					<?= $SC->input("pickupdate_id", ["type" => "select", "required" => true, "options" => $SC->toOptions($upcoming_pickupdates, "id", "pickupdate", ["add" => ["" => "Choose new pickup date"]])]); ?>
+					<?= $SC->input("department_id", ["type" => "select", "required" => true, "value" => $order_item_department_id, "options" => $SC->toOptions($departments, "id", "name", ["add" => ["" => "Choose new pickup department"]])]); ?>
+					<?= $SC->input("pickupdate_id", ["type" => "select", "required" => true, "value" => $order_item_pickupdate_id, "options" => $SC->toOptions($upcoming_pickupdates, "id", "pickupdate", ["add" => ["" => "Choose new pickup date"]])]); ?>
 				</fieldset>
 			
 			<ul class="actions">

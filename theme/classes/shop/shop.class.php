@@ -468,7 +468,15 @@ class Shop extends ShopCore {
 
 		if($this->getOrderItemDepartmentPickupdate($order_item_id)) {
 
-			$sql = "UPDATE ".$this->db_department_pickupdate_order_items." SET department_id = $department_id, pickupdate_id = $pickupdate_id WHERE order_item_id = $order_item_id";
+			if($DC->getDepartmentPickupdates($department_id, ["pickupdate_id" => $pickupdate_id])) {
+				
+				$sql = "UPDATE ".$this->db_department_pickupdate_order_items." SET department_id = $department_id, pickupdate_id = $pickupdate_id WHERE order_item_id = $order_item_id";
+			}
+			else {
+
+				message()->addMessage("The chosen department/pickupdate is not available. The department may be closed that day.", ["type" => "error"]);
+				return false;
+			}
 		}
 		else {
 
