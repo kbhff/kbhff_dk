@@ -466,7 +466,7 @@ class Department extends Model {
 
 	}
 
-	function getDepartmentPickupdates($department_id) {
+	function getDepartmentPickupdates($department_id, $_options = false) {
 		
 		$query = new Query();
 		$query->checkDbExistence($this->db_pickupdates);
@@ -474,7 +474,22 @@ class Department extends Model {
 		include_once("classes/shop/pickupdate.class.php");
 		$PC = new Pickupdate();
 
+		$pickupdate_id = false;
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+					case "pickupdate_id"        : $pickupdate_id             = $_value; break;
+				}
+			}
+		}
+
 		$sql = "SELECT pickupdate_id FROM ".$this->db_pickupdates." WHERE department_id = $department_id";
+		
+		if($pickupdate_id) {
+
+			$sql .= " AND pickupdate_id = $pickupdate_id";
+		}
+		
 		if($query->sql($sql)) {
 
 			$results = $query->results("pickupdate_id");

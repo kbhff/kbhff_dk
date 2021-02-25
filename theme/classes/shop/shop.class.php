@@ -458,6 +458,9 @@ class Shop extends ShopCore {
 		$query = new Query();
 		$query->checkDbExistence($this->db_department_pickupdate_order_items);
 
+		include_once("classes/system/department.class.php");
+		$DC = new Department();
+
 		$order_item_id = $action[1];
 		
 		$department_id = getPost("department_id", "value");
@@ -469,7 +472,15 @@ class Shop extends ShopCore {
 		}
 		else {
 
-			$sql = "INSERT INTO ".$this->db_department_pickupdate_order_items." SET department_id = $department_id, pickupdate_id = $pickupdate_id, order_item_id = $order_item_id";
+			if($DC->getDepartmentPickupdates($department_id, ["pickupdate_id" => $pickupdate_id])) {
+
+				$sql = "INSERT INTO ".$this->db_department_pickupdate_order_items." SET department_id = $department_id, pickupdate_id = $pickupdate_id, order_item_id = $order_item_id";
+			}
+			else {
+
+				message()->addMessage("The chosen department/pickupdate is not available. The department may be closed that day.", ["type" => "error"]);
+				return false;
+			}
 		}
 
 		if($query->sql($sql)) {
