@@ -118,7 +118,12 @@ $unpaid_orders = $SC->getUnpaidOrders();
 							<p class="order-status"><a href="/butik/betaling/<?= $order["order_no"] ?>" class="unpaid">Ikke betalt</a></p>
 							<? endif; ?>
 							<p class="change-untill"><span class="date"><?= date("d/m", strtotime($pickupdate["pickupdate"]." - 1 week")) ?></span> kl. <span class="time">23:59</span></p>
-							<ul class="actions change"><li class="change"><a href="/butik/ret-bestilling/<?= $order_item["id"] ?>" class="button <?= date("Y-m-d") > date("Y-m-d", strtotime($pickupdate["pickupdate"]." - 1 week")) ? "disabled" : "" ?>">Ret</a></li></ul>
+							<ul class="actions change"><li class="change">
+								<? if(date("Y-m-d") > date("Y-m-d", strtotime($pickupdate["pickupdate"]." - 1 week"))): ?>
+								<a class="button disabled">Ret</a></li></ul>
+								<? else: ?>
+								<a href="/butik/ret-bestilling/<?= $order_item["id"] ?>" class="button">Ret</a></li></ul>
+								<? endif; ?>
 						</div>
 						<? endforeach; ?>
 					</div>

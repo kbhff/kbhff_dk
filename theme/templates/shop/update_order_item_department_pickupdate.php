@@ -20,7 +20,7 @@ $this->pageTitle("Ret bestilling");
 
 <div class="scene update_order_item_department_pickupdate_form i:update_order_item_department_pickupdate_form">
 	<h1>Ret bestilling</h1>
-	<h2>Hvornår vil du hente dine grøntsager?</h2>
+	<h2>Hvornår vil du hente din vare?</h2>
 
 	<?= $UC->formStart("setOrderItemDepartmentPickupdate/".$order_item_id, ["class" => "form_order_item_details"]) ?> 
 
