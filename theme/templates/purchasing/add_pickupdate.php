@@ -2,6 +2,7 @@
 
 global $IC;
 global $PC;
+global $DC;
 
 $this->pageTitle("Tilføj afhentningsdag");
 
@@ -21,6 +22,8 @@ for ($i = 0; $i <= 12; $i++) {
 
 $available_wednesdays = array_combine($available_wednesdays, $available_wednesdays);
 
+$departments = $DC->getDepartments();
+
 ?>
 
 <div class="scene add_pickupdate i:add_pickupdate">
@@ -29,9 +32,20 @@ $available_wednesdays = array_combine($available_wednesdays, $available_wednesda
 
 	<div class="c-wrapper">
 	<?= $PC->formStart("savePickupdate", array("class" => "i:defaultNew labelstyle:inject")) ?>
-		<fieldset>
+		<h3>Vælg dato</h3>
+		<fieldset class="pickupdate">
 			<?= $PC->input("pickupdate", ["type" => "select", "options" => $available_wednesdays]) ?>
 		</fieldset>
+		<? if($departments): ?>
+		<h3>Vælg hvilke afdelinger der har åbent</h3>
+		<fieldset class="departments">
+			<? foreach($departments as $department): ?>
+			
+			<?= $PC->input("pickupdate_department_".$department["id"], ["type" => "checkbox", "label" => $department["name"], "value" => 1]) ?>
+			
+			<? endforeach; ?>
+		</fieldset>
+		<? endif; ?>
 		<ul class="actions">
 		<?= $PC->link("Annuller", "/indkoeb", array("class" => "button", "wrapper" => "li.cancel")) ?>
 		<?= $PC->submit("Opret", ["wrapper" => "li.save", "class" => "primary"]); ?>
