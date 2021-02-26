@@ -518,25 +518,39 @@ if($action) {
 
 			if($id_result && $id_result["status"] === "success") {
 
-				if($id_result["cart_reference"]) {
+				if($id_result["order_no"]) {
+					$order = $model->getOrders(["order_no" => $id_result["order_no"]]);
 
-					$order = $model->newOrderFromCart(["newOrderFromCart", $id_result["cart_reference"]]);
+				}
+				else if($id_result["cart_reference"]) {
+
+					$order = $model->getOrders(["cart_reference" => $id_result["cart_reference"]]) ?: $model->newOrderFromCart(["newOrderFromCart", $id_result["cart_reference"]]);
 					// Clear messages
 					message()->resetMessages();
-					if($order) {
+					
+				}
+				else {
+					$order = false;
+				}
 
-						// get payment intent
-						$registration_result = payments()->registerPaymentIntent($payment_intent_id, $order);
-						if($registration_result["status"] === "success") {
+				if($order) {
 
-							$total_order_price = $model->getTotalOrderPrice($order["id"]);
-							payments()->capturePayment($payment_intent_id, $total_order_price["price"]);
+					// get payment intent
+					$registration_result = payments()->registerPaymentIntent($payment_intent_id, $order);
+					if($registration_result["status"] === "success") {
 
-							// redirect to leave POST state
-							header("Location: /butik/kvittering/ny-ordre/".$order["order_no"]."/".superNormalize($id_result["gateway"]));
-							exit();
-						}
+						$total_order_price = $model->getTotalOrderPrice($order["id"]);
+						payments()->capturePayment($payment_intent_id, $total_order_price["price"]);
 
+						// redirect to leave POST state
+						header("Location: /butik/kvittering/ny-ordre/".$order["order_no"]."/".superNormalize($id_result["gateway"]));
+						exit();
+					}
+					else if($order["payment_status"] == 2) {
+						
+						// redirect to leave POST state
+						header("Location: /butik/kvittering/ny-ordre/".$order["order_no"]."/".superNormalize($id_result["gateway"]));
+						exit();
 					}
 
 				}
