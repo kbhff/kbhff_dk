@@ -29,13 +29,13 @@ if($order_item) {
 
 ?>
 <div class="scene i:scene defaultEdit shopView">
-	<h1>Edit order item</h1>
+	<h1>Edit ordered product</h1>
 <? if($order_item): ?>
 
 	<h2><?= $order_item["name"] ?></h2>
 
 	<ul class="actions i:defaultEditActions">
-		<?= $HTML->link("Order item list", "/janitor/order-item/list", array("class" => "button", "wrapper" => "li.list")) ?>
+		<?= $HTML->link("List ordered products", "/janitor/order-item/list", array("class" => "button", "wrapper" => "li.list")) ?>
 		<?= $HTML->link("Order", "/janitor/admin/shop/order/edit/".$order_item["order_id"], array("class" => "button", "wrapper" => "li.order")) ?>
 	</ul>
 

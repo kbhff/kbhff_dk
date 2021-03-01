@@ -90,7 +90,7 @@ if($order_items) {
 <?			endforeach; ?>
 		</ul>
 <?		else: ?>
-		<p>No order items (products)</p>
+		<p>No ordered products were found</p>
 <?		endif; ?>
 	</div>
 
