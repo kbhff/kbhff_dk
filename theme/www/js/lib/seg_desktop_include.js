@@ -42,3 +42,5 @@ document.write('<script type="text/javascript" src="/js/lib/desktop/m-forgot.js"
 document.write('<script type="text/javascript" src="/js/lib/desktop/m-tally.js"></script>');
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/u-expandarrow.js"></script>');
+
+document.write('<script type="text/javascript" src="/js/lib/desktop/m-purchasing.js"></script>');
