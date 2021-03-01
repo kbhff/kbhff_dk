@@ -17,7 +17,7 @@ $this->pageTitle("Rediger produkt");
 
 ?>
 
-<div class="scene edit_product i:edit_product">
+<div class="scene edit_product i:add_edit_product">
 	<h1>Rediger produkt</h1>
 	<h2>Produktoplysninger</h2>
 	
@@ -30,11 +30,12 @@ $this->pageTitle("Rediger produkt");
 			<?= $model->input("description", ["label" => "Produktbeskrivelse", "value" => $product["description"]]); ?>
 		</fieldset>
 
-		<h3>Bestilling og afhentning</h3>
+		<h3>Tilgængelighed i webshop</h3>
 		<fieldset class="availability">
-			<?= $model->input("start_availability_date", ["label" => "Fra og med dato", "hint_message" => "Hvornår bliver produktet tilgængeligt for medlemmerne?.",
-					"error_message" => "Angiv hvornår produktet bliver tilgængeligt for medlemmerne.", "value" => $product["start_availability_date"]]); ?>
-			<?= $model->input("end_availability_date", ["label" => "Til og med dato (kan udelades)", "hint_message" => "Hvornår ophører produktet med at være tilgængelig for medlemmerne?.", "error_message" => "Angiv hvornår produktet udløber.", "value" => $product["end_availability_date"] ?: false]); ?>
+			<?= $model->input("start_availability_date", ["label" => "Fra og med dato", "hint_message" => "Hvornår bliver produktet tilgængeligt i Grøntshoppen?",
+					"error_message" => "Angiv hvornår produktet bliver tilgængeligt i Grøntshoppen.", "value" => $product["start_availability_date"]]); ?>
+			<p class="first_pickupdate">Første mulige afhentningsdag: <span><?= date("d.m.Y", strtotime($product["start_availability_date"]." +1 week Wednesday")) ?></span></p>
+			<?= $model->input("end_availability_date", ["label" => "Til og med dato (kan udelades)", "hint_message" => "Hvornår ophører produktet med at være tilgængelig i Grøntshoppen?", "error_message" => "Angiv hvornår produktet udløber.", "value" => $product["end_availability_date"] ?: false]); ?>
 		</fieldset>
 		<ul class="actions">
 		<?= $UC->link("Annuller", "/indkoeb", array("class" => "button", "wrapper" => "li.cancel")) ?>

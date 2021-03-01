@@ -8,7 +8,7 @@ $this->pageTitle("Tilføj nyt produkt");
 
 ?>
 
-<div class="scene add_product i:add_product">
+<div class="scene add_product i:add_edit_product">
 	<h1>Opret nyt produkt</h1>
 	<h2>Produktoplysninger</h2>
 	
@@ -22,11 +22,13 @@ $this->pageTitle("Tilføj nyt produkt");
 			<?= $model->input("product_type", ["type" => "select", "label" => "Produkttype", "options" => ["productweeklybag" => "Ugens pose", "productseasonalbag" => "Sæsonpose", "productcanvasbag" => "Lærredspose", "productassorted" => "Løssalg"], "required" => true]); ?>
 		</fieldset>
 
-		<h3>Bestilling og afhentning</h3>
+		<h3>Tilgængelighed i webshop</h3>
 		<fieldset class="availability">
-			<?= $model->input("start_availability_date", ["label" => "Fra og med dato", "hint_message" => "Hvornår bliver produktet tilgængeligt for medlemmerne?.",
-					"error_message" => "Angiv hvornår produktet bliver tilgængeligt for medlemmerne."]); ?>
-			<?= $model->input("end_availability_date", ["label" => "Til og med dato (kan udelades)", "hint_message" => "Hvornår ophører produktet med at være tilgængelig for medlemmerne?.", "error_message" => "Angiv hvornår produktet udløber."]); ?>
+			<!-- <p>Angiv herunder hvornår produktet skal være tilgængeligt i webshoppen.Første mulige afhentningsdag er den første onsdag, der ligger mindst 7 dage efter den valgte startdato.</p> -->
+			<?= $model->input("start_availability_date", ["label" => "Fra og med dato", "hint_message" => "Hvornår bliver produktet tilgængeligt i Grøntshoppen?.",
+					"error_message" => "Angiv hvornår produktet bliver tilgængeligt i Grøntshoppen."]); ?>
+			<p class="first_pickupdate">Første mulige afhentningsdag: <span>-</span></p>
+			<?= $model->input("end_availability_date", ["label" => "Til og med dato (kan udelades)", "hint_message" => "Hvornår ophører produktet med at være tilgængelig i Grøntshoppen?", "error_message" => "Angiv hvornår produktet udløber."]); ?>
 		</fieldset>
 		<ul class="actions">
 		<?= $model->link("Annuller", "/indkoeb", array("class" => "button", "wrapper" => "li.cancel")) ?>
