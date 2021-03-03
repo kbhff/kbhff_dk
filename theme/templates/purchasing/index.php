@@ -100,7 +100,6 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 			}
 			else if( 
 				$product["start_availability_date"] 
-				&& $product["start_availability_date"] <= date("Y-m-d") 
 				&& $product["end_availability_date"] 
 			) {
 				$product_available = false;
