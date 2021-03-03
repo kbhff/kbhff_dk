@@ -112,6 +112,12 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 				$product_available = true;
 				$product_availability = "Altid";
 			}
+			else if( 
+				$product["start_availability_date"] 
+			) {
+				$product_available = false;
+				$product_availability = "Fra ".$product["start_availability_date"];
+			}
 			else {
 				$product_available = false;
 				$product_availability = "Ikke tilgængelig";
