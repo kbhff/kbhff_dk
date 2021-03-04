@@ -22,6 +22,7 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 <div class="scene purchasing i:purchasing" itemscope itemtype="http://schema.org/NewsArticle">
 	<div class="banner i:banner variant:random format:jpg"></div>
 	<h1>Indkøb</h1>
+	<?= $HTML->serverMessages(); ?>
 	<? if($next_pickupdate): ?>
 	<div class="c-wrapper order-list">
 		<h2>Ordrer til udlevering d. <?= date("d/m Y", strtotime($next_pickupdate["pickupdate"])) ?> </h2>

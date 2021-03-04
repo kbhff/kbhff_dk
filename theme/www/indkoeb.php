@@ -149,7 +149,7 @@ if($action) {
 			$price_types = $page->price_types();
 
 
-			if($old_price_1 && $new_price_1) {
+			if($old_price_1 !== false && $new_price_1 !== false) {
 
 				if($old_price_1["price"] !== $new_price_1) {
 
@@ -168,12 +168,12 @@ if($action) {
 					$frivillig_price = $old_price_1["price"];
 				}
 			}
-			else if($old_price_1) {
+			else if($old_price_1 !== false) {
 				// delete price_1
 				$model->deletePrice(["deletePrice", $item["id"], $old_price_1["id"]]);
 				$frivillig_price = false;
 			}
-			else if($new_price_1) {
+			else if($new_price_1 !== false) {
 
 				$vatrates = $page->vatrates();
 				$vatrate = $vatrates[arrayKeyValue($vatrates, "name", "25%")];
@@ -195,7 +195,7 @@ if($action) {
 
 			
 
-			if($old_price_2 && $new_price_2) {
+			if($old_price_2 !== false && $new_price_2 !== false) {
 
 				if($old_price_2["price"] !== $new_price_2) {
 
@@ -214,12 +214,12 @@ if($action) {
 					$stoettemedlem_price = $old_price_2["price"];
 				}
 			}
-			else if($old_price_2) {
+			else if($old_price_2 !== false) {
 				// delete price_2
 				$model->deletePrice(["deletePrice", $item["id"], $old_price_2["id"]]);
 				$stoettemedlem_price = false;
 			}
-			else if($new_price_2) {
+			else if($new_price_2 !== false) {
 
 				// add price for Støttemedlem
 				$stoettemedlem_price_type = $price_types[arrayKeyValue($price_types, "name", "stoettemedlem")];
@@ -234,19 +234,22 @@ if($action) {
 				$stoettemedlem_price = false;
 			}
 
-			if($frivillig_price && $stoettemedlem_price) {
+			if($frivillig_price !== false && $stoettemedlem_price !== false) {
 
+				message()->resetMessages();
 				message()->addMessage("Produktet blev opdateret.");
 				header("Location: /indkoeb");
 			}
 			else {
 				
+				message()->resetMessages();
 				message()->addMessage("Produktet blev opdateret, men der opstod et problem med at oprette priser", array("type" => "error"));
 				header("Location: /indkoeb");
 			}
 		}
 		// something went wrong
 		else {
+			message()->resetMessages();
 			message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
 		}
 
