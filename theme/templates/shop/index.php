@@ -196,14 +196,17 @@ else {
 								<? foreach($pickupdates as $pickupdate): 
 									$product_available = false;
 								
+									$first_pickupdate = date("Y-m-d", strtotime($product["start_availability_date"]." +1 week Wednesday"));
+									
 									// check if product is available on pickupdate
 									if($product["end_availability_date"]) {
-										if($pickupdate["pickupdate"] >= $product["start_availability_date"] && $pickupdate["pickupdate"] <= $product["end_availability_date"]) {
+										$last_pickupdate = date("Y-m-d", strtotime($product["end_availability_date"]." +1 week Wednesday"));
+										if($pickupdate["pickupdate"] >= $first_pickupdate && $pickupdate["pickupdate"] <= $last_pickupdate) {
 											$product_available = true;
 										}
 									}
 									else {
-										if($pickupdate["pickupdate"] >= $product["start_availability_date"]) {
+										if($pickupdate["pickupdate"] >= $first_pickupdate) {
 											$product_available = true;
 										}
 									}
