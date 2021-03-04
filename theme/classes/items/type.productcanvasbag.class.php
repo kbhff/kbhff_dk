@@ -62,7 +62,7 @@ class TypeProductCanvasbag extends Itemtype {
 
 		// Start availability date
 		$this->addToModel("start_availability_date", array(
-			"type" => "string",
+			"type" => "date",
 			"label" => "Start availability date",
 			"required" => true,
 			"hint_message" => "When does the product become available?.",
@@ -71,7 +71,7 @@ class TypeProductCanvasbag extends Itemtype {
 
 		// End availability date
 		$this->addToModel("end_availability_date", array(
-			"type" => "string",
+			"type" => "date",
 			"label" => "End availability date",
 			"hint_message" => "When does the product stop being available?.",
 			"error_message" => "Invalid end availability date."

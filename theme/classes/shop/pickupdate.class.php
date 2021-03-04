@@ -131,14 +131,19 @@ class Pickupdate extends Model {
 					include_once("classes/system/department.class.php");
 					$DC = new Department();
 
-					// $departments = $DC->getDepartments();
-					// foreach($departments as $department) {
-						
-					// 	$DC->addPickupdate(["addPickupdate", $department["id"], $pickupdate_id]);
-					// }
+					if(getPost("add_all_departments", "value")) {
 
-					$DC->updatePickupdateDepartments(["updatePickupdateDepartments", $pickupdate_id]);
-					
+						$departments = $DC->getDepartments();
+						foreach($departments as $department) {
+							
+							$DC->addPickupdate(["addPickupdate", $department["id"], $pickupdate_id]);
+						}
+					}
+					else {
+
+						$DC->updatePickupdateDepartments(["updatePickupdateDepartments", $pickupdate_id]);
+					}
+
 					message()->addMessage("Pickup date created");
 					return ["item_id" => $pickupdate_id];
 				}
