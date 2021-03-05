@@ -29,6 +29,7 @@ $this->pageTitle("Tilføj nyt produkt");
 					"error_message" => "Angiv hvornår produktet bliver tilgængeligt i Grøntshoppen."]); ?>
 			<p class="first_pickupdate">Første mulige afhentningsdag: <span>-</span></p>
 			<?= $model->input("end_availability_date", ["label" => "Til og med dato (kan udelades)", "hint_message" => "Hvornår ophører produktet med at være tilgængelig i Grøntshoppen?", "error_message" => "Angiv hvornår produktet udløber."]); ?>
+			<p class="last_pickupdate">Sidste mulige afhentningsdag: <span>-</span></p>
 		</fieldset>
 		<ul class="actions">
 		<?= $model->link("Annuller", "/indkoeb", array("class" => "button", "wrapper" => "li.cancel")) ?>

@@ -35,6 +35,24 @@ Util.Modules["add_edit_product"] = new function() {
 				}
 				this.form.scene.first_pickupdate_span.innerHTML = first_pickupdate;
 			}
+		
+			this.last_pickupdate_span = u.qs(".last_pickupdate span", this);
+			form.inputs["end_availability_date"].changed = function(iN) {
+				
+				var last_pickupdate = "";
+				var next_wednesday_date = this.form.scene.getNextDayOfTheWeek("Wednesday", true, new Date(iN.value));
+				
+				var one_day = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+				var diff_days = Math.round(Math.abs((next_wednesday_date - new Date(iN.value)) / one_day));
+				
+				if(diff_days >= 7) {
+					last_pickupdate = next_wednesday_date.toLocaleDateString();
+				}
+				else {
+					last_pickupdate = this.form.scene.getNextDayOfTheWeek("Wednesday", true, next_wednesday_date).toLocaleDateString();
+				}
+				this.form.scene.last_pickupdate_span.innerHTML = last_pickupdate;
+			}
 		}
 
 		scene.getNextDayOfTheWeek = function(dayName, excludeToday = true, refDate = new Date()) {
@@ -42,11 +60,11 @@ Util.Modules["add_edit_product"] = new function() {
 							  .indexOf(dayName.slice(0,3).toLowerCase());
 			if (dayOfWeek < 0) return;
 			refDate.setHours(0,0,0,0);
-			refDate.setDate(refDate.getDate() + +!!excludeToday + 
-							(dayOfWeek + 7 - refDate.getDay() - +!!excludeToday) % 7);
+			refDate.setDate(refDate.getDate() + (!!excludeToday ? 1 : 0) + 
+							(dayOfWeek + 7 - refDate.getDay() - (!!excludeToday ? 1 : 0)) % 7);
 			return refDate;
 		}
-
+		
 		// scene is ready
 		scene.ready();
 	}
