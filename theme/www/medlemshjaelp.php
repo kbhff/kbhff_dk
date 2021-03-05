@@ -712,6 +712,12 @@ if($action) {
 						case "incorrect_zip"            : $message = "Kortets postnummer kunne ikke bekræftes."; break;
 						case "card_declined"            : $message = "Kortet blev afvist."; break;
 					}
+					if($payment_method_result["decline_code"]) {
+						switch($payment_method_result["decline_code"]) {
+
+							case "insufficient_funds"         : $message = "Kortet blev afvist. Der er ikke penge nok på kontoen."; break;
+						}
+					}
 
 
 					message()->addMessage($message, ["type" => "error"]);
