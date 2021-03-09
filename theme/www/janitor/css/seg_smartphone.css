@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-09-21 17:45:36
+asset-builder @ 2021-03-09 20:35:45
 */
 
 /*seg_smartphone_include.css*/
@@ -785,6 +785,10 @@ body.invoice #content div.scene .payment_info {position: absolute; bottom: 50px;
 #content .scene.front div.orders ul.orders li {width: 25%; text-align: center;}
 #content .scene.front div.orders ul.orders li h3 a {display: block;}
 #content .scene.front div.orders ul.orders li h3 span {display: block; font-size: 50px; line-height: 60px;}
+#content .scene.front div.common ul.common {}
+#content .scene.front div.common ul.common li {width: 25%; text-align: center;}
+#content .scene.front div.common ul.common li h3 a {display: block; border: 2px solid #313942; padding: 20px; border-radius: 5px;}
+#content .scene.front div.common ul.common li h3 span {display: block; font-size: 50px; line-height: 60px;}
 #content .scene.front div.members ul.members {}
 #content .scene.front div.members ul.members li {width: 25%; text-align: center;}
 #content .scene.front div.members ul.members li h3 a {display: block;}
@@ -1000,9 +1004,9 @@ body.invoice #content div.scene .payment_info {position: absolute; bottom: 50px;
 #content .scene.defaultEdit > div.qnas ul.qnas > li ul.info li.user:after {content: ",\00a0";}
 #content .scene.defaultEdit > div.qnas ul.qnas > li {display: block; border-top: 1px solid #dedede; position: relative; padding-bottom: 8px; padding-top: 15px;}
 #content .scene.defaultEdit > div.qnas ul.qnas > li p {padding-bottom: 7px;}
-#content .scene.defaultEdit > div.editors {padding: 0 0 15px; border-bottom: 1px solid #bbbbbb; position: relative;}
+#content .scene.defaultEdit > div.editors {padding: 0; border-bottom: 1px solid #bbbbbb; position: relative;}
 #content .scene.defaultEdit > div.editors ul.editors {border-top: 1px solid #dedede; padding-bottom: 30px;}
-#content .scene.defaultEdit > div.editors > form {padding-bottom: 10px; padding-top: 5px;}
+#content .scene.defaultEdit > div.editors form.editors {padding-bottom: 15px;}
 
 
 /*s-default_edit.css*/
@@ -1037,6 +1041,24 @@ body.invoice #content div.scene .payment_info {position: absolute; bottom: 50px;
 #content .scene.wishList ul.items > li dl dt.reserved {display: none;}
 #content .scene.wishList ul.items > li dl dd.reserved {font-size: 14px;}
 #content .scene.eventList ul.items > li.past {background: #dddddd;}
+#content .scene.eventEdit div.eventTickets {border-bottom: 1px solid #bbbbbb;}
+#content .scene.eventEdit div.eventTickets > div > form > ul.actions {padding-bottom: 20px;}
+#content .scene.eventEdit div.eventTickets ul.tickets {border-top: 1px solid #dedede; padding-bottom: 30px;}
+#content .scene.ticketEdit div.item.expired {background: orange; padding-top: 25px;}
+#content .scene.ticketEdit div.item.expired p {color: #ffffff;}
+#content .scene.ticketEdit div.ticketEvent {border-bottom: 1px solid #bbbbbb;}
+#content .scene.ticketEdit div.ticketEvent > div > form > ul.actions {padding-bottom: 20px;}
+#content .scene.ticketEdit div.ticketEvent ul.events {border-top: 1px solid #dedede; padding-bottom: 30px;}
+#content .scene.ticketEdit div.participants {border-bottom: 1px solid #bbbbbb;}
+#content .scene.ticketEdit div.participants div.all_items {padding-bottom: 30px;}
+#content .scene.ticketEdit div.participants > div > ul.actions {padding-bottom: 20px; text-align: right;}
+#content .scene.ticketEdit ul.items.participants {}
+#content .scene.ticketEdit ul.items.participants li {padding: 0 30px;}
+#content .scene.ticketEdit ul.items.participants li ul.actions {top: 4px;}
+#content .scene.ticketEdit ul.items.participants li ul.actions li {padding: 0 0 0 10px;}
+#content .scene.ticketEdit ul.items.participants li span {padding: 10px 7px 10px 0; display: inline-block; width: 300px;}
+#content .scene.ticketEdit ul.items.participants li span.ticket_no {width: 130px;}
+#content .scene.ticketEdit ul.items.participants li span.unit_price {width: 80px;}
 #content .scene fieldset h3 {font-size: 0.8em; text-transform: uppercase; padding-top: 7px; padding-bottom: 10px; margin: 0;}
 #content .scene fieldset + fieldset h3 {margin: 20px 0 0px;}
 #content .scene.messageList > ul.actions li.maillists {float: right; padding: 0 0 10px 10px;}

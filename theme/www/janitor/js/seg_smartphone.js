@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-09-21 17:45:36
+asset-builder @ 2021-03-09 20:35:45
 */
 
 /*seg_smartphone_include.js*/
@@ -1931,6 +1931,7 @@ Util.Form = u.f = new function() {
 		_form._label_style = u.cv(_form, "labelstyle");
 		_form._callback_ready = "ready";
 		_form._callback_submitted = "submitted";
+		_form._callback_submit_failed = "submitFailed";
 		_form._callback_pre_submitted = "preSubmitted";
 		_form._callback_resat = "resat";
 		_form._callback_updated = "updated";
@@ -1949,6 +1950,7 @@ Util.Form = u.f = new function() {
 					case "label_style"              : _form._label_style               = _options[_argument]; break;
 					case "callback_ready"           : _form._callback_ready            = _options[_argument]; break;
 					case "callback_submitted"       : _form._callback_submitted        = _options[_argument]; break;
+					case "callback_submit_failed"   : _form._callback_submit_failed    = _options[_argument]; break;
 					case "callback_pre_submitted"   : _form._callback_pre_submitted    = _options[_argument]; break;
 					case "callback_resat"           : _form._callback_resat            = _options[_argument]; break;
 					case "callback_updated"         : _form._callback_updated          = _options[_argument]; break;
@@ -2193,6 +2195,11 @@ Util.Form = u.f = new function() {
 					}
 				}
 				this.DOMsubmit();
+			}
+		}
+		else {
+			if(fun(this[this._callback_submit_failed])) {
+				this[this._callback_submit_failed](iN);
 			}
 		}
 	}
@@ -3642,7 +3649,8 @@ u.f.textEditor = function(field) {
 				this.deleteMedia(tag);
 			}
 			tag.parentNode.removeChild(tag);
-			u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+			this._editor.updateTargets();
+			this._editor.updateDraggables();
 			this.update();
 			this._form.submit();
 		}
@@ -3770,7 +3778,8 @@ u.f.textEditor = function(field) {
 		u.e.addEndEvent(tag._input, this._changed_ext_video_content);
 		u.e.addEvent(tag._input, "focus", tag.field._focused_content);
 		u.e.addEvent(tag._input, "blur", tag.field._blurred_content);
-		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 		return tag;
 	}
 	field._changed_ext_video_content = function(event) {
@@ -3829,7 +3838,8 @@ u.f.textEditor = function(field) {
 				u.e.addEvent(tag._input, "mouseleave", u.f._mouseleave);
 			}
 		}
-		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 		return tag;
 	}
 	field.deleteMedia = function(tag) {
@@ -3841,7 +3851,7 @@ u.f.textEditor = function(field) {
 				this.field.update();
 			}
 		}
-		u.request(tag, this.file_delete_action+"/"+tag._item_id+"/"+tag._variant, {"method":"post", "params":form_data});
+		u.request(tag, this.file_delete_action+"/"+tag._item_id+"/"+tag._variant, {"method":"post", "data":form_data});
 	}
 	field._media_updated = function(event) {
 		var form_data = new FormData();
@@ -3881,7 +3891,7 @@ u.f.textEditor = function(field) {
 				this.tag.field._form.submit();
 			}
 		}
-		u.request(this, this.field.media_add_action+"/"+this.field.item_id, {"method":"post", "params":form_data});
+		u.request(this, this.field.media_add_action+"/"+this.field.item_id, {"method":"post", "data":form_data});
 	}
 	field._changed_media_content = function(event) {
 		if(this.val() && !this.val().replace(/<br>/, "")) {
@@ -3933,7 +3943,8 @@ u.f.textEditor = function(field) {
 				u.e.addEvent(tag._input, "mouseleave", u.f._mouseleave);
 			}
 		}
-		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 		return tag;
 	}
 	field.deleteFile = function(tag) {
@@ -3945,7 +3956,7 @@ u.f.textEditor = function(field) {
 				this.field.update();
 			}
 		}
-		u.request(tag, this.file_delete_action+"/"+tag._item_id+"/"+tag._variant, {"method":"post", "params":form_data});
+		u.request(tag, this.file_delete_action+"/"+tag._item_id+"/"+tag._variant, {"method":"post", "data":form_data});
 	}
 	field._file_updated = function(event) {
 		var form_data = new FormData();
@@ -3980,7 +3991,7 @@ u.f.textEditor = function(field) {
 				this.tag.field._form.submit();
 			}
 		}
-		u.request(this, this.field.file_add_action+"/"+this.field.item_id, {"method":"post", "params":form_data});
+		u.request(this, this.field.file_add_action+"/"+this.field.item_id, {"method":"post", "data":form_data});
 	}
 	field._changed_file_content = function(event) {
 		if(this.val() && !this.val().replace(/<br>/, "")) {
@@ -4014,7 +4025,8 @@ u.f.textEditor = function(field) {
 		tag.addNew = function() {
 			this.field.addTextItem(this.field.text_allowed[0]);
 		}
-		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 		return tag;
 	}
 	field._code_selection_started = function(event) {
@@ -4067,7 +4079,8 @@ u.f.textEditor = function(field) {
 					this.tag.parentNode.removeChild(this.tag);
 					prev.focus();
 				}
-				u.sortable(this.field._editor, {"draggables":".tag", "targets":".editor"});
+				this.field._editor.updateTargets();
+				this.field._editor.updateDraggables();
 			}
 			else if(!this.val() || !this.val().replace(/<br>/, "")) {
 				this.is_deletable = true;
@@ -4097,7 +4110,8 @@ u.f.textEditor = function(field) {
 	field.addListTag = function(type, value) {
 		var tag = this.createTag(this.list_allowed, type);
 		this.addListItem(tag, value);
-		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 		return tag;
 	}
 	field.addListItem = function(tag, value) {
@@ -4126,6 +4140,8 @@ u.f.textEditor = function(field) {
 			u.e.addEvent(li._input, "mouseleave", u.f._mouseleave);
 		}
 		u.e.addEvent(li._input, "paste", this._pasted_content);
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 		return li;
 	}
 	field.addTextTag = function(type, value) {
@@ -4154,7 +4170,8 @@ u.f.textEditor = function(field) {
 		tag.addNew = function() {
 			this.field.addTextItem(this.field.text_allowed[0]);
 		}
-		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 		return tag;
 	}
 	field._changing_content = function(event) {
@@ -4232,7 +4249,8 @@ u.f.textEditor = function(field) {
 						this.tag.parentNode.removeChild(this.tag);
 					}
 				}
-				u.sortable(this.field._editor, {"draggables":".tag", "targets":".editor"});
+				this.field._editor.updateTargets();
+				this.field._editor.updateDraggables();
 				if(prev) {
 					prev.focus();
 				}
@@ -4307,21 +4325,22 @@ u.f.textEditor = function(field) {
 				selection.deleteFromDocument();
 			}
 			var paste_parts = paste_content.trim().split(/\n\r|\n|\r/g);
-			var text_nodes = [];
-			for(i = 0; i < paste_parts.length; i++) {
-				text = paste_parts[i];
-				text_nodes.push(document.createTextNode(text));
-				if(paste_parts.length && i < paste_parts.length-1) {
-					text_nodes.push(document.createElement("br"));
+				var text_nodes = [];
+				for(i = 0; i < paste_parts.length; i++) {
+					text = paste_parts[i];
+					u.bug("text part", text);
+					text_nodes.push(document.createTextNode(text));
+					if(paste_parts.length && i < paste_parts.length-1) {
+						text_nodes.push(document.createElement("br"));
+					}
 				}
-			}
-			for(i = text_nodes.length-1; i >= 0; i--) {
-				node = text_nodes[i];
-				var range = selection.getRangeAt(0);
-				range.insertNode(node);
-				selection.addRange(range);
-			}
-			selection.collapseToEnd();
+				for(i = text_nodes.length-1; i >= 0; i--) {
+					node = text_nodes[i];
+					var range = selection.getRangeAt(0);
+					range.insertNode(node);
+					selection.addRange(range);
+				}
+				selection.collapseToEnd();
 		}
 	}
 	field.findPreviousInput = function(iN) {
@@ -4405,7 +4424,7 @@ u.f.textEditor = function(field) {
 			u.e.kill(event);
 			this.field.addAnchorTag(this.selection, this.tag);
 		}
-		this.selection_options._em = u.ae(ul, "li", {"class":"em", "html":"Itallic"});
+		this.selection_options._em = u.ae(ul, "li", {"class":"em", "html":"Italic"});
 		this.selection_options._em.field = this;
 		this.selection_options._em.tag = node;
 		this.selection_options._em.selection = selection;
@@ -4694,6 +4713,7 @@ u.f.textEditor = function(field) {
 		}
 	}
 	field._viewer.innerHTML = field.input.val();
+	u.sortable(field._editor, {"draggables":"div.tag", "targets":"div.editor"});
 	var value, node, i, tag, j, lis, li;
 	var nodes = u.cn(field._viewer, {"exclude":"br"});
 	if(nodes.length) {
@@ -4782,7 +4802,8 @@ u.f.textEditor = function(field) {
 		tag = field.addTextTag(field.text_allowed[0], value);
 		field.activateInlineFormatting(tag._input, tag);
 	}
-	u.sortable(field._editor, {"draggables":".tag", "targets":".editor"});
+	field._editor.updateTargets();
+	field._editor.updateDraggables();
 	field.updateViewer();
 	field.addOptions();
 }
@@ -6466,7 +6487,7 @@ u.sortable = function(scope, _options) {
 				case "draggables"			: scope._draggable_selector		= _options[_argument]; break;
 				case "targets"				: scope._target_selector		= _options[_argument]; break;
 				case "layout"				: scope._layout					= _options[_argument]; break;
-				case "allow_clickpick"		: scope._allow_clickpick			= _options[_argument]; break;
+				case "allow_clickpick"		: scope._allow_clickpick		= _options[_argument]; break;
 				case "allow_nesting"		: scope._allow_nesting			= _options[_argument]; break;
 				case "sorting_disabled"		: scope._sorting_disabled		= _options[_argument]; break;
 				case "distance_to_pick"		: scope._distance_to_pick		= _options[_argument]; break;
@@ -6821,15 +6842,15 @@ u.sortable = function(scope, _options) {
 			var i, target;
 			for(i = 0; i < this.target_nodes.length; i++) {
 				target = this.target_nodes[i];
-				if((target._n_top || target._n_bottom) && (u.cn(target).length > 1 || target._n_display != "block")) {
-					target._layout = "horizontal";
-				}
-				else if(target._n_left || target._n_right) {
-					target._layout = "vertical";
-				}
-				else {
-					target._layout = "multiline";
-				}
+					if((target._n_top || target._n_bottom) && (u.cn(target).length > 1 || target._n_display != "block")) {
+						target._layout = "horizontal";
+					}
+					else if(target._n_left || target._n_right) {
+						target._layout = "vertical";
+					}
+					else {
+						target._layout = "multiline";
+					}
 			}
 		}
 		scope.updateDraggables = function() {
@@ -8854,6 +8875,13 @@ Util.Modules["defaultEdit"] = new function() {
 			page.autosave_disabled = true;
 		}
 		u.f.init(form);
+		form.submitFailed = function(iN) {
+			u.bug("submit failed", iN);
+			var first_error = Object.keys(this._error_inputs)[0];
+			if(this.inputs[first_error]) {
+				u.scrollTo(window, {node: this.inputs[first_error].field, offset_y: 170});
+			}
+		}
 		form.submitted = function(iN) {
 			u.t.resetTimer(page.t_autosave);
 			this.response = function(response) {
@@ -10325,48 +10353,27 @@ Util.Modules["flushUserSession"] = new function() {
 		}
 	}
 }
-Util.Modules["newSubscription"] = new function() {
-	this.init = function(form) {
-		u.f.init(form);
-		u.bug("init")
-		form.inputs["item_id"].changed = function() {
-			location.href = location.href.replace(/new\/([\d]+).+/, "new/$1") + "/" + this.val();
-		}
-		if(form.actions["cancel"]) {
-			form.actions["cancel"].clicked = function(event) {
-				location.href = this.url;
-			}
-		}
-		form.submitted = function(iN) {
-			this.response = function(response) {
-				page.notify(response);
-				if(response.cms_status == "success") {
-					location.href = this.actions["cancel"].url;
-				}
-			}
-			u.request(this, this.action, {"method":"post", "data" : this.getData()});
-		}
-	}
-}
 Util.Modules["unverifiedUsernames"] = new function() {
 	this.init = function(div) {
 		var i, node;
-		div.bn_remind_selected = u.qs("li.remind_selected");
-		div.selectionUpdated = function(response) {
-			if(response.length > 0) {
-				u.rc(this.bn_remind_selected.form[2], "disabled");				
+		u.bug("div", div)
+		div.bn_remind_selected = u.qs("li.remind_selected input[type=submit]");
+		div.selectionUpdated = function(inputs) {
+			u.bug("inputs", inputs, this.bn_remind_selected);
+			if(inputs.length > 0) {
+				u.rc(this.bn_remind_selected, "disabled");
 			}
 			else {
-				u.ac(this.bn_remind_selected.form[2], "disabled");
+				u.ac(this.bn_remind_selected, "disabled");
 			}
 			this.selected_username_ids = [];
-			for(i = 0; i < response.length; i++) {
-				node = response[i].node;
+			for(i = 0; i < inputs.length; i++) {
+				node = inputs[i].node;
 				node.username_id = u.cv(node, "username_id");
 				this.selected_username_ids.push(node.username_id);
 			}
 			this.selected_username_ids = this.selected_username_ids.join();
-			this.bn_remind_selected.form.inputs.selected_username_ids.val(this.selected_username_ids);
+			this.bn_remind_selected._form.inputs.selected_username_ids.val(this.selected_username_ids);
 		}
 		for(i = 0; node = div.nodes[i]; i++) {
 			node.bn_remind = u.qs("ul.actions li.remind", node);
@@ -10397,7 +10404,7 @@ Util.Modules["unverifiedUsernamesSelected"] = new function() {
 	this.init = function(ul) {
 		var bn_remind_selected = u.qs("li.remind_selected", ul);
 		bn_remind_selected.reminded = function(response) {
-			var obj;
+			var obj, i, node;
 			if(response.cms_status == "success") {
 				for(i = 0; i < response.cms_object.length; i++) {
 					obj = response.cms_object[i];

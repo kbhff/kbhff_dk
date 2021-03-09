@@ -300,6 +300,51 @@ class SuperUser extends SuperUserCore {
 		return false;
 
 	}
+
+	function getDepartmentUsers($department_id) {
+		
+
+		$query = new Query();
+		
+		if($department_id) {
+			$sql = "SELECT users.*, user_department.department_id FROM ".SITE_DB.".user_department AS user_department, $this->db AS users WHERE users.status = 1 AND users.user_group_id > 1 AND user_department.user_id = users.id AND user_department.department_id = $department_id ORDER BY nickname";
+
+			if($query->sql($sql)) {
+
+				return $query->results();
+			}
+		}
+
+		return false;
+
+	}
+
+	// /janitor/user_group/updateUserUserGroup/#user_id# (values in POST)
+	function updateUserUserGroup($action) {
+
+		if($this->update(["update", $action[1]])) {
+
+			message()->resetMessages();
+			message()->addMessage("User group was updated");
+
+			$user = $this->getUsers(["user_id" => $action[1]]); 
+			return $this->getUserGroups(["user_group_id" => $user["user_group_id"]]);
+		}
+
+		return false;
+	}
+
+	function getAllActiveUsers() {
+
+		$query = new Query();
+		
+		$sql = "SELECT * FROM ".$this->db." WHERE id != 1 AND user_group_id IS NOT NULL ORDER BY nickname";
+		if($query->sql($sql)) {
+			return $query->results();
+	   }
+	}
+
+
 	/**
 	 * Update or set the current user's associated department.
 	 *

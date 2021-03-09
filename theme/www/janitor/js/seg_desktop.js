@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-09-21 17:45:36
+asset-builder @ 2021-03-09 20:35:45
 */
 
 /*seg_desktop_include.js*/
@@ -1931,6 +1931,7 @@ Util.Form = u.f = new function() {
 		_form._label_style = u.cv(_form, "labelstyle");
 		_form._callback_ready = "ready";
 		_form._callback_submitted = "submitted";
+		_form._callback_submit_failed = "submitFailed";
 		_form._callback_pre_submitted = "preSubmitted";
 		_form._callback_resat = "resat";
 		_form._callback_updated = "updated";
@@ -1949,6 +1950,7 @@ Util.Form = u.f = new function() {
 					case "label_style"              : _form._label_style               = _options[_argument]; break;
 					case "callback_ready"           : _form._callback_ready            = _options[_argument]; break;
 					case "callback_submitted"       : _form._callback_submitted        = _options[_argument]; break;
+					case "callback_submit_failed"   : _form._callback_submit_failed    = _options[_argument]; break;
 					case "callback_pre_submitted"   : _form._callback_pre_submitted    = _options[_argument]; break;
 					case "callback_resat"           : _form._callback_resat            = _options[_argument]; break;
 					case "callback_updated"         : _form._callback_updated          = _options[_argument]; break;
@@ -2193,6 +2195,11 @@ Util.Form = u.f = new function() {
 					}
 				}
 				this.DOMsubmit();
+			}
+		}
+		else {
+			if(fun(this[this._callback_submit_failed])) {
+				this[this._callback_submit_failed](iN);
 			}
 		}
 	}
@@ -3642,7 +3649,8 @@ u.f.textEditor = function(field) {
 				this.deleteMedia(tag);
 			}
 			tag.parentNode.removeChild(tag);
-			u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+			this._editor.updateTargets();
+			this._editor.updateDraggables();
 			this.update();
 			this._form.submit();
 		}
@@ -3770,7 +3778,8 @@ u.f.textEditor = function(field) {
 		u.e.addEndEvent(tag._input, this._changed_ext_video_content);
 		u.e.addEvent(tag._input, "focus", tag.field._focused_content);
 		u.e.addEvent(tag._input, "blur", tag.field._blurred_content);
-		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 		return tag;
 	}
 	field._changed_ext_video_content = function(event) {
@@ -3829,7 +3838,8 @@ u.f.textEditor = function(field) {
 				u.e.addEvent(tag._input, "mouseleave", u.f._mouseleave);
 			}
 		}
-		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 		return tag;
 	}
 	field.deleteMedia = function(tag) {
@@ -3841,7 +3851,7 @@ u.f.textEditor = function(field) {
 				this.field.update();
 			}
 		}
-		u.request(tag, this.file_delete_action+"/"+tag._item_id+"/"+tag._variant, {"method":"post", "params":form_data});
+		u.request(tag, this.file_delete_action+"/"+tag._item_id+"/"+tag._variant, {"method":"post", "data":form_data});
 	}
 	field._media_updated = function(event) {
 		var form_data = new FormData();
@@ -3881,7 +3891,7 @@ u.f.textEditor = function(field) {
 				this.tag.field._form.submit();
 			}
 		}
-		u.request(this, this.field.media_add_action+"/"+this.field.item_id, {"method":"post", "params":form_data});
+		u.request(this, this.field.media_add_action+"/"+this.field.item_id, {"method":"post", "data":form_data});
 	}
 	field._changed_media_content = function(event) {
 		if(this.val() && !this.val().replace(/<br>/, "")) {
@@ -3933,7 +3943,8 @@ u.f.textEditor = function(field) {
 				u.e.addEvent(tag._input, "mouseleave", u.f._mouseleave);
 			}
 		}
-		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 		return tag;
 	}
 	field.deleteFile = function(tag) {
@@ -3945,7 +3956,7 @@ u.f.textEditor = function(field) {
 				this.field.update();
 			}
 		}
-		u.request(tag, this.file_delete_action+"/"+tag._item_id+"/"+tag._variant, {"method":"post", "params":form_data});
+		u.request(tag, this.file_delete_action+"/"+tag._item_id+"/"+tag._variant, {"method":"post", "data":form_data});
 	}
 	field._file_updated = function(event) {
 		var form_data = new FormData();
@@ -3980,7 +3991,7 @@ u.f.textEditor = function(field) {
 				this.tag.field._form.submit();
 			}
 		}
-		u.request(this, this.field.file_add_action+"/"+this.field.item_id, {"method":"post", "params":form_data});
+		u.request(this, this.field.file_add_action+"/"+this.field.item_id, {"method":"post", "data":form_data});
 	}
 	field._changed_file_content = function(event) {
 		if(this.val() && !this.val().replace(/<br>/, "")) {
@@ -4014,7 +4025,8 @@ u.f.textEditor = function(field) {
 		tag.addNew = function() {
 			this.field.addTextItem(this.field.text_allowed[0]);
 		}
-		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 		return tag;
 	}
 	field._code_selection_started = function(event) {
@@ -4067,7 +4079,8 @@ u.f.textEditor = function(field) {
 					this.tag.parentNode.removeChild(this.tag);
 					prev.focus();
 				}
-				u.sortable(this.field._editor, {"draggables":".tag", "targets":".editor"});
+				this.field._editor.updateTargets();
+				this.field._editor.updateDraggables();
 			}
 			else if(!this.val() || !this.val().replace(/<br>/, "")) {
 				this.is_deletable = true;
@@ -4097,7 +4110,8 @@ u.f.textEditor = function(field) {
 	field.addListTag = function(type, value) {
 		var tag = this.createTag(this.list_allowed, type);
 		this.addListItem(tag, value);
-		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 		return tag;
 	}
 	field.addListItem = function(tag, value) {
@@ -4126,6 +4140,8 @@ u.f.textEditor = function(field) {
 			u.e.addEvent(li._input, "mouseleave", u.f._mouseleave);
 		}
 		u.e.addEvent(li._input, "paste", this._pasted_content);
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 		return li;
 	}
 	field.addTextTag = function(type, value) {
@@ -4154,7 +4170,8 @@ u.f.textEditor = function(field) {
 		tag.addNew = function() {
 			this.field.addTextItem(this.field.text_allowed[0]);
 		}
-		u.sortable(this._editor, {"draggables":".tag", "targets":".editor"});
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
 		return tag;
 	}
 	field._changing_content = function(event) {
@@ -4232,7 +4249,8 @@ u.f.textEditor = function(field) {
 						this.tag.parentNode.removeChild(this.tag);
 					}
 				}
-				u.sortable(this.field._editor, {"draggables":".tag", "targets":".editor"});
+				this.field._editor.updateTargets();
+				this.field._editor.updateDraggables();
 				if(prev) {
 					prev.focus();
 				}
@@ -4307,21 +4325,22 @@ u.f.textEditor = function(field) {
 				selection.deleteFromDocument();
 			}
 			var paste_parts = paste_content.trim().split(/\n\r|\n|\r/g);
-			var text_nodes = [];
-			for(i = 0; i < paste_parts.length; i++) {
-				text = paste_parts[i];
-				text_nodes.push(document.createTextNode(text));
-				if(paste_parts.length && i < paste_parts.length-1) {
-					text_nodes.push(document.createElement("br"));
+				var text_nodes = [];
+				for(i = 0; i < paste_parts.length; i++) {
+					text = paste_parts[i];
+					u.bug("text part", text);
+					text_nodes.push(document.createTextNode(text));
+					if(paste_parts.length && i < paste_parts.length-1) {
+						text_nodes.push(document.createElement("br"));
+					}
 				}
-			}
-			for(i = text_nodes.length-1; i >= 0; i--) {
-				node = text_nodes[i];
-				var range = selection.getRangeAt(0);
-				range.insertNode(node);
-				selection.addRange(range);
-			}
-			selection.collapseToEnd();
+				for(i = text_nodes.length-1; i >= 0; i--) {
+					node = text_nodes[i];
+					var range = selection.getRangeAt(0);
+					range.insertNode(node);
+					selection.addRange(range);
+				}
+				selection.collapseToEnd();
 		}
 	}
 	field.findPreviousInput = function(iN) {
@@ -4405,7 +4424,7 @@ u.f.textEditor = function(field) {
 			u.e.kill(event);
 			this.field.addAnchorTag(this.selection, this.tag);
 		}
-		this.selection_options._em = u.ae(ul, "li", {"class":"em", "html":"Itallic"});
+		this.selection_options._em = u.ae(ul, "li", {"class":"em", "html":"Italic"});
 		this.selection_options._em.field = this;
 		this.selection_options._em.tag = node;
 		this.selection_options._em.selection = selection;
@@ -4694,6 +4713,7 @@ u.f.textEditor = function(field) {
 		}
 	}
 	field._viewer.innerHTML = field.input.val();
+	u.sortable(field._editor, {"draggables":"div.tag", "targets":"div.editor"});
 	var value, node, i, tag, j, lis, li;
 	var nodes = u.cn(field._viewer, {"exclude":"br"});
 	if(nodes.length) {
@@ -4782,7 +4802,8 @@ u.f.textEditor = function(field) {
 		tag = field.addTextTag(field.text_allowed[0], value);
 		field.activateInlineFormatting(tag._input, tag);
 	}
-	u.sortable(field._editor, {"draggables":".tag", "targets":".editor"});
+	field._editor.updateTargets();
+	field._editor.updateDraggables();
 	field.updateViewer();
 	field.addOptions();
 }
@@ -6324,6 +6345,127 @@ Util.validateResponse = function(HTTPRequest){
 		}
 	}
 }
+u.scrollTo = function(node, _options) {
+	node._callback_scroll_to = "scrolledTo";
+	node._callback_scroll_cancelled = "scrollToCancelled";
+	var offset_y = 0;
+	var offset_x = 0;
+	var scroll_to_x = 0;
+	var scroll_to_y = 0;
+	var to_node = false;
+	node._force_scroll_to = false;
+	if(obj(_options)) {
+		var _argument;
+		for(_argument in _options) {
+			switch(_argument) {
+				case "callback"             : node._callback_scroll_to            = _options[_argument]; break;
+				case "callback_cancelled"   : node._callback_scroll_cancelled     = _options[_argument]; break;
+				case "offset_y"             : offset_y                           = _options[_argument]; break;
+				case "offset_x"             : offset_x                           = _options[_argument]; break;
+				case "node"                 : to_node                            = _options[_argument]; break;
+				case "x"                    : scroll_to_x                        = _options[_argument]; break;
+				case "y"                    : scroll_to_y                        = _options[_argument]; break;
+				case "scrollIn"             : scrollIn                           = _options[_argument]; break;
+				case "force"                : node._force_scroll_to              = _options[_argument]; break;
+			}
+		}
+	}
+	if(to_node) {
+		node._to_x = u.absX(to_node);
+		node._to_y = u.absY(to_node);
+	}
+	else {
+		node._to_x = scroll_to_x;
+		node._to_y = scroll_to_y;
+	}
+	node._to_x = offset_x ? node._to_x - offset_x : node._to_x;
+	node._to_y = offset_y ? node._to_y - offset_y : node._to_y;
+	if (Util.support("scrollBehavior")) {
+		var test = node.scrollTo({top:node._to_y, left:node._to_x, behavior: 'smooth'});
+	}
+	else {
+		if(node._to_y > (node == window ? document.body.scrollHeight : node.scrollHeight)-u.browserH()) {
+			node._to_y = (node == window ? document.body.scrollHeight : node.scrollHeight)-u.browserH();
+		}
+		if(node._to_x > (node == window ? document.body.scrollWidth : node.scrollWidth)-u.browserW()) {
+			node._to_x = (node == window ? document.body.scrollWidth : node.scrollWidth)-u.browserW();
+		}
+		node._to_x = node._to_x < 0 ? 0 : node._to_x;
+		node._to_y = node._to_y < 0 ? 0 : node._to_y;
+		node._x_scroll_direction = node._to_x - u.scrollX();
+		node._y_scroll_direction = node._to_y - u.scrollY();
+		node._scroll_to_x = u.scrollX();
+		node._scroll_to_y = u.scrollY();
+		node._ignoreWheel = function(event) {
+			u.e.kill(event);
+		}
+		if(node._force_scroll_to) {
+			u.e.addEvent(node, "wheel", node._ignoreWheel);
+		}
+		node._scrollToHandler = function(event) {
+			u.t.resetTimer(this.t_scroll);
+			this.t_scroll = u.t.setTimer(this, this._scrollTo, 25);
+		}
+		node._cancelScrollTo = function() {
+			if(!this._force_scroll_to) {
+				u.t.resetTimer(this.t_scroll);
+				this._scrollTo = null;
+			}
+		}
+		node._scrollToFinished = function() {
+			u.t.resetTimer(this.t_scroll);
+			u.e.removeEvent(this, "wheel", this._ignoreWheel);
+			this._scrollTo = null;
+		}
+		node._ZoomScrollFix = function(s_x, s_y) {
+			if(Math.abs(this._scroll_to_y - s_y) <= 2 && Math.abs(this._scroll_to_x - s_x) <= 2) {
+				return true;
+			}
+			return false;
+		}
+		node._scrollTo = function(start) {
+			var s_x = u.scrollX();
+			var s_y = u.scrollY();
+			if((s_y == this._scroll_to_y && s_x == this._scroll_to_x) || this._force_scroll_to || this._ZoomScrollFix(s_x, s_y)) {
+				if(this._x_scroll_direction > 0 && this._to_x > s_x) {
+					this._scroll_to_x = Math.ceil(this._scroll_to_x + (this._to_x - this._scroll_to_x)/6);
+				}
+				else if(this._x_scroll_direction < 0 && this._to_x < s_x) {
+					this._scroll_to_x = Math.floor(this._scroll_to_x - (this._scroll_to_x - this._to_x)/6);
+				}
+				else {
+					this._scroll_to_x = this._to_x;
+				}
+				if(this._y_scroll_direction > 0 && this._to_y > s_y) {
+					this._scroll_to_y = Math.ceil(this._scroll_to_y + (this._to_y - this._scroll_to_y)/6);
+				}
+				else if(this._y_scroll_direction < 0 && this._to_y < s_y) {
+					this._scroll_to_y = Math.floor(this._scroll_to_y - (this._scroll_to_y - this._to_y)/6);
+				}
+				else {
+					this._scroll_to_y = this._to_y;
+				}
+				if(this._scroll_to_x == this._to_x && this._scroll_to_y == this._to_y) {
+					this._scrollToFinished();
+					this.scrollTo(this._to_x, this._to_y);
+					if(fun(this[this._callback_scroll_to])) {
+						this[this._callback_scroll_to]();
+					}
+					return;
+				}
+				this.scrollTo(this._scroll_to_x, this._scroll_to_y);
+				this._scrollToHandler();
+			}
+			else {
+				this._cancelScrollTo();
+				if(fun(this[this._callback_scroll_cancelled])) {
+					this[this._callback_scroll_cancelled]();
+				}
+			}	
+		}
+		node._scrollTo();
+	}
+}
 u.sortable = function(scope, _options) {
 	scope._callback_picked = "picked";
 	scope._callback_moved = "moved";
@@ -6345,7 +6487,7 @@ u.sortable = function(scope, _options) {
 				case "draggables"			: scope._draggable_selector		= _options[_argument]; break;
 				case "targets"				: scope._target_selector		= _options[_argument]; break;
 				case "layout"				: scope._layout					= _options[_argument]; break;
-				case "allow_clickpick"		: scope._allow_clickpick			= _options[_argument]; break;
+				case "allow_clickpick"		: scope._allow_clickpick		= _options[_argument]; break;
 				case "allow_nesting"		: scope._allow_nesting			= _options[_argument]; break;
 				case "sorting_disabled"		: scope._sorting_disabled		= _options[_argument]; break;
 				case "distance_to_pick"		: scope._distance_to_pick		= _options[_argument]; break;
@@ -6700,15 +6842,15 @@ u.sortable = function(scope, _options) {
 			var i, target;
 			for(i = 0; i < this.target_nodes.length; i++) {
 				target = this.target_nodes[i];
-				if((target._n_top || target._n_bottom) && (u.cn(target).length > 1 || target._n_display != "block")) {
-					target._layout = "horizontal";
-				}
-				else if(target._n_left || target._n_right) {
-					target._layout = "vertical";
-				}
-				else {
-					target._layout = "multiline";
-				}
+					if((target._n_top || target._n_bottom) && (u.cn(target).length > 1 || target._n_display != "block")) {
+						target._layout = "horizontal";
+					}
+					else if(target._n_left || target._n_right) {
+						target._layout = "vertical";
+					}
+					else {
+						target._layout = "multiline";
+					}
 			}
 		}
 		scope.updateDraggables = function() {
@@ -8949,6 +9091,13 @@ Util.Modules["defaultEdit"] = new function() {
 			page.autosave_disabled = true;
 		}
 		u.f.init(form);
+		form.submitFailed = function(iN) {
+			u.bug("submit failed", iN);
+			var first_error = Object.keys(this._error_inputs)[0];
+			if(this.inputs[first_error]) {
+				u.scrollTo(window, {node: this.inputs[first_error].field, offset_y: 170});
+			}
+		}
 		form.submitted = function(iN) {
 			u.t.resetTimer(page.t_autosave);
 			this.response = function(response) {
@@ -10042,6 +10191,154 @@ Util.Modules["defaultDeveloper"] = new function() {
 	}
 }
 
+/*m-event_tickets.js*/
+Util.Modules["ticketEvent"] = new function() {
+	this.init = function(div) {
+		div.item_id = u.cv(div, "item_id");
+		div.remove_event_url = div.getAttribute("data-event-remove");
+		div.csrf_token = div.getAttribute("data-csrf-token");
+		div._form_event = u.qs("form.event", div);
+		div._list_events = u.qs("ul.events", div);
+		if(div._form_event) {
+			div._form_event.div = div;
+			u.f.init(div._form_event);
+			div._form_event.submitted = function(iN) {
+				this.response = function(response) {
+					page.notify(response);
+					if(response.cms_status == "success" && response.cms_object) {
+						if(!this.div._list_events) {
+							this.div._list_events = u.ae(this.parentNode, "ul", {"class":"items events"});
+							this.parentNode.insertBefore(this.div._list_events, this);
+							var p_no_events = u.qs("p", this.div);
+							if(p_no_events) {
+								p_no_events.parentNode.removeChild(p_no_events);
+							}
+						}
+						this.div._list_events.innerHTML = "";
+						var event_li = u.ae(this.div._list_events, "li", {"class":"event event_id:"+response.cms_object["event_id"]});
+						u.ae(event_li, "h3", {"html":response.cms_object["event_name"]});
+						this.div.initEvent(event_li);
+						this.reset();
+					}
+				}
+				u.request(this, this.action, {"method":"post", "data" : this.getData()});
+			}
+		}
+		div.initEvent = function(node) {
+			node.div = this;
+			if(this.remove_event_url) {
+				node.event_id = u.cv(node, "event_id");
+				node._ul_actions = u.ae(node, "ul", {"class":"actions"});
+				node._li_remove = u.ae(node._ul_actions, "li", {"class":"remove"});
+				node._form_remove = u.f.addForm(node._li_remove, {
+					"action":this.remove_event_url, 
+					"class":"remove"
+				});
+				node._form_remove.node = node;
+				u.f.addField(node._form_remove, {
+					"type":"hidden",
+					"name":"csrf-token", 
+					"value":div.csrf_token
+				});
+				u.f.addField(node._form_remove, {
+					"type":"hidden",
+					"name":"event_id", 
+					"value":node.event_id
+				});
+				u.f.addAction(node._form_remove, {
+					"value":"Remove from event",
+					"class":"button remove"
+				});
+				node._form_remove.setAttribute("data-success-function", "removed");
+				node._form_remove.setAttribute("data-confirm-value", "Are you sure?");
+				u.m.oneButtonForm.init(node._form_remove);
+				node._form_remove.removed = function(response) {
+					this.node.parentNode.removeChild(this.node);
+				}
+			}
+		}
+		div.events = u.qsa("li.event", div._list_events);
+		var i, node;
+		for(i = 0; node = div.events[i]; i++) {
+			div.initEvent(node);
+		}
+	}
+}
+Util.Modules["eventTickets"] = new function() {
+	this.init = function(div) {
+		div.item_id = u.cv(div, "item_id");
+		div.remove_ticket_url = div.getAttribute("data-ticket-remove");
+		div.csrf_token = div.getAttribute("data-csrf-token");
+		div._form_ticket = u.qs("form.ticket", div);
+		div._list_tickets = u.qs("ul.tickets", div);
+		if(div._form_ticket) {
+			div._form_ticket.div = div;
+			u.f.init(div._form_ticket);
+			div._form_ticket.submitted = function(iN) {
+				this.response = function(response) {
+					page.notify(response);
+					if(response.cms_status == "success" && response.cms_object) {
+						if(!this.div._list_tickets) {
+							this.div._list_tickets = u.ae(this.parentNode, "ul", {"class":"items tickets"});
+							this.parentNode.insertBefore(this.div._list_tickets, this);
+							var p_no_tickets = u.qs("p", this.div);
+							if(p_no_tickets) {
+								p_no_tickets.parentNode.removeChild(p_no_tickets);
+							}
+						}
+						var event_li = u.ae(this.div._list_tickets, "li", {"class":"ticket ticket_id:"+response.cms_object["ticket_id"]});
+						u.ae(event_li, "h3", {"html":response.cms_object["ticket_name"]});
+						this.inputs["item_ticket"].removeChild(this.inputs["item_ticket"].options[this.inputs["item_ticket"].selectedIndex]);
+						this.div.initTicket(event_li);
+						this.reset();
+					}
+				}
+				u.request(this, this.action, {"method":"post", "data" : this.getData()});
+			}
+		}
+		div.initTicket = function(node) {
+			node.div = this;
+			if(this.remove_ticket_url) {
+				node.ticket_id = u.cv(node, "ticket_id");
+				node._ul_actions = u.ae(node, "ul", {"class":"actions"});
+				node._li_remove = u.ae(node._ul_actions, "li", {"class":"remove"});
+				node._form_remove = u.f.addForm(node._li_remove, {
+					"action":this.remove_ticket_url, 
+					"class":"remove"
+				});
+				node._form_remove.node = node;
+				u.f.addField(node._form_remove, {
+					"type":"hidden",
+					"name":"csrf-token", 
+					"value":div.csrf_token
+				});
+				u.f.addField(node._form_remove, {
+					"type":"hidden",
+					"name":"ticket_id", 
+					"value":node.ticket_id
+				});
+				u.f.addAction(node._form_remove, {
+					"value":"Remove ticket",
+					"class":"button remove"
+				});
+				node._form_remove.setAttribute("data-success-function", "removed");
+				node._form_remove.setAttribute("data-confirm-value", "Are you sure?");
+				u.m.oneButtonForm.init(node._form_remove);
+				node._form_remove.removed = function(response) {
+					u.ae(this.node.div._form_ticket.inputs["item_ticket"], "option", {"html": node.innerHTML, "value": node.ticket_id});
+					this.node.parentNode.removeChild(this.node);
+				}
+			}
+		}
+		div.tickets = u.qsa("li.ticket", div._list_tickets);
+		var i, node;
+		for(i = 0; node = div.tickets[i]; i++) {
+			div.initTicket(node);
+		}
+	}
+}
+
+
 /*m-navigations.js*/
 Util.Modules["navigationNodes"] = new function() {
 	this.init = function(div) {
@@ -10497,48 +10794,27 @@ Util.Modules["flushUserSession"] = new function() {
 		}
 	}
 }
-Util.Modules["newSubscription"] = new function() {
-	this.init = function(form) {
-		u.f.init(form);
-		u.bug("init")
-		form.inputs["item_id"].changed = function() {
-			location.href = location.href.replace(/new\/([\d]+).+/, "new/$1") + "/" + this.val();
-		}
-		if(form.actions["cancel"]) {
-			form.actions["cancel"].clicked = function(event) {
-				location.href = this.url;
-			}
-		}
-		form.submitted = function(iN) {
-			this.response = function(response) {
-				page.notify(response);
-				if(response.cms_status == "success") {
-					location.href = this.actions["cancel"].url;
-				}
-			}
-			u.request(this, this.action, {"method":"post", "data" : this.getData()});
-		}
-	}
-}
 Util.Modules["unverifiedUsernames"] = new function() {
 	this.init = function(div) {
 		var i, node;
-		div.bn_remind_selected = u.qs("li.remind_selected");
-		div.selectionUpdated = function(response) {
-			if(response.length > 0) {
-				u.rc(this.bn_remind_selected.form[2], "disabled");				
+		u.bug("div", div)
+		div.bn_remind_selected = u.qs("li.remind_selected input[type=submit]");
+		div.selectionUpdated = function(inputs) {
+			u.bug("inputs", inputs, this.bn_remind_selected);
+			if(inputs.length > 0) {
+				u.rc(this.bn_remind_selected, "disabled");
 			}
 			else {
-				u.ac(this.bn_remind_selected.form[2], "disabled");
+				u.ac(this.bn_remind_selected, "disabled");
 			}
 			this.selected_username_ids = [];
-			for(i = 0; i < response.length; i++) {
-				node = response[i].node;
+			for(i = 0; i < inputs.length; i++) {
+				node = inputs[i].node;
 				node.username_id = u.cv(node, "username_id");
 				this.selected_username_ids.push(node.username_id);
 			}
 			this.selected_username_ids = this.selected_username_ids.join();
-			this.bn_remind_selected.form.inputs.selected_username_ids.val(this.selected_username_ids);
+			this.bn_remind_selected._form.inputs.selected_username_ids.val(this.selected_username_ids);
 		}
 		for(i = 0; node = div.nodes[i]; i++) {
 			node.bn_remind = u.qs("ul.actions li.remind", node);
@@ -10569,7 +10845,7 @@ Util.Modules["unverifiedUsernamesSelected"] = new function() {
 	this.init = function(ul) {
 		var bn_remind_selected = u.qs("li.remind_selected", ul);
 		bn_remind_selected.reminded = function(response) {
-			var obj;
+			var obj, i, node;
 			if(response.cms_status == "success") {
 				for(i = 0; i < response.cms_object.length; i++) {
 					obj = response.cms_object[i];
@@ -11249,6 +11525,28 @@ Util.Modules["department_pickupdates"] = new function() {
 			}
 			remove.removed = function(response) {
 				u.removeClass(this.pickupdate, "added");
+			}
+		}
+	}
+}
+
+/*m-user_group.js*/
+Util.Modules["user_group"] = new function() {
+	this.init = function(div) {
+		var users = u.qsa("li.item", div);
+		for(var i = 0; i < users.length; i++) {
+			var user = users[i];
+			user.user_group = u.qs("dd.user_group", user)
+			var update = u.qs("ul.actions li.update", user);
+			if(update) {
+				update.user = user;
+				update.confirmed = function(response) {
+					if(response.cms_status == "success" && response.cms_object) {
+						u.bug(this.user.user_group);
+						this.user.user_group.innerHTML = response.cms_object.user_group;
+						u.as(this, "display", "none");
+					}
+				}
 			}
 		}
 	}
