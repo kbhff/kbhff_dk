@@ -330,24 +330,14 @@ class SuperUser extends SuperUserCore {
 			$user = $this->getKbhffUser(["user_id" => $action[1]]);
 			$new_user_group = $this->getUserGroups(["user_group_id" => $user["user_group_id"]]);
 
-			if($new_user_group["user_group"] == "'User'" ) {
-				$new_user_group_info = 'Som medlem af brugergruppen "User" er du i stand til købe grøntsager i webshoppen, såfremt dit medlemskab er aktivt.'; 
-			}
-			elseif($new_user_group["user_group"] == "Shop shift" ) {
-				$new_user_group_info = 'Som medlem af brugergruppen "Shop shift" er du i stand til tage butiksvagter. Du kan selvfølgelig også selv købe grøntsager i webshoppen.'; 
-			}
-			elseif($new_user_group["user_group"] == "Local administrator" ) {
-				$new_user_group_info = 'Som medlem af brugergruppen "Local administrator" er du i stand til at ??? . Du kan også tage butiksvagter. Og du kan selvfølgelig også selv købe grøntsager i webshoppen.'; 
-			}
-			elseif($new_user_group["user_group"] == "Purchasing group" ) {
-				$new_user_group_info = 'Som medlem af brugergruppen "Purchasing group" er du i stand til at indgå i arbejdet med at indkøbe produkter. Du kan også tage butiksvagter. Og du kan selvfølgelig også selv købe grøntsager i webshoppen.'; 
-			}
-			elseif($new_user_group["user_group"] == "Communication group" ) {
-				$new_user_group_info = 'Som medlem af brugergruppen "Communication group" er du i stand til at indgå i arbejdet med udsendelse af nyhedsbreve. Du kan også tage butiksvagter. Og du kan selvfølgelig også selv købe grøntsager i webshoppen.'; 
-			}
-			elseif($new_user_group["user_group"] == "Super User" ) {
-				$new_user_group_info = 'Som medlem af brugergruppen "Super User" har du adgang til alle systemets funktioner.'; 
-			}
+			$new_user_group_info = [
+				"User" => 'Som medlem af brugergruppen "User" er du i stand til købe grøntsager i webshoppen, såfremt dit medlemskab er aktivt.',
+				"Shop shift" => 'Som medlem af brugergruppen "Shop shift" er du i stand til tage butiksvagter. Du kan selvfølgelig også selv købe grøntsager i webshoppen.',
+				"Local administrator" => 'Som medlem af brugergruppen "Local administrator" er du i stand til at ??? . Du kan også tage butiksvagter. Og du kan selvfølgelig også selv købe grøntsager i webshoppen.',
+				"Purchasing group" => 'Som medlem af brugergruppen "Purchasing group" er du i stand til at indgå i arbejdet med at indkøbe produkter. Du kan også tage butiksvagter. Og du kan selvfølgelig også selv købe grøntsager i webshoppen.',
+				"Communication group" => 'Som medlem af brugergruppen "Communication group" er du i stand til at indgå i arbejdet med udsendelse af nyhedsbreve. Du kan også tage butiksvagter. Og du kan selvfølgelig også selv købe grøntsager i webshoppen.',
+				"Super User" => 'Som medlem af brugergruppen "Super User" har du adgang til alle systemets funktioner.'
+			];
 
 			message()->resetMessages();
 			message()->addMessage("User group was updated");
@@ -359,7 +349,7 @@ class SuperUser extends SuperUserCore {
 					"NICKNAME" => $user["nickname"],
 					"OLD_USER_GROUP" => $old_user_group["user_group"],
 					"NEW_USER_GROUP" => $new_user_group["user_group"], 
-					"NEW_USER_GROUP_INFO" => $new_user_group_info, 
+					"NEW_USER_GROUP_INFO" => $new_user_group_info[$new_user_group["user_group"]], 
 				),
 				"recipients" => $user["email"],
 				"template" => "user_group_change_notice",

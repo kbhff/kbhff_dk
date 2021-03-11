@@ -217,6 +217,8 @@ class TypeMembership extends Itemtype {
 					
 					$subscription = $SuperSubscriptionClass->updateSubscription(["updateSubscription", $subscription_id]);
 					unset($_POST);
+
+					
 				}
 				// existing membership is inactive
 				else {
@@ -239,6 +241,22 @@ class TypeMembership extends Itemtype {
 				// update membership with subscription_id
 				$subscription_id = $subscription["id"];
 				$MC->updateMembership(["user_id" => $user_id, "subscription_id" => $subscription_id]);
+
+
+				// reset user_group to User if new membership is Støttemedlem
+				if($item["fixed_url_identifier"] == "stoettemedlem") {
+
+					include_once("classes/users/superuser.class.php");
+					$UC = new SuperUser();
+	
+					$user_groups = $UC->getUserGroups();
+					$user_key = arrayKeyValue($user_groups, "user_group", "User");
+					$_POST["user_group_id"] = $user_groups[$user_key] ? $user_groups[$user_key]["id"] : false;
+					$UC->update(["update", $user_id]);
+					unset($_POST);
+					
+					message()->resetMessages();
+				}
 			}
 			
 			// new membership item has no subscription method
