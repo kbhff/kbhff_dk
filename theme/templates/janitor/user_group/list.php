@@ -2,6 +2,8 @@
 <?php
 global $action;
 global $model;
+include_once("classes/users/supermember.class.php");
+$MC = new SuperMember();
 
 $user = $model->getKbhffUser(["user_id" => session()->value("user_id")]);
 $user_department = $user ? $user["department"] : false;
@@ -34,37 +36,40 @@ else {
 <?			foreach($list_users as $list_user): 
 			$member_no = $model->getUserNames(["type" => "member_no", 
 			"user_id" => $list_user["id"]]);
+			$list_user_membership = $MC->getMembers(["user_id" => $list_user["id"]]);
 
 			$list_user_group = $model->getUserGroups(["user_group_id" => $list_user["user_group_id"]]);
 
 			$list_user_department = $model->getUserDepartment(["user_id" => $list_user["id"]]);
 
-			if ($user_group["user_group"] == "Shop shift" && $list_user_group["user_group"] == "User") {
-				$allow_update = true;
-			}
-			elseif (
-				(
-					$user_group["user_group"] == "Local administrator"
-					|| $user_group["user_group"] == "Purchasing group"
-					|| $user_group["user_group"] == "Communication group"
-				)
-				&& (
-					$list_user_group["user_group"] == "User"
-					|| $list_user_group["user_group"] == "Shop shift"
-					|| $list_user_group["user_group"] == "Local administrator"
-					|| $list_user_group["user_group"] == "Purchasing group"
-					|| $list_user_group["user_group"] == "Communication group"
-				)
-				&& $list_user_group["user_group"] != $user_group["user_group"]
-			) {
-				$allow_update = true;
-			}
-			else {
-				$allow_update = false;
+			$allow_update = false;
+			if(isset($list_user_membership["item"]["fixed_url_identifier"]) && $list_user_membership["item"]["fixed_url_identifier"] == "frivillig") {
+				
+				if ($user_group["user_group"] == "Shop shift" && $list_user_group["user_group"] == "User") {
+					$allow_update = true;
+				}
+				elseif (
+					(
+						$user_group["user_group"] == "Local administrator"
+						|| $user_group["user_group"] == "Purchasing group"
+						|| $user_group["user_group"] == "Communication group"
+					)
+					&& (
+						$list_user_group["user_group"] == "User"
+						|| $list_user_group["user_group"] == "Shop shift"
+						|| $list_user_group["user_group"] == "Local administrator"
+						|| $list_user_group["user_group"] == "Purchasing group"
+						|| $list_user_group["user_group"] == "Communication group"
+					)
+					&& $list_user_group["user_group"] != $user_group["user_group"]
+				) {
+					$allow_update = true;
+				}
 			}
 
 
 ?>
+			<? if($list_user_membership): ?>
 			<li class="item item_id:<?= $list_user["id"] ?>">
 				<h3><?= strip_tags($list_user["nickname"]) ?></h3>
 
@@ -72,8 +77,11 @@ else {
 					<dt class="member_no">Member no.</dt>
 					<dd class="member_no"><?= $member_no ? $member_no["username"] : "N/A" ?></dd>;
 
-					<dt class="member_no">Department</dt>
-					<dd class="member_no"><?= $list_user_department ? $list_user_department["name"] : "N/A" ?></dd>;
+					<dt class="membership_type">Membership type</dt>
+					<dd class="membership_type"><?= isset($list_user_membership["item"]["name"]) ? $list_user_membership["item"]["name"] : "Inactive" ?></dd>;
+
+					<dt class="department">Department</dt>
+					<dd class="department"><?= $list_user_department ? $list_user_department["name"] : "N/A" ?></dd>;
 					
 					<dt class="user_group">User group.</dt>
 					<dd class="user_group"><?= $list_user_group ? $list_user_group["user_group"] : "N/A" ?></dd>;
@@ -96,6 +104,7 @@ else {
 					<? endif; ?>
 				</ul>
 			 </li>
+			<? endif; ?>
 <?			endforeach; ?>
 		</ul>
 <?		else: ?>
