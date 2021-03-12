@@ -38,38 +38,57 @@ else {
 			"user_id" => $list_user["id"]]);
 			$list_user_membership = $MC->getMembers(["user_id" => $list_user["id"]]);
 
+			if($list_user_membership && $list_user_membership["item"]) {
+				$list_user_membership["type"] = isset($list_user_membership["item"]["fixed_url_identifier"]) ? $list_user_membership["item"]["fixed_url_identifier"] : "";
+			}
+			elseif($list_user_membership) {
+				$list_user_membership["type"] = "inactive" ;
+			}
+
 			$list_user_group = $model->getUserGroups(["user_group_id" => $list_user["user_group_id"]]);
 
 			$list_user_department = $model->getUserDepartment(["user_id" => $list_user["id"]]);
 
+			$allow_display = false;
 			$allow_update = false;
-			if(isset($list_user_membership["item"]["fixed_url_identifier"]) && $list_user_membership["item"]["fixed_url_identifier"] == "frivillig") {
+			
+			// list user is member (active or inactive)
+			if($list_user_membership) {
+
+				// Shop shifts cannot see stoettemedlemmer
+				if(!($user_group["user_group"] == "Shop shift" && $list_user_membership["type"] == "stoettemedlem")) {
+					$allow_display = true;
+
+					if($list_user_membership["type"] == "frivillig") {
+						
+						if ($user_group["user_group"] == "Shop shift" && $list_user_group["user_group"] == "User") {
+							$allow_update = true;
+						}
+						elseif (
+							(
+								$user_group["user_group"] == "Local administrator"
+								|| $user_group["user_group"] == "Purchasing group"
+								|| $user_group["user_group"] == "Communication group"
+							)
+							&& (
+								$list_user_group["user_group"] == "User"
+								|| $list_user_group["user_group"] == "Shop shift"
+								|| $list_user_group["user_group"] == "Local administrator"
+								|| $list_user_group["user_group"] == "Purchasing group"
+								|| $list_user_group["user_group"] == "Communication group"
+							)
+							&& $list_user_group["user_group"] != $user_group["user_group"]
+						) {
+							$allow_update = true;
+						}
+					}
+
+				}
 				
-				if ($user_group["user_group"] == "Shop shift" && $list_user_group["user_group"] == "User") {
-					$allow_update = true;
-				}
-				elseif (
-					(
-						$user_group["user_group"] == "Local administrator"
-						|| $user_group["user_group"] == "Purchasing group"
-						|| $user_group["user_group"] == "Communication group"
-					)
-					&& (
-						$list_user_group["user_group"] == "User"
-						|| $list_user_group["user_group"] == "Shop shift"
-						|| $list_user_group["user_group"] == "Local administrator"
-						|| $list_user_group["user_group"] == "Purchasing group"
-						|| $list_user_group["user_group"] == "Communication group"
-					)
-					&& $list_user_group["user_group"] != $user_group["user_group"]
-				) {
-					$allow_update = true;
-				}
 			}
 
-
 ?>
-			<? if($list_user_membership): ?>
+			<? if($allow_display): ?>
 			<li class="item item_id:<?= $list_user["id"] ?>">
 				<h3><?= strip_tags($list_user["nickname"]) ?></h3>
 
@@ -88,8 +107,8 @@ else {
 
 				</dl>
 
+				<? if($allow_update): ?>
 				<ul class="actions">
-					<? if($allow_update): ?>
 					<?= $model->oneButtonForm(
 						'Change user group to "'.$user_group["user_group"].'"', 
 						"/janitor/user_group/updateUserUserGroup/".$list_user["id"], [
@@ -101,8 +120,8 @@ else {
 							"wrapper" => "li.update",
 						]) 
 					?>
-					<? endif; ?>
 				</ul>
+				<? endif; ?>
 			 </li>
 			<? endif; ?>
 <?			endforeach; ?>
