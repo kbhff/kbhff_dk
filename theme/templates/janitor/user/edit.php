@@ -16,11 +16,12 @@ if($item && $item["status"] >= 0) {
 	// Super Users should not be able to elevate to Developer
 	$current_user = $model->getUser();
 	$current_user_user_group = $model->getUserGroups(["user_group_id" => $current_user["user_group_id"]]);
-	if($current_user_user_group["user_group"] == "Super User") {
+		if($current_user_user_group["user_group"] == "Super User") {
 
 		unset($user_groups[arrayKeyValue($user_groups, "user_group", "Developer")]);
 	}
 
+	$item_user_group = $model->getUserGroups(["user_group_id" => $item["user_group_id"]]);
 
 	$user_groups_options = $model->toOptions($user_groups, "id", "user_group");
 
@@ -127,7 +128,12 @@ if($item && $item["status"] >= 0) {
 	</div>
 <? 	endif; ?>
 
-
+<? if($current_user_user_group["user_group"] == "Super User" && $item_user_group["user_group"] == "Developer"): ?>
+<div class="item">
+	<p>You do not have permission to edit this user.</p>
+</div>
+<? else: ?>
+	
 	<?= $JML->userTabs($user_id, "profile") ?>
 
 
@@ -300,6 +306,7 @@ if($item && $item["status"] >= 0) {
 		</ul>
 	</div>
 <? 	endif; ?>
+<? endif; ?>
 
 
 
