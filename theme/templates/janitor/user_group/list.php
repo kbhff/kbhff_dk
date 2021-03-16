@@ -55,8 +55,8 @@ else {
 			// list user is member (active or inactive)
 			if($list_user_membership) {
 
-				// Shop shifts cannot see stoettemedlemmer
-				if(!($user_group["user_group"] == "Shop shift" && $list_user_membership["type"] == "stoettemedlem")) {
+				// Shop shifts cannot see stoettemedlemmer or inactive members
+				if(!($user_group["user_group"] == "Shop shift" && ($list_user_membership["type"] == "stoettemedlem" || $list_user_membership["type"] == "inactive"))) {
 					$allow_display = true;
 
 					if($list_user_membership["type"] == "frivillig") {

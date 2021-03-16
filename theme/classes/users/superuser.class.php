@@ -333,7 +333,7 @@ class SuperUser extends SuperUserCore {
 			$new_user_group_info = [
 				"User" => 'Som medlem af brugergruppen "User" er du i stand til købe grøntsager i webshoppen, såfremt dit medlemskab er aktivt.',
 				"Shop shift" => 'Som medlem af brugergruppen "Shop shift" er du i stand til tage butiksvagter. Du kan selvfølgelig også selv købe grøntsager i webshoppen.',
-				"Local administrator" => 'Som medlem af brugergruppen "Local administrator" er du i stand til at ??? . Du kan også tage butiksvagter. Og du kan selvfølgelig også selv købe grøntsager i webshoppen.',
+				"Local administrator" => 'Som medlem af brugergruppen "Local administrator" er du i stand til at tage butiksvagter og sende beskeder til alle medlemmer i din lokalafdeling. Du kan også flytte medlemmer til din afdeling. Og du kan selvfølgelig også selv købe grøntsager i webshoppen.',
 				"Purchasing group" => 'Som medlem af brugergruppen "Purchasing group" er du i stand til at indgå i arbejdet med at indkøbe produkter. Du kan også tage butiksvagter. Og du kan selvfølgelig også selv købe grøntsager i webshoppen.',
 				"Communication group" => 'Som medlem af brugergruppen "Communication group" er du i stand til at indgå i arbejdet med udsendelse af nyhedsbreve. Du kan også tage butiksvagter. Og du kan selvfølgelig også selv købe grøntsager i webshoppen.',
 				"Super User" => 'Som medlem af brugergruppen "Super User" har du adgang til alle systemets funktioner.'
