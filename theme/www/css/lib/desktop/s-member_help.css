@@ -178,3 +178,7 @@
 /*#content .scene.user_profile form.form_membership fieldset {float:left;}*/
 /* OVERLAY */
 div.overlay .delete_user_information ul.actions {margin-top: 36px;}
+
+/* USER GROUPS */
+#content div.profile .user_group ul.actions li.upgrade {width: 100%;}
+#content div.profile .user_group ul.actions li.upgrade .confirm {background-color: #C22414;}

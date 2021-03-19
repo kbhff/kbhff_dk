@@ -348,6 +348,7 @@ if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Fr
 									"wait-value" => "Vent...",
 									"wrapper" => "li.upgrade",
 									"dom-submit" => true,
+									"class" => "full-width",
 									"inputs" => [
 										"user_group_id" => $clerk_user_user_group["id"]
 									]
