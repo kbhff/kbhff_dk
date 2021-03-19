@@ -37,7 +37,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $member_user_id]);
 // User groups
 $allow_user_group_display = false;
 $allow_user_group_update = false;
-if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Frivillig" && !($clerk_user_user_group["user_group"] == "Shop shift" && $member_user_user_group["user_group"] == "Shop shift")) {
+if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Frivillig" && !($clerk_user_user_group["user_group"] == "Shop shift" && $member_user_user_group["user_group"] != "User")) {
 	$allow_user_group_display = true;
 
 	if ($clerk_user_user_group["user_group"] == "Shop shift" && $member_user_user_group["user_group"] == "User") {
@@ -326,6 +326,8 @@ if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Fr
 							"Local administrator" => $member_user_name." har for øjeblikket status som lokaladministrator.",
 							"Purchasing group" => $member_user_name." har for øjeblikket status som medlem af indkøbsgruppen.",
 							"Communication group" => $member_user_name." har for øjeblikket status som medlem af kommunikationsgruppen.",
+							"Super User" => $member_user_name." er superbruger.",
+							"Developer" => $member_user_name." er medlem af IT-gruppen.",
 						];
 						$clerk_upgrade_option = [
 							"Shop shift" => "Du har mulighed for at indlemme ".($member_user["firstname"] ?: $member_user_name)." i gruppen af butiksvagter.",
