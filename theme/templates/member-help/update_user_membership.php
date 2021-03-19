@@ -43,7 +43,7 @@ $this->pageTitle("Afdelinger");
 			"type" => "select",
 			"label" => "Medlemstype",
 			"options" => $UC->toOptions($memberships, "id", "name"),
-			"value" => $membership["item_id"],
+			"value" => $membership ? $membership["item_id"] : "",
 			"error_message" => "Du kan vælge blandt medlemskaber i listen",
 			"hint_message" => "Vælg et medlemskab",
 			"class" => "membership_input"

@@ -6,28 +6,61 @@ $UC = new SuperUser();
 $SC = new SuperShop();
 
 // Get current user and related department
-$user_id = $action[1];
+$member_user_id = $action[1];
 
-$member_user = $UC->getKbhffUser(["user_id" => $user_id]);
-$department = $UC->getUserDepartment(["user_id" => $user_id]);
-$user_name = $member_user['nickname'] ? $member_user['nickname'] : $member_user['firstname'] . " " . $member_user['lastname'];
+$clerk_user = $UC->getKbhffUser(["user_id" => session()->value("user_id")]);
+$clerk_user_user_group = $UC->getUserGroups(["user_group_id" => $clerk_user["user_group_id"]]);
+
+$member_user = $UC->getKbhffUser(["user_id" => $member_user_id]);
+$member_user_user_group = $UC->getUserGroups(["user_group_id" => $member_user["user_group_id"]]);
+
+$department = $UC->getUserDepartment(["user_id" => $member_user_id]);
+$member_user_name = $member_user['nickname'] ? $member_user['nickname'] : $member_user['firstname'] . " " . $member_user['lastname'];
 
 // Get membership status
 $is_member = $member_user["membership"] ? $member_user["membership"]["id"] : false;
 $is_active = isset($member_user["membership"]["subscription_id"]) ? true : false;
 $is_membership_paid = $is_member && $is_active && $member_user["membership"]["order"]["payment_status"] == 2 ? true : false;
 
-$orders = $SC->getOrders(["user_id" => $user_id]);
+$orders = $SC->getOrders(["user_id" => $member_user_id]);
 $order_items_pickupdates = false;
 if($orders) {
-	$order_items_pickupdates = $SC->getOrderItemsPickupdates($user_id, ["after" => date("Y-m-d")]);
+	$order_items_pickupdates = $SC->getOrderItemsPickupdates($member_user_id, ["after" => date("Y-m-d")]);
 }
 
-$has_accepted_terms = $UC->hasAcceptedTerms(["user_id" => $user_id]);
+$has_accepted_terms = $UC->hasAcceptedTerms(["user_id" => $member_user_id]);
 
 
-$unpaid_membership = $UC->hasUnpaidMembership(["user_id" => $user_id]);
-$unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
+$unpaid_membership = $UC->hasUnpaidMembership(["user_id" => $member_user_id]);
+$unpaid_orders = $SC->getUnpaidOrders(["user_id" => $member_user_id]);
+
+// User groups
+$allow_user_group_display = false;
+$allow_user_group_update = false;
+if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Frivillig" && !($clerk_user_user_group["user_group"] == "Shop shift" && $member_user_user_group["user_group"] == "Shop shift")) {
+	$allow_user_group_display = true;
+
+	if ($clerk_user_user_group["user_group"] == "Shop shift" && $member_user_user_group["user_group"] == "User") {
+		$allow_user_group_update = true;
+	}
+	elseif (
+		(
+			$clerk_user_user_group["user_group"] == "Local administrator"
+			|| $clerk_user_user_group["user_group"] == "Purchasing group"
+			|| $clerk_user_user_group["user_group"] == "Communication group"
+		)
+		&& (
+			$member_user_user_group["user_group"] == "User"
+			|| $member_user_user_group["user_group"] == "Shop shift"
+			|| $member_user_user_group["user_group"] == "Local administrator"
+			|| $member_user_user_group["user_group"] == "Purchasing group"
+			|| $member_user_user_group["user_group"] == "Communication group"
+		)
+		&& $member_user_user_group["user_group"] != $clerk_user_user_group["user_group"]
+	) {
+		$allow_user_group_update = true;
+	}
+}
 ?>
 
 
@@ -49,7 +82,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 		<div class="c-two-thirds">
 			<? if(!$has_accepted_terms):?>
 			<div class="c-box obs">
-				<h3><span class="highlight">OBS! </span><?= $user_name ?> har ikke accepteret betingelserne.</h3>
+				<h3><span class="highlight">OBS! </span><?= $member_user_name ?> har ikke accepteret betingelserne.</h3>
 				<?= $model->formStart("brugerprofil/$action[1]/accepter", array("class" => "accept_terms labelstyle:inject")) ?>
 				<fieldset>
 					<div class="terms">
@@ -70,18 +103,18 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 			<? endif; ?>
 			<? if($unpaid_orders && count($unpaid_orders) > 1): ?>
 			<div class="c-box alert unpaid orders">
-				<h3>OBS! <?= $user_name ?> har ubetalte ordrer</h3>
+				<h3>OBS! <?= $member_user_name ?> har ubetalte ordrer</h3>
 				<p>Ubetalte grøntsagsbestillinger vil blive automatisk slettet en uge inden den førstkommende afhentningsdag.</p>
 				<? if($unpaid_membership): ?>
 				<p>Hvis man har et ubetalt indmeldelsesgebyr eller kontingent, skal det betales før medlemmet kan bestille grøntsager.</p>
 				<? endif; ?>
 				<ul class="actions">
-					<li class="pay"><a href="/medlemshjaelp/betalinger/<?= $user_id ?>" class="button">Betal udestående</a></li>
+					<li class="pay"><a href="/medlemshjaelp/betalinger/<?= $member_user_id ?>" class="button">Betal udestående</a></li>
 				</ul>
 			</div>
 			<? elseif($unpaid_orders && count($unpaid_orders) == 1 && !$unpaid_membership): ?>
 			<div class="c-box alert unpaid orders">
-				<h3>OBS! <?= $user_name ?> har en ubetalt ordre</h3>
+				<h3>OBS! <?= $member_user_name ?> har en ubetalt ordre</h3>
 				<p>Ubetalte grøntsagsbestillinger vil blive automatisk slettet en uge inden den førstkommende afhentningsdag.</p>
 				<ul class="actions">
 					<li class="pay"><a href="/medlemshjaelp/betaling/<?= $unpaid_orders[0]["order_no"] ?>" class="button">Betal udestående</a></li>
@@ -89,7 +122,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 			</div>
 			<? elseif($unpaid_membership && $unpaid_membership["type"] == "signupfee"): ?>
 			<div class="c-box alert unpaid signupfee">
-				<h3>OBS! <?= $user_name ?> mangler at betale sit indmeldelsesgebyr</h3>
+				<h3>OBS! <?= $member_user_name ?> mangler at betale sit indmeldelsesgebyr</h3>
 				<p>Indmeldelsesgebyret skal betales før medlemmet kan bestille grøntsager.</p>
 				<ul class="actions">
 					<li class="pay"><a href="/medlemshjaelp/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal indmeldelsesgebyr nu</a></li>
@@ -97,7 +130,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 			</div>
 			<? elseif($unpaid_membership && $unpaid_membership["type"] == "membership"): ?>
 			<div class="c-box alert unpaid membership">
-				<h3>OBS! <?= $user_name ?> mangler at betale kontingent</h3>
+				<h3>OBS! <?= $member_user_name ?> mangler at betale kontingent</h3>
 				<p>Kontingentet skal betales før medlemmet kan bestille grøntsager.</p>
 				<ul class="actions">
 					<li class="pay"><a href="/medlemshjaelp/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal kontingent nu</a></li>
@@ -138,7 +171,7 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 									<? if(date("Y-m-d") > date("Y-m-d", strtotime($pickupdate["pickupdate"]." - 1 week"))): ?>
 									<a class="button disabled">Ret</a>
 									<? else: ?>
-									<a href="/medlemshjaelp/ret-bestilling/<?= $order_item["id"] ?>/<?= $user_id ?>" class="button">Ret</a>
+									<a href="/medlemshjaelp/ret-bestilling/<?= $order_item["id"] ?>/<?= $member_user_id ?>" class="button">Ret</a>
 									<? endif; ?>
 								</li>
 							</ul>
@@ -149,26 +182,26 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 				<? endforeach; ?>	
 				<? else: ?>
 				<div>
-					<p><?= $user_name ?> har ingen aktuelle grøntsagsbestillinger.</p>					
+					<p><?= $member_user_name ?> har ingen aktuelle grøntsagsbestillinger.</p>					
 				</div>
 				<? endif; ?>
 
 				<ul class="actions">
 					<!-- <li class="view-orders"><a href="#" class="button">Se gamle bestillinger</a></li> -->
-					<li class="new-order"><a <?= $unpaid_membership ? "" : "href='/medlemshjaelp/butik/$user_id'" ?> class="button primary <?= $unpaid_membership ? "disabled" : "" ?>">Ny bestilling</a></li>
+					<li class="new-order"><a <?= $unpaid_membership ? "" : "href='/medlemshjaelp/butik/$member_user_id'" ?> class="button primary <?= $unpaid_membership ? "disabled" : "" ?>">Ny bestilling</a></li>
 
 				</ul>
 			</div>
 			<? else: ?>
 			<div class="section not_member">
-			<h3><?= $user_name ?> er ikke medlem</h3>
+			<h3><?= $member_user_name ?> er ikke medlem</h3>
 			<? 
 
-			$carts = $SC->getCarts(["user_id" => $user_id]);
+			$carts = $SC->getCarts(["user_id" => $member_user_id]);
 			$cart = $carts ? $carts[0] : false;
 
 			if($cart && $SC->hasSignupfeeInCart($cart["id"])): ?>
-			<p><?= $user_name ?> er endnu ikke medlem, men har et indmeldelsesgebyr i sin kurv – <a href="/medlemshjaelp/butik/kurv/<?= $cart["cart_reference"] ?>">Gå til kurv</a></p>
+			<p><?= $member_user_name ?> er endnu ikke medlem, men har et indmeldelsesgebyr i sin kurv – <a href="/medlemshjaelp/butik/kurv/<?= $cart["cart_reference"] ?>">Gå til kurv</a></p>
 			<? else: ?>
 			<p>Denne bruger er oprettet i systemet, men har ikke tilknyttet et medlemskab. Kontakt gerne <a href="mailto:it@kbhff.dk">IT-gruppen</a> og send dem et screenshot af dette skærmbillede.
 			</p><p>Brugeren kan selv oprette et medlemskab ved at logge ind på sin egen konto med brugernavnet <em><?= $member_user["email"] ?></em>.</p>
@@ -264,16 +297,73 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
 						<div class="membership-info renewal">
 
 							<p class="over">Automatisk fornyelse</p>
-							<p class="under"><?= $UC->getUserRenewalOptOut($user_id) ? "Nej" : "Ja" ?></p>
+							<p class="under"><?= $UC->getUserRenewalOptOut($member_user_id) ? "Nej" : "Ja" ?></p>
 							
 						</div>
 						<ul class="actions">
-							<li class="change-renewal full-width"><a href="/medlemshjaelp/brugerprofil/<?= $user_id ?>/fornyelse" class="button">Ret</a></li>
+							<li class="change-renewal full-width"><a href="/medlemshjaelp/brugerprofil/<?= $member_user_id ?>/fornyelse" class="button">Ret</a></li>
 						</ul>
 					</div>
 
 				</div>
 			</div>
+
+			<? if($allow_user_group_display): ?>
+			<div class="section user_group">
+				<div class="c-box">
+					<h3>Brugerrettigheder</h3>
+
+					<? 
+						$t_user_groups = [
+							"Shop shift" => "Butiksvagt",
+							"Local administrator" => "Lokaladministrator",
+							"Purchasing group" => "Indkøber",
+							"Communication group" => "Kommunikator",
+						];
+						$user_groups_info = [
+							"User" => $member_user_name." har for øjeblikket status som almindeligt frivillig-medlem, der kan købe produkter i webshoppen.",
+							"Shop shift" => $member_user_name." har for øjeblikket status som butiksvagt.",
+							"Local administrator" => $member_user_name." har for øjeblikket status som lokaladministrator.",
+							"Purchasing group" => $member_user_name." har for øjeblikket status som medlem af indkøbsgruppen.",
+							"Communication group" => $member_user_name." har for øjeblikket status som medlem af kommunikationsgruppen.",
+						];
+						$clerk_upgrade_option = [
+							"Shop shift" => "Du har mulighed for at indlemme ".($member_user["firstname"] ?: $member_user_name)." i gruppen af butiksvagter.",
+							"Local administrator" => "Du har mulighed for at gøre ".($member_user["firstname"] ?: $member_user_name)." til lokaladministrator.",
+							"Purchasing group" => "Du har mulighed for at gøre ".($member_user["firstname"] ?: $member_user_name)." til medlem af indkøbsgruppen.",
+							"Communication group" => "Du har mulighed for at gøre ".($member_user["firstname"] ?: $member_user_name)." til medlem af kommunikationsgruppen.",
+						];
+					?>
+
+					<div class="fields">
+						<div class="user_group">
+
+							<p><?= $user_groups_info[$member_user_user_group["user_group"]] ?></p>
+							<? if($allow_user_group_update): ?>
+							<p><?= $clerk_upgrade_option[$clerk_user_user_group["user_group"]] ?></p>
+							
+							<ul class="actions">
+								<?= $HTML->oneButtonForm("Opgrader til ".$t_user_groups[$clerk_user_user_group["user_group"]], "/medlemshjaelp/updateUserUserGroup/".$member_user_id, [
+									"confirm-value" => "Bekræft opgradering",
+									"wait-value" => "Vent...",
+									"wrapper" => "li.upgrade",
+									"dom-submit" => true,
+									"inputs" => [
+										"user_group_id" => $clerk_user_user_group["id"]
+									]
+								]) ?>
+							</ul>
+							<? elseif($clerk_user_user_group["user_group"] == "Super User" || $clerk_user_user_group["user_group"] == "Developer"): ?>
+							<p>Du har mulighed for at ændre brugergrupper via Janitor.</p>
+							<? endif; ?>
+							
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<? endif; ?>
+
 
 		</div>
 	</div>

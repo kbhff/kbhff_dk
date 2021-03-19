@@ -448,6 +448,27 @@ if($action) {
 			exit();
 		}
 	}
+	
+	# /medlemshjaelp/updateUserUserGroup/#user_id#
+	else if($action[0] == "updateUserUserGroup" && $page->validateCsrfToken()) {
+
+		//Method returns true
+		if($model->updateUserUserGroup($action)) {
+			message()->resetMessages();
+			message()->addMessage("Brugergruppen er opdateret");
+			header("Location: /medlemshjaelp/brugerprofil/$action[1]");
+			exit();
+		}
+		//Method returns false
+		else {
+			message()->resetMessages();
+			message()->addMessage("Der skete en fejl, så brugergruppen ikke blev opdateret.", array("type" => "error"));
+			header("Location: /medlemshjaelp/brugerprofil/$action[1]");
+			exit();
+		}
+	}
+
+
 
 	# /medlemshjaelp/butik
 	else if($action[0] == "butik") {
