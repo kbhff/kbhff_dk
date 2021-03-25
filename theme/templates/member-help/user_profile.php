@@ -308,8 +308,8 @@ if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Fr
 				</div>
 			</div>
 
-			<? if($allow_user_group_display): ?>
 			<div class="section user_group">
+			<? if($allow_user_group_display): ?>
 				<div class="c-box">
 					<h3>Brugerrettigheder</h3>
 
@@ -364,8 +364,8 @@ if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Fr
 					</div>
 
 				</div>
-			</div>
 			<? endif; ?>
+			</div>
 
 
 		</div>

@@ -22,10 +22,14 @@ Util.Modules["user_profile"] = new function() {
 			var button_membership = u.qs(".membership li.change-membership", this);
 			var button_cancel = u.qs(".membership li.cancel-membership", this);
 			var button_department = u.qs(".membership li.change-department", this);
+
+			var section_user_group = u.qs(".section.user_group");
+
 			// Create references to scene
 			button_membership.scene = this;
 			button_cancel.scene = this; 
 			button_department.scene = this;
+
 			
 			// Query elements for syncing
 			var right_panel = u.qs(".c-one-third", this);
@@ -194,6 +198,8 @@ Util.Modules["user_profile"] = new function() {
 							
 							box_membership.replaceChild(div_membership, form_membership);
 							
+							var new_section_user_group = u.qs(".section.user_group", response);
+							section_user_group.parentNode.replaceChild(new_section_user_group, section_user_group);
 							
 							if (message = u.qs("div.messages", response)) {
 							

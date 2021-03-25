@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-03-19 16:52:39
+asset-builder @ 2021-03-25 16:36:24
 */
 
 /*seg_desktop_include.js*/
@@ -6945,6 +6945,7 @@ Util.Modules["user_profile"] = new function() {
 			var button_membership = u.qs(".membership li.change-membership", this);
 			var button_cancel = u.qs(".membership li.cancel-membership", this);
 			var button_department = u.qs(".membership li.change-department", this);
+			var section_user_group = u.qs(".section.user_group");
 			button_membership.scene = this;
 			button_cancel.scene = this; 
 			button_department.scene = this;
@@ -7034,6 +7035,8 @@ Util.Modules["user_profile"] = new function() {
 							u.rc(this, "loading");
 							var div_membership = u.qs(".membership .fields", response);
 							box_membership.replaceChild(div_membership, form_membership);
+							var new_section_user_group = u.qs(".section.user_group", response);
+							section_user_group.parentNode.replaceChild(new_section_user_group, section_user_group);
 							if (message = u.qs("div.messages", response)) {
 								u.ie(box_membership, message);
 								message.transitioned = function() {

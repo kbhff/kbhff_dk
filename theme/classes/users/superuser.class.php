@@ -177,6 +177,7 @@ class SuperUser extends SuperUserCore {
 
 			$user_id = $action[1];
 			$item_id = $this->getProperty("item_id", "value");
+			$item = $IC->getItem(["id" => $item_id, "extend" => true]);
 
 			$member = $MC->getMembers(array("user_id" => $user_id));
 		
@@ -184,19 +185,28 @@ class SuperUser extends SuperUserCore {
 				$sql = "UPDATE ".SITE_DB.".user_item_subscriptions SET item_id = $item_id WHERE user_id = $user_id";
 				
 				if($query->sql($sql)) {
+
+					// reset user_group to User if new membership is Støttemedlem
+					if(isset($item["fixed_url_identifier"]) && $item["fixed_url_identifier"] == "stoettemedlem") {
+
+						include_once("classes/users/superuser.class.php");
+						$UC = new SuperUser();
+
+						$user_groups = $UC->getUserGroups();
+						$user_key = arrayKeyValue($user_groups, "user_group", "User");
+						$_POST["user_group_id"] = $user_groups[$user_key] ? $user_groups[$user_key]["id"] : false;
+						$UC->update(["update", $member["user_id"]]);
+						unset($_POST);
+						
+					}
+
 					message()->resetMessages();
 					message()->addMessage("Medlemskab er opdateret");
 					return true;
 				}
-				else {
-					return false;
-				}	
 			}
 			
-			else {
-				return false;
-				
-			}
+			return false;
 		}
 	}
 	/**
