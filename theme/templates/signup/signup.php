@@ -74,7 +74,7 @@ if(message()->hasMessages(array("type" => "error"))): ?>
 		<?= $model->input("email", array("required" => true, "label" => "Din email", "value" => $email, "hint_message" => "Indtast din email.", "error_message" => "Du har indtastet en ugyldig e-mailadresse.")); ?>
 		<?= $model->input("confirm_email", array("label" => "Gentag din email", "required" => true, "hint_message" => "Indtast din email igen.", "error_message" => "De to email adresser er ikke ens.")); ?>
 		<?= $model->input("mobile", array("label" => "Mobilnummer", "hint_message" => "Indtast dit mobilnummer.", "error_message" => "Det skal være et dansk mobilnummer.")); ?>
-		<?= $model->input("password", array("required" => true, "label" => "Adgangskode", "hint_message" => "Indtast en adgangskode på mindst 8 karakterer.", "error_message" => "Din adgangskode skal være mere end 8 karakterer.")); ?>
+		<?= $model->input("password", array("required" => true, "label" => "Adgangskode", "hint_message" => "Indtast en adgangskode på mindst 8 tegn.", "error_message" => "Din adgangskode skal være mere end 8 karakterer.")); ?>
 		<?= $model->input("department_id", array("type" => "select", "required" => true, "label" => "Vælg lokalafdeling", "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),)); ?>
 		<?= $model->input("terms", array("label" => 'Jeg accepterer <a href="/persondata" target="_blank">KBHFF\'s retningslinjer for behandling og opbevaring af persondata</a>', "hint_message" => "Nødvendigt for at blive medlem af KBHFF.", "error_message" => "Du skal acceptere KBHFF's retningslinjer for at være medlem.")); ?>
 		<?= $model->input("maillist", array("type" => "checkbox", "label" => "Jeg vil gerne modtage KBHFF's nyhedsbrev.", "value" => "Nyheder")); ?>
