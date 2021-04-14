@@ -27,6 +27,5 @@ Util.Modules["banner"] = new function() {
 		}
 		u.preloader(image, ["/img/banners/desktop/pi_" + variant + "." + format]);
 
-
 	}
 }

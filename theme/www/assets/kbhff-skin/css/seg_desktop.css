@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-11-06 23:53:23
+asset-builder @ 2021-04-14 18:46:43
 */
 
 /*seg_desktop_include.css*/
@@ -34,6 +34,17 @@ input, select, textarea {font-size: 20px; color: #333333; outline: none;}
 a, span {font-size: inherit; font-family: inherit; font-style: inherit; font-weight: inherit; line-height: inherit; color: inherit; text-transform: inherit;}
 em, strong {font-size: inherit; font-family: inherit; line-height: inherit; color: inherit; text-transform: inherit;}
 sup {line-height: 1em; font-family: inherit; color: inherit;}
+.terms_notification {opacity: 0; position: fixed; z-index: 90; top: 50%; margin-top: -140px; right: 0px; padding: 15px 20px; background: #000000; border-right: none; max-width: 250px;}
+.terms_notification h3 {padding: 0 0 20px; font-size: 18px; color: #ffffff; text-transform: uppercase;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+}
+.terms_notification p {padding: 0 0 20px; font-size: 14px; color: #ffffff; line-height: 17px;}
+.terms_notification .accept,
+.terms_notification .details {padding: 7px 14px; line-height: 22px; font-size: 14px; text-transform: uppercase; display: inline-block; vertical-align: bottom; color: #ffffff;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+}
+.terms_notification .accept {float: left; background-color: #999999;}
+.terms_notification .details {float: right; text-decoration: underline;}
 
 
 /*s-fonts.css*/
