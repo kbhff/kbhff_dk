@@ -19,24 +19,28 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 
 ?>
 
-<div class="scene purchasing i:purchasing" itemscope itemtype="http://schema.org/NewsArticle">
+<div class="scene purchasing i:purchasing">
+
 	<div class="banner i:banner variant:random format:jpg"></div>
+
 	<h1>Indkøb</h1>
+
 	<?= $HTML->serverMessages(); ?>
+
 	<? if($next_pickupdate): ?>
 	<div class="c-wrapper order-list">
-		<h2>Ordrer til udlevering d. <?= date("d/m Y", strtotime($next_pickupdate["pickupdate"])) ?> </h2>
+		<h2>Ordrer til udlevering d. <?= date("d/m Y", strtotime($next_pickupdate["pickupdate"])) ?></h2>
 		<ul class="list">
 			<li class="labels">
-				<span class="departments">Afdelinger</span>
+				<span class="departments" title="Afdelinger">Afdelinger</span>
 				<? foreach($products as $product): ?>
-				<span class="product"><?= $product["name"] ?></span>
+				<span class="product" title="<?= $product["name"] ?>"><?= $product["name"] ?></span>
 				<? endforeach; ?>
 			</li>
 
 			<? foreach($departments as $department): ?>
 			<li class="listing">
-				<span class="department"><?= $department["name"] ?></span>
+				<span class="department" title="<?= $department["name"] ?>"><?= $department["name"] ?></span>
 				
 				<? foreach($products as $product): 
 					$department_pickupdate_product_order_items = $SC->getPickupdateOrderItems($next_pickupdate["id"], ["department_id" => $department["id"], "item_id" => $product["id"]]);
@@ -71,13 +75,17 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 		</ul>
 	</div>
 	<? endif; ?>
+
+
 	<div class="c-wrapper products">
 		<h2>Produkter</h2>
 		<p>Hej indkøber! Dette afsnit bruges til at oprette og vedligeholde de posetyper som tilbydes til KBHFFs medlemmer.</p>
-		<p>Poserne kan enten oprettes som faste ugentlige valg, eller som specielle tilbud i specifikke perioder. Ved at trykke ‘tilføj nyt produkt’ til højre åbnes en ny menu, hvori disse funktioner kan vælges. Du kan også redigere eller fjerne poser, ved at trykke på de relevante knapper ud fra den pågældende posen.</p>
+		<p>Poserne kan enten oprettes som faste ugentlige valg, eller som specielle tilbud i specifikke perioder. Ved at trykke ‘tilføj nyt produkt’ til højre åbnes en ny menu, hvori disse funktioner kan vælges. Du kan også redigere eller fjerne poser, ved at trykke på de relevante knapper ud for det pågældende produkt.</p>
+
 		<ul class="actions">
 			<li class="add"><a href="/indkoeb/nyt-produkt" class="button primary">Tilføj nyt produkt</a></li>
 		</ul>
+
 	<? if($products): ?>
 		<ul class="list">
 			<li class="labels">
@@ -97,14 +105,14 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 				&& $product["end_availability_date"] >= date("Y-m-d")
 			) {
 				$product_available = true;
-				$product_availability = $product["start_availability_date"]." - ".$product["end_availability_date"];
+				$product_availability = "Fra ".$product["start_availability_date"]."<br />Til ".$product["end_availability_date"];
 			}
 			else if( 
 				$product["start_availability_date"] 
 				&& $product["end_availability_date"] 
 			) {
 				$product_available = false;
-				$product_availability = $product["start_availability_date"]." - ".$product["end_availability_date"];
+				$product_availability = "Fra ".$product["start_availability_date"]."<br />Til ".$product["end_availability_date"];
 			}
 			else if( 
 				$product["start_availability_date"] 
@@ -139,30 +147,34 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 				<span class="name"><?= $product["name"] ?></span>
 				<span class="availability"><?= $product_availability ?></span>
 			<? if($product_prices): ?>
-				<ul class="prices">
-					<? foreach($product_prices as $price): 
+				<span class='prices'>
+					<ul class="prices">
+						<? foreach($product_prices as $price): 
 						
-						switch($price["type"]) {
-							case "default"       : $price_type       = "Standard"; break;
-							case "offer"         : $price_type       = "Tilbud"; break;
-							case "bulk"          : $price_type       = "Mængderabat"; break;
-							case "stoettemedlem" : $price_type       = "Støttemedlem"; break;
-							case "frivillig"     : $price_type       = "Frivillig"; break;
+							switch($price["type"]) {
+								case "default"       : $price_type       = "Standard"; break;
+								case "offer"         : $price_type       = "Tilbud"; break;
+								case "bulk"          : $price_type       = "Mængderabat"; break;
+								case "stoettemedlem" : $price_type       = "Støttemedlem"; break;
+								case "frivillig"     : $price_type       = "Frivillig"; break;
 							
-							default              : $price_type       = ""; break;
-						}
+								default              : $price_type       = ""; break;
+							}
 						
-					?>
-					<li class="price"><?= $price["price"]." kr. <span class='type'>(".$price_type.")</span>" ?></li>
-					<? endforeach; ?>
-				</ul>
-				<? else: ?>
-				<?= "-" ?>
-				<? endif; ?>
+						?>
+						<li class="price"><?= $price["price"]." kr. (".$price_type.")" ?></li>
+						<? endforeach; ?>
+					</ul>
+					<? else: ?>
+					<?= "-" ?>
+					<? endif; ?>
+				</span>
 				<span class="available"><?= $product_available ? "Ja" : "Nej" ?></span>
-				<span class="button"><ul class="actions">
-					<li class="edit"><a href="/indkoeb/rediger-produkt/<?= $product["id"] ?>" class="button">Rediger</a></li>
-				</ul></span>
+				<span class="button">
+					<ul class="actions">
+						<li class="edit"><a href="/indkoeb/rediger-produkt/<?= $product["id"] ?>" class="button">Rediger</a></li>
+					</ul>
+				</span>
 			</li>
 		<? endforeach; ?>
 		</ul>
@@ -170,6 +182,8 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 		<p>Ingen produkter</p>
 	<? endif; ?>
 	</div>
+
+
 	<div class="c-wrapper pickupdates">
 		<h2>Afhentningsdage og lokale åbningsdage</h2>
 		<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique quas ipsum voluptatum temporibus earum ullam quo commodi adipisci. Culpa, sint facilis reiciendis explicabo aliquid illo omnis earum similique quod dolorum soluta vitae reprehenderit eum dolores! Vero quos excepturi architecto fuga!</p>
@@ -182,7 +196,7 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 				<span class="pickupdates">Afhentningsdage</span>
 				<? foreach($departments as $department): ?>
 
-				<span class="availability"><abbr title="<?= $department["name"] ?>"><?= $department["abbreviation"] ?></abbr></span>
+				<span class="availability" title="<?= $department["name"] ?>"><?= $department["abbreviation"] ?></span>
 				
 				<? endforeach; ?>
 				<span class="buttons"></span>

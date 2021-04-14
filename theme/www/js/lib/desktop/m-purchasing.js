@@ -1,3 +1,47 @@
+Util.Modules["purchasing"] = new function() {
+	this.init = function(scene) {
+
+		scene.resized = function() {
+			// u.bug("scene.resized", this);
+		}
+
+		scene.scrolled = function() {
+			// u.bug("scene.scrolled", this);
+		}
+
+		scene.ready = function() {
+			u.bug("scene.ready", this);
+
+			this.products = u.qsa("div.products li.listing", this);
+			var i, product, image;
+			for(i = 0; i < this.products.length; i++) {
+
+				product = this.products[i];
+				image = u.qs("span.image", product);
+
+				image._id = u.cv(image, "item_id");
+				image._format = u.cv(image, "format");
+				image._variant = u.cv(image, "variant");
+
+				if(image._id && image._format && image._variant) {
+
+					// add image
+					u.ass(image, {
+						backgroundImage: "url(/images/" + image._id + "/" + (image._variant ? image._variant+"/" : "") + "50x50." + image._format+")"
+					});
+
+				}
+
+			}
+
+		}
+		
+		// scene is ready
+		scene.ready();
+	}
+}
+
+
 Util.Modules["add_edit_product"] = new function() {
 	this.init = function(scene) {
 
