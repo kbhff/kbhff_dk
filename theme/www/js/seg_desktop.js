@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-03-25 16:36:24
+asset-builder @ 2021-04-14 20:18:37
 */
 
 /*seg_desktop_include.js*/
@@ -5225,7 +5225,7 @@ Util.Modules["page"] = new function() {
 			}
 		}
 		page.ready = function() {
-			u.bug("page.ready:", this);
+			u.bug("page.ready", this);
 			if(!this.is_ready) {
 				this.is_ready = true;
 				this.cN.scene = u.qs(".scene", this);
@@ -5233,6 +5233,7 @@ Util.Modules["page"] = new function() {
 				u.e.addWindowEvent(this, "scroll", this.scrolled);
 				this.initHeader();
 				this.initNavigation();
+				this.acceptCookies();
 				this.resized();
 			}
 		}
@@ -5276,6 +5277,28 @@ Util.Modules["page"] = new function() {
 						});
 					}
 				}
+			}
+		}
+		page.acceptCookies = function() {
+			if(u.terms_version && !u.getCookie(u.terms_version)) {
+				var terms = u.ie(document.body, "div", {"class":"terms_notification"});
+				u.ae(terms, "h3", {"html":u.stringOr(u.txt["terms-headline"], "Flere grøntsager, <br />færre kager")});
+				u.ae(terms, "p", {"html":u.stringOr(u.txt["terms-paragraph"], "Vi beskytter dit privatliv og bruger kun funktionelle cookies.")});
+				var bn_accept = u.ae(terms, "a", {"class":"accept", "html":u.stringOr(u.txt["terms-accept"], "Accepter")});
+				bn_accept.terms = terms;
+				u.ce(bn_accept);
+				bn_accept.clicked = function() {
+					this.terms.parentNode.removeChild(this.terms);
+					u.saveCookie(u.terms_version, true, {"path":"/", "expires":false});
+				}
+				if(!location.href.match(u.terms_link)) {
+					var bn_details = u.ae(terms, "a", {"class":"details", "html":u.stringOr(u.txt["terms-details"], "Læs mere"), "href":u.terms_link});
+					u.ce(bn_details, {"type":"link"});
+				}
+				u.a.transition(terms, "all 0.5s ease-in");
+				u.ass(terms, {
+					"opacity": 1
+				});
 			}
 		}
 		page.ready();
@@ -5332,6 +5355,12 @@ u.f.customHintPosition["radiobuttons"] = function() {}
 u.ga_account = '';
 u.ga_domain = '';
 u.gapi_key = 'AIzaSyAnZTViVnr4jxGyNQCCMGO0hnJ8NjsKqjo';
+u.terms_version = "terms_v1";
+u.terms_link = "/cookies";
+u.txt["terms-headline"] = "Flere grøntsager, <br />færre kager";
+u.txt["terms-paragraph"] = "Vi beskytter dit privatliv og bruger kun funktionelle cookies.";
+u.txt["terms-accept"] = "Accepter";
+u.txt["terms-details"] = "Læs mere";
 
 
 /*beta-u-paymentcards.js*/
@@ -8238,6 +8267,32 @@ u.addNextArrow = function(node) {
 
 
 /*m-purchasing.js*/
+Util.Modules["purchasing"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			u.bug("scene.ready", this);
+			this.products = u.qsa("div.products li.listing", this);
+			var i, product, image;
+			for(i = 0; i < this.products.length; i++) {
+				product = this.products[i];
+				image = u.qs("span.image", product);
+				image._id = u.cv(image, "item_id");
+				image._format = u.cv(image, "format");
+				image._variant = u.cv(image, "variant");
+				if(image._id && image._format && image._variant) {
+					u.ass(image, {
+						backgroundImage: "url(/images/" + image._id + "/" + (image._variant ? image._variant+"/" : "") + "50x50." + image._format+")"
+					});
+				}
+			}
+		}
+		scene.ready();
+	}
+}
 Util.Modules["add_edit_product"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {

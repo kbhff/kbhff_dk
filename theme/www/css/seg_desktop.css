@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-03-25 16:36:24
+asset-builder @ 2021-04-14 20:18:37
 */
 
 /*seg_desktop_include.css*/
@@ -34,6 +34,17 @@ input, select, textarea {font-size: 20px; color: #333333; outline: none;}
 a, span {font-size: inherit; font-family: inherit; font-style: inherit; font-weight: inherit; line-height: inherit; color: inherit; text-transform: inherit;}
 em, strong {font-size: inherit; font-family: inherit; line-height: inherit; color: inherit; text-transform: inherit;}
 sup {line-height: 1em; font-family: inherit; color: inherit;}
+.terms_notification {opacity: 0; position: fixed; z-index: 90; top: 50%; margin-top: -140px; right: 0px; padding: 15px 20px; background: #000000; border-right: none; max-width: 250px;}
+.terms_notification h3 {padding: 0 0 20px; font-size: 18px; color: #ffffff; text-transform: uppercase;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+}
+.terms_notification p {padding: 0 0 20px; font-size: 14px; color: #ffffff; line-height: 17px;}
+.terms_notification .accept,
+.terms_notification .details {padding: 7px 14px; line-height: 22px; font-size: 14px; text-transform: uppercase; display: inline-block; vertical-align: bottom; color: #ffffff;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+}
+.terms_notification .accept {float: left; background-color: #999999;}
+.terms_notification .details {float: right; text-decoration: underline;}
 @font-face {
 	font-family: 'voresfont';
 	src: url('../assets/kbhff-skin/css/fonts/vores_font/voresfont.eot');
@@ -1527,6 +1538,125 @@ div.overlay .field.password {
 #content .scene.accountant dd {text-align: right;}
 #content .scene.accountant dl.subtotal >* {font-weight: 600;}
 #content .scene.accountant .calculated {padding-bottom: 46px; border-bottom: 1px;}
+
+/*s-purchasing.css*/
+#content .scene.purchasing .c-wrapper.order-list {padding: 0 0 46px; border-bottom: 1px solid #999999;}
+#content .scene.purchasing .c-wrapper.order-list ul.list {padding: 0 12px; margin: 0; list-style: none;}
+#content .scene.purchasing .c-wrapper.order-list ul.list > li {padding: 0;
+	display: flex;
+	flex-flow: row nowrap;
+}
+#content .scene.purchasing .c-wrapper.order-list ul.list > li > span {display: block; padding: 4px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+	flex: 1 1 100px;
+}
+#content .scene.purchasing .c-wrapper.order-list ul.list li.labels {border-bottom: 2px solid #000000;}
+#content .scene.purchasing .c-wrapper.order-list ul.list li.labels > span {
+	text-transform: uppercase;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+}
+#content .scene.purchasing .c-wrapper.order-list ul.list li.listing:nth-child(2n) {background: #DDDDDD;}
+#content .scene.purchasing .c-wrapper.order-list ul.list li.totals {border-top: 2px solid #000000;}
+#content .scene.purchasing .c-wrapper.order-list ul.list li.labels span.departments,
+#content .scene.purchasing .c-wrapper.order-list ul.list li.listing span.department,
+#content .scene.purchasing .c-wrapper.order-list ul.list li.totals span.total {
+	flex: 1 0 130px;
+}
+#content .scene.purchasing .c-wrapper.order-list ul.list li.labels span.product,
+#content .scene.purchasing .c-wrapper.order-list ul.list li.listing span.order_item_count,
+#content .scene.purchasing .c-wrapper.order-list ul.list li.totals span.order_item_count {
+	border-left: 1px solid #999999;
+}
+#content .scene.purchasing .c-wrapper.products {padding: 0 0 46px; border-bottom: 1px solid #999999;}
+#content .scene.purchasing .c-wrapper.products ul.list {padding: 0 12px; margin: 0; list-style: none;}
+#content .scene.purchasing .c-wrapper.products ul.list > li {padding: 0;
+	display: flex;
+	flex-flow: row nowrap;
+}
+#content .scene.purchasing .c-wrapper.products ul.list > li > span {display: block; padding: 4px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+	flex: 1 1 100px;
+	align-self: center;
+}
+#content .scene.purchasing .c-wrapper.products ul.list li.labels {border-bottom: 2px solid #000000;}
+#content .scene.purchasing .c-wrapper.products ul.list li.labels span {
+	text-transform: uppercase;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+}
+#content .scene.purchasing .c-wrapper.products ul.list li.listing:nth-child(2n) {background: #DDDDDD;}
+#content .scene.purchasing .c-wrapper.products ul.list li.labels span.images,
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.image {
+	flex: 0 0 50px;
+}
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.image {height: 50px;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 50px auto;
+	background-color: transparent;
+}
+#content .scene.purchasing .c-wrapper.products ul.list li.labels span.price,
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.prices {
+	flex: 0 0 160px;
+}
+#content .scene.purchasing .c-wrapper.products ul.list li.labels span.availability,
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.availability {
+	flex: 0 0 150px;
+}
+#content .scene.purchasing .c-wrapper.products ul.list li.labels span.available,
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.available {
+	flex: 0 0 120px;
+}
+#content .scene.purchasing .c-wrapper.products ul.list li.labels span.buttons,
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.button {
+	flex: 0 0 100px;
+}
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.prices ul.prices {margin: 0; padding: 0; list-style: none;}
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.prices ul.prices li {padding: 0;}
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.button ul.actions {margin: 0; padding: 0; list-style: none;}
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.button ul.actions li {text-align: right; padding: 0;}
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.button ul.actions li a {padding: 4px 14px;}
+#content .scene.purchasing .c-wrapper.pickupdates {padding: 0 0 46px;}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list {padding: 0 12px; margin: 0; list-style: none;}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list > li {padding: 0;
+	display: flex;
+	flex-flow: row nowrap;
+}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list > li > span {display: block; padding: 4px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+	flex: 1 1 90px;
+	align-self: center;
+}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.labels {border-bottom: 2px solid #000000;}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.labels span {
+	text-transform: uppercase;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing:nth-child(2n) {background: #DDDDDD;}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.labels span.pickupdates,
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.pickupdate {
+	flex: 1 0 140px;
+}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.labels span.availability {
+	text-align: center;
+}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.status {
+	text-indent: -9999px;
+	background-size: auto 18px;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-color: transparent;
+}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.status.open {
+	background-image: url(../img/shop/gx_selected.svg);
+}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.status.closed {
+	background-image: url(../img/shop/gx_unavailable.svg);
+}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.labels span.buttons,
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.button {
+	flex: 0 0 100px;
+}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.button ul.actions {margin: 0; padding: 0; list-style: none;}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.button ul.actions li {text-align: right; padding: 0;}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.button ul.actions li a {padding: 4px 14px;}
+
 
 /*s-departments.css*/
 #content .scene.departments ul.departments {list-style: none; margin: 0; padding: 0 0 50px; font-size: 0;}
