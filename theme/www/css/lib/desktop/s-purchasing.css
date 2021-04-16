@@ -139,3 +139,5 @@
 #content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.button ul.actions li {text-align: right; padding: 0;}
 #content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.button ul.actions li a {padding: 4px 14px;}
 
+#content .scene.add_product .first_pickupdate {margin-top: -8px;}
+#content .scene.add_product .last_pickupdate {margin-top: -8px;}
