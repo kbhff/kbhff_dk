@@ -599,14 +599,56 @@
 
 							<div class="field integer">
 								<label for="input_integer">Integer</label>
-								<input type="integer" name="integer" id="input_integer" />
+								<input type="number" name="integer" id="input_integer" />
 								<div class="help">
 									<div class="hint">hint message</div>
 									<div class="error">error message</div>
 								</div>
 							</div>
 
+							<div class="field number required">
+								<label for="input_number">Number</label>
+								<input type="number" name="number" id="input_number" />
+								<div class="help">
+									<div class="hint">hint message</div>
+									<div class="error">error message</div>
+								</div>
+							</div>
+					
+							<div class="field files required max:1">
+								<label for="input_single_media">Produktbillede</label>
+								<input type="file" name="single_media[]" id="input_single_media" accept=".png,.jpg" />
+								<ul class="filelist"></ul>
+								<div class="help">
+									<div class="hint">Add single image by dragging it here. Minimum 960x960 PNG or JPG allowed.</div>
+									<div class="error">Media does not fit requirements.</div>
+								</div>
+							</div>
 						</fieldset>
+
+						<fieldset class="availability">
+							<div class="field date required">
+								<label for="input_start_availability_date">Fra og med dato</label>
+								<input type="date" name="start_availability_date" id="input_start_availability_date" autocomplete="off" />
+								<div class="help">
+									<div class="hint">Hvornår bliver produktet tilgængeligt i Grøntshoppen?.</div>
+									<div class="error">Angiv hvornår produktet bliver tilgængeligt i Grøntshoppen.</div>
+								</div>
+							</div>
+							<p class="first_pickupdate">Første mulige afhentningsdag: <span>-</span></p>
+
+							<div class="field date">
+								<label for="input_end_availability_date">Til og med dato (kan udelades)</label>
+								<input type="date" name="end_availability_date" id="input_end_availability_date" autocomplete="off" />
+								<div class="help">
+									<div class="hint">Hvornår ophører produktet med at være tilgængelig i Grøntshoppen?</div>
+									<div class="error">Angiv hvornår produktet udløber.</div>
+								</div>
+							</div>
+							<p class="last_pickupdate">Sidste mulige afhentningsdag: <span>-</span></p>
+						</fieldset>
+
+
 
 						<ul class="actions">
 							<li class="disabled">

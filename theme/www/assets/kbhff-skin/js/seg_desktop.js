@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-04-14 18:46:43
+asset-builder @ 2021-04-16 14:51:08
 */
 
 /*seg_desktop_include.js*/
@@ -5355,9 +5355,13 @@ u.f.customHintPosition = {};
 u.f.customHintPosition["string"] = function() {}
 u.f.customHintPosition["email"] = function() {}
 u.f.customHintPosition["number"] = function() {}
+u.f.customHintPosition["integer"] = function() {}
 u.f.customHintPosition["password"] = function() {}
 u.f.customHintPosition["tel"] = function() {}
 u.f.customHintPosition["text"] = function() {}
 u.f.customHintPosition["select"] = function() {}
 u.f.customHintPosition["checkbox"] = function() {}
 u.f.customHintPosition["radiobuttons"] = function() {}
+u.f.customHintPosition["date"] = function() {}
+u.f.customHintPosition["datetime"] = function() {}
+u.f.customHintPosition["files"] = function() {}
