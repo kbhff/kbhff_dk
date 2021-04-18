@@ -56,39 +56,43 @@ if($department_pickupdate_order_items) {
 }
 ?>
 
-<div class="scene shop_shift i:scene" itemscope itemtype="http://schema.org/NewsArticle">
+<div class="scene shop_shift i:scene">
 	
 	<div class="banner i:banner variant:1 format:jpg"></div>
 
-	<h1>Ordreliste</h1>
+	<h1>Ordreliste <span class="value"><?= $department["name"] ?: " - " ?></h1>
 	<div class="c-wrapper">
-		<div class="intro">
-			<p>I tabellen herunder kan du som kassemester se aktuelle og fremtidige bestillinger i din KBHFF-afdeling. Hvert punkt svarer til en vare, og derfor kan der godt være flere linjer med samme navn, hvis der er bestilt flere varer (grøntsagspose og frugtpose fx).</p>
-			<p>Kassemestre kan på en aktuel afhentningsdag bruge ‘Udlever’-knapperne til at registrere, at medlemmer har fået udleveret deres varer.</p>
-		</div>
 		<div class="c-two-thirds info">
-			<ul>
-				<li class="date">Dato: 
-					<?= $PC->formStart("selectPickupdate", ["class" => "labelstyle:inject form"]); ?>
-					<?= $PC->input("pickupdate_id", ["type" => "select", "value" => $pickupdate["id"], "options" => $PC->toOptions($all_pickupdates, "id", "pickupdate")]); ?>
-					
-					<ul class="actions">
+
+			<div class="intro">
+				<p>I tabellen herunder kan du som kassemester se aktuelle og fremtidige bestillinger i din KBHFF-afdeling. Hvert punkt svarer til en vare, og derfor kan der godt være flere linjer med samme navn, hvis der er bestilt flere varer (grøntsagspose og frugtpose fx).</p>
+				<p>Kassemestre kan på en aktuel afhentningsdag bruge ‘Udlever’-knapperne til at registrere, at medlemmer har fået udleveret deres varer.</p>
+			</div>
+
+			<?= $PC->formStart("selectPickupdate", ["class" => "labelstyle:inject form"]); ?>
+				<?= $PC->input("pickupdate_id", ["label" => "Udleveringsdag", "type" => "select", "value" => $pickupdate["id"], "options" => $PC->toOptions($all_pickupdates, "id", "pickupdate")]); ?>
+				<ul class="actions">
 					<?= $PC->submit("Vælg", ["wrapper" => "li.select"]); ?>
-					</ul>
-					<?= $PC->formEnd(); ?>
-				</li>
-				<li class="department">Afdeling: <span class="value"><?= $department["abbreviation"] ?: " - " ?></span></li>
-				<li class="ordered">Bestilt: <span class="value"><?= $order_items_total_quantity ?></span></li>
-				<li class="delivered">Udleveret: <span class="value"><?= $order_items_total_delivered_quantity ?></span></li>
-				<li class="undelivered">Afventer: <span class="value"><?= $order_items_total_undelivered_quantity ?></span></li>
-			</ul>
+				</ul>
+			<?= $PC->formEnd(); ?>
+
 		</div>
 		<div class="c-one-third tally">
+
 			<ul class="actions">
 				<li class="shop"><a href="/butiksvagt/kasse/<?= $tally_id ?>" class="button primary">Åbn kasseregnskab</a></li>
 			</ul>
+
 		</div>
-		<div class="order items">
+
+		<ul class="status">
+			<li class="department">Afdeling: <span class="value"><?= $department["abbreviation"] ?: " - " ?></span></li>
+			<li class="ordered">Bestilt: <span class="value"><?= $order_items_total_quantity ?></span></li>
+			<li class="delivered">Udleveret: <span class="value"><?= $order_items_total_delivered_quantity ?></span></li>
+			<li class="undelivered">Afventer: <span class="value"><?= $order_items_total_undelivered_quantity ?></span></li>
+		</ul>
+
+		<div class="orders items">
 		<? if($department_pickupdate_order_items): ?>
 			<ul class="list">
 				<li class="labels">
@@ -105,7 +109,7 @@ if($department_pickupdate_order_items) {
 					<span class="user_name"><?= $user ? $user["nickname"] : "" ?></span>
 					<span class="product_name"><?= $order_item["quantity"] ?> x <?= $order_item["name"] ?></span>
 					<span class="button">
-						<? if($pickupdate_is_today): ?>
+						<? if(1 || $pickupdate_is_today): ?>
 						<ul class="actions">
 							<? if($order_item["status"] == 1): ?>
 							<?= $HTML->oneButtonForm("Udlevér", "/butiksvagt/updateDeliveryStatus/".$order_item["id"], [

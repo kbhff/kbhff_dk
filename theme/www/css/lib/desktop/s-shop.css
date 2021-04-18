@@ -64,6 +64,7 @@
 #content .scene.shop ul.products li.product div.pickupdates ul.pickupdates {margin: 0; padding: 0; list-style: none; font-size: 0;}
 #content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate {width: 56px; display: inline-block; vertical-align: top; padding-left: 0; padding-top: 0; text-align: center;}
 #content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate div.add form.submitting {opacity: 0.5;}
+#content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate div.add form {font-size: 0;}
 #content .scene.shop ul.products li.product div.pickupdates ul.pickupdates li.pickupdate div.add input.button {cursor: pointer; border: none; width: 26px; height: 26px;
 	background: transparent url(/img/shop/gx_add.svg) no-repeat center top; font-size: 0;
 	background-size: auto 100%;
