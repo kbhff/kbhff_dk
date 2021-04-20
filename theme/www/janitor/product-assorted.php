@@ -17,6 +17,8 @@ $action = $page->actions();
 $IC = new Items();
 $itemtype = "productassorted";
 $model = $IC->typeObject($itemtype);
+$model->itemtype = $itemtype;
+
 
 // page info
 $page->bodyClass("product_assorted");

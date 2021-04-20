@@ -38,7 +38,7 @@ $this->pageTitle("Rediger produkt");
 			</div>
 			<div class="c-one-half">
 
-				<h3>Produkt billede</h3>
+				<h3>Produktbillede</h3>
 				<fieldset class="media">
 					<?= $model->input("single_media", ["label" => "Produktbillede", "value" => $file_input_value]); ?>
 				</fieldset>

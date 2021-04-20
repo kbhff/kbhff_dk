@@ -17,6 +17,8 @@ $action = $page->actions();
 $IC = new Items();
 $itemtype = "productcanvasbag";
 $model = $IC->typeObject($itemtype);
+$model->itemtype = $itemtype;
+
 
 // page info
 $page->bodyClass("product_canvasbag");

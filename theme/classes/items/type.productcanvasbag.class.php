@@ -36,14 +36,17 @@
 * This file contains item type functionality
 */
 
-class TypeProductCanvasbag extends Itemtype {
+
+// Incluge generic TypeProduct class
+include_once("classes/items/type.product.class.php");
+class TypeProductCanvasbag extends TypeProduct {
 
 	/**
 	* Init, set varnames, validation rules
 	*/
 	function __construct() {
 
-		// Construct Itemtype class and pass itemtype as parameter
+		// Construct TypeProduct class
 		parent::__construct(get_class());
 
 
@@ -53,67 +56,10 @@ class TypeProductCanvasbag extends Itemtype {
 
 		// Name
 		$this->addToModel("name", array(
-			"type" => "string",
-			"label" => "Name",
-			"required" => true,
 			"hint_message" => "Give the canvas bag a name.",
 			"error_message" => "The canvas bag needs a title."
 		));
 
-		// Start availability date
-		$this->addToModel("start_availability_date", array(
-			"type" => "date",
-			"label" => "Start availability date",
-			"required" => true,
-			"hint_message" => "When does the product become available?.",
-			"error_message" => "The product needs a start availability date."
-		));
-
-		// End availability date
-		$this->addToModel("end_availability_date", array(
-			"type" => "date",
-			"label" => "End availability date",
-			"hint_message" => "When does the product stop being available?.",
-			"error_message" => "Invalid end availability date."
-		));
-
-		
-		// description
-		$this->addToModel("description", array(
-			"type" => "text",
-			"label" => "Description",
-			"required" => true,
-			"hint_message" => "Decribe the product.",
-			"error_message" => "The product needs a description."
-		));
-
-		// Single media
-		$this->addToModel("single_media", array(
-			"type" => "files",
-			"label" => "Add media here",
-			"min_width" => 960,
-			"min_height" => 960,
-			"allowed_proportion" => 1,
-			"max" => 1,
-			"allowed_formats" => "png,jpg",
-			"hint_message" => "Add single image by dragging it here. Minimum 960x960 PNG or JPG allowed.",
-			"error_message" => "Media does not fit requirements."
-		));
-
-	}
-
-	function saved($item_id) {
-
-		include_once("classes/system/department.class.php");
-		$DC = new Department();
-
-		$departments = $DC->getDepartments();
-
-		// add the new product to all departments
-		foreach($departments as $department) {
-
-			$DC->addProduct($department["id"], $item_id);
-		}
 	}
 
 }
