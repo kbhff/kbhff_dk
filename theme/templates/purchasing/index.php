@@ -209,7 +209,7 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 			<? foreach($departments as $department): 
 				$department_open = arrayKeyValue($pickupdate_departments, "id", $department["id"]);
 			?>
-				<span class="status <?= $department_open !== false? "open" : "closed" ?>"><?= $department_open !== false ? "Åben" : "Lukket" ?></span>
+				<span class="status <?= $department_open !== false ? "open" : "closed" ?>"><?= $department_open !== false ? "Åben" : "Lukket" ?></span>
 			<? endforeach; ?>
 				<span class="button">
 					<ul class="actions">
