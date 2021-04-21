@@ -32,7 +32,7 @@ $this->pageTitle("Tilføj nyt produkt");
 
 				<h3>Produktbillede</h3>
 				<fieldset class="media">
-					<?= $model->input("single_media", ["label" => "Produktbillede", "hint_message" => "Tryk her for at tilføje et billede. Du kan også trække et billede ind på det grå felt."]); ?>
+					<?= $model->input("single_media", ["label" => "Produktbillede", "hint_message" => "Tryk her for at vælge et billede, eller træk et billede ind på det grå felt. Størrelse mindst 960x960 px. Tilladte formater: PNG og JPG.", "error_message" => "Billedet lever ikke op til kravene.",]); ?>
 				</fieldset>
 
 				<h3>Tilgængelighed i webshop</h3>
