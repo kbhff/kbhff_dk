@@ -93,8 +93,8 @@ if($action) {
 	
 			exit();
 	
-				}
-		
+		}
+
 		// /butiksvagt/kasse/#tally_id#/closeTally
 		elseif(count($action) == 3 && $action[2] == "closeTally" && $page->validateCsrfToken()) {
 	

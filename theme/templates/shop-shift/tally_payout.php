@@ -16,11 +16,9 @@ $department = $DC->getDepartment(["id" => $tally["department_id"]]);
 	<div class="c-wrapper">
 
 		<?= $TC->formStart("kasse/$tally_id/udbetaling/addPayout", ["class" => "labelstyle:inject add_payout"]); ?>
-	
 			<fieldset>
-				<?= $TC->input("payout_name", ["label" => "Hvad betales der for?"]); ?>
-				<?= $TC->input("payout_amount", ["label" => "Beløb"]); ?>
-				
+				<?= $TC->input("payout_name"); ?>
+				<?= $TC->input("payout_amount"); ?>
 			</fieldset>
 
 			<ul class="actions">
@@ -29,6 +27,5 @@ $department = $DC->getDepartment(["id" => $tally["department_id"]]);
 		<?= $TC->formEnd(); ?>
 
 	</div>
-
 
 </div>

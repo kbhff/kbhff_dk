@@ -1,28 +1,30 @@
 Util.Modules["tally"] = new function() {
 	this.init = function(scene) {
-//		u.bug("scene init:", scene);
+		// u.bug("scene init:", scene);
 
 
 		scene.resized = function() {
-//			u.bug("scene.resized:", this);
+			// u.bug("scene.resized:", this);
 		}
 
 		scene.scrolled = function() {
-//			u.bug("scrolled:", this);
+			// u.bug("scrolled:", this);
 		}
 
 		scene.ready = function() {
 			// u.bug("scene.ready:", this);
 
-			// page.cN.scene = this;
 
 			if(!u.qs(".section.tally.closed")) {
-				
+
 				this.tally_id = u.cv(this, "tally_id");
-				
+
+
 				this.initStartCash();
 				this.initEndCash();
 				this.initDeposited();
+
+
 				this.initPayouts();
 				this.initMiscRevenues();
 		
@@ -80,143 +82,100 @@ Util.Modules["tally"] = new function() {
 
 		scene.initStartCash = function() {
 
-			this.start_cash_view = u.qs(".start_cash .view");
-			this.start_cash_view.edit_btn = u.qs(".edit_btn", this.start_cash_view);
-			this.start_cash_view.amount = u.qs(".amount", this.start_cash_view);
-			this.start_cash_view.edit_btn.scene = this;
+			this.start_cash = u.qs(".start_cash .view");
+			this.start_cash.bn_edit = u.qs("li.edit", this.start_cash);
+			this.start_cash.bn_edit.scene = this;
 
-			this.start_cash_edit = u.qs(".start_cash .edit");
-			this.start_cash_edit.form = u.qs("form", this.start_cash_edit);
-			this.start_cash_edit.form.scene = this;
-			u.f.init(this.start_cash_edit.form);
+			this.start_cash.amount = u.qs("span.value", this.start_cash);
 
-			u.clickableElement(this.start_cash_view.edit_btn);
-			this.start_cash_view.edit_btn.clicked = function() {
+			this.start_cash.form = u.qs("form", this.start_cash);
+			this.start_cash.form.scene = this;
+			u.f.init(this.start_cash.form);
 
-
-				u.as(this.scene.start_cash_view, "display", "none");
-				u.as(this.scene.start_cash_edit, "display", "block");
-				
-				// console.log(this.scene.start_cash_edit.form.inputs)
-
-				this.scene.start_cash_edit.form.inputs["start_cash"].focus()
-
+			// u.ce(this.start_cash.bn_edit);
+			this.start_cash.form.actions["edit"].clicked = function() {
+				u.ac(this._form.scene.start_cash, "edit");
+				this._form.inputs["start_cash"].focus();
 			}
 			
-			this.start_cash_edit.form.submitted = function() {
-				
+			this.start_cash.form.submitted = function() {
+
 				this.response = function(response) {
-					// Update request state
-					this.is_requesting = false;
-					u.rc(this, "loading");
-					
-					// u.bug(response);
+					var new_amount = u.text(u.qs(".start_cash .view .amount span.value", response));
+					this.scene.start_cash.amount.innerHTML = new_amount;
 
-					var new_amount = u.text(u.qs(".start_cash .view .amount", response));
-
-					this.scene.start_cash_view.amount.innerText = new_amount;
-					
-					u.as(this.scene.start_cash_edit, "display", "none");
-					u.as(this.scene.start_cash_view, "display", "block");
+					u.rc(this.scene.start_cash, "edit");
 
 					this.scene.updateCalculatedValues(response);
 				}
-				
-				u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+				u.request(this, this.action, {"method":"post", "data":this.getData()});
+
 			}
 
 		}
 
 		scene.initEndCash = function() {
 
-			this.end_cash_view = u.qs(".end_cash .view");
-			this.end_cash_view.edit_btn = u.qs(".edit_btn", this.end_cash_view);
-			this.end_cash_view.amount = u.qs(".amount", this.end_cash_view);
-			this.end_cash_view.edit_btn.scene = this;
+			this.end_cash = u.qs(".end_cash .view");
+			this.end_cash.bn_edit = u.qs("li.edit", this.end_cash);
+			this.end_cash.bn_edit.scene = this;
 
-			this.end_cash_edit = u.qs(".end_cash .edit");
-			this.end_cash_edit.form = u.qs("form", this.end_cash_edit);
-			this.end_cash_edit.form.scene = this;
-			u.f.init(this.end_cash_edit.form);
+			this.end_cash.amount = u.qs("span.value", this.end_cash);
 
-			u.clickableElement(this.end_cash_view.edit_btn);
-			this.end_cash_view.edit_btn.clicked = function() {
+			this.end_cash.form = u.qs("form", this.end_cash);
+			this.end_cash.form.scene = this;
+			u.f.init(this.end_cash.form);
 
-
-				u.as(this.scene.end_cash_view, "display", "none");
-				u.as(this.scene.end_cash_edit, "display", "block");
-				
-				this.scene.end_cash_edit.form.inputs["end_cash"].focus()
-
+			this.end_cash.form.actions["edit"].clicked = function() {
+				u.ac(this._form.scene.end_cash, "edit");
+				this._form.inputs["end_cash"].focus();
 			}
-			
-			this.end_cash_edit.form.submitted = function() {
-				
+
+			this.end_cash.form.submitted = function() {
+
 				this.response = function(response) {
-					// Update request state
-					this.is_requesting = false;
-					u.rc(this, "loading");
-					
-					u.bug(response);
+					var new_amount = u.text(u.qs(".end_cash .view .amount span.value", response));
+					this.scene.end_cash.amount.innerHTML = new_amount;
 
-					var new_amount = u.text(u.qs(".end_cash .view .amount", response));
-
-					this.scene.end_cash_view.amount.innerText = new_amount;
-					
-					u.as(this.scene.end_cash_edit, "display", "none");
-					u.as(this.scene.end_cash_view, "display", "block");
+					u.rc(this.scene.end_cash, "edit");
 
 					this.scene.updateCalculatedValues(response);
 				}
-				
-				u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+				u.request(this, this.action, {"method":"post", "data":this.getData()});
+
 			}
 
 		}
 
 		scene.initDeposited = function() {
 
-			this.deposited_view = u.qs(".deposited .view");
-			this.deposited_view.edit_btn = u.qs(".edit_btn", this.deposited_view);
-			this.deposited_view.amount = u.qs(".amount", this.deposited_view);
-			this.deposited_view.edit_btn.scene = this;
+			this.deposited = u.qs(".deposited .view");
+			this.deposited.bn_edit = u.qs("li.edit", this.deposited);
+			this.deposited.bn_edit.scene = this;
 
-			this.deposited_edit = u.qs(".deposited .edit");
-			this.deposited_edit.form = u.qs("form", this.deposited_edit);
-			this.deposited_edit.form.scene = this;
-			u.f.init(this.deposited_edit.form);
+			this.deposited.amount = u.qs("span.value", this.deposited);
 
-			u.clickableElement(this.deposited_view.edit_btn);
-			this.deposited_view.edit_btn.clicked = function() {
+			this.deposited.form = u.qs("form", this.deposited);
+			this.deposited.form.scene = this;
+			u.f.init(this.deposited.form);
 
-
-				u.as(this.scene.deposited_view, "display", "none");
-				u.as(this.scene.deposited_edit, "display", "block");
-				
-				this.scene.deposited_edit.form.inputs["deposited"].focus()
-
+			this.deposited.form.actions["edit"].clicked = function() {
+				u.ac(this._form.scene.deposited, "edit");
+				this._form.inputs["deposited"].focus();
 			}
-			
-			this.deposited_edit.form.submitted = function() {
-				
+
+			this.deposited.form.submitted = function() {
+
 				this.response = function(response) {
-					// Update request state
-					this.is_requesting = false;
-					u.rc(this, "loading");
-					
-					// u.bug(response);
+					var new_amount = u.text(u.qs(".deposited .view .amount span.value", response));
+					this.scene.deposited.amount.innerHTML = new_amount;
 
-					var new_amount = u.text(u.qs(".deposited .view .amount", response));
-
-					this.scene.deposited_view.amount.innerText = new_amount;
-					
-					u.as(this.scene.deposited_edit, "display", "none");
-					u.as(this.scene.deposited_view, "display", "block");
+					u.rc(this.scene.deposited, "edit");
 
 					this.scene.updateCalculatedValues(response);
 				}
-				
-				u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+				u.request(this, this.action, {"method":"post", "data":this.getData()});
+
 			}
 
 		}
@@ -225,14 +184,15 @@ Util.Modules["tally"] = new function() {
 
 			this.tally_section = u.qs(".section.tally", this);
 			this.payouts = u.qs(".payouts", this);
-			this.calculated_sales_by_the_piece = u.qs(".calculated_sales span.sum", this);
 
 
-			this.payouts.delete_forms = u.qsa("ul.payout .delete");
-				if(this.payouts.delete_forms) {
-				for (let i = 0; i < this.payouts.delete_forms.length; i++) {
+			this.payouts.delete_forms = u.qsa("li.payout .delete", this.payouts);
 
-					var delete_form = this.payouts.delete_forms[i];
+			if(this.payouts.delete_forms) {
+				var i, delete_form;
+				for (i = 0; i < this.payouts.delete_forms.length; i++) {
+
+					delete_form = this.payouts.delete_forms[i];
 					delete_form.scene = this;
 
 					u.m.oneButtonForm.init(delete_form);
@@ -248,76 +208,66 @@ Util.Modules["tally"] = new function() {
 					}
 				}
 			}
-			
+
+
 			this.payouts.div_add = u.qs("div.add_payout", this.payouts);
-			this.payouts.div_add.ul = u.qs("ul.actions", this.payouts.div_add);
 
-			this.payouts.btn_add = u.qs("li.add_payout", this.payouts);
-			this.payouts.btn_add.scene = this;
+			this.payouts.bn_add = u.qs("li.add_payout", this.payouts);
+			this.payouts.bn_add.scene = this;
 
-			u.e.resetClickEvents(this.payouts.btn_add);
-			u.ce(this.payouts.btn_add);
-			
-			this.payouts.btn_add.clicked = function() {
+			u.ce(this.payouts.bn_add);
+			this.payouts.bn_add.clicked = function() {
+
 
 				this.response = function(response) {
+
+					u.ac(this.scene.payouts.div_add, "open");
 
 					this.scene.payouts.div_add.form = u.qs("form.add_payout", response);
 					this.scene.payouts.div_add.form.scene = this.scene;
 
+					u.ae(this.scene.payouts.div_add, this.scene.payouts.div_add.form);
+
 					u.f.init(this.scene.payouts.div_add.form);
-
-					
-					this.scene.payouts.div_add.replaceChild(this.scene.payouts.div_add.form, this.scene.payouts.div_add.ul); 
-
 					this.scene.payouts.div_add.form.inputs["payout_name"].focus();
-
 
 					this.scene.payouts.div_add.form.submitted = function() {
 
-						
-						
 						this.response = function(response) {
+							u.rc(this.scene.payouts.div_add, "open");
+							this.parentNode.removeChild(this);
+
+							this.payouts = u.qs("div.payouts", response);
+							this.scene.tally_section.replaceChild(this.payouts, this.scene.payouts);
 							
-							this.scene.payouts.div_add.replaceChild(this.scene.payouts.div_add.ul, this.scene.payouts.div_add.form); 
-							
-							this.response = function(response) {
-								
-								this.payouts = u.qs("div.payouts", response);
-								this.scene.tally_section.replaceChild(this.payouts, this.scene.payouts);
-								
-								this.scene.updateCalculatedValues(response);
+							this.scene.updateCalculatedValues(response);
 
-								this.scene.initPayouts();
-							}
-
-							u.request(this, "/butiksvagt/kasse/" + this.scene.tally_id);
-
+							this.scene.initPayouts();
 						}
-						
-						u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+
+						u.request(this, this.action, {"method":"post", "data":this.getData()});
 					}
 
 				}
-				
+
 				u.request(this, "/butiksvagt/kasse/" + this.scene.tally_id + "/udbetaling");
 
 			}
-
 		}
 
 		scene.initMiscRevenues = function() {
 
 			this.tally_section = u.qs(".section.tally", this);
 			this.revenues = u.qs(".misc_revenues", this);
-			this.calculated_sales_by_the_piece = u.qs(".calculated_sales span.sum", this);
 
-			
-			this.revenues.delete_forms = u.qsa("ul.revenue .delete");
-				if(this.revenues.delete_forms) {
-				for (let i = 0; i < this.revenues.delete_forms.length; i++) {
 
-					var delete_form = this.revenues.delete_forms[i];
+			this.revenues.delete_forms = u.qsa("li.revenue .delete", this.revenues);
+
+			if(this.revenues.delete_forms) {
+				var i, delete_form;
+				for (i = 0; i < this.revenues.delete_forms.length; i++) {
+
+					delete_form = this.revenues.delete_forms[i];
 					delete_form.scene = this;
 
 					u.m.oneButtonForm.init(delete_form);
@@ -329,62 +279,53 @@ Util.Modules["tally"] = new function() {
 
 						this.scene.updateCalculatedValues(response);
 
-					this.scene.initMiscRevenues();
+						this.scene.initMiscRevenues();
 					}
 				}
 			}
 			
 			this.revenues.div_add = u.qs("div.add_revenue", this.revenues);
-			this.revenues.div_add.ul = u.qs("ul.actions", this.revenues.div_add);
 
-			this.revenues.btn_add = u.qs("li.add_revenue", this.revenues);
-			this.revenues.btn_add.scene = this;
+			this.revenues.bn_add = u.qs("li.add_revenue", this.revenues);
+			this.revenues.bn_add.scene = this;
 
-			u.e.resetClickEvents(this.revenues.btn_add);
-			u.ce(this.revenues.btn_add);
-			
-			this.revenues.btn_add.clicked = function() {
+			u.ce(this.revenues.bn_add);
+			this.revenues.bn_add.clicked = function() {
 
 				this.response = function(response) {
+
+					u.ac(this.scene.revenues.div_add, "open");
 
 					this.scene.revenues.div_add.form = u.qs("form.add_revenue", response);
 					this.scene.revenues.div_add.form.scene = this.scene;
 
+					u.ae(this.scene.revenues.div_add, this.scene.revenues.div_add.form);
+
 					u.f.init(this.scene.revenues.div_add.form);
-
-					this.scene.revenues.div_add.replaceChild(this.scene.revenues.div_add.form, this.scene.revenues.div_add.ul); 
-
 					this.scene.revenues.div_add.form.inputs["revenue_name"].focus();
 
 					this.scene.revenues.div_add.form.submitted = function() {
 
 						this.response = function(response) {
+							u.rc(this.scene.revenues.div_add, "open");
+							this.parentNode.removeChild(this);
 
-							this.scene.revenues.div_add.replaceChild(this.scene.revenues.div_add.ul, this.scene.revenues.div_add.form); 
+							this.revenues = u.qs("div.misc_revenues", response);
+							this.scene.tally_section.replaceChild(this.revenues, this.scene.revenues);
+							
+							this.scene.updateCalculatedValues(response);
 
-							this.response = function(response) {
-
-								this.revenues = u.qs("div.misc_revenues", response);
-								this.scene.tally_section.replaceChild(this.revenues, this.scene.revenues);
-								
-								this.scene.updateCalculatedValues(response);
-
-								this.scene.initMiscRevenues();
-							}
-
-							u.request(this, "/butiksvagt/kasse/" + this.scene.tally_id);
-
+							this.scene.initMiscRevenues();
 						}
-						
-						u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+
+						u.request(this, this.action, {"method":"post", "data":this.getData()});
 					}
 
 				}
-				
+
 				u.request(this, "/butiksvagt/kasse/" + this.scene.tally_id + "/andre-indtaegter");
 
 			}
-
 		}
 
 		scene.updateCalculatedValues = function(response) {
@@ -406,8 +347,6 @@ Util.Modules["tally"] = new function() {
 
 
 		}
-
-		
 
 		// scene is ready
 		scene.ready();
