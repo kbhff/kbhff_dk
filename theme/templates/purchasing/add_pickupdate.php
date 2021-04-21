@@ -37,7 +37,7 @@ $departments = $DC->getDepartments();
 		<?= $PC->formStart("savePickupdate", array("class" => "i:defaultNew labelstyle:inject")) ?>
 			<h3>Vælg dato</h3>
 			<fieldset class="pickupdate">
-				<?= $PC->input("pickupdate", ["type" => "select", "options" => $available_wednesdays]) ?>
+				<?= $PC->input("pickupdate", ["type" => "select","label" => "Afhentningsdage (onsdage)", "options" => $available_wednesdays]) ?>
 			</fieldset>
 			<? if($departments): ?>
 			<h3>Vælg hvilke afdelinger der har åbent</h3>

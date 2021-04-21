@@ -40,7 +40,7 @@ $this->pageTitle("Rediger produkt");
 
 				<h3>Produktbillede</h3>
 				<fieldset class="media">
-					<?= $model->input("single_media", ["label" => "Produktbillede", "hint_message" => "Tryk her for at vælge et billede, eller træk et billede ind på det grå felt. Størrelse mindst 960x960 px. Tilladte formater: PNG og JPG.", "value" => $file_input_value]); ?>
+					<?= $model->input("single_media", ["label" => "Produktbillede", "hint_message" => "Tryk her for at vælge et billede, eller træk et billede ind på det grå felt. Størrelse mindst 960x960 px. Tilladte formater: PNG og JPG.", "error_message" => "Billedet lever ikke op til kravene.", "value" => $file_input_value]); ?>
 				</fieldset>
 
 				<h3>Tilgængelighed i webshop</h3>
