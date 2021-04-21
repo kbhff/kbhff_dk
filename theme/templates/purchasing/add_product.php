@@ -2,7 +2,7 @@
 
 global $DC;
 global $IC;
-$model = $IC->typeObject("productweeklybag");
+$model = $IC->typeObject("product");
 
 $this->pageTitle("Tilføj nyt produkt");
 
@@ -19,20 +19,20 @@ $this->pageTitle("Tilføj nyt produkt");
 			<div class="c-one-half">
 
 				<fieldset class="details">
-					<?= $model->input("name", ["label" => "Produktnavn", "hint_message" => "Giv produktet et navn", "error_message" => "Produktet må have et navn"]); ?>
-					<?= $model->input("price_1", ["type" => "number", "label" => "Pris 1 (Frivillig-medlem)", "required" => true]); ?>
-					<?= $model->input("price_2", ["type" => "number", "label" => "Pris 2 (Støttemedlem)", "required" => true]); ?>
-					<?= $model->input("description", ["label" => "Produktbeskrivelse"]); ?>
-					<?= $model->input("product_type", ["type" => "select", "label" => "Produkttype", "options" => ["" => "Vælg type", "productweeklybag" => "Ugens pose", "productseasonalbag" => "Sæsonpose", "productcanvasbag" => "Lærredspose", "productassorted" => "Løssalg"], "required" => true]); ?>
+					<?= $model->input("name", ["label" => "Produktnavn", "hint_message" => "Giv produktet et navn", "error_message" => "Produktet skal have et navn"]); ?>
+					<?= $model->input("price_1", ["label" => "Pris 1 (Frivillig-medlem)", "required" => true, "hint_message" => "Hvad skal produktet koste for Frivillig-medlemmer?", "error_message" => "Angiv en pris."]); ?>
+					<?= $model->input("price_2", ["label" => "Pris 2 (Støttemedlem)", "required" => true, "hint_message" => "Hvad skal produktet koste for Støttemedlemmer?", "error_message" => "Angiv en pris."]); ?>
+					<?= $model->input("description", ["label" => "Produktbeskrivelse", "hint_message" => "Beskriv produktet", "error_message" => "Produktet skal have en beskrivelse."]); ?>
+					<?= $model->input("product_type", ["label" => "Produkttype", "options" => ["" => "Vælg type", "productweeklybag" => "Ugens pose", "productseasonalbag" => "Sæsonpose", "productcanvasbag" => "Lærredspose", "productassorted" => "Løssalg"]]); ?>
 				</fieldset>
 
 
 			</div>
 			<div class="c-one-half">
 
-				<h3>Produkt billede</h3>
+				<h3>Produktbillede</h3>
 				<fieldset class="media">
-					<?= $model->input("single_media", ["label" => "Produktbillede"]); ?>
+					<?= $model->input("single_media", ["label" => "Produktbillede", "hint_message" => "Tryk her for at vælge et billede, eller træk et billede ind på det grå felt. Størrelse mindst 960x960 px. Tilladte formater: PNG og JPG.", "error_message" => "Billedet lever ikke op til kravene.",]); ?>
 				</fieldset>
 
 				<h3>Tilgængelighed i webshop</h3>
