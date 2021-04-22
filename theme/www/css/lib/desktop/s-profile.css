@@ -49,6 +49,11 @@
 	padding: 0;
 }
 
+#content div.profile .order_item-headings {
+	border-bottom: 1px solid #000000;
+}
+#content div.profile .order_item {padding: 5px 0;}
+
 #content div.profile .order_items,
 #content div.profile .order_item-headings,
 #content div.profile .order_item {
