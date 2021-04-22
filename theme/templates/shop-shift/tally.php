@@ -49,7 +49,7 @@ $this->pageTitle("Kasseregnskab");
 				<div class="start_cash">
 
 					<div class="view">
-						<?= $TC->formStart("kasse/$tally_id/updateTally", ["class" => "labelstyle:inject start_cash"]); ?>
+						<?= $TC->formStart("/butiksvagt/kasse/$tally_id/updateTally", ["class" => "labelstyle:inject start_cash"]); ?>
 
 							<span class="description">Ved vagtstart</span>
 							<span class="amount">
@@ -77,7 +77,7 @@ $this->pageTitle("Kasseregnskab");
 				<div class="end_cash">
 
 					<div class="view">
-						<?= $TC->formStart("kasse/$tally_id/updateTally", ["class" => "labelstyle:inject end_cash"]); ?>
+						<?= $TC->formStart("/butiksvagt/kasse/$tally_id/updateTally", ["class" => "labelstyle:inject end_cash"]); ?>
 
 							<span class="description">Ved vagtafslutning</span>
 							<span class="amount">
@@ -105,7 +105,7 @@ $this->pageTitle("Kasseregnskab");
 				<div class="deposited">
 
 					<div class="view">
-						<?= $TC->formStart("kasse/$tally_id/updateTally", ["class" => "labelstyle:inject deposit"]); ?>
+						<?= $TC->formStart("/butiksvagt/kasse/$tally_id/updateTally", ["class" => "labelstyle:inject deposit"]); ?>
 
 							<span class="description">Evt. deponeret</span>
 							<span class="amount">
@@ -249,19 +249,19 @@ $this->pageTitle("Kasseregnskab");
 
 			<div class="change">
 				<h2>Byttepenge til næste uge <span class="sum"><?= $TC->calculateChange($tally_id); ?> kr.</span></h2>
-				<p> (kassebeholdning ved slut minus deponerede penge)</p>
+				<p> (Kassebeholdning ved slut minus deponerede penge)</p>
 			</div>
 
 
-			<?= $TC->formStart("kasse/$tally_id/saveTally", ["class" => "labelstyle:inject comment"]); ?>
+			<?= $TC->formStart("/butiksvagt/kasse/$tally_id/saveTally", ["class" => "labelstyle:inject comment"]); ?>
 				<fieldset>
 					<?= $TC->input("comment", ["value" => $tally["comment"]]); ?>
 
 				</fieldset>
 			
 				<ul class="actions">
-					<?= $TC->submit("Gem og gå tilbage", ["wrapper" => "li.save", "formaction" => "kasse/$tally_id/saveTally"]); ?>
-					<?= $TC->submit("Godkend regnskab og luk kasse", ["wrapper" => "li.save", "class" => "primary", "formaction" => "$tally_id/closeTally"]) ?>
+					<?= $TC->submit("Gem og gå tilbage", ["wrapper" => "li.save", "formaction" => "/butiksvagt/kasse/$tally_id/saveTally"]); ?>
+					<?= $TC->submit("Godkend regnskab og luk kasse", ["wrapper" => "li.save", "class" => "primary", "formaction" => "/butiksvagt/kasse/$tally_id/closeTally"]) ?>
 				</ul>
 			<?= $TC->formEnd(); ?>
 

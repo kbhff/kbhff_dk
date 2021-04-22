@@ -311,13 +311,28 @@ class SuperUser extends SuperUserCore {
 
 	}
 
-	function getDepartmentUsers($department_id) {
-		
+	function getDepartmentUsers($department_id, $_options = false) {
 
 		$query = new Query();
 		
 		if($department_id) {
-			$sql = "SELECT users.*, user_department.department_id FROM ".SITE_DB.".user_department AS user_department, $this->db AS users WHERE users.status = 1 AND users.user_group_id > 1 AND user_department.user_id = users.id AND user_department.department_id = $department_id ORDER BY nickname";
+
+			$only_active_members = false;
+			if($_options !== false) {
+				foreach($_options as $_option => $_value) {
+					switch($_option) {
+						case "only_active_members"       : $only_active_members         = $_value; break;
+					}
+				}
+			}
+
+			$sql = "SELECT users.*, user_department.department_id, user_members.id AS member_id, user_members.subscription_id FROM ".SITE_DB.".user_members AS user_members, ".SITE_DB.".user_department AS user_department, $this->db AS users WHERE users.status = 1 AND users.user_group_id > 1 AND user_department.user_id = users.id AND user_members.user_id = users.id AND user_department.department_id = $department_id";
+
+			if($only_active_members) {
+				$sql .= " AND user_members.subscription_id IS NOT NULL";
+			}
+
+			$sql .= " ORDER BY nickname";
 
 			if($query->sql($sql)) {
 
@@ -802,10 +817,27 @@ class SuperUser extends SuperUserCore {
 			$query = new Query();
 
 			if($search_value) {
-				$sql = "SELECT u.nickname AS nickname, u.firstname AS firstname, u.lastname as lastname, ud.department_id as department, u.id as user_id, (select un.username from ".SITE_DB.".user_usernames as un where un.user_id = u.id and un.type = 'email') as email, (select un.username from ".SITE_DB.".user_usernames as un where un.user_id = u.id and un.type = 'mobile') as mobile, (select un.username from ".SITE_DB.".user_usernames as un where un.user_id = u.id and un.type = 'member_no') as member_no from ".SITE_DB.".users u LEFT OUTER JOIN ".SITE_DB.".user_department ud ON u.id = ud.user_id LEFT JOIN ".SITE_DB.".user_usernames un ON un.user_id = u.id WHERE u.id <> $user_id AND (un.username like '%$search_value%' OR u.nickname like '%$search_value%' OR u.firstname like '%$search_value%' OR u.lastname like '%$search_value%')";
+				$sql = "
+				SELECT 
+					u.nickname AS nickname, 
+					u.firstname AS firstname, 
+					u.lastname AS lastname, 
+					ud.department_id AS department, 
+					u.id AS user_id, 
+					(SELECT un.username FROM ".SITE_DB.".user_usernames as un WHERE un.user_id = u.id and un.type = 'email') AS email, 
+					(SELECT un.username FROM ".SITE_DB.".user_usernames AS un WHERE un.user_id = u.id and un.type = 'mobile') AS mobile, 
+					(SELECT un.username FROM ".SITE_DB.".user_usernames AS un WHERE un.user_id = u.id and un.type = 'member_no') AS member_no 
+				FROM ".
+					SITE_DB.".users u LEFT OUTER JOIN ".SITE_DB.".user_department ud ON u.id = ud.user_id LEFT JOIN ".SITE_DB.".user_usernames un ON un.user_id = u.id 
+				WHERE 
+					u.id <> $user_id 
+					AND (un.username LIKE '%$search_value%' 
+					OR u.nickname LIKE '%$search_value%' 
+					OR u.firstname LIKE '%$search_value%' 
+					OR u.lastname LIKE '%$search_value%')";
 				
 				if ($department_id != "all") {
-					$sql .= " and ud.department_id = $department_id";
+					$sql .= " AND ud.department_id = $department_id";
 				}
 				
 				$sql .= " group by u.id";
