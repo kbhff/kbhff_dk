@@ -1,3 +1,172 @@
-#content .cash .edit {display: none;}
 
-#content .section.tally .sum {float: right;}
+/* TALLY */
+#content div.scene.tally {}
+
+#content div.scene.tally dl.info {padding: 48px 12px 24px;}
+
+#content div.scene.tally dl.info dd {font-size: 24px; text-transform: uppercase;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+}
+
+#content div.scene.tally h2 {padding: 0; margin: 0 12px; border-bottom: 1px solid #000000;}
+#content div.scene.tally h2 .sum {float: right;}
+
+#content div.scene.tally li.delete input.confirm {background-color: #C22414; color: #ffffff;}
+#content div.scene.tally li.delete input.confirm:hover {background-color: #a81100;}
+
+
+/* CASH */
+#content div.scene.tally div.cash {padding-top: 48px;}
+#content div.scene.tally div.view {margin: 0 12px; border-bottom: 1px dashed #000000;}
+
+#content div.scene.tally div.view > form {
+	display: flex;
+	flex-flow: row nowrap;
+}
+
+#content div.scene.tally div.view > form > span {display: block; font-size: 20px; padding: 10px;
+	flex: 1 1;
+	align-self: center;
+}
+
+#content div.scene.tally div.view > form > span.amount {text-align: right;}
+#content div.scene.tally div.view.edit > form > span.amount {padding-top: 8px; padding-bottom: 8px;}
+
+#content div.scene.tally div.view > form > span.edit {
+	flex: 0 0 85px;
+}
+#content div.scene.tally div.view > form > span.edit ul.actions {padding: 0; margin: 0; list-style: none;}
+#content div.scene.tally div.view > form > span.edit ul.actions li {padding: 0;}
+
+#content div.scene.tally div.view > form > span.edit ul.actions li a,
+#content div.scene.tally div.view > form > span.edit ul.actions li input {padding-top: 4px; padding-bottom: 4px;}
+
+
+
+
+#content div.scene.tally div.view > form > span.amount fieldset,
+#content div.scene.tally div.view > form > span.edit ul.actions li.save {display: none;}
+
+#content div.scene.tally div.view.edit > form > span.amount span.value,
+#content div.scene.tally div.view.edit > form > span.edit ul.actions li.edit {display: none;}
+
+#content div.scene.tally div.view.edit > form > span.amount fieldset,
+#content div.scene.tally div.view.edit > form > span.edit ul.actions li.save {display: block;}
+
+#content div.scene.tally div.view.edit > form > span.amount div.field {padding: 0;}
+#content div.scene.tally div.view.edit > form > span.amount div.field label {display: none;}
+#content div.scene.tally div.view.edit > form > span.amount div.field input {padding-top: 2px; padding-bottom: 2px; width: 150px; text-align: right; float: right;}
+#content div.scene.tally div.view.edit > form > span.amount div.field div.help {float: right; padding: 0; width: 210px;}
+#content div.scene.tally div.view.edit > form > span.amount div.field div.help .hint {position: relative; padding: 5px 10px 0 0;}
+
+
+/* PAYOUTS */
+#content div.scene.tally div.payouts {padding-top: 72px;}
+#content div.scene.tally div.payouts > p {padding: 10px; margin: 0 12px 24px; font-size: 20px; border-bottom: 1px dashed #000000;}
+
+#content div.scene.tally div.payouts ul.payouts {
+	padding: 0; margin: 0 12px 24px; list-style: none;
+}
+
+#content div.scene.tally div.payouts li.payout {padding: 0; border-bottom: 1px dashed #000000;
+	display: flex;
+	flex-flow: row nowrap;
+}
+
+#content div.scene.tally div.payouts li.payout > span {
+	display: block;
+	font-size: 20px;
+	padding: 10px;
+	flex: 1 1;
+	align-self: center;
+}
+
+#content div.scene.tally div.payouts li.payout > span.amount {text-align: right;}
+
+#content div.scene.tally div.payouts li.payout > span.edit {
+	flex: 0 0 85px;
+}
+#content div.scene.tally div.payouts li.payout > span.edit ul.actions {padding: 0; margin: 0; list-style: none;}
+#content div.scene.tally div.payouts li.payout > span.edit ul.actions li {padding: 0;}
+
+#content div.scene.tally div.payouts li.payout > span.edit ul.actions li a,
+#content div.scene.tally div.payouts li.payout > span.edit ul.actions li input {padding-top: 4px; padding-bottom: 4px;}
+
+#content div.scene.tally div.payouts div.add_payout > ul.actions {padding: 0; margin: 0 12px; list-style: none;}
+#content div.scene.tally div.payouts div.add_payout > ul.actions li {padding: 0;}
+
+#content div.scene.tally div.payouts div.add_payout.open > ul.actions {display: none;}
+
+#content div.scene.tally div.payouts div.add_payout.open form {font-size: 0; margin: 0 12px;}
+#content div.scene.tally div.payouts div.add_payout.open form fieldset {display: inline-block; vertical-align: top; font-size: 0; width: calc(100% - 55px);}
+#content div.scene.tally div.payouts div.add_payout.open form fieldset div.field {display: inline-block; vertical-align: top; width: calc(50% - 10px); padding-left: 0;}
+
+#content div.scene.tally div.payouts div.add_payout.open form ul.actions {display: inline-block; vertical-align: top; width: 55px; padding: 0; margin: 15px 0 0;}
+#content div.scene.tally div.payouts div.add_payout.open form ul.actions li {padding: 0;}
+#content div.scene.tally div.payouts div.add_payout.open form ul.actions li input {padding-top: 4px; padding-bottom: 4px;}
+
+
+/* REVENUES */
+#content div.scene.tally div.misc_revenues {padding-top: 72px;}
+#content div.scene.tally div.misc_revenues > p {padding: 10px; margin: 0 12px 24px; font-size: 20px; border-bottom: 1px dashed #000000;}
+
+#content div.scene.tally div.misc_revenues ul.revenues {padding: 0; margin: 0 12px 24px; list-style: none;}
+#content div.scene.tally div.misc_revenues li.revenue {padding: 0; border-bottom: 1px dashed #000000;
+	display: flex;
+	flex-flow: row nowrap;
+}
+
+#content div.scene.tally div.misc_revenues li.revenue > span {
+	display: block;
+	font-size: 20px;
+	padding: 10px;
+	flex: 1 1;
+	align-self: center;
+}
+
+#content div.scene.tally div.misc_revenues li.revenue > span.amount {text-align: right;}
+
+#content div.scene.tally div.misc_revenues li.revenue > span.edit {
+	flex: 0 0 85px;
+}
+#content div.scene.tally div.misc_revenues li.revenue > span.edit ul.actions {padding: 0; margin: 0; list-style: none;}
+#content div.scene.tally div.misc_revenues li.revenue > span.edit ul.actions li {padding: 0;}
+
+#content div.scene.tally div.misc_revenues li.revenue > span.edit ul.actions li a,
+#content div.scene.tally div.misc_revenues li.revenue > span.edit ul.actions li input {padding-top: 4px; padding-bottom: 4px;}
+
+#content div.scene.tally div.misc_revenues div.add_revenue > ul.actions {padding: 0; margin: 0 12px; list-style: none;}
+#content div.scene.tally div.misc_revenues div.add_revenue > ul.actions li {padding: 0;}
+
+#content div.scene.tally div.misc_revenues div.add_revenue.open > ul.actions {display: none;}
+
+#content div.scene.tally div.misc_revenues div.add_revenue.open form {font-size: 0; margin: 0 12px;}
+#content div.scene.tally div.misc_revenues div.add_revenue.open form fieldset {display: inline-block; vertical-align: top; font-size: 0; width: calc(100% - 55px);}
+#content div.scene.tally div.misc_revenues div.add_revenue.open form fieldset div.field {display: inline-block; vertical-align: top; width: calc(50% - 10px); padding-left: 0;}
+
+#content div.scene.tally div.misc_revenues div.add_revenue.open form ul.actions {display: inline-block; vertical-align: top; width: 55px; padding: 0; margin: 15px 0 0;}
+#content div.scene.tally div.misc_revenues div.add_revenue.open form ul.actions li {padding: 0;}
+#content div.scene.tally div.misc_revenues div.add_revenue.open form ul.actions li input {padding-top: 4px; padding-bottom: 4px;}
+
+
+#content div.scene.tally div.cash_sales {padding-top: 72px;}
+#content div.scene.tally div.cash_sales ul.cash_sales {padding: 0; margin: 0 12px 24px; list-style: none;}
+#content div.scene.tally div.cash_sales ul.cash_sales > li {padding: 0; border-bottom: 1px dashed #000000;
+	display: flex;
+	flex-flow: row nowrap;
+}
+
+#content div.scene.tally div.cash_sales ul.cash_sales > li > span {
+	display: block;
+	font-size: 20px;
+	padding: 10px;
+	flex: 1 1;
+	align-self: center;
+}
+#content div.scene.tally div.cash_sales ul.cash_sales > li > span.total_price {text-align: right;
+	flex: 0 0 120px;
+}
+
+#content div.scene.tally div.calculated_sales {padding-top: 72px;}
+
+#content div.scene.tally div.change {padding-top: 72px;}
