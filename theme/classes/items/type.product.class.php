@@ -158,7 +158,7 @@ class TypeProduct extends Itemtype {
 				$frivillig_price_type = $price_types[arrayKeyValue($price_types, "name", "frivillig")];
 				$_POST["item_price"] = $price_1;
 				$_POST["item_price_currency"] = "DKK";
-				$_POST["item_price_vatrate"] = $vatrate ? $vatrate["id"] : false;
+				$_POST["item_price_vatrate"] = $vatrate_id;
 				$_POST["item_price_type"] = $frivillig_price_type ? $frivillig_price_type["id"] : false;
 				$frivillig_price = $model->addPrice(["addPrice", $item["id"]]);
 				unset($_POST);
@@ -167,7 +167,7 @@ class TypeProduct extends Itemtype {
 				$stoettemedlem_price_type = $price_types[arrayKeyValue($price_types, "name", "stoettemedlem")];
 				$_POST["item_price"] = $price_2;
 				$_POST["item_price_currency"] = "DKK";
-				$_POST["item_price_vatrate"] = $vatrate ? $vatrate["id"] : false;
+				$_POST["item_price_vatrate"] = $vatrate_id;
 				$_POST["item_price_type"] = $stoettemedlem_price_type ? $stoettemedlem_price_type["id"] : false;
 				$stoettemedlem_price = $model->addPrice(["addPrice", $item["id"]]);
 				unset($_POST);
