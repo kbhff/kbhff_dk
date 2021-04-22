@@ -17,7 +17,16 @@ $tally_id = $tally["id"];
 $pickupdate = false;
 $previous_pickupdate = $PC->getPickupdates(["after" => date("Y-m-d", strtotime("-8 days")), "before" => date("Y-m-d")]);
 $upcoming_pickupdates = $PC->getPickupdates(["after" => date("Y-m-d"), "before" => date("Y-m-d", strtotime("+15 days"))]);
-$all_pickupdates = array_merge($previous_pickupdate, $upcoming_pickupdates);
+if($previous_pickupdate && $upcoming_pickupdates) {
+
+	$all_pickupdates = array_merge($previous_pickupdate, $upcoming_pickupdates);
+}
+elseif ($previous_pickupdate) {
+	$all_pickupdates = $previous_pickupdate;
+}
+elseif ($upcoming_pickupdates) {
+	$all_pickupdates = $upcoming_pickupdates;
+}
 
 $pickupdate_is_today = true;
 if($action) {
@@ -35,7 +44,7 @@ if(!$pickupdate) {
 }
 
 
-$department_pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["department_id" => $department["id"]]);
+$department_pickupdate_order_items = $pickupdate ? $SC->getPickupdateOrderItems($pickupdate["id"], ["department_id" => $department["id"]]) : false;
 
 $order_items_total_quantity = 0;
 $order_items_total_delivered_quantity = 0;
@@ -70,7 +79,7 @@ if($department_pickupdate_order_items) {
 			</div>
 
 			<?= $PC->formStart("selectPickupdate", ["class" => "labelstyle:inject form"]); ?>
-				<?= $PC->input("pickupdate_id", ["label" => "Udleveringsdag", "type" => "select", "value" => $pickupdate["id"], "options" => $PC->toOptions($all_pickupdates, "id", "pickupdate")]); ?>
+				<?= $PC->input("pickupdate_id", ["label" => "Udleveringsdag", "type" => "select", "value" => $pickupdate ? $pickupdate["id"] : false, "options" => $PC->toOptions($all_pickupdates, "id", "pickupdate")]); ?>
 				<ul class="actions">
 					<?= $PC->submit("Vælg", ["wrapper" => "li.select"]); ?>
 				</ul>
