@@ -16,7 +16,7 @@ $user_id = session()->value("user_id");
 $this->pageTitle("Ret bestilling");
 ?>
 
-<? if($order && $order["user_id"] == $user_id): ?>
+<? if($order && $order["user_id"] == $user_id && $order_item_department_pickupdate): ?>
 
 <div class="scene update_order_item_department_pickupdate_form i:update_order_item_department_pickupdate_form">
 	<h1>Ret bestilling</h1>
