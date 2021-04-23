@@ -7,6 +7,14 @@ global $action;
 $departments = $DC->getDepartmentsAcceptSignups();
 $user_department = $UC->getUserDepartment();
 $pickupdates = $SC->getPickupdates(["after" => date("Y-m-d", strtotime("+7 days"))]);
+$department_pickupdates = $DC->getDepartmentPickupdates($user_department["id"]);
+$available_pickupdates = false;
+foreach ($pickupdates as $pickupdate) {
+	if(arrayKeyValue($department_pickupdates, "id", $pickupdate["id"])) {
+		$available_pickupdates[] = $pickupdate;
+	}
+}
+
 $order_item_id = $action[1];
 $order_item = $SC->getOrderItems(["order_item_id" => $order_item_id]);
 $order = $order_item ? $SC->getOrders(["order_id" => $order_item["order_id"]]) : false;
@@ -29,7 +37,7 @@ $this->pageTitle("Ret bestilling");
 		<fieldset>
 			<?= $UC->input("pickupdate_id", [
 				"type" => "select", 
-				"options" => $SC->toOptions($pickupdates, "id", "pickupdate"),
+				"options" => $SC->toOptions($available_pickupdates, "id", "pickupdate"),
 				"value" => $order_item_department_pickupdate["pickupdate_id"]
 				]); 
 			?>
