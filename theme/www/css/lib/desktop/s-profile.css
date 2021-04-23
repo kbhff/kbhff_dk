@@ -38,6 +38,12 @@
 
 
 /* LEFT COLUMN */
+
+#content div.profile .order_item:nth-child(2n) {
+	background-color: #DDDDDD;
+}
+
+
 #content div.profile .order_item,
 #content div.profile .order_item-headings {
 	margin-left: 12px;
@@ -48,6 +54,11 @@
 #content div.profile .order_item-headings > h4 {
 	padding: 0;
 }
+
+#content div.profile .order_item-headings {
+	border-bottom: 1px solid #000000;
+}
+#content div.profile .order_item p {padding: 7px 4px; font-size: 14px;}
 
 #content div.profile .order_items,
 #content div.profile .order_item-headings,
@@ -60,6 +71,14 @@
 	vertical-align: top;
 	width: 100%;
 }
+
+#content div.profile div.order_item.edit .pickupdate label,
+#content div.profile div.order_item.edit .pickupdate ul.actions,
+#content div.profile div.order_item.edit .pickupdate span.date {display: none;}
+
+#content div.profile div.order_item.edit .pickupdate {padding: 3px 0px;}
+#content div.profile div.order_item.edit .pickupdate div.field {padding: 0;}
+#content div.profile div.order_item.edit .pickupdate div.field select {font-size: 14px; line-height: 20px; width: calc(100% - 10px);}
 
 #content div.profile .pickupdate,
 #content div.profile .order_item-product,
@@ -93,12 +112,12 @@
 }
 
 #content div.profile ul.actions.change > li {
-	padding: 0;
+	padding: 6px;
 	margin: 0;
 }
 
 #content div.profile ul.actions.change > li > a {
-	padding: 0;
+	padding: 2px 0;
 	margin: 0;
 	padding-left: 8px;
 	padding-right: 8px;

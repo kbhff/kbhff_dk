@@ -13,6 +13,7 @@ Util.Modules["user_profile"] = new function() {
 			this.initMembershipBox();
 			this.initUserinfoBox();
 			this.initRenewalBox();
+			this.initOrderList();
 		}
 		
 		// Medlemskab box
@@ -665,6 +666,77 @@ Util.Modules["user_profile"] = new function() {
 
 		}
 
+
+		// Order list
+		scene.initOrderList = function() {
+
+			var orders = u.qsa("div.order_item", this);
+			var i, order;
+			for(i = 0; i < orders.length; i++) {
+				
+				order = orders[i];
+
+				order.order_item_id = u.cv(order, "order_item_id");
+				order.p_pickupdate = u.qs("p.pickupdate", order);
+				order.span_date = u.qs("span.date", order.p_pickupdate);
+				order.bn_edit = u.qs("li.change a.button:not(.disabled)", order);
+
+				if(order.bn_edit) {
+
+					order.bn_edit.order = order;
+
+					u.ce(order.bn_edit);
+					order.bn_edit.clicked = function() {
+
+						if(u.hc(this.order, "edit")) {
+
+							this.form.submit();
+
+						}
+						else {
+							u.ac(this.order, "edit");
+
+							this.response = function(response) {
+
+								this.form = u.qs("form", response);
+								if(this.form) {
+
+									this.form.order = this.order;
+
+									this.innerHTML = "Gem";
+									u.ac(this, "primary");
+									u.ae(this.order.p_pickupdate, this.form);
+									u.f.init(this.form);
+
+									this.form.submitted = function() {
+
+										this.response = function(response) {
+											this.order.bn_edit.form.parentNode.removeChild(this.order.bn_edit.form);
+											delete this.order.bn_edit.form;
+
+											this.order.span_date.innerHTML = u.qs("span.date", u.ge("order_item_id:"+this.order.order_item_id, response)).innerHTML;
+
+											u.rc(this.order, "edit");
+											this.order.bn_edit.innerHTML = "Ret";
+											u.rc(this.order.bn_edit, "primary");
+										}
+
+										u.request(this, this.action, {"method":"post", "data":this.getData()});
+
+									}
+
+								}
+
+							}
+
+							u.request(this, this.url);
+						}
+					}
+				}
+
+			}
+
+		}
 
 		// scene is ready
 		scene.ready();

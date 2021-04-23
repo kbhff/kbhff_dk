@@ -150,15 +150,15 @@ if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Fr
 				</div>
 
 
+				<div class="order_items">
 				<? foreach($order_items_pickupdates as $pickupdate): 
 					$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["user_id" => $member_user["id"]]);
-				?>
-					<? if($pickupdate_order_items): ?>
-					<div class="order_items">
+
+					if($pickupdate_order_items): ?>
 						<? foreach($pickupdate_order_items as $order_item): ?>
 						<? $order = $SC->getOrders(["order_id" => $order_item["order_id"]]) ?>
 						<div class="order_item">
-							<p class="pickupdate"><?= $pickupdate["pickupdate"] ?></p>
+							<p class="pickupdate"><span class="date"><?= $pickupdate["pickupdate"] ?></span></p>
 							<p class="order_item-product"><?= $order_item["quantity"] > 1 ? $order_item["quantity"]." x " : ""?><?= $order_item["name"] ?></p>
 							<? if($order["payment_status"] == 2): ?>
 							<p class="order-status"><span class='paid'>Betalt</span></p>
@@ -177,9 +177,10 @@ if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Fr
 							</ul>
 						</div>
 						<? endforeach; ?>
-					</div>
 					<? endif; ?>
 				<? endforeach; ?>	
+					</div>
+
 				<? else: ?>
 				<div>
 					<p><?= $member_user_name ?> har ingen aktuelle grøntsagsbestillinger.</p>					
