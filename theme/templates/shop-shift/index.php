@@ -12,13 +12,17 @@ $PC = new Pickupdate();
 $department = $UC->getUserDepartment(["user_id" => session()->value("user_id")]);
 
 $tally = $TC->getTally(["department_id" => $department ? $department["id"] : false]);
-$tally_id = $tally["id"];
+$tally_id = $tally ? $tally["id"] : false;
 
 $pickupdate = false;
-$previous_pickupdate = $PC->getPickupdates(["after" => date("Y-m-d", strtotime("-8 days")), "before" => date("Y-m-d")]);
-$upcoming_pickupdates = $PC->getPickupdates(["after" => date("Y-m-d"), "before" => date("Y-m-d", strtotime("+15 days"))]);
-if($previous_pickupdate && $upcoming_pickupdates) {
 
+// get today's pickupdate, or closest past pickupdate (look 1 week back)
+$previous_pickupdate = $PC->getPickupdates(["after" => date("Y-m-d", strtotime("-8 days")), "before" => date("Y-m-d")]);
+// get future pickupdates
+$upcoming_pickupdates = $PC->getPickupdates(["after" => date("Y-m-d"), "before" => date("Y-m-d", strtotime("+15 days"))]);
+
+$all_pickupdates = false;
+if($previous_pickupdate && $upcoming_pickupdates) {
 	$all_pickupdates = array_merge($previous_pickupdate, $upcoming_pickupdates);
 }
 elseif ($previous_pickupdate) {
@@ -70,6 +74,7 @@ if($department_pickupdate_order_items) {
 	<div class="banner i:banner variant:1 format:jpg"></div>
 
 	<h1>Ordreliste <span class="value"><?= $department["name"] ?: " - " ?></h1>
+	<? if($all_pickupdates && $pickupdate): ?>
 	<div class="c-wrapper">
 		<div class="c-two-thirds info">
 
@@ -151,6 +156,12 @@ if($department_pickupdate_order_items) {
 		<? endif; ?>
 		</div>
 	</div>
-	
+	<? else: ?>
+	<div class="c-wrapper">
+		<h2>Fejl</h2>
+		<p>Der blev ikke fundet nogen afhentningsdage.</p>
+	</div>
+	<? endif; ?>
+
 	
 </div>
