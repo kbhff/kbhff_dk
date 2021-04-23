@@ -1,0 +1,3 @@
+#content .scene.massMailView div.html { padding: 30px;}
+#content .scene.massMailView div.html ul { list-style: disc; font-size: 13px; width: 500px; margin-left: 50px; padding: 0 30px 25px;}
+#content .scene.massMailView div.html li { display: list-item; font-size: 13px; line-height: 1.3em;}

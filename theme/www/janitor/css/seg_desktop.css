@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-03-23 15:19:08
+asset-builder @ 2021-04-23 18:22:30
 */
 
 /*seg_desktop_include.css*/
@@ -1131,4 +1131,10 @@ body.invoice #content div.scene .payment_info {position: absolute; bottom: 50px;
 #content .scene.departmentEdit div.pickupdates ul.items li.item ul.actions li.remove { display: none;}
 #content .scene.departmentEdit div.pickupdates ul.items li.item.added ul.actions li.add { display: none;}
 #content .scene.departmentEdit div.pickupdates ul.items li.item.added ul.actions li.remove { display: inline-block;}
+
+
+/*s-mass_mail_log.css*/
+#content .scene.massMailView div.html { padding: 30px;}
+#content .scene.massMailView div.html ul { list-style: disc; font-size: 13px; width: 500px; margin-left: 50px; padding: 0 30px 25px;}
+#content .scene.massMailView div.html li { display: list-item; font-size: 13px; line-height: 1.3em;}
 
