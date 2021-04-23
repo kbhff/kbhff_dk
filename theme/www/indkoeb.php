@@ -92,7 +92,6 @@ if($action) {
 		$item = $IC->getItem(array("id" => $item_id, "extend" => ["mediae" => true, "prices" => true]));
 		
 		$model = $IC->typeObject($item["itemtype"]);
-		$model->itemtype = $item["itemtype"];
 
 		$item = $supermodel->updateProduct($action);
 

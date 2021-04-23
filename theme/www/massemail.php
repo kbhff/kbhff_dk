@@ -14,8 +14,7 @@ include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 // get REST parameters
 $action = $page->actions();
 $IC = new Items();
-$model = $IC->typeObject("kbhffmessage");
-$model->itemtype = "kbhffmessage";
+$model = $IC->typeObject("message");
 
 include_once("classes/users/superuser.class.php");
 $UC = new SuperUser();

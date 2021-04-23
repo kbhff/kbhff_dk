@@ -1,7 +1,10 @@
 <?php
+/**
+* @package janitor.items
+* Meant to allow local additions/overrides
+*/
 
-include_once("classes/items/type.message.class.php");
-class TypeKbhffMessage extends TypeMessage {
+class TypeMessage extends TypeMessageCore {
 
 	/**
 	* Initialization: set variable names and validation rules.
@@ -135,7 +138,7 @@ class TypeKbhffMessage extends TypeMessage {
 			if($id) {
 				return $query->result(0);
 			}
-			
+
 			return $query->results();
 		}
 

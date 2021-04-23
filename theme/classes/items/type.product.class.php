@@ -41,10 +41,10 @@ class TypeProduct extends Itemtype {
 	/**
 	* Init, set varnames, validation rules
 	*/
-	function __construct() {
+	function __construct($type_class = false) {
 
-		// Construct Itemtype class and pass itemtype as parameter
-		parent::__construct(get_class());
+		// Construct Itemtype class and pass sub-itemtype as parameter, if passed, or else itemtype
+		parent::__construct($type_class ?: get_class());
 
 
 		// Name
@@ -143,7 +143,6 @@ class TypeProduct extends Itemtype {
 			
 			$model = $IC->typeObject($product_type);
 			// overwrite itemtype (by default, the system uses the itemtype of the supermodel (product) rather than the model (e.g. productweeklybag))
-			$model->itemtype = $product_type;
 
 			$item = $model->save($action);
 
