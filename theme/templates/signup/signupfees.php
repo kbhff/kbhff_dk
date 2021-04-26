@@ -10,6 +10,12 @@ if($page_item) {
 }
 $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "position ASC", "status" => 1, "extend" => array("prices" => true)));
 
+// add name of associated membership to signupfee
+foreach ($signupfees as $key => $signupfee) {
+	$associated_membership = $IC->getItem(["id" => $signupfee["associated_membership_id"], "extend" => true]);
+	$signupfees[$key]["associated_membership_name"] = $associated_membership ? $associated_membership["name"] : false;
+}
+
 ?>
 
 <div class="scene signupfees i:signupfees">
@@ -62,7 +68,7 @@ $signupfees = $IC->getItems(array("itemtype" => "signupfee", "order" => "positio
 		<? // loop through signupfees and add them to html output
 		foreach($signupfees as $i => $signupfee): ?>
 			<li class="signupfee<?= $signupfee["classname"] ? " ".$signupfee["classname"] : "" ?>">
-				<h3><?= $signupfee["name"] ?></h3>
+				<h3><?= $signupfee["associated_membership_name"] ?></h3>
 
 			<? $membership_item = $IC->getItem(array("id" => $signupfee["associated_membership_id"], "extend" => array("prices" => true))); ?>
 
