@@ -310,7 +310,7 @@ Util.Modules["profile"] = new function() {
 			var box_userinfo = u.qs(".user > .c-box", this);
 			var button_userinfo = u.qs(".user li", this);
 
-			var intro_header = u.qs(".section.intro > h2", this);
+			var intro_header = u.qs(".section.intro > h1", this);
 			var span_name = u.qs("span.name", this);
 
 			if(button_userinfo) {
