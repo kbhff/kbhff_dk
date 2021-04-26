@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-04-22 23:53:13
+asset-builder @ 2021-04-26 14:07:48
 */
 
 /*seg_desktop_include.js*/
@@ -8036,7 +8036,8 @@ Util.Modules["tally"] = new function() {
 							this.p_error = u.ie(u.qs(".section.tally"), "p", {
 								html:error_message.innerHTML,
 								class:"error"
-							})
+							});
+							u.scrollTo(window, {node: this.p_error, "offset_y": 20});
 						}
 						else if(u.qs(".scene.shop_shift", response)) {
 							location.href = "/butiksvagt"; 

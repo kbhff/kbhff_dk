@@ -52,7 +52,9 @@ Util.Modules["tally"] = new function() {
 							this.p_error = u.ie(u.qs(".section.tally"), "p", {
 								html:error_message.innerHTML,
 								class:"error"
-							})
+							});
+							u.scrollTo(window, {node: this.p_error, "offset_y": 20});
+
 						}
 						else if(u.qs(".scene.shop_shift", response)) {
 		

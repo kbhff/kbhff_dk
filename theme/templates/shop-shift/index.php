@@ -123,7 +123,7 @@ if($department_pickupdate_order_items) {
 					<span class="user_name"><?= $user ? $user["nickname"] : "" ?></span>
 					<span class="product_name"><?= $order_item["quantity"] ?> x <?= $order_item["name"] ?></span>
 					<span class="button">
-						<? if(1 || $pickupdate_is_today): ?>
+						<? if($pickupdate_is_today): ?>
 						<ul class="actions">
 							<? if($order_item["status"] == 1): ?>
 							<?= $HTML->oneButtonForm("Udlevér", "/butiksvagt/updateDeliveryStatus/".$order_item["id"], [
