@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-04-16 14:51:08
+asset-builder @ 2021-04-27 22:30:44
 */
 
 /*seg_desktop_include.css*/
@@ -19,10 +19,6 @@ body {
 body span.highlight,
 #page span.highlight {color: #3e8e17;}
 #header span.highlight {display: block;}
-body p.error,
-body p.errormessage,
-#page p.error,
-#page p.errormessage {color: #C22414;}
 h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dd, dt {padding: 0; margin: 0;}
 h1, h2, h3, h4, h5, h6, p, li, dd, dt, span, a {line-height: 1em; font-weight: 400;}
 ul {list-style: none;}
@@ -523,6 +519,8 @@ position: relative;
 	padding-left: 12px;
 	padding-right: 12px;
 }
+#content div.messages p.message {padding: 10px; margin-bottom: 10px; border: 2px solid #3E8E17; color: #3E8E17;}
+#content div.messages p.error {padding: 10px; margin-bottom: 10px; border: 2px solid #C22414; color: #C22414;}
 #content div.c-wrapper {
 	display: block;
 	font-size: 0;
