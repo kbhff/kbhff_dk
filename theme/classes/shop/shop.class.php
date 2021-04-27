@@ -493,6 +493,9 @@ class Shop extends ShopCore {
 
 		if($query->sql($sql)) {
 
+			global $page;
+			$page->addLog("Shop->setOrderItemDepartmentPickupdate: user_id:".session()->value("user_id").", order_item_id:$order_item_id, department_id:$department_id, pickupdate_id:$pickupdate_id");
+
 			message()->addMessage("Pickup date and department was set");
 			return $this->getOrderItemDepartmentPickupdate($order_item_id);
 		}
