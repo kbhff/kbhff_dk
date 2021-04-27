@@ -18,10 +18,6 @@ body span.highlight,
 
 #header span.highlight {display: block;}
 
-body p.error,
-body p.errormessage,
-#page p.error,
-#page p.errormessage {color: #C22414;}
 
 
 /* BASE */
