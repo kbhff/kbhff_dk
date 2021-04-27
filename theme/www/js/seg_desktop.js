@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-04-26 14:07:48
+asset-builder @ 2021-04-27 22:32:29
 */
 
 /*seg_desktop_include.js*/
@@ -7592,7 +7592,7 @@ Util.Modules["profile"] = new function() {
 		scene.initUserinfoBox = function() {
 			var box_userinfo = u.qs(".user > .c-box", this);
 			var button_userinfo = u.qs(".user li", this);
-			var intro_header = u.qs(".section.intro > h2", this);
+			var intro_header = u.qs(".section.intro > h1", this);
 			var span_name = u.qs("span.name", this);
 			if(button_userinfo) {
 				button_userinfo.scene = this;
