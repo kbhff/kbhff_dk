@@ -35,16 +35,7 @@ $this->pageTitle("Genaktiver medlemskab");
 
 	<?= $UC->formStart("reactivateMembership", ["class" => "form_reactivate"]) ?> 
 
-<?	// print error messages
-	if(message()->hasMessages(array("type" => "error"))): ?>
-		<p class="errormessage">
-<?		$messages = message()->getMessages(array("type" => "error"));
-		message()->resetMessages();
-		foreach($messages as $message): ?>
-			<?= $message ?><br>
-<?		endforeach;?>
-		</p>
-<?	endif; ?>
+		<?= $HTML->serverMessages(["type" => "error"]) ?>
 
 		<fieldset>
 			

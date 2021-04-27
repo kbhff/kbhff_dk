@@ -56,16 +56,7 @@ else {
 
 	<h1>Betal dit medlemskab</h1>
 
-	<? // show error messages 
-if(message()->hasMessages(array("type" => "error"))): ?>
-	<p class="errormessage">
-<?	$messages = message()->getMessages(array("type" => "error"));
-		message()->resetMessages();
-		foreach($messages as $message): ?>
-		<?= $message ?><br>
-<?	endforeach;?>
-	</p>
-<?	endif; ?>
+	<?= $HTML->serverMessages(["type" => "error"]) ?>
 
 	<ul class="orders">
 	<? // loop through order items and show price, quantity and total order price.

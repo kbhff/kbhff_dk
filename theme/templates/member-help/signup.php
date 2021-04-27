@@ -66,17 +66,9 @@ $email = $model->getProperty("email", "value");
 		<?= $model->input("quantity", array("type" => "hidden", "value" => 1)); ?>
 		<div class="c-wrapper">
 			<div class="c-one-half">
-				
-			<? if(message()->hasMessages(array("type" => "error"))): ?>
-				<p class="errormessage">
-			<?	$messages = message()->getMessages(array("type" => "error"));
-					message()->resetMessages();
-					foreach($messages as $message): ?>
-					<?= $message ?><br>
-			<?	endforeach;?>
-				</p>
-			<?	endif; ?>
-			
+
+				<?= $HTML->serverMessages(["type" => "error"]) ?>
+
 				<fieldset>
 					<?= $model->input("firstname", array("required" => true, "label" => "Fornavn", "hint_message" => "Skriv medlemmets fornavn her", "error_message" => "Fornavn er obligatorisk. Det kan kun indeholde bogstaver.")) ?>
 					<?= $model->input("lastname", array("required" => true, "label" => "Efternavn", "hint_message" => "Skriv medlemmets efternavn her", "error_message" => "Efternavn er obligatorisk. Det kan kun indeholde bogstaver.")) ?>

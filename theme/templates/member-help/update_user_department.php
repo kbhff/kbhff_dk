@@ -24,18 +24,7 @@ $this->pageTitle("Afdelinger");
 
 	<?= $UC->formStart("updateUserDepartment/$action[1]", ["class" => "form_department"]) ?> 
 	
-	<? if(message()->hasMessages()): ?>
-	<div class="messages">
-	<?
-	$all_messages = message()->getMessages();
-	message()->resetMessages();
-	foreach($all_messages as $type => $messages):
-		foreach($messages as $message): ?>
-		<p class="<?= $type ?>"><?= $message ?></p>
-		<? endforeach;?>
-	<? endforeach;?>
-	</div>
-	<? endif; ?>
+	<?= $HTML->serverMessages() ?>
 	
 	
 	<fieldset>

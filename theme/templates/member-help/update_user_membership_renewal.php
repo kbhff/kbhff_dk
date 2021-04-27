@@ -26,16 +26,7 @@ $this->pageTitle("Fornyelse");
 
 	<?= $UC->formStart("updateUserMembershipRenewal/$user_id", ["class" => "form_renewal"]) ?> 
 
-<?	// print error messages
-	if(message()->hasMessages(array("type" => "error"))): ?>
-		<p class="errormessage">
-<?		$messages = message()->getMessages(array("type" => "error"));
-		message()->resetMessages();
-		foreach($messages as $message): ?>
-			<?= $message ?><br>
-<?		endforeach;?>
-		</p>
-<?	endif; ?>
+		<?= $HTML->serverMessages(["type" => "error"]) ?>
 
 		<fieldset>
 			
