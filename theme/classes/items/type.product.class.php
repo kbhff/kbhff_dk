@@ -313,7 +313,7 @@ class TypeProduct extends Itemtype {
 				}
 	
 				
-				if($frivillig_price && $stoettemedlem_price) {
+				if($frivillig_price !== false && $stoettemedlem_price !== false) {
 					
 					// enable item
 					$model->status(["status", $item["id"], 1]);
