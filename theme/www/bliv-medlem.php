@@ -313,7 +313,7 @@ if($action) {
 					// user has password
 					if($has_password) {
 						
-						message()->addMessage("Din profil er aktiveret.");
+						message()->addMessage("Du har verificeret din e-mailadresse.");
 
 						// redirect to leave POST state
 						header("Location: /bliv-medlem/bekraeft/kvittering");
