@@ -157,7 +157,7 @@ if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Fr
 					if($pickupdate_order_items): ?>
 						<? foreach($pickupdate_order_items as $order_item): ?>
 						<? $order = $SC->getOrders(["order_id" => $order_item["order_id"]]) ?>
-						<div class="order_item">
+						<div class="order_item order_item_id:<?= $order_item["id"] ?>">
 							<p class="pickupdate"><span class="date"><?= $pickupdate["pickupdate"] ?></span></p>
 							<p class="order_item-product"><?= $order_item["quantity"] > 1 ? $order_item["quantity"]." x " : ""?><?= $order_item["name"] ?></p>
 							<? if($order["payment_status"] == 2): ?>
