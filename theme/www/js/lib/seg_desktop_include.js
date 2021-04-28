@@ -40,6 +40,7 @@ document.write('<script type="text/javascript" src="/js/lib/desktop/m-profile.js
 document.write('<script type="text/javascript" src="/js/lib/desktop/m-forgot.js"></script>');
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/m-tally.js"></script>');
+document.write('<script type="text/javascript" src="/js/lib/desktop/m-shop_shift.js"></script>');
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/u-expandarrow.js"></script>');
 

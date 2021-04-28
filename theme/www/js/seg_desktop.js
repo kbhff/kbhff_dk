@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-04-27 22:32:29
+asset-builder @ 2021-04-28 12:12:37
 */
 
 /*seg_desktop_include.js*/
@@ -8220,6 +8220,25 @@ Util.Modules["tally"] = new function() {
 			if(change) {
 				u.pn(this.change).replaceChild(change, this.change);
 				this.change = change;
+			}
+		}
+		scene.ready();
+	}
+}
+
+
+/*m-shop_shift.js*/
+Util.Modules["shop_shift"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			var form = u.qs("form.choose_date");
+			u.f.init(form);
+			form.updated = function() {
+				this.submit();
 			}
 		}
 		scene.ready();

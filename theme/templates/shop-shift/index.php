@@ -69,7 +69,7 @@ if($department_pickupdate_order_items) {
 }
 ?>
 
-<div class="scene shop_shift i:scene">
+<div class="scene shop_shift i:shop_shift">
 	
 	<div class="banner i:banner variant:1 format:jpg"></div>
 
@@ -83,10 +83,10 @@ if($department_pickupdate_order_items) {
 				<p>Kassemestre kan på en aktuel afhentningsdag bruge ‘Udlever’-knapperne til at registrere, at medlemmer har fået udleveret deres varer.</p>
 			</div>
 
-			<?= $PC->formStart("selectPickupdate", ["class" => "labelstyle:inject form"]); ?>
+			<?= $PC->formStart("selectPickupdate", ["class" => "labelstyle:inject form choose_date"]); ?>
 				<?= $PC->input("pickupdate_id", ["label" => "Udleveringsdag", "type" => "select", "value" => $pickupdate ? $pickupdate["id"] : false, "options" => $PC->toOptions($all_pickupdates, "id", "pickupdate")]); ?>
 				<ul class="actions">
-					<?= $PC->submit("Vælg", ["wrapper" => "li.select"]); ?>
+					<?= $PC->submit("Vælg", ["wrapper" => "li.select", "class" => "primary"]); ?>
 				</ul>
 			<?= $PC->formEnd(); ?>
 
