@@ -534,7 +534,7 @@ class SuperUser extends SuperUserCore {
 			$query = new Query();
 		
 			$query->checkDbExistence(SITE_DB.".user_log_agreements");
-			$sql = "SELECT user_id FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id";
+			$sql = "SELECT user_id FROM ".SITE_DB.".user_log_agreements WHERE name = 'terms' AND user_id = $user_id";
 			if($query->sql($sql)) {
 				return true;
 			}

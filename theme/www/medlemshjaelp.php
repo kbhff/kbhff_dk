@@ -204,6 +204,26 @@ if($action) {
 	# /medlemshjaelp/brugerprofil
 	else if($action[0] == "brugerprofil") {
 		
+		// Allow accept terms
+		if(count($action) == 3 && $action[2] == "user_accept" && $page->validateCsrfToken()) {
+
+			$model->acceptedTerms(["user_id" => $action[1]]);
+
+			header("Location: /medlemshjaelp/brugerprofil/".$action[1]);
+
+		}
+
+		// User must always accept terms - force dialogue if user has not accepted the terms
+		if(count($action) == 2 && !$model->hasAcceptedTerms(["user_id" => $action[1]])) {
+
+			$page->page(array(
+				"templates" => "member-help/user_accept_terms.php",
+				"type" => "login",
+				"page_title" => "Samtykke"
+			));
+			exit();
+		}
+
 		# /medlemshjaelp/brugerprofil/#user_id#
 		if(count($action) == 2) {
 			$page->page(array(
