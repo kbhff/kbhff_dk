@@ -362,6 +362,9 @@ class Shop extends ShopCore {
 		$sql = "INSERT INTO ".$this->db_department_pickupdate_order_items." SET department_id = $department_id, pickupdate_id = $pickupdate_id, order_item_id = $order_item_id";
 		if($query->sql($sql)) {
 
+			global $page;
+			$page->addLog("Shop->addDepartmentPickupdateOrderItem: user_id:".session()->value("user_id").", order_item_id:$order_item_id, department_id:$department_id, pickupdate_id:$pickupdate_id");
+
 			return true;
 		}
 

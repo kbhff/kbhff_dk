@@ -38,7 +38,7 @@ if($action) {
 		exit();
 
 	}
-	else if($action[0] == "rediger-produkt") {
+	else if($action[0] == "rediger-produkt" && count($action) == 2) {
 
 		// standard template
 		$page->page(array(
