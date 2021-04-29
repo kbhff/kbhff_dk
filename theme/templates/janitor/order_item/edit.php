@@ -47,6 +47,9 @@ if($order_item) {
 			<dt class="order_item_id">Order item ID</dt>
 			<dd class="order_item_id"><?= $order_item_id ?></dd>
 			
+			<dt class="order_item_id">Quantity</dt>
+			<dd class="order_item_id"><?= $order_item["quantity"] ?></dd>
+			
 			<dt class="order_no">Order no.</dt>
 			<dd class="order_no"><?= $order_item["order_no"] ?></dd>
 
