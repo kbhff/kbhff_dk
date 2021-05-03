@@ -81,23 +81,29 @@
 #content div.profile div.order_item.edit .pickupdate div.field select {font-size: 14px; line-height: 20px; width: calc(100% - 10px);}
 
 #content div.profile .pickupdate,
+#content div.profile .place,
 #content div.profile .order_item-product,
 #content div.profile .order-status,
 #content div.profile .change-untill {
 	display: inline-block;
 	vertical-align: top;
 	box-sizing: border-box;
-	width: 25%;
+	width: 18%;
 }
 
-#content div.profile p.change-untill {
-	width: 17%;
-	padding-right: 0;
+#content div.profile .order-status {
+	width: 14%
 }
+
 
 #content div.profile p.order-status .unpaid {
 	color: #C22414;
 	font-weight: bold;
+}
+
+
+#content div.profile div.order_item {
+	position: relative;
 }
 
 #content div.profile ul.actions.change {
@@ -105,6 +111,8 @@
 	padding: 0;
 	margin: 0;
 	width: 8%;
+	position: absolute;
+	right: 0;
 }
 
 #content div.profile ul.actions .change-info {

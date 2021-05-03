@@ -96,6 +96,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 				<? if($order_items_pickupdates): ?>
 				<div class="order_item-headings">
 					<h4 class="pickupdate">AFH.DATO</h4>
+					<h4 class="place">AFH.STED</h4>
 					<h4 class="order_item-product">VARE(R)</h4>
 					<h4 class="order-status">STATUS</h4>
 					<h4 class="change-untill">RET INDTIL</h4>
@@ -109,8 +110,10 @@ $unpaid_orders = $SC->getUnpaidOrders();
 					if($pickupdate_order_items): ?>
 						<? foreach($pickupdate_order_items as $order_item): ?>
 						<? $order = $SC->getOrders(["order_id" => $order_item["order_id"]]) ?>
+						<? $order_item_department_pickupdate = $SC->getOrderItemDepartmentPickupdate($order_item["id"]) ?>
 						<div class="order_item order_item_id:<?= $order_item["id"] ?>">
 							<p class="pickupdate"><span class="date"><?= $pickupdate["pickupdate"] ?></span></p>
+							<p class="place"><?= $order_item_department_pickupdate["department"] ?></p>
 							<p class="order_item-product"><?= $order_item["quantity"] > 1 ? $order_item["quantity"]." x " : ""?><?= $order_item["name"] ?></p>
 							<? if($order["payment_status"] == 2): ?>
 							<p class="order-status"><span class='paid'>Betalt</span></p>
