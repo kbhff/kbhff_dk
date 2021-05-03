@@ -37,11 +37,15 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $member_user_id]);
 // User groups
 $allow_user_group_display = false;
 $allow_user_group_update = false;
-if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Frivillig" && !($clerk_user_user_group["user_group"] == "Shop shift" && $member_user_user_group["user_group"] != "User")) {
+if($is_member && $is_active && $clerk_user["membership"]["item"]["name"] == "Frivillig" && !($clerk_user_user_group["user_group"] == "Shop shift" && $member_user_user_group["user_group"] != "User")) {
 	$allow_user_group_display = true;
 
 	if ($clerk_user_user_group["user_group"] == "Shop shift" && $member_user_user_group["user_group"] == "User") {
 		$allow_user_group_update = true;
+	}
+	// Local administrators can update a User to either Shop shift or Local admin
+	elseif ($clerk_user_user_group["user_group"] == "Local administrator" && $member_user_user_group["user_group"] == "User") {
+		$allow_user_group_update = ["Shop shift", "Local administrator"];
 	}
 	elseif (
 		(
@@ -342,7 +346,34 @@ if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Fr
 						<div class="user_group">
 
 							<p><?= $user_groups_info[$member_user_user_group["user_group"]] ?></p>
-							<? if($allow_user_group_update): ?>
+							<? 
+							// Member-user can be upgraded to several user groups
+							if($allow_user_group_update && is_array($allow_user_group_update)): 
+								$user_groups = $UC->getUsergroups();
+							?>
+							<p>Du har mulighed for at gøre <?= $member_user["firstname"] ?: $member_user_name ?> til medlem af nedenstående brugergrupper.</p>
+								<? foreach($allow_user_group_update as $option): 
+									$user_group_key = arrayKeyValue($user_groups, "user_group", $option);
+									$user_group_id = $user_group_key ? $user_groups[$user_group_key]["id"] : false;
+								?>
+								
+							<ul class="actions">
+								<?= $HTML->oneButtonForm("Opgrader til ".$t_user_groups[$option], "/medlemshjaelp/updateUserUserGroup/".$member_user_id, [
+									"confirm-value" => "Bekræft opgradering",
+									"wait-value" => "Vent...",
+									"wrapper" => "li.upgrade",
+									"dom-submit" => true,
+									"class" => "full-width",
+									"inputs" => [
+										"user_group_id" => $user_group_id
+									]
+								]) ?>
+							</ul>
+								<? endforeach; ?>
+							<? 
+							// Member-user can be upgraded to clerk-user's user group
+							elseif($allow_user_group_update): ?>
+						
 							<p><?= $clerk_upgrade_option[$clerk_user_user_group["user_group"]] ?></p>
 							
 							<ul class="actions">
