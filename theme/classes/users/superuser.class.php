@@ -840,7 +840,7 @@ class SuperUser extends SuperUserCore {
 					$sql .= " AND ud.department_id = $department_id";
 				}
 				
-				$sql .= " ORDER BY u.lastname";
+				$sql .= " GROUP BY u.id ORDER BY u.lastname";
 
 				include_once("classes/system/department.class.php");
  				$DC = new Department();
