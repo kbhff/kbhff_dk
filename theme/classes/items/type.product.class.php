@@ -61,7 +61,7 @@ class TypeProduct extends Itemtype {
 			"type" => "date",
 			"label" => "Start availability date",
 			"required" => true,
-			"hint_message" => "When does the product become available?",
+			"hint_message" => "When does the product become available from the producer? The first available pickupdate will be the first Wednesday that are at least 1 week in the future, relative to this date.",
 			"error_message" => "The product needs a start availability date."
 		));
 
@@ -69,7 +69,7 @@ class TypeProduct extends Itemtype {
 		$this->addToModel("end_availability_date", array(
 			"type" => "date",
 			"label" => "End availability date",
-			"hint_message" => "When does the product stop being available?",
+			"hint_message" => "When does the product stop being available from the producer?",
 			"error_message" => "Invalid end availability date."
 		));
 		
@@ -130,7 +130,7 @@ class TypeProduct extends Itemtype {
 		$this->getPostedEntities();
 
 		// Validating generic product entities - the remaining entities will be validated on save()
-		if(count($action) == 1 && $this->validateList(["product_type", "price_1", "price_2"])) {
+		if(count($action) == 1 && $this->validateList(["product_type", "price_1", "price_2", "single_media"])) {
 
 			$product_type = $this->getProperty("product_type", "value");
 			$price_1 = $this->getProperty("price_1", "value");
@@ -142,7 +142,6 @@ class TypeProduct extends Itemtype {
 			unset($_POST["price_2"]);
 			
 			$model = $IC->typeObject($product_type);
-			// overwrite itemtype (by default, the system uses the itemtype of the supermodel (product) rather than the model (e.g. productweeklybag))
 
 			$item = $model->save($action);
 

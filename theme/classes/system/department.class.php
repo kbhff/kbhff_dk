@@ -466,41 +466,63 @@ class Department extends Model {
 
 	}
 
+	function getProductDepartments($item_id) {
+
+		$query = new Query();
+		$query->checkDbExistence($this->db_products);
+		
+		$IC = new Items();
+
+		$sql = "SELECT department_id FROM ".$this->db_products." WHERE product_id = $item_id";
+		if($query->sql($sql)) {
+
+			$results = $query->results("department_id");
+			$departments = [];
+
+			foreach ($results as $department_id) {
+				
+				$department = $this->getDepartment(["id" => $department_id]);
+				if($department) {
+					$departments[] = $department;
+				}
+
+			}
+			return $departments;
+		}
+
+		return false;
+	}
+
 	function getDepartmentPickupdates($department_id, $_options = false) {
 		
 		$query = new Query();
 		$query->checkDbExistence($this->db_pickupdates);
-		
-		include_once("classes/shop/pickupdate.class.php");
-		$PC = new Pickupdate();
 
 		$pickupdate_id = false;
+		$after = false;
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
-					case "pickupdate_id"        : $pickupdate_id             = $_value; break;
+					case "pickupdate_id"     : $pickupdate_id          = $_value; break;
+					case "after"             : $after                  = $_value; break;
 				}
 			}
 		}
 
-		$sql = "SELECT pickupdate_id FROM ".$this->db_pickupdates." WHERE department_id = $department_id";
+		$sql = "SELECT pickupdates.* FROM ".$this->db_pickupdates." AS department_pickupdates, ".SITE_DB.".project_pickupdates AS pickupdates WHERE department_pickupdates.pickupdate_id = pickupdates.id AND department_pickupdates.department_id = $department_id";
 		
 		if($pickupdate_id) {
 
-			$sql .= " AND pickupdate_id = $pickupdate_id";
+			$sql .= " AND pickupdates.id = $pickupdate_id";
+		}
+
+		if($after) {
+			$sql .= " AND pickupdates.pickupdate >= '$after'";
 		}
 		
 		if($query->sql($sql)) {
 
-			$results = $query->results("pickupdate_id");
-			$department_pickupdates = [];
-
-			foreach ($results as $pickupdate_id) {
-				
-				$department_pickupdates[] = $PC->getPickupdate(["id" => $pickupdate_id]);
-			}
-
-			return $department_pickupdates;
+			return $query->results();
 		}
 
 		return false;
@@ -625,8 +647,11 @@ class Department extends Model {
 						"tracking" => false
 						// "template" => "system"
 					));
+
 				}
-	
+
+				global $page;
+				$page->addLog("Department->removePickupdate: user_id:".session()->value("user_id").", pickupdate_id:$pickupdate_id, orphaned order_items: ".$department_pickupdate_order_items ? count($department_pickupdate_order_items) : "0");
 				return true;
 			}
 		}
