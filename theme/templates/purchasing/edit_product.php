@@ -43,12 +43,12 @@ $this->pageTitle("Rediger produkt");
 					<?= $model->input("single_media", ["label" => "Produktbillede", "hint_message" => "Tryk her for at vælge et billede, eller træk et billede ind på det grå felt. Størrelse mindst 960x960 px. Tilladte formater: PNG og JPG.", "error_message" => "Billedet lever ikke op til kravene.", "value" => $file_input_value]); ?>
 				</fieldset>
 
-				<h3>Tilgængelighed i webshop</h3>
+				<h3>Tilgængelighed fra producent</h3>
 				<fieldset class="availability">
-					<?= $model->input("start_availability_date", ["label" => "Fra og med dato", "hint_message" => "Hvornår bliver produktet tilgængeligt i Grøntshoppen?",
-							"error_message" => "Angiv hvornår produktet bliver tilgængeligt i Grøntshoppen.", "value" => $product["start_availability_date"]]); ?>
+					<?= $model->input("start_availability_date", ["label" => "Fra og med dato", "hint_message" => "Hvornår bliver produktet tilgængeligt fra producenten?",
+							"error_message" => "Angiv hvornår produktet bliver tilgængeligt fra producenten.", "value" => $product["start_availability_date"]]); ?>
 					<p class="first_pickupdate">Første mulige afhentningsdag: <span><?= date("d.m.Y", strtotime($product["start_availability_date"]." +1 week Wednesday")) ?></span></p>
-					<?= $model->input("end_availability_date", ["label" => "Til og med dato (kan udelades)", "hint_message" => "Hvornår ophører produktet med at være tilgængelig i Grøntshoppen?", "error_message" => "Angiv hvornår produktet udløber.", "value" => $product["end_availability_date"] ?: false]); ?>
+					<?= $model->input("end_availability_date", ["label" => "Til og med dato (kan udelades)", "hint_message" => "Hvornår ophører produktet med at være tilgængelig fra producenten? Kan udelades.", "error_message" => "Angiv hvornår produktet udløber.", "value" => $product["end_availability_date"] ?: false]); ?>
 
 				</fieldset>
 			</div>
