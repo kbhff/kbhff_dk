@@ -176,7 +176,7 @@ else {
 						
 						<?
 						$product_departments = $DC->getProductDepartments($product["id"]);
-						$first_possible_pickupdate = date("Y-m-d", strtotime($product["start_availability_date"]." +1 week Wednesday"));
+						$first_possible_pickupdate = date("Y-m-d", strtotime($product["start_availability_date"]." Wednesday"));
 
 						$product["available_at"] = [];
 
