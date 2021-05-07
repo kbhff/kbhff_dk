@@ -296,7 +296,7 @@ else {
 
 										<? endif; ?>
 
-											<p class="date"><?= date("d/m", strtotime($pickupdate["pickupdate"])) ?></p>
+											<p class="date"><?= date("d.m", strtotime($pickupdate["pickupdate"])) ?></p>
 
 										</li>
 
@@ -377,7 +377,7 @@ else {
 							if($pickupdate_cart_items): ?>
 						
 					<li class="pickupdate">
-						<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?> – <span class="name"><?= $user_department["name"] ?></span></h4>
+						<h4 class="pickupdate"><?= date("d.m.Y", strtotime($pickupdate["pickupdate"])) ?> – <span class="name"><?= $user_department["name"] ?></span></h4>
 
 						<ul class="items">
 
@@ -453,7 +453,7 @@ else {
 						if($pickupdate_order_items):
 							foreach($pickupdate_order_items as $order_item): ?>
 							<li class="listing">
-								<span class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?></span>
+								<span class="pickupdate"><?= date("d.m.Y", strtotime($pickupdate["pickupdate"])) ?></span>
 								<? if($order_item["quantity"] > 1): ?>
 								<span class="quantity"><?= $order_item["quantity"] ?></span>
 								<span class="x"><?= " x " ?></span>

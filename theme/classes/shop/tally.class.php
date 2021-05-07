@@ -909,10 +909,10 @@ class Tally extends Model {
 			$cash_order_items_summary = $this->cashOrderItemsSummary($tally["id"]);
 
 			$csv_arr[] = $department["name"].",Åbnet af,".$opened_by["nickname"]." (".$opened_by["email"].")";
-			$csv_arr[] = $department["name"].",Åbningstidspunkt,".date("d/m-Y H:i", strtotime($tally["created_at"]));
+			$csv_arr[] = $department["name"].",Åbningstidspunkt,".date("d.m.Y H:i", strtotime($tally["created_at"]));
 			$csv_arr[] = $department["name"].",Lukket af,".$closed_by["nickname"]." (".$closed_by["email"].")";
-			$csv_arr[] = $department["name"].",Lukningstidspunkt,".date("d/m-Y H:i", strtotime($tally["modified_at"]));
-			$csv_arr[] = $department["name"].",Forrige kasseåbning,".($previous_tally ? date("d/m-Y H:i", strtotime($previous_tally["created_at"])) : "Ikke tilgængelig");
+			$csv_arr[] = $department["name"].",Lukningstidspunkt,".date("d.m.Y H:i", strtotime($tally["modified_at"]));
+			$csv_arr[] = $department["name"].",Forrige kasseåbning,".($previous_tally ? date("d.m.Y H:i", strtotime($previous_tally["created_at"])) : "Ikke tilgængelig");
 			$csv_arr[] = $department["name"].",Byttepenge efter forrige kasselukning (kr.),".($previous_tally_change ?? "Ikke tilgængelig");
 			$csv_arr[] = $department["name"].",Kassebeholdning ved vagtstart (kr.),".$tally["start_cash"];
 			$csv_arr[] = $department["name"].",Kassebeholdning ved vagtafslutning (kr.),".$tally["end_cash"];

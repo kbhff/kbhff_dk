@@ -34,7 +34,7 @@ $this->pageTitle("Kasseregnskab");
 				<dt>Afdeling:</dt>
 				<dd><?=$department["name"] ?></dd>
 				<dt>Oprettet:</dt>
-				<dd><?=$tally["created_at"] ?></dd>
+				<dd><?=date("d.m.Y H:i:s") ?></dd>
 			</dl>
 
 			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus accusamus eos incidunt! Corrupti qui nostrum facere possimus. Aperiam sunt ullam, dolorem temporibus quam officiis iure possimus molestiae nesciunt dolor quidem quis sint porro commodi. Quod excepturi provident neque harum corrupti deserunt alias voluptatibus totam, ratione, a explicabo ad facilis possimus.</p>

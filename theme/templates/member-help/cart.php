@@ -184,7 +184,7 @@ if($cart && $cart["items"]) {
 					<? if($pickupdate_cart_items): ?>
 					
 				<li class="pickupdate">
-					<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?></h4>
+					<h4 class="pickupdate"><?= date("d.m.Y", strtotime($pickupdate["pickupdate"])) ?></h4>
 					<p class="department">Afhentningssted: <span class="name"><?= $department["name"] ?></span></p>
 					
 					<ul class="items">

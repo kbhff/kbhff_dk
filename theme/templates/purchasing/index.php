@@ -29,7 +29,7 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 
 	<? if($next_pickupdate): ?>
 	<div class="c-wrapper order-list">
-		<h2>Ordrer til udlevering d. <?= date("d/m Y", strtotime($next_pickupdate["pickupdate"])) ?></h2>
+		<h2>Ordrer til udlevering <?= date("d.m.Y", strtotime($next_pickupdate["pickupdate"])) ?></h2>
 		<ul class="list">
 			<li class="labels">
 				<span class="departments" title="Afdelinger">Afdelinger</span>
@@ -105,14 +105,14 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 				&& $product["end_availability_date"] >= date("Y-m-d")
 			) {
 				$product_available = true;
-				$product_availability = "Fra ".$product["start_availability_date"]."<br />Til ".$product["end_availability_date"];
+				$product_availability = "Fra ".date("d.m.Y", strtotime($product["start_availability_date"]))."<br />Til ".date("d.m.Y", strtotime($product["end_availability_date"]));
 			}
 			else if( 
 				$product["start_availability_date"] 
 				&& $product["end_availability_date"] 
 			) {
 				$product_available = false;
-				$product_availability = "Fra ".$product["start_availability_date"]."<br />Til ".$product["end_availability_date"];
+				$product_availability = "Fra ".date("d.m.Y", strtotime($product["start_availability_date"]))."<br />Til ".date("d.m.Y", strtotime($product["end_availability_date"]));
 			}
 			else if( 
 				$product["start_availability_date"] 
@@ -205,7 +205,7 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 			$pickupdate_departments = $DC->getPickupdateDepartments($pickupdate["id"]);
 		?>
 			<li class="listing">
-				<span class="pickupdate"><?= $pickupdate["pickupdate"] ?> (uge <?= (int)date("W", strtotime($pickupdate["pickupdate"])) ?>)</span>
+				<span class="pickupdate"><?= date("d.m.Y", strtotime($pickupdate["pickupdate"])) ?> (uge <?= (int)date("W", strtotime($pickupdate["pickupdate"])) ?>)</span>
 			<? foreach($departments as $department): 
 				$department_open = arrayKeyValue($pickupdate_departments, "id", $department["id"]);
 			?>

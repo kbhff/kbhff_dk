@@ -126,7 +126,7 @@ class SuperSubscription extends SuperSubscriptionCore {
 							"values" => array(
 								"FROM" => ADMIN_EMAIL,
 								"NICKNAME" => $user["nickname"],
-								"EXPIRES_AT" => date("d/m Y",strtotime($subscription["expires_at"]))
+								"EXPIRES_AT" => date("d.m.Y",strtotime($subscription["expires_at"]))
 							),
 							"recipients" => $user["email"],
 							"template" => "renewal_notice",
@@ -142,7 +142,7 @@ class SuperSubscription extends SuperSubscriptionCore {
 							"values" => array(
 								"FROM" => ADMIN_EMAIL,
 								"NICKNAME" => $user["nickname"],
-								"EXPIRES_AT" => date("d/m Y",strtotime($subscription["expires_at"]))
+								"EXPIRES_AT" => date("d.m.Y",strtotime($subscription["expires_at"]))
 							),
 							"recipients" => $user["email"],
 							"template" => "deactivation_notice",

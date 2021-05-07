@@ -223,7 +223,7 @@ else {
 				if($pickupdate_cart_items): ?>
 				
 			<li class="pickupdate">
-				<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?> – Afhentning <span class="name"><?= $department ? $department["name"] : "ukendt afdeling" ?></span></h4>
+				<h4 class="pickupdate"><?= date("d.m.Y", strtotime($pickupdate["pickupdate"])) ?> – Afhentning <span class="name"><?= $department ? $department["name"] : "ukendt afdeling" ?></span></h4>
 
 				<ul class="items">
 					<? foreach($pickupdate_cart_items as $cart_item):

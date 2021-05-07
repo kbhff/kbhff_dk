@@ -164,7 +164,7 @@ if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Fr
 						<? $order = $SC->getOrders(["order_id" => $order_item["order_id"]]) ?>
 						<? $order_item_department_pickupdate = $SC->getOrderItemDepartmentPickupdate($order_item["id"]) ?>
 						<div class="order_item order_item_id:<?= $order_item["id"] ?>">
-							<p class="pickupdate"><span class="date"><?= $pickupdate["pickupdate"] ?></span></p>
+							<p class="pickupdate"><span class="date"><?= date("d.m.Y", strtotime($pickupdate["pickupdate"])) ?></span></p>
 							<p class="place"><?= $order_item_department_pickupdate["department"] ?></p>
 							<p class="order_item-product"><?= $order_item["quantity"] > 1 ? $order_item["quantity"]." x " : ""?><?= $order_item["name"] ?></p>
 							<? if($order["payment_status"] == 2): ?>
@@ -172,7 +172,7 @@ if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Fr
 							<? else: ?>
 							<p class="order-status"><a href="/medlemshjaelp/betaling/<?= $order["order_no"] ?>" class="unpaid">Ikke betalt</a></p>
 							<? endif; ?>
-							<p class="change-untill"><span class="date"><?= date("d/m", strtotime($pickupdate["pickupdate"]." - 1 week")) ?></span> kl. <span class="time">23:59</span></p>
+							<p class="change-untill"><span class="date"><?= date("d.m", strtotime($pickupdate["pickupdate"]." - 1 week")) ?></span> kl. <span class="time">23:59</span></p>
 							<ul class="actions change">
 								<li class="change">
 									<? if(date("Y-m-d") > date("Y-m-d", strtotime($pickupdate["pickupdate"]." - 1 week"))): ?>

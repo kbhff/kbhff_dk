@@ -140,7 +140,7 @@ else {
 			<? if($pickupdate_order_items): ?>
 			
 		<li class="pickupdate">
-			<h4 class="pickupdate"><?= date("d/m-Y", strtotime($pickupdate["pickupdate"])) ?> – Afhentning <span class="name"><?= $department ? $department["name"] : "ukendt afdeling" ?></span></h4>
+			<h4 class="pickupdate"><?= date("d.m.Y", strtotime($pickupdate["pickupdate"])) ?> – Afhentning <span class="name"><?= $department ? $department["name"] : "ukendt afdeling" ?></span></h4>
 
 			<ul class="items orders">
 				<? foreach($pickupdate_order_items as $order_item):
