@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-05-03 19:15:55
+asset-builder @ 2021-05-07 11:32:42
 */
 
 /*seg_desktop_include.js*/
@@ -8397,31 +8397,9 @@ Util.Modules["add_edit_product"] = new function() {
 			next_wednesday = " - ";
 			this.first_pickupdate_span = u.qs(".first_pickupdate span", this);
 			form.inputs["start_availability_date"].changed = function(iN) {
-				var first_pickupdate = "";
-				var next_wednesday_date = this.form.scene.getNextDayOfTheWeek("Wednesday", true, new Date(iN.value));
-				var one_day = 24 * 60 * 60 * 1000; 
-				var diff_days = Math.round(Math.abs((next_wednesday_date - new Date(iN.value)) / one_day));
-				if(diff_days >= 7) {
-					first_pickupdate = next_wednesday_date.toLocaleDateString();
-				}
-				else {
-					first_pickupdate = this.form.scene.getNextDayOfTheWeek("Wednesday", true, next_wednesday_date).toLocaleDateString();
-				}
+				var next_wednesday_date = this.form.scene.getNextDayOfTheWeek("Wednesday", false, new Date(iN.value));
+				var	first_pickupdate = next_wednesday_date.toLocaleDateString();
 				this.form.scene.first_pickupdate_span.innerHTML = first_pickupdate;
-			}
-			this.last_pickupdate_span = u.qs(".last_pickupdate span", this);
-			form.inputs["end_availability_date"].changed = function(iN) {
-				var last_pickupdate = "";
-				var next_wednesday_date = this.form.scene.getNextDayOfTheWeek("Wednesday", true, new Date(iN.value));
-				var one_day = 24 * 60 * 60 * 1000; 
-				var diff_days = Math.round(Math.abs((next_wednesday_date - new Date(iN.value)) / one_day));
-				if(diff_days >= 7) {
-					last_pickupdate = next_wednesday_date.toLocaleDateString();
-				}
-				else {
-					last_pickupdate = this.form.scene.getNextDayOfTheWeek("Wednesday", true, next_wednesday_date).toLocaleDateString();
-				}
-				this.form.scene.last_pickupdate_span.innerHTML = last_pickupdate;
 			}
 		}
 		scene.getNextDayOfTheWeek = function(dayName, excludeToday = true, refDate = new Date()) {
