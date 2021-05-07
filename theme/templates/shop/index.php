@@ -34,12 +34,12 @@ if($user_id != 1) {
 
 
 	$user = $UC->getUser();
-	$user_department = $UC->getUserDepartment();
+	$department = $UC->getUserDepartment();
 	
-	if($user_department) {
-		$products = $DC->getDepartmentProducts($user_department["id"]);
+	if($department) {
+		$products = $DC->getDepartmentProducts($department["id"]);
 		$pickupdates = $PC->getPickupdates(["after" => date("Y-m-d", strtotime("+1 week"))]);
-		$user_department_pickupdates = $DC->getDepartmentPickupdates($user_department["id"]);
+		$department_pickupdates = $DC->getDepartmentPickupdates($department["id"]);
 		
 	}
 	$orders = $model->getOrders();
@@ -60,8 +60,8 @@ if($user_id != 1) {
 			// Get payment methods
 			$payment_methods = $this->paymentMethods();
 
-			// Get payment methods
-			$user_payment_methods = $UC->getPaymentMethods(["extend" => true]);
+			// Get user payment methods
+			// $user_payment_methods = $UC->getPaymentMethods(["extend" => true]);
 
 		}
 
@@ -70,6 +70,7 @@ if($user_id != 1) {
 
 	}
 
+	$order_items_pickupdates = false;
 	if($orders) {
 		
 		$order_items_pickupdates = $model->getOrderItemsPickupdates($user_id, ["after" => date("Y-m-d")]);
@@ -156,7 +157,7 @@ else {
 
 
 	<?
-	// user is already logged in, show checkout overview
+	// user is already logged in, show shop
 	else: ?>
 
 	<?= $HTML->serverMessages(["type" => "error"]) ?>
@@ -239,7 +240,7 @@ else {
 							?>
 						
 							<? // product is stocked in current department ?>
-							<? if(isset($product["departments"][$user_department["id"]])): ?>
+							<? if(isset($product["departments"][$department["id"]])): ?>
 
 								<? // product is available in a department on at least one of the pickupdates ?>
 								<? if($product["available_at"]): ?>
@@ -259,7 +260,7 @@ else {
 								</div>
 
 									<? // product is available in user's department on at least one of the pickupdates ?>
-									<? if(arrayKeyValue($product["departments"][$user_department["id"]]["pickupdates"], "status", "available" ) !== false): ?>
+									<? if(arrayKeyValue($product["departments"][$department["id"]]["pickupdates"], "status", "available" ) !== false): ?>
 								<h4 class="pickupdates">Tilføj bestillinger til afhentning på bestemte datoer:</h4>
 								
 								<div class="pickupdates">
@@ -271,7 +272,7 @@ else {
 										<li class="pickupdate">
 
 										<? // product is available ?>
-										<? if($product["departments"][$user_department["id"]]["pickupdates"][$pickupdate["id"]]["status"] == "available"): ?>
+										<? if($product["departments"][$department["id"]]["pickupdates"][$pickupdate["id"]]["status"] == "available"): ?>
 										
 											<?= $HTML->oneButtonForm("+", "/butik/addToCart", [
 												"confirm-value" => false,
@@ -286,12 +287,12 @@ else {
 											]) ?>
 
 										<? // product is unavailable ?>
-										<? elseif($product["departments"][$user_department["id"]]["pickupdates"][$pickupdate["id"]]["status"] == "unavailable"): ?>
+										<? elseif($product["departments"][$department["id"]]["pickupdates"][$pickupdate["id"]]["status"] == "unavailable"): ?>
 
 											<div class="unavailable" title="Ikke tilgængelig">Ikke tilgængelig</div>
 
 										<? // department is closed ?>
-										<? elseif($product["departments"][$user_department["id"]]["pickupdates"][$pickupdate["id"]]["status"] == "closed"): ?>
+										<? elseif($product["departments"][$department["id"]]["pickupdates"][$pickupdate["id"]]["status"] == "closed"): ?>
 											<div class="closed" title="Afdelingen er lukket">Afdelingen er lukket</div>
 
 										<? endif; ?>
@@ -377,7 +378,7 @@ else {
 							if($pickupdate_cart_items): ?>
 						
 					<li class="pickupdate">
-						<h4 class="pickupdate"><?= date("d.m.Y", strtotime($pickupdate["pickupdate"])) ?> – <span class="name"><?= $user_department["name"] ?></span></h4>
+						<h4 class="pickupdate"><?= date("d.m.Y", strtotime($pickupdate["pickupdate"])) ?> – <span class="name"><?= $department["name"] ?></span></h4>
 
 						<ul class="items">
 
