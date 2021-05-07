@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-05-07 11:32:42
+asset-builder @ 2021-05-07 14:13:44
 */
 
 /*seg_desktop_include.js*/
@@ -8398,8 +8398,14 @@ Util.Modules["add_edit_product"] = new function() {
 			this.first_pickupdate_span = u.qs(".first_pickupdate span", this);
 			form.inputs["start_availability_date"].changed = function(iN) {
 				var next_wednesday_date = this.form.scene.getNextDayOfTheWeek("Wednesday", false, new Date(iN.value));
-				var	first_pickupdate = next_wednesday_date.toLocaleDateString();
+				var	first_pickupdate = next_wednesday_date.toLocaleDateString('da-DA', {year:"numeric", month:"2-digit", day:"2-digit"});
 				this.form.scene.first_pickupdate_span.innerHTML = first_pickupdate;
+			}
+			this.last_pickupdate_span = u.qs(".last_pickupdate span", this);
+			form.inputs["end_availability_date"].changed = function(iN) {
+				var previous_wednesday_date = this.form.scene.getPreviousDayOfTheWeek("Wednesday", false, new Date(iN.value));
+				var last_pickupdate = previous_wednesday_date.toLocaleDateString('da-DA', {year:"numeric", month:"2-digit", day:"2-digit"});
+				this.form.scene.last_pickupdate_span.innerHTML = last_pickupdate;
 			}
 		}
 		scene.getNextDayOfTheWeek = function(dayName, excludeToday = true, refDate = new Date()) {
@@ -8409,6 +8415,15 @@ Util.Modules["add_edit_product"] = new function() {
 			refDate.setHours(0,0,0,0);
 			refDate.setDate(refDate.getDate() + (!!excludeToday ? 1 : 0) + 
 							(dayOfWeek + 7 - refDate.getDay() - (!!excludeToday ? 1 : 0)) % 7);
+			return refDate;
+		}
+		scene.getPreviousDayOfTheWeek = function(dayName, excludeToday = true, refDate = new Date()) {
+			var dayOfWeek = ["sun","mon","tue","wed","thu","fri","sat"]
+							  .indexOf(dayName.slice(0,3).toLowerCase());
+			if (dayOfWeek < 0) return;
+			refDate.setHours(0,0,0,0);
+			refDate.setDate(refDate.getDate() + (!!excludeToday ? 1 : 0) +
+							(dayOfWeek - 7 - refDate.getDay() - (!!excludeToday ? 1 : 0)) % 7);
 			return refDate;
 		}
 		scene.ready();

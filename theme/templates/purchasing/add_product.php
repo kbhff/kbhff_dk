@@ -42,6 +42,7 @@ $this->pageTitle("Tilføj nyt produkt");
 							"error_message" => "Angiv hvornår produktet bliver tilgængeligt fra producenten."]); ?>
 					<p class="first_pickupdate">Første mulige afhentningsdag: <span>-</span></p>
 					<?= $model->input("end_availability_date", ["label" => "Til og med dato (kan udelades)", "hint_message" => "Hvornår ophører produktet med at være tilgængeligt fra producenten? Kan udelades.", "error_message" => "Angiv hvornår produktet udløber."]); ?>
+					<p class="last_pickupdate">Sidste mulige afhentningsdag: <span>-</span></p>
 				</fieldset>
 
 			</div>

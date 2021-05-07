@@ -47,8 +47,9 @@ $this->pageTitle("Rediger produkt");
 				<fieldset class="availability">
 					<?= $model->input("start_availability_date", ["label" => "Fra og med dato", "hint_message" => "Hvornår bliver produktet tilgængeligt fra producenten?",
 							"error_message" => "Angiv hvornår produktet bliver tilgængeligt fra producenten.", "value" => $product["start_availability_date"]]); ?>
-					<p class="first_pickupdate">Første mulige afhentningsdag: <span><?= date("d.m.Y", strtotime($product["start_availability_date"]." +1 week Wednesday")) ?></span></p>
+					<p class="first_pickupdate">Første mulige afhentningsdag: <span><?= date("d.m.Y", strtotime($product["start_availability_date"]." Wednesday")) ?></span></p>
 					<?= $model->input("end_availability_date", ["label" => "Til og med dato (kan udelades)", "hint_message" => "Hvornår ophører produktet med at være tilgængelig fra producenten? Kan udelades.", "error_message" => "Angiv hvornår produktet udløber.", "value" => $product["end_availability_date"] ?: false]); ?>
+					<p class="last_pickupdate">Sidste mulige afhentningsdag: <span><?= date("d.m.Y", strtotime($product["end_availability_date"]." last Wednesday")) ?></span></p>
 
 				</fieldset>
 			</div>
