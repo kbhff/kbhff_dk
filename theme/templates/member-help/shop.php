@@ -44,7 +44,9 @@ if($clerk_user_id != 1) {
 	$orders = $SC->getOrders(["user_id" => $member_user_id]);
 	$unpaid_membership = $model->hasUnpaidMembership(["user_id" => $member_user_id]);
 
-
+	$cart_pickupdates = false;
+	$cart_items_without_pickupdate = false;
+	$order_items_pickupdates = false;
 
 	// Only get payment methods if cart has items
 	if($cart["items"]) {
@@ -169,103 +171,179 @@ else {
 			</div>
 
 			<? elseif($products): ?>
-			<ul class="products">
 
-				<? foreach($products as $product): 
-					$price = $SC->getPrice($product["id"], ["user_id" => $member_user_id]);
-					$media = $IC->sliceMediae($product, "single_media");
+				<? // pickupdate(s) exist that are at least 1 week in the future ?>
+				<? if($pickupdates): ?> 
 
-				?>
+					<ul class="products">
+					<? foreach ($products as $product): ?>
+						
+						<?
+						$product_departments = $DC->getProductDepartments($product["id"]);
+						$first_possible_pickupdate = date("Y-m-d", strtotime($product["start_availability_date"]." Wednesday"));
 
-				<li class="product">
-					<div class="c-box">
+						$product["available_at"] = [];
 
-						<div class="product">
-							<? if($media): ?>
-							<div class="image item_id:<?= $media["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>"></div>
-							<? else: ?>
-							<div class="image"></div>
-							<? endif; ?>
+						$price = $SC->getPrice($product["id"], ["user_id" => $member_user_id]);
+						$media = $IC->sliceMediae($product, "single_media");
+						?>
 
-							<h3><span class="name"><?= $product["name"] ?></span> <span class="price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span></h3>
-							<p><?= $product["description"] ?></p>
-						</div>
-
-						<h4 class="pickupdates">Tilføj bestillinger til afhentning på bestemte datoer:</h4>
-						<? if($pickupdates): ?>
-						<div class="pickupdates">
-							<ul class="pickupdates">
-								<? foreach($pickupdates as $pickupdate): 
-									$product_available = false;
+						<? // product is stocked in at least one department ?>
+						<? if($product_departments): ?>
+							<?
+							foreach ($product_departments as $product_department) {
 								
-									// check if product is available on pickupdate
-									if($product["end_availability_date"]) {
-										if($pickupdate["pickupdate"] >= $product["start_availability_date"] && $pickupdate["pickupdate"] <= $product["end_availability_date"]) {
-											$product_available = true;
+								$product_department_pickupdates = $DC->getDepartmentPickupdates($product_department["id"], ["after" => date("Y-m-d")]); 
+								
+								// loop through system pickupdates
+								foreach ($pickupdates as $pickupdate) {
+									
+									// department is open on pickupdate
+									if(arrayKeyValue($product_department_pickupdates, "id", $pickupdate["id"]) !== false) {
+										
+										
+										if($product["end_availability_date"]) {
+
+											// product is available in department on pickupdate
+											if($first_possible_pickupdate <= $pickupdate["pickupdate"] && $product["end_availability_date"] >= $pickupdate["pickupdate"]) {
+												$product["departments"][$product_department["id"]]["pickupdates"][$pickupdate["id"]]["status"] = "available";
+												
+												if(array_search($product_department["id"], $product["available_at"]) === false) {
+													$product["available_at"][] = $product_department["id"];
+												}
+											}
+											else {
+												$product["departments"][$product_department["id"]]["pickupdates"][$pickupdate["id"]]["status"] = "unavailable";
+											}
+										}
+										else {
+											
+											// product is available in department on pickupdate
+											if($first_possible_pickupdate <= $pickupdate["pickupdate"]) {
+
+												$product["departments"][$product_department["id"]]["pickupdates"][$pickupdate["id"]]["status"] = "available";
+
+												if(array_search($product_department["id"], $product["available_at"]) === false) {
+													$product["available_at"][] = $product_department["id"];
+												}
+											}
+											else {
+												$product["departments"][$product_department["id"]]["pickupdates"][$pickupdate["id"]]["status"] = "unavailable";
+											}
+
 										}
 									}
 									else {
-										if($pickupdate["pickupdate"] >= $product["start_availability_date"]) {
-											$product_available = true;
-										}
+										$product["departments"][$product_department["id"]]["pickupdates"][$pickupdate["id"]]["status"] = "closed";
 									}
-								?>
+									
+								}
 
-								<li class="pickupdate">
+							}
+							?>
+						
+							<? // product is stocked in current department ?>
+							<? if(isset($product["departments"][$department["id"]])): ?>
 
-								<? // check if department is open on given pickupdate ?>
-								<? if(arrayKeyValue($department_pickupdates, "id", $pickupdate["id"])): ?>
+								<? // product is available in a department on at least one of the pickupdates ?>
+								<? if($product["available_at"]): ?>
 
-									<? // check product availability ?>
-									<? if($product_available): ?>
-							
-									<?= $HTML->oneButtonForm("+", "/medlemshjaelp/butik/addToCart/".$cart_reference, [
-										"confirm-value" => false,
-										"wait-value" => "Vent",
-										"inputs" => [
-											"item_id" => $product["id"],
-											"quantity" => 1,
-											"pickupdate_id" => $pickupdate["id"]
-										],
-										"wrapper" => "div.add",
-										// "success-location" => "/medlemshjaelp/butik/".$member_user_id
-									]) ?>
-							
+						<li class="product">
+							<div class="c-box">
+
+								<div class="product">
+									<? if($media): ?>
+									<div class="image item_id:<?= $media["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>"></div>
 									<? else: ?>
+									<div class="image"></div>
+									<? endif; ?>
 
-									<div class="unavailable" title="Ikke tilgængelig">Ikke tilgængelig</div>
+									<h3><span class="name"><?= $product["name"] ?></span> <span class="price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span></h3>
+									<p><?= $product["description"] ?></p>
+								</div>
 
-									<? endif; ?>	
+									<? // product is available in member user's department on at least one of the pickupdates ?>
+									<? if(arrayKeyValue($product["departments"][$department["id"]]["pickupdates"], "status", "available" ) !== false): ?>
+								<h4 class="pickupdates">Tilføj bestillinger til afhentning på bestemte datoer:</h4>
+								
+								<div class="pickupdates">
+								
+									<ul class="pickupdates">
 
-								<? else: ?>
+										<? foreach($pickupdates as $pickupdate): ?>
+										
+										<li class="pickupdate">
 
-									<div class="closed" title="Afdelingen er lukket">Afdelingen er lukket</div>
+										<? // product is available ?>
+										<? if($product["departments"][$department["id"]]["pickupdates"][$pickupdate["id"]]["status"] == "available"): ?>
+										
+											<?= $HTML->oneButtonForm("+", "/medlemshjaelp/butik/addToCart/".$cart_reference, [
+												"confirm-value" => false,
+												"wait-value" => "Vent ...",
+												"inputs" => [
+													"item_id" => $product["id"],
+													"quantity" => 1,
+													"pickupdate_id" => $pickupdate["id"]
+												],
+												"wrapper" => "div.add",
+											]) ?>
 
+										<? // product is unavailable ?>
+										<? elseif($product["departments"][$department["id"]]["pickupdates"][$pickupdate["id"]]["status"] == "unavailable"): ?>
+
+											<div class="unavailable" title="Ikke tilgængelig">Ikke tilgængelig</div>
+
+										<? // department is closed ?>
+										<? elseif($product["departments"][$department["id"]]["pickupdates"][$pickupdate["id"]]["status"] == "closed"): ?>
+											<div class="closed" title="Afdelingen er lukket">Afdelingen er lukket</div>
+
+										<? endif; ?>
+
+											<p class="date"><?= date("d.m", strtotime($pickupdate["pickupdate"])) ?></p>
+
+										</li>
+
+										<? endforeach; ?>
+									</ul>
+
+								</div>
+								
+									<? // product is not available in member user's department, but is available in at least one of the other departments  ?>
+									<? else: ?>
+										<? 
+										foreach ($product["available_at"] as $department_id) {
+											$availability_department = $DC->getDepartment(["id" => $department_id]);
+
+											if($availability_department) {
+												$availability_department_names[] = $availability_department["name"];
+											}
+										}
+
+										?>
+										
+										<p class="available_elsewhere">Dette produkt er ikke tilgængeligt i denne afdeling, men kan bestilles i følgende afdelinger: <?= implode(", ", $availability_department_names) ?>.</p>
+
+									<? endif; ?>
+
+							</div>
+						</li>
 								<? endif; ?>
-
-									<p class="date"><?= date("d/m", strtotime($pickupdate["pickupdate"])) ?></p>
-
-								</li>
-
-								<? endforeach; ?>
-							</ul>
-
-						</div>
-						<? else: ?>
-						<p class="no_dates">Ingen aktuelle afhentningsdage.</p>
+							<? // product is stocked in other departments ?>
+							<? elseif($product_department): ?>
+								<? // TODO: in the future a department might choose not to stock a certain product at all, which could then be handled here ?>
+								<? // either the product should not be shown, or maybe it could refer to other departments ?>
+							<? endif; ?>
 						<? endif; ?>
-
-					</div>
-				</li>
-
-				<? endforeach; ?>
-			</ul>
+					<? endforeach; ?>
+					</ul>
+				<? else: ?>
+				<p class="no_dates">Ingen aktuelle afhentningsdage.</p>
+				<? endif; ?>
 			
 			<? else: ?>
-			<p>Ingen produkter til salg i <?= $department ? $department["name"] : "ukendt afdeling" ?>.</p>
+			<p>Ingen produkter til salg.</p>
 			<? endif; ?>
 			
-
 		</div>
 
 		<? if(!$unpaid_membership): ?>
