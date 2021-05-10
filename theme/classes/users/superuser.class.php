@@ -344,16 +344,52 @@ class SuperUser extends SuperUserCore {
 
 	}
 
+	function validateUserGroupUpdate($clerk_user_user_group, $member_user_user_group) {
+
+		if(isset($clerk_user_user_group["user_group"]) && isset($member_user_user_group["user_group"])) {
+			
+			if ($clerk_user_user_group["user_group"] == "Shop shift" && $member_user_user_group["user_group"] == "User") {
+				return true;
+			}
+			// Local administrators can update a User to either Shop shift or Local admin
+			elseif ($clerk_user_user_group["user_group"] == "Local administrator" && $member_user_user_group["user_group"] == "User") {
+				return ["Shop shift", "Local administrator"];
+			}
+			elseif (
+				(
+					$clerk_user_user_group["user_group"] == "Local administrator"
+					|| $clerk_user_user_group["user_group"] == "Purchasing group"
+					|| $clerk_user_user_group["user_group"] == "Communication group"
+				)
+				&& (
+					$member_user_user_group["user_group"] == "User"
+					|| $member_user_user_group["user_group"] == "Shop shift"
+					|| $member_user_user_group["user_group"] == "Local administrator"
+					|| $member_user_user_group["user_group"] == "Purchasing group"
+					|| $member_user_user_group["user_group"] == "Communication group"
+				)
+				&& $member_user_user_group["user_group"] != $clerk_user_user_group["user_group"]
+			) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 	// /janitor/user_group/updateUserUserGroup/#user_id# (values in POST)
 	function updateUserUserGroup($action) {
 
-		$user = $this->getKbhffUser(["user_id" => $action[1]]);
-		$old_user_group = $this->getUserGroups(["user_group_id" => $user["user_group_id"]]);
+		$clerk_user = $this->getKbhffUser(["user_id" => session()->value("user_id")]);
+		$clerk_user_user_group = $this->getUserGroups(["user_group_id" => $clerk_user["user_group_id"]]);
+
+		$member_user = $this->getKbhffUser(["user_id" => $action[1]]);
+		$old_user_group = $this->getUserGroups(["user_group_id" => $member_user["user_group_id"]]);
 		
-		if($this->update(["update", $action[1]])) {
+		if($this->validateUserGroupUpdate($clerk_user_user_group, $old_user_group) && $this->update(["update", $action[1]])) {
 			
-			$user = $this->getKbhffUser(["user_id" => $action[1]]);
-			$new_user_group = $this->getUserGroups(["user_group_id" => $user["user_group_id"]]);
+			$member_user = $this->getKbhffUser(["user_id" => $action[1]]);
+			$new_user_group = $this->getUserGroups(["user_group_id" => $member_user["user_group_id"]]);
 
 			$new_user_group_info = [
 				"User" => 'Som medlem af brugergruppen "User" er du i stand til købe grøntsager i webshoppen, såfremt dit medlemskab er aktivt.',
@@ -371,12 +407,12 @@ class SuperUser extends SuperUserCore {
 			mailer()->send(array(
 				"values" => array(
 					"FROM" => ADMIN_EMAIL,
-					"NICKNAME" => $user["nickname"],
+					"NICKNAME" => $member_user["nickname"],
 					"OLD_USER_GROUP" => $old_user_group["user_group"],
 					"NEW_USER_GROUP" => $new_user_group["user_group"], 
 					"NEW_USER_GROUP_INFO" => $new_user_group_info[$new_user_group["user_group"]], 
 				),
-				"recipients" => $user["email"],
+				"recipients" => $member_user["email"],
 				"template" => "user_group_change_notice",
 				"track_clicks" => false
 			));
