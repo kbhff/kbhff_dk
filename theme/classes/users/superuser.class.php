@@ -344,16 +344,16 @@ class SuperUser extends SuperUserCore {
 
 	}
 
-	function validateUserGroupUpdate($clerk_user_user_group, $member_user_user_group) {
+	function validateUserGroupUpdate($clerk_user_user_group, $member_user_user_group, $new_user_group) {
 
-		if(isset($clerk_user_user_group["user_group"]) && isset($member_user_user_group["user_group"])) {
-			
-			if ($clerk_user_user_group["user_group"] == "Shop shift" && $member_user_user_group["user_group"] == "User") {
+		if(isset($clerk_user_user_group["user_group"]) && isset($member_user_user_group["user_group"]) && isset($new_user_group["user_group"])) {
+
+			if ($clerk_user_user_group["user_group"] == "Shop shift" && $member_user_user_group["user_group"] == "User" && $new_user_group["user_group" == "Shop shift"]) {
 				return true;
 			}
 			// Local administrators can update a User to either Shop shift or Local admin
-			elseif ($clerk_user_user_group["user_group"] == "Local administrator" && $member_user_user_group["user_group"] == "User") {
-				return ["Shop shift", "Local administrator"];
+			elseif ($clerk_user_user_group["user_group"] == "Local administrator" && $member_user_user_group["user_group"] == "User" && ($new_user_group["user_group" == "Shop shift"] || $new_user_group["user_group" == "Local administrator"])) {
+				return true;
 			}
 			elseif (
 				(
@@ -368,7 +368,7 @@ class SuperUser extends SuperUserCore {
 					|| $member_user_user_group["user_group"] == "Purchasing group"
 					|| $member_user_user_group["user_group"] == "Communication group"
 				)
-				&& $member_user_user_group["user_group"] != $clerk_user_user_group["user_group"]
+				&& $clerk_user_user_group["user_group"] == $new_user_group["user_group"]
 			) {
 				return true;
 			}
@@ -384,9 +384,11 @@ class SuperUser extends SuperUserCore {
 		$clerk_user_user_group = $this->getUserGroups(["user_group_id" => $clerk_user["user_group_id"]]);
 
 		$member_user = $this->getKbhffUser(["user_id" => $action[1]]);
-		$old_user_group = $this->getUserGroups(["user_group_id" => $member_user["user_group_id"]]);
+		$member_user_user_group = $this->getUserGroups(["user_group_id" => $member_user["user_group_id"]]);
 		
-		if($this->validateUserGroupUpdate($clerk_user_user_group, $old_user_group) && $this->update(["update", $action[1]])) {
+		$posted_user_group = $this->getUserGroups(["user_group_id" => $_POST["user_group_id"]]);
+		
+		if($this->validateUserGroupUpdate($clerk_user_user_group, $member_user_user_group, $posted_user_group) && $this->update(["update", $action[1]])) {
 			
 			$member_user = $this->getKbhffUser(["user_id" => $action[1]]);
 			$new_user_group = $this->getUserGroups(["user_group_id" => $member_user["user_group_id"]]);
@@ -408,7 +410,7 @@ class SuperUser extends SuperUserCore {
 				"values" => array(
 					"FROM" => ADMIN_EMAIL,
 					"NICKNAME" => $member_user["nickname"],
-					"OLD_USER_GROUP" => $old_user_group["user_group"],
+					"OLD_member_user_USER_GROUP" => $member_user_user_group["user_group"],
 					"NEW_USER_GROUP" => $new_user_group["user_group"], 
 					"NEW_USER_GROUP_INFO" => $new_user_group_info[$new_user_group["user_group"]], 
 				),
