@@ -65,8 +65,13 @@ Util.Modules["add_edit_product"] = new function() {
 			this.first_pickupdate_span = u.qs(".first_pickupdate span", this);
 			form.inputs["start_availability_date"].changed = function(iN) {
 				
-				var next_wednesday_date = this.form.scene.getNextDayOfTheWeek("Wednesday", false, new Date(iN.value));
-				var	first_pickupdate = next_wednesday_date.toLocaleDateString('da-DA', {year:"numeric", month:"2-digit", day:"2-digit"});
+				var first_pickupdate = "-";
+
+				if(iN.value) {
+					var next_wednesday_date = this.form.scene.getNextDayOfTheWeek("Wednesday", false, new Date(iN.value));
+					first_pickupdate = next_wednesday_date.toLocaleDateString('da-DA', {year:"numeric", month:"2-digit", day:"2-digit"});
+				}
+				
 
 				this.form.scene.first_pickupdate_span.innerHTML = first_pickupdate;
 			}
@@ -74,9 +79,12 @@ Util.Modules["add_edit_product"] = new function() {
 			this.last_pickupdate_span = u.qs(".last_pickupdate span", this);
 			form.inputs["end_availability_date"].changed = function(iN) {
 				
-				var previous_wednesday_date = this.form.scene.getPreviousDayOfTheWeek("Wednesday", false, new Date(iN.value));
-				var last_pickupdate = previous_wednesday_date.toLocaleDateString('da-DA', {year:"numeric", month:"2-digit", day:"2-digit"});
+				var last_pickupdate = "-";
 				
+				if(iN.value) {
+					var previous_wednesday_date = this.form.scene.getPreviousDayOfTheWeek("Wednesday", false, new Date(iN.value));
+					last_pickupdate = previous_wednesday_date.toLocaleDateString('da-DA', {year:"numeric", month:"2-digit", day:"2-digit"});
+				}
 				
 				this.form.scene.last_pickupdate_span.innerHTML = last_pickupdate;
 			}
