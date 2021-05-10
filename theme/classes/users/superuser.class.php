@@ -348,26 +348,31 @@ class SuperUser extends SuperUserCore {
 
 		if(isset($clerk_user_user_group["user_group"]) && isset($member_user_user_group["user_group"]) && isset($new_user_group["user_group"])) {
 
+			// Shop shifts can upgrade User to Shop shift
 			if ($clerk_user_user_group["user_group"] == "Shop shift" && $member_user_user_group["user_group"] == "User" && $new_user_group["user_group" == "Shop shift"]) {
 				return true;
 			}
-			// Local administrators can update a User to either Shop shift or Local admin
+			// Local administrators can update User to either Shop shift or Local admin
 			elseif ($clerk_user_user_group["user_group"] == "Local administrator" && $member_user_user_group["user_group"] == "User" && ($new_user_group["user_group" == "Shop shift"] || $new_user_group["user_group" == "Local administrator"])) {
 				return true;
 			}
+
 			elseif (
 				(
+					// Clerks in these user groups...
 					$clerk_user_user_group["user_group"] == "Local administrator"
 					|| $clerk_user_user_group["user_group"] == "Purchasing group"
 					|| $clerk_user_user_group["user_group"] == "Communication group"
 				)
 				&& (
+					// ... can upgrade Members in these user groups
 					$member_user_user_group["user_group"] == "User"
 					|| $member_user_user_group["user_group"] == "Shop shift"
 					|| $member_user_user_group["user_group"] == "Local administrator"
 					|| $member_user_user_group["user_group"] == "Purchasing group"
 					|| $member_user_user_group["user_group"] == "Communication group"
 				)
+				// ... to the Clerk's own user group
 				&& $clerk_user_user_group["user_group"] == $new_user_group["user_group"]
 			) {
 				return true;
