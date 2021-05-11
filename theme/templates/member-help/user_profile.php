@@ -36,9 +36,34 @@ $unpaid_orders = $SC->getUnpaidOrders(["user_id" => $member_user_id]);
 
 // User groups
 $allow_user_group_display = false;
-$allow_user_group_update = $UC->validateUserGroupUpdate($clerk_user_user_group, $member_user_user_group);
+$allow_user_group_update = false;
 if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Frivillig" && !($clerk_user_user_group["user_group"] == "Shop shift" && $member_user_user_group["user_group"] != "User")) {
 	$allow_user_group_display = true;
+
+	if ($clerk_user_user_group["user_group"] == "Shop shift" && $member_user_user_group["user_group"] == "User") {
+		$allow_user_group_update = true;
+	}
+	// Local administrators can update a User to either Shop shift or Local admin
+	elseif ($clerk_user_user_group["user_group"] == "Local administrator" && $member_user_user_group["user_group"] == "User") {
+		$allow_user_group_update = ["Shop shift", "Local administrator"];
+	}
+	elseif (
+		(
+			$clerk_user_user_group["user_group"] == "Local administrator"
+			|| $clerk_user_user_group["user_group"] == "Purchasing group"
+			|| $clerk_user_user_group["user_group"] == "Communication group"
+		)
+		&& (
+			$member_user_user_group["user_group"] == "User"
+			|| $member_user_user_group["user_group"] == "Shop shift"
+			|| $member_user_user_group["user_group"] == "Local administrator"
+			|| $member_user_user_group["user_group"] == "Purchasing group"
+			|| $member_user_user_group["user_group"] == "Communication group"
+		)
+		&& $member_user_user_group["user_group"] != $clerk_user_user_group["user_group"]
+	) {
+		$allow_user_group_update = true;
+	}
 }
 ?>
 
