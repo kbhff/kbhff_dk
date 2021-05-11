@@ -101,7 +101,33 @@ if($action) {
 			
 		}
 		else {
-			header("Location: /indkoeb/rediger-produkt");
+			header("Location: /indkoeb/rediger-produkt/$item_id");
+		}
+
+		exit();
+
+	}
+
+	else if(count($action) == 2 && $action[0] == "disableProduct" && $page->validateCsrfToken()) {
+		
+		$item_id = $action[1];
+		$item = $IC->getItem(array("id" => $item_id));
+		
+		$model = $IC->typeObject($item["itemtype"]);
+
+
+		$result = $model->status(["status", $item_id, "0"]);
+
+		// successful update
+		if($result) {
+			message()->resetMessages();
+			message()->addMessage("Produktet blev slettet");
+
+			header("Location: /indkoeb");
+			
+		}
+		else {
+			header("Location: /indkoeb/rediger-produkt/$item_id");
 		}
 
 		exit();

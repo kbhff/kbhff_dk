@@ -30,7 +30,7 @@
 }
 
 
-/* PRDUCTS */
+/* PRODUCTS */
 #content .scene.purchasing .c-wrapper.products {padding: 0 0 46px; border-bottom: 1px solid #999999;}
 #content .scene.purchasing .c-wrapper.products ul.list {padding: 0 12px; margin: 0; list-style: none;}
 #content .scene.purchasing .c-wrapper.products ul.list > li {padding: 0;
@@ -89,6 +89,7 @@
 #content .scene.purchasing .c-wrapper.products ul.list li.listing span.button ul.actions li {text-align: right; padding: 0;}
 #content .scene.purchasing .c-wrapper.products ul.list li.listing span.button ul.actions li a {padding: 4px 14px;}
 
+#content .scene.edit_product ul.actions li.deactivate .confirm {background-color: #C22414;}
 
 /* PICKUPDATES */
 #content .scene.purchasing .c-wrapper.pickupdates {padding: 0 0 46px;}

@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-05-10 13:10:01
+asset-builder @ 2021-05-11 10:57:38
 */
 
 /*seg_desktop_include.css*/
@@ -1672,6 +1672,7 @@ div.overlay .field.password {
 #content .scene.purchasing .c-wrapper.products ul.list li.listing span.button ul.actions {margin: 0; padding: 0; list-style: none;}
 #content .scene.purchasing .c-wrapper.products ul.list li.listing span.button ul.actions li {text-align: right; padding: 0;}
 #content .scene.purchasing .c-wrapper.products ul.list li.listing span.button ul.actions li a {padding: 4px 14px;}
+#content .scene.edit_product ul.actions li.deactivate .confirm {background-color: #C22414;}
 #content .scene.purchasing .c-wrapper.pickupdates {padding: 0 0 46px;}
 #content .scene.purchasing .c-wrapper.pickupdates ul.list {padding: 0 12px; margin: 0; list-style: none;}
 #content .scene.purchasing .c-wrapper.pickupdates ul.list > li {padding: 0;

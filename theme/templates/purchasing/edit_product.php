@@ -33,9 +33,9 @@ $this->pageTitle("Rediger produkt");
 
 				<fieldset class="details">
 					<?= $model->input("name", ["label" => "Produktnavn", "hint_message" => "Giv produktet et navn", "error_message" => "Produktet må have et navn", "value" => $product["name"]]); ?>
-					<?= $model->input("price_1", ["type" => "number", "label" => "Pris 1 (Frivillig-medlem)", "required" => true, "value" => $product_price_1_key !== false ? $product["prices"][$product_price_1_key]["price"] : false]); ?>
-					<?= $model->input("price_2", ["type" => "number", "label" => "Pris 2 (Støttemedlem)", "required" => true, "value" => $product_price_2_key !== false ? $product["prices"][$product_price_2_key]["price"] : false]); ?>
-					<?= $model->input("description", ["label" => "Produktbeskrivelse", "value" => $product["description"]]); ?>
+					<?= $model->input("price_1", ["type" => "number", "label" => "Pris 1 (Frivillig-medlem)", "required" => true, "value" => $product_price_1_key !== false ? $product["prices"][$product_price_1_key]["price"] : false, "hint_message" => "Hvad skal produktet koste for Frivillig-medlemmer?", "error_message" => "Angiv en pris."]); ?>
+					<?= $model->input("price_2", ["type" => "number", "label" => "Pris 2 (Støttemedlem)", "required" => true, "value" => $product_price_2_key !== false ? $product["prices"][$product_price_2_key]["price"] : false, "hint_message" => "Hvad skal produktet koste for Støttemedlemmer?", "error_message" => "Angiv en pris."]); ?>
+					<?= $model->input("description", ["label" => "Produktbeskrivelse", "value" => $product["description"], "hint_message" => "Beskriv produktet", "error_message" => "Produktet skal have en beskrivelse."]); ?>
 				</fieldset>
 
 			</div>
@@ -64,5 +64,8 @@ $this->pageTitle("Rediger produkt");
 		</ul>
 
 	<?= $model->formEnd(); ?>
+		<ul class="actions">
+			<?= $model->oneButtonForm("Slet produkt", "/indkoeb/disableProduct/$item_id", ["wrapper" => "li.deactivate", "confirm-value" => "Bekræft", "wait-value" => "Vent...", "dom-submit" => true]) ?>
+		</ul>
 
 </div>
