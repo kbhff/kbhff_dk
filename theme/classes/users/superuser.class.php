@@ -349,11 +349,11 @@ class SuperUser extends SuperUserCore {
 		if(isset($clerk_user_user_group["user_group"]) && isset($member_user_user_group["user_group"]) && isset($new_user_group["user_group"])) {
 
 			// Shop shifts can upgrade User to Shop shift
-			if ($clerk_user_user_group["user_group"] == "Shop shift" && $member_user_user_group["user_group"] == "User" && $new_user_group["user_group" == "Shop shift"]) {
+			if ($clerk_user_user_group["user_group"] == "Shop shift" && $member_user_user_group["user_group"] == "User" && $new_user_group["user_group"] == "Shop shift") {
 				return true;
 			}
 			// Local administrators can update User to either Shop shift or Local admin
-			elseif ($clerk_user_user_group["user_group"] == "Local administrator" && $member_user_user_group["user_group"] == "User" && ($new_user_group["user_group" == "Shop shift"] || $new_user_group["user_group" == "Local administrator"])) {
+			elseif ($clerk_user_user_group["user_group"] == "Local administrator" && $member_user_user_group["user_group"] == "User" && ($new_user_group["user_group"] == "Shop shift" || $new_user_group["user_group"] == "Local administrator")) {
 				return true;
 			}
 
