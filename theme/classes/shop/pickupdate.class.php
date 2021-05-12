@@ -293,32 +293,42 @@ class Pickupdate extends Model {
 			$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate_id);
 			
 			$sql = "DELETE FROM ".$this->db." WHERE id = '$pickupdate_id'";
-			if($query->sql($sql)) {
-				message()->addMessage("Pickupdate deleted");
+			$deletion_success = false;
 
-				if($pickupdate_order_items) {
+			// if pickupdate has order_items, only allow deletion of future pickup dates
+			if($pickupdate_order_items && $pickupdate["pickupdate"] > date("Y-m-d") && $query->sql($sql)) {
 
-					$order_item_links = [];
-					foreach ($pickupdate_order_items as $order_item) {
-						
-						$order_item_links[] = SITE_URL."/janitor/order-item/edit/".$order_item["id"];
-					}
-
-					// send notification email to admin
-					mailer()->send(array(
-						"recipients" => ADMIN_EMAIL,
-						"subject" => SITE_URL . " - ACTION NEEDED: Order items have been orphaned",
-						"message" => "The pickupdate ".$pickupdate['pickupdate']." has been deleted from the system. This has caused ".count($pickupdate_order_items)." order items to lose their time and place of pickup. \n\nHere are links to each of the affected order items:\n\n".implode("\n", $order_item_links). ". \n\nFollow the links to assign a new department/pickupdate to each order item.",
-						"tracking" => false
-						// "template" => "system"
-					));
+				$order_item_links = [];
+				foreach ($pickupdate_order_items as $order_item) {
+					
+					$order_item_links[] = SITE_URL."/janitor/order-item/edit/".$order_item["id"];
 				}
 
+				// send notification email to admin
+				mailer()->send(array(
+					"recipients" => ADMIN_EMAIL,
+					"subject" => SITE_URL . " - ACTION NEEDED: Order items have been orphaned",
+					"message" => "The pickupdate ".$pickupdate['pickupdate']." has been deleted from the system. This has caused ".count($pickupdate_order_items)." order items to lose their time and place of pickup. \n\nHere are links to each of the affected order items:\n\n".implode("\n", $order_item_links). ". \n\nFollow the links to assign a new department/pickupdate to each order item.",
+					"tracking" => false
+					// "template" => "system"
+				));
+
+				$deletion_success = true;
+			}
+			// pickupdates without order_items can freely be deleted
+			elseif($query->sql($sql)) {
+
+				$deletion_success = true;
+			}
+
+			if($deletion_success) {
+
+				message()->addMessage("Pickupdate deleted");	
 				global $page;
 				$user_id = session()->value("user_id");
 				$page->addLog("Pickupdate: pickupdate id:$pickupdate_id deleted by user_id:$user_id");
 
-				return true;		
+				return true;
 			}
 
 		}
