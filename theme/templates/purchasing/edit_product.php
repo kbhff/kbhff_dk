@@ -65,7 +65,7 @@ $this->pageTitle("Rediger produkt");
 
 	<?= $model->formEnd(); ?>
 		<ul class="actions">
-			<?= $model->oneButtonForm("Slet produkt", "/indkoeb/disableProduct/$item_id", ["wrapper" => "li.deactivate", "confirm-value" => "Bekræft", "wait-value" => "Vent...", "dom-submit" => true]) ?>
+			<?= $model->oneButtonForm("Arkivér produkt", "/indkoeb/disableProduct/$item_id", ["wrapper" => "li.deactivate", "confirm-value" => "Bekræft", "wait-value" => "Vent...", "dom-submit" => true]) ?>
 		</ul>
 
 </div>
