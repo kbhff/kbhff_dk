@@ -46,6 +46,7 @@ class TypeProduct extends Itemtype {
 		// Construct Itemtype class and pass sub-itemtype as parameter, if passed, or else itemtype
 		parent::__construct($type_class ?: get_class());
 
+		$this->db_department_pickupdate_order_items = SITE_DB.".project_department_pickupdate_order_items";
 
 		// Name
 		$this->addToModel("name", array(
@@ -314,9 +315,6 @@ class TypeProduct extends Itemtype {
 				
 				if($frivillig_price !== false && $stoettemedlem_price !== false) {
 					
-					// enable item
-					$model->status(["status", $item["id"], 1]);
-					
 					message()->resetMessages();
 					message()->addMessage("Produktet blev opdateret.");
 					return $item;
@@ -339,6 +337,59 @@ class TypeProduct extends Itemtype {
 
 	}
 
+	function updated($item_id) {
+
+		$IC = new Items();
+		$SC = new Shop();
+		include_once("classes/shop/pickupdate.class.php");
+		$PC = new Pickupdate();
+		$query = new Query();
+
+		$item = $IC->getItem(["id" => $item_id, "extend" => true]);
+
+		// get unshipped order_items for this product
+		$sql = "SELECT order_items.* FROM ".SITE_DB.".shop_order_items AS order_items WHERE order_items.item_id = $item_id AND order_items.shipped_by IS NULL";
+		if($query->sql($sql)) {
+
+			$order_items = $query->results();
+
+			$order_item_links = [];
+			foreach ($order_items as $order_item) {
+
+				$order_item_department_pickupdate = $SC->getOrderItemDepartmentPickupdate($order_item["id"]);
+
+				$order_item_pickupdate = $order_item_department_pickupdate ? $PC->getPickupdate(["id" => $order_item_department_pickupdate["pickupdate_id"]]) : false;
+
+				if($item["end_availability_date"]) {
+						
+					if($order_item_pickupdate && ($order_item_pickupdate["pickupdate"] < $item["start_availability_date"] || $order_item_pickupdate["pickupdate"] > $item["end_availability_date"])) {
+
+						$order_item_links[] = SITE_URL."/janitor/order-item/edit/".$order_item["id"];
+					}
+				}
+				else {
+					
+					if($order_item_pickupdate && $order_item_pickupdate["pickupdate"] < $item["start_availability_date"]) {
+
+						$order_item_links[] = SITE_URL."/janitor/order-item/edit/".$order_item["id"];
+					}
+				}
+				
+			}
+
+			// send notification email to admin
+			mailer()->send(array(
+				"recipients" => ADMIN_EMAIL,
+				"subject" => SITE_URL . " - ACTION NEEDED: A product's availability window was changed, affecting undelivered orders.",
+				"message" => "The availability window for product '".$item['name']."' has been changed in the system. As a consequence there are now ".count($order_items)." undelivered order items that fall outside the product's availability period. \n\nHere are links to each of the affected order items:\n\n".implode("\n", $order_item_links). " \n\nFollow the links to resolve the issue manually.",
+				"tracking" => false
+				// "template" => "system"
+			));
+			
+		}
+
+	}
+
 	function saved($item_id) {
 
 		include_once("classes/system/department.class.php");
@@ -350,6 +401,36 @@ class TypeProduct extends Itemtype {
 		foreach($departments as $department) {
 
 			$DC->addProduct($department["id"], $item_id);
+		}
+	}
+
+	function disabled($item) {
+
+		$item_id = $item["id"];
+		$query = new Query();
+
+		// get unshipped order_items for this product
+		$sql = "SELECT order_items.* FROM ".SITE_DB.".shop_order_items AS order_items WHERE order_items.item_id = $item_id AND order_items.shipped_by IS NULL";
+
+		if($query->sql($sql)) {
+
+			$order_items = $query->results();
+
+			$order_item_links = [];
+			foreach ($order_items as $order_item) {
+				
+				$order_item_links[] = SITE_URL."/janitor/order-item/edit/".$order_item["id"];
+			}
+
+			// send notification email to admin
+			mailer()->send(array(
+				"recipients" => ADMIN_EMAIL,
+				"subject" => SITE_URL . " - ACTION NEEDED: A product was disabled but has not yet been delivered.",
+				"message" => "The product '".$item['name']."' has been disabled in the system. But the product is the content of ".count($order_items)." order items, which have not yet been delivered. \n\nHere are links to each of the affected order items:\n\n".implode("\n", $order_item_links). " \n\nFollow the links to resolve the issue manually.",
+				"tracking" => false
+				// "template" => "system"
+			));
+			
 		}
 	}
 
