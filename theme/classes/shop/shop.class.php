@@ -644,15 +644,14 @@ class Shop extends ShopCore {
 			}
 		}
 
-		$sql = "SELECT DISTINCT order_items.*, orders.user_id, department_pickupdate_order_items.status 
+		$sql = "SELECT DISTINCT order_items.*, orders.user_id 
 		FROM ".$this->db_pickupdates." AS pickupdates, "
 		.$this->db_department_pickupdate_order_items." AS department_pickupdate_order_items, "
 		.$this->db_order_items." AS order_items, "
 		.$this->db_orders." AS orders 
 		WHERE department_pickupdate_order_items.pickupdate_id = $pickupdate_id
 		AND department_pickupdate_order_items.order_item_id = order_items.id
-		AND order_items.order_id = orders.id
-		AND orders.status < 3"; 
+		AND order_items.order_id = orders.id"; 
 
 		if($order_id) {
 			$sql .= " AND orders.id = $order_id";

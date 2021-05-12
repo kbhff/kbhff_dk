@@ -718,37 +718,6 @@ class SuperShop extends SuperShopCore {
 		return $order_content;
 	}
 
-	function updateDeliveryStatus($action) {
-
-		$order_item_id = $action[1];
-		$order_item_department_pickupdate = $this->getOrderItemDepartmentPickupdate($order_item_id);
-		if($order_item_department_pickupdate) {
-
-			$current_delivery_status = $order_item_department_pickupdate["status"];
-			$new_delivery_status = getPost("status", "value");
-			
-			if($current_delivery_status !== $new_delivery_status) {
-
-				$query = new Query();
-				$sql = "UPDATE ".$this->db_department_pickupdate_order_items." SET status = $new_delivery_status WHERE id = ".$order_item_department_pickupdate["id"];
-				if($query->sql($sql)) {
-					
-					message()->addMessage("Delivery status was updated");
-					return true;
-				}
-
-				message()->addMessage("There was an error updating the delivery status of the order item", ["type" => "error"]);
-				return false;
-			}
-			
-			return true;
-		}
-		
-		message()->addMessage("There was an error updating the delivery status of the order item", ["type" => "error"]);
-		return false;
-
-		
-	}
 }
 
 ?>

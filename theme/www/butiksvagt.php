@@ -270,11 +270,13 @@ if($action) {
 
 		
 	}
-	else if($action[0] == "updateDeliveryStatus" && count($action) == 2) {
+	else if($action[0] == "updateShippingStatus" && count($action) == 3) {
 		
-		$status = $SC->updateDeliveryStatus($action);
+		$order = $SC->updateShippingStatus($action);
 		
-		if($status) {
+		if($order) {
+
+			message()->resetMessages();
 
 			// redirect to leave POST state
 			header("Location: /butiksvagt/");

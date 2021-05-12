@@ -59,11 +59,11 @@ if($department_pickupdate_order_items) {
 	foreach ($department_pickupdate_order_items as $order_item) {
 		
 		$order_items_total_quantity += $order_item["quantity"];
-		if($order_item["status"] == 1) {
-			$order_items_total_undelivered_quantity += $order_item["quantity"];
-		}
-		else if($order_item["status"] == 2) {
+		if(isset($order_item["shipped_by"])) {
 			$order_items_total_delivered_quantity += $order_item["quantity"];
+		}
+		else {
+			$order_items_total_undelivered_quantity += $order_item["quantity"];
 		}
 	}
 }
@@ -125,20 +125,20 @@ if($department_pickupdate_order_items) {
 					<span class="button">
 						<? if($pickupdate_is_today): ?>
 						<ul class="actions">
-							<? if($order_item["status"] == 1): ?>
-							<?= $HTML->oneButtonForm("Udlevér", "/butiksvagt/updateDeliveryStatus/".$order_item["id"], [
+							<? if(!isset($order_item["shipped_by"])): ?>
+							<?= $HTML->oneButtonForm("Udlevér", "/butiksvagt/updateShippingStatus/".$order_item["order_id"]."/".$order_item["id"], [
 								"inputs" => [
-									"status" => 2,
+									"shipped" => true,
 								],
 								"confirm-value" => "Bekræft",
 								"wait-value" => "Vent",
 								"dom-submit" => true,
-								"class" => "primary"
+								"class" => "primary",
 							]) ?>
-							<? elseif($order_item["status"] == 2): ?>
-							<?= $HTML->oneButtonForm("Fortryd", "/butiksvagt/updateDeliveryStatus/".$order_item["id"], [
+							<? else: ?>
+							<?= $HTML->oneButtonForm("Fortryd", "/butiksvagt/updateShippingStatus/".$order_item["order_id"]."/".$order_item["id"], [
 								"inputs" => [
-									"status" => 1,
+									"shipped" => false,
 								],
 								"confirm-value" => "Bekræft",
 								"wait-value" => "Vent",

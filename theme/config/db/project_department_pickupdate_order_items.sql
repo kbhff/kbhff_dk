@@ -3,7 +3,6 @@ CREATE TABLE `SITE_DB`.`project_department_pickupdate_order_items` (
   `department_id` int(11) NOT NULL DEFAULT 1,
   `pickupdate_id` int(11) NOT NULL,
   `order_item_id` int(11) NOT NULL,
-  `status` int(11) NOT NULL DEFAULT 1,
 
   PRIMARY KEY (`id`),
   KEY `department_id` (`department_id`),
