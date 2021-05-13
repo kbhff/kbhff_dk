@@ -4,16 +4,17 @@ global $UC;
 ?>
 <div class="scene i:member_help_accept_terms accept_terms">
 
-	<h1>Samtykke om brug af persondata</h1>
+	<h1>Samtykke om behandling af persondata</h1>
 
-	<p>Achtung! You're are entering an area with sensitive information and by proceeding you agree to handling this information responsibly.</p>
+	<p>OBS! På næste side findes fortrolige oplysninger om KBHFFs medlemmer. Ved at klikke videre giver du samtykke til, at du behandler disse oplysninger fortroligt og ansvarsfuldt.</p>
+	<p>Warning! You're about to enter an area with sensitive information and by proceeding you agree to handling this information responsibly.</p>
 
 
 	<!-- create form with a single checkbox and acccept/cancel buttons -->
 	<?= $UC->formStart("accept", array("class" => "accept")) ?>
 
 		<fieldset>
-			<?= $UC->input("terms", ["label"=>"Det er jeg indforstået med.", "hint_message"=>"", "error_message"=>"Du skal acceptere retningslinjerne for at fortsætte."]) ?>
+			<?= $UC->input("terms", ["label"=>"Jeg har læst og forstået ovenstående. / I have read and agree to the above terms.", "hint_message"=>"", "error_message"=>"Du skal acceptere retningslinjerne for at fortsætte."]) ?>
 		</fieldset>
 
 		<ul class="actions">
