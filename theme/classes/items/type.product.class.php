@@ -377,14 +377,18 @@ class TypeProduct extends Itemtype {
 				
 			}
 
-			// send notification email to admin
-			mailer()->send(array(
-				"recipients" => ADMIN_EMAIL,
-				"subject" => SITE_URL . " - ACTION NEEDED: A product's availability window was changed, affecting undelivered orders.",
-				"message" => "The availability window for product '".$item['name']."' has been changed in the system. As a consequence there are now ".count($order_items)." undelivered order items that fall outside the product's availability period. \n\nHere are links to each of the affected order items:\n\n".implode("\n", $order_item_links). " \n\nFollow the links to resolve the issue manually.",
-				"tracking" => false
-				// "template" => "system"
-			));
+			if($order_item_links) {
+
+				// send notification email to admin
+				mailer()->send(array(
+					"recipients" => ADMIN_EMAIL,
+					"subject" => SITE_URL . " - ACTION NEEDED: A product's availability window was changed, affecting undelivered orders.",
+					"message" => "The availability window for the product '".$item['name']."' has been changed in the system. As a consequence there are now ".count($order_item_links)." undelivered order items that fall outside the product's availability period. \n\nHere are links to each of the affected order items:\n\n".implode("\n", $order_item_links). " \n\nFollow the links to resolve the issue manually.",
+					"tracking" => false
+					// "template" => "system"
+				));
+				
+			}
 			
 		}
 
