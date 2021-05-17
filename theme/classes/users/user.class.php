@@ -202,8 +202,38 @@ class User extends UserCore {
 	 */
 	 function getKbhffUser(){
 		$user = $this->getUser();
-		$user["department"] = $this->getUserDepartment();
-		// print_r($user);
+		if($user) {
+
+			$user_id = $user["id"];
+
+			$query = new Query();
+
+			$user["mobile"] = "";
+			$user["email"] = "";
+	
+			$sql = "SELECT * FROM ".$this->db_usernames." WHERE user_id = $user_id";
+			if($query->sql($sql)) {
+				$usernames = $query->results();
+				foreach($usernames as $username) {
+					$user[$username["type"]] = $username["username"];
+				}
+			}
+	
+	
+			$user["addresses"] = $this->getAddresses();
+	
+			$user["maillists"] = $this->getMaillists();
+	
+			if((defined("SITE_SHOP") && SITE_SHOP)) {
+				$MC = new Member();
+				$user["membership"] = $MC->getMembership();
+			}
+	
+			$user["department"] = $this->getUserDepartment(["user_id" => $user_id]);
+			// print_r($user);
+	
+			return $user;
+		}
 
 		return $user;
 	}
@@ -261,14 +291,21 @@ class User extends UserCore {
 
 			$query->checkDbExistence(SITE_DB.".user_department");
 
-
+			$old_department = $user["department"];
 
 			//Check if the user is associated with a department and adjust query accordingly
-			if ($user["department"]) {
+			if ($old_department) {
 				//Update department
 				$sql = "UPDATE ".SITE_DB.".user_department SET department_id = $department_id WHERE user_id = $user_id";
 
 				if($query->sql($sql)) {
+
+					$user = $this->getKbhffUser();
+
+					// send notifications to admin
+					$this->sendMemberLeftNotification($user, $old_department);
+					$this->sendNewMemberNotification($user);
+
 					message()->addMessage("Afdeling blev opdateret.");
 					return true;
 				}
@@ -277,6 +314,7 @@ class User extends UserCore {
 				// Set department
 				$sql = "INSERT INTO ".SITE_DB.".user_department SET department_id = $department_id, user_id = $user_id";
 				if($query->sql($sql)) {
+
 					message()->addMessage("Afdeling blev tildelt.");
 					return true;
 				}
@@ -286,6 +324,58 @@ class User extends UserCore {
 
 		return false;
 
+	}
+
+	function sendMemberLeftNotification($user, $_options = false) {
+		
+		$old_department = $user["department"];
+
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+					case "old_department"     : $old_department       = $_value; break;
+				}
+			}
+		}
+
+		mailer()->send([
+			"subject" => "Medlem har forladt afdeling ".$old_department["name"],
+			"message" => "
+Hej ".$old_department["name"]." butiksgruppe,
+
+".$user["firstname"]." ".$user["lastname"]." er ikke længere medlem af jeres afdeling.
+
+Hvis det endnu ikke er sket, kan det være en god idé at fjerne vedkommende fra vagtplaner / holdoversigter.
+			
+Med venlig hilsen,
+IT",
+			"recipients" => ADMIN_EMAIL
+		]);
+	}
+
+	function sendNewMemberNotification($user) {
+
+		if($user && $user["department"] && $user["membership"]) {
+
+			mailer()->send([
+				"subject" => "Nyt medlem i afdeling ".$user["department"]["name"],
+				"message" => "
+Hej ".$user["department"]["name"]." butiksgruppe,
+
+I har fået et nyt medlem!
+
+Navn: ".$user["firstname"]." ".$user["lastname"]."
+Email: ".($user["email"] ?: "-")."
+
+Medlemstype: ".$user["membership"]["item"]["name"]."
+
+I kan kontakte vedkommende i forhold til introduktion og evt. opskrivning til vagt. Bemærk at vedkommende kan være flyttet fra en anden afdeling.
+
+Med venlig hilsen,
+IT",
+			"recipients" => ADMIN_EMAIL
+			]);
+		}
 	}
 
 	
@@ -469,6 +559,12 @@ class User extends UserCore {
 				"message" => "Du har meldt dig ud af Københavns Fødevarefællesskab. Tak for denne gang.",
 				"recipients" => [$user_email]
 				]);
+			
+			if($user["department"]) {
+
+				// send notification to admin
+				$this->sendMemberLeftNotification($user);
+			}	
 
 			return true;
 		}

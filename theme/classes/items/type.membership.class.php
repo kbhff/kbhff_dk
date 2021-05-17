@@ -287,7 +287,14 @@ class TypeMembership extends Itemtype {
 				unset($_POST);
 	
 				// add membership
-				$MC->addMembership($item_id, $subscription_id, ["user_id" => $user_id]);
+				if($MC->addMembership($membership_type["id"], $subscription_id, ["user_id" => $user_id])) {
+
+					// send notification to admin
+					include_once("classes/users/superuser.class.php");
+					$UC = new SuperUser();
+					$user = $UC->getKbhffUser(["user_id" => $user_id]);
+					$UC->sendNewMemberNotification($user);
+				}
 			}
 			else {
 

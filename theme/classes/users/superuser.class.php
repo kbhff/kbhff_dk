@@ -135,7 +135,13 @@ class SuperUser extends SuperUserCore {
 					"subject" => "Dit medlemskab af Københavns Fødevarefællesskab er opsagt",
 					"message" => "Du har meldt dig ud af Københavns Fødevarefællesskab. Tak for denne gang.",
 					"recipients" => [$user_email]
-					]);
+				]);
+
+				if($user["department"]) {
+
+					// send notification to admin
+					$this->sendMemberLeftNotification($user);
+				}
 
 				return true;
 			}
@@ -180,14 +186,19 @@ class SuperUser extends SuperUserCore {
 			$item = $IC->getItem(["id" => $item_id, "extend" => true]);
 
 			$member = $MC->getMembers(array("user_id" => $user_id));
+
+			$old_membership = isset($member["item"]["fixed_url_identifier"]) ? $member["item"]["fixed_url_identifier"] : false;
+
+			$new_membership = isset($item["fixed_url_identifier"]) ? $item["fixed_url_identifier"] : false;
 		
 			if($member) {
+
 				$sql = "UPDATE ".SITE_DB.".user_item_subscriptions SET item_id = $item_id WHERE user_id = $user_id";
 				
 				if($query->sql($sql)) {
 
 					// reset user_group to User if new membership is Støttemedlem
-					if(isset($item["fixed_url_identifier"]) && $item["fixed_url_identifier"] == "stoettemedlem") {
+					if($new_membership == "stoettemedlem") {
 
 						include_once("classes/users/superuser.class.php");
 						$UC = new SuperUser();
@@ -200,6 +211,9 @@ class SuperUser extends SuperUserCore {
 						
 					}
 
+					// send notification to admin
+					$this->sendMembershipChangeNotification($member, $item);
+
 					message()->resetMessages();
 					message()->addMessage("Medlemskab er opdateret");
 					return true;
@@ -209,6 +223,56 @@ class SuperUser extends SuperUserCore {
 			return false;
 		}
 	}
+
+	function sendMembershipChangeNotification($member, $item) {
+
+		$user_id = $member["user_id"];
+		$user = $this->getKbhffUser(["user_id" => $user_id]);
+		$email = $this->getUsernames(["user_id" => $user_id, "type" => "email"]);
+
+		$old_membership = isset($member["item"]["fixed_url_identifier"]) ? $member["item"]["fixed_url_identifier"] : false;
+
+		$new_membership = isset($item["fixed_url_identifier"]) ? $item["fixed_url_identifier"] : false;
+
+		if($old_membership == "stoettemedlem" && $new_membership == "frivillig") {
+			// send notification to admin
+			mailer()->send([
+				"subject" => "Medlem i afdeling ".$user["department"]["name"]." har ændret medlemstype.",
+				"message" => "
+Hej ".$user["department"]["name"]." butiksgruppe,
+
+Følgende medlem har skiftet status fra støttemedlem til frivilligt medlem og vil fremover indgå i driften af foreningen gennem vagtplanen og arbejdsgrupper.
+
+I får denne notifikation, så I kan kontakte medlemmet ift. at tilbyde en plads på afdelingens vagtplan.
+
+Navn: ".$user["firstname"]." ".$user["lastname"]."
+Email: ".($email ? $email["username"] : "-")."
+				 			
+Med venlig hilsen,
+IT",
+				"recipients" => ADMIN_EMAIL
+			]);
+			
+		}
+		else if($old_membership == "frivillig" && $new_membership == "stoettemedlem") {
+			// send notification to admin
+			mailer()->send([
+				"subject" => "Medlem i afdeling ".$user["department"]["name"]." har ændret medlemstype.",
+				"message" => "
+Hej ".$user["department"]["name"]." butiksgruppe,
+
+".$user["firstname"]." ".$user["lastname"]." har skiftet status fra frivilligt medlem til støttemedlem og forventes dermed ikke længere at indgå i vagtplanen.
+
+Hvis det endnu ikke er sket, kan det være en god idé at fjerne vedkommende fra vagtplaner / holdoversigter.
+
+Med venlig hilsen,
+IT
+",
+				"recipients" => ADMIN_EMAIL
+			]);
+		}	
+	}
+
 	/**
 	 * Update user account information
 	 *
@@ -464,14 +528,23 @@ class SuperUser extends SuperUserCore {
 			$query->checkDbExistence(SITE_DB.".user_department");
 
 			// Check if the user is associated with a department and adjust query accordingly
-			$user_department = $this->getUserDepartment(array("user_id" => $user_id));
-			
-		
-			if ($user_department) {
-					// Update department
+			$user = $this->getKbhffUser(["user_id" => $user_id]);
+			$old_department = $user["department"];
+
+			if ($old_department) {
+				
+				// Update department
 				$sql = "UPDATE ".SITE_DB.".user_department SET department_id = $department_id WHERE user_id = $user_id";
 
 				if($query->sql($sql)) {
+
+					// get updated user
+					$user = $this->getKbhffUser(["user_id" => $user_id]);
+
+					// send notifications to admin
+					$this->sendMemberLeftNotification($user, $old_department);
+					$this->sendNewMemberNotification($user);
+
 					message()->resetMessages();
 					message()->addMessage("Afdeling er opdateret");
 					return true;
@@ -485,6 +558,12 @@ class SuperUser extends SuperUserCore {
 				// Set department
 				$sql = "INSERT INTO ".SITE_DB.".user_department SET department_id = $department_id, user_id = $user_id";
 				if($query->sql($sql)) {
+
+					// get updated user
+					$user = $this->getKbhffUser(["user_id" => $user_id]);
+
+					$this->sendNewMemberNotification($user);
+
 					message()->resetMessages();
 					message()->addMessage("Afdeling er opdateret");
 					return true;

@@ -121,7 +121,7 @@ if($action) {
 		// successful update
 		if($result) {
 			message()->resetMessages();
-			message()->addMessage("Produktet blev slettet");
+			message()->addMessage("Produktet blev arkiveret");
 
 			header("Location: /indkoeb");
 			
