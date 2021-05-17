@@ -48,6 +48,8 @@ Util.Modules["profile"] = new function() {
 						var form_department = u.qs(".form_department", response);
 						form_department.scene = this.scene;
 
+						var warning = u.qs("p.warning", response);
+						
 						// Query elements to use
 						var div_fields = u.qs("div.fields", box_membership);
 						var divs_membership = u.qsa(".membership-info", div_fields);
@@ -63,6 +65,10 @@ Util.Modules["profile"] = new function() {
 
 						// Insert form into fields
 						u.ae(div_fields, form_department);
+
+						if(warning) {
+							u.ae(div_fields, warning);
+						}
 
 						// Update button
 						form_department.submitted = function() {
@@ -81,12 +87,11 @@ Util.Modules["profile"] = new function() {
 								var new_department_box = u.qs(".department", response);
 								right_panel.replaceChild(new_department_box, box_department);
 
-
 								if (message = u.qs("p.message", response)) {
 									var fields = u.qs("div.fields", box_membership)
 									u.ie(fields, message);
 								
-									// If previous message didn't finnish deleting
+									// If previous message didn't finish deleting
 									if (message.t_done) {
 										u.t.resetTimer(t_done);
 									}

@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-05-11 10:57:38
+asset-builder @ 2021-05-17 17:27:36
 */
 
 /*seg_desktop_include.js*/
@@ -7428,6 +7428,7 @@ Util.Modules["profile"] = new function() {
 						u.rc(this, "loading");
 						var form_department = u.qs(".form_department", response);
 						form_department.scene = this.scene;
+						var warning = u.qs("p.warning", response);
 						var div_fields = u.qs("div.fields", box_membership);
 						var divs_membership = u.qsa(".membership-info", div_fields);
 						var ul_buttons = u.qs("ul.actions", div_fields);
@@ -7436,6 +7437,9 @@ Util.Modules["profile"] = new function() {
 						u.ae(box_membership, form_department);
 						u.f.init(form_department);
 						u.ae(div_fields, form_department);
+						if(warning) {
+							u.ae(div_fields, warning);
+						}
 						form_department.submitted = function() {
 							var data = this.getData();
 							this.response = function(response) {

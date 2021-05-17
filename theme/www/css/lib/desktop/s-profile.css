@@ -199,6 +199,8 @@
 	padding-bottom: 12px;
 }
 
+#content div.profile .membership .fields p.warning {font-size: 11px; color: #C22414; line-height: 1.5em; padding-top: 10px;;}
+
 #content div.profile .password p.under {
 	font-size: 26px;
 	padding-bottom: 25px;

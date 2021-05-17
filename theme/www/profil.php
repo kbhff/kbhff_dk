@@ -153,6 +153,7 @@ if($action) {
 
 		//Method returns true
 		if($UC->updateUserDepartment($action)) {
+			
 			header("Location: /profil");
 			exit();
 		}
@@ -165,6 +166,15 @@ if($action) {
 			));
 			exit();
 		}
+	}
+
+	// ../profil/ny-afdeling-advarsel 
+	else if($action[0] == "ny-afdeling-advarsel") {
+		$page->page(array(
+			"templates" => "profile/new_department_warning.php",
+			"type" => "member"
+		));
+		exit();
 	}
 
 	// /profil/updateMembershipRenewal
