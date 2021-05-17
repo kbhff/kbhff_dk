@@ -47,6 +47,7 @@ Util.Modules["user_profile"] = new function() {
 					// Query form to inject and create a reference to scene on it
 					var form_department = u.qs(".form_department", response);
 					form_department.scene = this.scene;
+					var warning = u.qs("p.warning", response);
 
 					// Query elements to use
 					var form_fieldset = u.qs("fieldset", form_department);
@@ -67,6 +68,10 @@ Util.Modules["user_profile"] = new function() {
 				
 					// Move select into leftover field spot
 					u.ae(div_fields, form_fieldset);
+
+					if(warning) {
+						u.ae(div_fields, warning);
+					}
 				
 					// Update button
 					form_department.submitted = function() {
