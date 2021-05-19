@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-05-17 17:59:28
+asset-builder @ 2021-05-19 23:18:16
 */
 
 /*seg_desktop_include.js*/
@@ -5360,7 +5360,7 @@ u.ga_account = '';
 u.ga_domain = '';
 u.gapi_key = 'AIzaSyAnZTViVnr4jxGyNQCCMGO0hnJ8NjsKqjo';
 u.terms_version = "terms_v1";
-u.terms_link = "/cookies";
+u.terms_link = "/persondata";
 u.txt["terms-headline"] = "Flere grøntsager, <br />færre kager";
 u.txt["terms-paragraph"] = "Vi beskytter dit privatliv og bruger kun funktionelle cookies.";
 u.txt["terms-accept"] = "Accepter";

@@ -4,7 +4,7 @@ u.gapi_key = 'AIzaSyAnZTViVnr4jxGyNQCCMGO0hnJ8NjsKqjo';
 
 
 u.terms_version = "terms_v1";
-u.terms_link = "/cookies";
+u.terms_link = "/persondata";
 
 // terms
 u.txt["terms-headline"] = "Flere grøntsager, <br />færre kager";
