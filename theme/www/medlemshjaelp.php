@@ -119,6 +119,13 @@ if($action) {
 	
 		// successful creation
 		if(isset($user["user_id"])) {
+
+			if(getPost("maillist")) {
+				$model->addToMailchimp([
+					"email_address" => $user["email"],
+					"status" => "pending"
+				]);
+			}
 			
 			// add user_id to $_POST array, which will be used to create a new cart with addCart()
 			$_POST["user_id"] = $user["user_id"];
