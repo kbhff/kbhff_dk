@@ -117,14 +117,19 @@ if($action) {
 	# /bliv-medlem/save
 	else if($action[0] == "save" && $page->validateCsrfToken()) {
 
-		// overwrite the value of 'maillist' field, which is posted as integer
-		$_POST["maillist"] = "Nyheder";
-		
+			
 		// create new user
 		$user = $model->newUser(array("newUser"));
 
 		// if successful creation
 		if(isset($user["user_id"])) {
+
+			if(getPost("maillist")) {
+				$model->addToMailchimp([
+					"email_address" => $user["email"],
+					"status" => "pending"
+				]);
+			}
 
 			// redirect to leave POST state
 			header("Location: verificer");
