@@ -18,7 +18,7 @@ $this->pageTitle("Afdelinger");
 	<h2>Her kan du skifte din lokale afdeling.</h2>
 
 	<? if($unshipped_order_items): ?>
-	<p class="warning"><strong>NB!</strong>Du har fremtidige bestillinger i systemet. Hvis du skifter afdeling, bliver disse bestillinger IKKE flyttet med til din nye afdeling, men skal afhentes i din gamle afdeling. Hvis du ønsker at afhente dem i din nye afdeling, så skriv til <a href="mailto:it@kbhff.dk">it@kbhff.dk</a>. 
+	<p class="warning"><strong>NB!</strong> Du har fremtidige bestillinger i systemet. Hvis du skifter afdeling, bliver disse bestillinger IKKE flyttet med til din nye afdeling, men skal afhentes i din gamle afdeling. Hvis du ønsker at afhente dem i din nye afdeling, så skriv til <a href="mailto:it@kbhff.dk">it@kbhff.dk</a>. 
 	</p>
 	<? endif; ?>
 
