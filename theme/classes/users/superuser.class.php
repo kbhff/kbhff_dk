@@ -542,7 +542,7 @@ IT
 					$user = $this->getKbhffUser(["user_id" => $user_id]);
 
 					// send notifications to admin
-					$this->sendMemberLeftNotification($user, $old_department);
+					$this->sendMemberLeftNotification($user, ["old_department" => $old_department]);
 					$this->sendNewMemberNotification($user);
 
 					message()->resetMessages();

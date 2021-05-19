@@ -303,7 +303,7 @@ class User extends UserCore {
 					$user = $this->getKbhffUser();
 
 					// send notifications to admin
-					$this->sendMemberLeftNotification($user, $old_department);
+					$this->sendMemberLeftNotification($user, ["old_department" => $old_department]);
 					$this->sendNewMemberNotification($user);
 
 					message()->addMessage("Afdeling blev opdateret.");
