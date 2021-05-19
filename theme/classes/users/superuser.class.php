@@ -463,8 +463,8 @@ IT
 			$new_user_group = $this->getUserGroups(["user_group_id" => $member_user["user_group_id"]]);
 
 			$new_user_group_info = [
-				"User" => 'Som medlem af brugergruppen "User" er du i stand til købe grøntsager i webshoppen, såfremt dit medlemskab er aktivt.',
-				"Shop shift" => 'Som medlem af brugergruppen "Shop shift" er du i stand til tage butiksvagter. Du kan selvfølgelig også selv købe grøntsager i webshoppen.',
+				"User" => 'Som medlem af brugergruppen "User" er du i stand til at købe grøntsager i webshoppen, såfremt dit medlemskab er aktivt.',
+				"Shop shift" => 'Som medlem af brugergruppen "Shop shift" er du i stand til at tage butiksvagter. Du kan selvfølgelig også selv købe grøntsager i webshoppen.',
 				"Local administrator" => 'Som medlem af brugergruppen "Local administrator" er du i stand til at tage butiksvagter og sende beskeder til alle medlemmer i din lokalafdeling. Du kan også flytte medlemmer til din afdeling. Og du kan selvfølgelig også selv købe grøntsager i webshoppen.',
 				"Purchasing group" => 'Som medlem af brugergruppen "Purchasing group" er du i stand til at indgå i arbejdet med at indkøbe produkter. Du kan også tage butiksvagter. Og du kan selvfølgelig også selv købe grøntsager i webshoppen.',
 				"Communication group" => 'Som medlem af brugergruppen "Communication group" er du i stand til at indgå i arbejdet med udsendelse af nyhedsbreve. Du kan også tage butiksvagter. Og du kan selvfølgelig også selv købe grøntsager i webshoppen.',
@@ -479,7 +479,7 @@ IT
 				"values" => array(
 					"FROM" => ADMIN_EMAIL,
 					"NICKNAME" => $member_user["nickname"],
-					"OLD_member_user_USER_GROUP" => $member_user_user_group["user_group"],
+					"OLD_USER_GROUP" => $member_user_user_group["user_group"],
 					"NEW_USER_GROUP" => $new_user_group["user_group"], 
 					"NEW_USER_GROUP_INFO" => $new_user_group_info[$new_user_group["user_group"]], 
 				),
