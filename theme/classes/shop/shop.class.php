@@ -651,7 +651,8 @@ class Shop extends ShopCore {
 		.$this->db_orders." AS orders 
 		WHERE department_pickupdate_order_items.pickupdate_id = $pickupdate_id
 		AND department_pickupdate_order_items.order_item_id = order_items.id
-		AND order_items.order_id = orders.id"; 
+		AND order_items.order_id = orders.id
+		AND orders.status != 3"; 
 
 		if($order_id) {
 			$sql .= " AND orders.id = $order_id";
