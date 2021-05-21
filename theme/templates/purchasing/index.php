@@ -15,7 +15,7 @@ $upcoming_pickupdates = $PC->getPickupdates(["after" => date("Y-m-d")]);
 $next_pickupdate = $upcoming_pickupdates ? $upcoming_pickupdates[0] : false;
 
 $departments = $DC->getDepartments();
-$products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 1, "extend" => ["mediae" => true]]);
+$products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 1, "order" => "created_at", "extend" => ["mediae" => true]]);
 
 ?>
 
