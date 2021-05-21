@@ -13,7 +13,7 @@ if($page_item) {
 
 include_once("classes/system/department.class.php");
 $DC = new Department();
-$departments = $DC->getDepartmentsAcceptSignups();
+$departments = $DC->getDepartments(["accepts_signup" => 1]);
 
 $email = $model->getProperty("email", "value");
 

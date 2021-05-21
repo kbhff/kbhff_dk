@@ -4,7 +4,7 @@ $DC = new Department();
 $UC = new User();
 $SC = new Shop();
 global $action;
-$departments = $DC->getDepartmentsAcceptSignups();
+$departments = $DC->getDepartments(["accepts_signup" => 1]);
 $user_department = $UC->getUserDepartment();
 $pickupdates = $SC->getPickupdates(["after" => date("Y-m-d", strtotime("+7 days"))]);
 $department_pickupdates = $DC->getDepartmentPickupdates($user_department["id"]);

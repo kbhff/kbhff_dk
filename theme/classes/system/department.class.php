@@ -252,20 +252,29 @@ class Department extends Model {
 
 		// Define default values
 		$order = "name ASC";
+		$accepts_signup = false;
 
 
 		// Search through $_options to find recognized parameters
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
-					case "order"        : $order             = $_value; break;
+					case "order"                   : $order                        = $_value; break;
+					case "accepts_signup"          : $accepts_signup               = $_value; break;
 				}
 			}
 		}
 
 		// Query database for all departments.  
 		$query = new Query();
-		$sql = "SELECT * FROM ".$this->db . " ORDER BY $order";		
+		$sql = "SELECT * FROM ".$this->db;
+
+		if($accepts_signup === 0 || $accepts_signup === 1) {
+			$sql .= " WHERE accepts_signup = $accepts_signup";
+		}
+
+		$sql .= " ORDER BY $order";
+
 		if($query->sql($sql)) {
 			return $query->results();
 		}
@@ -312,24 +321,6 @@ class Department extends Model {
 			if($query->sql($sql)) {
 				return $query->result(0);
 			}
-		}
-
-		return false;
-	}
-
-
-	/**
-	 * Get list of departments that accept signups from database.
-	 *
-	 * @return array|false Department data object (via callback to Query->results()
-	 */
-	function getDepartmentsAcceptSignups() {
-
-		// Query database for all departments.
-		$query = new Query();
-		$sql = "SELECT * FROM ".$this->db." WHERE accepts_signup = 1";
-		if($query->sql($sql)) {
-			return $query->results();
 		}
 
 		return false;

@@ -3,7 +3,7 @@ include_once("classes/system/department.class.php");
 $DC = new Department();
 $UC = new User();
 $SC = new Shop();
-$departments = $DC->getDepartmentsAcceptSignups();
+$departments = $DC->getDepartments(["accepts_signup" => 1]);
 $user_department = $UC->getUserDepartment();
 
 // get unshipped order_items for this user

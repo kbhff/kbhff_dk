@@ -8,7 +8,7 @@ $order_item_id = $action[1];
 $user_id = $action[2];
 $user_department = $UC->getUserDepartment(["user_id" => $user_id]);
 
-$departments = $DC->getDepartmentsAcceptSignups();
+$departments = $DC->getDepartments(["accepts_signup" => 1]);
 $pickupdates = $SC->getPickupdates(["after" => date("Y-m-d", strtotime("+7 days"))]);
 $department_pickupdates = $DC->getDepartmentPickupdates($user_department["id"]);
 $available_pickupdates = false;

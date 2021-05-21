@@ -6,7 +6,7 @@ $MC = new Member();
 $IC = new Items();
 $SC = new Shop();
 $user = $UC->getKbhffUser();
-$departments = $DC->getDepartmentsAcceptSignups();
+$departments = $DC->getDepartments(["accepts_signup" => 1]);
 $user_department = $UC->getUserDepartment();
 
 $membership_renewal_value = $UC->getRenewalOptOut() ? 0 : 1;
