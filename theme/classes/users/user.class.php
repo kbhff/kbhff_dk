@@ -328,29 +328,33 @@ class User extends UserCore {
 
 	function sendMemberLeftNotification($user, $_options = false) {
 		
-		$old_department = $user["department"];
+		if($user && $user["department"] && $user["membership"]) {
 
-		if($_options !== false) {
-			foreach($_options as $_option => $_value) {
-				switch($_option) {
-					case "old_department"     : $old_department       = $_value; break;
+			$old_department = $user["department"];
+	
+			if($_options !== false) {
+				foreach($_options as $_option => $_value) {
+					switch($_option) {
+						case "old_department"     : $old_department       = $_value; break;
+					}
 				}
 			}
-		}
-
-		mailer()->send([
-			"subject" => "Medlem har forladt afdeling ".$old_department["name"],
-			"message" => "
+	
+			mailer()->send([
+				"subject" => "Medlem har forladt afdeling ".$old_department["name"],
+				"message" => "
 Hej ".$old_department["name"]." butiksgruppe,
 
-".$user["firstname"]." ".$user["lastname"]." er ikke længere medlem af jeres afdeling.
+".$user["firstname"]." ".$user["lastname"]." med medlemstype ".$user["membership"]["item"]["name"]." er ikke længere medlem af jeres afdeling.
 
-Hvis det endnu ikke er sket, kan det være en god idé at fjerne vedkommende fra vagtplaner / holdoversigter.
+Hvis medlemmet tog vagter i lokalafdelingen, kan det være en god idé at fjerne vedkommende fra vagtplaner / holdoversigter.
 			
 Med venlig hilsen,
 IT",
-			"recipients" => ADMIN_EMAIL
-		]);
+				"recipients" => ADMIN_EMAIL
+			]);
+		}
+
 	}
 
 	function sendNewMemberNotification($user) {
@@ -556,7 +560,7 @@ IT",
 			message()->addMessage("Dine oplysninger blev slettet");
 			mailer()->send([
 				"subject" => "Dit medlemskab af Københavns Fødevarefællesskab er opsagt",
-				"message" => "Du har meldt dig ud af Københavns Fødevarefællesskab. Tak for denne gang.",
+				"message" => "Du har meldt dig ud af Københavns Fødevarefællesskab. Tak for denne gang. \n\nBemærk, at hvis du har været tilmeldt nyhedsbrevet, skal du afmelde dig dette særskilt via afmeldings-linket i bunden af nyhedsbrevet. \n\nMed venlig hilsen, \nKøbenhavns Fødevarefællesskab",
 				"recipients" => [$user_email]
 				]);
 			
