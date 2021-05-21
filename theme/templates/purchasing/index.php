@@ -125,7 +125,7 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 				$product["start_availability_date"] 
 			) {
 				$product_available = false;
-				$product_availability = "Fra ".$product["start_availability_date"];
+				$product_availability = "Fra ".date("d.m.Y", strtotime($product["start_availability_date"]));
 			}
 			else {
 				$product_available = false;
