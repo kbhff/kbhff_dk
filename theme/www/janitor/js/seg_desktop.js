@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-04-23 18:22:30
+asset-builder @ 2021-05-21 15:46:24
 */
 
 /*seg_desktop_include.js*/
@@ -8950,6 +8950,9 @@ Util.Modules["defaultList"] = new function() {
 				else if(u.hc(action, "delete")) {
 					action.node = node;
 					u.m.oneButtonForm.init(action);
+					if(u.hc(action, "has_dependencies")) {
+						action.setAttribute("title", "This item has dependencies and cannot be deleted.");
+					}
 					action.confirmed = function(response) {
 						if(response.cms_status == "success") {
 							if(response.cms_object && response.cms_object.constraint_error) {
@@ -9378,6 +9381,10 @@ Util.Modules["defaultEditActions"] = new function() {
 				console.log(response)
 				location.href = location.href.replace(/edit\/.+/, "edit/"+response.cms_object["id"]);
 			}
+		}
+		var bn_delete = u.qs("li.delete", node);
+		if(bn_delete && u.hc(bn_delete, "has_dependencies")) {
+			bn_delete.setAttribute("title", "This item has dependencies and cannot be deleted.");
 		}
 	}
 }
