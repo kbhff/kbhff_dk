@@ -213,7 +213,7 @@ else {
 					<h5>MobilePay-nummer</h5>
 					<p>(<?=$department["name"]?>)</p>
 					<p class="payment_info"><span class="highlight"><?=$department["mobilepay_id"]?></span></p>
-					<h5>Medlemsoprettelseskode</h5>
+					<h5>Betalingsreference</h5>
 					<p>(Skrives i kommentarfeltet)</p>
 					<p class="payment_info"><span class="highlight"><?=$transaction_id?></span></p>
 				</div>
