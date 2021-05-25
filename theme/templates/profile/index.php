@@ -38,7 +38,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 			<div class="section intro">
 				<h1>Velkommen <span class="name"><?= $user['nickname'] ? $user['nickname'] : $user['firstname'] . " " . $user['lastname'] ?></span></h1>
 				<p>
-					På min side kan du se og rette oplysninger om dig og dit medlemskab.
+					På denne side kan du se og rette oplysninger om dig og dit medlemskab.
 					Du kan også se og rette dine eksisterende bestillinger og lave en ny bestilling (åbner GrøntShoppen).
 					På sigt er det desuden meningen at du her skal kunne booke frivillig-vagter og se nyheder og beskeder fra din lokalafdeling.
 				</p>
@@ -80,13 +80,13 @@ $unpaid_orders = $SC->getUnpaidOrders();
 				</div>
 				<? endif; ?>
 
-				<div class="c-box obs">
+				<!-- <div class="c-box obs">
 					<p>
 						<span class="highlight">OBS!</span> Østerbro lokalafdeling mangler en ny team-koordinator.
 						Kunne du have lyst til at hjælpe KBHFF med at blive endnu bedre federe at være frivillig i og være med på et helt vildt sjovt
 						og sejt hold, så skynd dig at skriv til anders@kbhff.dk eller mød op til mødet d. 8 august kl. 2017
 					</p>
-				</div>
+				</div> -->
 			</div>
 
 			<? if($is_member): ?>
