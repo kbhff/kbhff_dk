@@ -36,7 +36,8 @@
 #content .member_help ul.users ul {padding: 0; margin: 0; font-size: 0;}
 #content .member_help ul.users li {list-style-type: none; padding-left: 0;}
 
-#content .member_help h3 {padding-right: 0; padding-left: 0; padding-bottom: 0; margin-bottom: 22px; margin-left: 12px; margin-right: 12px;}
+#content .member_help h3 {padding-right: 0; padding-left: 0; padding-bottom: 0; margin-bottom: 22px; margin-left: 12px; margin-right: 12px; font-size: 0;}
+#content .member_help h3 span {font-size: 20px;}
 #content .member_help h3.hidden {display: none;}
 
 #content .member_help ul.users li ul li, 

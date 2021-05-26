@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-05-21 15:45:49
+asset-builder @ 2021-05-26 15:55:54
 */
 
 /*seg_desktop_include.js*/
@@ -7354,13 +7354,13 @@ Util.Modules["user_profile"] = new function() {
 			}
 		}
 		scene.initOrderList = function() {
-			var orders = u.qsa("div.order_item", this);
+			var orders = u.qsa("li.order_item", this);
 			var i, order;
 			for(i = 0; i < orders.length; i++) {
 				order = orders[i];
 				order.order_item_id = u.cv(order, "order_item_id");
-				order.p_pickupdate = u.qs("p.pickupdate", order);
-				order.span_date = u.qs("span.date", order.p_pickupdate);
+				order.span_pickupdate = u.qs("span.pickupdate", order);
+				order.span_date = u.qs("span.date", order.span_pickupdate);
 				order.bn_edit = u.qs("li.change a.button:not(.disabled)", order);
 				if(order.bn_edit) {
 					order.bn_edit.order = order;
@@ -7377,7 +7377,7 @@ Util.Modules["user_profile"] = new function() {
 									this.form.order = this.order;
 									this.innerHTML = "Gem";
 									u.ac(this, "primary");
-									u.ae(this.order.p_pickupdate, this.form);
+									u.ae(this.order.span_pickupdate, this.form);
 									u.f.init(this.form);
 									this.form.submitted = function() {
 										this.response = function(response) {
@@ -7893,13 +7893,13 @@ Util.Modules["profile"] = new function() {
 			}
 		}
 		scene.initOrderList = function() {
-			var orders = u.qsa("div.order_item", this);
+			var orders = u.qsa("li.order_item", this);
 			var i, order;
 			for(i = 0; i < orders.length; i++) {
 				order = orders[i];
 				order.order_item_id = u.cv(order, "order_item_id");
-				order.p_pickupdate = u.qs("p.pickupdate", order);
-				order.span_date = u.qs("span.date", order.p_pickupdate);
+				order.span_pickupdate = u.qs("span.pickupdate", order);
+				order.span_date = u.qs("span.date", order.span_pickupdate);
 				order.bn_edit = u.qs("li.change a.button:not(.disabled)", order);
 				if(order.bn_edit) {
 					order.bn_edit.order = order;
@@ -7916,7 +7916,7 @@ Util.Modules["profile"] = new function() {
 									this.form.order = this.order;
 									this.innerHTML = "Gem";
 									u.ac(this, "primary");
-									u.ae(this.order.p_pickupdate, this.form);
+									u.ae(this.order.span_pickupdate, this.form);
 									u.f.init(this.form);
 									this.form.submitted = function() {
 										this.response = function(response) {
