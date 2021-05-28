@@ -138,7 +138,7 @@ class Department extends Model {
 		$this->addToModel("description", array(
 			"type" => "html",
 			"label" => "Essential information",
-			"hint_message" => "Write any essential information about the department – this will be shown on the department list.",
+			"hint_message" => "Write any essential information about the department (e.g. special conditions or other deviations) – this will be shown on the department list.",
 			"error_message" => "Invalid entry."
 		));
 
