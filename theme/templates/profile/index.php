@@ -94,40 +94,46 @@ $unpaid_orders = $SC->getUnpaidOrders();
 				<h2>Bestillinger</h2>
 				
 				<? if($order_items_pickupdates): ?>
-				<div class="order_item-headings">
-					<h4 class="pickupdate">AFH.DATO</h4>
-					<h4 class="place">AFH.STED</h4>
-					<h4 class="order_item-product">VARE(R)</h4>
-					<h4 class="order-status">STATUS</h4>
-					<h4 class="change-untill">RET INDTIL</h4>
-				</div>
-
-
 				<div class="order_items">
+					<ul class="order_items">
+						<li class="headings">
+							<span class="pickupdate">AFH.DATO</span>
+							<span class="department">AFH.STED</span>
+							<span class="product">VARE(R)</span>
+							<span class="status">STATUS</span>
+							<span class="change-until">RET INDTIL</span>
+							<span class="button"></span>
+						</li>
+
 				<? foreach($order_items_pickupdates as $pickupdate): 
 					$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["user_id" => $user["id"]]);
 					
 					if($pickupdate_order_items): ?>
 						<? foreach($pickupdate_order_items as $order_item): ?>
 						<? $order = $SC->getOrders(["order_id" => $order_item["order_id"]]) ?>
-						<? $order_item_department_pickupdate = $SC->getOrderItemDepartmentPickupdate($order_item["id"]) ?>
-						<div class="order_item order_item_id:<?= $order_item["id"] ?>">
-							<p class="pickupdate"><span class="date"><?= date("d.m.Y", strtotime($pickupdate["pickupdate"])) ?></span></p>
-							<p class="place"><?= $order_item_department_pickupdate["department"] ?></p>
-							<p class="order_item-product"><?= $order_item["quantity"] > 1 ? $order_item["quantity"]." x " : ""?><?= $order_item["name"] ?></p>
+						<? $order_item_department_pickupdate = $SC->getOrderItemDepartmentPickupdate($order_item["id"]); ?>
+						<li class="order_item order_item_id:<?= $order_item["id"] ?>">
+							<span class="pickupdate"><span class="date"><?= date("d.m.Y", strtotime($pickupdate["pickupdate"])) ?></span></span>
+							<span class="department" title="<?= $order_item_department_pickupdate["department"] ?>"><?= $order_item_department_pickupdate["department"] ?></span>
+							<span class="product" title="<?= $order_item["name"] ?>"><?= $order_item["quantity"] > 1 ? $order_item["quantity"]." x " : "" ?><?= $order_item["name"] ?></span>
 							<? if($order["payment_status"] == 2): ?>
-							<p class="order-status"><span class='paid'>Betalt</span></p>
+							<span class="status"><span class="paid">Betalt</span></span>
 							<? else: ?>
-							<p class="order-status"><a href="/butik/betaling/<?= $order["order_no"] ?>" class="unpaid">Ikke betalt</a></p>
+							<span class="status"><a href="/butik/betaling/<?= $order["order_no"] ?>" class="unpaid">Ikke betalt</a></span>
 							<? endif; ?>
-							<p class="change-untill"><span class="date"><?= date("d.m", strtotime($pickupdate["pickupdate"]." - 1 week")) ?></span> kl. <span class="time">23:59</span></p>
-							<ul class="actions change"><li class="change">
-								<? if(date("Y-m-d") > date("Y-m-d", strtotime($pickupdate["pickupdate"]." - 1 week"))): ?>
-								<a class="button disabled">Ret</a></li></ul>
-								<? else: ?>
-								<a href="/butik/ret-bestilling/<?= $order_item["id"] ?>" class="button">Ret</a></li></ul>
-								<? endif; ?>
-						</div>
+							<span class="change-until"><span class="date"><?= date("d.m", strtotime($pickupdate["pickupdate"]." - 1 week")) ?></span> kl. <span class="time">23:59</span></span>
+							<span class="button">
+								<ul class="actions change">
+									<li class="change">
+									<? if(date("Y-m-d") > date("Y-m-d", strtotime($pickupdate["pickupdate"]." - 1 week"))): ?>
+										<a class="button disabled">Ret</a>
+									<? else: ?>
+										<a href="/butik/ret-bestilling/<?= $order_item["id"] ?>" class="button">Ret</a>
+									<? endif; ?>
+									</li>
+								</ul>
+							</span>
+						</li>
 						<? endforeach; ?>
 					<? endif; ?>
 				<? endforeach; ?>
