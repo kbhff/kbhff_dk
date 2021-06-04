@@ -17,6 +17,10 @@ $department_id = session()->value("department_id");
 
 			<p>Din besked er blevet sendt til alle <?= $recipient_count ?> aktive medlemmer af KBHFF.</p>
 			
+			<? elseif($department_id == "all_departments_all_members"): ?>
+
+			<p>Din besked er blevet sendt til alle <?= $recipient_count ?> aktive og inaktive medlemmer af KBHFF.</p>
+			
 			<? else: 
 			global $DC;
 			$department = $DC->getDepartment(["id" => $department_id]);

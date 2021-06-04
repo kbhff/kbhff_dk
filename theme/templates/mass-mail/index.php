@@ -29,7 +29,10 @@ $send_to_all_members = $this->checkpermissions("/massemail", "/sendToAllMembers"
 			<? if($send_to_department_members && $send_to_all_members): ?>
 			<fieldset>
 				<h3>Vælg modtagere</h3>
-				<?= $model->input("department_id", ["options" => $model->toOptions($departments, "id", "name", ["add" => ["all_departments" => "Alle afdelinger"]])]) ?>
+				<?= $model->input("department_id", ["options" => $model->toOptions($departments, "id", "name", ["add" => [
+					"all_departments" => "Alle afdelinger",
+					"all_departments_all_members" => "Alle afdelinger (inkl. inaktive medlemmer)"
+				]])]) ?>
 			</fieldset>
 			<? endif; ?>
 
