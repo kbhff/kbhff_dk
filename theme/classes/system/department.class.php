@@ -134,12 +134,12 @@ class Department extends Model {
 			"label" => "Longitude"
 		));
 
-		// description
+		// essential information
 		$this->addToModel("description", array(
-			"type" => "html",
-			"label" => "Short description",
-			"hint_message" => "Write a short description of the department – this will be shown on the department list.",
-			"error_message" => "A short description without any words? How weird."
+			"type" => "text",
+			"label" => "Essential information",
+			"hint_message" => "Write any essential information about the department (e.g. special conditions or other deviations) – this will be shown on the department list.",
+			"error_message" => "Invalid entry."
 		));
 
 		// HTML
