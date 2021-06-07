@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-04-27 22:30:44
+asset-builder @ 2021-06-07 15:12:58
 */
 
 /*seg_desktop_include.css*/
@@ -257,6 +257,138 @@ input[type="submit"] {
 	-webkit-appearance: none;
 	-webkit-border-radius: 0;
 }
+div.field.html {
+	z-index: 3;
+}
+div.field.html.optionsshown {z-index: 60 !important;}
+div.field.html div.html_editor_hint {width: 383px;}
+div.field.html div.html_editor_hint_content {display: none;}
+div.field.html div.html_editor_hint h3,
+div.field.html div.html_editor_hint h4,
+div.field.html div.html_editor_hint p {padding: 0 0 5px;}
+div.field.html div.html_editor_hint p+h3,
+div.field.html div.html_editor_hint p+h4 {padding: 10px 0 5px;}
+div.field.html div.html_editor_hint .open,
+div.field.html div.html_editor_hint .close {font-size: 1rem; line-height: 1em; cursor: pointer; vertical-align: top; margin: 3px 3px 0; border-radius: 13px; background-color: #313942; padding: 6px 10px 7px; color: #ffffff; margin: 10px 0 20px; text-align: center;}
+div.field.html > textarea {display: none;}
+div.field.html.focus > textarea {margin: 2px; border: 1px solid #dcdcdc;}
+div.field.html > textarea.show {display: block; height: 200px; }
+div.field.html > label {display: block;   font-size: 12px;}
+div.field.html > label span {font-size: 10px; float: right; padding: 1px 0 0; cursor: pointer;}
+div.field.html > .indicator {top: 33px;}
+div.field.html .viewer {display: none;}
+div.field.html .editor {  position: relative; z-index: 3;}
+div.field.html ul.new_tag_options {display: block; vertical-align: top; position: relative; z-index: 1; padding: 0 0 10px !important; margin: 0 !important;}
+div.field.html ul.new_tag_options li {font-size: 1rem; line-height: 1em !important; color: #000000; cursor: pointer; margin: 3px 3px 0; border-radius: 13px; background-color: #dedede; padding: 6px 10px 7px !important;  display: block;}
+div.field.html ul.new_tag_options li:hover {background-color: #3E8E17; color: #ffffff;}
+/*div.field.html ul.new_tag_options.show li.add {top: 0; left: 0; background-color: #df0000;}
+div.field.html ul.new_tag_options.show li {display: inline-block; position: relative; top: -26px; left: 26px;}
+*/
+div.field.html .editor div.tag {margin: 2px 2px 3px; padding: 0 0 0 30px; background-color: #dcdcdc; position: relative; border: 1px solid #999999;}
+div.field.html .editor div.dragged {background-color: #3E8E17; border-color: #3E8E17;}
+div.field.html .editor div.tag.dragged .drag {background-color: #3E8E17;}
+div.field.html .editor div.tag.dragged ul.type li {color: #ffffff;}
+div.field.html .editor div.tag .drag {display: none; position: absolute; top: 0px; left: -20px; border-top-left-radius: 100%; border-bottom-left-radius: 100%; background: #dedede; width: 27px; height: 27px; cursor: move;
+	background: #dedede url(../img/bg_icons.png) no-repeat 6px -93px;
+}
+div.field.html .editor div.tag:hover .drag {display: block;}
+div.field.html .editor div.tag ul.tag_options {display: none; z-index: 10; position: absolute; top: 0px; right: -14px; list-style: none !important; padding: 0 !important; margin: 0 !important;}
+div.field.html .editor div.tag ul.tag_options li {padding: 0 !important; box-sizing: border-box; display: block;}
+div.field.html .editor div.tag.classname_open ul.tag_options,
+div.field.html .editor div.tag:hover ul.tag_options {display: block;}
+div.field.html .editor div.tag ul.tag_options li.add {position: absolute; top: 13px; right: 8px; border-radius: 15px; background: #dedede; width: 30px; height: 30px; cursor: pointer;
+	font-size: 16px; line-height: 1em; padding: 3px 4px !important; text-align: center;
+}
+div.field.html .editor div.tag ul.tag_options li.add:hover {background-color: #3E8E17; color: #ffffff;}
+div.field.html .editor div.tag:first-child ul.tag_options li.remove {display: none;}
+div.field.html .editor div.tag ul.tag_options li.remove {position: absolute; top: 0px; right: -15px; border-radius: 15px; background: #dedede; width: 30px; height: 30px; cursor: pointer;
+	background: #dedede url(../img/bg_icons.png) no-repeat 8px -42px;
+}
+div.field.html .editor div.tag ul.tag_options li.remove:hover {background-color: #C22414;}
+div.field.html .editor div.tag ul.tag_options li.classname {position: absolute; top: -15px; right: 8px; border-radius: 15px; background: #dedede; width: 30px; height: 30px; cursor: pointer;}
+div.field.html .editor div.tag ul.tag_options li.classname.open {width: auto; white-space: nowrap; font-size: 0;}
+div.field.html .editor div.tag ul.tag_options li.classname span {display: inline-block; vertical-align: top; font-size: 10px; padding-top: 3px; padding-left: 5px;}
+div.field.html .editor div.tag ul.tag_options li.classname:hover {background-color: #3E8E17; color: #ffffff;}
+div.field.html .editor div.tag ul.tag_options li.classname form {margin: 0; display: inline-block; vertical-align: top;}
+div.field.html .editor div.tag ul.tag_options li.classname form .field {padding: 3px 12px 0 3px;}
+div.field.html .editor div.tag ul.tag_options li.classname form .field label {display: none;}
+div.field.html .editor div.tag ul.tag_options li.classname form .field input {height: 24px; width: 100px; font-size: 13px; margin: 0;}
+div.field.html .editor div.tag ul.tag_options li.classname form .field.focus input {border: 1px solid #999999; margin: 0px;}
+div.field.html .editor div.tag span.classname {position: absolute; top: -7px; right: 20px; background: #dedede; border-radius: 6px; font-size: 9px; display: block; padding: 2px 5px; line-height: 9px;}
+div.field.html .editor div.tag ul.type {display: block; z-index: 5; position: absolute; width: 30px; top: 0px; left: 0px; padding: 0 !important; margin: 0 !important;}
+div.field.html .editor div.tag ul.type li {display: none; text-transform: uppercase; padding: 9px 4px !important; text-align: center; font-size: 11px; line-height: 1em !important; cursor: default;}
+div.field.html .editor div.tag ul.type.clickable li {cursor: pointer;}
+div.field.html .editor div.tag ul.type li.selected {display: block;}
+div.field.html .editor div.tag ul.type.open {z-index: 10; border: 1px solid #999999; margin: -1px !important; background-color: #F5F7F8;}
+div.field.html .editor div.tag ul.type.open li {display: block; color: #5c5c5c !important;}
+div.field.html .editor div.tag ul.type.open li:hover {background-color: #dedede;}
+div.field.html .editor div.tag ul.type.open li.selected {background-color: #3E8E17 !important; color: #ffffff !important;}
+div.field.html .editor div.tag ul.type li.code {font-size: 8px; padding: 11px 0 !important;}
+div.field.html .editor div.tag ul.type li.media {font-size: 8px; padding: 11px 0 !important;}
+div.field.html .editor div.tag ul.type li.youtube {font-size: 8px; padding: 5px 4px !important; word-wrap: break-word;}
+div.field.html .editor div.tag ul.type li.vimeo {font-size: 8px; padding: 11px 0 !important;}
+div.field.html .editor div.tag ul.type li.file {font-size: 8px; padding: 11px 0 !important;}
+div.field.html .editor div.tag div.text {display: inline-block; vertical-align: top; width: 100%; box-sizing: border-box; height: auto; padding: 4px 6px; line-height: 1.375em; color: #333333; box-shadow: inset 0 1px 2px #dedede; background: #ffffff; min-height: 20px; outline: none;}
+div.field.html .editor div.tag div.text em,
+div.field.html .editor div.tag div.text strong,
+div.field.html .editor div.tag div.text a,
+div.field.html .editor div.tag div.text span,
+div.field.html .editor div.tag div.text sup {background-color: rgba(255, 0, 0, 0.3); cursor: default; font-size: inherit;}
+div.field.html .editor div.tag div.text sup {line-height: 1em; font-size: 11px;}
+div.field.html .editor div.tag.focus {background-color: #3E8E17; padding: 0 0 0 30px; margin: 0 0 1px; border: 3px solid #3E8E17;}
+div.field.html .editor div.tag + div.tag.focus {margin-top: -2px;}
+div.field.html .editor div.tag.focus + div.tag {margin-top: 1px;}
+div.field.html .editor div.tag.focus .drag {background-color: #3E8E17; }
+div.field.html .editor div.tag.focus ul.type li {color: #ffffff;}
+div.field.html .editor div.tag.h1 div.text {font-size: 36px;}
+div.field.html .editor div.tag.h2 div.text {font-size: 30px;}
+div.field.html .editor div.tag.h3 div.text {font-size: 20px;}
+div.field.html .editor div.tag.h4 div.text {font-size: 16px;}
+div.field.html .editor div.tag.h5 div.text {font-size: 14px;}
+div.field.html .editor div.tag.p div.text {font-size: 14px;}
+div.field.html .editor div.tag.code div.text {font-size: 12px; line-height: 1.761em; white-space: pre-wrap;
+	font-family: "Monaco", "Courier New", "Courier";
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+}
+div.field.html .editor div.tag.ul {padding-left: 50px;}
+div.field.html .editor div.tag.ol {padding-left: 50px;}
+div.field.html .editor div.tag div.li {font-size: 14px;}
+div.field.html .editor div.tag div.li div.text {width: 414px;}
+div.field.html .editor div.tag.file .text {padding: 0 6px; height: 28px;}
+div.field.html .editor div.tag.file.done .text {color: #aaaaaa; font-size: 13px; padding: 4px 6px; line-height: 1.461em; height: auto; text-decoration: underline;}
+div.field.html .editor div.tag.file.done.focus .text {color: #333333;}
+div.field.html .editor div.tag.file .text label {padding: 5px 0 0; display: block; text-align: center; position: absolute; z-index: 1; width: 432px; color: #aaaaaa;}
+div.field.html .editor div.tag.file input {width: 416px; opacity: 0; height: 18px; position: relative; z-index: 2;
+	font-size: 130px;
+}
+div.field.html .editor div.tag.media .text {padding: 0 6px; height: 28px;}
+div.field.html .editor div.tag.media.done .text {color: #aaaaaa; font-size: 13px; padding: 4px 6px; line-height: 1.461em; height: auto;}
+div.field.html .editor div.tag.media.done.focus .text {color: #333333;}
+div.field.html .editor div.tag.media .text label {padding: 5px 0 0; display: block; text-align: center; position: absolute; z-index: 1; width: 432px; color: #aaaaaa;}
+div.field.html .editor div.tag.media input {width: 416px; opacity: 0; height: 18px; position: relative; z-index: 2;
+	font-size: 130px;
+}
+div.field.html .editor div.tag.media img {width: 444px; margin: 2px;}
+div.field.html .editor div.tag.vimeo .text,
+div.field.html .editor div.tag.youtube .text {padding: 0 6px; height: 28px; color: #aaaaaa; font-size: 13px; padding: 4px 6px; line-height: 1.461em; height: auto;}
+div.field.html .editor div.tag.vimeo.focus .text,
+div.field.html .editor div.tag.youtube.focus .text {color: #333333;}
+body #selection_options {z-index: 1100; position: absolute; background-color: #F5F7F8; border: 3px solid #5c5c5c; margin: 0px 0 0 10px; padding: 15px; border-radius: 5px;}
+body #selection_options h3 {padding: 0 0 10px; text-align: left; font-size: 13px;}
+body #selection_options ul.options + form {margin-top: 10px; border-top: 1px solid #5c5c5c; padding-top: 10px;}
+body #selection_options ul.options li {display: block; font-size: 13px; padding: 5px 0; cursor: pointer;}
+body #selection_options ul.options li.link {text-decoration: underline;}
+body #selection_options ul.options li.em {font-style: italic;}
+body #selection_options ul.options li.strong {font-weight: 700;}
+body #selection_options .field {margin-left: -2px; padding: 0 0 5px;}
+body #selection_options .field.string input {width: 150px;}
+body #selection_options .field .help {left: 180px;}
+body #selection_options ul.actions {padding: 10px 0 0;}
+body #selection_options ul.actions li {padding: 0 5px 0 0;}
+.delete_selection {position: absolute; z-index: 1150; top: 0; left: 0; border-radius: 8px; width: 14px; height: 14px; font-size: 10px; line-height: 14px; text-align: center; background: #ffffff; border: 1px solid #000000; cursor: pointer;}
+.edit_selection {position: absolute; z-index: 1150; top: 0; left: 0; border-radius: 8px; width: 14px; height: 14px; font-size: 10px; line-height: 14px; text-align: center; background: #ffffff; border: 1px solid #000000; cursor: pointer;}
 
 
 /*s-header.css*/

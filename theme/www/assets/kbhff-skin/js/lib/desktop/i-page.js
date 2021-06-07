@@ -55,7 +55,7 @@ Util.Modules["page"] = new function() {
 
 		// Page is ready
 		page.ready = function() {
-			u.bug("page.ready", this);
+			// u.bug("page.ready", this);
 
 			// page is ready to be shown - only initalize if not already shown
 			if(!this.is_ready) {

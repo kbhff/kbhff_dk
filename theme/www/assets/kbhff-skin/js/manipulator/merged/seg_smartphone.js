@@ -1,6 +1,6 @@
 /*
-Manipulator v0.9.3-kbhff_dk Copyright 2008-2020 https://manipulator.parentnode.dk
-js-merged @ 2020-11-02 13:41:36
+Manipulator v0.9.3-kbhff_dk Copyright 2008-2021 https://manipulator.parentnode.dk
+js-merged @ 2021-06-07 15:10:02
 */
 
 /*seg_smartphone_include.js*/
@@ -926,10 +926,10 @@ u.containsOrIs = function(scope, node) {
 u.elementMatches = u.em = function(node, selector) {
 	return node.matches(selector);
 }
-Util.insertAfter = u.ia = function(after_node, insert_node) {
+Util.insertAfter = u.ia = function(insert_node, after_node) {
 	var next_node = u.ns(after_node);
 	if(next_node) {
-		after_node.parentNode.insertBefore(next_node, insert_node);
+		after_node.parentNode.insertBefore(insert_node, next_node);
 	}
 	else {
 		after_node.parentNode.appendChild(insert_node);

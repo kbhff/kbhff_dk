@@ -18,3 +18,4 @@ u.f.customHintPosition["radiobuttons"] = function() {}
 u.f.customHintPosition["date"] = function() {}
 u.f.customHintPosition["datetime"] = function() {}
 u.f.customHintPosition["files"] = function() {}
+u.f.customHintPosition["html"] = function() {}

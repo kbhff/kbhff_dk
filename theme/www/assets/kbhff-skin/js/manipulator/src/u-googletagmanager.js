@@ -1,23 +1,25 @@
-u.includeGoogleAnalytics = function() {
-	if(typeof(ga) !== "function") {
+u.includeGoogleTagManager = function() {
+	if(typeof(gtag) !== "function") {
 
-		u.bug("includeGoogleAnalytics");
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', u.gtm_account);
 
-	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	    m=s.getElementsByTagName(o)[0];a.async=1;a.defer=true;a.src=g;m.parentNode.insertBefore(a,m)
-	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		dataLayer.push({'gtm.start': new Date().getTime()});
+		dataLayer.push({'event': 'gtm.js'});
 
-		// track page view for initial load
-	    ga('create', u.ga_account, u.ga_domain);
-	    ga('send', 'pageview');
-		
+		u.ae(document.head, "script", {src: "https://www.googletagmanager.com/gtag/js?id="+u.gtm_account, async: true})
+
+		u.bug("includeGoogleTagManager");
 
 		u.stats = new function() {
 
 			// track regurlar page view
 			this.pageView = function(url) {
-				ga('send', 'pageview', url);
+				window.dataLayer.push({
+					'event': 'pageview'
+				});
 			}
 
 
@@ -60,15 +62,16 @@ u.includeGoogleAnalytics = function() {
 				}
 
 				// Set missing eventLabel (if possible)
-				if(!eventLabel && event && event.currentTarget && event.currentTarget.url) {
-					eventLabel = event.currentTarget.url;
-				}
-				else if(!eventLabel) {
+				// if(!eventLabel && event && event.currentTarget && event.currentTarget.url) {
+				// 	eventLabel = event.currentTarget.url;
+				// }
+				// else
+				if(!eventLabel) {
 					eventLabel = this.nodeSnippet(node);
 				}
 
 				//ga('send', 'event', [eventCategory], [eventAction], [eventLabel], [eventValue], [fieldsObject]);
-				ga('send', 'event', {
+				window.dataLayer.push({
 					"eventCategory": eventCategory, 
 					"eventAction": eventAction,
 					"eventLabel": eventLabel,
@@ -79,22 +82,27 @@ u.includeGoogleAnalytics = function() {
 
 			}
 
-			// LEGACY
-			// this.customVar = function(slot, name, value, scope) {
-			//
-			//
-			// 	// _gaq.push(['_setCustomVar',
-			// 	//       slot,		// This custom var is set to slot #1.  Required parameter.
-			// 	//       name,		// The name of the custom variable.  Required parameter.
-			// 	//       value,	// The value of the custom variable.  Required parameter.
-			// 	//       scope		// Sets the scope to visitor-level.  Optional parameter.
-			// 	//  ]);
-			//
-			// }
+
 
 			// Simple label generator
 			this.nodeSnippet = function(node) {
-				return u.cutString(u.text(node).trim(), 20) + "(<"+node.nodeName+">)";
+				if(node.id) {
+					return node.id;
+				}
+				else if(node._a && node._a.id) {
+					return node._a.id;
+				}
+				else if(u.text(node)) {
+					return u.cutString(u.text(node).trim(), 20);
+				}
+				else if(event && event.currentTarget && event.currentTarget.url) {
+					return event.currentTarget.url;
+				}
+				else {
+					return node.nodeName + (node.className ? "."+node.className : "");
+				}
+				
+				// return u.cutString(u.text(node).trim(), 20) + (node.id ? node.id : node._a.id ? node._a.id : "(<"+node.nodeName+">)");
 			}
 		}
 
@@ -104,8 +112,8 @@ u.includeGoogleAnalytics = function() {
 
 }
 
-if(u.ga_account && !u.cookies_disallowed) {
-	u.bug("includeGoogleAnalytics allowed");
-	u.includeGoogleAnalytics();
+if(u.gtm_account && !u.cookies_disallowed) {
+	u.bug("includeGoogleTagManager allowed");
+	u.includeGoogleTagManager();
 
 }
