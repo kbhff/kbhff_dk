@@ -441,19 +441,26 @@ div.field.html .editor div.tag.youtube.focus .text {color: #333333;}
 
 
 /* SELECTION OPTIONS PANE */
-body #selection_options {z-index: 1100; position: absolute; background-color: #F5F7F8; border: 3px solid #5c5c5c; margin: 0px 0 0 10px; padding: 15px; border-radius: 5px;}
-body #selection_options h3 {padding: 0 0 10px; text-align: left; font-size: 13px;}
-body #selection_options ul.options + form {margin-top: 10px; border-top: 1px solid #5c5c5c; padding-top: 10px;}
-body #selection_options ul.options li {display: block; font-size: 13px; padding: 5px 0; cursor: pointer;}
-body #selection_options ul.options li.link {text-decoration: underline;}
-body #selection_options ul.options li.em {font-style: italic;}
-body #selection_options ul.options li.strong {font-weight: 700;}
+div.field.html .editor .selection_options {/*z-index: 1100;*/ /*position: absolute;*/ background-color: #F5F7F8; border: 1px solid #999999; border-bottom: none; margin: 2px 2px -2px; /*margin: 0px 0 0 10px;*/padding: 10px 15px; /*border-radius: 5px;*/}
+div.field.html .editor .selection_options h3 {padding: 0 0 10px; text-align: left; font-size: 13px;}
+div.field.html .editor .selection_options ul.options {margin: 0 !important; padding: 0 !important; text-align: center; font-size: 0;}
+div.field.html .editor .selection_options ul.options li {display: inline-block; vertical-align: top; width: 20%; font-size: 13px; box-sizing: border-box; padding: 0 10px !important; cursor: pointer;}
+div.field.html .editor .selection_options ul.options li.link {text-decoration: underline;}
+div.field.html .editor .selection_options ul.options li.em {font-style: italic;}
+div.field.html .editor .selection_options ul.options li.strong {font-weight: 700;}
 
-body #selection_options .field {margin-left: -2px; padding: 0 0 5px;}
-body #selection_options .field.string input {width: 150px;}
-body #selection_options .field .help {left: 180px;}
-body #selection_options ul.actions {padding: 10px 0 0;}
-body #selection_options ul.actions li {padding: 0 5px 0 0;}
+/*div.field.html .editor .selection_options ul.options + form {margin-top: 10px; border-top: 1px solid #5c5c5c; padding-top: 10px; font-size: 0;}*/
+
+div.field.html .editor .selection_options form {font-size: 0; padding-top: 10px;}
+div.field.html .editor .selection_options fieldset,
+div.field.html .editor .selection_options ul.actions {display: inline-block; vertical-align: top;}
+
+div.field.html .editor .selection_options fieldset {width: calc(100% - 120px);}
+div.field.html .editor .selection_options .field {margin-left: -2px; padding: 0 0 5px;}
+/*div.field.html .editor .selection_options .field.string input {width: 150px;}*/
+div.field.html .editor .selection_options .field .help {left: 180px;}
+div.field.html .editor .selection_options ul.actions {padding: 10px 0 0 !important; width: 120px;}
+div.field.html .editor .selection_options ul.actions li {padding: 0;}
 
 
 /* DELETE SELECTION ICON */
