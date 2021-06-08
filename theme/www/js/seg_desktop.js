@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-06-07 15:26:09
+asset-builder @ 2021-06-08 14:20:33
 */
 
 /*seg_desktop_include.js*/
@@ -3262,7 +3262,6 @@ u.f.textEditor = function(field) {
 			this._editor.updateTargets();
 			this._editor.updateDraggables();
 			this.update();
-			this._form.submit();
 		}
 	}
 	field.classnameTag = function(tag) {
@@ -4048,7 +4047,6 @@ u.f.textEditor = function(field) {
 		}
 		this.field.hideSelectionOptions();
 		if(selection && !selection.isCollapsed) {
-			u.bug("selection:", this);
 			var node = selection.anchorNode;
 			while(node != this) {
 				if(node.nodeName == "HTML" || !node.parentNode) {
@@ -4059,6 +4057,9 @@ u.f.textEditor = function(field) {
 			if(node == this) {
 				this.field.showSelectionOptions(this, selection);
 			}
+		}
+		else {
+			this.field.hideSelectionOptions();
 		}
 		this.field.update();
 	}
@@ -4084,7 +4085,6 @@ u.f.textEditor = function(field) {
 		u.rc(this.field, "focus");
 		u.as(this.field, "zIndex", this.field._base_z_index);
 		u.f.positionHint(this.field);
-		this.field.hideSelectionOptions();
 	}
 	field._pasted_content = function(event) {
 		u.e.kill(event);
@@ -4176,20 +4176,18 @@ u.f.textEditor = function(field) {
 		this.update();
 	}
 	field.showSelectionOptions = function(node, selection) {
-		var x = u.absX(node);
-		var y = u.absY(node);
-		this.selection_options = u.ae(document.body, "div", {"id":"selection_options"});
-		u.as(this.selection_options, "top", y+"px");
-		u.as(this.selection_options, "left", (x + node.offsetWidth) +"px");
+		this.hideSelectionOptions();
+		this.hideDeleteOrEditOptions();
+		this.selection_options = u.ae(node.field._editor, "div", {"class":"selection_options"});
+		node.field._editor.insertBefore(this.selection_options, node.tag);
 		var ul = u.ae(this.selection_options, "ul", {"class":"options"});
 		this.selection_options._link = u.ae(ul, "li", {"class":"link", "html":"Link"});
 		this.selection_options._link.field = this;
-		this.selection_options._link.tag = node;
+		this.selection_options._link.tag = node.tag;
 		this.selection_options._link.selection = selection;
 		u.ce(this.selection_options._link);
 		this.selection_options._link.inputStarted = function(event) {
 			u.e.kill(event);
-			this.field.selection_options.is_active = true;
 		}
 		this.selection_options._link.clicked = function(event) {
 			u.e.kill(event);
@@ -4197,7 +4195,7 @@ u.f.textEditor = function(field) {
 		}
 		this.selection_options._em = u.ae(ul, "li", {"class":"em", "html":"Italic"});
 		this.selection_options._em.field = this;
-		this.selection_options._em.tag = node;
+		this.selection_options._em.tag = node.tag;
 		this.selection_options._em.selection = selection;
 		u.ce(this.selection_options._em);
 		this.selection_options._em.inputStarted = function(event) {
@@ -4209,7 +4207,7 @@ u.f.textEditor = function(field) {
 		}
 		this.selection_options._strong = u.ae(ul, "li", {"class":"strong", "html":"Bold"});
 		this.selection_options._strong.field = this;
-		this.selection_options._strong.tag = node;
+		this.selection_options._strong.tag = node.tag;
 		this.selection_options._strong.selection = selection;
 		u.ce(this.selection_options._strong);
 		this.selection_options._strong.inputStarted = function(event) {
@@ -4221,7 +4219,7 @@ u.f.textEditor = function(field) {
 		}
 		this.selection_options._sup = u.ae(ul, "li", {"class":"sup", "html":"Superscript"});
 		this.selection_options._sup.field = this;
-		this.selection_options._sup.tag = node;
+		this.selection_options._sup.tag = node.tag;
 		this.selection_options._sup.selection = selection;
 		u.ce(this.selection_options._sup);
 		this.selection_options._sup.inputStarted = function(event) {
@@ -4233,20 +4231,30 @@ u.f.textEditor = function(field) {
 		}
 		this.selection_options._span = u.ae(ul, "li", {"class":"span", "html":"CSS class"});
 		this.selection_options._span.field = this;
-		this.selection_options._span.tag = node;
+		this.selection_options._span.tag = node.tag;
 		this.selection_options._span.selection = selection;
 		u.ce(this.selection_options._span);
 		this.selection_options._span.inputStarted = function(event) {
 			u.e.kill(event);
-			this.field.selection_options.is_active = true;
 		}
 		this.selection_options._span.clicked = function(event) {
 			u.e.kill(event);
 			this.field.addSpanTag(this.selection, this.tag);
 		}
 	}
+	field.hideDeleteOrEditOptions = function(node) {
+		var options = u.qsa(".delete_selection, .edit_selection");
+		var i, option;
+		for(i = 0; i < options.length; i++) {
+			option = options[i];
+			if(!node || option.node !== node) {
+				option.node.out();
+			}
+		}
+	}
 	field.deleteOrEditOption = function(node) {
 		node.over = function(event) {
+			this.field.hideDeleteOrEditOptions(this);
 			if(!this.bn_delete) {
 				this.bn_delete = u.ae(document.body, "span", {"class":"delete_selection", "html":"X"});
 				this.bn_delete.node = this;
@@ -4300,7 +4308,7 @@ u.f.textEditor = function(field) {
 				delete this.bn_edit;
 			}
 		}
-		u.e.hover(node, {"delay":1000});
+		u.e.hover(node, {"delay":500});
 	}
 	field.activateInlineFormatting = function(input, tag) {
 		var i, node;
@@ -4309,7 +4317,12 @@ u.f.textEditor = function(field) {
 			node = inline_tags[i];
 			node.field = input.field;
 			node.tag = tag;
-			this.deleteOrEditOption(node);
+			if(!u.text(node)) {
+				node.parentNode.removeChild(node);
+			}
+			else {
+				this.deleteOrEditOption(node);
+			}
 		}
 	}
 	field.addAnchorTag = function(selection, tag) {
@@ -4321,10 +4334,11 @@ u.f.textEditor = function(field) {
 		try {
 			range.surroundContents(a);
 			selection.removeAllRanges();
-			this.anchorOptions(a);
+			this.editAnchorTag(a);
 			this.deleteOrEditOption(a);
 		}
 		catch(exception) {
+			u.bug("exception", exception)
 			selection.removeAllRanges();
 			this.hideSelectionOptions();
 			alert("You cannot cross the boundaries of another selection. Yet.");
@@ -4332,7 +4346,6 @@ u.f.textEditor = function(field) {
 	}
 	field.anchorOptions = function(a) {
 		var form = u.f.addForm(this.selection_options, {"class":"labelstyle:inject"});
-		u.ae(form, "h3", {"html":"Link options"});
 		var fieldset = u.f.addFieldset(form);
 		var input_url = u.f.addField(fieldset, {
 			"label":"url", 
@@ -4374,11 +4387,9 @@ u.f.textEditor = function(field) {
 	}
 	field.editAnchorTag = function(a) {
 		this.hideSelectionOptions();
-		var x = u.absX(a.tag);
-		var y = u.absY(a.tag);
-		this.selection_options = u.ae(document.body, "div", {"id":"selection_options"});
-		u.as(this.selection_options, "top", y+"px");
-		u.as(this.selection_options, "left", (x + a.tag.offsetWidth) +"px");
+		this.hideDeleteOrEditOptions();
+		this.selection_options = u.ae(a.field._editor, "div", {"class":"selection_options"});
+		a.field._editor.insertBefore(this.selection_options, a.tag);
 		this.selection_options.is_active = false;
 		this.anchorOptions(a);
 	}
@@ -4444,7 +4455,7 @@ u.f.textEditor = function(field) {
 		try {
 			range.surroundContents(span);
 			selection.removeAllRanges();
-			this.spanOptions(span);
+			this.editSpanTag(span);
 			this.deleteOrEditOption(span);
 		}
 		catch(exception) {
@@ -4455,19 +4466,15 @@ u.f.textEditor = function(field) {
 	}
 	field.editSpanTag = function(span) {
 		this.hideSelectionOptions();
-		var x = u.absX(span.tag);
-		var y = u.absY(span.tag);
-		this.selection_options = u.ae(document.body, "div", {"id":"selection_options"});
-		u.as(this.selection_options, "top", y+"px");
-		u.as(this.selection_options, "left", (x + span.tag.offsetWidth) +"px");
-		this.selection_options.is_active = false;
+		this.hideDeleteOrEditOptions();
+		this.selection_options = u.ae(span.field._editor, "div", {"class":"selection_options"});
+		span.field._editor.insertBefore(this.selection_options, span.tag);
 		this.spanOptions(span);
 	}
 	field.spanOptions = function(span) {
 		var form = u.f.addForm(this.selection_options, {"class":"labelstyle:inject"});
-		u.ae(form, "h3", {"html":"CSS class"});
 		var fieldset = u.f.addFieldset(form);
-		var input_classname = u.f.addField(fieldset, {"label":"classname", "name":"classname", "value":span.className, "error_message":""});
+		var input_classname = u.f.addField(fieldset, {"label":"CSS class", "name":"classname", "value":span.className, "error_message":""});
 		var bn_save = u.f.addAction(form, {"value":"Save class", "class":"button"});
 		u.f.init(form);
 		form.span = span;
@@ -4568,6 +4575,7 @@ u.f.textEditor = function(field) {
 	field._editor.updateDraggables();
 	field._editor.detectSortableLayout();
 	field.updateViewer();
+	field.updateContent();
 	field.addRawHTMLButton();
 }
 u.f.customBuild = {};
