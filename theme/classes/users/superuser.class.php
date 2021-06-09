@@ -132,8 +132,7 @@ class SuperUser extends SuperUserCore {
 				message()->addMessage("Brugeroplysningerne blev slettet");
 		
 				mailer()->send([
-					"subject" => "Dit medlemskab af Københavns Fødevarefællesskab er opsagt",
-					"message" => "Du har meldt dig ud af Københavns Fødevarefællesskab. Tak for denne gang. \n\nBemærk, at hvis du har været tilmeldt nyhedsbrevet, skal du afmelde dig dette særskilt via afmeldings-linket i bunden af nyhedsbrevet. \n\nMed venlig hilsen, \nKøbenhavns Fødevarefællesskab",
+					"template" => "confirmation_membership_cancellation",
 					"recipients" => [$user_email]
 				]);
 
