@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-06-08 14:20:33
+asset-builder @ 2021-06-10 12:33:35
 */
 
 /*seg_desktop_include.css*/
@@ -1854,6 +1854,9 @@ div.overlay .field.password {
 #content .scene.add_product .first_pickupdate {margin-top: -8px;}
 #content .scene.add_product .last_pickupdate {margin-top: -8px;}
 
+
+/*s-mass_mail.css*/
+#content .scene.massmail form .status { opacity: 0;}
 
 /*s-departments.css*/
 #content .scene.departments ul.departments {list-style: none; margin: 0; padding: 0 0 50px; font-size: 0;}

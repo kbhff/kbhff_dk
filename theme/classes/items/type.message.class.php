@@ -28,6 +28,39 @@ class TypeMessage extends TypeMessageCore {
 		));
 	}
 	
+	function sendKbhffMessageTest($action) {
+
+		$UC = new User();
+		$user = $UC->getKbhffUser();
+
+		$this->getPostedEntities();
+
+		$name = $this->getProperty("name", "value");
+		$description = $this->getProperty("description", "value");
+		$html = $this->getProperty("html", "value");
+
+		// create quasi message item
+		$message = [
+			"name" => $name,
+			"description" => $description,
+			"html" => $html,
+			"layout" => "template-mass_mail.html"
+		];
+
+		// create final HTML
+		$final_html = $this->mergeMessageIntoLayout($message);
+
+		$recipients[] = $user["email"];
+
+		// send final HTML
+		if(mailer()->send(["from_email" => "it@kbhff.dk", "recipients" => $recipients, "subject" => $name, "html" => $final_html])) {
+			return true;
+		}
+
+		return false;
+
+	}
+
 	function sendKbhffMessage($action) {
 
 		global $UC;
@@ -87,14 +120,14 @@ class TypeMessage extends TypeMessageCore {
 			"name" => $name,
 			"description" => $description,
 			"html" => $html,
-			"layout" => "template-b.html"
+			"layout" => "template-mass_mail.html"
 		];
 
 		// create final HTML
 		$final_html = $this->mergeMessageIntoLayout($message);
 
 		// send final HTML
-		if(mailer()->sendBulk(["recipients" => $recipients, "subject" => $name, "html" => $final_html])) {
+		if(mailer()->sendBulk(["from_email" => "it@kbhff.dk", "recipients" => $recipients, "subject" => $name, "html" => $final_html])) {
 
 			global $page;
 			$page->addLog("TypeKbhffMessage->sendKbhffMessage: user_id:".session()->value("user_id").", department_id:".$department_id);

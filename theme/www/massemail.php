@@ -43,6 +43,22 @@ if($action) {
 		}
 
 	}
+	if(count($action) == 1 && $action[0] == "sendKbhffMessageTest" && $page->validateCsrfToken()) {
+
+		if($model->sendKbhffMessageTest($action)) {
+
+			message()->resetMessages();
+			message()->addMessage("Testbeskeden blev afsendt.");
+			header("Location: /massemail/kvittering");
+			exit();
+		}
+		else {
+			
+			message()->resetMessages();
+			message()->addMessage("Noget gik galt.", array("type" => "error"));
+		}
+
+	}
 	else if(count($action) == 1 && $action[0] == "kvittering") {
 
 		$page->page(array(
