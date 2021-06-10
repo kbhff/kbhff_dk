@@ -78,6 +78,7 @@ $email = $model->getProperty("email", "value");
 					<?= $model->input("item_id", array("required" => true, "type" => "select", "label" => "Vælg medlemskab", "hint_message" => "Vælg typen af medlemskab.", "error_message" => "Der skal vælges et medlemskab.", "options" => $HTML->toOptions($signupfees, "id", "name", ["add" => ["" => "Vælg medlemskab"]]),)); ?>
 					<?= $model->input("department_id", array("required" => true,"type" => "select", "label" => "Vælg lokalafdeling", "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),)); ?>						
 				</fieldset>
+				<div><p><a href='/om/bliv-medlem' target='_blank'>Læs mere om medlemskabstyper m.m.</a> (åbner ny fane).</p></div>
 				
 			</div>
 			<div class="c-one-half c-box">
@@ -85,7 +86,7 @@ $email = $model->getProperty("email", "value");
 					<div class="terms">
 						<h3>Godkend brug af oplysninger</h3>
 						<p class="metatext">Vis denne side til personen og bed personen selv om at sætte krydset.</p>
-						<p>Vi opbevarer og anvender følgende informationer om dig: Dit navn, e-mailadresse, telefonnumer og indkøb hos os.
+						<p>Vi opbevarer og anvender følgende informationer om dig: Dit navn, e-mailadresse, telefonnummer og indkøb hos os.
 						<p>Vi videregiver ikke disse oplysninger til nogen tredjepart, men du er selv ansvarlig for de persondata, du skriver på foreningens offentlige sider, eksempelvis wikien.</p>
 						<p>Det er en forudsætning for din indmeldelse, at du giver dit samtykke til disse betingelser.</p>
 					</div>

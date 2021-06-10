@@ -39,6 +39,9 @@ define("SHOP_ORDER_NOTIFIES", "soren@parentnode.dk");
 // Enable notifications (send collection email after N notifications)
 define("SITE_COLLECT_NOTIFICATIONS", 50);
 
+define("SITE_PAYMENT_REGISTER_INTENT", SITE_URL."/butik/betalingsgateway/{GATEWAY}/register-intent");
+define("SITE_PAYMENT_REGISTER_PAID_INTENT", SITE_URL."/butik/betalingsgateway/{GATEWAY}/register-paid-intent");
+
 // INSTALL MODE (DISABLES ALL SECURITY)
 //define("SITE_INSTALL", true);
 

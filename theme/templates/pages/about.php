@@ -13,6 +13,8 @@ $about_subnavigation = $this->navigation("sub-about");
 
 <div class="scene about i:scene">
 
+	<div class="banner i:banner variant:random format:jpg"></div>
+
 	<? if($about_subnavigation && isset($about_subnavigation["nodes"])) { ?>
 	<ul class="subnavigation">
 		<? foreach($about_subnavigation["nodes"] as $node): ?>
