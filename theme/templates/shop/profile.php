@@ -18,7 +18,7 @@ $user = $UC->getUser();
 	<h1>Profil</h1>
 
 
-	<?= $HTML->serverMessages() ?>
+	<?= $HTML->serverMessages(["type" => "error"]) ?>
 
 
 	<div class="item">
@@ -34,8 +34,8 @@ $user = $UC->getUser();
 			</fieldset>
 
 			<ul class="actions">
-				<?= $UC->link("Cancel", "/shop/checkout/", array("class" => "button", "wrapper" => "li.cancel")) ?>
-				<?= $UC->submit("Update", array("class" => "primary key:s", "wrapper" => "li.save")) ?>
+				<?= $UC->link("Annuller", "/shop/checkout/", array("class" => "button", "wrapper" => "li.cancel")) ?>
+				<?= $UC->submit("Gem", array("class" => "primary key:s", "wrapper" => "li.save")) ?>
 			</ul>
 		<?= $UC->formEnd() ?>
 	</div>

@@ -137,9 +137,11 @@ $department = $model->getDepartment(array("name" => $department_name));
 					</li>
 					<li class="pricerange" itemprop="priceRange" content="0-100 DKK">1 - 100 kr.</li>
 				</ul>
+				<? if($department["description"]): ?>
 				<div class="description" itemprop="description">
-					<?= $department["description"] ?>
+					<p><?= $department["description"] ?></p>
 				</div>
+				<? endif; ?>
 			 </li>
 <?			endforeach; ?>
 

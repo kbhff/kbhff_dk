@@ -3,7 +3,7 @@ global $action;
 global $model;
 $UC = new User();
 
-$this->pageTitle("Payments");
+$this->pageTitle("Betalinger");
 
 // get current user id
 $user_id = session()->value("user_id");
@@ -54,7 +54,7 @@ if($orders && $total_payment): ?>
 
 
 	<dl class="amount">
-		<dt class="amount">Skyldigt beløb</dt>
+		<dt class="amount">Samlet udestående</dt>
 		<dd class="amount"><?= formatPrice(["price" => $total_payment, "currency" => $remaining_order_price["currency"]]) ?></dd>
 	</dl>
 
@@ -64,11 +64,19 @@ if($orders && $total_payment): ?>
 	<? foreach($orders as $order): 
 		$full_order = $model->getOrders(["order_id" => $order["id"]]); ?>
 		<li>
-			<h3>Ordrenummer: <a href="/butik/payment/<?= $full_order["order_no"] ?>"><?= $full_order["order_no"] ?></a> <?= ($full_order["comment"] ? (" – " . $full_order["comment"]) : "") ?>, <?= formatPrice($order["price"]) ?></h3>
+			<h3>Ordrenummer: <a href="/butik/betaling/<?= $full_order["order_no"] ?>"><?= $full_order["order_no"] ?></a> <?= ($full_order["comment"] ? (" – " . $full_order["comment"]) : "") ?>, <?= formatPrice($order["price"]) ?></h3>
 			<ul class="orderitems">
 			<? foreach($full_order["items"] as $order_item): ?>
 				<li><?= $order_item["quantity"] ?> x <?= $order_item["name"] ?></li>
 			<? endforeach; ?>
+			</ul>
+
+			<ul class="actions">
+				<?= $HTML->oneButtonForm("Annuller", "/butik/cancelOrder/".$order["id"], [
+					"confirm-value" => "Sikker?",
+					"wait-value" => "Vent ...",
+					"success-location" => count($orders) > 1 ? $this->url : "/profil"
+				]) ?>
 			</ul>
 		</li>
 	<? endforeach; ?>
@@ -95,7 +103,7 @@ if($orders && $total_payment): ?>
 						"/butik/selectUserPaymentMethodForOrders",
 						array(
 							"inputs" => array(
-								"order_ids" => implode($order_list, ","), 
+								"order_ids" => implode(",", $order_list), 
 								"user_payment_method_id" => $user_payment_method["id"], 
 								"payment_method_id" => $user_payment_method["payment_method_id"],
 								"gateway_payment_method_id" => $card["id"]
@@ -108,7 +116,7 @@ if($orders && $total_payment): ?>
 							"wrapper" => "li.continue.".$user_payment_method["classname"],
 						)) ?>
 					</ul>
-					<p><?= $user_payment_method["description"] ?></p>
+					<!-- <p><?= $user_payment_method["description"] ?></p> -->
 				</li>
 					<? endforeach; ?>
 
@@ -120,7 +128,7 @@ if($orders && $total_payment): ?>
 						"/butik/selectUserPaymentMethodForOrders",
 						array(
 							"inputs" => array(
-								"order_ids" => implode($order_list, ","), 
+								"order_ids" => implode(",", $order_list), 
 								"user_payment_method_id" => $user_payment_method["id"], 
 								"payment_method_id" => $user_payment_method["payment_method_id"]
 							),
@@ -132,7 +140,7 @@ if($orders && $total_payment): ?>
 							"wrapper" => "li.continue.".$user_payment_method["classname"],
 						)) ?>
 					</ul>
-					<p><?= $user_payment_method["description"] ?></p>
+					<!-- <p><?= $user_payment_method["description"] ?></p> -->
 				</li>
 				<? endif; ?>
 
@@ -157,7 +165,7 @@ if($orders && $total_payment): ?>
 						"/butik/selectPaymentMethodForOrders", 
 						array(
 							"inputs" => array(
-								"order_ids" => implode($order_list, ","), 
+								"order_ids" => implode(",", $order_list), 
 								"payment_method_id" => $payment_method["id"]
 							),
 							"confirm-value" => false,

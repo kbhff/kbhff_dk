@@ -17,25 +17,17 @@ if($page_item) {
 
 	<?= $model->formStart("bekraeft", ["class" => "verify_code"]) ?>
 
-<?	// show error messages 
-if(message()->hasMessages(array("type" => "error"))): ?>
-	<p class="errormessage">
-<?		$messages = message()->getMessages(array("type" => "error"));
-		message()->resetMessages();
-		foreach($messages as $message): ?>
-			<?= $message ?><br>
-<?		endforeach;?>
-	</p>
-<?	endif; ?>
+		<?= $HTML->serverMessages(["type" => "error"]) ?>
 
-	<fieldset>
-		<?= $model->input("verification_code", array("label" => "Verificeringskode", "required" => true, "hint_message" => "Indtast verificeringskoden som blev sendt til din email.", "error_message" => "Indtast korrekt verificeringskode")); ?>
-	</fieldset>
+		<fieldset>
+			<?= $model->input("verification_code", array("label" => "Verificeringskode", "required" => true, "hint_message" => "Indtast verificeringskoden som blev sendt til din email.", "error_message" => "Indtast korrekt verificeringskode")); ?>
+		</fieldset>
 
-	<ul class="actions">
-		<li class="skip"><a href="/bliv-medlem/spring-over" class="button">Spring over</a></li>
-		<?= $model->submit("Verificér", array("class" => "primary", "wrapper" => "li.reset")) ?>
-	</ul>
+		<ul class="actions">
+			<li class="skip"><a href="/bliv-medlem/spring-over" class="button">Spring over</a></li>
+			<?= $model->submit("Verificér", array("class" => "primary", "wrapper" => "li.reset")) ?>
+		</ul>
+
 	<?= $model->formEnd() ?>
 
 </div>

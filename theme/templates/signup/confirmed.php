@@ -52,18 +52,8 @@ session()->reset("signup_email");
 
 	<h1>Tak!</h1>
 
-<?	// Display any backend generated messages
-if(message()->hasMessages()): ?>
+		<?= $HTML->serverMessages(["type" => "error"]) ?>
 
-	<p class="message">
-<?	$messages = message()->getMessages(array("type" => "message"));
-	foreach($messages as $message): ?>
-		<?= $message ?><br>
-<?	endforeach; ?>
-	</p>
-
-	<? message()->resetMessages(); ?>
-<?	endif; ?>
 		<p>Du kan nu <a href="/login">logge ind</a>.</p>
 
 <? endif; ?>

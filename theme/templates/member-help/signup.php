@@ -14,6 +14,13 @@ $DC = new Department();
 $departments = $DC->getDepartments();
 
 $signupfees = $IC->getItems(array("itemtype" => "signupfee", "status" => 1, "extend" => true));
+
+// add name of associated membership to signupfee
+foreach ($signupfees as $key => $signupfee) {
+	$associated_membership = $IC->getItem(["id" => $signupfee["associated_membership_id"], "extend" => true]);
+	$signupfees[$key]["associated_membership_name"] = $associated_membership ? $associated_membership["name"] : false;
+}
+
 $email = $model->getProperty("email", "value");
 ?>
 <div class="scene member_help_signup i:member_help_signup">
@@ -59,23 +66,15 @@ $email = $model->getProperty("email", "value");
 		<?= $model->input("quantity", array("type" => "hidden", "value" => 1)); ?>
 		<div class="c-wrapper">
 			<div class="c-one-half">
-				
-			<? if(message()->hasMessages(array("type" => "error"))): ?>
-				<p class="errormessage">
-			<?	$messages = message()->getMessages(array("type" => "error"));
-					message()->resetMessages();
-					foreach($messages as $message): ?>
-					<?= $message ?><br>
-			<?	endforeach;?>
-				</p>
-			<?	endif; ?>
-			
+
+				<?= $HTML->serverMessages(["type" => "error"]) ?>
+
 				<fieldset>
 					<?= $model->input("firstname", array("required" => true, "label" => "Fornavn", "hint_message" => "Skriv medlemmets fornavn her", "error_message" => "Fornavn er obligatorisk. Det kan kun indeholde bogstaver.")) ?>
 					<?= $model->input("lastname", array("required" => true, "label" => "Efternavn", "hint_message" => "Skriv medlemmets efternavn her", "error_message" => "Efternavn er obligatorisk. Det kan kun indeholde bogstaver.")) ?>
 					<?= $model->input("email", array("required" => true, "label" => "Medlemmets e-mailadresse", "value" => $email, "hint_message" => "Indtast medlemmets e-mailadresse.", "error_message" => "Du har indtastet en ugyldig e-mailadresse.")); ?>
 					<?= $model->input("confirm_email", array("label" => "Gentag medlemmets e-mailadresse", "required" => true, "hint_message" => "Indtast medlemmets e-mailadresse igen.", "error_message" => "De to e-mailadresser er ikke ens.")); ?>
-					<?= $model->input("item_id", array("required" => true, "type" => "select", "label" => "Vælg medlemskab", "hint_message" => "Vælg typen af medlemskab.", "error_message" => "Der skal vælges et medlemskab.", "options" => $HTML->toOptions($signupfees, "id", "name", ["add" => ["" => "Vælg medlemskab"]]),)); ?>
+					<?= $model->input("item_id", array("required" => true, "type" => "select", "label" => "Vælg medlemskab", "hint_message" => "Vælg typen af medlemskab.", "error_message" => "Der skal vælges et medlemskab.", "options" => $HTML->toOptions($signupfees, "id", "associated_membership_name", ["add" => ["" => "Vælg medlemskab"]]),)); ?>
 					<?= $model->input("department_id", array("required" => true,"type" => "select", "label" => "Vælg lokalafdeling", "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["" => "Vælg afdeling"]]),)); ?>						
 				</fieldset>
 				<div><p><a href='/om/bliv-medlem' target='_blank'>Læs mere om medlemskabstyper m.m.</a> (åbner ny fane).</p></div>

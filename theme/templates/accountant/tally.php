@@ -31,9 +31,9 @@ $closed_by = $UC->getUser(["user_id" => $tally["closed_by"]]);
 			<dt>Afdeling</dt>
 			<dd><?= $department["name"] ?></dd>
 			<dt>Oprettet</dt>
-			<dd>d. <?= date("d/m-Y", strtotime($tally["created_at"])) ?> af <?= $opened_by["nickname"]." (".$opened_by["email"].")" ?></dd>
+			<dd>d. <?= date("d.m.Y", strtotime($tally["created_at"])) ?> af <?= $opened_by["nickname"]." (".$opened_by["email"].")" ?></dd>
 			<dt>Lukket</dt>
-			<dd>d. <?= date("d/m-Y", strtotime($tally["modified_at"])) ?> af <?= $closed_by["nickname"]." (".$closed_by["email"].")" ?></dd>
+			<dd>d. <?= date("d.m.Y", strtotime($tally["modified_at"])) ?> af <?= $closed_by["nickname"]." (".$closed_by["email"].")" ?></dd>
 			<? if($tally["comment"]): ?>	
 			<dt>Kommentar</dt>
 			<dd><?= $tally["comment"] ?></dd>

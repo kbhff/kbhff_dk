@@ -2,7 +2,7 @@
 global $action;
 global $model;
 
-$this->pageTitle("Stripe");
+$this->pageTitle("Betaling");
 
 $MC = new Member();
 $IC = new Items();
@@ -73,7 +73,7 @@ if($order) {
 <? else: ?>
 
 	<h1>Leder du efter betalingssiden?</h1>
-	<p>Du skal først <a href="/login?login_forward=/butik/betalinger">logge ind</a> på din konto og betale derfra.</p>
+	<p>Du skal først <a href="/login?forward_url=<?= $this->url ?>">logge ind</a> på din konto og betale derfra.</p>
 
 <? endif;?>
 

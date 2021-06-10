@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <head>
-	<link rel="stylesheet" href="">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<script type="text/javascript" src="https://detector-v4.dearapi.com/js-include/"></script>
+	<script>u.terms_version = "v1";</script>
+	<script>u.terms_link = "/terms";</script>
 </head>
 
 <body>
 
-<div id="page">
+<div id="page" class="i:page">
 
 	<div id="header">
-		<a class="logo" href="/">K�benhavns <span class="highlight">F�devaref�lleskab</span></a>
+		<a class="logo" href="/">Københavns <span class="highlight">Fødevarefællesskab</span></a>
 		<ul class="servicenavigation">
 			<li class="keynav navigation nofollow"><a href="#navigation">To navigation</a></li>
 			<li><a href="/kontakt">Contact</a></li>
@@ -146,20 +148,20 @@
 
 				<div class="content-6">
 					<h3>Content 6</h3>
-					<img class="fit-width" src="/img/banners/desktop/pi_2.jpg" alt="image example"></img>
+					<img class="fit-width" src="/img/banners/desktop/pi_2.jpg" alt="image example" />
 
 					<p>
 						Lorem ipsum dolor sit amet consectetur adipisicing elit.
 						Aspernatur necessitatibus, excepturi culpa saepe voluptas facilis et laboriosam beatae,
 						accusantium qui alias exercitationem! Assumenda libero cumque quo, commodi numquam hic ipsa.
 					</p>
-					<img class="fit-width" src="/img/banners/desktop/pi_3.jpg" alt="image example"></img>
+					<img class="fit-width" src="/img/banners/desktop/pi_3.jpg" alt="image example" />
 
 					<ul>
 						<li>Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
 						<li>Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
 					</ul>
-					<img class="fit-width" src="/img/banners/desktop/pi_4.jpg" alt="image example"></img>
+					<img class="fit-width" src="/img/banners/desktop/pi_4.jpg" alt="image example" />
 
 				</div>
 			</div>
@@ -438,6 +440,15 @@
 			</div>
 
 			<div class="c-wrapper section scene">
+
+				<div class="messages">
+					<p class="message">Produktet blev opdateret.</p>
+					<p class="error">Produktet blev opdateret.</p>
+				</div>
+
+			</div>
+
+			<div class="c-wrapper section scene">
 				<h2>Form elements</h2>
 				<div class="c-one-half">
 
@@ -452,7 +463,7 @@
 						}
 					</script>
 
-					<form action="#" method="POST" class="form i:standardForm labelstyle:inject">
+					<form action="#/1/" method="POST" class="form i:standardForm labelstyle:inject">
 						<fieldset>
 							<h3>Primary data</h3>
 
@@ -595,7 +606,73 @@
 								</div>
 							</div>
 
+							<div class="field integer">
+								<label for="input_integer">Integer</label>
+								<input type="number" name="integer" id="input_integer" />
+								<div class="help">
+									<div class="hint">hint message</div>
+									<div class="error">error message</div>
+								</div>
+							</div>
+
+							<div class="field number required">
+								<label for="input_number">Number</label>
+								<input type="number" name="number" id="input_number" />
+								<div class="help">
+									<div class="hint">hint message</div>
+									<div class="error">error message</div>
+								</div>
+							</div>
+					
+							<div class="field files required max:1">
+								<label for="input_single_media">Produktbillede</label>
+								<input type="file" name="single_media[]" id="input_single_media" accept=".png,.jpg" />
+								<ul class="filelist"></ul>
+								<div class="help">
+									<div class="hint">Add single image by dragging it here. Minimum 960x960 PNG or JPG allowed.</div>
+									<div class="error">Media does not fit requirements.</div>
+								</div>
+							</div>
+
+							<div class="field html required tags:p,h1,h2,h3,h4,h5,h6,code,ol,ul,download,png,jpg,vimeo,youtube"
+								data-media-add="#"
+								data-media-delete="#"
+								data-file-add="#"
+								data-file-delete="#"
+							>
+								<label for="solo_html_required">HTML, required</label>
+								<textarea name="html_required" id="solo_html_required"></textarea>
+								<div class="help">
+									<div class="hint">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+									<div class="error">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+								</div>
+							</div>
+
 						</fieldset>
+
+						<fieldset class="availability">
+							<div class="field date required">
+								<label for="input_start_availability_date">Fra og med dato</label>
+								<input type="date" name="start_availability_date" id="input_start_availability_date" autocomplete="off" />
+								<div class="help">
+									<div class="hint">Hvornår bliver produktet tilgængeligt i Grøntshoppen?.</div>
+									<div class="error">Angiv hvornår produktet bliver tilgængeligt i Grøntshoppen.</div>
+								</div>
+							</div>
+							<p class="first_pickupdate">Første mulige afhentningsdag: <span>-</span></p>
+
+							<div class="field date">
+								<label for="input_end_availability_date">Til og med dato (kan udelades)</label>
+								<input type="date" name="end_availability_date" id="input_end_availability_date" autocomplete="off" />
+								<div class="help">
+									<div class="hint">Hvornår ophører produktet med at være tilgængelig i Grøntshoppen?</div>
+									<div class="error">Angiv hvornår produktet udløber.</div>
+								</div>
+							</div>
+							<p class="last_pickupdate">Sidste mulige afhentningsdag: <span>-</span></p>
+						</fieldset>
+
+
 
 						<ul class="actions">
 							<li class="disabled">

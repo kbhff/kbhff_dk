@@ -32,7 +32,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 ?>
 <div class="scene shopPayment i:payment">
 
-<? if($order && $remaining_order_price["price"]): ?>
+<? if($order && $remaining_order_price && $remaining_order_price["price"]): ?>
 
 	<h1>Din ordre (<?= $order["order_no"]  ?>) er bekræftet</h1>
 	<p>
@@ -55,6 +55,15 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 			<ul class="orderitems">
 			<? foreach($order["items"] as $order_item): ?>
 				<li><?= $order_item["quantity"] ?> x <?= $order_item["name"] ?></li>
+				<li>
+					<ul class="actions">
+						<?= $HTML->oneButtonForm("Annuller", "/butik/cancelOrder/".$order["id"], [
+							"confirm-value" => "Sikker?",
+							"wait-value" => "Vent ...",
+							"success-location" => "/profil"
+						]) ?>
+					</ul>
+				</li>
 			<? endforeach; ?>
 			</ul>
 		</li>
@@ -98,7 +107,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 							"wrapper" => "li.continue.".$user_payment_method["classname"],
 						)) ?>
 					</ul>
-					<p><?= $user_payment_method["description"] ?></p>
+					<!-- <p><?= $user_payment_method["description"] ?></p> -->
 				</li>
 					<? endforeach; ?>
 
@@ -121,7 +130,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 							"wrapper" => "li.continue.".$user_payment_method["classname"],
 						)) ?>
 					</ul>
-					<p><?= $user_payment_method["description"] ?></p>
+					<!-- <p><?= $user_payment_method["description"] ?></p> -->
 				</li>
 				<? endif; ?>
 
@@ -180,6 +189,9 @@ elseif(session()->value("user_group_id") > 1): ?>
 	<h1>Betalingsmuligheder</h1>
 	<h2>Storartede nyheder</h2>
 	<p>Du har ingen udeståender.</p>
+	<ul class="actions">
+		<li><a href="/profil" class="button primary">Gå til Min Side</a></li>
+	</ul>
 
 <? 
 // User not logged in

@@ -9,25 +9,7 @@ global $model;
 
 	<h1>Opret adgangskode</h1>
 
-	<?	// Display any backend generated messages
-		if(message()->hasMessages()): ?>
-		
-			<p class="errormessage">
-		<?	$messages = message()->getMessages(array("type" => "error"));
-			foreach($messages as $message): ?>
-				<?= $message ?><br>
-		<?	endforeach;?>
-			</p>
-
-			<p class="message">
-		<?	$messages = message()->getMessages(array("type" => "message"));
-			foreach($messages as $message): ?>
-				<?= $message ?><br>
-		<?	endforeach; ?>
-			</p>
-
-			<? message()->resetMessages(); ?>
-	<?	endif; ?>
+	<?= $HTML->serverMessages() ?>
 
 	<div class="password">
 		<h2>Adgangskode</h2>

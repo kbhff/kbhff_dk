@@ -10,6 +10,12 @@ include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 $action = $page->actions();
 $model = new Shop();
 
+include_once("classes/shop/pickupdate.class.php");
+$PC = new Pickupdate();
+
+include_once("classes/system/department.class.php");
+$DC = new Department();
+
 
 $page->bodyClass("shop");
 $page->pageTitle("Butik");
@@ -17,17 +23,108 @@ $page->pageTitle("Butik");
 
 if($action) {
 	
-	
+	# /butik/kurv
+	if($action[0] == "kurv") {
+
+		$page->page(array(
+			"templates" => "shop/cart.php"
+		));
+		exit();
+		
+	}
+
+	# /butik/addToCart
+	else if($action[0] == "addToCart" && $page->validateCsrfToken()) {
+
+		$cart = $model->addToCart(array("addToCart"));
+
+		// successful creation
+		if($cart) {
+
+			message()->addMessage("Item added");
+			header("Location: /butik");
+			exit();
+		}
+		// something went wrong
+		else {
+			message()->addMessage("Noget gik galt.", array("type" => "error"));
+		}
+
+	}
+
+	# /butik/cancelOrder/#order_id#
+	else if(count($action) == 2 && $action[0] == "cancelOrder" && $page->validateCsrfToken()) {
+
+		$result = $model->cancelOrder(["cancelOrder", $action[1]]);
+
+		// successful creation
+		if($result) {
+
+			message()->addMessage("Order cancelled");
+			header("Location: /butik");
+			exit();
+		}
+		// something went wrong
+		else {
+			message()->addMessage("Noget gik galt.", array("type" => "error"));
+		}
+
+	}
+
+	# /butik/updateCartItemQuantity/#cart_reference#/#cart_item_id#
+	else if($action[0] == "updateCartItemQuantity" && $page->validateCsrfToken()) {
+
+		message()->resetMessages();
+
+
+		// create new user
+		$item = $model->updateCartItemQuantity($action);
+
+		// successful creation
+		if($item) {
+
+			if(!message()->hasMessages()) {
+				message()->addMessage("Mængde opdateret");
+			}
+			header("Location: /butik/kurv");
+			exit();
+		}
+		// something went wrong
+		else {
+			message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
+		}
+
+	}
+
+	# /butik/deleteFromCart/#cart_reference#/#cart_item_id#
+	else if($action[0] == "deleteFromCart" && $page->validateCsrfToken()) {
+
+		// create new user
+		$cart = $model->deleteFromCart($action);
+
+		// successful creation
+		if($cart) {
+
+			message()->addMessage("Varen blev slettet fra kurven.");
+			header("Location: /butik/kurv");
+			exit();
+		}
+		// something went wrong
+		else {
+			message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
+		}
+
+	}
 
 	# /butik/betal [POST]
-	if($action[0] == "betal" && $_SERVER['REQUEST_METHOD'] === "POST") {
+	else if($action[0] == "betal" && $_SERVER['REQUEST_METHOD'] === "POST") {
 
 		// redirect to leave POST state
 		header("Location: /butik/betal");
 		exit();
 	}
 
-	// /butik/betal
+	# /butik/betal
 	else if($action[0] == "betal") {
 
 		$page->page(array(
@@ -37,35 +134,38 @@ if($action) {
 		
 	}
 
-	// butik/kvittering
+	# /butik/kvittering
 	else if($action[0] == "kvittering") {
 
-		// /butik/kvittering/fejl
+		# /butik/kvittering/fejl
 		if(count($action) == 2 && $action[1] == "fejl") {
-
+			
 			$page->page(array(
 				"templates" => "shop/receipt/error.php"
 			));
 			exit();
-
+			
 		}
-
+		
+		# /butik/kvittering/ordrer
 		else if(count($action) >= 3 && $action[1] === "ordrer") {
-
+			
 			$page->page(array(
 				"templates" => "shop/receipt/orders.php"
 			));
 			exit();
-
+			
 		}
+		# /butik/kvittering/ny-ordre
 		else if(count($action) >= 3 && $action[1] === "ny-ordre") {
-
+			
 			$page->page(array(
 				"templates" => "shop/receipt/new-order.php"
 			));
 			exit();
-
+			
 		}
+		# /butik/kvittering/ordre
 		else if(count($action) >= 3 && $action[1] === "ordre") {
 
 			$page->page(array(
@@ -89,9 +189,9 @@ if($action) {
 
 	}
 
-	// /butik/betalingsgateway/#gateway#/kurv/#cart_reference#/[process]
-	// /butik/betalingsgateway/#gateway#/ordre/#order_no#/[process]
-	// /butik/betalingsgateway/#gateway#/ordrer/#order_ids#/[process]
+	# /butik/betalingsgateway/#gateway#/kurv/#cart_reference#/[process]
+	# /butik/betalingsgateway/#gateway#/ordre/#order_no#/[process]
+	# /butik/betalingsgateway/#gateway#/ordrer/#order_ids#/[process]
 	else if($action[0] == "betalingsgateway") {
 
 		// specific gateway payment window for cart
@@ -200,6 +300,13 @@ if($action) {
 						case "card_declined"            : $message = "Kortet blev afvist."; break;
 					}
 
+					if($payment_method_result["decline_code"]) {
+						switch($payment_method_result["decline_code"]) {
+
+							case "insufficient_funds"         : $message = "Kortet blev afvist. Der er ikke penge nok på kontoen."; break;
+						}
+					}
+
 
 					message()->addMessage($message, ["type" => "error"]);
 					// redirect to leave POST state
@@ -292,6 +399,12 @@ if($action) {
 						case "incorrect_cvc"            : $message = "Forkert sikkerhedskode."; break;
 						case "incorrect_zip"            : $message = "Kortets postnummer kunne ikke bekræftes."; break;
 						case "card_declined"            : $message = "Kortet blev afvist."; break;
+					}
+					if($payment_method_result["decline_code"]) {
+						switch($payment_method_result["decline_code"]) {
+
+							case "insufficient_funds"         : $message = "Kortet blev afvist. Der er ikke penge nok på kontoen."; break;
+						}
 					}
 
 
@@ -389,6 +502,12 @@ if($action) {
 						case "incorrect_zip"            : $message = "Kortets postnummer kunne ikke bekræftes."; break;
 						case "card_declined"            : $message = "Kortet blev afvist."; break;
 					}
+					if($payment_method_result["decline_code"]) {
+						switch($payment_method_result["decline_code"]) {
+
+							case "insufficient_funds"         : $message = "Kortet blev afvist. Der er ikke penge nok på kontoen."; break;
+						}
+					}
 
 
 					message()->addMessage($message, ["type" => "error"]);
@@ -418,22 +537,39 @@ if($action) {
 
 			if($id_result && $id_result["status"] === "success") {
 
-				if($id_result["cart_reference"]) {
+				if($id_result["order_no"]) {
+					$order = $model->getOrders(["order_no" => $id_result["order_no"]]);
 
-					$order = $model->newOrderFromCart(["newOrderFromCart", $id_result["cart_reference"]]);
+				}
+				else if($id_result["cart_reference"]) {
+
+					$order = $model->getOrders(["cart_reference" => $id_result["cart_reference"]]) ?: $model->newOrderFromCart(["newOrderFromCart", $id_result["cart_reference"]]);
 					// Clear messages
 					message()->resetMessages();
-					if($order) {
+					
+				}
+				else {
+					$order = false;
+				}
 
-						// get payment intent
-						$registration_result = payments()->registerPaymentIntent($payment_intent_id, $order);
-						if($registration_result["status"] === "success") {
+				if($order) {
 
-							// redirect to leave POST state
-							header("Location: /butik/kvittering/ny-ordre/".$order["order_no"]."/".superNormalize($id_result["gateway"]));
-							exit();
-						}
+					// get payment intent
+					$registration_result = payments()->registerPaymentIntent($payment_intent_id, $order);
+					if($registration_result["status"] === "success") {
 
+						$total_order_price = $model->getTotalOrderPrice($order["id"]);
+						payments()->capturePayment($payment_intent_id, $total_order_price["price"]);
+
+						// redirect to leave POST state
+						header("Location: /butik/kvittering/ny-ordre/".$order["order_no"]."/".superNormalize($id_result["gateway"]));
+						exit();
+					}
+					else if($order["payment_status"] == 2) {
+						
+						// redirect to leave POST state
+						header("Location: /butik/kvittering/ny-ordre/".$order["order_no"]."/".superNormalize($id_result["gateway"]));
+						exit();
 					}
 
 				}
@@ -880,7 +1016,7 @@ if($action) {
 			message()->addMessage("Ordren kunne ikke behandles – prøv igen.", ["type" => "error"]);
 
 			// redirect to leave POST state
-			header("Location: //butik/kurv");
+			header("Location: /butik/kurv");
 			exit();
 
 		}
@@ -936,51 +1072,6 @@ if($action) {
 		exit();
 	}
 
-	# /butik/updateCartItemQuantity
-	else if($action[0] == "updateCartItemQuantity" && $page->validateCsrfToken()) {
-
-		message()->resetMessages();
-
-
-		// create new user
-		$cart = $model->updateCartItemQuantity($action);
-
-		// successful creation
-		if($cart) {
-
-			if(!message()->hasMessages()) {
-				message()->addMessage("Mængde opdateret");
-			}
-			header("Location: /butik/kurv");
-			exit();
-		}
-		// something went wrong
-		else {
-			message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
-		}
-
-	}
-
-	# /butik/deleteFromCart
-	else if($action[0] == "deleteFromCart" && $page->validateCsrfToken()) {
-
-		// create new user
-		$cart = $model->deleteFromCart($action);
-
-		// successful creation
-		if($cart) {
-
-			message()->addMessage("Varen blev slettet fra kurven.");
-			header("Location: /butik/kurv");
-			exit();
-		}
-		// something went wrong
-		else {
-			message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
-		}
-
-	}
-
 	# /butik/selectAddress
 	else if($action[0] == "selectAddress" && $page->validateCsrfToken()) {
 
@@ -1030,12 +1121,49 @@ if($action) {
 	}
 
 
+	# /butik/ret-bestilling/#order_item_id#
+	else if($action[0] == "ret-bestilling" && count($action) == 2) {
+		$page->page(array(
+			"templates" => "shop/update_order_item_department_pickupdate.php",
+		));
+		exit();
+	}
+
+	# /butik/setOrderItemDepartmentPickupdate/#order_item_id#
+	else if($action[0] == "setOrderItemDepartmentPickupdate" && $page->validateCsrfToken()) {
+
+		if($model->setOrderItemDepartmentPickupdate($action)) {
+
+			header("Location: /profil");
+			exit();
+		}
+		// something went wrong
+		else {
+			message()->addMessage("Noget gik galt.", array("type" => "error"));
+			header("Location: /butik/ret-bestilling/".$action[1]);
+			exit();
+		}
+
+	}
+
+	// Class interface
+	else if(preg_match("/^removePastPickupdateCartItems$/", $action[0])) {
+
+		include_once("classes/shop/supershop.class.php");
+		$SC = new SuperShop();
+
+		$output = new Output();
+		$output->screen($SC->removePastPickupdateCartItems($action));
+		exit();
+
+	}
+
 }
 
-// go to cart directly
-// /butik
+// go to shop index directly
+# /butik
 $page->page(array(
-	"templates" => "shop/cart.php"
+	"templates" => "shop/index.php"
 ));
 
 ?>
