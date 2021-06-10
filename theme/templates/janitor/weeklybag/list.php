@@ -5,7 +5,7 @@ global $model;
 global $itemtype;
 
 
-$items = $IC->getItems(array("itemtype" => $itemtype, "extend" => true));
+$items = $IC->getItems(array("itemtype" => $itemtype, "extend" => true, "order" => "year DESC, week DESC"));
 
 ?>
 <div class="scene i:scene defaultList <?= $itemtype ?>List">
@@ -21,8 +21,7 @@ $items = $IC->getItems(array("itemtype" => $itemtype, "extend" => true));
 
 <?			foreach($items as $item): ?>
 			<li class="item item_id:<?= $item["id"] ?>">
-				<h3><?= strip_tags($item["name"]) ?></h3>
-
+				<h3><?= strip_tags($item["name"]) ?> (Week <?= $item["week"] ?>, <?= $item["year"] ?>)</h3>
 				<?= $JML->listActions($item) ?>
 			 </li>
 <?			endforeach; ?>
