@@ -34,28 +34,34 @@ class TypeMessage extends TypeMessageCore {
 		$user = $UC->getKbhffUser();
 
 		$this->getPostedEntities();
-
 		$name = $this->getProperty("name", "value");
 		$description = $this->getProperty("description", "value");
-		$html = $this->getProperty("html", "value");
+		if(isset($_POST["html"]) && $name && $description) {
+			
+			// custom handling of HTML
+			$value = stripDisallowed($_POST["html"]);
+			$this->setProperty("html", "value", $value);
+			$html = $this->getProperty("html", "value");
 
-		// create quasi message item
-		$message = [
-			"name" => $name,
-			"description" => $description,
-			"html" => $html,
-			"layout" => "template-mass_mail.html"
-		];
-
-		// create final HTML
-		$final_html = $this->mergeMessageIntoLayout($message);
-
-		$recipients[] = $user["email"];
-
-		// send final HTML
-		if(mailer()->send(["from_email" => "it@kbhff.dk", "recipients" => $recipients, "subject" => $name, "html" => $final_html])) {
-			return true;
+			// create quasi message item
+			$message = [
+				"name" => $name,
+				"description" => $description,
+				"html" => $html,
+				"layout" => "template-mass_mail.html"
+			];
+	
+			// create final HTML
+			$final_html = $this->mergeMessageIntoLayout($message);
+	
+			$recipients[] = $user["email"];
+	
+			// send final HTML
+			if(mailer()->send(["from_email" => "it@kbhff.dk", "recipients" => $recipients, "subject" => $name, "html" => $final_html])) {
+				return true;
+			}
 		}
+
 
 		return false;
 
@@ -71,88 +77,95 @@ class TypeMessage extends TypeMessageCore {
 
 		$name = $this->getProperty("name", "value");
 		$description = $this->getProperty("description", "value");
-		$html = $this->getProperty("html", "value");
 		$department_id = getPost("department_id", "value");
 
-		$recipients = [];
+		if(isset($_POST["html"]) && $name && $description) {
 
-		if($department_id == "all_departments") {
+			// custom handling of HTML
+			$value = stripDisallowed($_POST["html"]);
+			$this->setProperty("html", "value", $value);
+			$html = $this->getProperty("html", "value");
 			
-			// get all active members
-			$members = $MC->getMembers(["only_active_members" => true]);
-
-			// convert member list to recipients list
-			foreach ($members as $member) {
+			$recipients = [];
+	
+			if($department_id == "all_departments") {
 				
-				$member_email = $UC->getUsernames(["user_id" => $member["user"]["id"], "type" => "email"]);
-				$recipients[] = $member_email ? $member_email["username"] : "";
+				// get all active members
+				$members = $MC->getMembers(["only_active_members" => true]);
+	
+				// convert member list to recipients list
+				foreach ($members as $member) {
+					
+					$member_email = $UC->getUsernames(["user_id" => $member["user"]["id"], "type" => "email"]);
+					$recipients[] = $member_email ? $member_email["username"] : "";
+				}
+	
 			}
-
-		}
-		elseif($department_id == "all_departments_all_members") {
-			
-			// get all active members
-			$members = $MC->getMembers();
-
-			// convert member list to recipients list
-			foreach ($members as $member) {
+			elseif($department_id == "all_departments_all_members") {
 				
-				$member_email = $UC->getUsernames(["user_id" => $member["user"]["id"], "type" => "email"]);
-				$recipients[] = $member_email ? $member_email["username"] : "";
-			}
-
-		}
-		else {
-			// get department users with active membership
-			$users = $UC->getDepartmentUsers($department_id, ["only_active_members" => true]);
-
-			// convert user list to recipients list
-			foreach ($users as $user) {
-				
-				$user_email = $UC->getUsernames(["user_id" => $user["id"], "type" => "email"]);
-				$recipients[] = $user_email ? $user_email["username"] : "";
-			}
-
-		}
-
-		// create quasi message item
-		$message = [
-			"name" => $name,
-			"description" => $description,
-			"html" => $html,
-			"layout" => "template-mass_mail.html"
-		];
-
-		// create final HTML
-		$final_html = $this->mergeMessageIntoLayout($message);
-
-		// send final HTML
-		if(mailer()->sendBulk(["from_email" => "it@kbhff.dk", "recipients" => $recipients, "subject" => $name, "html" => $final_html])) {
-
-			global $page;
-			$page->addLog("TypeKbhffMessage->sendKbhffMessage: user_id:".session()->value("user_id").", department_id:".$department_id);
-
-			// add to Kbhff message log
-			$query = new Query();
-			$query->checkDbExistence($this->db_log);
-
-			if($department_id == 'all_departments') {
-				$receiving_department = "All departments";
+				// get all active members
+				$members = $MC->getMembers();
+	
+				// convert member list to recipients list
+				foreach ($members as $member) {
+					
+					$member_email = $UC->getUsernames(["user_id" => $member["user"]["id"], "type" => "email"]);
+					$recipients[] = $member_email ? $member_email["username"] : "";
+				}
+	
 			}
 			else {
-				global $DC;
-				$department = $DC->getDepartment(["id" => $department_id]);
-				$receiving_department = $department ? $department["name"] : false;
+				// get department users with active membership
+				$users = $UC->getDepartmentUsers($department_id, ["only_active_members" => true]);
+	
+				// convert user list to recipients list
+				foreach ($users as $user) {
+					
+					$user_email = $UC->getUsernames(["user_id" => $user["id"], "type" => "email"]);
+					$recipients[] = $user_email ? $user_email["username"] : "";
+				}
+	
 			}
-
-			$sql = "INSERT INTO ".$this->db_log." SET name = '$name', recipient = '$receiving_department', html = '$html'";
-			$query->sql($sql);
-
-			// add receipt data to session
-			session()->value("recipient_count", count($recipients));
-			session()->value("department_id", $department_id);
-
-			return true;
+	
+			// create quasi message item
+			$message = [
+				"name" => $name,
+				"description" => $description,
+				"html" => $html,
+				"layout" => "template-mass_mail.html"
+			];
+	
+			// create final HTML
+			$final_html = $this->mergeMessageIntoLayout($message);
+	
+			// send final HTML
+			if(mailer()->sendBulk(["from_email" => "it@kbhff.dk", "recipients" => $recipients, "subject" => $name, "html" => $final_html])) {
+	
+				global $page;
+				$page->addLog("TypeKbhffMessage->sendKbhffMessage: user_id:".session()->value("user_id").", department_id:".$department_id);
+	
+				// add to Kbhff message log
+				$query = new Query();
+				$query->checkDbExistence($this->db_log);
+	
+				if($department_id == 'all_departments') {
+					$receiving_department = "All departments";
+				}
+				else {
+					global $DC;
+					$department = $DC->getDepartment(["id" => $department_id]);
+					$receiving_department = $department ? $department["name"] : false;
+				}
+	
+				$sql = "INSERT INTO ".$this->db_log." SET name = '$name', recipient = '$receiving_department', html = '$html'";
+				$query->sql($sql);
+	
+				// add receipt data to session
+				session()->value("recipient_count", count($recipients));
+				session()->value("department_id", $department_id);
+	
+				return true;
+			}
 		}
 
 		return false;
