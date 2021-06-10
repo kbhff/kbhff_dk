@@ -172,23 +172,23 @@ div.field .pseudolabel {color: #999999;}
 
 
 /* HELP - HINT AND ERROR MESSAGES */
-div.field div.help {position: relative;}
+div.field > div.help {position: relative;}
 
-div.field div.error,
-div.field div.hint {opacity: 0; position: absolute; top: 0; left: 0; font-size: 12px; line-height: 13px; margin: 0 0 0 3px;
+div.field > div.help > div.error,
+div.field > div.help > div.hint {opacity: 0; position: absolute; top: 0; left: 0; font-size: 12px; line-height: 13px; margin: 0 0 0 3px;
 	transform: translate(0, -10px);
 	transition: 0.3s all ease-out;
 }
 
 /* HELP - ERRORS */
-div.field div.error {color: #C22414; z-index: -10;}
-div.field.error div.error {opacity: 1;
+div.field > div.help > div.error {color: #C22414; z-index: -10;}
+div.field.error > div.help > div.error {opacity: 1;
 	transform: translate(0, 0);
 }
 /* HELP - HINTS */
-div.field div.hint {color: #999999; z-index: -10;}
-div.field.focus div.hint {opacity: 1; transform: translate(0, 0);}
-div.field.error div.hint {opacity: 0; transform: translate(0, -10px);}
+div.field > div.help > div.hint {color: #999999; z-index: -10;}
+div.field.focus > div.help > div.hint {opacity: 1; transform: translate(0, 0);}
+div.field.error > div.help > div.hint {opacity: 0; transform: translate(0, -10px);}
 
 
 
@@ -456,9 +456,10 @@ div.field.html .editor .selection_options fieldset,
 div.field.html .editor .selection_options ul.actions {display: inline-block; vertical-align: top;}
 
 div.field.html .editor .selection_options fieldset {width: calc(100% - 120px);}
-div.field.html .editor .selection_options .field {margin-left: -2px; padding: 0 0 5px;}
+div.field.html .editor .selection_options .field {margin-left: -2px; padding: 0 0 15px;}
+div.field.html .editor .selection_options .field.error {position: relative; }
 /*div.field.html .editor .selection_options .field.string input {width: 150px;}*/
-div.field.html .editor .selection_options .field .help {left: 180px;}
+/*div.field.html .editor .selection_options .field .help {left: 180px;}*/
 div.field.html .editor .selection_options ul.actions {padding: 10px 0 0 !important; width: 120px;}
 div.field.html .editor .selection_options ul.actions li {padding: 0;}
 
