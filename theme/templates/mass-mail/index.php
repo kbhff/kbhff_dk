@@ -30,8 +30,8 @@ $send_to_all_members = $this->checkpermissions("/massemail", "/sendToAllMembers"
 			<div class="c-box">
 				<h3>Hvordan bruger jeg mail-editoren?</h3>
 				<p>Vores mail-editor er designet til at lave en korrekt formatering af tekstens delelementer, dvs. overskrifter, tekstafsnit og lister. Herved sikrer vi bl.a. at vores mails vises ensartet i alle mailprogrammer.</p>
-				<p>De to øverste felter til beskedens er til beskedens emne og mailprogrammets forhåndsvisning. Herunder begynder selve mail-editoren. Bemærk det grønne 'P' i venstre side.</p>
-				<p>P står for 'paragraph' og bruges til at skrive et almindeligt tekstafsnit. Tryk <em>Enter</em> for at starte et nyt afsnit.</p>
+				<p>De to øverste felter til beskedens er til beskedens emne og mailprogrammets forhåndsvisning. Herunder begynder selve mail-editoren. Bemærk bogstavet 'P' i venstre side af tekstfeltet.</p>
+				<p>P står for 'paragraph', og felter med denne markering bruges til at skrive et almindeligt tekstafsnit. Tryk <em>Enter</em> for at starte et nyt afsnit.</p>
 				<p>Hvis du vil lave en overskrift, kan du trykke på P'et og vælge H2, H3 eller H4 i stedet. H står for 'header' og tallene angiver overskriftens størrelse, hvor 2 er størst og 4 mindst.</p>
 				<p>Hvis du skal bruge punktopstilling, kan du trykke på det grønne plus-symbol, der dukker op i højre side, når du holder musen over et felt. Vælg derefter 'List'. Du har nu i venstre side mulighed for at vælge UL ('unordered list') for almindelige punkttegn eller OL ('ordered list') for nummererede punkttegn.</p>
 				<p>Endelig kan du markere ét eller flere ord, og du vil få muligheden for at formatere teksten med fremhævninger, links m.m.</p>
