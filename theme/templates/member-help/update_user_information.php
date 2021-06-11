@@ -67,7 +67,7 @@ $this->pageTitle("Brugeroplysninger");
 		</fieldset>
 
 		<ul class="actions">
-				<li class="cancel"><a href="/medlemshjaelp/brugerprofil/<?=$action[1]?>" class="button">Anullér</a></li>
+				<li class="cancel"><a href="/medlemshjaelp/brugerprofil/<?=$action[1]?>" class="button">Annullér</a></li>
 			<?= $UC->submit("Opdater", array("class" => "primary", "wrapper" => "li.save")) ?>
 		</ul>
 
