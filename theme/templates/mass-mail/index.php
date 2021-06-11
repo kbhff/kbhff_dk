@@ -16,6 +16,9 @@ $send_to_all_members = $this->checkpermissions("/massemail", "/sendToAllMembers"
 
 ?>
 <div class="scene massmail i:massmail">
+
+	<div class="banner i:banner variant:random format:jpg"></div>
+
 	<h1>Massemail</h1>
 
 	<div class="c-wrapper">
