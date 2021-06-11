@@ -57,7 +57,7 @@ class TypeMessage extends TypeMessageCore {
 			];
 	
 			// create final HTML
-			$final_html = $this->mergeMessageIntoLayout($message);
+			$final_html = html_entity_decode($this->mergeMessageIntoLayout($message));
 	
 			$recipients[] = $user["email"];
 	
@@ -146,7 +146,7 @@ class TypeMessage extends TypeMessageCore {
 			];
 	
 			// create final HTML
-			$final_html = $this->mergeMessageIntoLayout($message);
+			$final_html = html_entity_decode($this->mergeMessageIntoLayout($message));
 	
 			// send final HTML
 			if(mailer()->sendBulk(["from_email" => "it@kbhff.dk", "recipients" => $recipients, "subject" => $name, "html" => $final_html])) {
