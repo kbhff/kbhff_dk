@@ -11,15 +11,19 @@ $UC = new User();
 $user_department = $UC->getUserDepartment();
 $department_id = false;
 $users = false;
+$search_value = "";
 
 $global_search_allowed = $page->validatePath("/medlemshjaelp/globalSearch"); 
 
 $search_users = $model->searchUsers($action);
-$search_value = $search_users["search_value"];
-$users = $search_users["users"];
-$department_id = $search_users["department_id"];
+if($search_users) {
 
-if (!$department_id) {
+	$search_value = $search_users["search_value"];
+	$users = $search_users["users"];
+	$department_id = $search_users["department_id"];
+}
+
+if (!$department_id && $user_department) {
 	$department_id = $user_department["id"];
 }
 
@@ -64,19 +68,7 @@ if (!$department_id) {
 	<?= $model->formEnd() ?>
 
 
-	<? // show error messages 
-	if(message()->hasMessages()): ?>
-	<div class="messages">
-	<?
-	$all_messages = message()->getMessages();
-	message()->resetMessages();
-	foreach($all_messages as $type => $messages):
-		foreach($messages as $message): ?>
-		<p class="<?= $type ?>"><?= $message ?></p>
-		<? endforeach;?>
-	<? endforeach;?>
-	</div>
-	<? endif; ?>
+	<?= $HTML->serverMessages(["type" => "error"]) ?>
 
 
 	<div class="c-wrapper users">

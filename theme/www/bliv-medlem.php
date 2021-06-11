@@ -19,7 +19,7 @@ $page->pageTitle("Bliv medlem");
 
 if($action) {
 	
-	// bliv-medlem/addToCart
+	# /bliv-medlem/addToCart
 	if($action[0] == "addToCart" && $page->validateCsrfToken()) {
 
 		// user is already a user
@@ -36,7 +36,7 @@ if($action) {
 
 			}
 		}
-		// add membership to new or existing cart
+		// add signupfee to new or existing cart
 		$cart = $SC->addToCart(array("addToCart"));
 		// if successful creation
 		if($cart) {
@@ -62,7 +62,7 @@ if($action) {
 		}
 	}
 	
-	// bliv-medlem/tilmelding
+	# /bliv-medlem/tilmelding
 	else if($action[0] == "tilmelding") {
 
 		$user_id = session()->value("user_id");
@@ -95,7 +95,7 @@ if($action) {
 	}
 
 	// user is already a member with a subscription 
-	// bliv-medlem/allerece-medlem
+	# /bliv-medlem/allerece-medlem
 	else if($action[0] == "allerede-medlem") {
 
 		$page->page(array(
@@ -114,17 +114,22 @@ if($action) {
 
 	}
 
-	// bliv-medlem/save
+	# /bliv-medlem/save
 	else if($action[0] == "save" && $page->validateCsrfToken()) {
 
-		// overwrite the value of 'maillist' field, which is posted as integer
-		$_POST["maillist"] = "Nyheder";
-		
+			
 		// create new user
 		$user = $model->newUser(array("newUser"));
 
 		// if successful creation
 		if(isset($user["user_id"])) {
+
+			if(getPost("maillist")) {
+				$model->addToMailchimp([
+					"email_address" => $user["email"],
+					"status" => "pending"
+				]);
+			}
 
 			// redirect to leave POST state
 			header("Location: verificer");
@@ -157,7 +162,7 @@ if($action) {
 
 	}
 
-	// bliv-medlem/verificer
+	# /bliv-medlem/verificer
 	else if($action[0] == "verificer") {
 
 		$page->page(array(
@@ -167,7 +172,7 @@ if($action) {
 
 	}
 	
-	// bliv-medlem/spring-over 
+	# /bliv-medlem/spring-over 
 	else if($action[0] == "spring-over") {
 
 		// redirect to leave POST state
@@ -175,7 +180,7 @@ if($action) {
 		exit();
 	}
 
-	// bliv-medlem/bekraeft
+	# /bliv-medlem/bekraeft
 	else if($action[0] == "bekraeft") {
 
 		if (count($action) == 1 && $page->validateCsrfToken()) {
@@ -214,7 +219,7 @@ if($action) {
 					
 					// redirect to leave POST state
 					// to checkout and confirm order
-					message()->addMessage("Dit brugernavn er verificeret – du kan nu bekræfte din ordre.", array("type" => "message"));
+					message()->addMessage("Dit brugernavn er verificeret.", array("type" => "message"));
 					header("Location: /butik/betal");
 					exit();
 					
@@ -240,7 +245,7 @@ if($action) {
 
 		else if(count($action) == 2) {
 
-			// /bliv-medlem/bekraeft/fejl 
+			# /bliv-medlem/bekraeft/fejl 
 			if($action[1] == "fejl") {
 	
 				$page->page(array(
@@ -259,7 +264,7 @@ if($action) {
 			}
 		}
 
-		// /bliv-medlem/bekraeft/#email/#verification_code# (submitted from link in email)
+		# /bliv-medlem/bekraeft/#email/#verification_code# (submitted from link in email)
 		else if(count($action) == 3) {
 			
 			$username = $action[1];
@@ -313,7 +318,7 @@ if($action) {
 					// user has password
 					if($has_password) {
 						
-						message()->addMessage("Din profil er aktiveret.");
+						message()->addMessage("Du har verificeret din e-mailadresse.");
 
 						// redirect to leave POST state
 						header("Location: /bliv-medlem/bekraeft/kvittering");
@@ -371,7 +376,7 @@ if($action) {
 	}
 
 	// view specific membership
-	// /bliv-medlem/medlemskaber/#sindex#
+	# /bliv-medlem/medlemskaber/#sindex#
 	else if(count($action) == 2 && $action[0] == "medlemskaber") {
 
 		$page->page(array(
@@ -382,7 +387,7 @@ if($action) {
 }
 
 // plain signup directly
-// /bliv-medlem
+# /bliv-medlem
 $page->page(array(
 	"templates" => "signup/signupfees.php"
 ));

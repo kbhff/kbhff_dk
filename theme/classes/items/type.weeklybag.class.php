@@ -147,6 +147,9 @@ class TypeWeeklybag extends Itemtype {
 
 	function sindexBase(){
 		
+		// Get posted values to make them available for models
+		$this->getPostedEntities();
+
 		return sprintf("pose-%04d-uge-%02d",
 		$this->getProperty("year", "value"),
 		$this->getProperty("week", "value"));

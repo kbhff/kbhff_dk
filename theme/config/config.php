@@ -24,6 +24,8 @@ define("DEFAULT_LANGUAGE_ISO", "DA");
 define("DEFAULT_COUNTRY_ISO", "DK");
 define("DEFAULT_CURRENCY_ISO", "DKK");
 
+define("RENEWAL_DATE", "05-01");
+
 
 // ENABLE ITEMS MODEL
 define("SITE_ITEMS", true);

@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2020-03-27 10:53:54
+asset-builder @ 2021-06-10 19:17:05
 */
 
 /*seg_desktop_include.js*/
@@ -439,7 +439,7 @@ Util.getNodeCookie = function(node, name, _options) {
 	var mem = JSON.parse(u.getCookie("man_mem"));
 	if(mem && mem[ref]) {
 		if(name) {
-			return mem[ref][name] ? mem[ref][name] : "";
+			return (typeof(mem[ref][name]) != "undefined") ? mem[ref][name] : false;
 		}
 		else {
 			return mem[ref];
@@ -907,10 +907,10 @@ u.containsOrIs = function(scope, node) {
 u.elementMatches = u.em = function(node, selector) {
 	return node.matches(selector);
 }
-Util.insertAfter = u.ia = function(after_node, insert_node) {
+Util.insertAfter = u.ia = function(insert_node, after_node) {
 	var next_node = u.ns(after_node);
 	if(next_node) {
-		after_node.parentNode.insertBefore(next_node, insert_node);
+		after_node.parentNode.insertBefore(insert_node, next_node);
 	}
 	else {
 		after_node.parentNode.appendChild(insert_node);
@@ -1929,6 +1929,7 @@ Util.Form = u.f = new function() {
 		_form._label_style = u.cv(_form, "labelstyle");
 		_form._callback_ready = "ready";
 		_form._callback_submitted = "submitted";
+		_form._callback_submit_failed = "submitFailed";
 		_form._callback_pre_submitted = "preSubmitted";
 		_form._callback_resat = "resat";
 		_form._callback_updated = "updated";
@@ -1947,6 +1948,7 @@ Util.Form = u.f = new function() {
 					case "label_style"              : _form._label_style               = _options[_argument]; break;
 					case "callback_ready"           : _form._callback_ready            = _options[_argument]; break;
 					case "callback_submitted"       : _form._callback_submitted        = _options[_argument]; break;
+					case "callback_submit_failed"   : _form._callback_submit_failed    = _options[_argument]; break;
 					case "callback_pre_submitted"   : _form._callback_pre_submitted    = _options[_argument]; break;
 					case "callback_resat"           : _form._callback_resat            = _options[_argument]; break;
 					case "callback_updated"         : _form._callback_updated          = _options[_argument]; break;
@@ -2191,6 +2193,11 @@ Util.Form = u.f = new function() {
 					}
 				}
 				this.DOMsubmit();
+			}
+		}
+		else {
+			if(fun(this[this._callback_submit_failed])) {
+				this[this._callback_submit_failed](iN);
 			}
 		}
 	}
@@ -3040,6 +3047,1537 @@ Util.Form = u.f = new function() {
 		}
 	}
 }
+Util.Form.customInit["html"] = function(field) {
+	u.bug("html field", field);
+	field.type = "html";
+	field.input = u.qs("textarea", field);
+	field.input._form = field._form;
+	field.input.label = u.qs("label[for='"+field.input.id+"']", field);
+	field.input.field = field;
+	field.input.val = u.f._value;
+	u.f.textEditor(field);
+}
+Util.Form.customValidate["html"] = function(iN) {
+	min = Number(u.cv(iN.field, "min"));
+	max = Number(u.cv(iN.field, "max"));
+	min = min ? min : 1;
+	max = max ? max : 10000000;
+	pattern = iN.getAttribute("pattern");
+	if(
+		u.text(iN.field._viewer) &&
+		u.text(iN.field._viewer).length >= min && 
+		u.text(iN.field._viewer).length <= max && 
+		(!pattern || iN.val().match("^"+pattern+"$"))
+	) {
+		u.f.inputIsCorrect(iN);
+	}
+	else {
+		u.f.inputHasError(iN);
+	}
+}
+Util.Form.customHintPosition["html"] = function(field) {
+	var input_middle = field._editor.offsetTop + (field._editor.offsetHeight / 2);
+	var help_top = input_middle - field.help.offsetHeight / 2;
+	u.ass(field.help, {
+		"top": help_top + "px"
+	});
+}
+u.f.textEditor = function(field) {
+	field.text_support = "h1,h2,h3,h4,h5,h6,p";
+	field.code_support = "code";
+	field.list_support = "ul,ol";
+	field.media_support = "png,jpg,mp4";
+	field.ext_video_support = "youtube,vimeo";
+	field.file_support = "download"; 
+	field.allowed_tags = u.cv(field, "tags");
+	if(!field.allowed_tags) {
+		u.bug("allowed_tags not specified")
+		return;
+	}
+	field.filterAllowedTags = function(type) {
+		tags = this.allowed_tags.split(",");
+		this[type+"_allowed"] = new Array();
+		var tag, i;
+		for(i = 0; i < tags.length; i++) {
+			tag = tags[i];
+			if(tag.match("^("+this[type+"_support"].split(",").join("|")+")$")) {
+				this[type+"_allowed"].push(tag);
+			}
+		}
+	}
+	field.filterAllowedTags("text");
+	field.filterAllowedTags("list");
+	field.filterAllowedTags("media");
+	field.filterAllowedTags("ext_video");
+	field.filterAllowedTags("file");
+	field.filterAllowedTags("code");
+	field.file_add_action = field.getAttribute("data-file-add");
+	field.file_delete_action = field.getAttribute("data-file-delete");
+	field.media_add_action = field.getAttribute("data-media-add");
+	field.media_delete_action = field.getAttribute("data-media-delete");
+	field.item_id;
+	var item_id_match = field._form.action.match(/\/([0-9]+)(\/|$)/);
+	if(item_id_match) {
+		field.item_id = item_id_match[1];
+	}
+	field._viewer = u.ae(field, "div", {"class":"viewer"});
+	field.insertBefore(field._viewer, field.help)
+	field._viewer.field = field;
+	field._editor = u.ae(field, "div", {"class":"editor"});
+	field.insertBefore(field._editor, field.help)
+	field._editor.field = field;
+	if(!fun(u.f.fixFieldHTML)) {
+		u.ae(field._editor, field.indicator);
+	}
+	field._editor.dropped = function() {
+		this.field.update();
+	}
+	field.addRawHTMLButton = function() {
+		this.bn_show_raw = u.ae(this.input.label, "span", {"html":"(RAW HTML)"});
+		this.bn_show_raw.field = this;
+		u.ce(this.bn_show_raw);
+		this.bn_show_raw.clicked = function() {
+			if(u.hc(this.field.input, "show")) {
+				u.rc(this.field.input, "show");
+			}
+			else {
+				u.ac(this.field.input, "show");
+			}
+		}
+	}
+	field.update = function() {
+		this.updateViewer();
+		this.updateContent();
+		if(fun(this.updated)) {
+			this.updated(this.input);
+		}
+		if(fun(this.changed)) {
+			this.changed(this.input);
+		}
+		if(this.input._form && fun(this.input._form.updated)) {
+			this.input._form.updated(this.input);
+		}
+		if(this.input._form && fun(this.input._form.changed)) {
+			this.input._form.changed(this.input);
+		}
+	}
+	field.updateViewer = function() {
+		var tags = u.qsa("div.tag", this);
+		var i, tag, j, list, li, lis, div, p, a;
+		this._viewer.innerHTML = "";
+		for(i = 0; i < tags.length; i++) {
+			tag = tags[i];
+			if(u.hc(tag, this.text_allowed.join("|"))) {
+				u.ae(this._viewer, tag._type.val(), {"html":tag._input.val()});
+			}
+			else if(u.hc(tag, this.list_allowed.join("|"))) {
+				list = u.ae(this._viewer, tag._type.val());
+				lis = u.qsa("div.li", tag);
+				for(j = 0; j < lis.length; j++) {
+					li = lis[j];
+					li = u.ae(list, tag._type.val(), {"html":li._input.val()});
+				}
+			}
+			else if(u.hc(tag, this.ext_video_allowed.join("|")) && tag._video_id) {
+				div = u.ae(this._viewer, "div", {"class":tag._type.val()+" video_id:"+tag._video_id});
+			}
+			else if(u.hc(tag, "code")) {
+				div = u.ae(this._viewer, "code", {"html":tag._input.val()});
+			}
+			else if(u.hc(tag, "file") && tag._variant) {
+				div = u.ae(this._viewer, "div", {"class":"file item_id:"+tag._item_id+" variant:"+tag._variant+" name:"+encodeURIComponent(tag._name)+" filesize:"+tag._filesize});
+				p = u.ae(div, "p");
+				a = u.ae(p, "a", {"href":"/download/"+tag._item_id+"/"+tag._variant+"/"+tag._name, "html":tag._input.val()});
+			}
+			else if(u.hc(tag, "media") && tag._variant) {
+				div = u.ae(this._viewer, "div", {"class":"media item_id:"+tag._item_id+" variant:"+tag._variant+" name:"+encodeURIComponent(tag._name)+" filesize:"+tag._filesize + " format:"+tag._format});
+				p = u.ae(div, "p");
+				a = u.ae(p, "a", {"href":"/images/"+tag._item_id+"/"+tag._variant+"/480x."+tag._format, "html":tag._input.val()});
+			}
+		}
+	}
+	field.updateContent = function() {
+		u.bug("updateContent");
+		var tags = u.qsa("div.tag", this);
+		this.input.val("");
+		var i, node, tag, type, value, j, html = "";
+		for(i = 0; i < tags.length; i++) {
+			tag = tags[i];
+			if(u.hc(tag, this.text_allowed.join("|"))) {
+				type = tag._type.val();
+				html += '<'+type + (tag._classname ? (' class="'+tag._classname+'"') : '')+'>'+tag._input.val()+'</'+type+'>'+"\n";
+			}
+			else if(u.hc(tag, this.list_allowed.join("|"))) {
+				type = tag._type.val();
+				html += "<"+type+(tag._classname ? (' class="'+tag._classname+'"') : '')+">\n";
+				lis = u.qsa("div.li", tag);
+				for(j = 0; j < lis.length; j++) {
+					li = lis[j];
+					html += "\t<li>"+li._input.val()+"</li>\n";
+				}
+				html += "</"+type+">\n";
+			}
+			else if(u.hc(tag, this.ext_video_allowed.join("|")) && tag._video_id) {
+				html += '<div class="'+tag._type.val()+' video_id:'+tag._video_id+'"></div>\n';
+			}
+			else if(u.hc(tag, "code")) {
+				html += '<code'+(tag._classname ? (' class="'+tag._classname+'"') : '')+'>'+tag._input.val()+'</code>'+"\n";
+			}
+			else if(u.hc(tag, "media") && tag._variant) {
+				html += '<div class="media item_id:'+tag._item_id+' variant:'+tag._variant+' name:'+encodeURIComponent(tag._name)+' filesize:'+tag._filesize+' format:'+tag._format+' width:'+tag._width+' height:'+tag._height+'">'+"\n";
+				html += '\t<p><a href="/images/'+tag._item_id+'/'+tag._variant+'/480x.'+tag._format+'">'+tag._input.val()+"</a></p>";
+				html += "</div>\n";
+			}
+			else if(u.hc(tag, "file") && tag._variant) {
+				html += '<div class="file item_id:'+tag._item_id+' variant:'+tag._variant+' name:'+encodeURIComponent(tag._name)+' filesize:'+tag._filesize+'">'+"\n";
+				html += '\t<p><a href="/download/'+tag._item_id+'/'+tag._variant+'/'+tag._name+'">'+tag._input.val()+"</a></p>";
+				html += "</div>\n";
+			}
+		}
+		this.input.val(html);
+	}
+	field.createTag = function(allowed_tags, type, className) {
+		var tag = u.ae(this._editor, "div", {"class":"tag"});
+		tag.field = this;
+		tag._drag = u.ae(tag, "div", {"class":"drag"});
+		tag._drag.field = this;
+		tag._drag.tag = tag;
+		this.createTagSelector(tag, allowed_tags);
+		tag._type.val(type);
+		if(className) {
+			tag._classname = className;
+		}
+		this.addTagOptions(tag);
+		return tag;
+	}
+	field.deleteTag = function(tag) {
+		if(u.qsa("div.tag", this).length > 1) {
+			if(u.hc(tag, "file")) {
+				this.deleteFile(tag);
+			}
+			else if(u.hc(tag, "media")) {
+				this.deleteMedia(tag);
+			}
+			tag.parentNode.removeChild(tag);
+			this._editor.updateTargets();
+			this._editor.updateDraggables();
+			this.update();
+		}
+	}
+	field.classnameTag = function(tag) {
+		if(!u.hc(tag.bn_classname, "open")) {
+			var form = u.f.addForm(tag.bn_classname, {"class":"labelstyle:inject"});
+			var fieldset = u.f.addFieldset(form);
+			var input_classname = u.f.addField(fieldset, {"label":"classname", "name":"classname", "error_message":"", "value":tag._classname});
+			input_classname.tag = tag;
+			u.ac(tag.bn_classname, "open");
+			u.ac(tag, "classname_open");
+			u.f.init(form);
+			input_classname.input.focus();
+			input_classname.input.blurred = function() {
+				this.field.tag._classname = this.val();
+				this.field.tag.bn_classname.removeChild(this._form);
+				u.rc(this.field.tag.bn_classname, "open");
+				u.rc(this.field.tag, "classname_open");
+				if(!this.field.tag.mirror) {
+					this.field.tag.mirror = u.ae(this.field.tag, "span", {"class":"classname"});
+				}
+				if(this.field.tag._classname && this.field.tag._classname != "") {
+					this.field.tag.mirror.innerHTML = this.field.tag._classname;
+				}
+				else {
+					this.field.tag.mirror.parentNode.removeChild(this.field.tag.mirror);
+					delete this.field.tag.mirror;
+				}
+				this.field.tag.field.update();
+			}
+		}
+	}
+	field.createTagSelector = function(tag, allowed_tags) {
+		var i, allowed_tag;
+		tag._type = u.ae(tag, "ul", {"class":"type"});
+		tag._type.field = this;
+		tag._type.tag = tag;
+		for(i = 0; allowed_tag = allowed_tags[i]; i++) {
+			u.ae(tag._type, "li", {"html":allowed_tag, "class":allowed_tag});
+		}
+		tag._type.val = function(value) {
+			if(value !== undefined) {
+				var i, option;
+				for(i = 0; i < this.childNodes.length; i++) {
+					option = this.childNodes[i];
+					if(u.text(option) == value) {
+						if(this.selected_option) {
+							u.rc(this.selected_option, "selected");
+							u.rc(this.tag, u.text(this.selected_option));
+						}
+						u.ac(option, "selected");
+						this.selected_option = option;
+						u.ac(this.tag, value);
+						return option;
+					}
+				}
+				u.ac(this.childNodes[0], "selected");
+				this.selected_option = this.childNodes[0];
+				u.ac(this.tag, u.text(this.childNodes[0]));
+				return this.childNodes[0];
+			}
+			else {
+				return u.text(this.selected_option);
+			}
+		}
+		if(allowed_tags.length > 1) {
+			u.ce(tag._type);
+			tag._type.inputStarted = function(event) {
+				var selection = window.getSelection();
+				if(selection && selection.type && u.contains(this.tag, selection.anchorNode)) {
+					u.e.kill(event);
+				}
+			}
+			tag._type.clicked = function(event) {
+				u.t.resetTimer(this.t_autohide);
+				if(u.hc(this, "open")) {
+					u.rc(this, "open");
+					u.rc(this.tag, "focus");
+					u.ass(this.field, {
+						"zIndex": this.field._base_z_index
+					});
+					u.as(this, "top", 0);
+					if(event.target) {
+						this.val(u.text(event.target));
+					}
+					u.e.removeEvent(this, "mouseout", this.autohide);
+					u.e.removeEvent(this, "mouseover", this.delayautohide);
+					this.field.returnFocus(this.tag);
+					this.field.update();
+				}
+				else {
+					u.ac(this, "open");
+					u.ac(this.tag, "focus");
+					u.ass(this.field, {
+						"zIndex": this.field._form._focus_z_index,
+					});
+					u.as(this, "top", -(this.selected_option.offsetTop) + "px");
+					u.e.addEvent(this, "mouseout", this.autohide);
+					u.e.addEvent(this, "mouseover", this.delayautohide);
+				}
+			}
+			tag._type.hide = function() {
+				u.rc(this, "open");
+				if(!this.field.is_focused) {
+					u.rc(this.tag, "focus");
+					u.ass(this.field, {
+						"zIndex": this.field._base_z_index
+					});
+					this.field.returnFocus(this);
+				}
+				u.as(this, "top", 0);
+				u.e.removeEvent(this, "mouseout", this.autohide);
+				u.e.removeEvent(this, "mouseover", this.delayautohide);
+				u.t.resetTimer(this.t_autohide);
+			}
+			tag._type.autohide = function(event) {
+				u.t.resetTimer(this.t_autohide);
+				this.t_autohide = u.t.setTimer(this, this.hide, 800);
+			}
+			tag._type.delayautohide = function(event) {
+				u.t.resetTimer(this.t_autohide);
+			}
+		}
+	}
+	field.addTagOptions = function(tag) {
+		tag.ul_tag_options = u.ae(tag, "ul", {"class":"tag_options"});
+		tag.bn_add = u.ae(tag.ul_tag_options, "li", {"class":"add", "html":"+"});
+		tag.bn_add.field = field;
+		tag.bn_add.tag = tag;
+		u.ce(tag.bn_add);
+		u.ce(tag.ul_tag_options);
+		tag.ul_tag_options.inputStarted = function(event) {
+			u.e.kill(event);
+		}
+		tag.bn_add.clicked = function(event) {
+			this.cleanupOptions = function(event) {
+				if(this.field.ul_new_tag_options) {
+					u.bug("remove options");
+					this.field.ul_new_tag_options.parentNode.removeChild(this.field.ul_new_tag_options);
+					delete this.field.ul_new_tag_options;
+					if(this.start_event_id) {
+						u.e.removeWindowStartEvent(this, this.start_event_id);
+						delete this.start_event_id;
+					}
+				}
+			}
+				this.start_event_id = u.e.addWindowStartEvent(this, this.cleanupOptions);
+			this.field.ul_new_tag_options = u.ae(this.field._editor, "ul", {"class":"new_tag_options"});
+			u.ia(this.field.ul_new_tag_options, this.tag);
+			if(this.field.text_allowed.length) {
+				this.bn_add_text = u.ae(this.field.ul_new_tag_options, "li", {"class":"text", "html":"Text ("+this.field.text_allowed.join(", ")+")"});
+				this.bn_add_text.field = this.field;
+				this.bn_add_text.tag = this.tag;
+				u.ce(this.bn_add_text);
+				this.bn_add_text.inputStarted = function(event) {
+					u.e.kill(event);
+				}
+				this.bn_add_text.clicked = function(event) {
+					var tag = this.field.addTextTag(this.field.text_allowed[0]);
+					u.ia(tag, this.tag);
+					this.tag.bn_add.cleanupOptions();
+					tag._input.focus();
+				}
+			}
+			if(this.field.list_allowed.length) {
+				this.bn_add_list = u.ae(this.field.ul_new_tag_options, "li", {"class":"list", "html":"List ("+this.field.list_allowed.join(", ")+")"});
+				this.bn_add_list.field = this.field;
+				this.bn_add_list.tag = this.tag;
+				u.ce(this.bn_add_list);
+				this.bn_add_list.inputStarted = function(event) {
+					u.e.kill(event);
+				}
+				this.bn_add_list.clicked = function(event) {
+					var tag = this.field.addListTag(this.field.list_allowed[0]);
+					u.ia(tag, this.tag);
+					this.tag.bn_add.cleanupOptions();
+					tag._input.focus();
+				}
+			}
+			if(this.field.code_allowed.length) {
+				this.bn_add_code = u.ae(this.field.ul_new_tag_options, "li", {"class":"code", "html":"Code"});
+				this.bn_add_code.field = this.field;
+				this.bn_add_code.tag = this.tag;
+				u.ce(this.bn_add_code);
+				this.bn_add_code.inputStarted = function(event) {
+					u.e.kill(event);
+				}
+				this.bn_add_code.clicked = function(event) {
+					var tag = this.field.addCodeTag(this.field.code_allowed[0]);
+					u.ia(tag, this.tag);
+					this.tag.bn_add.cleanupOptions();
+					tag._input.focus();
+				}
+			}
+			if(this.field.media_allowed.length && this.field.item_id && this.field.media_add_action && this.field.media_delete_action && !u.browser("IE", "<=9")) {
+				this.bn_add_media = u.ae(this.field.ul_new_tag_options, "li", {"class":"list", "html":"Media ("+this.field.media_allowed.join(", ")+")"});
+				this.bn_add_media.field = this.field;
+				this.bn_add_media.tag = this.tag;
+				u.ce(this.bn_add_media);
+				this.bn_add_media.inputStarted = function(event) {
+					u.e.kill(event);
+				}
+				this.bn_add_media.clicked = function(event) {
+					var tag = this.field.addMediaTag();
+					u.ia(tag, this.tag);
+					this.tag.bn_add.cleanupOptions();
+					tag._input.focus();
+				}
+			}
+			else if(this.field.media_allowed.length) {
+				u.bug("some information is missing to support media upload:\nitem_id="+this.field.item_id+"\nmedia_add_action="+this.field.media_add_action+"\nmedia_delete_action="+this.field.media_delete_action);
+			}
+			if(this.field.ext_video_allowed.length) {
+				this.bn_add_ext_video = u.ae(this.field.ul_new_tag_options, "li", {"class":"video", "html":"External video ("+this.field.ext_video_allowed.join(", ")+")"});
+				this.bn_add_ext_video.field = this.field;
+				this.bn_add_ext_video.tag = this.tag;
+				u.ce(this.bn_add_ext_video);
+				this.bn_add_ext_video.inputStarted = function(event) {
+					u.e.kill(event);
+				}
+				this.bn_add_ext_video.clicked = function(event) {
+					var tag = this.field.addExternalVideoTag(this.field.ext_video_allowed[0]);
+					u.ia(tag, this.tag);
+					this.tag.bn_add.cleanupOptions();
+					tag._input.focus();
+				}
+			}
+			if(this.field.file_allowed.length && this.field.item_id && this.field.file_add_action && this.field.file_delete_action && !u.browser("IE", "<=9")) {
+				this.bn_add_file = u.ae(this.field.ul_new_tag_options, "li", {"class":"file", "html":"Downloadable file"});
+				this.bn_add_file.field = this.field;
+				this.bn_add_file.tag = this.tag;
+				u.ce(this.bn_add_file);
+				this.bn_add_file.inputStarted = function(event) {
+					u.e.kill(event);
+				}
+				this.bn_add_file.clicked = function(event) {
+					var tag = this.field.addFileTag();
+					u.ia(tag, this.tag);
+					this.tag.bn_add.cleanupOptions();
+					tag._input.focus();
+				}
+			}
+			else if(this.field.file_allowed.length) {
+				u.bug("some information is missing to support file upload:\nitem_id="+this.field.item_id+"\nfile_add_action="+this.field.file_add_action+"\nfile_delete_action="+this.field.file_delete_action);
+			}
+		}
+		tag.bn_remove = u.ae(tag.ul_tag_options, "li", {"class":"remove"});
+		tag.bn_remove.field = this;
+		tag.bn_remove.tag = tag;
+		u.ce(tag.bn_remove);
+		tag.bn_remove.clicked = function() {
+			this.field.deleteTag(this.tag);
+		}
+		tag.bn_classname = u.ae(tag.ul_tag_options, "li", {"class":"classname"});
+		u.ae(tag.bn_classname, "span", {"html":"CSS"});
+		tag.bn_classname.field = this;
+		tag.bn_classname.tag = tag;
+		u.ce(tag.bn_classname);
+		tag.bn_classname.clicked = function() {
+			this.field.classnameTag(this.tag);
+		}
+		if(tag._classname) {
+			if(!tag.mirror) {
+				tag.mirror = u.ae(tag, "span", {"class":"classname", "html":tag._classname});
+			}
+		}
+	}
+	field.addExternalVideoTag = function(type, node) {
+		var tag = this.createTag(this.ext_video_allowed, type);
+		tag._input = u.ae(tag, "div", {"class":"text", "contentEditable":true});
+		tag._input.tag = tag;
+		tag._input.field = this;
+		if(node) {
+			tag._video_id = u.cv(node, "video_id");
+			tag._input.innerHTML = tag._video_id;
+		}
+		tag._input.val = function(value) {
+			if(value !== undefined) {
+				this.innerHTML = value;
+			}
+			return this.innerHTML;
+		}
+		u.e.addEvent(tag._input, "keydown", tag.field._changing_content);
+		u.e.addEvent(tag._input, "keyup", this._changed_ext_video_content);
+		u.e.addEndEvent(tag._input, this._changed_ext_video_content);
+		u.e.addEvent(tag._input, "focus", tag.field._focused_content);
+		u.e.addEvent(tag._input, "blur", tag.field._blurred_content);
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
+		return tag;
+	}
+	field._changed_ext_video_content = function(event) {
+		if(this.val() && !this.val().replace(/<br>/, "")) {
+			this.val("");
+		}
+		this.tag._video_id = this.val();
+		this.tag.field.update();
+	}
+	field.addMediaTag = function(node) {
+		var tag = this.createTag(["media"], "media");
+		tag._input = u.ae(tag, "div", {"class":"text"});
+		tag._input.tag = tag;
+		tag._input.field = this;
+		tag._input._form = this._form;
+		if(node) {
+			tag._name = u.cv(node, "name");
+			tag._item_id = u.cv(node, "item_id");
+			tag._filesize = u.cv(node, "filesize");
+			tag._format = u.cv(node, "format");
+			tag._variant = u.cv(node, "variant");
+			tag._width = u.cv(node, "width");
+			tag._height = u.cv(node, "height");
+			tag._input.contentEditable = true;
+			tag._input.innerHTML = u.qs("a", node).innerHTML;
+			tag._image = u.ie(tag, "img");
+			tag._image.src = "/images/"+tag._item_id+"/"+tag._variant+"/400x."+tag._format;
+			tag._input.val = function(value) {
+				if(value !== undefined) {
+					this.innerHTML = value;
+				}
+				return this.innerHTML;
+			}
+			u.e.addEvent(tag._input, "keydown", tag.field._changing_content);
+			u.e.addEvent(tag._input, "keyup", this._changed_media_content);
+			u.e.addEndEvent(tag._input, this._changed_media_content);
+			u.e.addEvent(tag._input, "focus", tag.field._focused_content);
+			u.e.addEvent(tag._input, "blur", tag.field._blurred_content);
+			u.ac(tag, "done");
+		}
+		else {
+			tag._text = tag._input;
+			tag._text.tag = tag;
+			tag._text.field = this;
+			tag._label = u.ae(tag._text, "label", {"html":"Drag media here"});
+			tag._input = u.ae(tag._text, "input", {"type":"file", "name":"htmleditor_media[]"});
+			tag._input.tag = tag;
+			tag._input.field = this;
+			tag._input._form = this._form;
+			tag._input.val = function(value) {return false;}
+			u.e.addEvent(tag._input, "change", this._media_updated);
+			u.e.addEvent(tag._input, "focus", this._focused_content);
+			u.e.addEvent(tag._input, "blur", this._blurred_content);
+			if(u.e.event_pref == "mouse") {
+				u.e.addEvent(tag._input, "mouseenter", u.f._mouseenter);
+				u.e.addEvent(tag._input, "mouseleave", u.f._mouseleave);
+			}
+		}
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
+		return tag;
+	}
+	field.deleteMedia = function(tag) {
+		var form_data = new FormData();
+		form_data.append("csrf-token", this._form.inputs["csrf-token"].val());
+		tag.response = function(response) {
+			page.notify(response);
+			if(response.cms_status && response.cms_status == "success") {
+				this.field.update();
+			}
+		}
+		u.request(tag, this.file_delete_action+"/"+tag._item_id+"/"+tag._variant, {"method":"post", "data":form_data});
+	}
+	field._media_updated = function(event) {
+		var form_data = new FormData();
+		form_data.append(this.name, this.files[0], this.value);
+		form_data.append("csrf-token", this._form.inputs["csrf-token"].val());
+		form_data.append("input-name", this.tag.field.input.name);
+		this.response = function(response) {
+			page.notify(response);
+			if(response.cms_status && response.cms_status == "success") {
+				this.parentNode.removeChild(this.tag._label);
+				this.parentNode.removeChild(this);
+				this.tag._input = this.tag._text;
+				this.tag._variant = response.cms_object["variant"];
+				this.tag._filesize = response.cms_object["filesize"]
+				this.tag._format = response.cms_object["format"]
+				this.tag._width = response.cms_object["width"]
+				this.tag._height = response.cms_object["height"]
+				this.tag._name = response.cms_object["name"]
+				this.tag._item_id = response.cms_object["item_id"]
+				this.tag._input.contentEditable = true;
+				this.tag._image = u.ie(this.tag, "img");
+				this.tag._image.src = "/images/"+this.tag._item_id+"/"+this.tag._variant+"/400x."+this.tag._format;
+				this.tag._input.innerHTML = this.tag._name + " ("+ u.round((this.tag._filesize/1000), 2) +"Kb)";
+				this.tag._input.val = function(value) {
+					if(value !== undefined) {
+						this.innerHTML = value;
+					}
+					return this.innerHTML;
+				}
+				u.e.addEvent(this.tag._input, "keydown", this.tag.field._changing_content);
+				u.e.addEvent(this.tag._input, "keyup", this.tag.field._changed_media_content);
+				u.e.addEndEvent(this.tag._input, this.tag.field._changed_media_content);
+				u.e.addEvent(this.tag._input, "focus", this.tag.field._focused_content);
+				u.e.addEvent(this.tag._input, "blur", this.tag.field._blurred_content);
+				u.ac(this.tag, "done");
+				this.tag.field.update();
+				this.tag.field._form.submit();
+			}
+		}
+		u.request(this, this.field.media_add_action+"/"+this.field.item_id, {"method":"post", "data":form_data});
+	}
+	field._changed_media_content = function(event) {
+		if(this.val() && !this.val().replace(/<br>/, "")) {
+			this.val("");
+		}
+		this.field.update();
+	}
+	field.addFileTag = function(node) {
+		var tag = this.createTag(["file"], "file");
+		tag._input = u.ae(tag, "div", {"class":"text"});
+		tag._input.tag = tag;
+		tag._input.field = this;
+		tag._input._form = this._form;
+		if(node) {
+			tag._input.contentEditable = true;
+			tag._variant = u.cv(node, "variant");
+			tag._name = u.cv(node, "name");
+			tag._item_id = u.cv(node, "item_id");
+			tag._filesize = u.cv(node, "filesize");
+			tag._input.innerHTML = u.qs("a", node).innerHTML;
+			tag._input.val = function(value) {
+				if(value !== undefined) {
+					this.innerHTML = value;
+				}
+				return this.innerHTML;
+			}
+			u.e.addEvent(tag._input, "keydown", tag.field._changing_content);
+			u.e.addEvent(tag._input, "keyup", this._changed_file_content);
+			u.e.addEndEvent(tag._input, this._changed_file_content);
+			u.e.addEvent(tag._input, "focus", tag.field._focused_content);
+			u.e.addEvent(tag._input, "blur", tag.field._blurred_content);
+			u.ac(tag, "done");
+		}
+		else {
+			tag._text = tag._input;
+			tag._text.tag = tag;
+			tag._text.field = this;
+			tag._label = u.ae(tag._text, "label", {"html":"Drag file here"});
+			tag._input = u.ae(tag._text, "input", {"type":"file", "name":"htmleditor_file[]"});
+			tag._input.tag = tag;
+			tag._input.field = this;
+			tag._input._form = this._form;
+			tag._input.val = function(value) {return false;}
+			u.e.addEvent(tag._input, "change", this._file_updated);
+			u.e.addEvent(tag._input, "focus", this._focused_content);
+			u.e.addEvent(tag._input, "blur", this._blurred_content);
+			if(u.e.event_pref == "mouse") {
+				u.e.addEvent(tag._input, "mouseenter", u.f._mouseenter);
+				u.e.addEvent(tag._input, "mouseleave", u.f._mouseleave);
+			}
+		}
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
+		return tag;
+	}
+	field.deleteFile = function(tag) {
+		var form_data = new FormData();
+		form_data.append("csrf-token", this._form.inputs["csrf-token"].val());
+		tag.response = function(response) {
+			page.notify(response);
+			if(response.cms_status && response.cms_status == "success") {
+				this.field.update();
+			}
+		}
+		u.request(tag, this.file_delete_action+"/"+tag._item_id+"/"+tag._variant, {"method":"post", "data":form_data});
+	}
+	field._file_updated = function(event) {
+		var form_data = new FormData();
+		form_data.append(this.name, this.files[0], this.value);
+		form_data.append("csrf-token", this._form.inputs["csrf-token"].val());
+		form_data.append("input-name", this.tag.field.input.name);
+		this.response = function(response) {
+			page.notify(response);
+			if(response.cms_status && response.cms_status == "success") {
+				this.parentNode.removeChild(this.tag._label);
+				this.parentNode.removeChild(this);
+				this.tag._variant = response.cms_object["variant"];
+				this.tag._filesize = response.cms_object["filesize"]
+				this.tag._name = response.cms_object["name"]
+				this.tag._item_id = response.cms_object["item_id"]
+				this.tag._text.contentEditable = true;
+				this.tag._text.innerHTML = this.tag._name + " ("+ u.round((this.tag._filesize/1000), 2) +"Kb)";
+				this.tag._input = this.tag._text;
+				this.tag._input.val = function(value) {
+					if(value !== undefined) {
+						this.innerHTML = value;
+					}
+					return this.innerHTML;
+				}
+				u.e.addEvent(this.tag._input, "keydown", this.tag.field._changing_content);
+				u.e.addEvent(this.tag._input, "keyup", this.tag.field._changed_file_content);
+				u.e.addEvent(this.tag._input, "mouseup", this.tag.field._changed_file_content);
+				u.e.addEvent(this.tag._input, "focus", this.tag.field._focused_content);
+				u.e.addEvent(this.tag._input, "blur", this.tag.field._blurred_content);
+				u.ac(this.tag, "done");
+				this.tag.field.update();
+				this.tag.field._form.submit();
+			}
+		}
+		u.request(this, this.field.file_add_action+"/"+this.field.item_id, {"method":"post", "data":form_data});
+	}
+	field._changed_file_content = function(event) {
+		if(this.val() && !this.val().replace(/<br>/, "")) {
+			this.val("");
+		}
+		this.field.update();
+	}
+	field.addCodeTag = function(type, value, className) {
+		var tag = this.createTag(this.code_allowed, type, className);
+		tag._input = u.ae(tag, "div", {"class":"text", "contentEditable":true});
+		tag._input.tag = tag;
+		tag._input.field = this;
+		tag._input._form = this._form;
+		tag._input.val = function(value) {
+			if(value !== undefined) {
+				this.innerHTML = value;
+			}
+			return this.innerHTML;
+		}
+		tag._input.val(u.stringOr(value));
+		u.e.addEvent(tag._input, "keydown", this._changing_code_content);
+		u.e.addEvent(tag._input, "keyup", this._code_updated);
+		u.e.addStartEvent(tag._input, this._code_selection_started);
+		u.e.addEvent(tag._input, "focus", this._focused_content);
+		u.e.addEvent(tag._input, "blur", this._blurred_content);
+		if(u.e.event_pref == "mouse") {
+			u.e.addEvent(tag._input, "mouseenter", u.f._mouseenter);
+			u.e.addEvent(tag._input, "mouseleave", u.f._mouseleave);
+		}
+		u.e.addEvent(tag._input, "paste", this._pasted_content);
+		tag.addNew = function() {
+			this.field.addTextItem(this.field.text_allowed[0]);
+		}
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
+		return tag;
+	}
+	field._code_selection_started = function(event) {
+		this._selection_event_id = u.e.addWindowEndEvent(this, this.field._code_updated);
+	}
+	field._changing_code_content = function(event) {
+		if(event.keyCode == 13 || event.keyCode == 9) {
+			u.e.kill(event);
+		}
+		if(event.keyCode == 9 && event.shiftKey) {
+			this.field.backwards_tab = true;
+		}
+	}
+	field._code_updated = function(event) {
+		if(this._selection_event_id) {
+			u.e.removeWindowEndEvent(this, this._selection_event_id);
+			delete this._selection_event_id;
+		}
+		var selection = window.getSelection(); 
+		if(event.keyCode == 13) {
+			u.e.kill(event);
+			if(selection && selection.isCollapsed) {
+				var br = document.createTextNode("\n");
+				range = selection.getRangeAt(0);
+				range.insertNode(br);
+				range.collapse(false);
+				var selection = window.getSelection();
+				selection.removeAllRanges();
+				selection.addRange(range);
+			}
+		}
+		if(event.keyCode == 9) {
+			u.e.kill(event);
+			if(selection && selection.isCollapsed) {
+				var br = document.createTextNode("\t");
+				range = selection.getRangeAt(0);
+				range.insertNode(br);
+				range.collapse(false);
+				var selection = window.getSelection();
+				selection.removeAllRanges();
+				selection.addRange(range);
+			}
+		}
+		else if(event.keyCode == 8) {
+			if(this.is_deletable) {
+				u.e.kill(event);
+				var all_tags = u.qsa("div.tag", this.field);
+				var prev = this.field.findPreviousInput(this);
+				if(prev) {
+					this.tag.parentNode.removeChild(this.tag);
+					prev.focus();
+				}
+				this.field._editor.updateTargets();
+				this.field._editor.updateDraggables();
+			}
+			else if(!this.val() || !this.val().replace(/<br>/, "")) {
+				this.is_deletable = true;
+			}
+			else if(selection.anchorNode != this && selection.anchorNode.innerHTML == "") {
+				selection.anchorNode.parentNode.removeChild(selection.anchorNode);
+			}
+		}
+		else {
+			this.is_deletable = false;
+		}
+		this.field.hideSelectionOptions();
+		if(selection && !selection.isCollapsed) {
+			var node = selection.anchorNode;
+			while(node != this) {
+				if(node.nodeName == "HTML" || !node.parentNode) {
+					break;
+				}
+				node = node.parentNode;
+			}
+			if(node == this) {
+				this.field.showSelectionOptions(this, selection);
+			}
+		}
+		this.field.update();
+	}
+	field.addListTag = function(type, value, className) {
+		var tag = this.createTag(this.list_allowed, type, className);
+		this.addListItem(tag, value);
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
+		return tag;
+	}
+	field.addListItem = function(tag, value) {
+		var li = u.ae(tag, "div", {"class":"li"});
+		li.tag = tag;
+		li.field = this;
+		li._input = u.ae(li, "div", {"class":"text", "contentEditable":true});
+		li._input.li = li;
+		li._input.tag = tag;
+		li._input.field = this;
+		li._input._form = this._form;
+		li._input.val = function(value) {
+			if(value !== undefined) {
+				this.innerHTML = value;
+			}
+			return this.innerHTML;
+		}
+		li._input.val(u.stringOr(value));
+		u.e.addEvent(li._input, "keydown", this._changing_content);
+		u.e.addEvent(li._input, "keyup", this._changed_content);
+		u.e.addStartEvent(li._input, this._selection_started);
+		u.e.addEvent(li._input, "focus", this._focused_content);
+		u.e.addEvent(li._input, "blur", this._blurred_content);
+		if(u.e.event_pref == "mouse") {
+			u.e.addEvent(li._input, "mouseenter", u.f._mouseenter);
+			u.e.addEvent(li._input, "mouseleave", u.f._mouseleave);
+		}
+		u.e.addEvent(li._input, "paste", this._pasted_content);
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
+		return li;
+	}
+	field.addTextTag = function(type, value, className) {
+		var tag = this.createTag(this.text_allowed, type, className);
+		tag._input = u.ae(tag, "div", {"class":"text", "contentEditable":true});
+		tag._input.tag = tag;
+		tag._input.field = this;
+		tag._input._form = this._form;
+		tag._input.val = function(value) {
+			if(value !== undefined) {
+				this.innerHTML = value;
+			}
+			return this.innerHTML;
+		}
+		tag._input.val(u.stringOr(value));
+		u.e.addEvent(tag._input, "keydown", this._changing_content);
+		u.e.addEvent(tag._input, "keyup", this._changed_content);
+		u.e.addStartEvent(tag._input, this._selection_started);
+		u.e.addEvent(tag._input, "focus", this._focused_content);
+		u.e.addEvent(tag._input, "blur", this._blurred_content);
+		if(u.e.event_pref == "mouse") {
+			u.e.addEvent(tag._input, "mouseenter", u.f._mouseenter);
+			u.e.addEvent(tag._input, "mouseleave", u.f._mouseleave);
+		}
+		u.e.addEvent(tag._input, "paste", this._pasted_content);
+		tag.addNew = function() {
+			this.field.addTextItem(this.field.text_allowed[0]);
+		}
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
+		return tag;
+	}
+	field._changing_content = function(event) {
+		if(event.keyCode == 13) {
+			u.e.kill(event);
+		}
+		if(event.keyCode == 9 && event.shiftKey) {
+			this.field.backwards_tab = true;
+		}
+	}
+	field._selection_started = function(event) {
+		this._selection_event_id = u.e.addWindowEndEvent(this, this.field._changed_content);
+	}
+	field._changed_content = function(event) {
+		if(this._selection_event_id) {
+			u.e.removeWindowEndEvent(this, this._selection_event_id);
+			delete this._selection_event_id;
+		}
+		var selection = window.getSelection(); 
+		if(event.keyCode == 13) {
+			u.e.kill(event);
+			if(!event.ctrlKey && !event.metaKey) {
+				if(u.hc(this.tag, this.field.list_allowed.join("|"))) {
+					var new_li = this.field.addListItem(this.tag);
+					var next_li = u.ns(this.li);
+					if(next_li) {
+						this.tag.insertBefore(new_li, next_li);
+					}
+					else {
+						this.tag.appendChild(new_li);
+					}
+					new_li._input.focus();
+				}
+				else {
+					var new_tag = this.field.addTextTag(this.field.text_allowed[0]);
+					var next_tag = u.ns(this.tag);
+					if(next_tag) {
+						this.tag.parentNode.insertBefore(new_tag, next_tag);
+					}
+					else {
+						this.tag.parentNode.appendChild(new_tag);
+					}
+					new_tag._input.focus();
+				}
+			}
+			else {
+				if(selection && selection.isCollapsed) {
+					var br = document.createElement("br");
+					range = selection.getRangeAt(0);
+					range.insertNode(br);
+					range.collapse(false);
+					var selection = window.getSelection();
+					selection.removeAllRanges();
+					selection.addRange(range);
+				}
+			}
+		}
+		else if(event.keyCode == 8) {
+			if(this.is_deletable) {
+				u.e.kill(event);
+				var all_tags = u.qsa("div.tag", this.field);
+				var prev = this.field.findPreviousInput(this);
+				if(u.hc(this.tag, this.field.list_allowed.join("|"))) {
+					var all_lis = u.qsa("div.li", this.tag);
+					if(prev || all_tags.length > 1) {
+						this.li._input.blur();
+						this.tag.removeChild(this.li);
+						if(!u.qsa("div.li", this.tag).length) {
+							this.tag.parentNode.removeChild(this.tag);
+						}
+					}
+				}
+				else {
+					if(prev || all_tags.length > 1) {
+						this.tag.parentNode.removeChild(this.tag);
+					}
+				}
+				this.field._editor.updateTargets();
+				this.field._editor.updateDraggables();
+				if(prev) {
+					prev.focus();
+				}
+				else {
+					if(u.hc(this.tag, this.field.list_allowed.join("|"))) {
+						var all_lis = u.qsa("div.li", this.tag);
+						all_lis[0]._input.focus();
+					}
+					else {
+						var all_tags = u.qsa("div.tag", this.field);
+						all_tags[0]._input.focus();
+					}
+				}
+			}
+			else if(!this.val() || !this.val().replace(/<br>/, "")) {
+				this.is_deletable = true;
+			}
+			else if(selection.anchorNode != this && selection.anchorNode.innerHTML == "") {
+				selection.anchorNode.parentNode.removeChild(selection.anchorNode);
+			}
+		}
+		else {
+			this.is_deletable = false;
+		}
+		this.field.hideSelectionOptions();
+		if(selection && !selection.isCollapsed) {
+			var node = selection.anchorNode;
+			while(node != this) {
+				if(node.nodeName == "HTML" || !node.parentNode) {
+					break;
+				}
+				node = node.parentNode;
+			}
+			if(node == this) {
+				this.field.showSelectionOptions(this, selection);
+			}
+		}
+		else {
+			this.field.hideSelectionOptions();
+		}
+		this.field.update();
+	}
+	field._focused_content = function(event) {
+		this.field.is_focused = true;
+		u.ac(this.tag, "focus");
+		u.ac(this.field, "focus");
+		u.as(this.field, "zIndex", this.field._form._focus_z_index);
+		u.f.positionHint(this.field);
+		if(this.field.backwards_tab) {
+			this.field.backwards_tab = false;
+			var range = document.createRange();
+			range.selectNodeContents(this);
+			range.collapse(false);
+			var selection = window.getSelection();
+			selection.removeAllRanges();
+			selection.addRange(range);
+		}
+	}
+	field._blurred_content = function() {
+		this.field.is_focused = false;
+		u.rc(this.tag, "focus");
+		u.rc(this.field, "focus");
+		u.as(this.field, "zIndex", this.field._base_z_index);
+		u.f.positionHint(this.field);
+	}
+	field._pasted_content = function(event) {
+		u.e.kill(event);
+		var i, node;
+		var paste_content = event.clipboardData.getData("text/plain");
+		if(paste_content !== "") {
+			var selection = window.getSelection();
+			if(!selection.isCollapsed) {
+				selection.deleteFromDocument();
+			}
+			var paste_parts = paste_content.trim().split(/\n\r|\n|\r/g);
+				var text_nodes = [];
+				for(i = 0; i < paste_parts.length; i++) {
+					text = paste_parts[i];
+					u.bug("text part", text);
+					text_nodes.push(document.createTextNode(text));
+					if(paste_parts.length && i < paste_parts.length-1) {
+						text_nodes.push(document.createElement("br"));
+					}
+				}
+				for(i = text_nodes.length-1; i >= 0; i--) {
+					node = text_nodes[i];
+					var range = selection.getRangeAt(0);
+					range.insertNode(node);
+					selection.addRange(range);
+				}
+				selection.collapseToEnd();
+		}
+	}
+	field.findPreviousInput = function(iN) {
+		var prev = false;
+		if(u.hc(iN.tag, this.list_allowed.join("|"))) {
+			prev = u.ps(iN.li, {"exclude":".drag,.remove,.type"});
+		}
+		if(!prev) {
+			prev = u.ps(iN.tag);
+			if(prev && u.hc(prev, this.list_allowed.join("|"))) {
+				var items = u.qsa("div.li", prev);
+				prev = items[items.length-1];
+			}
+			else if(prev && u.hc(prev, "file")) {
+				if(!prev._variant) {
+					var prev_iN = this.findPreviousInput(prev._input);
+					if(prev_iN) {
+						prev = prev_iN.tag;
+					}
+					else {
+						prev = false;
+					}
+				}
+			}
+		}
+		if(!prev) {
+			prev = u.qs("div.tag", this);
+			if(u.hc(prev, this.list_allowed.join("|"))) {
+				prev = u.qs("div.li", prev);
+			}
+			else if(prev && u.hc(prev, "file")) {
+				if(!prev._variant) {
+					var prev_iN = this.findPreviousInput(prev._input);
+					if(prev_iN) {
+						prev = prev_iN.tag;
+					}
+					else {
+						prev = false;
+					}
+				}
+			}
+		}
+		return prev && prev._input != iN ? prev._input : false;
+	}
+	field.returnFocus = function(tag) {
+		if(u.hc(tag, this.text_allowed.join("|"))) {
+			tag._input.focus();
+		}
+		else if(u.hc(tag, "code")) {
+			tag._input.focus();
+		}
+		else if(u.hc(tag, this.list_allowed.join("|"))) {
+			var li = u.qs("div.li", tag);
+			li._input.focus();
+		}
+	}
+	field.hideSelectionOptions = function() {
+		if(this.selection_options && !this.selection_options.is_active) {
+			this.selection_options.parentNode.removeChild(this.selection_options);
+			this.selection_options = null;
+		}
+		this.update();
+	}
+	field.showSelectionOptions = function(node, selection) {
+		this.hideSelectionOptions();
+		this.hideDeleteOrEditOptions();
+		this.selection_options = u.ae(node.field._editor, "div", {"class":"selection_options"});
+		node.field._editor.insertBefore(this.selection_options, node.tag);
+		var ul = u.ae(this.selection_options, "ul", {"class":"options"});
+		this.selection_options._link = u.ae(ul, "li", {"class":"link", "html":"Link"});
+		this.selection_options._link.field = this;
+		this.selection_options._link.tag = node.tag;
+		this.selection_options._link.selection = selection;
+		u.ce(this.selection_options._link);
+		this.selection_options._link.inputStarted = function(event) {
+			u.e.kill(event);
+		}
+		this.selection_options._link.clicked = function(event) {
+			u.e.kill(event);
+			this.field.addAnchorTag(this.selection, this.tag);
+		}
+		this.selection_options._em = u.ae(ul, "li", {"class":"em", "html":"Italic"});
+		this.selection_options._em.field = this;
+		this.selection_options._em.tag = node.tag;
+		this.selection_options._em.selection = selection;
+		u.ce(this.selection_options._em);
+		this.selection_options._em.inputStarted = function(event) {
+			u.e.kill(event);
+		}
+		this.selection_options._em.clicked = function(event) {
+			u.e.kill(event);
+			this.field.addEmTag(this.selection, this.tag);
+		}
+		this.selection_options._strong = u.ae(ul, "li", {"class":"strong", "html":"Bold"});
+		this.selection_options._strong.field = this;
+		this.selection_options._strong.tag = node.tag;
+		this.selection_options._strong.selection = selection;
+		u.ce(this.selection_options._strong);
+		this.selection_options._strong.inputStarted = function(event) {
+			u.e.kill(event);
+		}
+		this.selection_options._strong.clicked = function(event) {
+			u.e.kill(event);
+			this.field.addStrongTag(this.selection, this.tag);
+		}
+		this.selection_options._sup = u.ae(ul, "li", {"class":"sup", "html":"Superscript"});
+		this.selection_options._sup.field = this;
+		this.selection_options._sup.tag = node.tag;
+		this.selection_options._sup.selection = selection;
+		u.ce(this.selection_options._sup);
+		this.selection_options._sup.inputStarted = function(event) {
+			u.e.kill(event);
+		}
+		this.selection_options._sup.clicked = function(event) {
+			u.e.kill(event);
+			this.field.addSupTag(this.selection, this.tag);
+		}
+		this.selection_options._span = u.ae(ul, "li", {"class":"span", "html":"CSS class"});
+		this.selection_options._span.field = this;
+		this.selection_options._span.tag = node.tag;
+		this.selection_options._span.selection = selection;
+		u.ce(this.selection_options._span);
+		this.selection_options._span.inputStarted = function(event) {
+			u.e.kill(event);
+		}
+		this.selection_options._span.clicked = function(event) {
+			u.e.kill(event);
+			this.field.addSpanTag(this.selection, this.tag);
+		}
+	}
+	field.hideDeleteOrEditOptions = function(node) {
+		var options = u.qsa(".delete_selection, .edit_selection");
+		var i, option;
+		for(i = 0; i < options.length; i++) {
+			option = options[i];
+			if(!node || option.node !== node) {
+				option.node.out();
+			}
+		}
+	}
+	field.deleteOrEditOption = function(node) {
+		node.over = function(event) {
+			this.field.hideDeleteOrEditOptions(this);
+			if(!this.bn_delete) {
+				this.bn_delete = u.ae(document.body, "span", {"class":"delete_selection", "html":"X"});
+				this.bn_delete.node = this;
+				this.bn_delete.over = function(event) {
+					u.t.resetTimer(this.node.t_out);
+				}
+				u.e.addEvent(this.bn_delete, "mouseover", this.bn_delete.over);
+				u.ce(this.bn_delete);
+				this.bn_delete.clicked = function() {
+					u.e.kill(event);
+					if(this.node.field.selection_options) {
+						this.node.field.selection_options.is_active = false;
+						this.node.field.hideSelectionOptions();
+					}
+					var fragment = document.createTextNode(this.node.innerHTML);
+					this.node.parentNode.replaceChild(fragment, this.node);
+					this.node.out();
+					this.node.field.update();
+				}
+				u.as(this.bn_delete, "top", (u.absY(this)-5)+"px");
+				u.as(this.bn_delete, "left", (u.absX(this)-5)+"px");
+			}
+			if(this.nodeName.toLowerCase() == "a" || this.nodeName.toLowerCase() == "span" && !this.bn_edit) {
+				this.bn_edit = u.ae(document.body, "span", {"class":"edit_selection", "html":"?"});
+				this.bn_edit.node = this;
+				this.bn_edit.over = function(event) {
+					u.t.resetTimer(this.node.t_out);
+				}
+				u.e.addEvent(this.bn_edit, "mouseover", this.bn_edit.over);
+				u.ce(this.bn_edit);
+				this.bn_edit.clicked = function() {
+					u.e.kill(event);
+					if(this.node.nodeName.toLowerCase() == "span") {
+						this.node.field.editSpanTag(this.node);
+					}
+					else if(this.node.nodeName.toLowerCase() == "a") {
+						this.node.field.editAnchorTag(this.node);
+					}
+				}
+				u.as(this.bn_edit, "top", (u.absY(this)-5)+"px");
+				u.as(this.bn_edit, "left", (u.absX(this)-23)+"px");
+			}
+		}
+		node.out = function(event) {
+			if(this.bn_delete) {
+				document.body.removeChild(this.bn_delete);
+				delete this.bn_delete;
+			}
+			if(this.bn_edit) {
+				document.body.removeChild(this.bn_edit);
+				delete this.bn_edit;
+			}
+		}
+		u.e.hover(node, {"delay":500});
+	}
+	field.activateInlineFormatting = function(input, tag) {
+		var i, node;
+		var inline_tags = u.qsa("a,strong,em,span", input);
+		for(i = 0; i < inline_tags.length; i++) {
+			node = inline_tags[i];
+			node.field = input.field;
+			node.tag = tag;
+			if(!u.text(node)) {
+				node.parentNode.removeChild(node);
+			}
+			else {
+				this.deleteOrEditOption(node);
+			}
+		}
+	}
+	field.addAnchorTag = function(selection, tag) {
+		var range, a, url, target;
+		var a = document.createElement("a");
+		a.field = this;
+		a.tag = tag;
+		range = selection.getRangeAt(0);
+		try {
+			range.surroundContents(a);
+			selection.removeAllRanges();
+			this.editAnchorTag(a);
+			this.deleteOrEditOption(a);
+		}
+		catch(exception) {
+			u.bug("exception", exception)
+			selection.removeAllRanges();
+			this.hideSelectionOptions();
+			alert("You cannot cross the boundaries of another selection. Yet.");
+		}
+	}
+	field.anchorOptions = function(a) {
+		var form = u.f.addForm(this.selection_options, {"class":"labelstyle:inject"});
+		var fieldset = u.f.addFieldset(form);
+		var input_url = u.f.addField(fieldset, {
+			"label":"url", 
+			"name":"url", 
+			"value":a.href.replace(location.protocol + "//" + document.domain, ""), 
+			"pattern":"(http[s]?:\\/\\/|mailto:|tel:)[^$]+|\/[^$]*",
+			"error_message":"Must start with /, http:// or https://, mailto: or tel:"
+		});
+		var input_target = u.f.addField(fieldset, {
+			"type":"checkbox", 
+			"label":"Open in new window?", 
+			"checked":(a.target ? "checked" : false), 
+			"name":"target", 
+			"error_message":""
+		});
+		var bn_save = u.f.addAction(form, {
+			"value":"Save link", 
+			"class":"button"
+		});
+		u.f.init(form);
+		form.a = a;
+		form.field = this;
+		form.submitted = function() {
+			if(this.inputs["url"].val()) {
+				this.a.href = this.inputs["url"].val();
+			}
+			else {
+				this.a.removeAttribute("href");
+			}
+			if(this.inputs["target"].val()) {
+				this.a.target = "_blank";
+			}
+			else {
+				this.a.removeAttribute("target");
+			}
+			this.field.selection_options.is_active = false;
+			this.field.hideSelectionOptions();
+		}
+	}
+	field.editAnchorTag = function(a) {
+		this.hideSelectionOptions();
+		this.hideDeleteOrEditOptions();
+		this.selection_options = u.ae(a.field._editor, "div", {"class":"selection_options"});
+		a.field._editor.insertBefore(this.selection_options, a.tag);
+		this.selection_options.is_active = false;
+		this.anchorOptions(a);
+	}
+	field.addStrongTag = function(selection, tag) {
+		var range, a, url, target;
+		var strong = document.createElement("strong");
+		strong.field = this;
+		strong.tag = tag;
+		range = selection.getRangeAt(0);
+		try {
+			range.surroundContents(strong);
+			selection.removeAllRanges();
+			this.deleteOrEditOption(strong);
+			this.hideSelectionOptions();
+		}
+		catch(exception) {
+			selection.removeAllRanges();
+			this.hideSelectionOptions();
+			alert("You cannot cross the boundaries of another selection. Yet.");
+		}
+	}
+	field.addEmTag = function(selection, tag) {
+		var range, a, url, target;
+		var em = document.createElement("em");
+		em.field = this;
+		em.tag = tag;
+		range = selection.getRangeAt(0);
+		try {
+			range.surroundContents(em);
+			selection.removeAllRanges();
+			this.deleteOrEditOption(em);
+			this.hideSelectionOptions();
+		}
+		catch(exception) {
+			selection.removeAllRanges();
+			this.hideSelectionOptions();
+			alert("You cannot cross the boundaries of another selection. Yet.");
+		}
+	}
+	field.addSupTag = function(selection, tag) {
+		var range, a, url, target;
+		var sup = document.createElement("sup");
+		sup.field = this;
+		sup.tag = tag;
+		range = selection.getRangeAt(0);
+		try {
+			range.surroundContents(sup);
+			selection.removeAllRanges();
+			this.deleteOrEditOption(sup);
+			this.hideSelectionOptions();
+		}
+		catch(exception) {
+			selection.removeAllRanges();
+			this.hideSelectionOptions();
+			alert("You cannot cross the boundaries of another selection. Yet.");
+		}
+	}
+	field.addSpanTag = function(selection, tag) {
+		var span = document.createElement("span");
+		span.field = this;
+		span.tag = tag;
+		var range = selection.getRangeAt(0);
+		try {
+			range.surroundContents(span);
+			selection.removeAllRanges();
+			this.editSpanTag(span);
+			this.deleteOrEditOption(span);
+		}
+		catch(exception) {
+			selection.removeAllRanges();
+			this.hideSelectionOptions();
+			alert("You cannot cross the boundaries of another selection. Yet.");
+		}
+	}
+	field.editSpanTag = function(span) {
+		this.hideSelectionOptions();
+		this.hideDeleteOrEditOptions();
+		this.selection_options = u.ae(span.field._editor, "div", {"class":"selection_options"});
+		span.field._editor.insertBefore(this.selection_options, span.tag);
+		this.spanOptions(span);
+	}
+	field.spanOptions = function(span) {
+		var form = u.f.addForm(this.selection_options, {"class":"labelstyle:inject"});
+		var fieldset = u.f.addFieldset(form);
+		var input_classname = u.f.addField(fieldset, {"label":"CSS class", "name":"classname", "value":span.className, "error_message":""});
+		var bn_save = u.f.addAction(form, {"value":"Save class", "class":"button"});
+		u.f.init(form);
+		form.span = span;
+		form.field = this;
+		form.submitted = function() {
+			if(this.inputs["classname"].val()) {
+				this.span.className = this.inputs["classname"].val();
+			}
+			else {
+				this.span.removeAttribute("class");
+			}
+			this.field.selection_options.is_active = false;
+			this.field.hideSelectionOptions();
+		}
+	}
+	field._viewer.innerHTML = field.input.val();
+	u.sortable(field._editor, {"draggables":"div.tag", "targets":"div.editor"});
+	var value, node, i, tag, j, lis, li;
+	var nodes = u.cn(field._viewer, {"exclude":"br"});
+	if(nodes.length) {
+		for(i = 0; i < field._viewer.childNodes.length; i++) {
+			node = field._viewer.childNodes[i];
+			if(node.nodeName == "#text") {
+				if(node.nodeValue.trim()) {
+					var fragments = node.nodeValue.trim().split(/\n\r\n\r|\n\n|\r\r/g);
+					if(fragments) {
+						for(index in fragments) {
+							value = fragments[index].replace(/\n\r|\n|\r/g, "<br>");
+							tag = field.addTextTag("p", fragments[index]);
+							field.activateInlineFormatting(tag._input, tag);
+						}
+					}
+					else {
+						value = node.nodeValue; 
+						tag = field.addTextTag("p", value);
+						field.activateInlineFormatting(tag._input, tag);
+					}
+				}
+			}
+			else if(field.text_allowed && node.nodeName.toLowerCase().match(field.text_allowed.join("|"))) {
+				value = node.innerHTML.trim().replace(/(<br>|<br \/>)$/, "").replace(/\n\r|\n|\r/g, "<br>"); 
+				tag = field.addTextTag(node.nodeName.toLowerCase(), value, node.className);
+				field.activateInlineFormatting(tag._input, tag);
+			}
+			else if(node.nodeName.toLowerCase() == "code") {
+				tag = field.addCodeTag(node.nodeName.toLowerCase(), node.innerHTML, node.className);
+				field.activateInlineFormatting(tag._input, tag);
+			}
+			else if(field.list_allowed.length && node.nodeName.toLowerCase().match(field.list_allowed.join("|"))) {
+				var lis = u.qsa("li", node);
+				value = lis[0].innerHTML.trim().replace(/(<br>|<br \/>)$/, "").replace(/\n\r|\n|\r/g, "<br>");
+				tag = field.addListTag(node.nodeName.toLowerCase(), value, node.className);
+				var li = u.qs("div.li", tag);
+				field.activateInlineFormatting(li._input, li);
+				if(lis.length > 1) {
+					for(j = 1; j < lis.length; j++) {
+						li = lis[j];
+						value = li.innerHTML.trim().replace(/(<br>|<br \/>)$/, "").replace(/\n\r|\n|\r/g, "<br>");
+						li = field.addListItem(tag, value);
+						field.activateInlineFormatting(li._input, li);
+					}
+				}
+			}
+			else if(u.hc(node, "youtube|vimeo")) {
+				field.addExternalVideoTag(node.className.match(field.ext_video_allowed.join("|")[0]), node);
+			}
+			else if(u.hc(node, "file")) {
+				field.addFileTag(node);
+			}
+			else if(u.hc(node, "media")) {
+				field.addMediaTag(node);
+			}
+			else if(node.nodeName.toLowerCase().match(/dl|ul|ol/)) {
+				var children = u.cn(node);
+				for(j = 0; j < children.length; j++) {
+					child = children[j];
+					value = child.innerHTML.replace(/\n\r|\n|\r/g, "");
+					tag = field.addTextTag(field.text_allowed[0], value);
+					field.activateInlineFormatting(tag._input, tag);
+				}
+			}
+			else if(node.nodeName.toLowerCase().match(/h1|h2|h3|h4|h5|code/)) {
+				value = node.innerHTML.replace(/\n\r|\n|\r/g, "");
+				tag = field.addTextTag(field.text_allowed[0], value);
+				field.activateInlineFormatting(tag._input, tag);
+			}
+			else {
+				alert("HTML contains unautorized node:" + node.nodeName + "\nIt has been altered to conform with SEO and design.");
+			}
+		}
+	}
+	else {
+		value = field._viewer.innerHTML.replace(/\<br[\/]?\>/g, "\n");
+		tag = field.addTextTag(field.text_allowed[0], value);
+		field.activateInlineFormatting(tag._input, tag);
+	}
+	field._editor.updateTargets();
+	field._editor.updateDraggables();
+	field._editor.detectSortableLayout();
+	field.updateViewer();
+	field.updateContent();
+	field.addRawHTMLButton();
+}
 u.f.customBuild = {};
 u.f.addForm = function(node, _options) {
 	var form_name = "js_form";
@@ -3392,6 +4930,167 @@ Util.pageScrollX = u.scrollX = function() {
 Util.pageScrollY = u.scrollY = function() {
 	return window.pageYOffset;
 }
+u.googlemaps = new function() {
+	this.api_loading = false;
+	this.api_loaded = false;
+	this.api_load_queue = [];
+	this.map = function(map, center, _options) {
+		map._maps_streetview = false;
+		map._maps_zoom = 10;
+		map._maps_scrollwheel = true;
+		map._maps_zoom = 10;
+		map._center_latitude = center[0];
+		map._center_longitude = center[1];
+		map._styles = false;
+		map._disable_ui = false;
+		if(obj(_options)) {
+			var _argument;
+			for(_argument in _options) {
+				switch(_argument) {
+					case "zoom"           : map._maps_zoom               = _options[_argument]; break;
+					case "scrollwheel"    : map._maps_scrollwheel        = _options[_argument]; break;
+					case "streetview"     : map._maps_streetview         = _options[_argument]; break;
+					case "styles"         : map._styles                  = _options[_argument]; break;
+					case "disableUI"      : map._disable_ui              = _options[_argument]; break;
+				}
+			}
+		}
+		var map_key = u.randomString(8);
+		window[map_key] = function() {
+			u.googlemaps.api_loaded = true;
+			var map;
+			while(u.googlemaps.api_load_queue.length) {
+				map = u.googlemaps.api_load_queue.shift();
+				map.init();
+			}
+		}
+		map.init = function() {
+			var mapOptions = {center: new google.maps.LatLng(center[0], center[1]), zoom: this._maps_zoom, scrollwheel: this._maps_scrollwheel, streetViewControl: this._maps_streetview, zoomControlOptions: {position: google.maps.ControlPosition.LEFT_TOP}, styles: this._styles, disableDefaultUI: this._disable_ui};
+			this.g_map = new google.maps.Map(this, mapOptions);
+			this.g_map.m_map = this
+			if(fun(this.APIloaded)) {
+				this.APIloaded();
+			}
+			google.maps.event.addListener(this.g_map, 'tilesloaded', function() {
+				if(fun(this.m_map.tilesloaded)) {
+					this.m_map.tilesloaded();
+				}
+			});
+			google.maps.event.addListenerOnce(this.g_map, 'tilesloaded', function() {
+				if(fun(this.m_map.loaded)) {
+					this.m_map.loaded();
+				}
+			});
+		}
+		if(!this.api_loaded && !this.api_loading) {
+			u.ae(document.head, "script", {"src":"https://maps.googleapis.com/maps/api/js?callback="+map_key+(u.gapi_key ? "&key="+u.gapi_key : "")});
+			this.api_loading = true;
+			this.api_load_queue.push(map);
+		}
+		else if(this.api_loading) {
+			this.api_load_queue.push(map);
+		}
+		else {
+			map.init();
+		}
+	}
+	this.addMarker = function(map, coords, _options) {
+		var _icon;
+		var _label = null;
+		if(obj(_options)) {
+			var _argument;
+			for(_argument in _options) {
+				switch(_argument) {
+					case "icon"           : _icon               = _options[_argument]; break;
+					case "label"          : _label              = _options[_argument]; break;
+				}
+			}
+		}
+		var marker = new google.maps.Marker({position: new google.maps.LatLng(coords[0], coords[1]), animation:google.maps.Animation.DROP, icon: _icon, label: _label});
+		marker.setMap(map.g_map);
+		marker.g_map = map.g_map;
+		google.maps.event.addListener(marker, 'click', function() {
+			if(fun(this.clicked)) {
+				this.clicked();
+			}
+		});
+		google.maps.event.addListener(marker, 'mouseover', function() {
+			if(fun(this.entered)) {
+				this.entered();
+			}
+		});
+		google.maps.event.addListener(marker, 'mouseout', function() {
+			if(fun(this.exited)) {
+				this.exited();
+			}
+		});
+		return marker;
+	}
+	this.removeMarker = function(map, marker, _options) {
+		marker._animation = true;
+		if(obj(_options)) {
+			var _argument;
+			for(_argument in _options) {
+				switch(_argument) {
+					case "animation"      : marker._animation            = _options[_argument]; break;
+				}
+			}
+		}
+		if(marker._animation) {
+			var key = u.randomString(8);
+			marker.pick_step = 0;
+			marker.c_zoom = (1 << map.getZoom());
+			marker.c_projection = map.getProjection();
+			marker.c_exit = map.getBounds().getNorthEast().lat();
+			marker._pickUp = function() {
+				var new_position = this.c_projection.fromLatLngToPoint(this.getPosition());
+				new_position.y -= (20*this.pick_step) / this.c_zoom; 
+				new_position = this.c_projection.fromPointToLatLng(new_position);
+				this.setPosition(new_position);
+				if(this.c_exit < new_position.lat()) {
+					this.setMap(null);
+					if(fun(this.removed)) {
+						this.removed();
+					}
+				}
+				else{
+					this.pick_step++;
+					u.t.setTimer(this, this._pickUp, 20);
+				}
+			}
+			marker._pickUp();
+		}
+		else {
+			marker.setMap(null);
+		}
+	}
+	this.infoWindow = function(map) {
+		map.g_infowindow = new google.maps.InfoWindow({"maxWidth":250});
+		google.maps.event.addListener(map.g_infowindow, 'closeclick', function() {
+			if(this._marker && fun(this._marker.closed)) {
+				this._marker.closed();
+				this._marker = false;
+			}
+		});
+	}
+	this.showInfoWindow = function(map, marker, content) {
+		map.g_infowindow.setContent(content);
+		map.g_infowindow.open(map, marker);
+		map.g_infowindow._marker = marker;
+	}
+	this.hideInfoWindow = function(map) {
+		map.g_infowindow.close();
+		if(map.g_infowindow._marker && fun(map.g_infowindow._marker.closed)) {
+			map.g_infowindow._marker.closed();
+			map.g_infowindow._marker = false;
+		}
+		map.g_infowindow._marker = false;
+	}
+	this.zoom = function() {
+	}
+	this.center = function() {
+	}
+}
 Util.History = u.h = new function() {
 	this.popstate = ("onpopstate" in window);
 	this.callbacks = [];
@@ -3710,6 +5409,120 @@ u.navigation = function(_options) {
 	else {
 		u.h.callbacks.push({"node":navigation_node, "callback":callback_navigate});
 	}
+}
+u.objectValues = function(obj) {
+	var key, values = [];
+	for(key in obj) {
+		if(obj.hasOwnProperty(key)) {
+			values.push(obj[key]);
+		}
+	}
+	return values;
+}
+u.overlay = function (_options) {
+	var title = "Overlay";
+	var drag = true;
+	var width = 400;
+	var height = 400;
+	var content_scroll = false;
+	var classname = "";
+	if(obj(_options)) {
+		var _argument;
+		for(_argument in _options) {
+			switch(_argument) {
+				case "title"       : title          = _options[_argument]; break;
+				case "drag"        : drag           = _options[_argument]; break;
+				case "class"       : classname      = _options[_argument]; break;
+				case "width"       : width          = _options[_argument]; break;
+				case "height"      : height         = _options[_argument]; break;
+				case "content_scroll" : content_scroll    = _options[_argument]; break;
+			}
+		}
+	}
+	if (width > 500) {
+		classname = " large " + classname;
+	}
+	else {
+		classname = " small " + classname;
+	}
+	if (content_scroll) {
+		classname += "content_scroll"
+	}
+	var overlay = u.ae(document.body, "div", {"class": "overlay" + classname, "tabindex":"-1"});
+	u.ass(overlay, {
+		"opacity": 0,
+		"width": width + "px",
+		"height": height + "px",
+		"left": ((u.browserW() - width) / 2) + "px",
+		"top": ((u.browserH() - height) / 2) + "px",
+	});
+	overlay.protection = u.ae(document.body, "div", {"class": "overlay_protection"});
+	if (window._overlay_stack_index) {
+		u.ass(overlay.protection, { "z-index": window._overlay_stack_index});
+		u.ass(overlay, { "z-index": window._overlay_stack_index + 1 });
+	}
+	window._overlay_stack_index = Number(u.gcs(overlay, "z-index")) + 2;
+	u.ass(overlay, {
+		"transition": "all .4s ease-in-out",
+		"opacity": 1,
+	});
+	u.as(document.body, "overflow", "hidden");
+	overlay._resized = function (event) {
+		u.ass(this, {
+			"left": ((u.browserW() - this.w) / 2) + "px",
+			"top": ((u.browserH() - this.h) / 2) + "px",
+		});
+		u.ass(this.div_content, {
+			"height": ((this.offsetHeight - this.div_header.offsetHeight) - this.div_footer.offsetHeight) + "px"
+		});
+		if(fun(this.resized)) {
+			this.resized(event);
+		}
+	}
+	u.e.addWindowEvent(overlay, "resize", "_resized");
+	overlay.div_header = u.ae(overlay, "div", {class:"header"});
+	if(title) {
+		overlay.div_header.h2 = u.ae(overlay.div_header, "h2", {html: title});
+		overlay.div_header.overlay = overlay;
+	}
+	overlay.div_content = u.ae(overlay, "div", {class: "content"});
+	overlay.div_content.overlay = overlay;
+	overlay.div_footer = u.ae(overlay, "div", {class: "footer"});
+	overlay.div_footer.overlay = overlay;
+	overlay.w = width;
+	overlay.h = height;
+	if (drag) {
+		u.e.drag(overlay.div_header, overlay.div_header);
+		overlay._x = 0;
+		overlay._y = 0;
+		overlay.div_header.moved = function (event) {
+			var new_x = this.overlay._x + this.current_x;
+			var new_y = this.overlay._y + this.current_y;
+			u.ass(this.overlay, {
+				"transform": "translate(" + new_x + "px, " + new_y + "px)",
+			});
+		}
+		overlay.div_header.dropped = function (event) {
+			this.overlay._x += this.current_x;
+			this.overlay._y += this.current_y;
+		}
+	}
+	overlay.close = function (event) {
+		u.as(document.body, "overflow", "auto");
+		document.body.removeChild(this);
+		document.body.removeChild(this.protection);
+		if (fun (this.closed)) {
+			this.closed(event);
+		}
+	}
+	overlay.x_close = u.ae(overlay.div_header, "div", {class: "close"});
+	overlay.x_close.overlay = overlay;
+	u.ce(overlay.x_close);
+	overlay.x_close.clicked = function (event) {
+		this.overlay.close(event);
+	}
+	overlay._resized();
+	return overlay;
 }
 u.preloader = function(node, files, _options) {
 	var callback_preloader_loaded = "loaded";
@@ -4105,6 +5918,525 @@ Util.validateResponse = function(HTTPRequest){
 		else if(fun(node[request.callback_response])) {
 			node[request.callback_response]({error:true,status:request.status}, request_id);
 		}
+	}
+}
+u.sortable = function(scope, _options) {
+	scope._callback_picked = "picked";
+	scope._callback_moved = "moved";
+	scope._callback_dropped = "dropped";
+	scope._draggable_selector;
+	scope._target_selector;
+	scope._layout;
+	scope._allow_clickpick = false;
+	scope._allow_nesting = false;
+	scope._sorting_disabled = false;
+	scope._distance_to_pick = 2;
+	if(obj(_options)) {
+		var _argument;
+		for(_argument in _options) {
+			switch(_argument) {
+				case "picked"				: scope._callback_picked		= _options[_argument]; break;
+				case "moved"				: scope._callback_moved			= _options[_argument]; break;
+				case "dropped"				: scope._callback_dropped		= _options[_argument]; break;
+				case "draggables"			: scope._draggable_selector		= _options[_argument]; break;
+				case "targets"				: scope._target_selector		= _options[_argument]; break;
+				case "layout"				: scope._layout					= _options[_argument]; break;
+				case "allow_clickpick"		: scope._allow_clickpick		= _options[_argument]; break;
+				case "allow_nesting"		: scope._allow_nesting			= _options[_argument]; break;
+				case "sorting_disabled"		: scope._sorting_disabled		= _options[_argument]; break;
+				case "distance_to_pick"		: scope._distance_to_pick		= _options[_argument]; break;
+			}
+		}
+	}
+	if(!fun(scope.resetSortableEvents)) {
+		scope._sortableInputStart = function(event) {
+			if(!this.draggable_node.scope._sorting_disabled) {
+				this.draggable_node._start_event_x = u.eventX(event);
+				this.draggable_node._start_event_y = u.eventY(event);
+				this.draggable_node.current_xps = 0;
+				this.draggable_node.current_yps = 0;
+				this.draggable_node._move_timestamp = event.timeStamp;
+				this.draggable_node._move_last_x = 0;
+				this.draggable_node._move_last_y = 0;
+				u.e.addMoveEvent(this.draggable_node, this.draggable_node.scope._sortablePick);
+				u.e.addEndEvent(this.draggable_node, this.draggable_node.scope._cancelSortablePick);
+				if(event.type.match(/mouse/)) {
+		 			u.e.addOutEvent(this.draggable_node.drag, this.draggable_node.scope._sortableOut);
+				}
+				this.draggable_node.scope._org_css_user_select = document.body.style.userSelect;
+				u.ass(document.body, {
+					"user-select": "none"
+				});
+			}
+		}
+		scope._cancelSortablePick = function(event) {
+			if(!this.scope._allow_clickpick) {
+				this.scope.resetSortableEvents(this);
+				u.ass(document.body, {
+					"user-select": this.scope._org_css_user_select
+				});
+			}
+		}
+		scope._sortableOut = function(event) {
+			var edoi = this.draggable_node._event_drop_out_id = u.randomString();
+			document["_DroppedOutNode" + edoi] = this.draggable_node;
+			eval('document["_DroppedOutMove' + edoi + '"] = function(event) {document["_DroppedOutNode' + edoi + '"].scope._sortablePick.bind(document["_DroppedOutNode' + edoi + '"])(event);}');
+			u.e.addEvent(document, "mousemove", document["_DroppedOutMove" + edoi]);
+			eval('document["_DroppedOutOver' + edoi + '"] = function(event) {document["_DroppedOutNode' + edoi + '"].scope.resetSortableOutEvents(document["_DroppedOutNode' + edoi + '"]);}');
+			u.e.addEvent(this.draggable_node, "mouseover", document["_DroppedOutOver" + edoi]);
+			eval('document["_DroppedOutEnd' + edoi + '"] = function(event) {u.bug("### up save");document["_DroppedOutNode' + edoi + '"].scope._cancelSortablePick.bind(document["_DroppedOutNode' + edoi + '"])(event);}');
+			u.e.addEvent(document, "mouseup", document["_DroppedOutEnd" + edoi]);
+		}
+		scope._sortablePick = function(event) {
+			var event_x = u.eventX(event);
+			var event_y = u.eventY(event);
+			this.current_x = event_x - this._start_event_x;
+			this.current_y = event_y - this._start_event_y;
+			var init_distance_x = Math.abs(this.current_x);
+			var init_distance_y = Math.abs(this.current_y);
+			if((init_distance_x > this.scope._distance_to_pick || init_distance_y > this.scope._distance_to_pick)) {
+				this.scope.resetNestedSortableEvents(this);
+				u.e.kill(event);
+				this.scope._dragged_node = this;
+				this._mouse_ox = event_x - u.absX(this);
+				this._mouse_oy = event_y - u.absY(this);
+				this.current_xps = Math.round(((this.current_x - this._move_last_x) / (event.timeStamp - this._move_timestamp)) * 1000);
+				this.current_yps = Math.round(((this.current_y - this._move_last_y) / (event.timeStamp - this._move_timestamp)) * 1000);
+				this._move_timestamp = event.timeStamp;
+				this._move_last_x = this.current_x;
+				this._move_last_y = this.current_y;
+				this.scope._shadow_node = u.ae(this.parentNode, this.cloneNode(true));
+				this.parentNode.insertBefore(this.scope._shadow_node, this);
+				u.ac(this.scope._shadow_node, "shadow");
+				this.scope._recalculateRelativeShadowOffset();
+				var _start_width = u.gcs(this, "width");
+				var _z_index;
+				if(this._z_index != "auto") {
+					_z_index = this._z_index + 1;
+				}
+				else {
+					_z_index = 55;
+				}
+				u.ass(this.scope._shadow_node, {
+					width: _start_width,
+					position: "absolute",
+					left: ((event_x - this.scope._shadow_node._rel_ox) - this._mouse_ox) + "px",
+					top: ((event_y - this.scope._shadow_node.rel_oy) - this._mouse_oy) + "px",
+					"z-index": _z_index,
+				});
+				u.ac(this, "dragged");
+				this._event_move_id = u.e.addWindowMoveEvent(this, this.scope._sortableDrag);
+				this._event_end_id = u.e.addWindowEndEvent(this, this.scope._sortableDrop);
+				if(fun(this.scope[this.scope._callback_picked])) {
+					this.scope[this.scope._callback_picked](this);
+				}
+			}
+		}
+		scope._sortableDrag = function(event) {
+			var i, node;
+			var event_x = u.eventX(event);
+			var event_y = u.eventY(event);
+			var d_left = event_x - this._mouse_ox;
+			var d_top = event_y - this._mouse_oy;
+			this.current_x = event_x - this._start_event_x;
+			this.current_y = event_y - this._start_event_y;
+			this.current_xps = Math.round(((this.current_x - this._move_last_x) / (event.timeStamp - this._move_timestamp)) * 1000);
+			this.current_yps = Math.round(((this.current_y - this._move_last_y) / (event.timeStamp - this._move_timestamp)) * 1000);
+			this._move_timestamp = event.timeStamp;
+			this._move_last_x = this.current_x;
+			this._move_last_y = this.current_y;
+			this.scope._detectAndInject(event_x, event_y);
+			u.ass(this.scope._shadow_node, {
+				"position": "absolute",
+				"left": (d_left - this.scope._shadow_node._rel_ox)+"px",
+				"top": (d_top - this.scope._shadow_node._rel_oy)+"px",
+				"bottom": "auto"
+			});
+			if(fun(this.scope[this.scope._callback_moved])) {
+				this.scope[this.scope._callback_moved](this);
+			}
+		}
+		scope._sortableDrop = function(event) {
+			u.e.kill(event);
+			this.scope.resetSortableEvents(this);
+			this.scope._shadow_node.parentNode.removeChild(this.scope._shadow_node);
+			delete this.scope._shadow_node;
+			u.rc(this, "dragged");
+			this.scope._dragged_node = false;
+			this.current_xps = 0;
+			this.current_yps = 0;
+			this._move_timestamp = event.timeStamp;
+			this._move_last_x = 0;
+			this._move_last_y = 0;
+			this.scope.updateDraggables();
+			u.ass(document.body, {
+				"user-select": this.scope._org_css_user_select
+			});
+			if(fun(this.scope[this.scope._callback_dropped])) {
+				this.scope[this.scope._callback_dropped](this);
+			}
+		}
+		scope._recalculateRelativeShadowOffset = function() {
+			if(this._shadow_node) {
+				this._shadow_node._rel_ox = u.absX(this._shadow_node) - u.relX(this._shadow_node);
+				this._shadow_node._rel_oy = u.absY(this._shadow_node) - u.relY(this._shadow_node);
+			}
+		}
+		scope._detectAndInject = function(event_x, event_y) {
+			for(i = this.draggable_nodes.length-1; i >= 0; i--) {
+				node = this.draggable_nodes[i];
+				if(this.target_nodes.indexOf(node.parentNode) !== -1) {
+					if(node.parentNode._layout == "multiline") {
+						var o_left = u.absX(node);
+						var o_top = u.absY(node);
+						var o_width = node.offsetWidth;
+						var o_height = node.offsetHeight;
+					 	if(event_x > o_left && event_x < o_left + o_width && event_y > o_top && event_y < o_top + o_height) {
+							if(node !== this._dragged_node) {
+								if(event_x < o_left + o_width/2) {
+									node.parentNode.insertBefore(this._dragged_node, node);
+								}
+								else {
+									var next = u.ns(node, {exclude: ".target,.dragged"});
+									if(next) {
+										node.parentNode.insertBefore(this._dragged_node, next);
+									}
+									else {
+										node.parentNode.appendChild(this._dragged_node);
+									}
+								}
+								this._recalculateRelativeShadowOffset();
+								break;
+							}
+						}
+					}
+					else if(node.parentNode._layout == "horizontal") {
+						var o_left = u.absX(node);
+						var o_width = node.offsetWidth;
+					 	if(event_x > o_left && event_x < o_left + o_width) {
+							if(node !== this._dragged_node && !u.pn(node, {include:".dragged"})) {
+								if(event_x < o_left + o_width/2) {
+									node.parentNode.insertBefore(this._dragged_node, node);
+								}
+								else {
+									var next = u.ns(node, {exclude: ".target,.dragged"});
+									if(next) {
+										node.parentNode.insertBefore(this._dragged_node, next);
+									}
+									else {
+										node.parentNode.appendChild(this._dragged_node);
+									}
+								}
+							}
+							this._recalculateRelativeShadowOffset();
+							break;
+						}
+					}
+					else {
+						var o_top, o_height;
+						if(this._allow_nesting) {
+							o_top = u.absY(node) - node._extra_height_top;
+							o_height = node._top_node_height + node._extra_height_top + node._extra_height_bottom;
+						}
+						else {
+							o_top = u.absY(node);
+							o_height = node._top_node_height;
+						}
+					 	if(event_y >= o_top && event_y <= o_top + o_height) {
+							if(node !== this._dragged_node && !u.pn(node, {include:".dragged"})) {
+								if(this._allow_nesting) {
+									if(event_y < o_top + (o_height / 3) && (!node.sub_target || !node.sub_target.childNodes.length || this._dragged_node.current_yps < 0)) {
+										node.parentNode.insertBefore(this._dragged_node, node);
+									}
+									else if(event_y > o_top + ((o_height / 3) * 2)) {
+										var next = u.ns(node, {exclude:".target,.dragged"});
+										if(next) {
+											node.parentNode.insertBefore(this._dragged_node, next);
+										}
+										else {
+											node.parentNode.appendChild(this._dragged_node);
+										}
+									}
+									else {
+										if(!node.sub_target) {
+											node.sub_target = u.ae(node, "ul", {"class":this._target_selector.replace(/([a-z]*.?)/, "").replace(/\./g, " ")});
+											this.target_nodes.push(node.sub_target);
+										}
+										node.sub_target.insertBefore(this._dragged_node, node.sub_target.firstChild);
+									}
+								}
+								else {
+									if(event_y < o_top + o_height/2) {
+										node.parentNode.insertBefore(this._dragged_node, node);
+									}
+									else {
+										var next = u.ns(node);
+										if(next) {
+											node.parentNode.insertBefore(this._dragged_node, next);
+										}
+										else {
+											node.parentNode.appendChild(this._dragged_node);
+										}
+									}
+								}
+								this._recalculateRelativeShadowOffset();
+								break;
+							}
+							else {
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		scope.resetSortableEvents = function(node) {
+			u.e.removeMoveEvent(node, this._sortablePick);
+			u.e.removeEndEvent(node, this._cancelSortablePick);
+			u.e.removeOverEvent(node, this._sortableOver);
+			if(node._event_move_id) {
+				u.e.removeWindowMoveEvent(node, node._event_move_id);
+				delete node._event_move_id;
+			}
+			if(node._event_end_id) {
+				u.e.removeWindowEndEvent(node, node._event_end_id);
+				delete node._event_end_id;
+			}
+			u.e.removeOutEvent(node.drag, this._sortableOut);
+			this.resetSortableOutEvents(node);
+		}
+		scope.resetSortableOutEvents = function(node) {
+			if(node._event_drop_out_id) {
+				u.e.removeEvent(document, "mousemove", document["_DroppedOutMove" + node._event_drop_out_id]);
+				u.e.removeEvent(node, "mouseover", document["_DroppedOutOver" + node._event_drop_out_id]);
+				u.e.removeEvent(document, "mouseup", document["_DroppedOutEnd" + node._event_drop_out_id]);
+				delete document["_DroppedOutMove" + node._event_drop_out_id];
+				delete document["_DroppedOutOver" + node._event_drop_out_id];
+				delete document["_DroppedOutEnd" + node._event_drop_out_id];
+				delete document["_DroppedOutNode" + node._event_drop_out_id];
+				delete node._event_drop_out_id;
+			}
+		}
+		scope.resetNestedSortableEvents = function(node) {
+			while(node && node != this) {
+				if(node.drag) {
+					this.resetSortableEvents(node);
+				}
+				node = node.parentNode;
+			}
+		}
+		scope.getNodeOrder = function(_options) {
+			var class_var = "item_id";
+			if(obj(_options)) {
+				var _argument;
+				for(_argument in _options) {
+					switch(_argument) {
+						case "class_var"			: class_var 		= _options[_argument]; break;
+					}
+				}
+			}
+			this.updateDraggables();
+			var order = [];
+			var i, node, id;
+			for(i = 0; i < this.draggable_nodes.length; i++) {
+				node = this.draggable_nodes[i];
+				id = u.cv(node, class_var);
+				if(id) {
+					order.push(id);
+				}
+				else {
+					order.push(node);
+				}
+			}
+			return order;
+		}
+		scope.getNodeRelations = function(_options) {
+			var class_var = "item_id";
+			if(obj(_options)) {
+				var _argument;
+				for(_argument in _options) {
+					switch(_argument) {
+						case "class_var"			: class_var 		= _options[_argument]; break;
+					}
+				}
+			}
+			this.updateDraggables();
+			var structure = [];
+			var i, node, id, relation, position;
+			for(i = 0; i < this.draggable_nodes.length; i++) {
+				node = this.draggable_nodes[i];
+				id = u.cv(node, class_var);
+				relation = this.getNodeRelation(node);
+				position = this.getNodePositionInList(node);
+				if(id) {
+					structure.push({"id": id, "relation": relation, "position": position});
+				}
+				else {
+					structure.push({"node": node, "relation": relation, "position": position});
+				}
+			}
+			return structure;
+		}
+		scope.getNodePositionInList = function(node) {
+			var pos = 1;
+			var test_node = node;
+			while(u.ps(test_node)) {
+				test_node = u.ps(test_node);
+				pos++;
+			}
+			return pos;
+		}
+		scope.getNodeRelation = function(node) {
+			var relation = 0;
+			var relation_node = u.pn(node, {"include":(this._draggable_selector ? this._draggable_selector : "li")});
+			if(u.inNodeList(relation_node, this.draggable_nodes)) {
+				var id = u.cv(relation_node, "item_id");
+				if(id) {
+					relation = id;
+				}
+				else {
+					relation = relation_node;
+				}
+			}
+			return relation;
+		}
+		scope.detectSortableLayout = function() {
+			var i, target;
+			for(i = 0; i < this.target_nodes.length; i++) {
+				target = this.target_nodes[i];
+					if((target._n_top || target._n_bottom) && (u.cn(target).length > 1 || target._n_display != "block")) {
+						target._layout = "horizontal";
+					}
+					else if(target._n_left || target._n_right) {
+						target._layout = "vertical";
+					}
+					else {
+						target._layout = "multiline";
+					}
+			}
+		}
+		scope.updateDraggables = function() {
+			var i, target, draggable_node;
+			if(this.draggable_nodes && this.draggable_nodes.length) {
+				for(i = 0; i < this.draggable_nodes.length; i++) {
+					draggable_node = this.draggable_nodes[i];
+					if(draggable_node && draggable_node.drag) {
+						this.resetSortableEvents(draggable_node);
+						u.e.removeStartEvent(draggable_node.drag, this._sortableInputStart);
+						u.e.removeOverEvent(draggable_node, this._sortableOver);
+						delete draggable_node.drag;
+						delete draggable_node.sub_target;
+						delete draggable_node.draggable_node;
+					}
+				}
+			}
+			delete scope.draggable_nodes;
+			if(this._draggable_selector) {
+				this.draggable_nodes = Array.prototype.slice.call(u.qsa(this._draggable_selector, this));
+			}
+			else {
+				if(this.nodeName.toLowerCase() === "ul") {
+					this.draggable_nodes = u.cn(this, {include:"li"});
+				}
+				else {
+					this.draggable_nodes = [];
+					for(i = 0; i < this.target_nodes.length; i++) {
+						target = this.target_nodes[i];
+						this.draggable_nodes = this.draggable_nodes.concat(u.cn(target, {include:"li"}));
+					}
+				}
+			}
+			for(i = 0; i < this.draggable_nodes.length; i++) {
+				draggable_node = this.draggable_nodes[i];
+				draggable_node.scope = this;
+				draggable_node.drag = u.qs(".drag", draggable_node);
+				if(!draggable_node.drag) {
+					draggable_node.drag = draggable_node;
+				}
+				draggable_node.drag.draggable_node = draggable_node;
+				draggable_node.draggable_node = draggable_node;
+				var _top = draggable_node.offsetTop;
+				var _height = draggable_node.offsetHeight;
+				var _left = draggable_node.offsetLeft;
+				var _width = draggable_node.offsetWidth;
+				var _display = u.gcs(draggable_node, "display");
+				draggable_node.parentNode._n_top = draggable_node.parentNode._n_top === undefined ? _top : (draggable_node.parentNode._n_top == _top ? draggable_node.parentNode._n_top : false);
+				draggable_node.parentNode._n_left = draggable_node.parentNode._n_left === undefined ? _left : (draggable_node.parentNode._n_left == _left ? draggable_node.parentNode._n_left : false);
+				draggable_node.parentNode._n_bottom = draggable_node.parentNode._n_bottom === undefined ? _top + _height : (draggable_node.parentNode._n_bottom == _top + _height ? draggable_node.parentNode._n_bottom : false);
+				draggable_node.parentNode._n_right = draggable_node.parentNode._n_right === undefined ? _left + _width : (draggable_node.parentNode._n_right == _left + _width ? draggable_node.parentNode._n_right : false);
+				draggable_node.parentNode._n_display = draggable_node.parentNode._n_display === undefined ? _display : (draggable_node.parentNode._n_display == _display ? draggable_node.parentNode._n_display : false);
+				draggable_node._z_index = u.gcs(draggable_node, "zIndex");
+				if(this._allow_nesting) {
+					draggable_node.sub_target = u.qs(this._target_selector, draggable_node);
+					if(draggable_node.sub_target) {
+						var _position = u.gcs(draggable_node, "position");
+						var node_height = _height - draggable_node.sub_target.offsetHeight;
+						if(_position !== "static") {
+							draggable_node._top_node_height = node_height - (node_height - draggable_node.sub_target.offsetTop);
+						}
+						else {
+							draggable_node._top_node_height = node_height - (node_height - (draggable_node.sub_target.offsetTop - _top));
+						}
+					}
+					else {
+						draggable_node._top_node_height = _height;
+					}
+					var _margin_top = parseInt(u.gcs(draggable_node, "margin-top"));
+					var _margin_bottom = parseInt(u.gcs(draggable_node, "margin-bottom"));
+					var _box_sizing = u.gcs(draggable_node, "box-sizing");
+					if(_box_sizing == "content-box") {
+						var _border_top_width = parseInt(u.gcs(draggable_node, "border-top-width"));
+						var _border_bottom_width = parseInt(u.gcs(draggable_node, "border-bottom-width"));
+						draggable_node._extra_height_top = _margin_top + _border_top_width;
+						draggable_node._extra_height_bottom = _margin_bottom + _border_bottom_width;
+					}
+					else {
+						draggable_node._extra_height_top = _start_margin_top;
+						draggable_node._extra_height_bottom = _start_margin_bottom;
+					}
+				}
+				else {
+					draggable_node._top_node_height = _height;
+				}
+				u.e.addStartEvent(draggable_node.drag, this._sortableInputStart);
+			}
+		}
+		scope.updateTargets = function() {
+			if(this._target_selector) {
+				this.target_nodes = Array.prototype.slice.call(u.qsa(this._target_selector, this));
+				if(u.elementMatches(this, this._target_selector)) {
+					this.target_nodes.unshift(this);
+				}
+			}
+			else {
+				if(this.nodeName.toLowerCase() === "ul") {
+					this.target_nodes = [this];
+				}
+				else {
+					var i, target, target_nodes, parent_ul;
+					this.target_nodes = [];
+					target_nodes = u.qsa("ul", this);
+					for(i = 0; i < target_nodes.length; i++) {
+						target = target_nodes[i];
+						if(this._allow_nesting) {
+							this.target_nodes.push(target);
+						}
+						else {
+							parent_ul = u.pn(target, {include:"ul"});
+							if(!parent_ul || !u.contains(this, parent_ul)) {
+								this.target_nodes.push(target);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	scope.updateTargets();
+	scope.updateDraggables();
+	scope.detectSortableLayout();
+	if(!scope.draggable_nodes.length || !scope.target_nodes.length) {
+		return;
 	}
 }
 u.scrollTo = function(node, _options) {
@@ -4665,6 +6997,175 @@ Util.vendorPrefix = function() {
 	}
 	return Util.vendor_prefix;
 }
+u.template = function(template, json, _options) {
+	var string = "";
+	var template_string = "";
+	var clone, container, item_template, dom, node_list, type_template, type_parent;
+	var append_to_node = false;
+	if (obj(_options)) {
+		var _argument;
+		for (_argument in _options) {
+			switch (_argument) {
+				case "append": 	append_to_node = _options[_argument];			break;
+			}
+		}
+	}
+	if(obj(template) && typeof(template.nodeName) != "undefined") {
+		type_template = "HTML";
+	}
+	else if(obj(template) && JSON.stringify(template)) {
+		type_template = "JSON";
+	}
+	else if(str(template) && template.match(/^(\{|\[)/)) {
+		type_template = "JSON_STRING";
+	}
+	else if(str(template) && template.match(/^<.+>$/)) {
+		type_template = "HTML_STRING";
+	}
+	else if(str(template)) {
+		type_template = "STRING";
+	}
+	if(type_template == "HTML_STRING" || type_template == "HTML") {
+		if(type_template == "HTML") {
+			clone = template.cloneNode(true);
+			u.rc(clone, "template");
+			if(template.nodeName == "LI") {
+				type_parent = "ul";
+				container = document.createElement(type_parent);
+			}
+			else if(template.nodeName == "TR") {
+				type_parent = "table";
+				container = document.createElement("table").appendChild(document.createElement("tbody"));
+			}
+			else {
+				type_parent = "div";
+				container = document.createElement("div");
+			}
+			container.appendChild(clone);
+			template_string = container.innerHTML;
+			template_string = template_string.replace(/href\=\"([^\"]+)\"/g, function(string) {return decodeURIComponent(string);});
+			template_string = template_string.replace(/src\=\"([^\"]+)\"/g, function(string) {return decodeURIComponent(string);});
+		}
+		else {
+			if(template.match(/^<li/i)) {
+				type_parent = "ul";
+			}
+			else if(template.match(/^<tr/i)) {
+				type_parent = "table";
+			}
+			else {
+				type_parent = "div";
+			}
+			template_string = template;
+		}
+	}
+	else if(type_template == "JSON") {
+		template_string = JSON.stringify(template).replace(/^{/g, "MAN_JSON_START").replace(/}$/g, "MAN_JSON_END");
+	}
+	else if(type_template == "JSON_STRING") {
+		template_string = template.replace(/^{/g, "MAN_JSON_START").replace(/}$/g, "MAN_JSON_END");
+	}
+	else if(type_template == "STRING") {
+		template_string = template;
+	}
+	if(obj(json) && ((json.length == undefined && Object.keys(json).length) || json.length)) {
+		if(json.length) {
+			for(_item in json) {
+				if(json.hasOwnProperty(_item)) {
+					item_template = template_string;
+					string += item_template.replace(/\{(.+?)\}/g, function(string) {
+						var key = string.toString().replace(/[\{\}]/g, "");
+						if(str(json[_item][key]) && json[_item][key]) {
+							return json[_item][key].toString().replace(/(\\|\"|\')/g, "\\$1").replace(/\n/g, "\\n");
+						}
+						else if(typeof(json[_item][key]) == "number") {
+							return "MAN_NUM" + json[_item][key] + "MAN_NUM";
+						}
+						else if(typeof(json[_item][key]) == "boolean") {
+							return "MAN_BOOL" + json[_item][key] + "MAN_BOOL";
+						}
+						else if(json[_item][key] === null) {
+							return "MAN_NULL";
+						}
+						else if(obj(json[_item][key])) {
+							return "MAN_OBJ" + JSON.stringify(json[_item][key]).replace(/(\"|\')/g, "\\$1") + "MAN_OBJ";
+						}
+						else {
+							return "";
+						}
+					});
+				}
+			}
+		}
+		else {
+			string += template_string.replace(/\{(.+?)\}/g, function(string) {
+				var key = string.toString().replace(/[\{\}]/g, "");
+				if(str(json[key]) && json[key]) {
+					return json[key].replace(/(\\|\"|\')/g, "\\$1").replace(/\n/g, "\\n");
+				}
+				else if(typeof(json[key]) == "number") {
+					return "MAN_NUM" + json[key] + "MAN_NUM";
+				}
+				else if(typeof(json[key]) == "boolean") {
+					return "MAN_BOOL" + json[key] + "MAN_BOOL";
+				}
+				else if(json[key] === null) {
+					return "MAN_NULL";
+				}
+				else if(obj(json[key])) {
+					return "MAN_OBJ" + JSON.stringify(json[key]).replace(/(\"|\')/g, "\\$1") + "MAN_OBJ";
+				}
+				else {
+					return "";
+				}
+			});
+		}
+	}
+	if(type_template == "HTML_STRING" || type_template == "HTML") {
+		string = string.replace(/MAN_(BOOL|NUM)(.+?(?=MAN_(BOOL|NUM)))MAN_(BOOL|NUM)/g, "$2");
+		string = string.replace(/MAN_NULL/g, "");
+		string = string.replace(/MAN_OBJ(.+?(?=MAN_OBJ))MAN_OBJ/g, function(string) {
+			string = string.replace(/MAN_OBJ(.+?(?=MAN_OBJ))MAN_OBJ/g, "$1");
+			return string.replace(/\\(\\|"|')/g, "$1");
+		});
+		string = string.replace(/\\(\\|"|')/g, "$1");
+		if(type_parent == "table") {
+			dom = document.createElement("div");
+			dom.innerHTML = "<table><tbody>"+string+"</tbody></table>";
+			dom = u.qs("tbody", dom);
+		}
+		else {
+			dom = document.createElement(type_parent);
+			dom.innerHTML = string;
+		}
+		if(append_to_node) {
+			node_list = [];
+			while(dom.childNodes.length) {
+				node_list.push(u.ae(append_to_node, dom.childNodes[0]));
+			}
+			return node_list;
+		}
+		return dom.childNodes;
+	}
+	else if(type_template == "JSON_STRING" || type_template == "JSON") {
+		string = string.replace(/[\"]?MAN_(BOOL|NUM)(.+?(?=MAN_(BOOL|NUM)))MAN_(BOOL|NUM)[\"]?/g, "$2");
+		string = string.replace(/[\"]?MAN_NULL[\"]?/g, "null");
+		string = string.replace(/[\"]?MAN_OBJ(.+?(?=MAN_OBJ))MAN_OBJ[\"]?/g, function(string) {
+			string = string.replace(/[\"]?MAN_OBJ(.+?(?=MAN_OBJ))MAN_OBJ[\"]?/g, "$1");
+			return string.replace(/\\("|')/g, "$1");
+		});
+		return eval("["+string.replace(/MAN_JSON_START/g, "{").replace(/MAN_JSON_END/g, "},")+"]");
+	}
+	else if(type_template == "STRING") {
+		string = string.replace(/MAN_(BOOL|NUM)(.+?(?=MAN_(BOOL|NUM)))MAN_(BOOL|NUM)/g, "$2");
+		string = string.replace(/MAN_NULL/g, "");
+		string = string.replace(/MAN_OBJ(.+?(?=MAN_OBJ))MAN_OBJ/g, function(string) {
+			string = string.replace(/MAN_OBJ(.+?(?=MAN_OBJ))MAN_OBJ/g, "$1");
+			return string.replace(/\\(\\|"|')/g, "$1");
+		});
+		return string.replace(/\\(\\|"|')/g, "$1");
+	}
+}
 Util.Timer = u.t = new function() {
 	this._timers = new Array();
 	this.setTimer = function(node, action, timeout, param) {
@@ -4774,7 +7275,6 @@ Util.Modules["page"] = new function() {
 			}
 		}
 		page.ready = function() {
-			u.bug("page.ready:", this);
 			if(!this.is_ready) {
 				this.is_ready = true;
 				this.cN.scene = u.qs(".scene", this);
@@ -4782,6 +7282,7 @@ Util.Modules["page"] = new function() {
 				u.e.addWindowEvent(this, "scroll", this.scrolled);
 				this.initHeader();
 				this.initNavigation();
+				this.acceptCookies();
 				this.resized();
 			}
 		}
@@ -4827,6 +7328,28 @@ Util.Modules["page"] = new function() {
 				}
 			}
 		}
+		page.acceptCookies = function() {
+			if(u.terms_version && !u.getCookie(u.terms_version)) {
+				var terms = u.ie(document.body, "div", {"class":"terms_notification"});
+				u.ae(terms, "h3", {"html":u.stringOr(u.txt["terms-headline"], "Flere grøntsager, <br />færre kager")});
+				u.ae(terms, "p", {"html":u.stringOr(u.txt["terms-paragraph"], "Vi beskytter dit privatliv og bruger kun funktionelle cookies.")});
+				var bn_accept = u.ae(terms, "a", {"class":"accept", "html":u.stringOr(u.txt["terms-accept"], "Accepter")});
+				bn_accept.terms = terms;
+				u.ce(bn_accept);
+				bn_accept.clicked = function() {
+					this.terms.parentNode.removeChild(this.terms);
+					u.saveCookie(u.terms_version, true, {"path":"/", "expires":false});
+				}
+				if(!location.href.match(u.terms_link)) {
+					var bn_details = u.ae(terms, "a", {"class":"details", "html":u.stringOr(u.txt["terms-details"], "Læs mere"), "href":u.terms_link});
+					u.ce(bn_details, {"type":"link"});
+				}
+				u.a.transition(terms, "all 0.5s ease-in");
+				u.ass(terms, {
+					"opacity": 1
+				});
+			}
+		}
 		page.ready();
 	}
 }
@@ -4849,8 +7372,15 @@ Util.Modules["banner"] = new function() {
 		if (variant == "random" || !variant) {
 			variant = u.random(1, 4);
 		}
-		u.ae(div, "img", {class:"fit-width", src:"/img/banners/desktop/pi_" + variant + "." + format});	
+		var image = u.ae(div, "img", {class:"fit-width"});	
 		u.ae(div, "div", {class:"logo"});
+		image.loaded = function(queue) {
+			this.src = queue[0].image.src;
+			if(page) {
+				page.resized();
+			}
+		}
+		u.preloader(image, ["/img/banners/desktop/pi_" + variant + "." + format]);
 	}
 }
 u.f.fixFieldHTML = function(field) {
@@ -4862,121 +7392,29 @@ u.f.customHintPosition = {};
 u.f.customHintPosition["string"] = function() {}
 u.f.customHintPosition["email"] = function() {}
 u.f.customHintPosition["number"] = function() {}
+u.f.customHintPosition["integer"] = function() {}
 u.f.customHintPosition["password"] = function() {}
 u.f.customHintPosition["tel"] = function() {}
 u.f.customHintPosition["text"] = function() {}
 u.f.customHintPosition["select"] = function() {}
 u.f.customHintPosition["checkbox"] = function() {}
 u.f.customHintPosition["radiobuttons"] = function() {}
+u.f.customHintPosition["date"] = function() {}
+u.f.customHintPosition["datetime"] = function() {}
+u.f.customHintPosition["files"] = function() {}
+u.f.customHintPosition["html"] = function() {}
 
 
 /*u-settings.js*/
 u.ga_account = '';
 u.ga_domain = '';
 u.gapi_key = 'AIzaSyAnZTViVnr4jxGyNQCCMGO0hnJ8NjsKqjo';
-
-
-/*u-overlay.js*/
-u.overlay = function (_options) {
-	var title = "Overlay";
-	var drag = true;
-	var width = 400;
-	var height = 400;
-	var content_scroll = false;
-	var classname = "";
-	if(obj(_options)) {
-		var _argument;
-		for(_argument in _options) {
-			switch(_argument) {
-				case "title"       : title          = _options[_argument]; break;
-				case "drag"        : drag           = _options[_argument]; break;
-				case "class"       : classname      = _options[_argument]; break;
-				case "width"       : width          = _options[_argument]; break;
-				case "height"      : height         = _options[_argument]; break;
-				case "content_scroll" : content_scroll    = _options[_argument]; break;
-			}
-		}
-	}
-	if (width > 500) {
-		classname = " large " + classname;
-	}
-	else {
-		classname = " small " + classname;
-	}
-	if (content_scroll) {
-		classname += "content_scroll"
-	}
-	var overlay = u.ae(document.body, "div", {"class": "overlay" + classname, "tabindex":"-1"});
-	u.ass(overlay, {
-		"width": width + "px",
-		"height": height + "px",
-		"left": ((u.browserW() - width) / 2) + "px",
-		"top": ((u.browserH() - height) / 2) + "px",
-	});
-	overlay.protection = u.ae(document.body, "div", {"class": "overlay_protection"});
-	if (window._overlay_stack_index) {
-		u.ass(overlay.protection, { "z-index": window._overlay_stack_index});
-		u.ass(overlay, { "z-index": window._overlay_stack_index + 1 });
-	}
-	window._overlay_stack_index = Number(u.gcs(overlay, "z-index")) + 2;
-	u.as(document.body, "overflow", "hidden");
-	overlay._resized = function (event) {
-		u.ass(this, {
-			"left": ((u.browserW() - this.w) / 2) + "px",
-			"top": ((u.browserH() - this.h) / 2) + "px",
-		});
-		u.ass(this.div_content, {
-			"height": ((this.offsetHeight - this.div_header.offsetHeight) - this.div_footer.offsetHeight) + "px"
-		});
-		if(fun(this.resized)) {
-			this.resized(event);
-		}
-	}
-	u.e.addWindowEvent(overlay, "resize", "_resized");
-	overlay.div_header = u.ae(overlay, "div", {class:"header"});
-	if(title) {
-		overlay.div_header.h2 = u.ae(overlay.div_header, "h2", {html: title});
-		overlay.div_header.overlay = overlay;
-	}
-	overlay.div_content = u.ae(overlay, "div", {class: "content"});
-	overlay.div_content.overlay = overlay;
-	overlay.div_footer = u.ae(overlay, "div", {class: "footer"});
-	overlay.div_footer.overlay = overlay;
-	overlay.w = width;
-	overlay.h = height;
-	if (drag) {
-		u.e.drag(overlay.div_header, overlay.div_header);
-		overlay._x = 0;
-		overlay._y = 0;
-		overlay.div_header.moved = function (event) {
-			var new_x = this.overlay._x + this.current_x;
-			var new_y = this.overlay._y + this.current_y;
-			u.ass(this.overlay, {
-				"transform": "translate(" + new_x + "px, " + new_y + "px)",
-			});
-		}
-		overlay.div_header.dropped = function (event) {
-			this.overlay._x += this.current_x;
-			this.overlay._y += this.current_y;
-		}
-	}
-	overlay.close = function (event) {
-		u.as(document.body, "overflow", "auto");
-		document.body.removeChild(this);
-		document.body.removeChild(this.protection);
-		if (fun (this.closed)) {
-			this.closed(event);
-		}
-	}
-	overlay.x_close = u.ae(overlay.div_header, "div", {class: "close"});
-	overlay.x_close.overlay = overlay;
-	u.ce(overlay.x_close);
-	overlay.x_close.clicked = function (event) {
-		this.overlay.close(event);
-	}
-	overlay._resized();
-	return overlay;
-}
+u.terms_version = "terms_v1";
+u.terms_link = "/persondata";
+u.txt["terms-headline"] = "Flere grøntsager, <br />færre kager";
+u.txt["terms-paragraph"] = "Vi beskytter dit privatliv og bruger kun funktionelle cookies.";
+u.txt["terms-accept"] = "Accepter";
+u.txt["terms-details"] = "Læs mere";
 
 
 /*beta-u-paymentcards.js*/
@@ -4985,7 +7423,7 @@ u.paymentCards = new function() {
 		{
 			"type": 'maestro',
 			"patterns": [5018, 502, 503, 506, 56, 58, 639, 6220, 67],
-			"format": /(\d{1,4})/g,
+			"format": /([\d]{1,4})([\d]{1,4})?([\d]{1,4})?([\d]{1,4})?([\d]{1,4})?/,
 			"card_length": [12,13,14,15,16,17,18,19],
 			"cvc_length": [3],
 			"luhn": true
@@ -4993,7 +7431,7 @@ u.paymentCards = new function() {
 		{
 			"type": 'forbrugsforeningen',
 			"patterns": [600],
-			"format": /(\d{1,4})/g,
+			"format": /([\d]{1,4})([\d]{1,4})?([\d]{1,4})?([\d]{1,4})?/,
 			"card_length": [16],
 			"cvc_length": [3],
 			"luhn": true,
@@ -5001,7 +7439,7 @@ u.paymentCards = new function() {
 		{
 			"type": 'dankort',
 			"patterns": [5019],
-			"format": /(\d{1,4})/g,
+			"format": /([\d]{1,4})([\d]{1,4})?([\d]{1,4})?([\d]{1,4})?/,
 			"card_length": [16],
 			"cvc_length": [3],
 			"luhn": true
@@ -5017,7 +7455,7 @@ u.paymentCards = new function() {
 		{
 			"type": 'mastercard',
 			"patterns": [51, 52, 53, 54, 55, 22, 23, 24, 25, 26, 27],
-			"format": /(\d{1,4})/g,
+			"format": /([\d]{1,4})([\d]{1,4})?([\d]{1,4})?([\d]{1,4})?/,
 			"card_length": [16],
 			"cvc_length": [3],
 			"luhn": true
@@ -5107,13 +7545,11 @@ u.paymentCards = new function() {
 		if(card) {
 			var matches = card_number.match(card.format);
 			if(matches) {
-				if(matches.length > 1 && matches[0] == card_number) {
-					matches.shift();
-					card_number = matches.join(" ").trim();
-				}
-				else {
-					card_number = matches.join(" ");
-				}
+				var matched_text = matches[0];
+				matches.shift(); 
+				var unmatched_suffix = card_number.slice(matched_text.length);
+				matches.push(unmatched_suffix);
+				card_number = matches.join(" ").trim().replace(/ +/g, " ");
 			}
 		}
 		return card_number;
@@ -5130,360 +7566,6 @@ u.paymentCards = new function() {
 	};
 }
 
-
-/*u-template.js*/
-u.template = function(template, json, _options) {
-	var string = "";
-	var template_string = "";
-	var clone, container, item_template, dom, node_list, type_template, type_parent;
-	var append_to_node = false;
-	if (obj(_options)) {
-		var _argument;
-		for (_argument in _options) {
-			switch (_argument) {
-				case "append": 	append_to_node = _options[_argument];			break;
-			}
-		}
-	}
-	if(obj(template) && typeof(template.nodeName) != "undefined") {
-		type_template = "HTML";
-	}
-	else if(obj(template) && JSON.stringify(template)) {
-		type_template = "JSON";
-	}
-	else if(str(template) && template.match(/^(\{|\[)/)) {
-		type_template = "JSON_STRING";
-	}
-	else if(str(template) && template.match(/^<.+>$/)) {
-		type_template = "HTML_STRING";
-	}
-	else if(str(template)) {
-		type_template = "STRING";
-	}
-	if(type_template == "HTML_STRING" || type_template == "HTML") {
-		if(type_template == "HTML") {
-			clone = template.cloneNode(true);
-			u.rc(clone, "template");
-			if(template.nodeName == "LI") {
-				type_parent = "ul";
-				container = document.createElement(type_parent);
-			}
-			else if(template.nodeName == "TR") {
-				type_parent = "table";
-				container = document.createElement("table").appendChild(document.createElement("tbody"));
-			}
-			else {
-				type_parent = "div";
-				container = document.createElement("div");
-			}
-			container.appendChild(clone);
-			template_string = container.innerHTML;
-			template_string = template_string.replace(/href\=\"([^\"]+)\"/g, function(string) {return decodeURIComponent(string);});
-			template_string = template_string.replace(/src\=\"([^\"]+)\"/g, function(string) {return decodeURIComponent(string);});
-		}
-		else {
-			if(template.match(/^<li/i)) {
-				type_parent = "ul";
-			}
-			else if(template.match(/^<tr/i)) {
-				type_parent = "table";
-			}
-			else {
-				type_parent = "div";
-			}
-			template_string = template;
-		}
-	}
-	else if(type_template == "JSON") {
-		template_string = JSON.stringify(template).replace(/^{/g, "MAN_JSON_START").replace(/}$/g, "MAN_JSON_END");
-	}
-	else if(type_template == "JSON_STRING") {
-		template_string = template.replace(/^{/g, "MAN_JSON_START").replace(/}$/g, "MAN_JSON_END");
-	}
-	else if(type_template == "STRING") {
-		template_string = template;
-	}
-	if(obj(json) && ((json.length == undefined && Object.keys(json).length) || json.length)) {
-		if(json.length) {
-			for(_item in json) {
-				if(json.hasOwnProperty(_item)) {
-					item_template = template_string;
-	// 					
-	// 
-	// 
-	// 
-	// 					
-	// 
-	// 
-					string += item_template.replace(/\{(.+?)\}/g, function(string) {
-						var key = string.toString().replace(/[\{\}]/g, "");
-						if(str(json[_item][key]) && json[_item][key]) {
-							return json[_item][key].toString().replace(/(\\|\"|\')/g, "\\$1").replace(/\n/g, "\\n");
-						}
-						else if(typeof(json[_item][key]) == "number") {
-							return "MAN_NUM" + json[_item][key] + "MAN_NUM";
-						}
-						else if(typeof(json[_item][key]) == "boolean") {
-							return "MAN_BOOL" + json[_item][key] + "MAN_BOOL";
-						}
-						else if(json[_item][key] === null) {
-							return "MAN_NULL";
-						}
-						else if(obj(json[_item][key])) {
-							return "MAN_OBJ" + JSON.stringify(json[_item][key]).replace(/(\"|\')/g, "\\$1") + "MAN_OBJ";
-						}
-						else {
-							return "";
-						}
-					});
-				}
-			}
-		}
-		else {
-			string += template_string.replace(/\{(.+?)\}/g, function(string) {
-				var key = string.toString().replace(/[\{\}]/g, "");
-				if(str(json[key]) && json[key]) {
-					return json[key].replace(/(\\|\"|\')/g, "\\$1").replace(/\n/g, "\\n");
-				}
-				else if(typeof(json[key]) == "number") {
-					return "MAN_NUM" + json[key] + "MAN_NUM";
-				}
-				else if(typeof(json[key]) == "boolean") {
-					return "MAN_BOOL" + json[key] + "MAN_BOOL";
-				}
-				else if(json[key] === null) {
-					return "MAN_NULL";
-				}
-				else if(obj(json[key])) {
-					return "MAN_OBJ" + JSON.stringify(json[key]).replace(/(\"|\')/g, "\\$1") + "MAN_OBJ";
-				}
-				else {
-					return "";
-				}
-			});
-		}
-	}
-	if(type_template == "HTML_STRING" || type_template == "HTML") {
-		string = string.replace(/MAN_(BOOL|NUM)(.+?(?=MAN_(BOOL|NUM)))MAN_(BOOL|NUM)/g, "$2");
-		string = string.replace(/MAN_NULL/g, "");
-		string = string.replace(/MAN_OBJ(.+?(?=MAN_OBJ))MAN_OBJ/g, function(string) {
-			string = string.replace(/MAN_OBJ(.+?(?=MAN_OBJ))MAN_OBJ/g, "$1");
-			return string.replace(/\\(\\|"|')/g, "$1");
-		});
-		string = string.replace(/\\(\\|"|')/g, "$1");
-		if(type_parent == "table") {
-			dom = document.createElement("div");
-			dom.innerHTML = "<table><tbody>"+string+"</tbody></table>";
-			dom = u.qs("tbody", dom);
-		}
-		else {
-			dom = document.createElement(type_parent);
-			dom.innerHTML = string;
-		}
-		if(append_to_node) {
-			node_list = [];
-			while(dom.childNodes.length) {
-				node_list.push(u.ae(append_to_node, dom.childNodes[0]));
-			}
-			return node_list;
-		}
-		return dom.childNodes;
-	}
-	else if(type_template == "JSON_STRING" || type_template == "JSON") {
-		string = string.replace(/[\"]?MAN_(BOOL|NUM)(.+?(?=MAN_(BOOL|NUM)))MAN_(BOOL|NUM)[\"]?/g, "$2");
-		string = string.replace(/[\"]?MAN_NULL[\"]?/g, "null");
-		string = string.replace(/[\"]?MAN_OBJ(.+?(?=MAN_OBJ))MAN_OBJ[\"]?/g, function(string) {
-			string = string.replace(/[\"]?MAN_OBJ(.+?(?=MAN_OBJ))MAN_OBJ[\"]?/g, "$1");
-			return string.replace(/\\("|')/g, "$1");
-		});
-		return eval("["+string.replace(/MAN_JSON_START/g, "{").replace(/MAN_JSON_END/g, "},")+"]");
-	}
-	else if(type_template == "STRING") {
-		string = string.replace(/MAN_(BOOL|NUM)(.+?(?=MAN_(BOOL|NUM)))MAN_(BOOL|NUM)/g, "$2");
-		string = string.replace(/MAN_NULL/g, "");
-		string = string.replace(/MAN_OBJ(.+?(?=MAN_OBJ))MAN_OBJ/g, function(string) {
-			string = string.replace(/MAN_OBJ(.+?(?=MAN_OBJ))MAN_OBJ/g, "$1");
-			return string.replace(/\\(\\|"|')/g, "$1");
-		});
-		return string.replace(/\\(\\|"|')/g, "$1");
-	}
-}
-
-
-/*u-googlemaps.js*/
-u.googlemaps = new function() {
-	this.api_loading = false;
-	this.api_loaded = false;
-	this.api_load_queue = [];
-	this.map = function(map, center, _options) {
-		map._maps_streetview = false;
-		map._maps_zoom = 10;
-		map._maps_scrollwheel = true;
-		map._maps_zoom = 10;
-		map._center_latitude = center[0];
-		map._center_longitude = center[1];
-		map._styles = false;
-		map._disable_ui = false;
-		if(obj(_options)) {
-			var _argument;
-			for(_argument in _options) {
-				switch(_argument) {
-					case "zoom"           : map._maps_zoom               = _options[_argument]; break;
-					case "scrollwheel"    : map._maps_scrollwheel        = _options[_argument]; break;
-					case "streetview"     : map._maps_streetview         = _options[_argument]; break;
-					case "styles"         : map._styles                  = _options[_argument]; break;
-					case "disableUI"      : map._disable_ui              = _options[_argument]; break;
-				}
-			}
-		}
-		var map_key = u.randomString(8);
-		window[map_key] = function() {
-			u.googlemaps.api_loaded = true;
-			var map;
-			while(u.googlemaps.api_load_queue.length) {
-				map = u.googlemaps.api_load_queue.shift();
-				map.init();
-			}
-		}
-		map.init = function() {
-			var mapOptions = {center: new google.maps.LatLng(center[0], center[1]), zoom: this._maps_zoom, scrollwheel: this._maps_scrollwheel, streetViewControl: this._maps_streetview, zoomControlOptions: {position: google.maps.ControlPosition.LEFT_TOP}, styles: this._styles, disableDefaultUI: this._disable_ui};
-			this.g_map = new google.maps.Map(this, mapOptions);
-			this.g_map.m_map = this
-			if(fun(this.APIloaded)) {
-				this.APIloaded();
-			}
-			google.maps.event.addListener(this.g_map, 'tilesloaded', function() {
-				if(fun(this.m_map.tilesloaded)) {
-					this.m_map.tilesloaded();
-				}
-			});
-			google.maps.event.addListenerOnce(this.g_map, 'tilesloaded', function() {
-				if(fun(this.m_map.loaded)) {
-					this.m_map.loaded();
-				}
-			});
-		}
-		if(!this.api_loaded && !this.api_loading) {
-			u.ae(document.head, "script", {"src":"https://maps.googleapis.com/maps/api/js?callback="+map_key+(u.gapi_key ? "&key="+u.gapi_key : "")});
-			this.api_loading = true;
-			this.api_load_queue.push(map);
-		}
-		else if(this.api_loading) {
-			this.api_load_queue.push(map);
-		}
-		else {
-			map.init();
-		}
-	}
-	this.addMarker = function(map, coords, _options) {
-		var _icon;
-		var _label = null;
-		if(obj(_options)) {
-			var _argument;
-			for(_argument in _options) {
-				switch(_argument) {
-					case "icon"           : _icon               = _options[_argument]; break;
-					case "label"          : _label              = _options[_argument]; break;
-				}
-			}
-		}
-		var marker = new google.maps.Marker({position: new google.maps.LatLng(coords[0], coords[1]), animation:google.maps.Animation.DROP, icon: _icon, label: _label});
-		marker.setMap(map.g_map);
-		marker.g_map = map.g_map;
-		google.maps.event.addListener(marker, 'click', function() {
-			if(fun(this.clicked)) {
-				this.clicked();
-			}
-		});
-		google.maps.event.addListener(marker, 'mouseover', function() {
-			if(fun(this.entered)) {
-				this.entered();
-			}
-		});
-		google.maps.event.addListener(marker, 'mouseout', function() {
-			if(fun(this.exited)) {
-				this.exited();
-			}
-		});
-		return marker;
-	}
-	this.removeMarker = function(map, marker, _options) {
-		marker._animation = true;
-		if(obj(_options)) {
-			var _argument;
-			for(_argument in _options) {
-				switch(_argument) {
-					case "animation"      : marker._animation            = _options[_argument]; break;
-				}
-			}
-		}
-		if(marker._animation) {
-			var key = u.randomString(8);
-			marker.pick_step = 0;
-			marker.c_zoom = (1 << map.getZoom());
-			marker.c_projection = map.getProjection();
-			marker.c_exit = map.getBounds().getNorthEast().lat();
-			marker._pickUp = function() {
-				var new_position = this.c_projection.fromLatLngToPoint(this.getPosition());
-				new_position.y -= (20*this.pick_step) / this.c_zoom; 
-				new_position = this.c_projection.fromPointToLatLng(new_position);
-				this.setPosition(new_position);
-				if(this.c_exit < new_position.lat()) {
-					this.setMap(null);
-					if(fun(this.removed)) {
-						this.removed();
-					}
-				}
-				else{
-					this.pick_step++;
-					u.t.setTimer(this, this._pickUp, 20);
-				}
-			}
-			marker._pickUp();
-		}
-		else {
-			marker.setMap(null);
-		}
-	}
-	this.infoWindow = function(map) {
-		map.g_infowindow = new google.maps.InfoWindow({"maxWidth":250});
-		google.maps.event.addListener(map.g_infowindow, 'closeclick', function() {
-			if(this._marker && fun(this._marker.closed)) {
-				this._marker.closed();
-				this._marker = false;
-			}
-		});
-	}
-	this.showInfoWindow = function(map, marker, content) {
-		map.g_infowindow.setContent(content);
-		map.g_infowindow.open(map, marker);
-		map.g_infowindow._marker = marker;
-	}
-	this.hideInfoWindow = function(map) {
-		map.g_infowindow.close();
-		if(map.g_infowindow._marker && fun(map.g_infowindow._marker.closed)) {
-			map.g_infowindow._marker.closed();
-			map.g_infowindow._marker = false;
-		}
-		map.g_infowindow._marker = false;
-	}
-	this.zoom = function() {
-	}
-	this.center = function() {
-	}
-}
-
-
-/*u-object.js*/
-u.objectValues = function(obj) {
-	var key, values = [];
-	for(key in obj) {
-		if(obj.hasOwnProperty(key)) {
-			values.push(obj[key]);
-		}
-	}
-	return values;
-}
 
 /*beta-u-form-onebuttonform.js*/
 Util.Modules["oneButtonForm"] = new function() {
@@ -5839,6 +7921,7 @@ Util.Modules["login"] = new function() {
 		scene.ready = function() {
 			var form_login = u.qs("form.login", this);
 			u.f.init(form_login);
+			form_login.inputs["username"].focus();
 		}
 		scene.ready();
 	}
@@ -5964,8 +8047,8 @@ Util.Modules["create_password"] = new function() {
 }
 
 
-/*m-update_department.js*/
-Util.Modules["update_department"] = new function() {
+/*m-update_userinfo_form.js*/
+Util.Modules["update_userinfo_form"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
 		}
@@ -6041,6 +8124,273 @@ Util.Modules["signupfees"] = new function() {
 		// 	
 		// 	
 		// 	
+		}
+		scene.ready();
+	}
+}
+
+
+/*m-shop.js*/
+Util.Modules["shop"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+			if(this.sidebar) {
+				this.sidebar.start_y = u.absY(this.sidebar);
+			}
+		}
+		scene.scrolled = function() {
+			if(this.sidebar) {
+				if(page.offsetHeight - 52 - page.scrolled_y < this.sidebar.offsetHeight) {
+				}
+				else if(this.sidebar.start_y < page.scrolled_y) {
+					if(!this.sidebar.is_fixed) {
+						this.sidebar.is_fixed = true;
+						u.ac(this.sidebar, "fixed");
+					}
+					u.ass(this.sidebar, {
+						top: page.scrolled_y - this.sidebar.start_y + "px"
+					});
+				}
+				else if(this.sidebar.is_fixed) {
+					this.sidebar.is_fixed = false;
+					u.rc(this.sidebar, "fixed");
+				}
+			}
+		}
+		scene.ready = function() {
+			var form_login = u.qs("form.login", this);
+			if(form_login) {
+				u.f.init(form_login);
+				form_login.inputs["username"].focus();
+			}
+			var products = u.qsa("li.product", this);
+			if(products) {
+				var i, j, pickupdate, product, image;
+				for(i = 0; i < products.length; i++) {
+					product = products[i];
+					var images = u.qsa("div.image,div.media", product);
+					for(j = 0; j < images.length; j++) {
+						image = images[j];
+						image.product = product;
+						image._id = u.cv(image, "item_id");
+						image._format = u.cv(image, "format");
+						image._variant = u.cv(image, "variant");
+						if(image._id && image._format) {
+							image._image_src = "/images/" + image._id + "/" + (image._variant ? image._variant+"/" : "") + "380x." + image._format;
+							image.loaded = function(queue) {
+								u.ac(this, "loaded");
+								u.ass(this, {
+									"backgroundImage": "url("+queue[0].image.src+")"
+								})
+							}
+							u.preloader(image, [image._image_src]);
+						}
+					}
+					var pickupdate;
+					var div_pickupdates = u.qs("div.pickupdates", product);
+					div_pickupdates.ul_pickupdates = u.qs("ul.pickupdates", product);
+					div_pickupdates.pickupdates = u.qsa("li.pickupdate", product);
+					div_pickupdates.total_width = div_pickupdates.pickupdates.length*56;
+					if(div_pickupdates.total_width >= div_pickupdates.offsetWidth) {
+						div_pickupdates.current_x = 0;
+						u.ac(div_pickupdates, "scroll");
+						u.ass(div_pickupdates.ul_pickupdates, {
+							width: div_pickupdates.total_width+"px"
+						});
+						div_pickupdates.bn_left = u.ae(div_pickupdates, "span", {"class":"left"});
+						div_pickupdates.bn_left.div_pickupdates = div_pickupdates;
+						u.ce(div_pickupdates.bn_left);
+						div_pickupdates.bn_left.clicked = function() {
+							if(this.div_pickupdates.current_x < 0) {
+								this.div_pickupdates.current_x = this.div_pickupdates.current_x + 56;
+								u.ass(this.div_pickupdates.ul_pickupdates, {
+									transition: "all 0.5s ease-in-out",
+									transform: "translate(" + this.div_pickupdates.current_x + "px, 0)"
+								});
+							}
+							this.div_pickupdates.updateArrows();
+						}
+						div_pickupdates.bn_right = u.ae(div_pickupdates, "span", {"class":"right"});
+						div_pickupdates.bn_right.div_pickupdates = div_pickupdates;
+						u.ce(div_pickupdates.bn_right);
+						div_pickupdates.bn_right.clicked = function() {
+							if(this.div_pickupdates.current_x > this.div_pickupdates.offsetWidth - this.div_pickupdates.total_width) {
+								this.div_pickupdates.current_x = this.div_pickupdates.current_x - 56;
+								u.ass(this.div_pickupdates.ul_pickupdates, {
+									transition: "all 0.5s ease-in-out",
+									transform: "translate(" + this.div_pickupdates.current_x + "px, 0)"
+								});
+							}
+							this.div_pickupdates.updateArrows();
+						};
+						div_pickupdates.updateArrows = function() {
+							if(this.current_x <= this.offsetWidth - this.total_width) {
+								u.ass(this.bn_right, {opacity: 0.3});
+							}
+							else {
+								u.ass(this.bn_right, {opacity: 1});
+							}
+							if(this.current_x >= 0) {
+								u.ass(this.bn_left, {opacity: 0.3});
+							}
+							else {
+								u.ass(this.bn_left, {opacity: 1});
+							}
+						}
+						div_pickupdates.updateArrows();
+					}
+					for(j = 0; j < div_pickupdates.pickupdates.length; j++) {
+						pickupdate = div_pickupdates.pickupdates[j];
+						pickupdate.scene = this;
+						pickupdate.bn_add = u.qs("div.add", pickupdate);
+						if(pickupdate.bn_add) {
+							pickupdate.bn_add.title = "Tilføj til kurven";
+							pickupdate.bn_add.pickupdate = pickupdate;
+							pickupdate.bn_add.confirmed = function(response) {
+								if(response.isHTML) {
+									var scene_cart = u.qs("div.cart", this.pickupdate.scene);
+									var response_cart = u.qs("div.cart", response);
+									u.ass(response_cart, {
+										opacity: 0.5
+									});
+									scene_cart.parentNode.replaceChild(response_cart, scene_cart);
+									u.ass(response_cart, {
+										transition: "opacity 0.1s ease-in-out",
+										opacity: 1
+									});
+								}
+							}
+						}
+					}
+				}
+			}
+			this.sidebar = u.qs("div.sidebar", this);
+			if(this.sidebar) {
+				this.sidebar.start_y = u.absY(this.sidebar);
+			}
+		}
+		scene.ready();
+	}
+}
+Util.Modules["cart"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			this.total_cart_price = u.qs("div.total span.total_price", this);
+			u.bug("this.total_cart_price", this.total_cart_price);
+			this.cart_nodes = u.qsa("ul.items li.item", this);
+			var i, node;
+			for(i = 0; node = this.cart_nodes[i]; i++) {
+				node.scene = this;
+				node.item_id = u.cv(node, "id");
+				node.pickupdate = u.cv(node, "date");
+				node.unit_price = u.qs("span.unit_price", node);
+				node.total_price = u.qs("span.total_price", node);
+				node.quantity = u.qs("input[name=quantity]", node);
+				var quantity_form = u.qs("form.updateCartItemQuantity", node)
+				if(quantity_form) {
+					quantity_form.node = node;
+					u.f.init(quantity_form);
+					quantity_form.inputs["quantity"].updated = function() {
+						if(parseInt(this.val()) < 1) {
+							this.val(1);
+						}
+							this._form.submit();
+					}
+					quantity_form.submitted = function() {
+						this.response = function(response) {
+				 			u.rc(this.actions["update"], "primary");
+							if(response) {
+								var total_price = u.qs("div.scene div.total span.total_price", response);
+								var item_row;
+								if(this.node.pickupdate) {
+									item_row = u.ge("id:"+this.node.item_id+" date:"+this.node.pickupdate, response);
+								}
+								else {
+									item_row = u.ge("id:"+this.node.item_id, response);
+								}
+								var item_total_price = u.qs("span.total_price", item_row);
+								var item_unit_price = u.qs("span.unit_price", item_row);
+								var item_quantity = u.qs("input[name=quantity]", item_row);
+								this.node.scene.total_cart_price.innerHTML = total_price.innerHTML;
+								this.node.total_price.innerHTML = item_total_price.innerHTML;
+								this.node.unit_price.innerHTML = item_unit_price.innerHTML;
+								this.node.quantity.value = item_quantity.value;
+							}
+							else {
+								u.ac(this._form.actions["update"], "primary");
+							}
+						}
+						u.request(this, this.action, {"method":"post", "data":this.getData()});
+					}
+				}
+				// 			
+			}
+		}
+		scene.ready();
+	}
+}
+Util.Modules["checkout"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			var form_login = u.qs("form.login", this);
+			if(form_login) {
+				u.f.init(form_login);
+				form_login.inputs["username"].focus();
+			}
+		}
+		scene.ready();
+	}
+}
+Util.Modules["shopProfile"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			var form = u.qs("form.details", this);
+			if(form) {
+				u.f.init(form);
+			}
+		}
+		scene.ready();
+	}
+}
+Util.Modules["shopAddress"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			var addresses = u.qsa("ul.addresses li.address", this);
+			if(addresses) {
+				var i, address, highest = 0;
+				for(i = 0; i < addresses.length; i++) {
+					address = addresses[i];
+					if(address.offsetHeight > highest) {
+						highest = address.offsetHeight;
+					}
+				}
+				for(i = 0; i < addresses.length; i++) {
+					address = addresses[i];
+					u.ass(address, {
+						height: highest+"px"
+					})
+				}
+			}
+			var form = u.qs("form.address", this);
+			if(form) {
+				u.f.init(form);
+			}
 		}
 		scene.ready();
 	}
@@ -6671,12 +9021,15 @@ Util.Modules["user_profile"] = new function() {
 		scene.ready = function() {
 			this.initMembershipBox();
 			this.initUserinfoBox();
+			this.initRenewalBox();
+			this.initOrderList();
 		}
 		scene.initMembershipBox = function() {
 			var box_membership = u.qs(".membership > .c-box", this);
 			var button_membership = u.qs(".membership li.change-membership", this);
 			var button_cancel = u.qs(".membership li.cancel-membership", this);
 			var button_department = u.qs(".membership li.change-department", this);
+			var section_user_group = u.qs(".section.user_group");
 			button_membership.scene = this;
 			button_cancel.scene = this; 
 			button_department.scene = this;
@@ -6688,6 +9041,7 @@ Util.Modules["user_profile"] = new function() {
 					u.rc(this, "loading");
 					var form_department = u.qs(".form_department", response);
 					form_department.scene = this.scene;
+					var warning = u.qs("p.warning", response);
 					var form_fieldset = u.qs("fieldset", form_department);
 					var div_fields = u.qs("div.fields", box_membership);
 					var divs_membership = u.qsa(".membership-info", div_fields)	;
@@ -6698,6 +9052,9 @@ Util.Modules["user_profile"] = new function() {
 					u.f.init(form_department);
 					u.ie(form_department, div_fields);
 					u.ae(div_fields, form_fieldset);
+					if(warning) {
+						u.ae(div_fields, warning);
+					}
 					form_department.submitted = function() {
 						var data = this.getData();
 						this.response = function(response) {
@@ -6766,6 +9123,8 @@ Util.Modules["user_profile"] = new function() {
 							u.rc(this, "loading");
 							var div_membership = u.qs(".membership .fields", response);
 							box_membership.replaceChild(div_membership, form_membership);
+							var new_section_user_group = u.qs(".section.user_group", response);
+							section_user_group.parentNode.replaceChild(new_section_user_group, section_user_group);
 							if (message = u.qs("div.messages", response)) {
 								u.ie(box_membership, message);
 								message.transitioned = function() {
@@ -6937,6 +9296,158 @@ Util.Modules["user_profile"] = new function() {
 				}
 			}
 		}
+		scene.initRenewalBox = function() {
+			var box_renewal = u.qs(".renewal > .c-box", this);
+			var button_renewal = u.qs(".renewal li", this);
+			if(button_renewal) {
+				button_renewal.scene = this;
+				u.clickableElement(button_renewal);
+				button_renewal.clicked = function() {
+					this.response = function(response) {
+						this.is_requesting = false;
+						u.rc(this, "loading");
+						var form_renewal = u.qs(".form_renewal", response);
+						form_renewal.scene = this.scene;
+						var div_fields = u.qs("div.fields", box_renewal);
+						box_renewal.replaceChild(form_renewal, div_fields);
+						u.f.init(form_renewal);
+						form_renewal.submitted = function() {
+							var data = this.getData();
+							this.response = function(response, request_id) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								if (message = u.qs("p.error", this)) {
+									message.parentNode.removeChild(message);
+								}
+								if (message = u.qs("div.messages > p.error", response)) {
+									u.ass(message, {
+										"padding-bottom":"5px",
+										"transform":"translate3d(0px, -10px, 0px)",
+										"opacity":"0"
+									});
+									u.ie(this, message);	
+									u.a.transition(message, "all .5s ease");
+									u.ass(message, {
+										"transform":"translate3d(0px, 0, 0px)",
+										"opacity":"1"
+									});
+								}
+								var div_renewal = u.qs(".renewal .fields", response);
+								if(div_renewal) {
+									box_renewal.replaceChild(div_renewal, this);
+									if (message = u.qs("p.message", response)) {
+										var fields = u.qs("div.fields", box_renewal);
+										u.ie(fields, message);
+										if (message.t_done) {
+											u.t.resetTimer(t_done);
+										}
+										message.done = function() {
+											u.ass(this, {
+												"transition":"all .5s ease",
+												"transform":"translate3d(0px, -10px, 0px)",
+												"opacity":"0"
+											});
+											u.t.setTimer(this, function() {
+												this.parentNode.removeChild(this);
+											}, 500);
+										}
+										message.transitioned = function() {
+											this.t_done = u.t.setTimer(this, this.done, 2400);
+										}
+										u.ass(message, {
+											"color":"#3e8e17",
+											"padding-bottom":"5px",
+											"transform":"translate3d(0px, -10px, 0px)",
+											"opacity":"0"
+										});
+										u.a.transition(message, "all 1s ease");
+										u.ass(message, {
+											"transform":"translate3d(0px, 0, 0px)",
+											"opacity":"1"
+										});
+									}
+									this.scene.initRenewalBox();
+								}
+								else {
+									if(this[request_id].request_url != this[request_id].response_url) {
+										location.href = this[request_id].response_url;
+									}
+								}
+							}
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.action, {"data":data, "method":"POST"});
+							}
+						}
+						form_renewal.actions["cancel"].clicked = function() {
+							this.response = function(response) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								var div_userinfo = u.qs(".renewal .fields", response);
+								box_renewal.replaceChild(div_userinfo, this._form);
+								this._form.scene.initRenewalBox();
+							}
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.url);
+							}
+						}
+					}
+					if (!this.is_requesting) {
+						this.is_requesting = true;
+						u.ac(this, "loading");
+						u.request(this, this.url);
+					}
+				}
+			}
+		}
+		scene.initOrderList = function() {
+			var orders = u.qsa("li.order_item", this);
+			var i, order;
+			for(i = 0; i < orders.length; i++) {
+				order = orders[i];
+				order.order_item_id = u.cv(order, "order_item_id");
+				order.span_pickupdate = u.qs("span.pickupdate", order);
+				order.span_date = u.qs("span.date", order.span_pickupdate);
+				order.bn_edit = u.qs("li.change a.button:not(.disabled)", order);
+				if(order.bn_edit) {
+					order.bn_edit.order = order;
+					u.ce(order.bn_edit);
+					order.bn_edit.clicked = function() {
+						if(u.hc(this.order, "edit")) {
+							this.form.submit();
+						}
+						else {
+							u.ac(this.order, "edit");
+							this.response = function(response) {
+								this.form = u.qs("form", response);
+								if(this.form) {
+									this.form.order = this.order;
+									this.innerHTML = "Gem";
+									u.ac(this, "primary");
+									u.ae(this.order.span_pickupdate, this.form);
+									u.f.init(this.form);
+									this.form.submitted = function() {
+										this.response = function(response) {
+											this.order.bn_edit.form.parentNode.removeChild(this.order.bn_edit.form);
+											delete this.order.bn_edit.form;
+											this.order.span_date.innerHTML = u.qs("span.date", u.ge("order_item_id:"+this.order.order_item_id, response)).innerHTML;
+											u.rc(this.order, "edit");
+											this.order.bn_edit.innerHTML = "Ret";
+											u.rc(this.order.bn_edit, "primary");
+										}
+										u.request(this, this.action, {"method":"post", "data":this.getData()});
+									}
+								}
+							}
+							u.request(this, this.url);
+						}
+					}
+				}
+			}
+		}
 		scene.ready();
 	}
 }
@@ -6953,352 +9464,526 @@ Util.Modules["profile"] = new function() {
 			this.initMembershipBox();
 			this.initUserinfoBox();
 			this.initPasswordBox();
+			this.initRenewalBox();
+			this.initOrderList();
 		}
 		scene.initMembershipBox = function() {
 			var box_membership = u.qs(".membership > .c-box", this);
 			var button_membership = u.qs(".membership li.change-info", this);
 			var button_cancel = u.qs(".membership li.cancel-membership", this);
-			button_membership.scene = this;
-			button_cancel.scene = this; 
 			var right_panel = u.qs(".c-one-third", this);
 			var box_department = u.qs(".department", this);
-			u.clickableElement(button_membership); 
-			button_membership.clicked = function() {
-				this.response = function(response) {
-					this.is_requesting = false;
-					u.rc(this, "loading");
-					var form_department = u.qs(".form_department", response);
-					form_department.scene = this.scene;
-					var div_fields = u.qs("div.fields", box_membership);
-					var divs_membership = u.qsa(".membership-info", div_fields);
-					var ul_buttons = u.qs("ul.actions", div_fields);
-					u.ass(divs_membership[3], {"display":"none"});
-					u.ass(ul_buttons, {"display":"none"});
-					u.ae(box_membership, form_department);
-					u.f.init(form_department);
-					u.ae(div_fields, form_department);
-					form_department.submitted = function() {
-						var data = this.getData();
-						this.response = function(response) {
-							this.is_requesting = false;
-							u.rc(this, "loading");
-							var new_fields = u.qs(".membership .fields", response);
-							box_membership.replaceChild(new_fields, div_fields);
-							var new_department_box = u.qs(".department", response);
-							right_panel.replaceChild(new_department_box, box_department);
-							if (message = u.qs("p.message", response)) {
-								var fields = u.qs("div.fields", box_membership)
-								u.ie(fields, message);
-								if (message.t_done) {
-									u.t.resetTimer(t_done);
-								}
-								message.done = function() {
-									u.ass(this, {
-										"transition":"all .5s ease",
-										"transform":"translate3d(0px, -10px, 0px)",
-										"opacity":"0"
-									});
-									u.t.setTimer(this, function() {
-										this.parentNode.removeChild(this);
-									}, 500);
-								}
-								message.transitioned = function() {
-									this.t_done = u.t.setTimer(this, this.done, 2400);
-								}
-								u.ass(message, {
-									"color":"#3e8e17",
-									"padding-bottom":"5px",
-									"transform":"translate3d(0px, -10px, 0px)",
-									"opacity":"0"
-								});
-								u.a.transition(message, "all .5s ease");
-								u.ass(message, {
-									"transform":"translate3d(0px, 0, 0px)",
-									"opacity":"1"
-								});
-							}
-							this.scene.initMembershipBox();
-						}
-						if (!this.is_requesting) {
-							this.is_requesting = true;
-							u.ac(this, "loading");
-							u.request(this, this.action, {"data":data, "method":"POST"});
-						}
-					}
-					form_department.actions["cancel"].clicked = function() {
-						this.response = function(response) {
-							this.is_requesting = false;
-							u.rc(this, "loading");
-							var new_fields = u.qs(".membership .fields", response);
-							box_membership.replaceChild(new_fields, div_fields);
-							this._form.scene.initMembershipBox();
-						}
-						if (!this.is_requesting) {
-							this.is_requesting = true;
-							u.ac(this, "loading");
-							u.request(this, "/profil");
-						}
-					}
-				}
-				if (!this.is_requesting) {
-					this.is_requesting = true;
-					u.ac(this, "loading");
-					u.request(this, "/profil/afdeling");
-				}
-			}
-			u.clickableElement(button_cancel);
-			button_cancel.clicked = function() {
-				this.scene.overlay = u.overlay({title:"Vil du udmeldes?", height:200,width:600, class:"confirm_cancel_membership"});
-				var p_warning = u.ae(this.scene.overlay.div_content, "p", {
-					html:"Du er ved at melde dig ud af KBHFF. Er du sikker?"
-				});
-				var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
-					class:"actions"
-				});
-				var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"button delete_me","value":"Meld mig ud af KBHFF"});
-				var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"button regret primary", "value":"Fortryd udmelding"});
-				delete_me.scene = this.scene;
-				regret.scene = this.scene;
-				u.e.click(delete_me)
-				delete_me.clicked = function () {
+			if(button_membership) {
+				button_membership.scene = this;
+				u.clickableElement(button_membership); 
+				button_membership.clicked = function() {
 					this.response = function(response) {
 						this.is_requesting = false;
 						u.rc(this, "loading");
-						var form_confirm_cancellation = u.qs(".confirm_cancellation", response);
-						form_confirm_cancellation.scene = this.scene;
-						u.ass(p_warning, {"display":"none"});
-						u.ass(ul_actions, {"display":"none"});
-						u.ae(this.scene.overlay.div_content, form_confirm_cancellation);
-						u.f.init(form_confirm_cancellation);
-						form_confirm_cancellation.submitted = function () {
+						var form_department = u.qs(".form_department", response);
+						form_department.scene = this.scene;
+						var warning = u.qs("p.warning", response);
+						var div_fields = u.qs("div.fields", box_membership);
+						var divs_membership = u.qsa(".membership-info", div_fields);
+						var ul_buttons = u.qs("ul.actions", div_fields);
+						u.ass(divs_membership[3], {"display":"none"});
+						u.ass(ul_buttons, {"display":"none"});
+						u.ae(box_membership, form_department);
+						u.f.init(form_department);
+						u.ae(div_fields, form_department);
+						if(warning) {
+							u.ae(div_fields, warning);
+						}
+						form_department.submitted = function() {
 							var data = this.getData();
 							this.response = function(response) {
 								this.is_requesting = false;
 								u.rc(this, "loading");
-								if (response.cms_object == "JS-request") {
-									console.log(response);
-									location.href = "/";
-								}
-								else if (response != "JS-request") {
-									if (message = u.qs("div.messages", response)) {
-										u.ass(this, {"display":"none"})
-										console.log(this);
-										u.ae(this.scene.overlay.div_content, message);
-										var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
-											class:"actions"
+								var new_fields = u.qs(".membership .fields", response);
+								box_membership.replaceChild(new_fields, div_fields);
+								var new_department_box = u.qs(".department", response);
+								right_panel.replaceChild(new_department_box, box_department);
+								if (message = u.qs("p.message", response)) {
+									var fields = u.qs("div.fields", box_membership)
+									u.ie(fields, message);
+									if (message.t_done) {
+										u.t.resetTimer(t_done);
+									}
+									message.done = function() {
+										u.ass(this, {
+											"transition":"all .5s ease",
+											"transform":"translate3d(0px, -10px, 0px)",
+											"opacity":"0"
 										});
-										var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
-										button_close.scene = this.scene;
-										u.e.click(button_close)
-										button_close.clicked = function () {
-											this.scene.overlay.close ();
-										}
+										u.t.setTimer(this, function() {
+											this.parentNode.removeChild(this);
+										}, 500);
 									}
-									else {
-										location.href = "/";
+									message.transitioned = function() {
+										this.t_done = u.t.setTimer(this, this.done, 2400);
 									}
+									u.ass(message, {
+										"color":"#3e8e17",
+										"padding-bottom":"5px",
+										"transform":"translate3d(0px, -10px, 0px)",
+										"opacity":"0"
+									});
+									u.a.transition(message, "all .5s ease");
+									u.ass(message, {
+										"transform":"translate3d(0px, 0, 0px)",
+										"opacity":"1"
+									});
 								}
+								this.scene.initMembershipBox();
 							}
 							if (!this.is_requesting) {
 								this.is_requesting = true;
 								u.ac(this, "loading");
-								u.request(this, this.action, {"data":data, "method":"POST", "headers":{"X-Requested-With":"XMLHttpRequest"}});
+								u.request(this, this.action, {"data":data, "method":"POST"});
+							}
+						}
+						form_department.actions["cancel"].clicked = function() {
+							this.response = function(response) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								var new_fields = u.qs(".membership .fields", response);
+								box_membership.replaceChild(new_fields, div_fields);
+								this._form.scene.initMembershipBox();
+							}
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, "/profil");
 							}
 						}
 					}
 					if (!this.is_requesting) {
 						this.is_requesting = true;
 						u.ac(this, "loading");
-						u.request(this, "/profil/opsig");
+						u.request(this, "/profil/afdeling");
 					}
 				}
-				u.e.click(regret)
-				regret.clicked = function () {
-					this.scene.overlay.close ();
+			}
+			if(button_cancel) {
+				button_cancel.scene = this; 
+				u.clickableElement(button_cancel);
+				button_cancel.clicked = function() {
+					this.scene.overlay = u.overlay({title:"Vil du virkelig udmeldes?", height:365,width:600, class:"confirm_cancel_membership"});
+					var p_warning = u.ae(this.scene.overlay.div_content, "p", {
+						html:"Hvis du udmelder dig, bliver din konto slettet. Du vil ikke kunne logge ind, og du giver afkald på alle fremtidige bestillinger – også selv om du har betalt dem."
+					});
+					var p_alternative = u.ae(this.scene.overlay.div_content, "p", {
+						html:"Du kan i stedet vælge at deaktivere dit medlemskab, når det udløber. Dette gøres ved at fravælge automatisk fornyelse nederst til højre på Min Side. Som inaktivt medlem betaler du ikke kontingent, og du kan ikke lave nye bestillinger, men du kan stadig se dine eksisterende ordrer, vagter m.m."
+					});
+					p_confirmation = u.ae(this.scene.overlay.div_content, "p", {
+						html:"Er du sikker på, at du vil melde dig ud af KBHFF?"
+					});
+					var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
+						class:"actions"
+					});
+					var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"button delete_me","value":"Ja, slet mine data"});
+					var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"button regret primary", "value":"Fortryd udmelding"});
+					delete_me.scene = this.scene;
+					regret.scene = this.scene;
+					u.e.click(delete_me)
+					delete_me.clicked = function () {
+						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
+							var form_confirm_cancellation = u.qs(".confirm_cancellation", response);
+							form_confirm_cancellation.scene = this.scene;
+							u.ass(p_warning, {"display":"none"});
+							u.ass(p_alternative, {"display":"none"});
+							u.ass(p_confirmation, {"display":"none"});
+							u.ass(ul_actions, {"display":"none"});
+							u.ae(this.scene.overlay.div_content, form_confirm_cancellation);
+							u.f.init(form_confirm_cancellation);
+							form_confirm_cancellation.submitted = function () {
+								var data = this.getData();
+								this.response = function(response) {
+									this.is_requesting = false;
+									u.rc(this, "loading");
+									if (response.cms_object == "JS-request") {
+										console.log(response);
+										location.href = "/";
+									}
+									else if (response != "JS-request") {
+										if (message = u.qs("div.messages", response)) {
+											u.ass(this, {"display":"none"})
+											console.log(this);
+											u.ae(this.scene.overlay.div_content, message);
+											var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
+												class:"actions"
+											});
+											var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
+											button_close.scene = this.scene;
+											u.e.click(button_close)
+											button_close.clicked = function () {
+												this.scene.overlay.close ();
+											}
+										}
+										else {
+											location.href = "/";
+										}
+									}
+								}
+								if (!this.is_requesting) {
+									this.is_requesting = true;
+									u.ac(this, "loading");
+									u.request(this, this.action, {"data":data, "method":"POST", "headers":{"X-Requested-With":"XMLHttpRequest"}});
+								}
+							}
+						}
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, "/profil/opsig");
+						}
+					}
+					u.e.click(regret)
+					regret.clicked = function () {
+						this.scene.overlay.close ();
+					}
 				}
 			}
 		}
 		scene.initUserinfoBox = function() {
 			var box_userinfo = u.qs(".user > .c-box", this);
 			var button_userinfo = u.qs(".user li", this);
-			button_userinfo.scene = this;
-			var intro_header = u.qs(".section.intro > h2", this);
+			var intro_header = u.qs(".section.intro > h1", this);
 			var span_name = u.qs("span.name", this);
-			u.clickableElement(button_userinfo);
-			button_userinfo.clicked = function() {
-				this.response = function(response) {
-					this.is_requesting = false;
-					u.rc(this, "loading");
-					var form_userinfo = u.qs(".form_user", response);
-					form_userinfo.scene = this.scene;
-					var div_fields = u.qs("div.fields", box_userinfo);
-					box_userinfo.replaceChild(form_userinfo, div_fields);
-					u.f.init(form_userinfo);
-					form_userinfo.submitted = function() {
-						var data = this.getData();
-						this.response = function(response) {
-							this.is_requesting = false;
-							u.rc(this, "loading");
-							var div_userinfo = u.qs(".user .fields", response);
-							box_userinfo.replaceChild(div_userinfo, form_userinfo);
-							var new_name = u.qs("span.name", response);
-							intro_header.replaceChild(new_name, span_name);
-							if (message = u.qs("p.message", response)) {
-								var fields = u.qs("div.fields", box_userinfo);
-								u.ie(fields, message);
-								if (message.t_done) {
-									u.t.resetTimer(t_done);
-								}
-								message.done = function() {
-									u.ass(this, {
-										"transition":"all .5s ease",
+			if(button_userinfo) {
+				button_userinfo.scene = this;
+				u.clickableElement(button_userinfo);
+				button_userinfo.clicked = function() {
+					this.response = function(response) {
+						this.is_requesting = false;
+						u.rc(this, "loading");
+						var form_userinfo = u.qs(".form_user", response);
+						form_userinfo.scene = this.scene;
+						var div_fields = u.qs("div.fields", box_userinfo);
+						box_userinfo.replaceChild(form_userinfo, div_fields);
+						u.f.init(form_userinfo);
+						form_userinfo.submitted = function() {
+							var data = this.getData();
+							this.response = function(response) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								var div_userinfo = u.qs(".user .fields", response);
+								box_userinfo.replaceChild(div_userinfo, form_userinfo);
+								var new_name = u.qs("span.name", response);
+								intro_header.replaceChild(new_name, span_name);
+								if (message = u.qs("p.message", response)) {
+									var fields = u.qs("div.fields", box_userinfo);
+									u.ie(fields, message);
+									if (message.t_done) {
+										u.t.resetTimer(t_done);
+									}
+									message.done = function() {
+										u.ass(this, {
+											"transition":"all .5s ease",
+											"transform":"translate3d(0px, -10px, 0px)",
+											"opacity":"0"
+										});
+										u.t.setTimer(this, function() {
+											this.parentNode.removeChild(this);
+										}, 500);
+									}
+									message.transitioned = function() {
+										this.t_done = u.t.setTimer(this, this.done, 2400);
+									}
+									u.ass(message, {
+										"color":"#3e8e17",
+										"padding-bottom":"5px",
 										"transform":"translate3d(0px, -10px, 0px)",
 										"opacity":"0"
 									});
-									u.t.setTimer(this, function() {
-										this.parentNode.removeChild(this);
-									}, 500);
+									u.a.transition(message, "all .5s ease");
+									u.ass(message, {
+										"transform":"translate3d(0px, 0, 0px)",
+										"opacity":"1"
+									});
 								}
-								message.transitioned = function() {
-									this.t_done = u.t.setTimer(this, this.done, 2400);
-								}
-								u.ass(message, {
-									"color":"#3e8e17",
-									"padding-bottom":"5px",
-									"transform":"translate3d(0px, -10px, 0px)",
-									"opacity":"0"
-								});
-								u.a.transition(message, "all .5s ease");
-								u.ass(message, {
-									"transform":"translate3d(0px, 0, 0px)",
-									"opacity":"1"
-								});
+								this.scene.initUserinfoBox();
 							}
-							this.scene.initUserinfoBox();
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.action, {"data":data, "method":"POST"});
+							}
 						}
-						if (!this.is_requesting) {
-							this.is_requesting = true;
-							u.ac(this, "loading");
-							u.request(this, this.action, {"data":data, "method":"POST"});
+						form_userinfo.actions["cancel"].clicked = function() {
+							this.response = function(response) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								var div_userinfo = u.qs(".user .fields", response);
+								box_userinfo.replaceChild(div_userinfo, form_userinfo);
+								this._form.scene.initUserinfoBox();
+							}
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, "/profil");
+							}
 						}
 					}
-					form_userinfo.actions["cancel"].clicked = function() {
-						this.response = function(response) {
-							this.is_requesting = false;
-							u.rc(this, "loading");
-							var div_userinfo = u.qs(".user .fields", response);
-							box_userinfo.replaceChild(div_userinfo, form_userinfo);
-							this._form.scene.initUserinfoBox();
-						}
-						if (!this.is_requesting) {
-							this.is_requesting = true;
-							u.ac(this, "loading");
-							u.request(this, "/profil");
-						}
+					if (!this.is_requesting) {
+						this.is_requesting = true;
+						u.ac(this, "loading");
+						u.request(this, "/profil/bruger");
 					}
-				}
-				if (!this.is_requesting) {
-					this.is_requesting = true;
-					u.ac(this, "loading");
-					u.request(this, "/profil/bruger");
 				}
 			}
 		}
 		scene.initPasswordBox = function() {
 			var box_password = u.qs(".password > .c-box", this);
 			var button_password = u.qs(".password li", this);
-			button_password.scene = this;
-			u.clickableElement(button_password);
-			button_password.clicked = function() {
-				this.response = function(response) {
-					this.is_requesting = false;
-					u.rc(this, "loading");
-					var form_password = u.qs(".form_password", response);
-					form_password.scene = this.scene;
-					var div_fields = u.qs("div.fields", box_password);
-					box_password.replaceChild(form_password, div_fields);
-					u.f.init(form_password);
-					form_password.submitted = function() {
-						var data = this.getData();
-						this.response = function(response) {
-							this.is_requesting = false;
-							u.rc(this, "loading");
-							if (message = u.qs("p.error", this)) {
-								message.parentNode.removeChild(message);
-							}
-							if (message = u.qs("div.messages > p.error", response)) {
-								u.ass(message, {
-									"padding-bottom":"5px",
-									"transform":"translate3d(0px, -10px, 0px)",
-									"opacity":"0"
-								});
-								u.ie(this, message);	
-								u.a.transition(message, "all .5s ease");
-								u.ass(message, {
-									"transform":"translate3d(0px, 0, 0px)",
-									"opacity":"1"
-								});
-							}
-							var div_password = u.qs(".password .fields", response);
-							box_password.replaceChild(div_password, this);
-							if (message = u.qs("p.message", response)) {
-								var fields = u.qs("div.fields", box_password);
-								u.ie(fields, message);
-								if (message.t_done) {
-									u.t.resetTimer(t_done);
+			if(button_password) {
+				button_password.scene = this;
+				u.clickableElement(button_password);
+				button_password.clicked = function() {
+					this.response = function(response) {
+						this.is_requesting = false;
+						u.rc(this, "loading");
+						var form_password = u.qs(".form_password", response);
+						form_password.scene = this.scene;
+						var div_fields = u.qs("div.fields", box_password);
+						box_password.replaceChild(form_password, div_fields);
+						u.f.init(form_password);
+						form_password.submitted = function() {
+							var data = this.getData();
+							this.response = function(response) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								if (message = u.qs("p.error", this)) {
+									message.parentNode.removeChild(message);
 								}
-								message.done = function() {
-									u.ass(this, {
-										"transition":"all .5s ease",
+								if (message = u.qs("div.messages > p.error", response)) {
+									u.ass(message, {
+										"padding-bottom":"5px",
 										"transform":"translate3d(0px, -10px, 0px)",
 										"opacity":"0"
 									});
-									u.t.setTimer(this, function() {
-										this.parentNode.removeChild(this);
-									}, 500);
+									u.ie(this, message);	
+									u.a.transition(message, "all .5s ease");
+									u.ass(message, {
+										"transform":"translate3d(0px, 0, 0px)",
+										"opacity":"1"
+									});
 								}
-								message.transitioned = function() {
-									this.t_done = u.t.setTimer(this, this.done, 2400);
+								var div_password = u.qs(".password .fields", response);
+								box_password.replaceChild(div_password, this);
+								if (message = u.qs("p.message", response)) {
+									var fields = u.qs("div.fields", box_password);
+									u.ie(fields, message);
+									if (message.t_done) {
+										u.t.resetTimer(t_done);
+									}
+									message.done = function() {
+										u.ass(this, {
+											"transition":"all .5s ease",
+											"transform":"translate3d(0px, -10px, 0px)",
+											"opacity":"0"
+										});
+										u.t.setTimer(this, function() {
+											this.parentNode.removeChild(this);
+										}, 500);
+									}
+									message.transitioned = function() {
+										this.t_done = u.t.setTimer(this, this.done, 2400);
+									}
+									u.ass(message, {
+										"color":"#3e8e17",
+										"padding-bottom":"5px",
+										"transform":"translate3d(0px, -10px, 0px)",
+										"opacity":"0"
+									});
+									u.a.transition(message, "all 1s ease");
+									u.ass(message, {
+										"transform":"translate3d(0px, 0, 0px)",
+										"opacity":"1"
+									});
 								}
-								u.ass(message, {
-									"color":"#3e8e17",
-									"padding-bottom":"5px",
-									"transform":"translate3d(0px, -10px, 0px)",
-									"opacity":"0"
-								});
-								u.a.transition(message, "all 1s ease");
-								u.ass(message, {
-									"transform":"translate3d(0px, 0, 0px)",
-									"opacity":"1"
-								});
+								this.scene.initPasswordBox();
 							}
-							this.scene.initPasswordBox();
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.action, {"data":data, "method":"POST"});
+							}
 						}
-						if (!this.is_requesting) {
-							this.is_requesting = true;
-							u.ac(this, "loading");
-							u.request(this, this.action, {"data":data, "method":"POST"});
+						form_password.actions["cancel"].clicked = function() {
+							this.response = function(response) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								var div_userinfo = u.qs(".password .fields", response);
+								box_password.replaceChild(div_userinfo, this._form);
+								this._form.scene.initPasswordBox();
+							}
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, "/profil");
+							}
 						}
 					}
-					form_password.actions["cancel"].clicked = function() {
-						this.response = function(response) {
-							this.is_requesting = false;
-							u.rc(this, "loading");
-							var div_userinfo = u.qs(".password .fields", response);
-							box_password.replaceChild(div_userinfo, this._form);
-							this._form.scene.initPasswordBox();
-						}
-						if (!this.is_requesting) {
-							this.is_requesting = true;
-							u.ac(this, "loading");
-							u.request(this, "/profil");
-						}
+					if (!this.is_requesting) {
+						this.is_requesting = true;
+						u.ac(this, "loading");
+						u.request(this, "/profil/kodeord");
 					}
 				}
-				if (!this.is_requesting) {
-					this.is_requesting = true;
-					u.ac(this, "loading");
-					u.request(this, "/profil/kodeord");
+			}
+		}
+		scene.initRenewalBox = function() {
+			var box_renewal = u.qs(".renewal > .c-box", this);
+			var button_renewal = u.qs(".renewal li", this);
+			if(button_renewal) {
+				button_renewal.scene = this;
+				u.clickableElement(button_renewal);
+				button_renewal.clicked = function() {
+					this.response = function(response) {
+						this.is_requesting = false;
+						u.rc(this, "loading");
+						var form_renewal = u.qs(".form_renewal", response);
+						form_renewal.scene = this.scene;
+						var div_fields = u.qs("div.fields", box_renewal);
+						box_renewal.replaceChild(form_renewal, div_fields);
+						u.f.init(form_renewal);
+						form_renewal.submitted = function() {
+							var data = this.getData();
+							this.response = function(response, request_id) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								if (message = u.qs("p.error", this)) {
+									message.parentNode.removeChild(message);
+								}
+								if (message = u.qs("div.messages > p.error", response)) {
+									u.ass(message, {
+										"padding-bottom":"5px",
+										"transform":"translate3d(0px, -10px, 0px)",
+										"opacity":"0"
+									});
+									u.ie(this, message);	
+									u.a.transition(message, "all .5s ease");
+									u.ass(message, {
+										"transform":"translate3d(0px, 0, 0px)",
+										"opacity":"1"
+									});
+								}
+								var div_renewal = u.qs(".renewal .fields", response);
+								if(div_renewal) {
+									box_renewal.replaceChild(div_renewal, this);
+									if (message = u.qs("p.message", response)) {
+										var fields = u.qs("div.fields", box_renewal);
+										u.ie(fields, message);
+										if (message.t_done) {
+											u.t.resetTimer(t_done);
+										}
+										message.done = function() {
+											u.ass(this, {
+												"transition":"all .5s ease",
+												"transform":"translate3d(0px, -10px, 0px)",
+												"opacity":"0"
+											});
+											u.t.setTimer(this, function() {
+												this.parentNode.removeChild(this);
+											}, 500);
+										}
+										message.transitioned = function() {
+											this.t_done = u.t.setTimer(this, this.done, 2400);
+										}
+										u.ass(message, {
+											"color":"#3e8e17",
+											"padding-bottom":"5px",
+											"transform":"translate3d(0px, -10px, 0px)",
+											"opacity":"0"
+										});
+										u.a.transition(message, "all 1s ease");
+										u.ass(message, {
+											"transform":"translate3d(0px, 0, 0px)",
+											"opacity":"1"
+										});
+									}
+									this.scene.initRenewalBox();
+								}
+								else {
+									if(this[request_id].request_url != this[request_id].response_url) {
+										location.href = this[request_id].response_url;
+									}
+								}
+							}
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.action, {"data":data, "method":"POST"});
+							}
+						}
+						form_renewal.actions["cancel"].clicked = function() {
+							this.response = function(response) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								var div_userinfo = u.qs(".renewal .fields", response);
+								box_renewal.replaceChild(div_userinfo, this._form);
+								this._form.scene.initRenewalBox();
+							}
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, "/profil");
+							}
+						}
+					}
+					if (!this.is_requesting) {
+						this.is_requesting = true;
+						u.ac(this, "loading");
+						u.request(this, this.url);
+					}
+				}
+			}
+		}
+		scene.initOrderList = function() {
+			var orders = u.qsa("li.order_item", this);
+			var i, order;
+			for(i = 0; i < orders.length; i++) {
+				order = orders[i];
+				order.order_item_id = u.cv(order, "order_item_id");
+				order.span_pickupdate = u.qs("span.pickupdate", order);
+				order.span_date = u.qs("span.date", order.span_pickupdate);
+				order.bn_edit = u.qs("li.change a.button:not(.disabled)", order);
+				if(order.bn_edit) {
+					order.bn_edit.order = order;
+					u.ce(order.bn_edit);
+					order.bn_edit.clicked = function() {
+						if(u.hc(this.order, "edit")) {
+							this.form.submit();
+						}
+						else {
+							u.ac(this.order, "edit");
+							this.response = function(response) {
+								this.form = u.qs("form", response);
+								if(this.form) {
+									this.form.order = this.order;
+									this.innerHTML = "Gem";
+									u.ac(this, "primary");
+									u.ae(this.order.span_pickupdate, this.form);
+									u.f.init(this.form);
+									this.form.submitted = function() {
+										this.response = function(response) {
+											this.order.bn_edit.form.parentNode.removeChild(this.order.bn_edit.form);
+											delete this.order.bn_edit.form;
+											this.order.span_date.innerHTML = u.qs("span.date", u.ge("order_item_id:"+this.order.order_item_id, response)).innerHTML;
+											u.rc(this.order, "edit");
+											this.order.bn_edit.innerHTML = "Ret";
+											u.rc(this.order.bn_edit, "primary");
+										}
+										u.request(this, this.action, {"method":"post", "data":this.getData()});
+									}
+								}
+							}
+							u.request(this, this.url);
+						}
+					}
 				}
 			}
 		}
@@ -7409,7 +10094,8 @@ Util.Modules["tally"] = new function() {
 							this.p_error = u.ie(u.qs(".section.tally"), "p", {
 								html:error_message.innerHTML,
 								class:"error"
-							})
+							});
+							u.scrollTo(window, {node: this.p_error, "offset_y": 20});
 						}
 						else if(u.qs(".scene.shop_shift", response)) {
 							location.href = "/butiksvagt"; 
@@ -7427,98 +10113,79 @@ Util.Modules["tally"] = new function() {
 			page.resized();
 		}
 		scene.initStartCash = function() {
-			this.start_cash_view = u.qs(".start_cash .view");
-			this.start_cash_view.edit_btn = u.qs(".edit_btn", this.start_cash_view);
-			this.start_cash_view.amount = u.qs(".amount", this.start_cash_view);
-			this.start_cash_view.edit_btn.scene = this;
-			this.start_cash_edit = u.qs(".start_cash .edit");
-			this.start_cash_edit.form = u.qs("form", this.start_cash_edit);
-			this.start_cash_edit.form.scene = this;
-			u.f.init(this.start_cash_edit.form);
-			u.clickableElement(this.start_cash_view.edit_btn);
-			this.start_cash_view.edit_btn.clicked = function() {
-				u.as(this.scene.start_cash_view, "display", "none");
-				u.as(this.scene.start_cash_edit, "display", "block");
-				this.scene.start_cash_edit.form.inputs["start_cash"].focus()
+			this.start_cash = u.qs(".start_cash .view");
+			this.start_cash.bn_edit = u.qs("li.edit", this.start_cash);
+			this.start_cash.bn_edit.scene = this;
+			this.start_cash.amount = u.qs("span.value", this.start_cash);
+			this.start_cash.form = u.qs("form", this.start_cash);
+			this.start_cash.form.scene = this;
+			u.f.init(this.start_cash.form);
+			this.start_cash.form.actions["edit"].clicked = function() {
+				u.ac(this._form.scene.start_cash, "edit");
+				this._form.inputs["start_cash"].focus();
 			}
-			this.start_cash_edit.form.submitted = function() {
+			this.start_cash.form.submitted = function() {
 				this.response = function(response) {
-					this.is_requesting = false;
-					u.rc(this, "loading");
-					var new_amount = u.text(u.qs(".start_cash .view .amount", response));
-					this.scene.start_cash_view.amount.innerText = new_amount;
-					u.as(this.scene.start_cash_edit, "display", "none");
-					u.as(this.scene.start_cash_view, "display", "block");
+					var new_amount = u.text(u.qs(".start_cash .view .amount span.value", response));
+					this.scene.start_cash.amount.innerHTML = new_amount;
+					u.rc(this.scene.start_cash, "edit");
 					this.scene.updateCalculatedValues(response);
 				}
-				u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+				u.request(this, this.action, {"method":"post", "data":this.getData()});
 			}
 		}
 		scene.initEndCash = function() {
-			this.end_cash_view = u.qs(".end_cash .view");
-			this.end_cash_view.edit_btn = u.qs(".edit_btn", this.end_cash_view);
-			this.end_cash_view.amount = u.qs(".amount", this.end_cash_view);
-			this.end_cash_view.edit_btn.scene = this;
-			this.end_cash_edit = u.qs(".end_cash .edit");
-			this.end_cash_edit.form = u.qs("form", this.end_cash_edit);
-			this.end_cash_edit.form.scene = this;
-			u.f.init(this.end_cash_edit.form);
-			u.clickableElement(this.end_cash_view.edit_btn);
-			this.end_cash_view.edit_btn.clicked = function() {
-				u.as(this.scene.end_cash_view, "display", "none");
-				u.as(this.scene.end_cash_edit, "display", "block");
-				this.scene.end_cash_edit.form.inputs["end_cash"].focus()
+			this.end_cash = u.qs(".end_cash .view");
+			this.end_cash.bn_edit = u.qs("li.edit", this.end_cash);
+			this.end_cash.bn_edit.scene = this;
+			this.end_cash.amount = u.qs("span.value", this.end_cash);
+			this.end_cash.form = u.qs("form", this.end_cash);
+			this.end_cash.form.scene = this;
+			u.f.init(this.end_cash.form);
+			this.end_cash.form.actions["edit"].clicked = function() {
+				u.ac(this._form.scene.end_cash, "edit");
+				this._form.inputs["end_cash"].focus();
 			}
-			this.end_cash_edit.form.submitted = function() {
+			this.end_cash.form.submitted = function() {
 				this.response = function(response) {
-					this.is_requesting = false;
-					u.rc(this, "loading");
-					u.bug(response);
-					var new_amount = u.text(u.qs(".end_cash .view .amount", response));
-					this.scene.end_cash_view.amount.innerText = new_amount;
-					u.as(this.scene.end_cash_edit, "display", "none");
-					u.as(this.scene.end_cash_view, "display", "block");
+					var new_amount = u.text(u.qs(".end_cash .view .amount span.value", response));
+					this.scene.end_cash.amount.innerHTML = new_amount;
+					u.rc(this.scene.end_cash, "edit");
 					this.scene.updateCalculatedValues(response);
 				}
-				u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+				u.request(this, this.action, {"method":"post", "data":this.getData()});
 			}
 		}
 		scene.initDeposited = function() {
-			this.deposited_view = u.qs(".deposited .view");
-			this.deposited_view.edit_btn = u.qs(".edit_btn", this.deposited_view);
-			this.deposited_view.amount = u.qs(".amount", this.deposited_view);
-			this.deposited_view.edit_btn.scene = this;
-			this.deposited_edit = u.qs(".deposited .edit");
-			this.deposited_edit.form = u.qs("form", this.deposited_edit);
-			this.deposited_edit.form.scene = this;
-			u.f.init(this.deposited_edit.form);
-			u.clickableElement(this.deposited_view.edit_btn);
-			this.deposited_view.edit_btn.clicked = function() {
-				u.as(this.scene.deposited_view, "display", "none");
-				u.as(this.scene.deposited_edit, "display", "block");
-				this.scene.deposited_edit.form.inputs["deposited"].focus()
+			this.deposited = u.qs(".deposited .view");
+			this.deposited.bn_edit = u.qs("li.edit", this.deposited);
+			this.deposited.bn_edit.scene = this;
+			this.deposited.amount = u.qs("span.value", this.deposited);
+			this.deposited.form = u.qs("form", this.deposited);
+			this.deposited.form.scene = this;
+			u.f.init(this.deposited.form);
+			this.deposited.form.actions["edit"].clicked = function() {
+				u.ac(this._form.scene.deposited, "edit");
+				this._form.inputs["deposited"].focus();
 			}
-			this.deposited_edit.form.submitted = function() {
+			this.deposited.form.submitted = function() {
 				this.response = function(response) {
-					this.is_requesting = false;
-					u.rc(this, "loading");
-					var new_amount = u.text(u.qs(".deposited .view .amount", response));
-					this.scene.deposited_view.amount.innerText = new_amount;
-					u.as(this.scene.deposited_edit, "display", "none");
-					u.as(this.scene.deposited_view, "display", "block");
+					var new_amount = u.text(u.qs(".deposited .view .amount span.value", response));
+					this.scene.deposited.amount.innerHTML = new_amount;
+					u.rc(this.scene.deposited, "edit");
 					this.scene.updateCalculatedValues(response);
 				}
-				u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+				u.request(this, this.action, {"method":"post", "data":this.getData()});
 			}
 		}
 		scene.initPayouts = function() {
 			this.tally_section = u.qs(".section.tally", this);
 			this.payouts = u.qs(".payouts", this);
-			this.calculated_sales_by_the_piece = u.qs(".calculated_sales span.sum", this);
-			this.payouts.delete_forms = u.qsa("ul.payout .delete");
-				if(this.payouts.delete_forms) {
-				for (let i = 0; i < this.payouts.delete_forms.length; i++) {
-					var delete_form = this.payouts.delete_forms[i];
+			this.payouts.delete_forms = u.qsa("li.payout .delete", this.payouts);
+			if(this.payouts.delete_forms) {
+				var i, delete_form;
+				for (i = 0; i < this.payouts.delete_forms.length; i++) {
+					delete_form = this.payouts.delete_forms[i];
 					delete_form.scene = this;
 					u.m.oneButtonForm.init(delete_form);
 					delete_form.confirmed = function(response) {
@@ -7530,30 +10197,27 @@ Util.Modules["tally"] = new function() {
 				}
 			}
 			this.payouts.div_add = u.qs("div.add_payout", this.payouts);
-			this.payouts.div_add.ul = u.qs("ul.actions", this.payouts.div_add);
-			this.payouts.btn_add = u.qs("li.add_payout", this.payouts);
-			this.payouts.btn_add.scene = this;
-			u.e.resetClickEvents(this.payouts.btn_add);
-			u.ce(this.payouts.btn_add);
-			this.payouts.btn_add.clicked = function() {
+			this.payouts.bn_add = u.qs("li.add_payout", this.payouts);
+			this.payouts.bn_add.scene = this;
+			u.ce(this.payouts.bn_add);
+			this.payouts.bn_add.clicked = function() {
 				this.response = function(response) {
+					u.ac(this.scene.payouts.div_add, "open");
 					this.scene.payouts.div_add.form = u.qs("form.add_payout", response);
 					this.scene.payouts.div_add.form.scene = this.scene;
+					u.ae(this.scene.payouts.div_add, this.scene.payouts.div_add.form);
 					u.f.init(this.scene.payouts.div_add.form);
-					this.scene.payouts.div_add.replaceChild(this.scene.payouts.div_add.form, this.scene.payouts.div_add.ul); 
 					this.scene.payouts.div_add.form.inputs["payout_name"].focus();
 					this.scene.payouts.div_add.form.submitted = function() {
 						this.response = function(response) {
-							this.scene.payouts.div_add.replaceChild(this.scene.payouts.div_add.ul, this.scene.payouts.div_add.form); 
-							this.response = function(response) {
-								this.payouts = u.qs("div.payouts", response);
-								this.scene.tally_section.replaceChild(this.payouts, this.scene.payouts);
-								this.scene.updateCalculatedValues(response);
-								this.scene.initPayouts();
-							}
-							u.request(this, "/butiksvagt/kasse/" + this.scene.tally_id);
+							u.rc(this.scene.payouts.div_add, "open");
+							this.parentNode.removeChild(this);
+							this.payouts = u.qs("div.payouts", response);
+							this.scene.tally_section.replaceChild(this.payouts, this.scene.payouts);
+							this.scene.updateCalculatedValues(response);
+							this.scene.initPayouts();
 						}
-						u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+						u.request(this, this.action, {"method":"post", "data":this.getData()});
 					}
 				}
 				u.request(this, "/butiksvagt/kasse/" + this.scene.tally_id + "/udbetaling");
@@ -7562,46 +10226,43 @@ Util.Modules["tally"] = new function() {
 		scene.initMiscRevenues = function() {
 			this.tally_section = u.qs(".section.tally", this);
 			this.revenues = u.qs(".misc_revenues", this);
-			this.calculated_sales_by_the_piece = u.qs(".calculated_sales span.sum", this);
-			this.revenues.delete_forms = u.qsa("ul.revenue .delete");
-				if(this.revenues.delete_forms) {
-				for (let i = 0; i < this.revenues.delete_forms.length; i++) {
-					var delete_form = this.revenues.delete_forms[i];
+			this.revenues.delete_forms = u.qsa("li.revenue .delete", this.revenues);
+			if(this.revenues.delete_forms) {
+				var i, delete_form;
+				for (i = 0; i < this.revenues.delete_forms.length; i++) {
+					delete_form = this.revenues.delete_forms[i];
 					delete_form.scene = this;
 					u.m.oneButtonForm.init(delete_form);
 					delete_form.confirmed = function(response) {
 						this.revenues = u.qs("div.misc_revenues", response);
 						this.scene.tally_section.replaceChild(this.revenues, this.scene.revenues);
 						this.scene.updateCalculatedValues(response);
-					this.scene.initMiscRevenues();
+						this.scene.initMiscRevenues();
 					}
 				}
 			}
 			this.revenues.div_add = u.qs("div.add_revenue", this.revenues);
-			this.revenues.div_add.ul = u.qs("ul.actions", this.revenues.div_add);
-			this.revenues.btn_add = u.qs("li.add_revenue", this.revenues);
-			this.revenues.btn_add.scene = this;
-			u.e.resetClickEvents(this.revenues.btn_add);
-			u.ce(this.revenues.btn_add);
-			this.revenues.btn_add.clicked = function() {
+			this.revenues.bn_add = u.qs("li.add_revenue", this.revenues);
+			this.revenues.bn_add.scene = this;
+			u.ce(this.revenues.bn_add);
+			this.revenues.bn_add.clicked = function() {
 				this.response = function(response) {
+					u.ac(this.scene.revenues.div_add, "open");
 					this.scene.revenues.div_add.form = u.qs("form.add_revenue", response);
 					this.scene.revenues.div_add.form.scene = this.scene;
+					u.ae(this.scene.revenues.div_add, this.scene.revenues.div_add.form);
 					u.f.init(this.scene.revenues.div_add.form);
-					this.scene.revenues.div_add.replaceChild(this.scene.revenues.div_add.form, this.scene.revenues.div_add.ul); 
 					this.scene.revenues.div_add.form.inputs["revenue_name"].focus();
 					this.scene.revenues.div_add.form.submitted = function() {
 						this.response = function(response) {
-							this.scene.revenues.div_add.replaceChild(this.scene.revenues.div_add.ul, this.scene.revenues.div_add.form); 
-							this.response = function(response) {
-								this.revenues = u.qs("div.misc_revenues", response);
-								this.scene.tally_section.replaceChild(this.revenues, this.scene.revenues);
-								this.scene.updateCalculatedValues(response);
-								this.scene.initMiscRevenues();
-							}
-							u.request(this, "/butiksvagt/kasse/" + this.scene.tally_id);
+							u.rc(this.scene.revenues.div_add, "open");
+							this.parentNode.removeChild(this);
+							this.revenues = u.qs("div.misc_revenues", response);
+							this.scene.tally_section.replaceChild(this.revenues, this.scene.revenues);
+							this.scene.updateCalculatedValues(response);
+							this.scene.initMiscRevenues();
 						}
-						u.request(this, this.action, {"method":"POST", "params":u.f.getParams(this, {"send_as":"formdata"})});
+						u.request(this, this.action, {"method":"post", "data":this.getData()});
 					}
 				}
 				u.request(this, "/butiksvagt/kasse/" + this.scene.tally_id + "/andre-indtaegter");
@@ -7617,6 +10278,68 @@ Util.Modules["tally"] = new function() {
 			if(change) {
 				u.pn(this.change).replaceChild(change, this.change);
 				this.change = change;
+			}
+		}
+		scene.ready();
+	}
+}
+
+
+/*m-shop_shift.js*/
+Util.Modules["shop_shift"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			var form = u.qs("form.choose_date");
+			u.f.init(form);
+			form.updated = function() {
+				this.submit();
+			}
+		}
+		scene.ready();
+	}
+}
+
+
+/*m-massmail.js*/
+Util.Modules["massmail"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			u.bug("scene.ready", this);
+			var form = u.qs("form");
+			u.f.init(form, this);
+			form.scene = this;
+			form.p_status = u.qs(".status", form);
+			form.submitted = function(iN) {
+				if(iN.hasAttribute("formaction")) {
+					form.response = function(response) {
+						if(u.qs(".scene.mass_mail_receipt", response)) {
+							this.p_status.innerHTML = "Test-mail blev afsendt.";
+						}
+						else {
+							this.p_status.innerHTML = "Noget gik galt...";
+						}
+						this.p_status.transitioned = function() {
+							u.t.setTimer(this, function() {
+								u.a.transition(this, "all 1s ease-in");
+								u.as(this, "opacity", "0");
+							}, 1500);
+						}
+						u.a.transition(this.p_status, "all 0.5s ease-in");
+						u.as(this.p_status, "opacity", "1");
+					}
+					u.request(this, iN.getAttribute("formaction"), {"method":"POST", "params":u.f.getParams(this)});
+				}
+				else {
+					form.DOMsubmit();
+				}
 			}
 		}
 		scene.ready();
@@ -7732,5 +10455,84 @@ u.addNextArrow = function(node) {
 			}
 		]
 	});
+}
+
+
+/*m-purchasing.js*/
+Util.Modules["purchasing"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			this.products = u.qsa("div.products li.listing", this);
+			var i, product, image;
+			for(i = 0; i < this.products.length; i++) {
+				product = this.products[i];
+				image = u.qs("span.image", product);
+				image._id = u.cv(image, "item_id");
+				image._format = u.cv(image, "format");
+				image._variant = u.cv(image, "variant");
+				if(image._id && image._format && image._variant) {
+					u.ass(image, {
+						backgroundImage: "url(/images/" + image._id + "/" + (image._variant ? image._variant+"/" : "") + "50x50." + image._format+")"
+					});
+				}
+			}
+		}
+		scene.ready();
+	}
+}
+Util.Modules["add_edit_product"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			var form = u.qs("form");
+			u.f.init(form, this);
+			form.scene = this;
+			next_wednesday = " - ";
+			this.first_pickupdate_span = u.qs(".first_pickupdate span", this);
+			form.inputs["start_availability_date"].changed = function(iN) {
+				var first_pickupdate = "-";
+				if(iN.value) {
+					var next_wednesday_date = this.form.scene.getNextDayOfTheWeek("Wednesday", false, new Date(iN.value));
+					first_pickupdate = next_wednesday_date.toLocaleDateString('da-DA', {year:"numeric", month:"2-digit", day:"2-digit"});
+				}
+				this.form.scene.first_pickupdate_span.innerHTML = first_pickupdate;
+			}
+			this.last_pickupdate_span = u.qs(".last_pickupdate span", this);
+			form.inputs["end_availability_date"].changed = function(iN) {
+				var last_pickupdate = "-";
+				if(iN.value) {
+					var previous_wednesday_date = this.form.scene.getPreviousDayOfTheWeek("Wednesday", false, new Date(iN.value));
+					last_pickupdate = previous_wednesday_date.toLocaleDateString('da-DA', {year:"numeric", month:"2-digit", day:"2-digit"});
+				}
+				this.form.scene.last_pickupdate_span.innerHTML = last_pickupdate;
+			}
+		}
+		scene.getNextDayOfTheWeek = function(dayName, excludeToday = true, refDate = new Date()) {
+			var dayOfWeek = ["sun","mon","tue","wed","thu","fri","sat"]
+							  .indexOf(dayName.slice(0,3).toLowerCase());
+			if (dayOfWeek < 0) return;
+			refDate.setHours(0,0,0,0);
+			refDate.setDate(refDate.getDate() + (!!excludeToday ? 1 : 0) + 
+							(dayOfWeek + 7 - refDate.getDay() - (!!excludeToday ? 1 : 0)) % 7);
+			return refDate;
+		}
+		scene.getPreviousDayOfTheWeek = function(dayName, excludeToday = true, refDate = new Date()) {
+			var dayOfWeek = ["sun","mon","tue","wed","thu","fri","sat"]
+							  .indexOf(dayName.slice(0,3).toLowerCase());
+			if (dayOfWeek < 0) return;
+			refDate.setHours(0,0,0,0);
+			refDate.setDate(refDate.getDate() + (!!excludeToday ? 1 : 0) +
+							(dayOfWeek - 7 - refDate.getDay() - (!!excludeToday ? 1 : 0)) % 7);
+			return refDate;
+		}
+		scene.ready();
+	}
 }
 

@@ -5,7 +5,7 @@ global $model;
 global $itemtype;
 
 $item_id = $action[1];
-$item = $IC->getItem(array("id" => $item_id, "extend" => array("tags" => true, "mediae" => true, "comments" => true, "subscription_method" => true)));
+$item = $IC->getItem(array("id" => $item_id, "extend" => array("dependencies" => true, "tags" => true, "mediae" => true, "user" => true, "prices" => true)));
 
 $memberships = $IC->getItems(array("itemtype" => "membership", "extend" => true));
 ?>

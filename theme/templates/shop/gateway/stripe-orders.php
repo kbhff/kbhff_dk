@@ -3,7 +3,7 @@ global $action;
 global $model;
 $UC = new User();
 
-$this->pageTitle("Stripe");
+$this->pageTitle("Betaling");
 
 // get current user id
 $user_id = session()->value("user_id");
@@ -83,7 +83,7 @@ if(isset($action[3])) {
 <? else: ?>
 
 	<h1>Leder du efter betalingssiden?</h1>
-	<p>Du skal først <a href="/login?login_forward=/butik/betalinger">logge ind</a> på din konto og betale derfra.</p>
+	<p>Du skal først <a href="/login?forward_url=<?= $this->url ?>">logge ind</a> på din konto og betale derfra.</p>
 
 <? endif;?>
 

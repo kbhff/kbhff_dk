@@ -18,26 +18,13 @@ $this->pageTitle("Udmeldelse");
 
 	<?= $UC->formStart("deleteUserInformation/$action[1]", array("class" => "confirm_cancellation")) ?>
 
-	<? if(message()->hasMessages()): ?>
-	<div class="messages">
-	<?
-	$all_messages = message()->getMessages();
-	message()->resetMessages();
-	foreach($all_messages as $type => $messages):
-		foreach($messages as $message): ?>
-		<p class="<?= $type ?>"><?= $message ?></p>
-		<? endforeach;?>
-	<? endforeach;?>
-	</div>
-	<? endif; ?>
-	
-		
+		<?= $HTML->serverMessages() ?>
+
 		<ul class="actions">
 			<?= $UC->submit("Bekræft udmeldelse", array("class" => "primary", "wrapper" => "li.save")) ?>
 			<li class="cancel"><a href="/medlemshjaelp/brugerprofil/<?=$action[1]?>" class="button">Annullér</a></li>
 		</ul>
 
 	<?= $UC->formEnd() ?>
-
 
 </div>

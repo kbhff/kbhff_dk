@@ -114,11 +114,6 @@ class Page extends PageCore {
 			return cache()->value("departments");
 		}
 	}
-	
-	function loggedIn($user_id) {
-		$UC = new User();
-		$UC->removeExcessMembershipFromCart($user_id);
-	}
 }
 
 ?>

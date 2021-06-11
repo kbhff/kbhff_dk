@@ -25,7 +25,7 @@ class Pickupdate extends Model {
 
 		// pickup date
 		$this->addToModel("pickupdate", array(
-			"type" => "date",
+			// "type" => "date",
 			"label" => "Pickup date",
 			"required" => true,
 			"hint_message" => "State the pickup date", 
@@ -49,21 +49,40 @@ class Pickupdate extends Model {
 	 */
 	function getPickupdates($_options = false) {
 
+		$query = new Query();
+		$query->checkDbExistence($this->db);
+
 		// define default sorting order
 		$order = "pickupdate ASC";
+		$before = false;
+		$after = false;
 		
 
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
-					case "order"           : $order                = $_value; break;
+					case "order"             : $order                  = $_value; break;
+					case "after"             : $after                  = $_value; break;
+					case "before"            : $before                 = $_value; break;
 				}
 			}
 		}
 
-		$query = new Query();
-		$sql = "SELECT * FROM ".$this->db;		
+		$sql = "SELECT * FROM ".$this->db;
+		
+		if($before && $after) {
+			$sql .= " WHERE pickupdate < '$before' AND pickupdate >= '$after'";
 
+		}
+		elseif($after) {
+			$sql .= " WHERE pickupdate >= '$after'";
+		}
+		elseif($before) {
+			
+			$sql .= " WHERE pickupdate < '$before'";
+		}
+
+		
 		$sql .= " ORDER BY $order";
 
 
@@ -112,12 +131,19 @@ class Pickupdate extends Model {
 					include_once("classes/system/department.class.php");
 					$DC = new Department();
 
-					$departments = $DC->getDepartments();
-					foreach($departments as $department) {
-						
-						$DC->addPickupdate($department["id"], $pickupdate_id);
+					if(getPost("add_all_departments", "value")) {
+
+						$departments = $DC->getDepartments();
+						foreach($departments as $department) {
+							
+							$DC->addPickupdate(["addPickupdate", $department["id"], $pickupdate_id]);
+						}
 					}
-					
+					else {
+
+						$DC->updatePickupdateDepartments(["updatePickupdateDepartments", $pickupdate_id]);
+					}
+
 					message()->addMessage("Pickup date created");
 					return ["item_id" => $pickupdate_id];
 				}
@@ -134,17 +160,20 @@ class Pickupdate extends Model {
 		return false;
 	}
 
+	
 	/**
 	 * Get a single pickupdate from database.
 	 *
 	 * @param array|boolean $_options Associative array containing unsorted function parameters.
 	 * 		$id				int			Pickupdate id
-	 * 		$name			string		Pickupdate name
-	 * 		$department_id	int			Will search for active pickupdate for given department
+	 * 		$pickupdate 	string		Pickupdate (Y-m-d)
 	 * 
 	 * @return array|false Pickupdate item (via callback to Query->result(0))
 	 */
 	function getPickupdate($_options = false) {
+		
+		$query = new Query();
+		$query->checkDbExistence($this->db);
 
 		// Define default values
 		$id = false;
@@ -154,8 +183,8 @@ class Pickupdate extends Model {
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
-					case "id"                   : $id             = $_value; break;
-					case "pickupdate"                 : $pickupdate           = $_value; break;
+					case "id"                         : $id             = $_value; break;
+					case "pickupdate"                 : $pickupdate     = $_value; break;
 				}
 			}
 		}
@@ -163,14 +192,12 @@ class Pickupdate extends Model {
 
 		// Query database for pickupdate with specific id.
 		if($id) {
-			$query = new Query();
 			$sql = "SELECT * FROM ".$this->db." WHERE id = '$id'";
 			if($query->sql($sql)) {
 				return $query->result(0);
 			}
 		}
 		else if($pickupdate) {
-			$query = new Query();
 			$sql = "SELECT * FROM ".$this->db." WHERE pickupdate = '$pickupdate'";
 			if($query->sql($sql)) {
 				return $query->result(0);
@@ -257,19 +284,51 @@ class Pickupdate extends Model {
 		// Checks for unexpected number of parameters
 		if(count($action) == 2) {
 			
-			// Ask the database to delete the row with the id that came from $action. 
-			$id = $action[1];
 			$query = new Query();
 			
-			$sql = "DELETE FROM ".$this->db." WHERE id = '$id'";
-			if($query->sql($sql)) {
-				message()->addMessage("Pickupdate deleted");
+			$pickupdate_id = $action[1];
+			$pickupdate = $this->getPickupdate(["id" => $pickupdate_id]);
 
+			$SC = new Shop();
+			$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate_id);
+			
+			$sql = "DELETE FROM ".$this->db." WHERE id = '$pickupdate_id'";
+			$deletion_success = false;
+
+			// if pickupdate has order_items, only allow deletion of future pickup dates
+			if($pickupdate_order_items && $pickupdate["pickupdate"] > date("Y-m-d") && $query->sql($sql)) {
+
+				$order_item_links = [];
+				foreach ($pickupdate_order_items as $order_item) {
+					
+					$order_item_links[] = SITE_URL."/janitor/order-item/edit/".$order_item["id"];
+				}
+
+				// send notification email to admin
+				mailer()->send(array(
+					"recipients" => ADMIN_EMAIL,
+					"subject" => SITE_URL . " - ACTION NEEDED: Order items have been orphaned",
+					"message" => "The pickupdate ".$pickupdate['pickupdate']." has been deleted from the system. This has caused ".count($pickupdate_order_items)." order items to lose their time and place of pickup. \n\nHere are links to each of the affected order items:\n\n".implode("\n", $order_item_links). ". \n\nFollow the links to assign a new department/pickupdate to each order item.",
+					"tracking" => false
+					// "template" => "system"
+				));
+
+				$deletion_success = true;
+			}
+			// pickupdates without order_items can freely be deleted
+			elseif($query->sql($sql)) {
+
+				$deletion_success = true;
+			}
+
+			if($deletion_success) {
+
+				message()->addMessage("Pickupdate deleted");	
 				global $page;
 				$user_id = session()->value("user_id");
-				$page->addLog("Pickupdate: pickupdate id:$id deleted by user_id:$user_id");
+				$page->addLog("Pickupdate: pickupdate id:$pickupdate_id deleted by user_id:$user_id");
 
-				return true;		
+				return true;
 			}
 
 		}

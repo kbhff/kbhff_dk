@@ -16,18 +16,7 @@ $this->pageTitle("Adgangskode");
 
 	<?= $UC->formStart("updateUserPassword/$action[1]", ["class" => "form_password"]) ?>
 
-	<? if(message()->hasMessages()): ?>
-	<div class="messages">
-	<?
-	$all_messages = message()->getMessages();
-	message()->resetMessages();
-	foreach($all_messages as $type => $messages):
-		foreach($messages as $message): ?>
-		<p class="<?= $type ?>"><?= $message ?></p>
-		<? endforeach;?>
-	<? endforeach;?>
-	</div>
-	<? endif; ?>
+		<?= $HTML->serverMessages() ?>
 
 		<fieldset>
 			<?=

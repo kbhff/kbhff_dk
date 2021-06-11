@@ -18,6 +18,7 @@ $IC = new Items();
 $itemtype = "productassorted";
 $model = $IC->typeObject($itemtype);
 
+
 // page info
 $page->bodyClass("product_assorted");
 $page->pageTitle("Assorted products");

@@ -9,19 +9,8 @@ $this->pageTitle("Adgangskode");
 	<h1>Adgangskode</h1>
 	<h2>Her kan du ændre din adgangskode.</h2>
 
-	<? if(message()->hasMessages()): ?>
-	<div class="messages">
-	<?
-	$all_messages = message()->getMessages();
-	message()->resetMessages();
-	foreach($all_messages as $type => $messages):
-		foreach($messages as $message): ?>
-		<p class="<?= $type ?>"><?= $message ?></p>
-		<? endforeach;?>
-	<? endforeach;?>
-	</div>
-	<? endif; ?>
-		
+	<?= $HTML->serverMessages(); ?>
+
 	<?= $UC->formStart("updateUserPassword", ["class" => "form_password password i:resetPassword"]) ?>
 
 		<fieldset>

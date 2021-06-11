@@ -173,14 +173,22 @@
 #content ol,
 #content ul,
 #content dl {
-	padding-left: 18px;
-	padding-right: 18px;
+	padding-left: 12px;
+	padding-right: 12px;
 }
+
+
+
+#content div.messages p.message {padding: 10px; margin-bottom: 10px; border: 2px solid #3E8E17; color: #3E8E17;}
+#content div.messages p.error {padding: 10px; margin-bottom: 10px; border: 2px solid #C22414; color: #C22414;}
+
 
 
 /**
 *	## GRID START ##
 */
+
+
 
 #content div.c-wrapper {
 	display: block;

@@ -3,3 +3,7 @@ document.write('<script type="text/javascript" src="/janitor/admin/js/lib/seg_de
 document.write('<script type="text/javascript" src="/janitor/js/lib/u-settings.js"></script>');
 
 document.write('<script type="text/javascript" src="/janitor/js/lib/desktop/m-form.js"></script>');
+
+document.write('<script type="text/javascript" src="/janitor/js/lib/desktop/m-departments.js"></script>');
+
+document.write('<script type="text/javascript" src="/janitor/js/lib/desktop/m-user_group.js"></script>');

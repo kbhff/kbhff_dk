@@ -68,12 +68,21 @@ class User extends UserCore {
 			"error_message" => "Du skal vælge en afdeling."
 		));
 		// Search field in order to search for members
-		 $this->addToModel("search_member", array(
+		$this->addToModel("search_member", array(
 		 	"type" => "string",
 		 	"label" => "Søg efter medlem", 
 		 	"hint_message" => "Navn, email, mobilnr eller medlemsnr. – min. 4 tegn.",
 		 	"error_message" => "Du skal som minimum angive 4 tegn."
 		 ));
+
+		// Search field in order to search for members
+		$this->addToModel("membership_renewal", array(
+			"type" => "select",
+			"options" => ["1" => "Ja", "0" => "Nej"],
+			"label" => "Automatisk fornyelse", 
+			"hint_message" => "Vil du have dit medlemskab automatisk fornyet og betalt hvert år?",
+			"error_message" => "Fejl"
+		));
 		 
 	}
 
@@ -193,8 +202,38 @@ class User extends UserCore {
 	 */
 	 function getKbhffUser(){
 		$user = $this->getUser();
-		$user["department"] = $this->getUserDepartment();
-		// print_r($user);
+		if($user) {
+
+			$user_id = $user["id"];
+
+			$query = new Query();
+
+			$user["mobile"] = "";
+			$user["email"] = "";
+	
+			$sql = "SELECT * FROM ".$this->db_usernames." WHERE user_id = $user_id";
+			if($query->sql($sql)) {
+				$usernames = $query->results();
+				foreach($usernames as $username) {
+					$user[$username["type"]] = $username["username"];
+				}
+			}
+	
+	
+			$user["addresses"] = $this->getAddresses();
+	
+			$user["maillists"] = $this->getMaillists();
+	
+			if((defined("SITE_SHOP") && SITE_SHOP)) {
+				$MC = new Member();
+				$user["membership"] = $MC->getMembership();
+			}
+	
+			$user["department"] = $this->getUserDepartment(["user_id" => $user_id]);
+			// print_r($user);
+	
+			return $user;
+		}
 
 		return $user;
 	}
@@ -240,7 +279,7 @@ class User extends UserCore {
 		// Get content of $_POST array that have been mapped to the model entities object
 		$this->getPostedEntities();
 
-		print_r ($action);
+		// print_r ($action);
 		// Check that the number of REST parameters is as expected and that the listed entries are valid.
 		if(count($action) == 1 && $this->validateList(array("department_id"))) {
 
@@ -252,14 +291,21 @@ class User extends UserCore {
 
 			$query->checkDbExistence(SITE_DB.".user_department");
 
-
+			$old_department = $user["department"];
 
 			//Check if the user is associated with a department and adjust query accordingly
-			if ($user["department"]) {
+			if ($old_department) {
 				//Update department
 				$sql = "UPDATE ".SITE_DB.".user_department SET department_id = $department_id WHERE user_id = $user_id";
 
 				if($query->sql($sql)) {
+
+					$user = $this->getKbhffUser();
+
+					// send notifications to admin
+					$this->sendMemberLeftNotification($user, ["old_department" => $old_department]);
+					$this->sendNewMemberNotification($user);
+
 					message()->addMessage("Afdeling blev opdateret.");
 					return true;
 				}
@@ -268,6 +314,7 @@ class User extends UserCore {
 				// Set department
 				$sql = "INSERT INTO ".SITE_DB.".user_department SET department_id = $department_id, user_id = $user_id";
 				if($query->sql($sql)) {
+
 					message()->addMessage("Afdeling blev tildelt.");
 					return true;
 				}
@@ -278,6 +325,64 @@ class User extends UserCore {
 		return false;
 
 	}
+
+	function sendMemberLeftNotification($user, $_options = false) {
+		
+		if($user && $user["department"] && $user["membership"]) {
+
+			$old_department = $user["department"];
+	
+			if($_options !== false) {
+				foreach($_options as $_option => $_value) {
+					switch($_option) {
+						case "old_department"     : $old_department       = $_value; break;
+					}
+				}
+			}
+	
+			mailer()->send([
+				"subject" => "Medlem har forladt afdeling ".$old_department["name"],
+				"message" => "
+Hej ".$old_department["name"]." butiksgruppe,
+
+".$user["firstname"]." ".$user["lastname"]." med medlemstype ".$user["membership"]["item"]["name"]." er ikke længere medlem af jeres afdeling.
+
+Hvis medlemmet tog vagter i lokalafdelingen, kan det være en god idé at fjerne vedkommende fra vagtplaner / holdoversigter.
+			
+Med venlig hilsen,
+IT",
+				"recipients" => ADMIN_EMAIL
+			]);
+		}
+
+	}
+
+	function sendNewMemberNotification($user) {
+
+		if($user && $user["department"] && $user["membership"]) {
+
+			mailer()->send([
+				"subject" => "Nyt medlem i afdeling ".$user["department"]["name"],
+				"message" => "
+Hej ".$user["department"]["name"]." butiksgruppe,
+
+I har fået et nyt medlem!
+
+Navn: ".$user["firstname"]." ".$user["lastname"]."
+Email: ".($user["email"] ?: "-")."
+
+Medlemstype: ".$user["membership"]["item"]["name"]."
+
+I kan kontakte vedkommende i forhold til introduktion og evt. opskrivning til vagt. Bemærk at vedkommende kan være flyttet fra en anden afdeling.
+
+Med venlig hilsen,
+IT",
+			"recipients" => ADMIN_EMAIL
+			]);
+		}
+	}
+
+	
 
 	/**
 	 * Remove current user's acceptance of terms – for testing purposes
@@ -290,7 +395,7 @@ class User extends UserCore {
 
 		$query = new Query();
 
-		$sql = "DELETE FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id";
+		$sql = "DELETE FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id AND name = 'terms'";
 
 		if($query->sql($sql)) {
 			return true;
@@ -299,16 +404,48 @@ class User extends UserCore {
 		return false;
 	}
 
-	function hasUnpaidMembership() {
+	function hasUnpaidMembership($_option = false) {
 
 		$query = new Query();
 		$MC = new Member();
 		$user_id = session()->value("user_id");
+		$IC = new Items();
+		$SC = new Shop();
 		
 
 		$member = $MC->getMembership();
 		if($member && $member["order"] && $member["order"]["payment_status"] <= 1) {
-			return $member["order"]["order_no"];
+
+			$order_item = $IC->getItem(["id" => $member["order"]["items"][0]["item_id"]]);
+
+			if($order_item && $order_item["itemtype"] == "signupfee") {
+				$result["type"] = "signupfee";
+				$result["order_no"] = $member["order"]["order_no"];
+				return $result;
+			}
+			else if($order_item && $order_item["itemtype"] == "membership") {
+				$result["type"] = "membership";
+				$result["order_no"] = $member["order"]["order_no"];
+				return $result;
+			}
+ 
+		}
+		// handle odd cases where an unpaid signupfee exists but no membership
+		else {
+
+			$unpaid_orders = $SC->getUnpaidOrders();
+
+			if($unpaid_orders && count($unpaid_orders) == 1) {
+				
+				$unpaid_order = $SC->getOrders(["order_id" => $unpaid_orders[0]["id"]]);
+				$item = $IC->getItem(["id" => $unpaid_order["items"][0]["item_id"]]);
+
+				if($item && $item["itemtype"] == "signupfee") {
+					$result["type"] = "signupfee";
+					$result["order_no"] = $unpaid_order["order_no"];
+					return $result;
+				}
+			}
 		}
 
 		return false;
@@ -421,11 +558,17 @@ class User extends UserCore {
 		// if cancel goes through and returns true then send a mail
 		if ($cancel_result === true) {
 			message()->addMessage("Dine oplysninger blev slettet");
+
 			mailer()->send([
-				"subject" => "Dit medlemskab af Københavns Fødevarefællesskab er opsagt",
-				"message" => "Du har meldt dig ud af Københavns Fødevarefællesskab. Tak for denne gang.",
+				"template" => "confirmation_membership_cancellation",
 				"recipients" => [$user_email]
-				]);
+			]);
+			
+			if($user["department"]) {
+
+				// send notification to admin
+				$this->sendMemberLeftNotification($user);
+			}	
 
 			return true;
 		}
@@ -610,6 +753,143 @@ class User extends UserCore {
 			}
 		}
 	}
+
+	function getRenewalOptOut($_options = false) {
+
+		$user_id = session()->value("user_id");
+		$query = new Query();
+		$sql = "SELECT * FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id AND name = 'disable_membership_renewal'";
+		if($query->sql($sql)) {
+			
+			$renewal_optout_time = $query->result(0, "accepted_at");
+			return $renewal_optout_time;
+		}
+
+		return false;
+	}
+
+	function setRenewalOptOut($_options = false) {
+
+		$user_id = session()->value("user_id");
+		$query = new Query();
+
+		if(!$this->getRenewalOptOut()) {
+			
+			$sql = "INSERT INTO ".SITE_DB.".user_log_agreements SET user_id = $user_id, name = 'disable_membership_renewal'";
+			if($query->sql($sql)) {
+				
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	function unsetRenewalOptOut($_options = false) {
+
+		$user_id = session()->value("user_id");
+		$query = new Query();
+
+		if($this->getRenewalOptOut()) {
+
+			$sql = "DELETE FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id AND name = 'disable_membership_renewal'";
+			if($query->sql($sql)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Update or set the current user's associated department.
+	 *
+	 * @param array $action REST parameters of current request
+	 * @return boolean
+	 */
+	function updateRenewalOptOut($action){
+		// Get content of $_POST array that have been mapped to the model entities object
+		$this->getPostedEntities();
+
+		// print_r ($action);
+		// Check that the number of REST parameters is as expected and that the listed entries are valid.
+		if(count($action) == 1 && $this->validateList(array("membership_renewal"))) {
+
+			$user = $this->getKbhffUser();
+			$user_id = $user["id"];
+			$membership_renewal = $this->getProperty("membership_renewal", "value");
+
+			$query = new Query();
+
+			if($membership_renewal && $this->getRenewalOptOut()) {
+
+
+				// user is inactive member
+				if($user["membership"] && !$user["membership"]["subscription_id"]) {
+
+					return "REACTIVATION REQUIRED";
+				}	
+				
+				$this->unsetRenewalOptOut();
+
+				return "RENEWAL ENABLED";
+
+			}
+			elseif(!$membership_renewal && !$this->getRenewalOptOut()) {
+
+				$this->setRenewalOptOut();
+
+				return "RENEWAL DISABLED";
+			}
+			else {
+				return true;
+			}
+
+		}
+
+		return false;
+		
+		
+	}
+
+	function addToMailchimp($data) {
+
+		if(defined("MAILCHIMP_API_KEY")) {
+
+			$apiKey = MAILCHIMP_API_KEY;
+			$listId = '141ae6f59f';
+	
+			$memberId = md5(strtolower($data['email']));
+			$dataCenter = substr($apiKey,strpos($apiKey,'-')+1);
+			$url = 'https://' . $dataCenter . '.api.mailchimp.com/3.0/lists/' . $listId . '/members/' . $memberId;
+	
+			$json = json_encode([
+				'email_address' => $data['email_address'],
+				'status'        => $data['status'], // "subscribed","unsubscribed","cleaned","pending"
+			]);
+	
+			$ch = curl_init($url);
+	
+			curl_setopt($ch, CURLOPT_USERPWD, 'user:' . $apiKey);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $json); 
+	
+			$result = curl_exec($ch);
+			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+	
+			return $httpCode;
+		}
+
+	}
+
 }
 
 ?>

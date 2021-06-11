@@ -89,15 +89,6 @@ if(!$UC->hasAcceptedTerms()) {
 
 }
 
-// Members with unpaid memberships will be directed to payment page
-$order_no = $UC->hasUnpaidMembership();
-if($order_no) {
-
-	message()->addMessage("Du mangler at betale dit medlemskab. Betal venligst før du kan gå videre.", array("type" => "error"));
-	header("Location: /butik/betaling/".$order_no);
-	exit();
-}
-
 
 if($action) {
 
@@ -114,8 +105,31 @@ if($action) {
 		));
 		exit();
 	}
+	
+	else if($action[0] == "medlemskab") {
 
-	// ../profil/bruger lead to template
+
+		// ../profil/medlemskab/fornyelse
+		if(count($action) == 2 && $action[1] == "fornyelse") {
+			$page->page(array(
+				"templates" => "profile/update_membership_renewal.php",
+				"type" => "member"
+			));
+			exit();
+		}
+		// ../profil/medlemskab/genaktiver
+		else if(count($action) == 2 && $action[1] == "genaktiver") {
+			$page->page(array(
+				"templates" => "profile/reactivate_membership.php",
+				"type" => "member"
+			));
+			exit();
+		}
+
+	}
+
+
+	// ../profil/bruger 
 	else if($action[0] == "bruger") {
 		$page->page(array(
 			"templates" => "profile/update_user_information.php",
@@ -124,7 +138,7 @@ if($action) {
 		exit();
 	}
 
-	// ../profil/kodeord lead to template
+	// ../profil/kodeord 
 	else if($action[0] == "kodeord") {
 		$page->page(array(
 			"templates" => "profile/update_user_password.php",
@@ -133,11 +147,13 @@ if($action) {
 		exit();
 	}
 
+	// /profil/updateUserDepartment
 	// Handling updateUserDepartment method, specified in user.class.php
 	else if($action[0] == "updateUserDepartment" && $page->validateCsrfToken()) {
 
 		//Method returns true
 		if($UC->updateUserDepartment($action)) {
+			
 			header("Location: /profil");
 			exit();
 		}
@@ -150,6 +166,59 @@ if($action) {
 			));
 			exit();
 		}
+	}
+
+	// ../profil/ny-afdeling-advarsel 
+	else if($action[0] == "ny-afdeling-advarsel") {
+		$page->page(array(
+			"templates" => "profile/new_department_warning.php",
+			"type" => "member"
+		));
+		exit();
+	}
+
+	// /profil/updateMembershipRenewal
+	else if($action[0] == "updateMembershipRenewal" && $page->validateCsrfToken()) {
+
+		$result = $UC->updateRenewalOptOut($action);
+
+		if($result === "REACTIVATION REQUIRED") {
+
+			header("Location: /profil/medlemskab/genaktiver");
+			exit();
+
+		}
+		else {
+
+			header("Location: /profil");
+			exit();
+		}
+	}
+
+	// profil/reactivateMembership
+	else if($action[0] == "reactivateMembership" && $page->validateCsrfToken()) {
+
+		$order = $MC->switchMembership($action);
+
+		if($order) {
+
+			$_POST["membership_renewal"] = 1;
+			$result = $UC->updateRenewalOptOut(["updateRenewalOptOut"]);
+			unset($_POST);
+			if($result) {
+
+				header("Location: /butik/betaling/".$order["order_no"]);
+				exit();
+			}
+			
+		}
+
+		message()->addMessage("Der skete en fejl.", array("type" => "error"));
+		$page->page([
+			"templates" => "profile/reactivate_membership.php",
+			"type" => "member"
+		]);
+		exit();
 	}
 
 	// profil/updateUserInformation
