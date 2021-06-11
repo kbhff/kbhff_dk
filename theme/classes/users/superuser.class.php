@@ -279,6 +279,10 @@ IT
 	 * @return void
 	 */
 	function updateUserInformation($action) {
+
+		include_once("classes/users/superuser.class.php");
+		$UC = new SuperUser();
+
 		// Get posted values from form
 		$this->getPostedEntities();
 		$user_id = $action[1];
@@ -298,9 +302,12 @@ IT
 			$update_success = true;
 
 			if($email) {
+				$existing_email = $UC->getUsernames(["user_id" => $user_id, "type" => "email"]);
+				$_POST["username_id"] = $existing_email ? $existing_email["id"] : false;
 				if(!$this->updateEmail(["updateEmail", $user_id])) {
 					$update_success = false;
 				}
+				unset($_POST["username_id"]);
 			}
 			if($mobile) {
 				if(!$this->updateMobile(["updateMobile", $user_id])) {

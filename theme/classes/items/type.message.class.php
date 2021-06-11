@@ -36,7 +36,12 @@ class TypeMessage extends TypeMessageCore {
 		$this->getPostedEntities();
 		$name = $this->getProperty("name", "value");
 		$description = $this->getProperty("description", "value");
-		if(isset($_POST["html"]) && $name && $description) {
+		if(isset($_POST["html"]) && isset($_POST["description"]) && $name) {
+			
+			// custom handling of description
+			$value = stripDisallowed($_POST["description"]);
+			$this->setProperty("description", "value", $value);
+			$description = $this->getProperty("description", "value");
 			
 			// custom handling of HTML
 			$value = stripDisallowed($_POST["html"]);
@@ -52,7 +57,7 @@ class TypeMessage extends TypeMessageCore {
 			];
 	
 			// create final HTML
-			$final_html = $this->mergeMessageIntoLayout($message);
+			$final_html = html_entity_decode($this->mergeMessageIntoLayout($message));
 	
 			$recipients[] = $user["email"];
 	
@@ -79,8 +84,13 @@ class TypeMessage extends TypeMessageCore {
 		$description = $this->getProperty("description", "value");
 		$department_id = getPost("department_id", "value");
 
-		if(isset($_POST["html"]) && $name && $description) {
-
+		if(isset($_POST["html"]) && isset($_POST["description"]) && $name) {
+			
+			// custom handling of description
+			$value = stripDisallowed($_POST["description"]);
+			$this->setProperty("description", "value", $value);
+			$description = $this->getProperty("description", "value");
+			
 			// custom handling of HTML
 			$value = stripDisallowed($_POST["html"]);
 			$this->setProperty("html", "value", $value);
@@ -136,7 +146,7 @@ class TypeMessage extends TypeMessageCore {
 			];
 	
 			// create final HTML
-			$final_html = $this->mergeMessageIntoLayout($message);
+			$final_html = html_entity_decode($this->mergeMessageIntoLayout($message));
 	
 			// send final HTML
 			if(mailer()->sendBulk(["from_email" => "it@kbhff.dk", "recipients" => $recipients, "subject" => $name, "html" => $final_html])) {

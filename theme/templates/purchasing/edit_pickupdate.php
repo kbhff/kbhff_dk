@@ -21,7 +21,7 @@ $pickupdate_departments = $DC->getPickupdateDepartments($pickupdate_id);
 		<div class="c-one-half">
 
 			<h3>Rediger åbne afdelinger</h3>
-			<p>Her kan du redigere, hvilke afdelinger der har åben på denne afhentningsdag. Fjern fluebenet ved en afdeling for at markere den som lukket, og tryk på Gem. Hvis du lukker en afdeling, hvortil der er knyttet bestillinger på den givne dato, vil IT-gruppen vil adviseret og tage sig af det.</p>
+			<p>Her kan du redigere, hvilke afdelinger der har åben på denne afhentningsdag. Fjern fluebenet ved en afdeling for at markere den som lukket, og tryk på Gem. Hvis du lukker en afdeling, hvortil der er knyttet bestillinger på den givne dato, vil IT-gruppen blive adviseret og tage sig af det.</p>
 	
 			<?= $PC->formStart("updatePickupdateDepartments/".$pickupdate_id, array("class" => "i:defaultNew labelstyle:inject")) ?>
 				<fieldset>

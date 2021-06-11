@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Dit medlemskab hos {SITE_NAME} udløber</title>
+	<title>Dit medlemskab hos {SITE_NAME} udløber // Your {SITE_NAME} membership is running out</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 	<style type="text/css">
@@ -63,19 +63,23 @@
 	<tr>
 		<td align="left" style="text-align: left;">
 			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 20px 0 30px;">
-				Hej <em>{NICKNAME}</em>,
+				Hej {NICKNAME},
 			</p>
 			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
-				Om en uge, d. {EXPIRES_AT}, udløber dit medlemskab af Københavns Fødevarefællesskab, fordi du har fravalgt automatisk fornyelse. Du vil herefter være inaktivt medlem og indtil du genaktiverer medlemskabet vil du ikke kunne lave grøntsagsbestillinger. Du vil dog stadig kunne se dine eksisterende bestillinger og vagter.
+				Om en uge er det tid til at betale dit årlige kontingent til Københavns Fødevarefællesskab. Herefter vil det ikke være muligt at bestille fra os, før du har fornyet dit medlemsskab. Du vil dog stadig kunne se eksisterende ordrer.
 			</p>
 			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 15px;">
-			Hvis du ikke ønsker at deaktivere dit medlemskab, kan du logge ind på <a href="{SITE_URL}/profil" style="font-family: Arial, sans-serif; font-size: 14px; text-decoration: none; color: #000000;"><strong style="color: #3e8e17;">Min Side</strong></a> og tilmelde dig automatisk fornyelse før d. {EXPIRES_AT}.
+				Du kan tilmelde dig automatisk fornyelse på <a href="https://medlem.kbhff.dk">Min Side</a>. Så vil dit kontingent automatisk blive opkrævet om en uge og ved hver følgende opkrævning.
 			</p>
 			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
-				Tak fordi du støtter bæredygtig fødevaredistribution!
+				Alternativt kan du logge på efter {EXPIRES_AT} og betale det som engangsbetaling. Har du ikke mulighed for at forny dit kontingent via hjemmesiden, kan du gøre det i din afdeling.
+			</p>
+			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
+				<em>Bliver kontingentet ikke betalt, vil du automatisk blive udmeldt af Københavns Fødevarefællesskab.</em>
 			</p>
 			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 15px 0;">
-			Grønne hilsener
+				Venlig hilsen,<br/>
+				Københavns Fødevarefællesskab
 			</p>
 		</td>
 	</tr>
@@ -84,13 +88,26 @@
 	</tr>
 	<tr>
 		<td align="left" style="text-align: left;">
-			<h2 style="margin: 0; padding: 0; color: #000000; font-family: 'voresfont', Arial, sans-serif; font-size: 15px; line-height: 15px; font-weight: 400;">
-				<a href="{SITE_URL}" style="font-family: 'voresfont', Arial, sans-serif; font-size: 15px; line-height: 15px; font-weight: 400; color: #000000; text-decoration: none;">Københavns Fødevarefællesskab</a>
-			</h2>
+			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 20px 0 30px;">
+				Hi {NICKNAME},
+			</p>
+			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
+				In one week it will be time to pay the yearly subscription to Københavns Fødevarefællesskab. After this it will not be possible for you to order until you have renewed your membership. You will still be able to see existing orders.
+			</p>
+			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 15px;">
+				Instead of paying it manually you can sign up for automatic renewal on <a href=”medlem.kbhff.dk”>Min Side</a>. Then your membership will be automatically charged next week and for each following annual renewal.
+			</p>
+			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
+				Alternatively, you can log on after {EXPIRES_AT} and pay your membership fee manually. You can also renew your membership in your department instead of doing it online.
+			</p>
+			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
+				<em>If your subscription is not paid you will automatically cease to be a member of Københavns Fødevarefælleskab.</em>
+			</p>
+			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 15px 0;">
+				Best regards,<br/>
+				Københavns Fødevarefællesskab
+			</p>
 		</td>
-	</tr>
-	<tr>
-		<td height="30" style="height: 30px; font-size: 1px; line-height: 1px;">&nbsp;</td>
 	</tr>
 	</table>
 </div>
