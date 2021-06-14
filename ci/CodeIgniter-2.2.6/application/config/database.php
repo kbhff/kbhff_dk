@@ -46,12 +46,13 @@ $db['default']['hostname'] = '127.0.0.1';
 if(ENVIRONMENT == "development") {
 	$db['default']['username'] = 'kbhffdk';
 	$db['default']['password'] = 'localpass';
+	$db['default']['database'] = 'kbhff_dk';
 }
 else {
 	$db['default']['username'] = $_SERVER["DB_USERNAME"];
 	$db['default']['password'] = $_SERVER["DB_PASSWORD"];
+	$db['default']['database'] = $_SERVER["DB_NAME"];
 }
-$db['default']['database'] = 'kbhff_dk';
 $db['default']['dbdriver'] = 'mysqli';
 $db['default']['dbprefix'] = 'ff_';
 $db['default']['pconnect'] = TRUE;
