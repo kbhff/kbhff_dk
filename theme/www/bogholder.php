@@ -30,7 +30,8 @@ if($action) {
 		if(count($action) == 2) {
 
 			$page->page([
-				"templates" => "accountant/tallies.php"
+				"templates" => "accountant/tallies.php",
+				"type" => "admin"
 			]);
 			exit();
 		}
@@ -39,7 +40,8 @@ if($action) {
 		elseif(count($action) == 3) {
 
 			$page->page([
-				"templates" => "accountant/tally.php"
+				"templates" => "accountant/tally.php",
+				"type" => "admin"
 			]);
 			exit();
 		}
@@ -75,6 +77,7 @@ if($action) {
 // standard template
 $page->page(array(
 	"templates" => "accountant/index.php",
+	"type" => "admin"
 	// "type" => "accountant"
 ));
 exit();
