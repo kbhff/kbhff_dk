@@ -62,7 +62,7 @@ if (defined('ENVIRONMENT'))
  *
  */
 //	$system_path = 'system';
-	$system_path = '/srv/sites/kbhff/kbhff_dk/ci/CodeIgniter-2.2.6/system';
+	$system_path = $_SERVER["CI_PATH"].'/CodeIgniter-2.2.6/system';
 
 /*
  *---------------------------------------------------------------
@@ -79,7 +79,7 @@ if (defined('ENVIRONMENT'))
  *
  */
 //	$application_folder = 'application';
-	$application_folder = '/srv/sites/kbhff/kbhff_dk/ci/CodeIgniter-2.2.6/application';
+	$application_folder = $_SERVER["CI_PATH"].'/CodeIgniter-2.2.6/application';
 
 /*
  * --------------------------------------------------------------------
