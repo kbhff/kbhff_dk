@@ -894,12 +894,12 @@ if(is_array($action) && count($action)) {
 
 		// ORDER HELPERS
 
-		function getAllOrders() {
+		function getAllOrders($limit = false) {
 			$orders = [];
 
 			$query = new Query();
 			$sql = "SELECT uid, orderkey, orderno, puid, cc_trans_amount, status1, created FROM ".SITE_DB.".ff_orderhead";
-			$sql .= " ORDER BY uid ASC";
+			$sql .= " ORDER BY uid ASC" . ($limit ? " LIMIT ".$limit : "");
 			//$sql .= " LIMIT 1000";
 			// $sql = "SELECT * FROM ".SITE_DB.".ff_orderhead ORDER BY uid ASC LIMIT 1000";
 			//$sql = "SELECT * FROM ".SITE_DB.".ff_orderhead ORDER BY uid ASC";
@@ -1059,7 +1059,7 @@ if(is_array($action) && count($action)) {
 
 
 		// TRANSFER ALL ORDERS
-		$order_operations_transfer = true;
+		$order_operations_transfer = false;
 
 
 		// CREATE MEMBERSHIP ORDERS FOR ALL RELEVANT MEMBERS
@@ -2388,14 +2388,20 @@ if(is_array($action) && count($action)) {
 
 			output("order_operations_1");
 
+
 			# create an index on orderkey to speed things up
-			$query->sql("SELECT COUNT(1) index_exists FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema='".SITE_DB."' AND table_name='ff_orderhead' AND index_name='orderkey'");
+			$sql = "SELECT COUNT(1) index_exists FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema='".SITE_DB."' AND table_name='ff_orderhead' AND index_name='orderkey'";
+			$query->sql($sql);
 			if (!$query->result(0, "index_exists")) {
+				$sql = "ALTER TABLE ".SITE_DB.".ff_orderhead ADD INDEX `orderkey` (orderkey(19))";
 				$query->sql("ALTER TABLE ".SITE_DB.".ff_orderhead ADD INDEX `orderkey` (orderkey(19))");
+
 				output("INDEX for ff_orderhead.orderkey CREATED.");
-			} else {
+			}
+			else {
 				output("INDEX for ff_orderhead.orderkey ALREADY EXISTS.");
 			}
+
 
 			# create an index on orderno to speed things up (at order_operations_6)
 			$query->sql("SELECT COUNT(1) index_exists FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema='".SITE_DB."' AND table_name='ff_orderhead' AND index_name='orderkey'");
@@ -2617,8 +2623,9 @@ if(is_array($action) && count($action)) {
 		if($order_operations_6) {
 
 			output("order_operations_6");
+			output("REPEAT UNTIL NO ORDERS ARE FOUND");
 
-			$orders = getAllOrders();
+			$orders = getAllOrders(5000);
 			output("TOTAL ORDERS: " . count($orders));
 
 			$orderno_to_delete = array();
@@ -2688,7 +2695,6 @@ if(is_array($action) && count($action)) {
 						$order_lines_total += $order_line["amount"];
 
 
-
 						// Check if user information can be made useful – or delete order
 						if($order["puid"] != $order_line["puid"] && $order["puid"] != $order_line["status1"]) {
 							
@@ -2756,7 +2762,6 @@ if(is_array($action) && count($action)) {
 					}
 
 
-
 					if($order_amount_issue && count($order_transactions) > 1) {
 
 						//output("TRANSACTIONS ISSUE???");
@@ -2792,9 +2797,6 @@ if(is_array($action) && count($action)) {
 					}
 
 
-
-
-
 					// If transaction has wrong user, but amounts otherwise adds up, 
 					// then set correct usre for transaction
 					if($order_transaction_user_issue && !$order_amount_issue) {
@@ -2821,8 +2823,6 @@ if(is_array($action) && count($action)) {
 						$user_ok_amount_bad_count++;
 						// output("AMOUNT ISSUE");
 
-
-
 					}
 
 
@@ -2837,7 +2837,6 @@ if(is_array($action) && count($action)) {
 						// print_r($order_transactions);
 
 					}
-
 
 				}
 
@@ -3112,9 +3111,15 @@ if(is_array($action) && count($action)) {
 		if($order_operations_transfer) {
 
 			output("order_operations_transfer");
+			output("REPEAT UNTIL NO ORDERS ARE FOUND");
 
-			$orders = getAllOrders();
-			output("TOTAL ORDERS TO IMPORT: " . count($orders));
+			$orders = getAllOrders(3000);
+			output("ORDERS TO IMPORT: " . count($orders));
+			if(count($orders) == 0) {
+				output("ALL OK");
+				exit();
+			}
+
 			$SC = new Shop();
 
 
@@ -3138,8 +3143,9 @@ if(is_array($action) && count($action)) {
 			foreach($legacy_products as $legacy_product) {
 				$legacy_products_index[$legacy_product["name"]] = $legacy_product;
 			}
-
+			$legacy_products = null;
 			// print_r($legacy_products_index);
+
 
 			// GET LEGACY PRODUCT INDEX
 			$sql = "SELECT items.id as id, products.id as product_id, products.explained FROM ".SITE_DB.".ff_producttypes as products, ".SITE_DB.".ff_items as items WHERE items.producttype_id = products.id";
@@ -3149,30 +3155,20 @@ if(is_array($action) && count($action)) {
 			$products = $query->results();
 			foreach($products as $product) {
 
-
-
-
-				// $matches = $IC->getItems(["itemtype" => "legacyproduct", "where" => "name = '".$product["explained"]."'", "limit" => 1]);
 				if(isset($legacy_products_index[trim($product["explained"])])) {
 					$product["item_id"] = $legacy_products_index[trim($product["explained"])]["item_id"];
-					// $product["item_id"] = $legacy_products_index[$product["explained"]];
 				}
 				else if(preg_match("/medlemskab|Kontingent/", $product["explained"])) {
 
 					$product["item_id"] = $membership_id;
 				}
-				// else {
-				// 	output("SHIT:" . $product["explained"] . ", " . $legacy_products_index["støttepose (grøntsager)"]);
-				// 	exit;
-				// }
-
 
 				$product_index[$product["id"]] = $product;
 
 			}
+			$products = null;
 
 
-			// TODO:
 			// Get future pickup date id's to know which products are to be picked up in the future
 			$pickupdates_index = [];
 
@@ -3186,6 +3182,8 @@ if(is_array($action) && count($action)) {
 
 				}
 			}
+			$pickupdates = null;
+
 
 			// departments?
 			$sql = "SELECT id, abbreviation FROM ".SITE_DB.".project_departments";
@@ -3199,18 +3197,18 @@ if(is_array($action) && count($action)) {
 				}
 
 			}
+			$departments = null;
 			// debug([$pickupdates_index, $department_index]);
+
 
 
 			$payment_method_index = [];
 			$payment_methods = $page->paymentMethods();
 
 			foreach($payment_methods as $payment_method) {
-
 				$payment_method_index[$payment_method["classname"]] = $payment_method;
-
 			}
-
+			$payment_methods = null;
 
 
 			$orderno_to_delete = array();
@@ -3223,31 +3221,35 @@ if(is_array($action) && count($action)) {
 				$user_id = false;
 
 				$sql = "SELECT * FROM ".SITE_DB.".ff_orderlines WHERE orderno = ".$order["orderno"];
+				// debug([$sql]);
 				$query->sql($sql);
 				$order_lines = $query->results();
 
 				$sql = "SELECT * FROM ".SITE_DB.".ff_transactions WHERE orderno = ".$order["orderno"];
+				// debug([$sql]);
 				$query->sql($sql);
 				$order_transactions = $query->results();
 
+				// debug([$order_lines, $order_transactions]);
 				// Everything looks good
 				if($order_lines && $order_transactions) {
 
 					// Get some additional details
 					$sql = "SELECT new_user_id FROM ".SITE_DB.".ff_persons WHERE uid = ".$order["puid"];
-					// print_r("$sql");
+					// debug([$sql]);
 					if($query->sql($sql)) {
 
 						$user_id = $query->result(0, "new_user_id");
 
 						$order_no = $SC->getNewOrderNumber();
 						
-						$sql = "SELECT id FROM ".SITE_DB.".shop_orders WHERE order_no = '$order_no'";
+						$sql = "SELECT * FROM ".SITE_DB.".shop_orders WHERE order_no = '$order_no'";
 						$query->sql($sql);
 						$order_id = $query->result(0, "id");
 
 					}
 
+					// debug([$user_id, $order_no, $order_id, $query->result(0)]);
 
 					if($order_no && $user_id) {
 
@@ -3284,6 +3286,10 @@ if(is_array($action) && count($action)) {
 						foreach($order_lines as $order_line) {
 
 							$item_id = $product_index[$order_line["item"]]["item_id"];
+							if(!$item_id) {
+								output("FATAL ERROR: MISSING ITEM_ID for orderline item: " . $order_line["item"].", order no: ". $order_line["orderno"]);
+								exit();
+							}
 
 							$sql = "INSERT INTO ".SITE_DB.".shop_order_items SET ";
 							$sql .= "order_id = $order_id, ";
@@ -3345,11 +3351,8 @@ if(is_array($action) && count($action)) {
 								$query->sql($sql);
 
 							}
-							// update order shipped and status to partial
+							// update order shipped and status to pending
 							else {
-
-								debug(["should change fully"]);
-								// update order shipped and status
 
 								// UPDATE ORDER
 								$sql = "UPDATE ".SITE_DB.".shop_orders SET ";
@@ -3408,7 +3411,7 @@ if(is_array($action) && count($action)) {
 						print_r($order_lines);
 						print_r($order_transactions);
 
-						// exit();
+						exit();
 					}
 
 
@@ -3423,8 +3426,8 @@ if(is_array($action) && count($action)) {
 					exit();
 				}
 
-
 			}
+
 			output(count($orderno_to_delete)." Orders to be DELETED.");
 			if (count($orderno_to_delete)) {
 				deleteOrders($orderno_to_delete);
