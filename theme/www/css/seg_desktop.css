@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-06-10 19:17:05
+asset-builder @ 2021-06-16 15:51:36
 */
 
 /*seg_desktop_include.css*/
@@ -953,6 +953,45 @@ position: relative;
 	font-size: 26px;
 	padding-bottom: 25px;
 }
+#content div.order_history ul.orders {margin: 0; list-style: none;}
+#content div.order_history ul.orders li {
+	display: flex;
+	flex-flow: row nowrap;
+	padding: 0;
+}
+#content div.order_history ul.orders > li > span {
+	display: block;
+	font-size: 14px;
+	padding: 3px 4px;
+	flex: 1 1;
+	align-self: center;
+}
+#content div.order_history ul.orders li.order_item:nth-child(2n) {
+	background-color: #DDDDDD;
+}
+#content div.order_history ul.orders li.order {
+	border-bottom: 1px solid #000000;
+	margin-top: 30px;
+}
+#content div.order_history ul.orders li.order span {
+	text-transform: uppercase;
+	font-size: 20px;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+}
+#content div.order_history ul.orders > li.order > span.order_date {
+	flex: 0 0 100px;
+}
+#content div.order_history ul.orders > li.order > span.order_number {
+	flex: 1 1;
+}
+#content div.order_history ul.orders > li.order > span.total_price {
+	text-align: right;
+	flex: 0 0 100px;
+}
+#content div.order_history ul.orders > li > span.order_item {
+	flex: 1 1;
+}
+
 
 /*s-signup.css*/
 #content .scene.signupfees h3 {padding-bottom: 8px;
@@ -1590,9 +1629,11 @@ div.overlay .field.password {
 #content div.scene.tally div.view.edit > form > span.edit ul.actions li.save {display: block;}
 #content div.scene.tally div.view.edit > form > span.amount div.field {padding: 0;}
 #content div.scene.tally div.view.edit > form > span.amount div.field label {display: none;}
+#content div.scene.tally div.view.edit > form > span.amount div.field span.pseudolabel {display: none;}
 #content div.scene.tally div.view.edit > form > span.amount div.field input {padding-top: 2px; padding-bottom: 2px; width: 150px; text-align: right; float: right;}
 #content div.scene.tally div.view.edit > form > span.amount div.field div.help {float: right; padding: 0; width: 210px;}
-#content div.scene.tally div.view.edit > form > span.amount div.field div.help .hint {position: relative; padding: 5px 10px 0 0;}
+#content div.scene.tally div.view.edit > form > span.amount div.field div.help .hint {padding: 3px 10px 0 0; width: 200px;}
+#content div.scene.tally div.view.edit > form > span.amount div.field div.help .error {padding: 10px 10px 0 0; width: 200px;}
 #content div.scene.tally div.payouts {padding-top: 72px;}
 #content div.scene.tally div.payouts > p {padding: 10px; margin: 0 12px 24px; font-size: 20px; border-bottom: 1px dashed #000000;}
 #content div.scene.tally div.payouts ul.payouts {
@@ -1869,6 +1910,7 @@ div.overlay .field.password {
 #content .scene.departments ul.departments li ul.info > li.location {display: none;}
 #content .scene.departments ul.departments li ul.contact {margin: 0; padding-bottom: 10px;}
 #content .scene.departments ul.departments li ul.info > li.pricerange {display: none;}
+#content .scene.departments ul.departments li div.description {padding-top: 10px;}
 #content .scene.departments > div.map {height: 400px; margin: 0 12px 50px;}
 #content .scene.departments .c-one-third .c-box {margin-top: 12px;}
 #content .scene.departments .c-one-third .c-box:first-child {margin-top: 58px; border-top: 5px solid #000;}
