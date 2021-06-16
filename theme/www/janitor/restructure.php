@@ -1059,7 +1059,7 @@ if(is_array($action) && count($action)) {
 
 
 		// TRANSFER ALL ORDERS
-		$order_operations_transfer = false;
+		$order_operations_transfer = true;
 
 
 		// CREATE MEMBERSHIP ORDERS FOR ALL RELEVANT MEMBERS
@@ -1974,6 +1974,12 @@ if(is_array($action) && count($action)) {
 
 
 
+					if($division["shortname"] == "IB") {
+						$sql = "UPDATE ".SITE_DB.".ff_divisions SET shortname = 'NB' WHERE uid = ".$division["uid"];
+						$query->sql($sql);
+
+						$division["shortname"] = "NB";
+					}
 					if($division["shortname"] == "INB") {
 						$sql = "UPDATE ".SITE_DB.".ff_divisions SET shortname = 'NB' WHERE uid = ".$division["uid"];
 						$query->sql($sql);
