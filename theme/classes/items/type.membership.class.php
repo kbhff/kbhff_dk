@@ -282,7 +282,9 @@ class TypeMembership extends Itemtype {
 				}
 				else {
 					$_POST["custom_price"] = null;
-				}					$subscription = $SuperSubscriptionClass->addSubscription(["addSubscription"]);
+				}					
+				
+				$subscription = $SuperSubscriptionClass->addSubscription(["addSubscription"]);
 				$subscription_id = $subscription["id"];
 				unset($_POST);
 	
