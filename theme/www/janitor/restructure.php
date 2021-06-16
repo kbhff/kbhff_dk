@@ -1067,7 +1067,7 @@ if(is_array($action) && count($action)) {
 
 
 		// REMOVE DEPRECATED TABLES AND COLUMNS
-		$cleanup_operation = true;
+		$cleanup_operation = false;
 
 
 
