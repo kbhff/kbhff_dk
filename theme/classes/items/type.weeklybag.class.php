@@ -137,7 +137,7 @@ class TypeWeeklybag extends Itemtype {
 		if($query->sql($sql)) {
 
 			$IC = new Items();
-			return $IC->getItem(["id" => $query->result(0, "item_id"), "extend" => true]);
+			return $IC->getItem(["id" => $query->result(0, "item_id"), "status" => 1, "extend" => true]);
 
 		}
 		
