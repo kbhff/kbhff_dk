@@ -30,8 +30,7 @@ if($action) {
 
 
 		// check if user exists
-		if(!$model->userExists(["email"=>$username, "mobile"=>$username])) {
-			
+		if(!$model->userExists(["email"=>$username, "mobile"=>$username, "member_no"=>$username])) {
 			message()->addMessage("Det indtastede brugernavn findes ikke i vores system.", ["type"=>"error"]);
 			header("Location: /login");
 			exit();
@@ -139,8 +138,12 @@ if($action) {
 		}
 
 		
-		// Perform Janitor login and redirect to /profil
-		session()->value("login_forward", "/profil");
+		// Perform Janitor login and redirect to /profil, if no other redirect location is found
+		if(!session()->value("login_forward")) {
+
+			session()->value("login_forward", "/profil");
+		}
+		
 		$login_status = $page->login();
 
 		// print_r($login_status);exit;

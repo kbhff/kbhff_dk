@@ -1,6 +1,7 @@
 <?php
 global $action;
 global $model;
+global $SC;
 
 $UC = new SuperUser();
 $IC = new Items();
@@ -11,10 +12,17 @@ $amount = "";
 // $user = $UC->getUser();
 
 $order = $model->getOrders(array("order_no" => $order_no));
-// print_r($order); 
+$member_user_id = $order["user_id"];
+
+$order_items_without_pickupdates = $SC->getOrderItems(["order_id" => $order["id"], "department_pickupdate" => "none"]);
+$order_pickupdates = $SC->getOrderPickupdates($order["id"], ["user_id" => $member_user_id]);
+
+
 
 $department = $UC->getUserDepartment(["user_id" => $order["user_id"]]);
 // print_r($department);
+
+
 
 $is_membership = false;
 $subscription_method = false;
@@ -44,15 +52,11 @@ if($order) {
 	}
 
 
-	// if($membership && $membership["order"]) {
-	// 	$is_membership = ($membership["order"] && $order["id"] == $membership["order"]["id"]) ? true : false;
-	// }
-
-
-	// if($membership && $membership["item"] && $membership["item"]["subscription_method"] && $membership["item"]["subscription_method"]["duration"]) {
-	// 	$subscription_method = $membership["item"]["subscription_method"];
-	// 	$payment_date = $membership["renewed_at"] ? date("jS", strtotime($membership["renewed_at"])) : date("jS", strtotime($membership["created_at"]));
-	// }
+	$member_user = $UC->getKbhffUser(["user_id" => $member_user_id]);
+	if($member_user) {
+		$member_name = $member_user['nickname'] ? $member_user['nickname'] : $member_user['firstname'] . " " . $member_user['lastname'];
+		$member_name_possesive = preg_match("/s$/", $member_name) ? $member_name."'" : $member_name."s";
+	}
 
 }
 
@@ -73,6 +77,11 @@ else {
 		<h1>Hovsa?</h1>
 		<p>Denne ordre (<?= $order["order_no"] ?>) er allerede betalt, så der er intet at gøre her.</p>
 	</div>
+<? elseif($order && $order["status"] == 3): ?>
+	<div>
+		<h1>Hovsa?</h1>
+		<p>Denne order (<?= $order["order_no"] ?>) er annulleret, så der er intet at gøre her.</p>
+	</div>
 <? else: ?>
 
 <div class="scene member_help_payment <?= $order ? "i:member_help_payment" : "i:scene" ?>">
@@ -83,27 +92,112 @@ else {
 
 	$transaction_id = $order["order_no"]; 
 ?>
+	<div class="c-wrapper">
+		<div class="c-box obs">
+			<h2 class="obs"><span class="highlight">OBS! </span>Handler på vegne af <span class="highlight"><a href="/medlemshjaelp/brugerprofil/<?= $member_user_id ?>"><?= $member_name ?></a></span></h2>
+		</div>
+	</div>
 
 	<h1>Betaling</h1>
 
-	<?	if(message()->hasMessages()): ?>
-	<p class="errormessage">
-	<?		$messages = message()->getMessages(array("type" => "error"));
-		foreach($messages as $message): ?>
-			<?= $message ?><br>
-	<?		endforeach;?>
-	</p>
-	<?	message()->resetMessages(); ?>
-	<?	endif; ?>
-	
-	
-	<ul class="orders">
-	<? foreach($order["items"] as $i => $item): ?>
-		<li class="unit_price"> <?= $item["quantity"]." x ".$item["name"]." a ". formatPrice(array("price" => $item["unit_price"], "currency" => $order["currency"])) ?> <span class="price"><?= formatPrice(array("price" => $item["total_price"], "currency" => $order["currency"]))?></span></li> 
-	<? endforeach; ?>
-		<li>Heraf moms <span class="price vat_price"><?= formatPrice(array("price" => $total_order_price["vat"], "currency" => $total_order_price["currency"])) ?></span></li>
-		<li class="total_price">I alt <span class="price"><?= formatPrice($total_order_price) ?> </span></li>
+	<?= $HTML->serverMessages(["type" => "error"]) ?>
+
+
+	<? if($order_items_without_pickupdates): ?>
+	<ul class="items orders">
+		<? foreach($order_items_without_pickupdates as $order_item): ?>
+		<li class="unit_price">
+
+			<span class="quantity"><?= $order_item["quantity"] ?></span>
+			<span class="x">x </span>
+			<span class="name"><?= $order_item["name"] ?> </span>
+			<span class="a">á </span>
+			<span class="unit_price"><?= formatPrice(array("price" => $order_item["unit_price"], "currency" => $order["currency"])) ?></span>
+			<span class="total_price">
+				<?= formatPrice(array(
+						"price" => $order_item["total_price"], 
+						"vat" => $order_item["total_vat"], 
+						"currency" => $order["currency"], 
+						"country" => $order["country"]
+					), 
+					array("vat" => false)
+				) ?>
+			</span>
+		</li> 
+		<? endforeach; ?>
 	</ul>
+	
+	<? endif; ?>
+
+	<? if($order_pickupdates): ?>
+	<ul class="pickupdates">
+
+			<? foreach($order_pickupdates as $pickupdate): 
+
+				$pickupdate_order_items = $model->getPickupdateOrderItems($pickupdate["id"], ["order_id" => $order["id"]]);
+
+			?>
+			<? if($pickupdate_order_items): ?>
+			
+		<li class="pickupdate">
+			<h4 class="pickupdate"><?= date("d.m.Y", strtotime($pickupdate["pickupdate"])) ?> – Afhentning <span class="name"><?= $department ? $department["name"] : "ukendt afdeling" ?></span></h4>
+
+			<ul class="items orders">
+				<? foreach($pickupdate_order_items as $order_item):
+				$item = $IC->getItem(array("id" => $order_item["item_id"], "extend" => array("subscription_method" => true))); 
+				$price = $model->getPrice($order_item["item_id"], array("user_id" => $member_user_id, "quantity" => $order_item["quantity"], "currency" => $order["currency"], "country" => $order["country"]));
+				$order_item_id = $order_item["id"];
+				?>
+
+				<li class="item_id:<?= $order_item["item_id"] ?>">
+
+					 <? /* = $order_item["quantity"]." x ".$order_item["name"]." a ". formatPrice(array("price" => $order_item["unit_price"], "currency" => $order["currency"])) ?> <span class="price"><?= formatPrice(array("price" => $order_item["total_price"], "currency" => $order["currency"]))?></span> */ ?>
+
+		 			<span class="quantity"><?= $order_item["quantity"] ?></span>
+		 			<span class="x">x </span>
+		 			<span class="name"><?= $order_item["name"] ?> </span>
+		 			<span class="a">á </span>
+		 			<span class="unit_price"><?= formatPrice(array("price" => $order_item["unit_price"], "currency" => $order["currency"])) ?></span>
+		 			<span class="total_price">
+		 				<?= formatPrice(array(
+		 						"price" => $order_item["total_price"], 
+		 						"vat" => $order_item["total_vat"], 
+		 						"currency" => $order["currency"], 
+		 						"country" => $order["country"]
+		 					), 
+		 					array("vat" => false)
+		 				) ?>
+		 			</span>
+
+				 </li>
+
+
+
+				<? endforeach; ?>
+			</ul>
+		</li>
+
+			<? endif; ?>
+			<? endforeach; ?>
+	</ul>
+	<? endif; ?>
+
+	<div class="total">
+		<p>
+			<span class="name">Heraf moms</span>
+			<span class="total_price">
+				<?= formatPrice(array("price" => $total_order_price["vat"], "currency" => $total_order_price["currency"])) ?>
+			</span>
+		</p>
+		<h3>
+			<span class="name">I alt</span>
+			<span class="total_price">
+				<?= formatPrice($total_order_price) ?>
+			</span>
+		</h3>
+			
+	</div>
+
 	<div class="payment_options">
 		<?= $model->formStart("registerPayment/".$order_no, ["class" => "mobilepay"]) ?>
 			<fieldset class="mobilepay">
@@ -119,7 +213,7 @@ else {
 					<h5>MobilePay-nummer</h5>
 					<p>(<?=$department["name"]?>)</p>
 					<p class="payment_info"><span class="highlight"><?=$department["mobilepay_id"]?></span></p>
-					<h5>Medlemsoprettelseskode</h5>
+					<h5>Betalingsreference</h5>
 					<p>(Skrives i kommentarfeltet)</p>
 					<p class="payment_info"><span class="highlight"><?=$transaction_id?></span></p>
 				</div>
@@ -147,9 +241,9 @@ else {
 			<ul class="actions">
 				<?= $model->submit("Betal ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
 			</ul>
-		<?= $model->formEnd() ?>
-	
-		<?= $model->formStart("registerPayment/".$order_no, ["class" => "cash"]) ?>
+			<?= $model->formEnd() ?>
+			
+			<?= $model->formStart("registerPayment/".$order_no, ["class" => "cash"]) ?>
 			<fieldset class="cash">
 				<?= $model->input("payment_amount", array("type" => "hidden", "value" => $total_order_price["price"])); ?>
 				<?= $model->input("payment_method_id", array("type" => "hidden", "value" => $cash_payment_method_id)); ?>
@@ -161,11 +255,17 @@ else {
 				</div>
 				<?= $model->input("confirm_cash_payment", array("type" => "checkbox", "label" => "Personen har betalt ".formatPrice($total_order_price)." kontant.", "required" => true)); ?>
 			</fieldset>
-	
-		<ul class="actions">
-			<?= $model->submit("Godkend betaling af ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
-		</ul>
+			
+			<ul class="actions">
+				<?= $model->submit("Godkend betaling af ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
+			</ul>
 		<?= $model->formEnd() ?>
+
+		<? if(!$model->hasSignupfeeInOrder($order["id"])): ?>
+		<ul class="actions">
+			<li class="cancel"><a href="/medlemshjaelp/butik/cancelOrder/<?= $order_no ?>/<?= $member_user_id ?>" class="button">Annullér ordre</a></li>
+		</ul>
+		<? endif; ?>
 	</div>
 
 	<? else: ?>

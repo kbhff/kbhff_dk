@@ -12,6 +12,8 @@ Util.Modules["user_profile"] = new function() {
 //			// u.bug("scene.ready", this);
 			this.initMembershipBox();
 			this.initUserinfoBox();
+			this.initRenewalBox();
+			this.initOrderList();
 		}
 		
 		// Medlemskab box
@@ -21,10 +23,14 @@ Util.Modules["user_profile"] = new function() {
 			var button_membership = u.qs(".membership li.change-membership", this);
 			var button_cancel = u.qs(".membership li.cancel-membership", this);
 			var button_department = u.qs(".membership li.change-department", this);
+
+			var section_user_group = u.qs(".section.user_group");
+
 			// Create references to scene
 			button_membership.scene = this;
 			button_cancel.scene = this; 
 			button_department.scene = this;
+
 			
 			// Query elements for syncing
 			var right_panel = u.qs(".c-one-third", this);
@@ -41,6 +47,7 @@ Util.Modules["user_profile"] = new function() {
 					// Query form to inject and create a reference to scene on it
 					var form_department = u.qs(".form_department", response);
 					form_department.scene = this.scene;
+					var warning = u.qs("p.warning", response);
 
 					// Query elements to use
 					var form_fieldset = u.qs("fieldset", form_department);
@@ -61,6 +68,10 @@ Util.Modules["user_profile"] = new function() {
 				
 					// Move select into leftover field spot
 					u.ae(div_fields, form_fieldset);
+
+					if(warning) {
+						u.ae(div_fields, warning);
+					}
 				
 					// Update button
 					form_department.submitted = function() {
@@ -145,7 +156,7 @@ Util.Modules["user_profile"] = new function() {
 
 			}
 			
-			// "Ret Medlemsskab" button
+			// "Ret Medlemskab" button
 			u.clickableElement(button_membership); // Add click event to button and ignore href redirect.
 			button_membership.clicked = function() {
 
@@ -193,6 +204,8 @@ Util.Modules["user_profile"] = new function() {
 							
 							box_membership.replaceChild(div_membership, form_membership);
 							
+							var new_section_user_group = u.qs(".section.user_group", response);
+							section_user_group.parentNode.replaceChild(new_section_user_group, section_user_group);
 							
 							if (message = u.qs("div.messages", response)) {
 							
@@ -479,6 +492,255 @@ Util.Modules["user_profile"] = new function() {
 
 			}
 		
+		}
+
+		// Renewal box
+		scene.initRenewalBox = function() {
+
+			var box_renewal = u.qs(".renewal > .c-box", this);
+			var button_renewal = u.qs(".renewal li", this);
+
+			if(button_renewal) {
+				button_renewal.scene = this;
+
+				u.clickableElement(button_renewal);
+				button_renewal.clicked = function() {
+
+					this.response = function(response) {
+						// Update request state
+						this.is_requesting = false;
+						u.rc(this, "loading");
+
+						// Query form and create reference to scene
+						var form_renewal = u.qs(".form_renewal", response);
+						form_renewal.scene = this.scene;
+
+						// Query current static content and replace with form
+						var div_fields = u.qs("div.fields", box_renewal);
+						box_renewal.replaceChild(form_renewal, div_fields);
+
+						// Init form
+						u.f.init(form_renewal);
+
+						// Update button
+						form_renewal.submitted = function() {
+							var data = this.getData();
+							this.response = function(response, request_id) {
+								// Update request state
+								this.is_requesting = false;
+								u.rc(this, "loading");
+							
+								// Prevent multiple errors
+								if (message = u.qs("p.error", this)) {
+									message.parentNode.removeChild(message);
+								}
+
+								// in case of error, the message needs to show in the form_renewal. 
+								if (message = u.qs("div.messages > p.error", response)) {
+							
+									// State before animation
+									u.ass(message, {
+										"padding-bottom":"5px",
+										"transform":"translate3d(0px, -10px, 0px)",
+										"opacity":"0"
+									});
+									// Insert message
+									u.ie(this, message);	
+							
+									// Animate
+									u.a.transition(message, "all .5s ease");
+									u.ass(message, {
+										"transform":"translate3d(0px, 0, 0px)",
+										"opacity":"1"
+									});
+								}
+
+								// Query new static content and replace with current form
+								var div_renewal = u.qs(".renewal .fields", response);
+								if(div_renewal) {
+
+									box_renewal.replaceChild(div_renewal, this);
+
+									// Message needs to show when form_renewal is replaced with box_renewal.
+									if (message = u.qs("p.message", response)) {
+								
+										// Insert
+										var fields = u.qs("div.fields", box_renewal);
+										u.ie(fields, message);
+
+										// If previous message didn't finnish deleting
+										if (message.t_done) {
+											u.t.resetTimer(t_done);
+										}
+
+										message.done = function() {
+											u.ass(this, {
+												"transition":"all .5s ease",
+												"transform":"translate3d(0px, -10px, 0px)",
+												"opacity":"0"
+											});
+
+											u.t.setTimer(this, function() {
+												this.parentNode.removeChild(this);
+											}, 500);
+										}
+
+										message.transitioned = function() {
+											this.t_done = u.t.setTimer(this, this.done, 2400);
+										}
+
+										// State before animation
+										u.ass(message, {
+											"color":"#3e8e17",
+											"padding-bottom":"5px",
+											"transform":"translate3d(0px, -10px, 0px)",
+											"opacity":"0"
+										});
+
+										// Animate
+										u.a.transition(message, "all 1s ease");
+										u.ass(message, {
+											"transform":"translate3d(0px, 0, 0px)",
+											"opacity":"1"
+										});
+									}
+							
+							
+									// Initialize the new passwordbox
+									this.scene.initRenewalBox();
+
+								}
+								else {
+
+									if(this[request_id].request_url != this[request_id].response_url) {
+										location.href = this[request_id].response_url;
+									}
+
+								}
+
+							}
+
+							// Prevent making the request more than once
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.action, {"data":data, "method":"POST"});
+							}
+
+						}
+
+						// Cancel button
+						form_renewal.actions["cancel"].clicked = function() {
+
+							this.response = function(response) {
+								// Update request state
+								this.is_requesting = false;
+								u.rc(this, "loading");
+
+								// Get div containing static content
+								var div_userinfo = u.qs(".renewal .fields", response);
+
+								// Replace form with static content
+								box_renewal.replaceChild(div_userinfo, this._form);
+
+								// Initialize the new passwordbox
+								this._form.scene.initRenewalBox();
+							}
+
+							// Prevent making the request more than once
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.url);
+							}
+
+						}
+
+					}
+
+					// Prevent making the request more than once
+					if (!this.is_requesting) {
+						this.is_requesting = true;
+						u.ac(this, "loading");
+						u.request(this, this.url);
+					}
+
+				}
+
+			}
+
+		}
+
+
+		// Order list
+		scene.initOrderList = function() {
+
+			var orders = u.qsa("li.order_item", this);
+			var i, order;
+			for(i = 0; i < orders.length; i++) {
+				
+				order = orders[i];
+
+				order.order_item_id = u.cv(order, "order_item_id");
+				order.span_pickupdate = u.qs("span.pickupdate", order);
+				order.span_date = u.qs("span.date", order.span_pickupdate);
+				order.bn_edit = u.qs("li.change a.button:not(.disabled)", order);
+
+				if(order.bn_edit) {
+
+					order.bn_edit.order = order;
+
+					u.ce(order.bn_edit);
+					order.bn_edit.clicked = function() {
+
+						if(u.hc(this.order, "edit")) {
+
+							this.form.submit();
+
+						}
+						else {
+							u.ac(this.order, "edit");
+
+							this.response = function(response) {
+
+								this.form = u.qs("form", response);
+								if(this.form) {
+
+									this.form.order = this.order;
+
+									this.innerHTML = "Gem";
+									u.ac(this, "primary");
+									u.ae(this.order.span_pickupdate, this.form);
+									u.f.init(this.form);
+
+									this.form.submitted = function() {
+
+										this.response = function(response) {
+											this.order.bn_edit.form.parentNode.removeChild(this.order.bn_edit.form);
+											delete this.order.bn_edit.form;
+
+											this.order.span_date.innerHTML = u.qs("span.date", u.ge("order_item_id:"+this.order.order_item_id, response)).innerHTML;
+
+											u.rc(this.order, "edit");
+											this.order.bn_edit.innerHTML = "Ret";
+											u.rc(this.order.bn_edit, "primary");
+										}
+
+										u.request(this, this.action, {"method":"post", "data":this.getData()});
+
+									}
+
+								}
+
+							}
+
+							u.request(this, this.url);
+						}
+					}
+				}
+
+			}
+
 		}
 
 		// scene is ready

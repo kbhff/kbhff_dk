@@ -134,12 +134,12 @@ class Department extends Model {
 			"label" => "Longitude"
 		));
 
-		// description
+		// essential information
 		$this->addToModel("description", array(
-			"type" => "html",
-			"label" => "Short description",
-			"hint_message" => "Write a short description of the department – this will be shown on the department list.",
-			"error_message" => "A short description without any words? How weird."
+			"type" => "text",
+			"label" => "Essential information",
+			"hint_message" => "Write any essential information about the department (e.g. special conditions or other deviations) – this will be shown on the department list.",
+			"error_message" => "Invalid entry.",
 		));
 
 		// HTML
@@ -204,20 +204,25 @@ class Department extends Model {
 					$department_id = $query->lastInsertId();
 
 					// add all products to the new department
-					$products = $IC->getItems(["where" => "itemtype REGEXP '^product'"]);
+					$products = $IC->getItems(["where" => "itemtype REGEXP '^product.*'"]);
 					foreach($products as $product) {
 						
 						$this->addProduct($department_id, $product["id"]);
 					}
 
 					// add all pickup dates to the new department
-					// only opening dates that after current date? 
 					include_once("classes/shop/pickupdate.class.php");
 					$PC = new Pickupdate();
 					$pickupdates = $PC->getPickupdates();
 					foreach($pickupdates as $pickupdate) {
+						
+						
+						// pickup date is on or after current date 
+						if($pickupdate["pickupdate"] >= date("Y-m-d")) {
 
-						$this->addPickupdate($department_id, $pickupdate["id"]);
+							$this->addPickupdate(["addPickupdate", $department_id, $pickupdate["id"]]);
+						}
+
 					}
 
 
@@ -247,20 +252,29 @@ class Department extends Model {
 
 		// Define default values
 		$order = "name ASC";
+		$accepts_signup = false;
 
 
 		// Search through $_options to find recognized parameters
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
-					case "order"        : $order             = $_value; break;
+					case "order"                   : $order                        = $_value; break;
+					case "accepts_signup"          : $accepts_signup               = $_value; break;
 				}
 			}
 		}
 
 		// Query database for all departments.  
 		$query = new Query();
-		$sql = "SELECT * FROM ".$this->db . " ORDER BY $order";		
+		$sql = "SELECT * FROM ".$this->db;
+
+		if($accepts_signup === 0 || $accepts_signup === 1) {
+			$sql .= " WHERE accepts_signup = $accepts_signup";
+		}
+
+		$sql .= " ORDER BY $order";
+
 		if($query->sql($sql)) {
 			return $query->results();
 		}
@@ -307,24 +321,6 @@ class Department extends Model {
 			if($query->sql($sql)) {
 				return $query->result(0);
 			}
-		}
-
-		return false;
-	}
-
-
-	/**
-	 * Get list of departments that accept signups from database.
-	 *
-	 * @return array|false Department data object (via callback to Query->results()
-	 */
-	function getDepartmentsAcceptSignups() {
-
-		// Query database for all departments.
-		$query = new Query();
-		$sql = "SELECT * FROM ".$this->db." WHERE accepts_signup = 1";
-		if($query->sql($sql)) {
-			return $query->results();
 		}
 
 		return false;
@@ -423,14 +419,131 @@ class Department extends Model {
 
 		$query = new Query();
 		$query->checkDbExistence($this->db_products);
-
+		
 		$sql = "INSERT INTO ".$this->db_products." SET department_id = $department_id, product_id = $product_id";
 		if($query->sql($sql)) {
-
+			
 			return true;
+		}
+		
+		return false;
+	}
+	
+	function getDepartmentProducts($department_id) {
+		
+		$query = new Query();
+		$query->checkDbExistence($this->db_products);
+		
+		$IC = new Items();
+
+		$sql = "SELECT product_id FROM ".$this->db_products." WHERE department_id = $department_id ORDER BY product_id ASC";
+		if($query->sql($sql)) {
+
+			$results = $query->results("product_id");
+			$products = [];
+
+			foreach ($results as $product_id) {
+				
+				$product = $IC->getItem(["id" => $product_id, "extend" => ["all" => true]]);
+				if($product["status"] == 1) {
+					$products[] = $product;
+				}
+			}
+
+			return $products;
 		}
 
 		return false;
+
+	}
+
+	function getProductDepartments($item_id) {
+
+		$query = new Query();
+		$query->checkDbExistence($this->db_products);
+		
+		$IC = new Items();
+
+		$sql = "SELECT department_id FROM ".$this->db_products." WHERE product_id = $item_id";
+		if($query->sql($sql)) {
+
+			$results = $query->results("department_id");
+			$departments = [];
+
+			foreach ($results as $department_id) {
+				
+				$department = $this->getDepartment(["id" => $department_id]);
+				if($department) {
+					$departments[] = $department;
+				}
+
+			}
+			return $departments;
+		}
+
+		return false;
+	}
+
+	function getDepartmentPickupdates($department_id, $_options = false) {
+		
+		$query = new Query();
+		$query->checkDbExistence($this->db_pickupdates);
+
+		$pickupdate_id = false;
+		$after = false;
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+					case "pickupdate_id"     : $pickupdate_id          = $_value; break;
+					case "after"             : $after                  = $_value; break;
+				}
+			}
+		}
+
+		$sql = "SELECT pickupdates.* FROM ".$this->db_pickupdates." AS department_pickupdates, ".SITE_DB.".project_pickupdates AS pickupdates WHERE department_pickupdates.pickupdate_id = pickupdates.id AND department_pickupdates.department_id = $department_id";
+		
+		if($pickupdate_id) {
+
+			$sql .= " AND pickupdates.id = $pickupdate_id";
+		}
+
+		if($after) {
+			$sql .= " AND pickupdates.pickupdate >= '$after'";
+		}
+		
+		if($query->sql($sql)) {
+
+			return $query->results();
+		}
+
+		return false;
+
+	}
+
+	function getPickupdateDepartments($pickupdate_id) {
+		
+		$query = new Query();
+		$query->checkDbExistence($this->db_pickupdates);
+		
+		include_once("classes/shop/pickupdate.class.php");
+		$PC = new Pickupdate();
+
+		$sql = "SELECT department_id FROM ".$this->db_pickupdates." WHERE pickupdate_id = $pickupdate_id";
+		if($query->sql($sql)) {
+
+			$results = $query->results("department_id");
+			$pickupdate_departments = [];
+
+			foreach ($results as $department_id) {
+				
+				$pickupdate_departments[] = $this->getDepartment(["id" => $department_id]);
+			}
+
+			return $pickupdate_departments;
+		}
+
+		return false;
+
 	}
 
 	/**
@@ -461,15 +574,21 @@ class Department extends Model {
 	 * @param int $pickupdate_id
 	 * @return boolean
 	 */
-	function addPickupdate($department_id, $pickupdate_id) {
+	function addPickupdate($action) {
 
-		$query = new Query();
-		$query->checkDbExistence($this->db_pickupdates);
+		if(count($action) == 3) {
 
-		$sql = "INSERT INTO ".$this->db_pickupdates." SET department_id = $department_id, pickupdate_id = $pickupdate_id";
-		if($query->sql($sql)) {
+			$department_id = $action[1];
+			$pickupdate_id = $action[2];
 
-			return true;
+			$query = new Query();
+			$query->checkDbExistence($this->db_pickupdates);
+	
+			$sql = "INSERT INTO ".$this->db_pickupdates." SET department_id = $department_id, pickupdate_id = $pickupdate_id";
+			if($query->sql($sql)) {
+	
+				return true;
+			}
 		}
 
 		return false;
@@ -482,20 +601,97 @@ class Department extends Model {
 	 * @param int $pickupdate_id
 	 * @return boolean
 	 */
-	function removePickupdate($department_id, $pickupdate_id) {
-		
-		$query = new Query();
+	function removePickupdate($action) {
 
-		$sql = "DELETE FROM ".$this->db_pickupdates." WHERE department_id = $department_id AND pickupdate_id = $pickupdate_id";
+		if(count($action) == 3) {
 
-		if($query->sql($sql)) {
+			$department_id = $action[1];
+			$pickupdate_id = $action[2];
 
-			return true;
+			$query = new Query();
+
+			$SC = new Shop();
+			$department_pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate_id, ["department_id" => $department_id]);
+
+			$sql = "DELETE FROM ".$this->db_pickupdates." WHERE department_id = $department_id AND pickupdate_id = $pickupdate_id";
+	
+			if($query->sql($sql)) {
+
+				if($department_pickupdate_order_items) {
+
+					include_once("classes/shop/pickupdate.class.php");
+					$PC = new Pickupdate();
+					$pickupdate = $PC->getPickupdate(["id" => $pickupdate_id]);
+					$department = $this->getDepartment(["id" => $department_id]);
+
+					$order_item_links = [];
+					foreach ($department_pickupdate_order_items as $order_item) {
+						
+						$order_item_links[] = SITE_URL."/janitor/order-item/edit/".$order_item["id"];
+					}
+
+					// send notification email to admin
+					mailer()->send(array(
+						"recipients" => ADMIN_EMAIL,
+						"subject" => SITE_URL . " - ACTION NEEDED: Order items have been orphaned",
+						"message" => "The ".$department['name']." department has been closed on the pickupdate ".$pickupdate['pickupdate'].". This has caused ".count($department_pickupdate_order_items)." order items to lose their time and place of pickup. \n\nHere are links to each of the affected order items:\n\n".implode("\n", $order_item_links). ". \n\nFollow the links to assign a new department/pickupdate to each order item.",
+						"tracking" => false
+						// "template" => "system"
+					));
+
+				}
+
+				global $page;
+				$page->addLog("Department->removePickupdate: user_id:".session()->value("user_id").", pickupdate_id:$pickupdate_id, orphaned order_items: ".$department_pickupdate_order_items ? count($department_pickupdate_order_items) : "0");
+				return true;
+			}
 		}
+		
 
 		return false;
 
 	}
+
+	function updatePickupdateDepartments($action) {
+
+		
+		// Check that the number of REST parameters is as expected.
+		if(count($action) == 2) {
+
+			// Get content of $_POST array which have been "quality-assured" by Janitor 
+			$this->getPostedEntities();
+	
+			$pickupdate_id = $action[1];
+
+			$pickupdate_departments = $this->getPickupdateDepartments($pickupdate_id);
+			
+			$departments = $this->getDepartments();
+			foreach ($departments as $department) {
+
+				$department_open_current = arrayKeyValue($pickupdate_departments, "id", $department["id"]);	
+				$department_open_new = getPost("pickupdate_department_".$department["id"], "value");
+				
+				// department was changed to closed
+				if(($department_open_current !== false && !$department_open_new)) {
+
+					$this->removePickupdate(["removePickupdate", $department["id"], $pickupdate_id]);
+				}
+				// department was changed to open
+				else if($department_open_current === false && $department_open_new) {
+
+					$this->addPickupdate(["addPickupdate", $department["id"], $pickupdate_id]);
+				}
+
+			}
+
+			return true;
+
+		}
+
+		// something went wrong
+		return false;
+	}
+
 }
 
 ?>

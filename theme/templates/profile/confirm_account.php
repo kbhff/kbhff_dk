@@ -17,15 +17,7 @@ $this->pageTitle("Bekræft din konto");
 	<?= $model->formStart("confirmAccount", ["class" => "confirm_account"]) ?>
 		<?= $model->input("username", ["type" => "hidden", "value" => $username])?>
 
-<?	if(message()->hasMessages(array("type" => "error"))): ?>
-		<p class="errormessage">
-<?		$messages = message()->getMessages(array("type" => "error"));
-		message()->resetMessages();
-		foreach($messages as $message): ?>
-			<?= $message ?><br>
-<?		endforeach;?>
-		</p>
-<?	endif; ?>
+		<?= $HTML->serverMessages(["type" => "error"]) ?>
 
 		<fieldset>
 			<?= $model->input("verification_code", array(

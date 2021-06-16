@@ -2,7 +2,7 @@
 global $action;
 global $model;
 
-$this->pageTitle("Payment");
+$this->pageTitle("Betaling");
 
 $UC = new User();
 $MC = new Member();
@@ -34,14 +34,14 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 <div class="scene shopPayment i:payment">
 	<h1>Betaling</h1>
 
-<? if($order && $remaining_order_price["price"]): ?>
+<? if($order && $remaining_order_price && $remaining_order_price["price"]): ?>
 
 
 	<?= $HTML->serverMessages() ?>
 
 
 	<dl class="amount">
-		<dt class="amount">Skyldigt beløb</dt>
+		<dt class="amount">Udestående:</dt>
 		<dd class="amount"><?= formatPrice($remaining_order_price) ?></dd>
 	</dl>
 
@@ -56,6 +56,15 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 				<li><?= $order_item["quantity"] ?> x <?= $order_item["name"] ?></li>
 			<? endforeach; ?>
 			</ul>
+
+			<ul class="actions">
+				<?= $HTML->oneButtonForm("Annuller", "/butik/cancelOrder/".$order["id"], [
+					"confirm-value" => "Sikker?",
+					"wait-value" => "Vent ...",
+					"success-location" => "/profil"
+				]) ?>
+			</ul>
+
 		</li>
 	</ul>
 
@@ -77,7 +86,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 					<ul class="actions">
 						<?= $HTML->oneButtonForm(
 						"Betal ordre med kort, der ender på " . $card["last4"], 
-						"/shop/selectUserPaymentMethodForOrder",
+						"/butik/selectUserPaymentMethodForOrder",
 						array(
 							"inputs" => array(
 								"order_id" => $order["id"], 
@@ -93,7 +102,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 							"wrapper" => "li.continue.".$user_payment_method["classname"],
 						)) ?>
 					</ul>
-					<p><?= $user_payment_method["description"] ?></p>
+					<!-- <p><?= $user_payment_method["description"] ?></p> -->
 				</li>
 					<? endforeach; ?>
 
@@ -102,7 +111,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 					<ul class="actions">
 						<?= $HTML->oneButtonForm(
 						"Betal ordre med " . $user_payment_method["name"], 
-						"/shop/selectUserPaymentMethodForOrder",
+						"/butik/selectUserPaymentMethodForOrder",
 						array(
 							"inputs" => array(
 								"order_id" => $order["id"], 
@@ -117,7 +126,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 							"wrapper" => "li.continue.".$user_payment_method["classname"],
 						)) ?>
 					</ul>
-					<p><?= $user_payment_method["description"] ?></p>
+					<!-- <p><?= $user_payment_method["description"] ?></p> -->
 				</li>
 				<? endif; ?>
 
@@ -164,7 +173,7 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 	</div>
 
 <? // No payments
-elseif($order && $remaining_order_price["price"] === 0): ?>
+elseif($order && $remaining_order_price && $remaining_order_price["price"] === 0): ?>
 
 	<h2>Storartede nyheder</h2>
 	<p>Du har ingen udeståender.</p>
@@ -183,8 +192,8 @@ else:
 	$username = stringOr(getPost("username"));
 	?>
 
-	<h2>Leder du efter betalingssiden?</h2>
-	<p>Du skal først logge ind på din konto.</p>
+	<h2>Log ind</h2>
+	<p>For at lave en betaling skal du først logge ind på din konto.</p>
 
 
 	<?= $model->formStart("?login=true", array("class" => "login labelstyle:inject")) ?>

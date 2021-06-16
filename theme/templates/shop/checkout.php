@@ -42,23 +42,29 @@ if($user_id != 1) {
 
 
 	$user = $UC->getUser();
-
+	$department = $UC->getUserDepartment();
+	$unpaid_membership = $UC->hasUnpaidMembership();
 
 	// Only get payment methods if cart has items
 	if($cart["items"]) {
+		
+
 
 		// Get the total cart price
 		$total_cart_price = $model->getTotalCartPrice($cart["id"]);
-
+		
 		if($total_cart_price && $total_cart_price["price"] > 0) {
-
+			
 			// Get payment methods
 			$payment_methods = $this->paymentMethods();
-
+			
 			// Get payment methods
 			$user_payment_methods = $UC->getPaymentMethods(["extend" => true]);
-
+			
 		}
+		
+		$cart_pickupdates = $model->getCartPickupdates();
+		$cart_items_without_pickupdate = $model->getCartItemsWithoutPickupdate();
 
 	}
 
@@ -101,103 +107,203 @@ else {
 	<div class="login">
 		<h2>Log ind</h2>
 		<p>Log ind nu, hvis du allerede er medlem.</p>
-		<?= $UC->formStart("/butik/betaling?login=true", array("class" => "login labelstyle:inject")) ?>
-			<?= $UC->input("login_forward", ["type" => "hidden", "value" => "/butik/betaling"]); ?>
+		<?= $UC->formStart("/butik/betal?login=true", array("class" => "login labelstyle:inject")) ?>
+			<?= $UC->input("login_forward", ["type" => "hidden", "value" => "/butik/betal"]); ?>
 			<fieldset>
 				<?= $UC->input("username", array("type" => "string", "label" => "Email or mobile number", "required" => true, "value" => $username, "pattern" => "[\w\.\-_]+@[\w\-\.]+\.\w{2,10}|([\+0-9\-\.\s\(\)]){5,18}", "hint_message" => "You can log in using either your email or mobile number.", "error_message" => "You entered an invalid email or mobile number.")); ?>
 				<?= $UC->input("password", array("type" => "password", "label" => "Password", "required" => true, "hint_message" => "Type your password", "error_message" => "Your password should be between 8-20 characters.")); ?>
 			</fieldset>
 
 			<ul class="actions">
-				<?= $UC->submit("Log in", array("class" => "primary", "wrapper" => "li.login")) ?>
-				<li class="forgot">Har du <a href="/login/forgot" target="_blank">glemt dit password</a>?</li>
+				<?= $UC->submit("Log ind", array("class" => "primary", "wrapper" => "li.login")) ?>
 			</ul>
 		<?= $UC->formEnd() ?>
+		<p class="forgot">Har du <a href="/login/glemt" target="_blank">glemt din adgangskode</a>?</p>
+		<p class="signup">Endnu ikke medlem? <a href="/bliv-medlem">Meld dig ind nu</a>.</p>
 	</div>
 
-	<div class="signup">
-		<p>Eller <a href="/bliv-medlem">bliv medlem</a> nu.</p>
+	<? elseif($unpaid_membership): 
+		$unpaid_membership_type_dk = $unpaid_membership["type"] == "signupfee" ? "indmeldelsesgebyr" : "kontingent";
+	?>
+	<div class="unpaid_membership">
+		<h2>Før du går videre...</h2>
+		<p>Du mangler at betale <?= $unpaid_membership_type_dk ?>. Det skal betales før du kan lave en grøntsagsbestilling.</p>
+		<ul class="actions">
+			<li class="pay"><a href="/butik/betaling/<?= $unpaid_membership["order_no"] ?>" class="button">Betal <?= $unpaid_membership_type_dk ?> nu</a></li>
+		</ul>
 	</div>
-
 
 	<?
 	// user is already logged in, show checkout overview
 	else: ?>
 
-	<div class="contact">
-		<h2>Dine brugeroplysninger <a href="/butik/profil">(Redigér)</a></h2>
-		<dl class="list">
-			<dt>Fulde navn</dt>
-			<dd><?= $user["firstname"] ?> <?= $user["lastname"] ?></dd>
-			<dt>Email</dt>
-			<dd><?= $user["email"] ?></dd>
-			<dt>Mobiltelefon</dt>
-			<dd><?= $user["mobile"] ?></dd>
-		</dl>
-	</div>
-
 	<div class="all_items">
-		<h2>Din kurv <a href="/butik/kurv">(Redigér)</a></h2>
+		<h2>Din kurv</h2>
 		<? if($cart["items"]): ?>
+		
+		<? if($cart_items_without_pickupdate): ?>
 		<ul class="items">
-			<? foreach($cart["items"] as $cart_item):
+			<? foreach($cart_items_without_pickupdate as $cart_item):
 				$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true))); 
 				$price = $model->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
+				$cart_item_id = $cart_item["id"];
 			?>
 			<li class="item id:<?= $item["id"] ?>">
-				<h3>
-					<span class="quantity"><?= $cart_item["quantity"] ?></span>
-					<span class="x">x </span>
-					<span class="name"><?= $item["name"] ?> </span>
-					<span class="a">á </span>
-					<span class="unit_price"><?= formatPrice($price) ?></span>
-					<span class="total_price">
-						<?= formatPrice(array(
-								"price" => $price["price"]*$cart_item["quantity"], 
-								"vat" => $price["vat"]*$cart_item["quantity"], 
-								"currency" => $cart["currency"], 
-								"country" => $cart["country"]
-							), 
-							array("vat" => true)
-						) ?>
-					</span>
-				</h3>
-				<? if($item["subscription_method"] && $price["price"]): ?>
-				<p class="subscription_method">
-					Tilbagevendende betaling hver <?= strtolower($item["subscription_method"]["name"]) ?>.
-				</p>
-				<? endif; ?>
+				<span class="quantity"><?= $cart_item["quantity"] ?></span>
+				<span class="x">x </span>
+				<span class="name"><?= $item["name"] ?> </span>
+				<span class="a">á </span>
+				<span class="unit_price"><?= formatPrice($price) ?></span>
+				<span class="total_price">
+					<?= formatPrice(array(
+							"price" => $price["price"]*$cart_item["quantity"], 
+							"vat" => $price["vat"]*$cart_item["quantity"], 
+							"currency" => $cart["currency"], 
+							"country" => $cart["country"]
+						), 
+						array("vat" => false)
+					) ?>
+				</span>
 
-				<? if($item["itemtype"] == "membership"): ?>
+				<? if($item["itemtype"] == "signupfee"): ?>
 				<p class="membership">
 					<? if($price["price"]): ?>
-					Dette køb omfatter et medlemskab.
+					Dette køb indeholder et medlemskab.
 					<? else: ?>
 					Bekræft ordren for at tilmelde dig nyhedsbrevet.
 					<? endif; ?>
 				</p>
 				<? endif; ?>
+
+				<? if(isset($item["associated_membership_id"])):
+					 $membership = $IC->getItem(["id" => $item["associated_membership_id"], "extend" => ["subscription_method" => true]]); 
+				?>
+				<p class="subscription_method">
+					<? if($membership["subscription_method"]["duration"] == "annually"): ?>
+					Tilbagevendende betaling hvert år.
+					<? else: ?>
+					Tilbagevendende betaling hver <?= strtolower($membership["subscription_method"]["name"]) ?>.
+					<? endif; ?>
+				</p>
+
+				<? elseif($item["subscription_method"]): ?>
+				<p class="subscription_method">
+					<? if($item["subscription_method"]["duration"] == "annually"): ?>
+					Tilbagevendende betaling hvert år.
+					<? else: ?>
+					Tilbagevendende betaling hver <?= strtolower($item["subscription_method"]["name"]) ?>.
+					<? endif; ?>
+				</p>
+				<? endif; ?>
+
+				<? if($item["itemtype"] != "signupfee"): ?>
+				
+				<ul class="actions">
+					<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
+						"confirm-value" => "Sikker?",
+						"wait-value" => "Vent ...",
+						"wrapper" => "li.delete",
+						"success-location" => count($cart["items"]) > 1 ? $this->url : "/butik"
+						]) ?>
+				</ul>
+				<? endif; ?>
+				
 			</li>
 			<? endforeach; ?>
-
-			<li class="total">
-				<h3>
-					<span class="name">I alt</span>
-					<span class="total_price">
-						<?= formatPrice($total_cart_price, array("vat" => true)) ?>
-					</span>
-				</h3>
-			</li>
 		</ul>
+		<? endif; ?>
+		
+		<? if($cart_pickupdates): ?>
+			<ul class="pickupdates">
+					
+			<? foreach($cart_pickupdates as $pickupdate): 
+
+				$pickupdate_cart_items = $model->getCartPickupdateItems($pickupdate["id"]);
+
+				if($pickupdate_cart_items): ?>
+				
+			<li class="pickupdate">
+				<h4 class="pickupdate"><?= date("d.m.Y", strtotime($pickupdate["pickupdate"])) ?> – Afhentning <span class="name"><?= $department ? $department["name"] : "ukendt afdeling" ?></span></h4>
+
+				<ul class="items">
+					<? foreach($pickupdate_cart_items as $cart_item):
+					$item = $IC->getItem(array("id" => $cart_item["item_id"], "extend" => array("subscription_method" => true))); 
+					$price = $model->getPrice($cart_item["item_id"], array("quantity" => $cart_item["quantity"], "currency" => $cart["currency"], "country" => $cart["country"]));
+					$cart_item_id = $cart_item["id"];
+					?>
+
+					<li class="item id:<?= $item["id"] ?>">
+						<span class="quantity"><?= $cart_item["quantity"] ?></span>
+						<span class="x">x </span>
+						<span class="name"><?= $item["name"] ?> </span>
+						<span class="a">á </span>
+						<span class="unit_price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span>
+						<span class="total_price">
+							<? // generate total price and vat to item 
+							print formatPrice(array(
+									"price" => $price["price"]*$cart_item["quantity"],
+									"vat" => $price["vat"]*$cart_item["quantity"],
+									"currency" => $cart["currency"],
+									"country" => $cart["country"]
+								),
+								array("vat" => false)
+							) ?>
+						</span>
+
+
+						<? if($item["subscription_method"]): ?>
+						<p class="subscription_method">
+							<? if($item["subscription_method"]["duration"] == "annually"): ?>
+							Tilbagevendende betaling hvert <?= strtolower($item["subscription_method"]["name"]) ?>.
+							<? else: ?>
+							Tilbagevendende betaling hver <?= strtolower($item["subscription_method"]["name"]) ?>.
+							<? endif; ?>
+						</p>
+						<? endif; ?>
+
+						<ul class="actions">
+							<?= $HTML->oneButtonForm("Slet", "/butik/deleteFromCart/".$cart["cart_reference"]."/$cart_item_id", [
+								"confirm-value" => "Sikker?",
+								"wait-value" => "Vent ...",
+								"wrapper" => "li.delete",
+								"success-location" => count($cart["items"]) > 1 ? $this->url : "/butik"
+								]) ?>
+						</ul>
+					</li>
+
+					<? endforeach; ?>
+				</ul>
+			</li>
+
+				<? endif; ?>
+			<? endforeach; ?>
+		</ul>
+		<? endif; ?>
+
+		<div class="total">
+			<p>
+				<span class="name">Heraf moms</span>
+				<span class="total_price">
+					<?= formatPrice(array("price" => $total_cart_price["vat"], "currency" => $total_cart_price["currency"])) ?>
+				</span>
+			</p>
+			<h3>
+				<span class="name">I alt</span>
+				<span class="total_price">
+					<?= formatPrice($total_cart_price) ?>
+				</span>
+			</h3>
+		</div>
+
 		<? else: ?>
-		<p>Du har ingenting i kurven endnu. <br />Tag et kig på vores <a href="/memberships">medlemskaber</a>.</p>
+		<p>Du har ingenting i kurven endnu. <br />Tag et kig på vores <a href="/bliv-medlem">medlemskaber</a>.</p>
 		<? endif; ?>
 	</div>
 
 
-	<? 
-	// Only show payment options if cart has items
-	if($cart["items"] && $total_cart_price && $total_cart_price["price"] !== 0): ?>
+		<? 
+		// Only show payment options if cart has items
+		if($cart["items"] && $total_cart_price && $total_cart_price["price"] !== 0): ?>
 
 
 	<div class="payment_method">
@@ -233,7 +339,7 @@ else {
 							"wrapper" => "li.continue.".$user_payment_method["classname"],
 						)) ?>
 					</ul>
-					<p><?= $user_payment_method["description"] ?></p>
+					<!-- <p><?= $user_payment_method["description"] ?></p> -->
 				</li>
 					<? endforeach; ?>
 
@@ -257,7 +363,7 @@ else {
 							"wrapper" => "li.continue.".$user_payment_method["classname"],
 						)) ?>
 					</ul>
-					<p><?= $user_payment_method["description"] ?></p>
+					<!-- <p><?= $user_payment_method["description"] ?></p> -->
 				</li>
 				<? endif; ?>
 
@@ -304,9 +410,9 @@ else {
 	</div>
 
 
-	<? 
-	// Cart has items but total price is 0 – skip payment and confirm order
-	elseif($cart["items"] && $total_cart_price && $total_cart_price["price"] === 0): ?>
+		<? 
+		// Cart has items but total price is 0 – skip payment and confirm order
+		elseif($cart["items"] && $total_cart_price && $total_cart_price["price"] === 0): ?>
 
 
 	<div class="confirm">
@@ -326,62 +432,24 @@ else {
 	</div>
 
 
-	<? endif; ?>
-
-
-
-	<div class="delivery">
-		<h2>Leveringsadresse <a href="/butik/adresse/levering">(Redigér)</a></h2>
-
-		<? if($cart["delivery_address_id"]): ?>
-		<dl class="list">
-			<dt>Navn</dt>
-			<dd><?= $delivery_address["address_name"] ?></dd>
-			<dt>Att</dt>
-			<dd><?= $delivery_address["att"] ?></dd>
-			<dt>Adresse 1</dt>
-			<dd><?= $delivery_address["address1"] ?></dd>
-			<dt>Adresse 2</dt>
-			<dd><?= $delivery_address["address2"] ?></dd>
-			<dt>Postnummer og by</dt>
-			<dd><?= $delivery_address["postal"] ?> <?= $delivery_address["city"] ?></dd>
-			<dt>Land</dt>
-			<dd><?= $delivery_address["country"] ?></dd>
-		</dl>
-
-		<? else: ?>
-
-		<p>Du kan <a href="/butik/adresse/levering">tilføje en leveringsadresse</a>, hvis du vil have den vist på din faktura, men det er ikke et krav.</p>
-		
 		<? endif; ?>
+
+
+	<div class="contact">
+		<h2>Dine brugeroplysninger </h2>
+		<dl class="list">
+			<dt>Fulde navn</dt>
+			<dd><?= $user["firstname"] || $user["lastname"] ? $user["firstname"] . " " . $user["lastname"] : "N/A" ?></dd>
+			<dt>Email</dt>
+			<dd><?= $user["email"] ? $user["email"] : "N/A" ?></dd>
+			<dt>Mobiltelefon</dt>
+			<dd><?= $user["mobile"] ? $user["mobile"] : "N/A" ?></dd>
+		</dl>
+		<ul class="actions">
+			<li><a href="/butik/profil" class="button">Ret oplysninger</a></li>
+		</ul>
 	</div>
 
-	<div class="billing">
-		<h2>Faktureringsadresse <a href="/butik/adresse/fakturering">(Redigér)</a></h2>
-
-		<? if($cart["billing_address_id"]): ?>
-		<dl class="list">
-			<dt>Navn</dt>
-			<dd><?= $billing_address["address_name"] ?></dd>
-			<dt>Att</dt>
-			<dd><?= $billing_address["att"] ?></dd>
-			<dt>Adresse 1</dt>
-			<dd><?= $billing_address["address1"] ?></dd>
-			<dt>Adresse 2</dt>
-			<dd><?= $billing_address["address2"] ?></dd>
-			<dt>Postnummer og by</dt>
-			<dd><?= $billing_address["postal"] ?> <?= $billing_address["city"] ?></dd>
-			<dt>Stat</dt>
-			<dd><?= $billing_address["state"] ?></dd>
-			<dt>Land</dt>
-			<dd><?= $billing_address["country"] ?></dd>
-		</dl>
-		<? else: ?>
-
-		<p>Du kan <a href="/butik/adresse/fakturering">tilføje en faktureringsadresse</a>, hvis du vil have den vist på din faktura, men det er ikke et krav. </p>
-		
-		<? endif; ?>
-	</div>
 
 	<? endif; ?>
 

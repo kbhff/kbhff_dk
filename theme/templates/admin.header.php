@@ -13,7 +13,7 @@
     mail: bestyrelse@kbhff.dk
     
     think.dk
-    Æbeløgade 4
+    Æbeløgade 13, 402
     2100 København Ø
     Denmark
     mail: start@think.dk

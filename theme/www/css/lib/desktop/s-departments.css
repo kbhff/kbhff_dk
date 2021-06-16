@@ -8,6 +8,7 @@
 #content .scene.departments ul.departments li ul.info > li.location {display: none;}
 #content .scene.departments ul.departments li ul.contact {margin: 0; padding-bottom: 10px;}
 #content .scene.departments ul.departments li ul.info > li.pricerange {display: none;}
+#content .scene.departments ul.departments li div.description {padding-top: 10px;}
 
 #content .scene.departments > div.map {height: 400px; margin: 0 12px 50px;}
 

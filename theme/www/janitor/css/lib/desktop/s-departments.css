@@ -1,0 +1,9 @@
+#content .scene.departmentEdit div.pickupdates ul.items li.item ul.actions li.add { display: inline-block;}
+#content .scene.departmentEdit div.pickupdates ul.items li.item ul.actions li.remove { display: none;}
+
+#content .scene.departmentEdit div.pickupdates ul.items li.item.added ul.actions li.add { display: none;}
+#content .scene.departmentEdit div.pickupdates ul.items li.item.added ul.actions li.remove { display: inline-block;}
+
+/* #content .scene.departmentEdit div.pickupdates .taglist_tags ul.actions { padding-top: 10px;} */
+
+/* #content .scene.departmentEdit div.pickupdates .item p.handle { padding-top: 6px; padding-bottom: 2px;} */

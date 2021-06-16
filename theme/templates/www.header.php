@@ -13,7 +13,7 @@
     mail: bestyrelse@kbhff.dk
 
     think.dk
-    Æbeløgade 4
+    Æbeløgade 13, 402
     2100 København Ø
     Denmark
     mail: start@think.dk
@@ -31,7 +31,7 @@
     You should have received a copy of the GNU General Public License
 	along with this source code.  If not, see <http://www.gnu.org/licenses/>. -->
 
-	<!-- If you want to use or contribute to this code, visit http://parentnode.dk -->
+	<!-- If you want to use or contribute to this code, visit https://parentnode.dk -->
 
 
 	<title><?= $this->pageTitle() ?></title>
@@ -51,8 +51,8 @@
 	<link type="text/css" rel="stylesheet" media="all" href="/css/lib/seg_<?= $this->segment() ?>_include.css?cb=<?=randomKey(4); ?>" />
 	<script type="text/javascript" src="/js/lib/seg_<?= $this->segment() ?>_include.js?cb=<?=randomKey(4); ?>"></script>
 <? } else { ?>
-	<link type="text/css" rel="stylesheet" media="all" href="/css/seg_<?= $this->segment() ?>.css?rev=20200327-105354" />
-	<script type="text/javascript" src="/js/seg_<?= $this->segment() ?>.js?rev=20200327-105354"></script>
+	<link type="text/css" rel="stylesheet" media="all" href="/css/seg_<?= $this->segment() ?>.css?rev=20210616-171352" />
+	<script type="text/javascript" src="/js/seg_<?= $this->segment() ?>.js?rev=20210616-171352"></script>
 <? } ?>
 
 	<?= $this->headerIncludes() ?>

@@ -164,6 +164,7 @@ class TypeSignupfee extends Itemtype {
 		if($existing_membership) {
 
 			// new membership item has a subscription method
+			// subscriptionless memberships are not allowed (use non-expiring subscription in stead)
 			if(SITE_SUBSCRIPTIONS && $membership_type["subscription_method"]) {
 				
 				// existing membership is active
@@ -193,13 +194,7 @@ class TypeSignupfee extends Itemtype {
 				$MC->updateMembership(["user_id" => $user_id, "subscription_id" => $subscription_id]);
 			}
 			
-			// new membership item has no subscription method
-			else {
 				
-				// subscriptionless memberships are not allowed (use non-expiring subscription in stead)
-				return false;
-			}
-			
 		}
 		
 		// user is not yet a member
@@ -217,14 +212,16 @@ class TypeSignupfee extends Itemtype {
 				unset($_POST);
 	
 				// add membership
-				$MC->addMembership($membership_type["id"], $subscription_id, ["user_id" => $user_id]);
+				if($MC->addMembership($membership_type["id"], $subscription_id, ["user_id" => $user_id])) {
+
+					// send notification to admin
+					include_once("classes/users/superuser.class.php");
+					$UC = new SuperUser();
+					$user = $UC->getKbhffUser(["user_id" => $user_id]);
+					$UC->sendNewMemberNotification($user);
+				}
 			}
-			else {
-
-				return false;
-			}
-
-
+		
 			// Add member number as username (if username doesn't already exist)
 			$sql = "SELECT username FROM ".SITE_DB.".user_usernames WHERE user_id = $user_id, type = 'member_no'";
 			if(!$query->sql($sql)) {

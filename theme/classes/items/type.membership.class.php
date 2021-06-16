@@ -96,7 +96,7 @@ class TypeMembership extends Itemtype {
 		$this->addToModel("html", [
 			"type" => "html",
 			"label" => "Full description",
-			"allowed_tags" => "p,h2,h3,h4,ul,ol,code,download,jpg,png", //,mp4,vimeo,youtube",
+			"allowed_tags" => "p,h2,h3,h4,ul,ol,code,download,jpg,png,vimeo", //,mp4,vimeo,youtube",
 			"hint_message" => "Write a full description of the membership.",
 			"error_message" => "A full description without any words? How weird."
 		]);
@@ -105,10 +105,11 @@ class TypeMembership extends Itemtype {
 		$this->addToModel("single_media", array(
 			"type" => "files",
 			"label" => "Add media here",
-			"allowed_sizes" => "960x540",
+			// "allowed_sizes" => "960x540",
+			"min_width" => 640,
 			"max" => 1,
 			"allowed_formats" => "png,jpg",
-			"hint_message" => "Add single image by dragging it here. PNG or JPG allowed in 960x540",
+			"hint_message" => "Add single image by dragging it here. PNG or JPG allowed, min. 640px wide",
 			"error_message" => "Media does not fit requirements."
 		));
 
@@ -179,37 +180,60 @@ class TypeMembership extends Itemtype {
 		include_once("classes/users/supermember.class.php");
 		$SuperSubscriptionClass = new SuperSubscription();
 		$MC = new SuperMember();
+		$IC = new Items();
+
+		$item = $IC->getItem(["id" => $order_item["item_id"], "extend" => ["subscription_method" => true]]);
+		$item_id = $order_item["item_id"];
 		
-		$order_item_item_id = $order_item["item_id"];
 		$order_id = $order["id"];
 		$user_id = $order["user_id"];
-		
+
+		if(isset($order_item["custom_price"]) && $order_item["custom_price"] !== false) {
+			$custom_price = $order_item["custom_price"];
+		}
+
 		$existing_membership = $MC->getMembers(["user_id" => $user_id]);
 		
 		// user is already member (active or inactive)
 		if($existing_membership) {
 
 			// new membership item has a subscription method
-			if(SITE_SUBSCRIPTIONS && $order_item["subscription_method"]) {
+			if(SITE_SUBSCRIPTIONS && $item["subscription_method"]) {
 				
 				// existing membership is active
 				if($existing_membership["subscription_id"]) {
 					
 					// update subscription
 					$subscription_id = $existing_membership["subscription_id"];
-					$_POST["item_id"] = $order_item_item_id;
+					$_POST["item_id"] = $item_id;
 					$_POST["user_id"] = $user_id;
 					$_POST["order_id"] = $order_id;
+					if(isset($custom_price) && ($custom_price || $custom_price === "0")) {
+						$_POST["custom_price"] = $custom_price;
+					}
+					else {
+						$_POST["custom_price"] = null;
+					}					
+					
 					$subscription = $SuperSubscriptionClass->updateSubscription(["updateSubscription", $subscription_id]);
 					unset($_POST);
+
+					
 				}
 				// existing membership is inactive
 				else {
 
 					// add subscription
-					$_POST["item_id"] = $order_item_item_id;
+					$_POST["item_id"] = $item_id;
 					$_POST["user_id"] = $user_id;
 					$_POST["order_id"] = $order_id;
+					if(isset($custom_price) && ($custom_price || $custom_price === "0")) {
+						$_POST["custom_price"] = $custom_price;
+					}
+					else {
+						$_POST["custom_price"] = null;
+					}					
+					
 					$subscription = $SuperSubscriptionClass->addSubscription(["addSubscription"]);
 					unset($_POST);
 				}
@@ -217,6 +241,22 @@ class TypeMembership extends Itemtype {
 				// update membership with subscription_id
 				$subscription_id = $subscription["id"];
 				$MC->updateMembership(["user_id" => $user_id, "subscription_id" => $subscription_id]);
+
+
+				// reset user_group to User if new membership is Støttemedlem
+				if($item["fixed_url_identifier"] == "stoettemedlem") {
+
+					include_once("classes/users/superuser.class.php");
+					$UC = new SuperUser();
+	
+					$user_groups = $UC->getUserGroups();
+					$user_key = arrayKeyValue($user_groups, "user_group", "User");
+					$_POST["user_group_id"] = $user_groups[$user_key] ? $user_groups[$user_key]["id"] : false;
+					$UC->update(["update", $user_id]);
+					unset($_POST);
+					
+					message()->resetMessages();
+				}
 			}
 			
 			// new membership item has no subscription method
@@ -231,18 +271,32 @@ class TypeMembership extends Itemtype {
 		else {
 
 			// new membership has a subscription method
-			if(SITE_SUBSCRIPTIONS && $order_item["subscription_method"]) {
+			if(SITE_SUBSCRIPTIONS && isset($item["subscription_method"]) && $item["subscription_method"]) {
 				
 				// add subscription
-				$_POST["item_id"] = $order_item_item_id;
+				$_POST["item_id"] = $item_id;
 				$_POST["user_id"] = $user_id;
 				$_POST["order_id"] = $order_id;
+				if(isset($custom_price) && ($custom_price || $custom_price === "0")) {
+					$_POST["custom_price"] = $custom_price;
+				}
+				else {
+					$_POST["custom_price"] = null;
+				}					
+				
 				$subscription = $SuperSubscriptionClass->addSubscription(["addSubscription"]);
 				$subscription_id = $subscription["id"];
 				unset($_POST);
 	
 				// add membership
-				$MC->addMembership($order_item_item_id, $subscription_id, ["user_id" => $user_id]);
+				if($MC->addMembership($item_id, $subscription_id, ["user_id" => $user_id])) {
+
+					// send notification to admin
+					include_once("classes/users/superuser.class.php");
+					$UC = new SuperUser();
+					$user = $UC->getKbhffUser(["user_id" => $user_id]);
+					$UC->sendNewMemberNotification($user);
+				}
 			}
 			else {
 
@@ -252,7 +306,7 @@ class TypeMembership extends Itemtype {
 		
 		global $page;
 		$page->addLog("membership->ordered: order_id:".$order["id"]);
-		// print "\n<br>###$order_item_item_id### ordered (membership)\n<br>";
+		// print "\n<br>###$item_id### ordered (membership)\n<br>";
 	}
 
 

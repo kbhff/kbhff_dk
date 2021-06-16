@@ -137,7 +137,7 @@ class TypeWeeklybag extends Itemtype {
 		if($query->sql($sql)) {
 
 			$IC = new Items();
-			return $IC->getItem(["id" => $query->result(0, "item_id"), "extend" => true]);
+			return $IC->getItem(["id" => $query->result(0, "item_id"), "status" => 1, "extend" => true]);
 
 		}
 		
@@ -147,6 +147,9 @@ class TypeWeeklybag extends Itemtype {
 
 	function sindexBase(){
 		
+		// Get posted values to make them available for models
+		$this->getPostedEntities();
+
 		return sprintf("pose-%04d-uge-%02d",
 		$this->getProperty("year", "value"),
 		$this->getProperty("week", "value"));

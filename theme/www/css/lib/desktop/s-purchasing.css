@@ -1,0 +1,144 @@
+/* ORDER LIST */
+#content .scene.purchasing .c-wrapper.order-list {padding: 0 0 46px; border-bottom: 1px solid #999999;}
+#content .scene.purchasing .c-wrapper.order-list ul.list {padding: 0 12px; margin: 0; list-style: none;}
+#content .scene.purchasing .c-wrapper.order-list ul.list > li {padding: 0;
+	display: flex;
+	flex-flow: row nowrap;
+}
+#content .scene.purchasing .c-wrapper.order-list ul.list > li > span {display: block; padding: 4px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+	flex: 1 1 100px;
+}
+
+#content .scene.purchasing .c-wrapper.order-list ul.list li.labels {border-bottom: 2px solid #000000;}
+#content .scene.purchasing .c-wrapper.order-list ul.list li.labels > span {
+	text-transform: uppercase;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+}
+#content .scene.purchasing .c-wrapper.order-list ul.list li.listing:nth-child(2n) {background: #DDDDDD;}
+#content .scene.purchasing .c-wrapper.order-list ul.list li.totals {border-top: 2px solid #000000;}
+
+#content .scene.purchasing .c-wrapper.order-list ul.list li.labels span.departments,
+#content .scene.purchasing .c-wrapper.order-list ul.list li.listing span.department,
+#content .scene.purchasing .c-wrapper.order-list ul.list li.totals span.total {
+	flex: 1 0 130px;
+}
+
+#content .scene.purchasing .c-wrapper.order-list ul.list li.labels span.product,
+#content .scene.purchasing .c-wrapper.order-list ul.list li.listing span.order_item_count,
+#content .scene.purchasing .c-wrapper.order-list ul.list li.totals span.order_item_count {
+	border-left: 1px solid #999999;
+}
+
+
+/* PRODUCTS */
+#content .scene.purchasing .c-wrapper.products {padding: 0 0 46px; border-bottom: 1px solid #999999;}
+#content .scene.purchasing .c-wrapper.products ul.list {padding: 0 12px; margin: 0; list-style: none;}
+#content .scene.purchasing .c-wrapper.products ul.list > li {padding: 0;
+	display: flex;
+	flex-flow: row nowrap;
+}
+
+#content .scene.purchasing .c-wrapper.products ul.list > li > span {display: block; padding: 4px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+	flex: 1 1 100px;
+	align-self: center;
+}
+
+#content .scene.purchasing .c-wrapper.products ul.list li.labels {border-bottom: 2px solid #000000;}
+#content .scene.purchasing .c-wrapper.products ul.list li.labels span {
+	text-transform: uppercase;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+}
+#content .scene.purchasing .c-wrapper.products ul.list li.listing:nth-child(2n) {background: #DDDDDD;}
+
+
+#content .scene.purchasing .c-wrapper.products ul.list li.labels span.images,
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.image {
+	flex: 0 0 50px;
+}
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.image {height: 50px;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 50px auto;
+	background-color: transparent;
+}
+
+#content .scene.purchasing .c-wrapper.products ul.list li.labels span.price,
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.prices {
+	flex: 0 0 160px;
+}
+
+#content .scene.purchasing .c-wrapper.products ul.list li.labels span.availability,
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.availability {
+	flex: 0 0 150px;
+}
+
+#content .scene.purchasing .c-wrapper.products ul.list li.labels span.available,
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.available {
+	flex: 0 0 120px;
+}
+
+#content .scene.purchasing .c-wrapper.products ul.list li.labels span.buttons,
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.button {
+	flex: 0 0 100px;
+}
+
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.prices ul.prices {margin: 0; padding: 0; list-style: none;}
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.prices ul.prices li {padding: 0;}
+
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.button ul.actions {margin: 0; padding: 0; list-style: none;}
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.button ul.actions li {text-align: right; padding: 0;}
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.button ul.actions li a {padding: 4px 14px;}
+
+#content .scene.edit_product ul.actions li.deactivate .confirm {background-color: #C22414;}
+
+/* PICKUPDATES */
+#content .scene.purchasing .c-wrapper.pickupdates {padding: 0 0 46px;}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list {padding: 0 12px; margin: 0; list-style: none;}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list > li {padding: 0;
+	display: flex;
+	flex-flow: row nowrap;
+}
+
+#content .scene.purchasing .c-wrapper.pickupdates ul.list > li > span {display: block; padding: 4px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+	flex: 1 1 90px;
+	align-self: center;
+}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.labels {border-bottom: 2px solid #000000;}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.labels span {
+	text-transform: uppercase;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing:nth-child(2n) {background: #DDDDDD;}
+
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.labels span.pickupdates,
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.pickupdate {
+	flex: 1 0 140px;
+}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.labels span.availability {
+	text-align: center;
+}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.status {
+	text-indent: -9999px;
+	background-size: auto 18px;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-color: transparent;
+}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.status.open {
+	background-image: url(/img/shop/gx_selected.svg);
+}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.status.closed {
+	background-image: url(/img/shop/gx_unavailable.svg);
+}
+
+
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.labels span.buttons,
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.button {
+	flex: 0 0 100px;
+}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.button ul.actions {margin: 0; padding: 0; list-style: none;}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.button ul.actions li {text-align: right; padding: 0;}
+#content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.button ul.actions li a {padding: 4px 14px;}
+
+#content .scene.add_product .first_pickupdate {margin-top: -8px;}
+#content .scene.add_product .last_pickupdate {margin-top: -8px;}

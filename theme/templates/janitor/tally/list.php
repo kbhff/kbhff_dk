@@ -25,7 +25,8 @@ $tallies = $model->getTallies();
 				<?= $JML->listActions($tally, ["modify"=>[
 					"delete"=>[
 						"url"=>"/janitor/tally/deleteTally/".$tally["id"]
-					]]]); ?>
+					],
+					"status" => false]]); ?>
 			 </li>
 <?			endforeach; ?>
 		</ul>

@@ -16,21 +16,8 @@ $this->pageTitle("Brugeroplysninger");
 
 	<?= $UC->formStart("updateUserInformation/$action[1]", ["class" => "form_user"]) ?>
 
-		
-	<? if(message()->hasMessages()): ?>
-	<div class="messages">
-	<?
-	$all_messages = message()->getMessages();
-	message()->resetMessages();
-	foreach($all_messages as $type => $messages):
-		foreach($messages as $message): ?>
-		<p class="<?= $type ?>"><?= $message ?></p>
-		<? endforeach;?>
-	<? endforeach;?>
-	</div>
-	<? endif; ?>
-	
-	
+		<?= $HTML->serverMessages() ?>
+
 		<fieldset>
 			<?= 
 				$UC->input("nickname", [
@@ -80,7 +67,7 @@ $this->pageTitle("Brugeroplysninger");
 		</fieldset>
 
 		<ul class="actions">
-				<li class="cancel"><a href="/medlemshjaelp/brugerprofil/<?=$action[1]?>" class="button">Anullér</a></li>
+				<li class="cancel"><a href="/medlemshjaelp/brugerprofil/<?=$action[1]?>" class="button">Annullér</a></li>
 			<?= $UC->submit("Opdater", array("class" => "primary", "wrapper" => "li.save")) ?>
 		</ul>
 

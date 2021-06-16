@@ -2,28 +2,29 @@
 include_once("classes/system/department.class.php");
 $DC = new Department();
 $UC = new User();
-$departments = $DC->getDepartmentsAcceptSignups();
+$SC = new Shop();
+$departments = $DC->getDepartments(["accepts_signup" => 1]);
 $user_department = $UC->getUserDepartment();
+
+// get unshipped order_items for this user
+$unshipped_order_items = $SC->getOrderItems(["user_id" => session()->value("user_id"), "where" => "shipped_by IS NULL"]);
+
 
 $this->pageTitle("Afdelinger");
 ?>
 
-<div class="scene update_department i:update_department">
+<div class="scene update_userinfo_form i:update_userinfo_form">
 	<h1>Afdelinger</h1>
 	<h2>Her kan du skifte din lokale afdeling.</h2>
 
+	<? if($unshipped_order_items): ?>
+	<p class="warning"><strong>NB!</strong> Du har fremtidige bestillinger i systemet. Hvis du skifter afdeling, bliver disse bestillinger IKKE flyttet med til din nye afdeling, men skal afhentes i din gamle afdeling. Hvis du ønsker at afhente dem i din nye afdeling, så skriv til <a href="mailto:it@kbhff.dk">it@kbhff.dk</a>. 
+	</p>
+	<? endif; ?>
+
 	<?= $UC->formStart("updateUserDepartment", ["class" => "form_department"]) ?> 
 
-<?	// print error messages
-	if(message()->hasMessages(array("type" => "error"))): ?>
-		<p class="errormessage">
-<?		$messages = message()->getMessages(array("type" => "error"));
-		message()->resetMessages();
-		foreach($messages as $message): ?>
-			<?= $message ?><br>
-<?		endforeach;?>
-		</p>
-<?	endif; ?>
+		<?= $HTML->serverMessages(["type" => "error"]); ?>
 
 		<fieldset>
 			<?= $UC->input("department_id", [

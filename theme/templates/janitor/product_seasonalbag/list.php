@@ -5,7 +5,7 @@ global $model;
 global $itemtype;
 
 
-$items = $IC->getItems(array("itemtype" => $itemtype, "extend" => true));
+$items = $IC->getItems(array("itemtype" => $itemtype, "extend" => ["dependencies" => true]));
 
 ?>
 <div class="scene i:scene defaultList <?= $itemtype ?>List">

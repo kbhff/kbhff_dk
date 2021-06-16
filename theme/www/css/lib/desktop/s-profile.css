@@ -38,66 +38,88 @@
 
 
 /* LEFT COLUMN */
-#content div.profile .order,
-#content div.profile .order-headings {
-	margin-left: 12px;
-	margin-right: 12px;
-}
+#content div.profile ul.order_items {margin: 0; list-style: none;}
 
-#content div.profile .order > p,
-#content div.profile .order-headings > h4 {
+#content div.profile ul.order_items li {
+	display: flex;
+	flex-flow: row nowrap;
+	
 	padding: 0;
 }
 
-#content div.profile .orders,
-#content div.profile .order-headings,
-#content div.profile .order {
-	font-size: 0;
+#content div.profile ul.order_items > li > span {
+	display: block;
+	font-size: 14px;
+	padding: 7px 4px;
+	flex: 1 1;
+	align-self: center;
 }
 
-#content div.profile .membership-info {
-	display: inline-block;
-	vertical-align: top;
-	width: 100%;
+#content div.profile .order_item:nth-child(2n) {
+	background-color: #DDDDDD;
 }
 
-#content div.profile .pickup-date,
-#content div.profile .order-place,
-#content div.profile .order-products,
-#content div.profile .change-untill {
-	display: inline-block;
-	vertical-align: top;
-	box-sizing: border-box;
-	width: 25%;
+#content div.profile ul.order_items > li > span.button ul.actions {padding: 0; width: auto; display: inline-block;}
+#content div.profile ul.order_items > li > span.button ul.actions li {padding: 0;}
+
+#content div.profile ul.order_items li.headings {
+	border-bottom: 1px solid #000000;
+}
+#content div.profile ul.order_items li.headings span {
+	text-transform: uppercase;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	
+}
+#content div.profile ul.order_items > li > span.pickupdate {
+	flex: 0 0 100px;
+}
+#content div.profile ul.order_items > li > span.department {
+	flex: 0 0 100px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+#content div.profile ul.order_items > li > span.product {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+#content div.profile ul.order_items > li > span.status {
+	flex: 0 0 80px;
+}
+#content div.profile ul.order_items > li > span.change-until {
+	flex: 0 0 100px;
+}
+#content div.profile ul.order_items > li > span.button {
+	text-align: right;
+	flex: 0 0 40px;
 }
 
-#content div.profile p.change-untill {
-	width: 17%;
-	padding-right: 0;
+#content div.profile li.order_item.edit .pickupdate label,
+#content div.profile li.order_item.edit .pickupdate ul.actions,
+#content div.profile li.order_item.edit .pickupdate span.date {display: none;}
+
+#content div.profile li.order_item.edit .pickupdate {padding: 3px 0px;
+	flex: 0 0 108px;
 }
-#content div.profile ul.actions.change {
-	display: inline-block;
-	padding: 0;
-	margin: 0;
-	width: 8%;
+#content div.profile li.order_item.edit .pickupdate div.field {padding: 0;}
+#content div.profile li.order_item.edit .pickupdate div.field select {font-size: 14px; line-height: 20px; padding-left: 0; width: calc(100% - 10px);
+	background-position: right 6px;
 }
 
+#content div.profile ul.order_items span.status .unpaid {
+	color: #C22414;
+	font-weight: bold;
+}
 #content div.profile ul.actions .change-info {
 	padding-left: 0;
 }
-
-#content div.profile ul.actions.change > li {
-	padding: 0;
-	margin: 0;
-}
-
 #content div.profile ul.actions.change > li > a {
-	padding: 0;
-	margin: 0;
-	padding-left: 8px;
-	padding-right: 8px;
+	padding: 2px 8px;
 	font-size: 12px;
 }
+
+
 
 /* RIGHT COLUMN */
 #content div.profile .c-wrapper > .c-one-third > ul.actions {
@@ -105,6 +127,10 @@
 	padding-bottom: 12px;
 	padding-left: 12px;
 	padding-right: 12px;
+}
+
+#content div.profile .c-wrapper > .c-one-third .section:first-child {
+	margin-top: 36px;
 }
 
 #content div.profile .c-box,
@@ -151,6 +177,11 @@
 	padding-bottom: 19px;
 }
 
+#content div.profile .membership-info {
+	display: inline-block;
+	vertical-align: top;
+	width: 100%;
+}
 
 #content div.profile .department-info,
 #content div.profile .membership-info,
@@ -162,7 +193,56 @@
 	padding-bottom: 12px;
 }
 
+#content div.profile .membership .fields p.warning {font-size: 11px; color: #C22414; line-height: 1.5em; padding-top: 10px;;}
+
 #content div.profile .password p.under {
 	font-size: 26px;
 	padding-bottom: 25px;
+}
+
+
+#content div.order_history ul.orders {margin: 0; list-style: none;}
+
+#content div.order_history ul.orders li {
+	display: flex;
+	flex-flow: row nowrap;
+	
+	padding: 0;
+}
+
+#content div.order_history ul.orders > li > span {
+	display: block;
+	font-size: 14px;
+	padding: 3px 4px;
+	flex: 1 1;
+	align-self: center;
+}
+
+#content div.order_history ul.orders li.order_item:nth-child(2n) {
+	background-color: #DDDDDD;
+}
+
+
+#content div.order_history ul.orders li.order {
+	border-bottom: 1px solid #000000;
+	margin-top: 30px;
+}
+#content div.order_history ul.orders li.order span {
+	text-transform: uppercase;
+	font-size: 20px;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	
+}
+#content div.order_history ul.orders > li.order > span.order_date {
+	flex: 0 0 100px;
+}
+#content div.order_history ul.orders > li.order > span.order_number {
+	flex: 1 1;
+}
+#content div.order_history ul.orders > li.order > span.total_price {
+	text-align: right;
+	flex: 0 0 100px;
+}
+#content div.order_history ul.orders > li > span.order_item {
+	flex: 1 1;
 }

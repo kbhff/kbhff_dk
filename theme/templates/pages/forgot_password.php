@@ -13,17 +13,8 @@ $this->pageTitle("Glemt adgangskode");
 	</p>
 
 	<?= $model->formStart("requestReset", ["class" => "request_password"]) ?>
-	
-		<?	// Display any backend generated messages
-			if(message()->hasMessages(array("type" => "error"))): ?>
-				<p class="errormessage">
-			<?	$messages = message()->getMessages(array("type" => "error"));
-				message()->resetMessages();
-				foreach($messages as $message): ?>
-					<?= $message ?><br>
-			<?	endforeach; ?>
-				</p>
-		<?	endif; ?>
+
+		<?= $HTML->serverMessages(["type" => "error"]) ?>
 
 		<fieldset>
 			<?= $model->input("username", array(

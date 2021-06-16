@@ -16,10 +16,9 @@ $department = $DC->getDepartment(["id" => $tally["department_id"]]);
 	<div class="c-wrapper">
 
 		<?= $TC->formStart("kasse/$tally_id/andre-indtaegter/addRevenue", ["class" => "labelstyle:inject add_revenue"]); ?>
-	
 			<fieldset>
-				<?= $TC->input("revenue_name", ["label" => "Indtægtskilde"]); ?>
-				<?= $TC->input("revenue_amount", ["label" => "Beløb"]); ?>
+				<?= $TC->input("revenue_name"); ?>
+				<?= $TC->input("revenue_amount"); ?>
 			</fieldset>
 
 			<ul class="actions">
@@ -28,6 +27,5 @@ $department = $DC->getDepartment(["id" => $tally["department_id"]]);
 		<?= $TC->formEnd(); ?>
 
 	</div>
-
 
 </div>

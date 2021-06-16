@@ -2,7 +2,7 @@
 global $action;
 global $model;
 
-$this->pageTitle("Receipt");
+$this->pageTitle("Kvittering");
 
 $UC = new User();
 $MC = new Member();
@@ -75,7 +75,18 @@ if(isset($action[3])) {
 	<h1>Tak for din ordre!</h1>
 	<div class="order_info">
 
-		<h2>Din ordre er bekræftet <br />– betalingen behandles.</h2>
+		<h2>
+			Din ordre er bekræftet <br />
+			<? if($remaining_order_price["price"] > 0): ?>
+				<? if($receipt_type == "stripe"): ?>
+				– betalingen behandles
+				<? else: ?>
+				– afventer din betaling
+				<? endif; ?>
+			<? else: ?>
+			– og betalt
+			<? endif; ?>
+		</h2>
 
 		<ul class="orders">
 			<li>
@@ -91,7 +102,7 @@ if(isset($action[3])) {
 		<h3>
 			<span class="name">I alt</span>
 			<span class="total_price">
-				<?= formatPrice($total_order_price, array("vat" => true)) ?>
+				<?= formatPrice($total_order_price, array("vat" => false)) ?>
 			</span>
 		</h3>
 
@@ -113,113 +124,15 @@ if(isset($action[3])) {
 	<div class="activation_info">
 		<p>Husk, at du skal aktivere din konto før du kan bestille grøntsager. Aktiveringskoden er blevet sendt til <em><?= $user["email"] ?></em>.</p>
 	</div>
+	<? elseif($user_id == 1): ?>
+	<ul class="actions">
+		<li><a class="button primary clickable" href="/login">Log ind</a></li>
+	</ul>
 	<? else: ?>
-			<ul class="actions">
-				<li><a class="button primary clickable" href="/login">Log ind</a></li>
-			</ul>
-	<? endif; ?>
-
-
-	<? if($remaining_order_price["price"] > 0): ?>
-	<div class="payment_information">
-
-		<? if($receipt_type == "bank-transfer"): ?>
-		<h2>Pay with Bank transfer</h2>
-
-		<p>
-		<? if($subscription_method && $payment_date && $remaining_order_price["price"] == $total_order_price["price"]): ?>
-			Set up a re-occuring payment every <?= strtolower($subscription_method["name"]) ?> on the <?= $payment_date ?> to our bankaccount, using the information below:
-		<? else: ?>
-			Make a payment to our bankaccount, using the information below:
-		<? endif; ?>
-		</p>
-
-		<dl>
-			<dt class="amount">Amount</dt>
-			<dd class="amount"><?= formatPrice($remaining_order_price) ?></dd>
-
-			<dt class="recipient">Recipient</dt>
-			<dd class="recipient">think.dk ApS</dd>
-
-			<dt class="reference">Reference</dt>
-			<? if($is_membership): ?>
-			<dd class="reference">Member <?= $membership["id"] ?></dd>
-			<? else: ?>
-			<dd class="reference"><?= $order_no ?></dd>
-			<? endif; ?>
-
-			<dt class="bank">Bank</dt>
-			<dd class="bank">Fælleskassen</dd>
-
-			<dt class="account">Account no</dt>
-			<dd class="account">8411 4145172</dd>
-
-			<dt class="iban">IBAN</dt>
-			<dd class="iban">DK3184110004145172</dd>
-
-			<dt class="swift">SWIFT/BIC</dt>
-			<dd class="swift">FAELDKK1</dd>
-		</dl>
-
-
-		<? elseif($receipt_type == "paypal"): ?>
-
-
-		<h2>Pay with PayPal</h2>
-		<p>
-			Make a payment to our PayPal account, using the information below:
-		</p>
-
-		<dl>
-			<dt class="amount">Amount</dt>
-			<dd class="amount"><?= formatPrice($remaining_order_price) ?></dd>
-
-			<dt class="recipient">PayPal account</dt>
-			<dd class="recipient">payment@think.dk</dd>
-
-			<dt class="reference">Reference</dt>
-			<? if($is_membership): ?>
-			<dd class="reference">Member <?= $membership["id"] ?></dd>
-			<? else: ?>
-			<dd class="reference"><?= $order_no ?></dd>
-			<? endif; ?>
-		</dl>
-
-
-		<? elseif($receipt_type == "mobilepay"): ?>
-
-
-		<h2>Pay with MobilePay</h2>
-		<p>
-			Make a payment to our MobilePay account, using the information below:
-		</p>
-
-		<dl>
-			<dt class="amount">Amount</dt>
-			<dd class="amount"><?= formatPrice($remaining_order_price) ?></dd>
-
-			<dt class="recipient">MobilePay account</dt>
-			<dd class="recipient">127888</dd>
-
-			<dt class="reference">Reference</dt>
-			<? if($is_membership): ?>
-			<dd class="reference">Member <?= $membership["id"] ?></dd>
-			<? else: ?>
-			<dd class="reference"><?= $order_no ?></dd>
-			<? endif; ?>
-		</dl>
-
-
-		<? elseif($receipt_type == "cash"): ?>
-
-
-		<h2>Cash payment</h2>
-		<p>Just bring <?= formatPrice($remaining_order_price) ?> in cash next time you come to the Center.</p>
-
-
-		<? endif; ?>
-
-	</div>
+	<ul class="actions">
+		<li><a class="button primary clickable" href="/profil">Gå til Min Side</a></li>
+	</ul>
+	
 	<? endif; ?>
 
 <? elseif($user_id > 1):?>
@@ -230,7 +143,7 @@ if(isset($action[3])) {
 <? else: ?>
 
 	<h1>Leder du efter din kvittering?</h1>
-	<p>Du skal <a href="/login?login_forward=<?= $this->url ?>">logge ind</a> på din konto, før du kan se kvitteringer.</p>
+	<p>Du skal <a href="/login?forward_url=<?= $this->url ?>">logge ind</a> på din konto, før du kan se kvitteringer.</p>
 
 <? endif; ?>
 

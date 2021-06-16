@@ -58,41 +58,16 @@ class SuperUser extends SuperUserCore {
  			}
  		}
 		
-		$user = $this->getUser(["user_id" => $user_id]);
-		$user["department"] = $this->getUserDepartment();
-		// print_r($user);
+		$user = $this->getUsers(["user_id" => $user_id]);
 
-		return $user;
-	}
+		if($user) {
 
-
-	function getUser($_options=false) {
-		
-		// default values
-		$user_id = false;
-
-		if($_options !== false) {
-			foreach($_options as $_option => $_value) {
-				switch($_option) {
-
-					case "user_id"        : $user_id          = $_value; break;
-				}
-			}
-		}
-
-		// default values
-
-		$query = new Query();
-		
-		$sql = "SELECT * FROM ".$this->db." WHERE id = $user_id";
-//			print $sql;
-		if($query->sql($sql)) {
-			$user = $query->result(0);
-
+			 
+			$query = new Query();
 
 			$user["mobile"] = "";
 			$user["email"] = "";
-
+	
 			$sql = "SELECT * FROM ".$this->db_usernames." WHERE user_id = $user_id";
 			if($query->sql($sql)) {
 				$usernames = $query->results();
@@ -100,23 +75,28 @@ class SuperUser extends SuperUserCore {
 					$user[$username["type"]] = $username["username"];
 				}
 			}
-
-
+	
+	
 			$user["addresses"] = $this->getAddresses();
-
+	
 			$user["maillists"] = $this->getMaillists();
-
+	
 			if((defined("SITE_SHOP") && SITE_SHOP)) {
 				include_once("classes/users/supermember.class.php");
 				$MC = new SuperMember();
 				$user["membership"] = $MC->getMembers(["user_id" => $user_id]);
 			}
-
+	
+			$user["department"] = $this->getUserDepartment(["user_id" => $user_id]);
+			// print_r($user);
+	
 			return $user;
 		}
 
 		return false;
 	}
+
+
 	/**
 	 * Delete kbhff account
 	 *
@@ -152,10 +132,15 @@ class SuperUser extends SuperUserCore {
 				message()->addMessage("Brugeroplysningerne blev slettet");
 		
 				mailer()->send([
-					"subject" => "Dit medlemskab af Københavns Fødevarefællesskab er opsagt",
-					"message" => "Du har meldt dig ud af Københavns Fødevarefællesskab. Tak for denne gang.",
+					"template" => "confirmation_membership_cancellation",
 					"recipients" => [$user_email]
-					]);
+				]);
+
+				if($user["department"]) {
+
+					// send notification to admin
+					$this->sendMemberLeftNotification($user);
+				}
 
 				return true;
 			}
@@ -186,37 +171,107 @@ class SuperUser extends SuperUserCore {
 		// Get posted values to make them available for models
 		$this->getPostedEntities();
 
-
 		// does values validate
 		if(count($action) == 2 && $this->validateList(array("item_id"))) {
 
 			$query = new Query();
 			$IC = new Items();
 			
+			include_once("classes/users/supermember.class.php");
+			$MC = new SuperMember();
+
 			$user_id = $action[1];
 			$item_id = $this->getProperty("item_id", "value");
+			$item = $IC->getItem(["id" => $item_id, "extend" => true]);
 
-			$member = $this->getMembers(array("user_id" => $user_id));
+			$member = $MC->getMembers(array("user_id" => $user_id));
+
+			$old_membership = isset($member["item"]["fixed_url_identifier"]) ? $member["item"]["fixed_url_identifier"] : false;
+
+			$new_membership = isset($item["fixed_url_identifier"]) ? $item["fixed_url_identifier"] : false;
 		
 			if($member) {
+
 				$sql = "UPDATE ".SITE_DB.".user_item_subscriptions SET item_id = $item_id WHERE user_id = $user_id";
 				
 				if($query->sql($sql)) {
+
+					// reset user_group to User if new membership is Støttemedlem
+					if($new_membership == "stoettemedlem") {
+
+						include_once("classes/users/superuser.class.php");
+						$UC = new SuperUser();
+
+						$user_groups = $UC->getUserGroups();
+						$user_key = arrayKeyValue($user_groups, "user_group", "User");
+						$_POST["user_group_id"] = $user_groups[$user_key] ? $user_groups[$user_key]["id"] : false;
+						$UC->update(["update", $member["user_id"]]);
+						unset($_POST);
+						
+					}
+
+					// send notification to admin
+					$this->sendMembershipChangeNotification($member, $item);
+
 					message()->resetMessages();
-					message()->addMessage("Medlemsskab er opdateret");
+					message()->addMessage("Medlemskab er opdateret");
 					return true;
 				}
-				else {
-					return false;
-				}	
 			}
 			
-			else {
-				return false;
-				
-			}
+			return false;
 		}
 	}
+
+	function sendMembershipChangeNotification($member, $item) {
+
+		$user_id = $member["user_id"];
+		$user = $this->getKbhffUser(["user_id" => $user_id]);
+		$email = $this->getUsernames(["user_id" => $user_id, "type" => "email"]);
+
+		$old_membership = isset($member["item"]["fixed_url_identifier"]) ? $member["item"]["fixed_url_identifier"] : false;
+
+		$new_membership = isset($item["fixed_url_identifier"]) ? $item["fixed_url_identifier"] : false;
+
+		if($old_membership == "stoettemedlem" && $new_membership == "frivillig") {
+			// send notification to admin
+			mailer()->send([
+				"subject" => "Medlem i afdeling ".$user["department"]["name"]." har ændret medlemstype.",
+				"message" => "
+Hej ".$user["department"]["name"]." butiksgruppe,
+
+Følgende medlem har skiftet status fra støttemedlem til frivilligt medlem og vil fremover indgå i driften af foreningen gennem vagtplanen og arbejdsgrupper.
+
+I får denne notifikation, så I kan kontakte medlemmet ift. at tilbyde en plads på afdelingens vagtplan.
+
+Navn: ".$user["firstname"]." ".$user["lastname"]."
+Email: ".($email ? $email["username"] : "-")."
+				 			
+Med venlig hilsen,
+IT",
+				"recipients" => ADMIN_EMAIL
+			]);
+			
+		}
+		else if($old_membership == "frivillig" && $new_membership == "stoettemedlem") {
+			// send notification to admin
+			mailer()->send([
+				"subject" => "Medlem i afdeling ".$user["department"]["name"]." har ændret medlemstype.",
+				"message" => "
+Hej ".$user["department"]["name"]." butiksgruppe,
+
+".$user["firstname"]." ".$user["lastname"]." har skiftet status fra frivilligt medlem til støttemedlem og forventes dermed ikke længere at indgå i vagtplanen.
+
+Hvis det endnu ikke er sket, kan det være en god idé at fjerne vedkommende fra vagtplaner / holdoversigter.
+
+Med venlig hilsen,
+IT
+",
+				"recipients" => ADMIN_EMAIL
+			]);
+		}	
+	}
+
 	/**
 	 * Update user account information
 	 *
@@ -224,6 +279,10 @@ class SuperUser extends SuperUserCore {
 	 * @return void
 	 */
 	function updateUserInformation($action) {
+
+		include_once("classes/users/superuser.class.php");
+		$UC = new SuperUser();
+
 		// Get posted values from form
 		$this->getPostedEntities();
 		$user_id = $action[1];
@@ -243,9 +302,12 @@ class SuperUser extends SuperUserCore {
 			$update_success = true;
 
 			if($email) {
+				$existing_email = $UC->getUsernames(["user_id" => $user_id, "type" => "email"]);
+				$_POST["username_id"] = $existing_email ? $existing_email["id"] : false;
 				if(!$this->updateEmail(["updateEmail", $user_id])) {
 					$update_success = false;
 				}
+				unset($_POST["username_id"]);
 			}
 			if($mobile) {
 				if(!$this->updateMobile(["updateMobile", $user_id])) {
@@ -318,6 +380,138 @@ class SuperUser extends SuperUserCore {
 		return false;
 
 	}
+
+	function getDepartmentUsers($department_id, $_options = false) {
+
+		$query = new Query();
+		
+		if($department_id) {
+
+			$only_active_members = false;
+			if($_options !== false) {
+				foreach($_options as $_option => $_value) {
+					switch($_option) {
+						case "only_active_members"       : $only_active_members         = $_value; break;
+					}
+				}
+			}
+
+			$sql = "SELECT users.*, user_department.department_id, user_members.id AS member_id, user_members.subscription_id FROM ".SITE_DB.".user_members AS user_members, ".SITE_DB.".user_department AS user_department, $this->db AS users WHERE users.status = 1 AND users.user_group_id > 1 AND user_department.user_id = users.id AND user_members.user_id = users.id AND user_department.department_id = $department_id";
+
+			if($only_active_members) {
+				$sql .= " AND user_members.subscription_id IS NOT NULL";
+			}
+
+			$sql .= " ORDER BY nickname";
+
+			if($query->sql($sql)) {
+
+				return $query->results();
+			}
+		}
+
+		return false;
+
+	}
+
+	function validateUserGroupUpdate($clerk_user_user_group, $member_user_user_group, $new_user_group) {
+
+		if(isset($clerk_user_user_group["user_group"]) && isset($member_user_user_group["user_group"]) && isset($new_user_group["user_group"])) {
+
+			// Shop shifts can upgrade User to Shop shift
+			if ($clerk_user_user_group["user_group"] == "Shop shift" && $member_user_user_group["user_group"] == "User" && $new_user_group["user_group"] == "Shop shift") {
+				return true;
+			}
+			// Local administrators can update User to either Shop shift or Local admin
+			elseif ($clerk_user_user_group["user_group"] == "Local administrator" && $member_user_user_group["user_group"] == "User" && ($new_user_group["user_group"] == "Shop shift" || $new_user_group["user_group"] == "Local administrator")) {
+				return true;
+			}
+
+			elseif (
+				(
+					// Clerks in these user groups...
+					$clerk_user_user_group["user_group"] == "Local administrator"
+					|| $clerk_user_user_group["user_group"] == "Purchasing group"
+					|| $clerk_user_user_group["user_group"] == "Communication group"
+				)
+				&& (
+					// ... can upgrade Members in these user groups
+					$member_user_user_group["user_group"] == "User"
+					|| $member_user_user_group["user_group"] == "Shop shift"
+					|| $member_user_user_group["user_group"] == "Local administrator"
+					|| $member_user_user_group["user_group"] == "Purchasing group"
+					|| $member_user_user_group["user_group"] == "Communication group"
+				)
+				// ... to the Clerk's own user group
+				&& $clerk_user_user_group["user_group"] == $new_user_group["user_group"]
+			) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	// /janitor/user_group/updateUserUserGroup/#user_id# (values in POST)
+	function updateUserUserGroup($action) {
+
+		$clerk_user = $this->getKbhffUser(["user_id" => session()->value("user_id")]);
+		$clerk_user_user_group = $this->getUserGroups(["user_group_id" => $clerk_user["user_group_id"]]);
+
+		$member_user = $this->getKbhffUser(["user_id" => $action[1]]);
+		$member_user_user_group = $this->getUserGroups(["user_group_id" => $member_user["user_group_id"]]);
+		
+		$posted_user_group = $this->getUserGroups(["user_group_id" => $_POST["user_group_id"]]);
+		
+		if($this->validateUserGroupUpdate($clerk_user_user_group, $member_user_user_group, $posted_user_group) && $this->update(["update", $action[1]])) {
+			
+			$member_user = $this->getKbhffUser(["user_id" => $action[1]]);
+			$new_user_group = $this->getUserGroups(["user_group_id" => $member_user["user_group_id"]]);
+
+			$new_user_group_info = [
+				"User" => 'Som medlem af brugergruppen "User" er du i stand til at købe grøntsager i webshoppen, såfremt dit medlemskab er aktivt.',
+				"Shop shift" => 'Som medlem af brugergruppen "Shop shift" er du i stand til at tage butiksvagter. Du kan selvfølgelig også selv købe grøntsager i webshoppen.',
+				"Local administrator" => 'Som medlem af brugergruppen "Local administrator" er du i stand til at tage butiksvagter og sende beskeder til alle medlemmer i din lokalafdeling. Du kan også flytte medlemmer til din afdeling. Og du kan selvfølgelig også selv købe grøntsager i webshoppen.',
+				"Purchasing group" => 'Som medlem af brugergruppen "Purchasing group" er du i stand til at indgå i arbejdet med at indkøbe produkter. Du kan også tage butiksvagter. Og du kan selvfølgelig også selv købe grøntsager i webshoppen.',
+				"Communication group" => 'Som medlem af brugergruppen "Communication group" er du i stand til at indgå i arbejdet med udsendelse af nyhedsbreve. Du kan også tage butiksvagter. Og du kan selvfølgelig også selv købe grøntsager i webshoppen.',
+				"Super User" => 'Som medlem af brugergruppen "Super User" har du adgang til alle systemets funktioner.'
+			];
+
+			message()->resetMessages();
+			message()->addMessage("User group was updated");
+			
+			// send notification mail
+			mailer()->send(array(
+				"values" => array(
+					"FROM" => ADMIN_EMAIL,
+					"NICKNAME" => $member_user["nickname"],
+					"OLD_USER_GROUP" => $member_user_user_group["user_group"],
+					"NEW_USER_GROUP" => $new_user_group["user_group"], 
+					"NEW_USER_GROUP_INFO" => $new_user_group_info[$new_user_group["user_group"]], 
+				),
+				"recipients" => $member_user["email"],
+				"template" => "user_group_change_notice",
+				"track_clicks" => false
+			));
+
+
+			return $new_user_group;
+		}	
+
+		return false;
+	}
+
+	function getAllActiveUsers() {
+
+		$query = new Query();
+		
+		$sql = "SELECT * FROM ".$this->db." WHERE id != 1 AND user_group_id IS NOT NULL ORDER BY nickname";
+		if($query->sql($sql)) {
+			return $query->results();
+	   }
+	}
+
+
 	/**
 	 * Update or set the current user's associated department.
 	 *
@@ -340,14 +534,23 @@ class SuperUser extends SuperUserCore {
 			$query->checkDbExistence(SITE_DB.".user_department");
 
 			// Check if the user is associated with a department and adjust query accordingly
-			$user_department = $this->getUserDepartment(array("user_id" => $user_id));
-			
-		
-			if ($user_department) {
-					// Update department
+			$user = $this->getKbhffUser(["user_id" => $user_id]);
+			$old_department = $user["department"];
+
+			if ($old_department) {
+				
+				// Update department
 				$sql = "UPDATE ".SITE_DB.".user_department SET department_id = $department_id WHERE user_id = $user_id";
 
 				if($query->sql($sql)) {
+
+					// get updated user
+					$user = $this->getKbhffUser(["user_id" => $user_id]);
+
+					// send notifications to admin
+					$this->sendMemberLeftNotification($user, ["old_department" => $old_department]);
+					$this->sendNewMemberNotification($user);
+
 					message()->resetMessages();
 					message()->addMessage("Afdeling er opdateret");
 					return true;
@@ -361,6 +564,12 @@ class SuperUser extends SuperUserCore {
 				// Set department
 				$sql = "INSERT INTO ".SITE_DB.".user_department SET department_id = $department_id, user_id = $user_id";
 				if($query->sql($sql)) {
+
+					// get updated user
+					$user = $this->getKbhffUser(["user_id" => $user_id]);
+
+					$this->sendNewMemberNotification($user);
+
 					message()->resetMessages();
 					message()->addMessage("Afdeling er opdateret");
 					return true;
@@ -453,7 +662,7 @@ class SuperUser extends SuperUserCore {
 			$query = new Query();
 		
 			$query->checkDbExistence(SITE_DB.".user_log_agreements");
-			$sql = "SELECT user_id FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id";
+			$sql = "SELECT user_id FROM ".SITE_DB.".user_log_agreements WHERE name = 'terms' AND user_id = $user_id";
 			if($query->sql($sql)) {
 				return true;
 			}
@@ -736,13 +945,30 @@ class SuperUser extends SuperUserCore {
 			$query = new Query();
 
 			if($search_value) {
-				$sql = "SELECT u.nickname AS nickname, u.firstname AS firstname, u.lastname as lastname, ud.department_id as department, u.id as user_id, (select un.username from ".SITE_DB.".user_usernames as un where un.user_id = u.id and un.type = 'email') as email, (select un.username from ".SITE_DB.".user_usernames as un where un.user_id = u.id and un.type = 'mobile') as mobile, (select un.username from ".SITE_DB.".user_usernames as un where un.user_id = u.id and un.type = 'member_no') as member_no from ".SITE_DB.".users u LEFT OUTER JOIN ".SITE_DB.".user_department ud ON u.id = ud.user_id LEFT JOIN ".SITE_DB.".user_usernames un ON un.user_id = u.id WHERE u.id <> $user_id AND (un.username like '%$search_value%' OR u.nickname like '%$search_value%' OR u.firstname like '%$search_value%' OR u.lastname like '%$search_value%')";
+				$sql = "
+				SELECT 
+					u.nickname AS nickname, 
+					u.firstname AS firstname, 
+					u.lastname AS lastname, 
+					ud.department_id AS department, 
+					u.id AS user_id, 
+					(SELECT un.username FROM ".SITE_DB.".user_usernames as un WHERE un.user_id = u.id and un.type = 'email') AS email, 
+					(SELECT un.username FROM ".SITE_DB.".user_usernames AS un WHERE un.user_id = u.id and un.type = 'mobile') AS mobile, 
+					(SELECT un.username FROM ".SITE_DB.".user_usernames AS un WHERE un.user_id = u.id and un.type = 'member_no') AS member_no 
+				FROM ".
+					SITE_DB.".users u LEFT OUTER JOIN ".SITE_DB.".user_department ud ON u.id = ud.user_id LEFT JOIN ".SITE_DB.".user_usernames un ON un.user_id = u.id 
+				WHERE 
+					u.id <> $user_id 
+					AND (un.username LIKE '%$search_value%' 
+					OR u.nickname LIKE '%$search_value%' 
+					OR u.firstname LIKE '%$search_value%' 
+					OR u.lastname LIKE '%$search_value%')";
 				
 				if ($department_id != "all") {
-					$sql .= " and ud.department_id = $department_id";
+					$sql .= " AND ud.department_id = $department_id";
 				}
 				
-				$sql .= " group by u.id";
+				$sql .= " GROUP BY u.id ORDER BY u.lastname";
 
 				include_once("classes/system/department.class.php");
  				$DC = new Department();
@@ -772,6 +998,173 @@ class SuperUser extends SuperUserCore {
 		}
 
 		return false;
+	}
+
+	function hasUnpaidMembership($_options = false) {
+
+		$query = new Query();
+		$MC = new SuperMember();
+		$IC = new Items();
+		$SC = new SuperShop();
+
+		// default values
+		$user_id = false;
+
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+
+					case "user_id"        : $user_id          = $_value; break;
+				}
+			}
+		}
+		
+
+		$member = $MC->getMembers(["user_id" => $user_id]);
+		if($member && $member["order"] && $member["order"]["payment_status"] <= 1) {
+
+			$order_item = $IC->getItem(["id" => $member["order"]["items"][0]["item_id"]]);
+
+			if($order_item && $order_item["itemtype"] == "signupfee") {
+				$result["type"] = "signupfee";
+				$result["order_no"] = $member["order"]["order_no"];
+				return $result;
+			}
+			else if($order_item && $order_item["itemtype"] == "membership") {
+				$result["type"] = "membership";
+				$result["order_no"] = $member["order"]["order_no"];
+				return $result;
+			}
+ 
+		}
+		// handle odd cases where an unpaid signupfee exists but no membership
+		else {
+
+			$unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
+
+			if($unpaid_orders && count($unpaid_orders) == 1) {
+				
+				$unpaid_order = $SC->getOrders(["order_id" => $unpaid_orders[0]["id"]]);
+				$item = $IC->getItem(["id" => $unpaid_order["items"][0]["item_id"]]);
+
+				if($item && $item["itemtype"] == "signupfee") {
+					$result["type"] = "signupfee";
+					$result["order_no"] = $unpaid_order["order_no"];
+					return $result;
+				}
+			}
+		}
+
+		return false;
+
+	}
+
+	function getUserRenewalOptOut($user_id) {
+
+		if($user_id) {
+			$query = new Query();
+			$sql = "SELECT * FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id AND name = 'disable_membership_renewal'";
+			if($query->sql($sql)) {
+				
+				$renewal_optout_time = $query->result(0, "accepted_at");
+				return $renewal_optout_time;
+			}
+		}
+
+		return false;
+	}
+
+	function setUserRenewalOptOut($user_id) {
+
+		if($user_id) {
+
+			$query = new Query();
+	
+			if(!$this->getUserRenewalOptOut($user_id)) {
+				
+				$sql = "INSERT INTO ".SITE_DB.".user_log_agreements SET user_id = $user_id, name = 'disable_membership_renewal'";
+				if($query->sql($sql)) {
+					
+					return true;
+				}
+			}
+		}
+	
+		return false;
+	}
+
+	function unsetUserRenewalOptOut($user_id) {
+		
+		if($user_id) {
+
+			$query = new Query();
+	
+			if($this->getUserRenewalOptOut($user_id)) {
+	
+				$sql = "DELETE FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id AND name = 'disable_membership_renewal'";
+				if($query->sql($sql)) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+	}
+
+	/**
+	 * Update or set the current user's associated department.
+	 *
+	 * @param array $action REST parameters of current request
+	 * @return boolean
+	 */
+	function updateUserRenewalOptOut($action){
+		// Get content of $_POST array that have been mapped to the model entities object
+		$this->getPostedEntities();
+
+		// print_r ($action);
+		// Check that the number of REST parameters is as expected and that the listed entries are valid.
+		if(count($action) == 2 && $this->validateList(array("membership_renewal"))) {
+
+			$user_id = $action[1];
+
+			$user = $this->getKbhffUser(["user_id" => $user_id]);
+			$membership_renewal = $this->getProperty("membership_renewal", "value");
+
+			$query = new Query();
+
+			if($membership_renewal && $this->getUserRenewalOptOut($user_id)) {
+
+
+				// user is inactive member
+				if($user["membership"] && !$user["membership"]["subscription_id"]) {
+
+					return "REACTIVATION REQUIRED";
+				}	
+				
+				$this->unsetUserRenewalOptOut($user_id);
+
+				return "RENEWAL ENABLED";
+
+			}
+			elseif(!$membership_renewal && !$this->getUserRenewalOptOut($user_id)) {
+
+				$this->setUserRenewalOptOut($user_id);
+
+				return "RENEWAL DISABLED";
+			}
+			else {
+				return true;
+			}
+
+		}
+
+		return false;
+		
+		
 	}
 	
 	

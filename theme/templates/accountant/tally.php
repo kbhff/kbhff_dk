@@ -31,9 +31,9 @@ $closed_by = $UC->getUser(["user_id" => $tally["closed_by"]]);
 			<dt>Afdeling</dt>
 			<dd><?= $department["name"] ?></dd>
 			<dt>Oprettet</dt>
-			<dd>d. <?= date("d/m-Y", strtotime($tally["created_at"])) ?> af <?= $opened_by["nickname"]." (".$opened_by["email"].")" ?></dd>
+			<dd>d. <?= date("d.m.Y", strtotime($tally["created_at"])) ?> af <?= $opened_by["nickname"]." (".$opened_by["email"].")" ?></dd>
 			<dt>Lukket</dt>
-			<dd>d. <?= date("d/m-Y", strtotime($tally["modified_at"])) ?> af <?= $closed_by["nickname"]." (".$closed_by["email"].")" ?></dd>
+			<dd>d. <?= date("d.m.Y", strtotime($tally["modified_at"])) ?> af <?= $closed_by["nickname"]." (".$closed_by["email"].")" ?></dd>
 			<? if($tally["comment"]): ?>	
 			<dt>Kommentar</dt>
 			<dd><?= $tally["comment"] ?></dd>
@@ -93,7 +93,7 @@ $closed_by = $UC->getUser(["user_id" => $tally["closed_by"]]);
 		
 		<? foreach($cash_order_items_summary as $item_id => $values): ?>					
 		<dl class="<?= $values["itemtype"]." ".$values["name"] ?>">
-			<dt class="line_summary"><?= $values["count"] ?> <span class="x">x</span> <?= $values["name"]." (".$values["itemtype"].") á ".$values["unit_price"] ?> kr.</dt>
+			<dt class="line_summary"><?= $values["count"] ?> <span class="x">x</span> <?= $values["name"]." á ".$values["unit_price"] ?> kr.</dt>
 			<dd class="total_price"><?= $values["total_price"] ?> kr.</dd>
 		</dl>
 		<? endforeach; ?>

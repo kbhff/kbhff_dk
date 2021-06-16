@@ -2,7 +2,7 @@
 global $action;
 global $model;
 
-$this->pageTitle("Receipt");
+$this->pageTitle("Kvittering");
 
 $orders = [];
 $order_no_list = false;
@@ -179,7 +179,7 @@ if(isset($action[3])) {
 <? else: ?>
 
 <h1>Leder du efter din kvittering?</h1>
-<p>Du skal <a href="/login?login_forward=<?= $this->url ?>">logge ind</a> på din konto, før du kan se kvitteringer.</p>
+<p>Du skal <a href="/login?forward_url=<?= $this->url ?>">logge ind</a> på din konto, før du kan se kvitteringer.</p>
 
 <? endif; ?>
 

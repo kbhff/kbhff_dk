@@ -36,14 +36,16 @@
 * This file contains item type functionality
 */
 
-class TypeProductWeeklybag extends Itemtype {
+// Incluge generic TypeProduct class
+include_once("classes/items/type.product.class.php");
+class TypeProductWeeklybag extends TypeProduct {
 
 	/**
 	* Init, set varnames, validation rules
 	*/
 	function __construct() {
 
-		// Construct Itemtype class and pass itemtype as parameter
+		// Construct TypeProduct class
 		parent::__construct(get_class());
 
 
@@ -53,64 +55,10 @@ class TypeProductWeeklybag extends Itemtype {
 
 		// Name
 		$this->addToModel("name", array(
-			"type" => "string",
-			"label" => "Name",
-			"required" => true,
 			"hint_message" => "Give the weekly bag a name.",
 			"error_message" => "The weekly bag needs a title."
 		));
 
-		// Start availability date
-		$this->addToModel("start_availability_date", array(
-			"type" => "string",
-			"label" => "Start availability date",
-			"required" => true,
-			"hint_message" => "When does the product become available?.",
-			"error_message" => "The product needs a start availability date."
-		));
-
-		// End availability date
-		$this->addToModel("end_availability_date", array(
-			"type" => "string",
-			"label" => "End availability date",
-			"hint_message" => "When does the product become available?.",
-			"error_message" => "Invalid end availability date."
-		));
-
-		
-		// description
-		$this->addToModel("description", array(
-			"type" => "text",
-			"label" => "Description",
-			"required" => true,
-			"hint_message" => "Decribe the product.",
-			"error_message" => "The product needs a description."
-		));
-
-		// Single media
-		$this->addToModel("single_media", array(
-			"type" => "files",
-			"label" => "Add media here",
-			"max" => 1,
-			"allowed_formats" => "png,jpg",
-			"hint_message" => "Add single image by dragging it here. PNG or JPG allowed.",
-			"error_message" => "Media does not fit requirements."
-		));
-
-	}
-
-	function saved($item_id) {
-
-		include_once("classes/system/department.class.php");
-		$DC = new Department();
-
-		$departments = $DC->getDepartments();
-
-		// add the new product to all departments
-		foreach($departments as $department) {
-
-			$DC->addProduct($department["id"], $item_id);
-		}
 	}
 
 }

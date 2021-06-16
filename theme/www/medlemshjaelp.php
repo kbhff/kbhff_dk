@@ -18,10 +18,28 @@ $action = $page->actions();
 $model = new SuperUser();
 $SC = new SuperShop();
 $UC = new User();
+include_once("classes/shop/pickupdate.class.php");
+$PC = new Pickupdate();
+include_once("classes/system/department.class.php");
+$DC = new Department();
+include_once("classes/users/supermember.class.php");
+$MC = new SuperMember();
 
 // page info
 $page->bodyClass("member_help");
 $page->pageTitle("Medlemshjælp");
+
+// User must be active member
+$user = $UC->getKbhffUser();
+if($user["membership"] && !$user["membership"]["subscription_id"]) {
+
+	$page->page(array(
+		"templates" => "profile/inactive_membership.php",
+		"type" => "member",
+		"page_title" => "Inaktivt medlemskab"
+	));
+	exit();
+}
 
 // Allow accept terms
 if($action && count($action) == 1 && $action[0] == "accept" && $page->validateCsrfToken()) {
@@ -39,11 +57,11 @@ if(!$UC->hasAcceptedTerms(["name" => "memberhelp"])) {
 		"page_title" => "Samtykke"
 	));
 	exit();
-
 }
 
 if($action) {
 	
+	# /medlemshjaelp/soeg
 	if($action[0] == "soeg") {
 		
 		// users that are not allowed to make global searches can only search their own department
@@ -67,7 +85,7 @@ if($action) {
 	
 	
 	
-	// /medlemshjaelp/tilmelding
+	# /medlemshjaelp/tilmelding
 	if($action[0] == "tilmelding") {
 		// signup page
 		if(count($action) === 1) {
@@ -78,12 +96,12 @@ if($action) {
 			exit();
 		}
 
-		// /medlemshjaelp/tilmelding/fejl
+		# /medlemshjaelp/tilmelding/fejl
 		// signup error
 		else if($action[1] == "fejl") {
 			
 			$page->page(array(
-				"templates" => "member-help/signup-error.php",
+				"templates" => "member-help/signup_error.php",
 				"type" => "admin"
 			));
 			exit();
@@ -93,14 +111,21 @@ if($action) {
 	}
 
 	
-	// /medlemshjaelp/save
+	# /medlemshjaelp/save
 	else if($action[0] == "save" && $page->validateCsrfToken()) {
 		
-		// create new user (with a "fake" $action-array)
-		$user = $model->newUserFromMemberHelp(array("newUserFromMemberHelp"));
+		// create new user
+		$user = $model->newUserFromMemberHelp(["newUserFromMemberHelp"]);
 	
 		// successful creation
 		if(isset($user["user_id"])) {
+
+			if(getPost("maillist")) {
+				$model->addToMailchimp([
+					"email_address" => $user["email"],
+					"status" => "pending"
+				]);
+			}
 			
 			// add user_id to $_POST array, which will be used to create a new cart with addCart()
 			$_POST["user_id"] = $user["user_id"];
@@ -183,21 +208,41 @@ if($action) {
 	}
 	
 	
-	// /medlemshjaelp/brugerprofil
+	# /medlemshjaelp/brugerprofil
 	else if($action[0] == "brugerprofil") {
 		
-		//	/medlemshjaelp/brugerprofil/#user_id#
+		// Allow accept terms
+		if(count($action) == 3 && $action[2] == "user_accept" && $page->validateCsrfToken()) {
+
+			$model->acceptedTerms(["user_id" => $action[1]]);
+
+			header("Location: /medlemshjaelp/brugerprofil/".$action[1]);
+
+		}
+
+		// User must always accept terms - force dialogue if user has not accepted the terms
+		if(count($action) == 2 && !$model->hasAcceptedTerms(["user_id" => $action[1]])) {
+
+			$page->page(array(
+				"templates" => "member-help/user_accept_terms.php",
+				"type" => "login",
+				"page_title" => "Samtykke"
+			));
+			exit();
+		}
+
+		# /medlemshjaelp/brugerprofil/#user_id#
 		if(count($action) == 2) {
 			$page->page(array(
-				"templates" => "member-help/user-profile.php",
+				"templates" => "member-help/user_profile.php",
 				"type" => "admin"
 			));
 			exit();
 		}
-		// /medlemshjaelp/brugerprofil/#user_id#/
 		
+		# /medlemshjaelp/brugerprofil/#user_id#/...
 		else if(count($action) == 3) {
-			// /medlemshjaelp/brugerprofil/#user_id#/afdeling
+			# /medlemshjaelp/brugerprofil/#user_id#/afdeling
 			if($action[2] == "afdeling") {
 				$page->page(array(
 					"templates" => "member-help/update_user_department.php",
@@ -205,7 +250,7 @@ if($action) {
 				));
 				exit();
 			}
-			// /medlemshjaelp/brugerprofil/#user_id#/opsig
+			# /medlemshjaelp/brugerprofil/#user_id#/opsig
 			elseif($action[2] == "opsig") {
 				$page->page(array(
 					"templates" => "member-help/delete_user_information.php",
@@ -214,16 +259,45 @@ if($action) {
 				exit();
 			}
 			
-			// /medlemshjaelp/brugerprofil/#user_id#/medlemsskab
-			elseif($action[2] == "medlemsskab") {
+			# /medlemshjaelp/brugerprofil/#user_id#/medlemskab
+			elseif($action[2] == "medlemskab") {
+
 				$page->page(array(
 					"templates" => "member-help/update_user_membership.php",
 					"type" => "admin"
 				));
 				exit();
 			}
+
+			# /medlemshjaelp/brugerprofil/#user_id#/ordre-historik
+			elseif($action[2] == "ordre-historik") {
+
+				$page->page(array(
+					"templates" => "member-help/user_order_history.php",
+					"type" => "admin"
+				));
+				exit();
+			}
+
+			# /medlemshjaelp/brugerprofil/#user_id#/fornyelse
+			else if($action[2] == "fornyelse") {
+				$page->page(array(
+					"templates" => "member-help/update_user_membership_renewal.php",
+					"type" => "member"
+				));
+				exit();
+			}
+
+			# /medlemshjaelp/brugerprofil/#user_id#/genaktiver
+			else if($action[2] == "genaktiver") {
+				$page->page(array(
+					"templates" => "member-help/reactivate_user_membership.php",
+					"type" => "member"
+				));
+				exit();
+			}
 			
-			// /medlemshjaelp/brugerprofil/#user_id#/oplysninger lead to template
+			# /medlemshjaelp/brugerprofil/#user_id#/oplysninger
 			else if($action[2] == "oplysninger") {
 				$page->page(array(
 					"templates" => "member-help/update_user_information.php",
@@ -231,7 +305,7 @@ if($action) {
 				));
 				exit();
 			}
-			// medlemshjaelp/brugerprofil/#user_id#/kodeord lead to template
+			# /medlemshjaelp/brugerprofil/#user_id#/kodeord
 			else if($action[2] == "kodeord") {
 				$page->page(array(
 					"templates" => "member-help/update_user_password.php",
@@ -240,7 +314,7 @@ if($action) {
 				exit();
 			}
 			
-			// medlemshjaelp/brugerprofil/#user_id#/kodeord lead to template
+			# /medlemshjaelp/brugerprofil/#user_id#/kodeord
 			else if($action[2] == "accepter") {
 				//Method returns true
 				if($model->acceptedTerms(["user_id" => $action[1]])) {
@@ -253,10 +327,11 @@ if($action) {
 					exit();
 				}
 			}
+
 		}
 	}
 	
-	// profil/updateUserInformation
+	# /medlemshjaelp/updateUserInformation
 	else if($action[0] == "updateUserInformation" && $page->validateCsrfToken()) {
 
 		//Method returns true
@@ -271,8 +346,7 @@ if($action) {
 		}
 	}
 	
-	
-	// Handling updateUserDepartment method, specified in superuser.class.php
+	# /medlemshjaelp/updateUserDepartment
 	else if($action[0] == "updateUserDepartment" && $page->validateCsrfToken()) {
 
 		//Method returns true
@@ -291,7 +365,7 @@ if($action) {
 		}
 	}
 	
-	// Handling updateUserDepartment method, specified in superuser.class.php
+	# /medlemshjaelp/updateUserMembership
 	else if($action[0] == "updateUserMembership" && $page->validateCsrfToken()) {
 
 		//Method returns true
@@ -302,14 +376,60 @@ if($action) {
 		// Method returns false
 		else {
 			message()->resetMessages();
-			message()->addMessage("Medlemsskab blev ikke opdateret.", ["type" => "error"]);
+			message()->addMessage("Medlemskab blev ikke opdateret.", ["type" => "error"]);
 			header("Location: /medlemshjaelp/brugerprofil/$action[1]");
 			exit();
 		}
 	}
+
+	# /medlemshjaelp/updateUserMembershipRenewal/#user_id#
+	else if($action[0] == "updateUserMembershipRenewal" && count($action) == 2 && $page->validateCsrfToken()) {
+
+		$user_id = $action[1];
+		$result = $model->updateUserRenewalOptOut($action);
+
+		if($result === "REACTIVATION REQUIRED") {
+
+			header("Location: /medlemshjaelp/brugerprofil/$user_id/genaktiver");
+			exit();
+
+		}
+		else {
+
+			header("Location: /medlemshjaelp/brugerprofil/$user_id");
+			exit();
+		}
+	}
+
+	# /medlemshjaelp/reactivateUserMembership/#user_id#
+	else if($action[0] == "reactivateUserMembership" && count($action) == 2 && $page->validateCsrfToken()) {
+
+		$user_id = $action[1];
+		$order = $MC->switchMembership($action);
+
+		if($order) {
+
+			$_POST["membership_renewal"] = 1;
+			$result = $model->updateUserRenewalOptOut(["updateUserRenewalOptOut", $user_id]);
+			unset($_POST);
+			if($result) {
+
+				header("Location: /medlemshjaelp/betaling/".$order["order_no"]);
+				exit();
+			}
+			
+		}
+
+		message()->addMessage("Der skete en fejl.", array("type" => "error"));
+		$page->page([
+			"templates" => "member-help/reactivate_user_membership.php",
+			"type" => "member"
+		]);
+		exit();
+	}
 	
 
-	// medlemshjaelp/deleteUserInformation
+	# /medlemshjaelp/deleteUserInformation
 	else if($action[0] == "deleteUserInformation") {
 		
 		// If the method is requested by JavaScript
@@ -347,7 +467,7 @@ if($action) {
 		
 	}
 
-	// profil/updateUserPassword
+	# /medlemshjaelp/updateUserPassword
 	else if($action[0] == "updateUserPassword" && $page->validateCsrfToken()) {
 
 		//Method returns true
@@ -365,10 +485,197 @@ if($action) {
 			exit();
 		}
 	}
+	
+	# /medlemshjaelp/updateUserUserGroup/#user_id#
+	else if($action[0] == "updateUserUserGroup" && $page->validateCsrfToken()) {
 
+		//Method returns true
+		if($model->updateUserUserGroup($action)) {
+			message()->resetMessages();
+			message()->addMessage("Brugergruppen er opdateret");
+			header("Location: /medlemshjaelp/brugerprofil/$action[1]");
+			exit();
+		}
+		//Method returns false
+		else {
+			message()->resetMessages();
+			message()->addMessage("Der skete en fejl, så brugergruppen ikke blev opdateret.", array("type" => "error"));
+			header("Location: /medlemshjaelp/brugerprofil/$action[1]");
+			exit();
+		}
+	}
+
+
+
+	# /medlemshjaelp/butik
+	else if($action[0] == "butik") {
+		
+		# /medlemshjaelp/butik/#user_id#
+		if(count($action) == 2) {
+
+
+			$page->page(array(
+				"templates" => "member-help/shop.php",
+				"type" => "admin"
+			));	
+			exit();
+		}
+		else if(count($action) == 3) {
+
+			# /medlemshjaelp/butik/kurv/#cart_reference#
+			if($action[1] == "kurv") {
+				
+				$page->page(array(
+					"templates" => "member-help/cart.php",
+					"type" => "admin"
+				));	
+				exit();
+			}
+			
+			# /medlemshjaelp/butik/addToCart/#cart_reference#
+			else if($action[1] == "addToCart" && $page->validateCsrfToken()) {
+
+				$cart_reference = $action[2];
+				$cart = $SC->addToCart(["addToCart", $cart_reference]);
+
+				if($cart) {
+
+					header("Location: /medlemshjaelp/butik/".$cart["user_id"]);
+					exit();
+				}
+				// something went wrong
+				else {
+					message()->addMessage("Noget gik galt.", array("type" => "error"));
+				}
+
+			}
+
+		}
+		else if(count($action) == 4) {
+
+			# /medlemshjaelp/butik/updateCartItemQuantity/#cart_reference#/#cart_item_id#
+			if($action[1] == "updateCartItemQuantity" && $page->validateCsrfToken()) {
+
+				message()->resetMessages();
+
+
+				$item = $SC->updateCartItemQuantity(["updateCartItemQuantity", $action[2], $action[3]]);
+
+				if($item) {
+
+					if(!message()->hasMessages()) {
+						message()->addMessage("Mængde opdateret");
+					}
+					header("Location: /medlemshjaelp/butik/kurv/".$action[2]);
+					exit();
+				}
+				// something went wrong
+				else {
+					message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
+				}
+
+			}
+
+			# /medlemshjaelp/butik/deleteFromCart/#cart_reference#/#cart_item_id#
+			else if($action[1] == "deleteFromCart" && $page->validateCsrfToken()) {
+
+				$cart = $SC->deleteFromCart(["deleteFromCart", $action[2], $action[3]]);
+
+				if($cart) {
+
+					message()->addMessage("Varen blev slettet fra kurven.");
+					header("Location: /medlemshjaelp/butik/kurv/".$cart["cart_reference"]);
+					exit();
+				}
+				// something went wrong
+				else {
+					message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
+				}
+
+			}
+			
+			# /medlemshjaelp/butik/newOrderFromCart/#cart_reference#/#cart_id#
+			else if($action[1] == "newOrderFromCart") {
+
+				$cart_reference = $action[2];
+				$cart_id = $action[3];
+
+				// convert cart to order
+				$order = $SC->newOrderFromCart(["newOrderFromCart", $cart_id, $cart_reference]);
+				if($order) {	
+					
+					$order_no = $order["order_no"];
+					$user_id = $order["user_id"];
+					$user = $model->getKbhffUser(["user_id" => $user_id]);
+					$total_order_price = $SC->getTotalOrderPrice($order["id"]);
+					
+					// send notification email to admin
+					mailer()->send(array(
+						"recipients" => SHOP_ORDER_NOTIFIES,
+						"subject" => SITE_URL . " - New order ($order_no) created on behalf of: $user_id",
+						"message" => "Check out the new order: " . SITE_URL . "/janitor/admin/user/orders/" . $user_id,
+						"tracking" => false
+						// "template" => "system"
+					));
+
+					// order confirmation mail
+					mailer()->send(array(
+						"recipients" => $user["email"],
+						"values" => array(
+							"NICKNAME" => $user["nickname"], 
+							"ORDER_NO" => $order_no, 
+							"ORDER_ID" => $order["id"], 
+							"ORDER_PRICE" => formatPrice($total_order_price) 
+						),
+						// "subject" => SITE_URL . " – Thank you for your order!",
+						"tracking" => false,
+						"template" => "order_confirmation"
+					));
+					
+					// redirect to payment
+					message()->resetMessages();
+					header("Location: /medlemshjaelp/betaling/".$order["order_no"]);
+					exit();
+				}
+				
+				// error
+				else {
+					message()->resetMessages();
+					message()->addMessage("Det mislykkedes at omdanne indkøbskurven til en ordre.", array("type" => "error"));
+					header("Location: /medlemshjaelp/fejl");
+					exit();
+				}
+
+				
+			}
+
+			# /medlemshjaelp/butik/cancelOrder/#order_no#/#user_id#
+			else if($action[1] == "cancelOrder") {
+
+				$order_no = $action[2];
+				$user_id = $action[3];
+
+				$order = $SC->getOrders(["order_no" => $order_no]);
+
+				if($SC->cancelOrder(["cancelOrder", $order["id"], $user_id])) {
+
+					message()->addMessage("Ordren ".$order_no." blev annulleret.");
+					header("Location: /medlemshjaelp/butik/".$user_id);
+					exit();
+				}
+				// something went wrong
+				else {
+					message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
+				}
+			}
+		}
+		
+	}
+
+	# /medlemshjaelp/betaling
 	else if($action[0] == "betaling") {
 		
-		// /medlemshjaelp/betaling/#order_no#
+		# /medlemshjaelp/betaling/#order_no#
 		if(count($action) === 2) {
 			$page->page(array(
 				"templates" => "member-help/payment.php",
@@ -377,7 +684,7 @@ if($action) {
 			exit();
 		}
 		
-		// /medlemshjaelp/betaling/spring-over/kvittering
+		# /medlemshjaelp/betaling/spring-over/kvittering
 		else if(count($action) === 3 && $action[1] == "spring-over") {
 			$page->page(array(
 				"templates" => "member-help/receipt/skipped.php",
@@ -386,7 +693,7 @@ if($action) {
 			exit();
 		} 
 		
-		// /medlemshjaelp/betaling/stripe/ordre/#order_no#/process
+		# /medlemshjaelp/betaling/stripe/ordre/#order_no#/process
 		else if(count($action) === 5 && $action[4] == "process" && $page->validateCsrfToken()) {
 			
 			$gateway = $action[1];
@@ -410,7 +717,7 @@ if($action) {
 
 							// redirect to leave POST state
 							header("Location: $return_url/?payment_intent=".$result["payment_intent_id"]);
-								exit();
+							exit();
 
 						}
 						else if($result["status"] === "ACTION_REQUIRED") {
@@ -463,6 +770,12 @@ if($action) {
 						case "incorrect_zip"            : $message = "Kortets postnummer kunne ikke bekræftes."; break;
 						case "card_declined"            : $message = "Kortet blev afvist."; break;
 					}
+					if($payment_method_result["decline_code"]) {
+						switch($payment_method_result["decline_code"]) {
+
+							case "insufficient_funds"         : $message = "Kortet blev afvist. Der er ikke penge nok på kontoen."; break;
+						}
+					}
 
 
 					message()->addMessage($message, ["type" => "error"]);
@@ -482,7 +795,7 @@ if($action) {
 			
 		}
 
-		// /medlemshjaelp/betaling/stripe/register-paid-intent
+		# /medlemshjaelp/betaling/stripe/register-paid-intent
 		else if(count($action) == 3 && $action[2] == "register-paid-intent") {
 
 			$payment_intent_id = getVar("payment_intent");
@@ -527,7 +840,7 @@ if($action) {
 			else if($id_result && $id_result["status"] === "error") {
 
 				if($id_result["code"] === "payment_intent_authentication_failure") {
-					$id_result["message"] = "Tredjepartsautentificeringen slog fejl. Prøv igen eller brug et andet kort.";
+					$id_result["message"] = "Tredjepartsautentificeringen slog fejl. Prøv igen eller brug en andet kort eller betalingsmetode.";
 				}
 
 				message()->addMessage($id_result["message"], ["type" => "error"]);
@@ -545,7 +858,7 @@ if($action) {
 
 		}
 		
-		// /medlemshjaelp/betaling/#order_no/#payment_id#/kvittering
+		# /medlemshjaelp/betaling/#order_no/#payment_id#/kvittering
 		else if(count($action) === 4 && $action[3] == "kvittering") {
 			$page->page(array(
 				"templates" => "member-help/receipt/index.php",
@@ -556,8 +869,48 @@ if($action) {
 
 		
 	}
+
+	# /medlemshjaelp/ret-bestilling
+	else if($action[0] == "ret-bestilling" && count($action) == 3) {
+		$page->page(array(
+			"templates" => "member-help/update_order_item_department_pickupdate.php",
+		));
+		exit();
+	}
+
+	# /medlemshjaelp/setOrderItemDepartmentPickupdate/#order_item_id#
+	else if($action[0] == "setOrderItemDepartmentPickupdate" && $page->validateCsrfToken()) {
+
+		$order_item_id = $action[1];
+		$order_item = $SC->getOrderItems(["order_item_id" => $order_item_id]);
+		$user_id = $order_item ? $order_item["user_id"] : false;
+
+
+		if($SC->setOrderItemDepartmentPickupdate(["setOrderItemDepartmentPickupdate", $order_item_id])) {
+
+			header("Location: /medlemshjaelp/brugerprofil/$user_id");
+			exit();
+		}
+		// something went wrong
+		else {
+			message()->addMessage("Noget gik galt.", array("type" => "error"));
+			header("Location: /medlemshjaelp/ret-bestilling/$order_item_id/$user_id");
+			exit();
+		}
+
+	}
+
+	# /medlemshjaelp/betalinger/#user_id#
+	else if($action[0] == "betalinger" && count($action) == 2) {
+
+		$page->page(array(
+			"templates" => "member-help/payments.php",
+			"type" => "admin"
+		));
+		exit();
+	}
 	
-	// /medlemshjaelp/registerPayment/#order_no#
+	# /medlemshjaelp/registerPayment/#order_no#
 	else if(count($action) === 2 && $action[0] == "registerPayment") {
 		
 		// create payment id
@@ -565,7 +918,7 @@ if($action) {
 		if($payment_id) {		
 			// redirect to receipt
 			message()->resetMessages();
-			header("Location: /medlemshjaelp/betaling/".$payment_id."/".$action[1]."/kvittering");
+			header("Location: /medlemshjaelp/betaling/".$action[1]."/".$payment_id."/kvittering");
 			exit();
 		}
 
@@ -583,7 +936,7 @@ if($action) {
 
 	}
 	
-	// /medlemshjaelp/paymentError
+	# /medlemshjaelp/paymentError
 	else if($action[0] == "paymentError") {
 		$page->page(array(
 			"templates" => "member-help/payment.php",

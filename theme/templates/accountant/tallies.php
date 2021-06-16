@@ -26,8 +26,8 @@ $tallies = $TC->getTallies(["department_id" => $department_id, "order" => "creat
 
 	<? foreach($tallies as $tally): ?>
 		<? 
-		$created_at = date("d/m-Y", strtotime($tally["created_at"]));
-		$closed_at = date("d/m-Y", strtotime($tally["modified_at"]));
+		$created_at = date("d.m.Y", strtotime($tally["created_at"]));
+		$closed_at = date("d.m.Y", strtotime($tally["modified_at"]));
 		?>
 
 		<li class="tally tally_id:<?= $tally["id"] ?>">

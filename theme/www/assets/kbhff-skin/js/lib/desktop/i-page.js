@@ -55,7 +55,7 @@ Util.Modules["page"] = new function() {
 
 		// Page is ready
 		page.ready = function() {
-			u.bug("page.ready:", this);
+			// u.bug("page.ready", this);
 
 			// page is ready to be shown - only initalize if not already shown
 			if(!this.is_ready) {
@@ -75,6 +75,9 @@ Util.Modules["page"] = new function() {
 
 				// Initialize navigation
 				this.initNavigation();
+
+				// accept cookies?
+				this.acceptCookies();
 
 				// Initial size adjustment
 				this.resized();
@@ -144,6 +147,41 @@ Util.Modules["page"] = new function() {
 					}
 				}
 			}
+		}
+
+		// show accept cookies dialogue
+		page.acceptCookies = function() {
+			// u.bug("acceptCookies", u.terms_version);
+
+			// show terms notification
+			if(u.terms_version && !u.getCookie(u.terms_version)) {
+
+
+				var terms = u.ie(document.body, "div", {"class":"terms_notification"});
+				u.ae(terms, "h3", {"html":u.stringOr(u.txt["terms-headline"], "Flere grøntsager, <br />færre kager")});
+				u.ae(terms, "p", {"html":u.stringOr(u.txt["terms-paragraph"], "Vi beskytter dit privatliv og bruger kun funktionelle cookies.")});
+
+				var bn_accept = u.ae(terms, "a", {"class":"accept", "html":u.stringOr(u.txt["terms-accept"], "Accepter")});
+				bn_accept.terms = terms;
+				u.ce(bn_accept);
+				bn_accept.clicked = function() {
+					this.terms.parentNode.removeChild(this.terms);
+					u.saveCookie(u.terms_version, true, {"path":"/", "expires":false});
+				}
+
+				if(!location.href.match(u.terms_link)) {
+					var bn_details = u.ae(terms, "a", {"class":"details", "html":u.stringOr(u.txt["terms-details"], "Læs mere"), "href":u.terms_link});
+					u.ce(bn_details, {"type":"link"});
+				}
+
+				// show terms/cookie approval
+				u.a.transition(terms, "all 0.5s ease-in");
+				u.ass(terms, {
+					"opacity": 1
+				});
+
+			}
+
 		}
 
 		// ready to start page builing process

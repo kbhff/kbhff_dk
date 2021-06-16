@@ -49,6 +49,13 @@ $departments = $model->getDepartments(["order" => "name ASC"]);
 
 	</div>
 
+<? else: ?>
+
+
+	<h1>Afdelingner</h1>
+
+
+<? endif; ?>
 
 	<div class="departmentlist">
 		<ul class="departments">
@@ -88,9 +95,11 @@ $departments = $model->getDepartments(["order" => "name ASC"]);
 					</li>
 					<li class="pricerange" itemprop="priceRange" content="0-100 DKK">1 - 100 kr.</li>
 				</ul>
+				<? if($department["description"]): ?>
 				<div class="description" itemprop="description">
-					<?= $department["description"] ?>
+					<p><?= $department["description"] ?></p>
 				</div>
+				<? endif; ?>
 			 </li>
 <?			endforeach; ?>
 
@@ -98,15 +107,6 @@ $departments = $model->getDepartments(["order" => "name ASC"]);
 	</div>
 
 
-<? else: ?>
-
-
-	<h1>Hov!</h1>
-	<h2>Der skete en fejl.</h2>
-	<p>Vi kunne ikke finde den ønskede side.</p>
-
-
-<? endif; ?>
 
 
 </div>
