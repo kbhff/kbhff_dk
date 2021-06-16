@@ -13,8 +13,8 @@
     mail: bestyrelse@kbhff.dk
 
     think.dk
-    Charlotte Ammundsens Plads 3
-    1359 København K
+    Æbeløgade 13, 402
+    2100 København Ø
     Denmark
     mail: start@think.dk
 
