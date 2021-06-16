@@ -105,6 +105,13 @@ if($action) {
 		));
 		exit();
 	}
+	else if($action[0] == "ordre-historik") {
+		$page->page(array(
+			"templates" => "profile/order_history.php",
+			"type" => "member"
+		));
+		exit();
+	}
 	
 	else if($action[0] == "medlemskab") {
 

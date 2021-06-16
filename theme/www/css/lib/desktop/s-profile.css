@@ -199,3 +199,50 @@
 	font-size: 26px;
 	padding-bottom: 25px;
 }
+
+
+#content div.order_history ul.orders {margin: 0; list-style: none;}
+
+#content div.order_history ul.orders li {
+	display: flex;
+	flex-flow: row nowrap;
+	
+	padding: 0;
+}
+
+#content div.order_history ul.orders > li > span {
+	display: block;
+	font-size: 14px;
+	padding: 3px 4px;
+	flex: 1 1;
+	align-self: center;
+}
+
+#content div.order_history ul.orders li.order_item:nth-child(2n) {
+	background-color: #DDDDDD;
+}
+
+
+#content div.order_history ul.orders li.order {
+	border-bottom: 1px solid #000000;
+	margin-top: 30px;
+}
+#content div.order_history ul.orders li.order span {
+	text-transform: uppercase;
+	font-size: 20px;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	
+}
+#content div.order_history ul.orders > li.order > span.order_date {
+	flex: 0 0 100px;
+}
+#content div.order_history ul.orders > li.order > span.order_number {
+	flex: 1 1;
+}
+#content div.order_history ul.orders > li.order > span.total_price {
+	text-align: right;
+	flex: 0 0 100px;
+}
+#content div.order_history ul.orders > li > span.order_item {
+	flex: 1 1;
+}

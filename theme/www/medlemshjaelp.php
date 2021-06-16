@@ -269,6 +269,16 @@ if($action) {
 				exit();
 			}
 
+			# /medlemshjaelp/brugerprofil/#user_id#/ordre-historik
+			elseif($action[2] == "ordre-historik") {
+
+				$page->page(array(
+					"templates" => "member-help/user_order_history.php",
+					"type" => "admin"
+				));
+				exit();
+			}
+
 			# /medlemshjaelp/brugerprofil/#user_id#/fornyelse
 			else if($action[2] == "fornyelse") {
 				$page->page(array(
