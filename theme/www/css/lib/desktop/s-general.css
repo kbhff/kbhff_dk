@@ -98,3 +98,10 @@
 
 #content .scene.post .article > ul.info {display: block; width: 100%; margin: 0 auto; padding: 16px 12px 0 18px;  box-sizing: border-box;}
 #content .scene.post .article > ul.info li {padding-left: 0; color: #666;}
+
+
+#content div.downtime {
+	text-align: center;
+	padding: 300px 100px;
+	background: transparent url(/favicon.png) no-repeat center 100px;
+}
