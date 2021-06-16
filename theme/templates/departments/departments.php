@@ -49,6 +49,13 @@ $departments = $model->getDepartments(["order" => "name ASC"]);
 
 	</div>
 
+<? else: ?>
+
+
+	<h1>Afdelingner</h1>
+
+
+<? endif; ?>
 
 	<div class="departmentlist">
 		<ul class="departments">
@@ -100,15 +107,6 @@ $departments = $model->getDepartments(["order" => "name ASC"]);
 	</div>
 
 
-<? else: ?>
-
-
-	<h1>Hov!</h1>
-	<h2>Der skete en fejl.</h2>
-	<p>Vi kunne ikke finde den ønskede side.</p>
-
-
-<? endif; ?>
 
 
 </div>
