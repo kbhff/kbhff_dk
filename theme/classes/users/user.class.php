@@ -890,6 +890,68 @@ IT",
 
 	}
 
+
+	// check if user exists
+	// checks if email or mobile already exists for different user_id
+	// TODO: could be expanded to cover names and addresses as well
+	// Consider if expanded "search" should be kept elsewhere
+	function userExists($_options) {
+
+		$email = false;
+		$mobile = false;
+
+		$member_no = false;
+
+		// user_id to check is user is same user
+		$user_id = false;
+
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+					case "email"      : $email        = $_value; break;
+					case "mobile"     : $mobile       = $_value; break;
+
+					case "member_no"  : $member_no    = $_value; break;
+
+					case "user_id"    : $user_id      = $_value; break;
+				}
+			}
+		}
+
+		$query = new Query();
+
+		// check for users with same email
+		if($email) {
+
+			$sql = "SELECT user_id FROM ".$this->db_usernames." WHERE type = 'email' AND username = '$email'".($user_id ? " AND user_id != $user_id" : "");
+//			print $sql;
+			if($query->sql($sql)) {
+				return true;
+			}
+		}
+
+		// check for users with same mobile
+		if($mobile) {
+
+			$sql = "SELECT user_id FROM ".$this->db_usernames." WHERE type = 'mobile' AND username = '$mobile'".($user_id ? " AND user_id != $user_id" : "");
+//			print $sql;
+			if($query->sql($sql)) {
+				return true;
+			}
+		}
+
+		// check for users with same member_no
+		if($member_no) {
+
+			$sql = "SELECT user_id FROM ".$this->db_usernames." WHERE type = 'member_no' AND username = '$member_no'".($user_id ? " AND user_id != $user_id" : "");
+//			print $sql;
+			if($query->sql($sql)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
 
 ?>
