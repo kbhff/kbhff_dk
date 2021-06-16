@@ -44,8 +44,11 @@ $this->pageTitle("Kasseregnskab");
 				<h1>Dagens kasseregnskab</h1>
 				<p>Afdeling: <?=$department["name"] ?></p>
 				<p>Oprettet: <?=$tally["created_at"] ?></p>
-				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus accusamus eos incidunt! Corrupti qui nostrum facere possimus. Aperiam sunt ullam, dolorem temporibus quam officiis iure possimus molestiae nesciunt dolor quidem quis sint porro commodi. Quod excepturi provident neque harum corrupti deserunt alias voluptatibus totam, ratione, a explicabo ad facilis possimus.</p>
-
+				<p>Som kassemester/butiksvagt skal du holde øje med ind- og udbetalinger af kontanter under din vagt. På denne side skal du derfor udfylde nedenstående felter i løbet af vagten. Du kan løbende klikke “Gem og gå tilbage”, men til sidst i vagten er det vigtigt at du klikker “Godkend regnskab og luk kasse”, så kassen er klar til at blive udfyldt i næste uge./p>
+				<p>Ved vagtstart åbnes kassen, og den allerede eksisterende kassebeholdning indtastes i feltet vagtstart. På samme måde indtastes ved afdelingens lukketid slutbeløbet i feltet vagtslut inden deponering.
+Deponering af penge sker, hvis penge fra kassebeholdningen udtrækkes for at blive overført til KBHFFs økonomiansvarlige via mobilepay eller bankoverførsel. Udbetalinger fra kassen kan f.eks. være udgifter i afdelingen til kaffe, rengøringsmidler, skraldeposer osv. Andre kontante indtægter er f.eks. betalinger for fællesspisning eller kogebøger.</p>
+				<p>Til slut kan der aflægges eventuelle kommentarer, inden kassen godkendes og lukkes. Sker der vagtskifte undervejs, kan de pågældende medlemmer henholdsvis lukke og åbne kassen, så længe regnskabet ikke godkendes ved lukning.</p>
+				<p>Skriv til <a href="mailto:okonomi@kbhff.dk">okonomi@kbhff.dk</a> og <a href="mailto:it@kbhff.dk">it@kbhff.dk</a> hvis du har spørgsmål til kassen.</p>
 			</div>
 
 			<? if($tally["status"] == 1): ?>
@@ -82,7 +85,7 @@ $this->pageTitle("Kasseregnskab");
 
 						<div class="view">
 							<ul class="actions">
-								<li class="description">Ved vagtafslutning</li>
+								<li class="description">Ved vagtafslutning - inden evt. Deponering</li>
 								<li class="amount"><?= $tally["end_cash"] ? $tally["end_cash"] . " kr." : "" ?></li>
 								<li class="edit_btn"><a href="#" class="button">Redigér</a></li>
 							</ul>
