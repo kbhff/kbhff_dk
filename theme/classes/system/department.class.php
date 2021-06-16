@@ -139,7 +139,9 @@ class Department extends Model {
 			"type" => "html",
 			"label" => "Essential information",
 			"hint_message" => "Write any essential information about the department (e.g. special conditions or other deviations) – this will be shown on the department list.",
-			"error_message" => "Invalid entry."
+			"error_message" => "Invalid entry.",
+			"allowed_tags" => "p,h3,h4",
+			"required" => false
 		));
 
 		// HTML
