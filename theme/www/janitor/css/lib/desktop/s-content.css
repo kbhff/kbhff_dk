@@ -1,2 +1,4 @@
-#content .scene.restructure div.result code {white-space: pre;}
+#content .scene.restructure div.result code {white-space: pre; border-bottom: 3px solid red; display: block;}
 #content .scene.restructure div.result code br {display: none;}
+
+#content .scene.restructure div.result code p.error {color: red;}

@@ -5,7 +5,8 @@
 	<ul class="actions">
 		<?= $HTML->oneButtonForm("Perform DB restructuring", "/janitor/restructure/run", [
 			"wrapper" => "li.restrucure",
-			"success-location" => "/janitor/restructure/done"
+			"success-function" => "progress"
+			// "success-location" => "/janitor/restructure/done"
 		]) ?>
 	</ul>
 
