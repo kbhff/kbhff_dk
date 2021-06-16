@@ -586,6 +586,8 @@ class Shop extends ShopCore {
 	function getOrderItemsPickupdates($user_id, $_options = false) {
 		
 		$query = new Query();
+		$query->checkDbExistence($this->db_pickupdates);
+		$query->checkDbExistence($this->db_department_pickupdates);
 		$query->checkDbExistence($this->db_department_pickupdate_order_items);
 
 		$after = false;
