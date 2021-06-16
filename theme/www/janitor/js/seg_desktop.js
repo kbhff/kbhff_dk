@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-05-21 15:46:24
+asset-builder @ 2021-06-16 16:08:07
 */
 
 /*seg_desktop_include.js*/
@@ -11492,7 +11492,8 @@ u.gapi_key = 'AIzaSyAVqnYpqFln-qAYsp5rkEGs84mrhmGQB_I';
 /*m-form.js*/
 Util.Modules["restructure"] = new function() {
 	this.init = function(div) {
-		var result_code = u.qs("div.result code");
+		var div_result = u.qs("div.result");
+		var result_code = u.qs("code", div_result);
 		var li_restructure = u.qs("li.restrucure");
 		li_restructure.result_code = result_code;
 		li_restructure.confirmedError = function(response) {
@@ -11505,9 +11506,10 @@ Util.Modules["restructure"] = new function() {
 			else if(response) {
 				this.result_code.innerHTML = response;
 			}
-			console.log(response);
 		}
-		console.log(li_restructure);
+		li_restructure.progress = function(response) {
+			u.ie(div_result, result_code.cloneNode(true), {html:response.innerHTML});
+		}
 	}
 }
 Util.Modules["generic"] = new function() {
