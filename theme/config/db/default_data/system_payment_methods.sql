@@ -1,6 +1,6 @@
-INSERT INTO `kbhff_dk`.`system_payment_methods` (`id`, `name`, `classname`, `description`, `gateway`, `state`, `position`)
+INSERT INTO `SITE_DB`.`system_payment_methods` (`id`, `name`, `classname`, `description`, `gateway`, `state`, `position`)
 VALUES
-	(1,'Bankoverførsel','banktransfer','Regular bank transfer. Preferred option.',NULL,NULL,1),
-	(2,'Kreditkort','stripe','Stripe credit card payment - 1.4% transaction fee. *','stripe','public',2),
-	(3,'MobilePay','mobilepay','MobilePay payment.',NULL,NULL,3),
-	(4,'Cash','cash','Cash payment',NULL,NULL,4);
+	(1,'Bankoverførsel','banktransfer','Regular bank transfer. Preferred option.',NULL,'admin',1),
+	(2,'Betalingskort','stripe','','stripe','public',2),
+	(3,'MobilePay','mobilepay','MobilePay payment.',NULL,'memberhelp',3),
+	(4,'Cash','cash','Cash payment',NULL,'admin',4);

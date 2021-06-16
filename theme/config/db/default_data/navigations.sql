@@ -1,4 +1,4 @@
-INSERT INTO `kbhff_dk`.`navigation` (`id`, `name`, `handle`)
+INSERT INTO `SITE_DB`.`navigation` (`id`, `name`, `handle`)
 VALUES
 	(2,'main-janitor','main-janitor'),
 	(3,'main-public','main-public'),

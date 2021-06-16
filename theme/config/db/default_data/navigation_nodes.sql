@@ -1,4 +1,4 @@
-INSERT INTO `kbhff_dk`.`navigation_nodes` (`id`, `navigation_id`, `node_name`, `node_link`, `node_item_id`, `node_item_controller`, `node_classname`, `node_target`, `node_fallback`, `relation`, `position`)
+INSERT INTO `SITE_DB`.`navigation_nodes` (`id`, `navigation_id`, `node_name`, `node_link`, `node_item_id`, `node_item_controller`, `node_classname`, `node_target`, `node_fallback`, `relation`, `position`)
 VALUES
 	(DEFAULT,3,'Min side','/profil',NULL,NULL,'profile',NULL,"/login",0,0),
 	(DEFAULT,3,'Grøntshoppen','/butik',NULL,NULL,'shop',NULL,NULL,0,0),
