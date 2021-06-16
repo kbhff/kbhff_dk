@@ -55,9 +55,11 @@
 
 #content div.scene.tally div.view.edit > form > span.amount div.field {padding: 0;}
 #content div.scene.tally div.view.edit > form > span.amount div.field label {display: none;}
+#content div.scene.tally div.view.edit > form > span.amount div.field span.pseudolabel {display: none;}
 #content div.scene.tally div.view.edit > form > span.amount div.field input {padding-top: 2px; padding-bottom: 2px; width: 150px; text-align: right; float: right;}
 #content div.scene.tally div.view.edit > form > span.amount div.field div.help {float: right; padding: 0; width: 210px;}
-#content div.scene.tally div.view.edit > form > span.amount div.field div.help .hint {position: relative; padding: 5px 10px 0 0;}
+#content div.scene.tally div.view.edit > form > span.amount div.field div.help .hint {padding: 3px 10px 0 0; width: 200px;}
+#content div.scene.tally div.view.edit > form > span.amount div.field div.help .error {padding: 10px 10px 0 0; width: 200px;}
 
 
 /* PAYOUTS */
