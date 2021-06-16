@@ -58,58 +58,58 @@ class Page extends PageCore {
 	*
 	* @return String page header
 	*/
-	function page($_options = false) {
-		global $HTML;
-		global $JML;
-
-		if(session()->value("itgroup")) {
-			$type = "www";
-			$templates = false;
-			$error = "pages/404.php";
-
-			if($_options !== false) {
-				foreach($_options as $_option => $_value) {
-					switch($_option) {
-						case "type"              : $type       = $_value; break;
-
-						case "templates"         : $templates  = $_value; break;
-
-						case "error"             : $error      = $_value; break;
-
-						case "body_class"        : $this->bodyClass($_value); break;
-						case "page_title"        : $this->pageTitle($_value); break;
-						case "page_descriptiton" : $this->pageDescription($_value); break;
-						case "content_class"     : $this->contentClass($_value); break;
-					}
-				}
-			}
-
-			$_template = "";
-			$_header = "";
-			$_footer = "";
-
-			if($templates) {
-				$templates_array = explode(",", $templates);
-				foreach($templates_array as $template) {
-	//				print "buffering: " . $template;
-
-					$_template .= $this->template($template, array("buffer" => true, "error" => $error));
-
-	//				print "buffered: " . $_template;
-				}
-			}
-
-			$_header = $this->header(array("type" => $type, "buffer" => true));
-			$_footer = $this->footer(array("type" => $type, "buffer" => true));
-
-			print $_header.$_template.$_footer;
-		}
-
-		else {
-			print $this->template("downtime.php");
-			
-		}
-	}
+	// function page($_options = false) {
+	// 	global $HTML;
+	// 	global $JML;
+	//
+	// 	if(session()->value("itgroup")) {
+	// 		$type = "www";
+	// 		$templates = false;
+	// 		$error = "pages/404.php";
+	//
+	// 		if($_options !== false) {
+	// 			foreach($_options as $_option => $_value) {
+	// 				switch($_option) {
+	// 					case "type"              : $type       = $_value; break;
+	//
+	// 					case "templates"         : $templates  = $_value; break;
+	//
+	// 					case "error"             : $error      = $_value; break;
+	//
+	// 					case "body_class"        : $this->bodyClass($_value); break;
+	// 					case "page_title"        : $this->pageTitle($_value); break;
+	// 					case "page_descriptiton" : $this->pageDescription($_value); break;
+	// 					case "content_class"     : $this->contentClass($_value); break;
+	// 				}
+	// 			}
+	// 		}
+	//
+	// 		$_template = "";
+	// 		$_header = "";
+	// 		$_footer = "";
+	//
+	// 		if($templates) {
+	// 			$templates_array = explode(",", $templates);
+	// 			foreach($templates_array as $template) {
+	// //				print "buffering: " . $template;
+	//
+	// 				$_template .= $this->template($template, array("buffer" => true, "error" => $error));
+	//
+	// //				print "buffered: " . $_template;
+	// 			}
+	// 		}
+	//
+	// 		$_header = $this->header(array("type" => $type, "buffer" => true));
+	// 		$_footer = $this->footer(array("type" => $type, "buffer" => true));
+	//
+	// 		print $_header.$_template.$_footer;
+	// 	}
+	//
+	// 	else {
+	// 		print $this->template("downtime.php");
+	//
+	// 	}
+	// }
 
 
 	/**
