@@ -30,8 +30,7 @@ if($action) {
 
 
 		// check if user exists
-		if(!$model->userExists(["email"=>$username, "mobile"=>$username])) {
-			
+		if(!$model->userExists(["email"=>$username, "mobile"=>$username, "member_no"=>$username])) {
 			message()->addMessage("Det indtastede brugernavn findes ikke i vores system.", ["type"=>"error"]);
 			header("Location: /login");
 			exit();
