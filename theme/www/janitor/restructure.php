@@ -2625,7 +2625,7 @@ if(is_array($action) && count($action)) {
 			output("order_operations_6");
 			output("REPEAT UNTIL NO ORDERS ARE FOUND");
 
-			$orders = getAllOrders(5000);
+			$orders = getAllOrders();
 			output("TOTAL ORDERS: " . count($orders));
 
 			$orderno_to_delete = array();
