@@ -35,7 +35,7 @@ define('FF_ANNUALFEE', 77);
 */
 
 if(ENVIRONMENT == "production") {
-	$config['base_url']	= (isset($_SERVER["CI_DOMAIN"]) ?  $_SERVER["CI_DOMAIN"] : 'http://kbhff2.dk');
+	$config['base_url']	= (isset($_SERVER["CI_DOMAIN"]) ?  $_SERVER["CI_DOMAIN"] : 'http://kbhff.dk');
 }
 else if(ENVIRONMENT == "testing") {
 	$config['base_url']	= isset($_SERVER["CI_DOMAIN"]) ?  $_SERVER["CI_DOMAIN"] : 'http://test.kbhff.dk';
