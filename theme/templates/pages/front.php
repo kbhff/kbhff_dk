@@ -114,7 +114,7 @@ $post_items = $IC->getItems([
 				<h3>Genveje</h3>
 				<ul class="actions">
 					<li><a href="http://kbhffwiki.org/tiki-index.php?page=Vagtplaner" class="shift">Ta' en vagt</a></li>
-					<li><a href="https://medlem.kbhff.dk" class="order">Bestil en pose</a></li>
+					<li><a href="/butik" class="order">Bestil en pose</a></li>
 					<li><a href="/om/bliv-medlem" class="member">Bliv medlem</a></li>
 				</ul>
 			</div>
