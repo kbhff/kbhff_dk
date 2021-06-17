@@ -309,7 +309,7 @@ IT
 				}
 				unset($_POST["username_id"]);
 			}
-			if($mobile) {
+			if($mobile !== false) {
 				if(!$this->updateMobile(["updateMobile", $user_id])) {
 					$update_success = false;
 				}
