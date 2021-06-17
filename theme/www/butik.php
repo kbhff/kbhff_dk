@@ -20,6 +20,14 @@ $DC = new Department();
 $page->bodyClass("shop");
 $page->pageTitle("Butik");
 
+$UC = new User();
+$user = $UC->getKbhffUser();
+// current user is active member
+if($user && $user["membership"] && $user["membership"]["subscription_id"]) {
+
+	// active members should not have signupfees in their cart
+	$model->deleteItemtypeFromCart("signupfee");
+}
 
 if($action) {
 	
