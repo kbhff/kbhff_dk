@@ -186,7 +186,14 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 
 	<div class="c-wrapper pickupdates">
 		<h2>Afhentningsdage og lokale åbningsdage</h2>
-		<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique quas ipsum voluptatum temporibus earum ullam quo commodi adipisci. Culpa, sint facilis reiciendis explicabo aliquid illo omnis earum similique quod dolorum soluta vitae reprehenderit eum dolores! Vero quos excepturi architecto fuga!</p>
+		<p>
+			Dette afsnit bruges til at oprette og vedligeholde afhentningsdage (de dage produkter kan afhentes i afdelingerne), samt hvilke afdelinger 
+			har åbent på disse dage.
+		</p>
+		<p>
+			Når du opretter en ny afhentningsdag, kan du kun vælge blandt onsdage, hvor der ikke allerede er oprettet en afhentningsdag. Alle
+			afdelinger er som standard åbne på hver afhentningsdag, så du skal klikke af hvis en afdeling f.eks. holder ferielukket.
+		</p>
 		<ul class="actions">
 			<li class="add"><a href="/indkoeb/ny-afhentningsdag" class="button primary">Tilføj ny afhentningsdag</a></li>
 		</ul>
