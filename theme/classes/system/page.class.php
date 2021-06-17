@@ -106,7 +106,7 @@ class Page extends PageCore {
 		}
 
 		else {
-			print $this->template("downtime.php");
+			print $this->template("downtime.php", array("buffer" => true));
 
 		}
 	}
