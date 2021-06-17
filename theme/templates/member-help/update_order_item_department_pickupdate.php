@@ -3,6 +3,7 @@ include_once("classes/system/department.class.php");
 $DC = new Department();
 $UC = new SuperUser();
 $SC = new SuperShop();
+$IC = new Items();
 global $action;
 $order_item_id = $action[1];
 $user_id = $action[2];
@@ -12,15 +13,22 @@ $departments = $DC->getDepartments(["accepts_signup" => 1]);
 $pickupdates = $SC->getPickupdates(["after" => date("Y-m-d", strtotime("+7 days"))]);
 $department_pickupdates = $DC->getDepartmentPickupdates($user_department["id"]);
 $available_pickupdates = false;
-foreach ($pickupdates as $pickupdate) {
-	if(arrayKeyValue($department_pickupdates, "id", $pickupdate["id"])) {
-		$available_pickupdates[] = $pickupdate;
-	}
-}
 
 $order_item = $SC->getOrderItems(["order_item_id" => $order_item_id]);
 $order = $order_item ? $SC->getOrders(["order_id" => $order_item["order_id"]]) : false;
 $order_item_department_pickupdate = $SC->getOrderItemDepartmentPickupdate($order_item_id);
+
+$product = $IC->getItem(["id" => $order_item["item_id"], "extend" => true]);
+
+foreach ($pickupdates as $pickupdate) {
+	if(
+		arrayKeyValue($department_pickupdates, "id", $pickupdate["id"])
+		&& (!$product["end_availability_date"] || $product["end_availability_date"] >= $pickupdate["pickupdate"])
+	) {
+		$pickupdate["formatted_pickupdate"] = date("d.m.Y", strtotime($pickupdate["pickupdate"]));
+		$available_pickupdates[] = $pickupdate;
+	}
+}
 
 $this->pageTitle("Ret bestilling");
 ?>
@@ -38,8 +46,9 @@ $this->pageTitle("Ret bestilling");
 		<fieldset>
 			<?= $UC->input("pickupdate_id", [
 				"type" => "select", 
-				"options" => $SC->toOptions($available_pickupdates, "id", "pickupdate"),
-				"value" => $order_item_department_pickupdate["pickupdate_id"]
+				"options" => $SC->toOptions($available_pickupdates, "id", "formatted_pickupdate", [
+					"add" => [$order_item_department_pickupdate["pickupdate_id"] => date("d.m.Y", strtotime($order_item_department_pickupdate["pickupdate"]))]
+					]),
 				]); 
 			?>
 			<?= $UC->input("department_id", [
