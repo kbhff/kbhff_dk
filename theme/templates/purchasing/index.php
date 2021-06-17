@@ -16,6 +16,27 @@ $next_pickupdate = $upcoming_pickupdates ? $upcoming_pickupdates[0] : false;
 
 $departments = $DC->getDepartments();
 $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 1, "order" => "created_at", "extend" => ["mediae" => true]]);
+$legacy_products = $IC->getItems(["where" => "itemtype = 'legacyproduct'", "order" => "created_at", "extend" => ["mediae" => true]]);
+$products_legacy_products = array_merge($products, $legacy_products);
+
+if($next_pickupdate) {
+
+	foreach ($products_legacy_products as $key => $product) {
+		
+		$pickupdate_product_order_items = $SC->getPickupdateOrderItems($next_pickupdate["id"], ["item_id" => $product["id"]]);
+		$pickupdate_product_order_item_count = 0;
+		if($pickupdate_product_order_items) {
+			foreach ($pickupdate_product_order_items as $order_item) {
+				$pickupdate_product_order_item_count += $order_item["quantity"];
+			}
+		}
+
+		$products_legacy_products[$key]["total_order_item_count"] = $pickupdate_product_order_item_count;
+	}
+
+	
+	
+}
 
 ?>
 
@@ -31,10 +52,13 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 	<div class="c-wrapper order-list">
 		<h2>Ordrer til udlevering <?= date("d.m.Y", strtotime($next_pickupdate["pickupdate"])) ?></h2>
 		<ul class="list">
+			
 			<li class="labels">
 				<span class="departments" title="Afdelinger">Afdelinger</span>
-				<? foreach($products as $product): ?>
+				<? foreach($products_legacy_products as $product): ?>
+				<? if(!($product["itemtype"] == "legacyproduct" && $product["total_order_item_count"] === 0)): ?>
 				<span class="product" title="<?= $product["name"] ?>"><?= $product["name"] ?></span>
+				<? endif; ?>
 				<? endforeach; ?>
 			</li>
 
@@ -42,7 +66,7 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 			<li class="listing">
 				<span class="department" title="<?= $department["name"] ?>"><?= $department["name"] ?></span>
 				
-				<? foreach($products as $product): 
+				<? foreach($products_legacy_products as $product): 
 					$department_pickupdate_product_order_items = $SC->getPickupdateOrderItems($next_pickupdate["id"], ["department_id" => $department["id"], "item_id" => $product["id"]]);
 					$department_pickupdate_product_order_item_count = 0;
 					if($department_pickupdate_product_order_items) {
@@ -51,15 +75,16 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 						}
 					}
 				?>
-
+				<? if(!($product["itemtype"] == "legacyproduct" && $product["total_order_item_count"] === 0)): ?>
 				<span class="order_item_count"><?= $department_pickupdate_product_order_item_count?></span>
+				<? endif; ?>
 				<? endforeach; ?>
 			</li>
 			<? endforeach; ?>
 
 			<li class="totals">
 				<span class="total">Total</span>
-				<? foreach($products as $product): 
+				<? foreach($products_legacy_products as $product): 
 					$pickupdate_product_order_items = $SC->getPickupdateOrderItems($next_pickupdate["id"], ["item_id" => $product["id"]]);
 					$pickupdate_product_order_item_count = 0;
 					if($pickupdate_product_order_items) {
@@ -68,7 +93,9 @@ $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 
 						}
 					}
 				?>
+				<? if(!($product["itemtype"] == "legacyproduct" && $product["total_order_item_count"] === 0)): ?>
 				<span class="order_item_count"><?= $pickupdate_product_order_item_count ?></span>
+				<? endif; ?>
 				<? endforeach; ?>
 			</li>
 

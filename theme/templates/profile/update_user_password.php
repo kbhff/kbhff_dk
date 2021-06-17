@@ -19,6 +19,7 @@ $this->pageTitle("Adgangskode");
 				$UC->input("old_password", [
 					"label" => "Din nuværende adgangskode",
 					"required" => true,
+					"min" => 1,
 					"hint_message" => "Indtast din nuværende adgangskode",
 					"error_message" => "",
 				]),
