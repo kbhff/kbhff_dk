@@ -64,7 +64,7 @@
 		<div class="downtime">
 			<h1>Opdatering i gang</h1>
 			<h2>Vi er i gang med en stor opdatering af kbhff.dk.</h2>
-			<p>Vi glæder os til at vise dig vores nye medlemsystem – vi forventer at sitet er klar til nye besøg igen ca. kl. 17.</p>
+			<p>Vi glæder os til at vise dig vores nye medlemsystem – vi forventer at sitet er klar til nye besøg igen ca. kl. 18.</p>
 		</div>
 	</div>
 </div>
