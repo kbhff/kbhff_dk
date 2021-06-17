@@ -48,7 +48,7 @@ if(!$pickupdate) {
 }
 
 
-$department_pickupdate_order_items = $pickupdate ? $SC->getPickupdateOrderItems($pickupdate["id"], ["department_id" => $department["id"]]) : false;
+$department_pickupdate_order_items = $pickupdate ? $SC->getPickupdateOrderItems($pickupdate["id"], ["department_id" => $department["id"], "order" => "nickname, created_at ASC"]) : false;
 
 $order_items_total_quantity = 0;
 $order_items_total_delivered_quantity = 0;
