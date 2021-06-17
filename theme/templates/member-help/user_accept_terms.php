@@ -11,6 +11,8 @@ $user_id = $action[1];
 
 	<p><em>(Vis nedenstående tekst til medlemmet)</em></p>
 
+	<p><em>As part of the process of transferring to the new member system, you must accept the terms of use of your personal information. Please read the <a href="http://kbhff.dk/persondata">English translation of our privacy policy</a>.</em></p>
+
 	<p>I forbindelse med overgangen til det nye system vil vi en enkelt gang bede dig om dit samtykke til at vi opbevarer og behandler den persondata du har givet os. Dette er fra lovgivningens side en forudsætning for, at vi kan have dig som medlem.</p>
 
 	<p>Vi opbevarer følgende informationer: Navn, e-mailadresse, telefonnummer og dine indkøb.</P>
