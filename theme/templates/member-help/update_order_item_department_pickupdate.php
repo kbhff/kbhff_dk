@@ -23,6 +23,7 @@ $product = $IC->getItem(["id" => $order_item["item_id"], "extend" => true]);
 foreach ($pickupdates as $pickupdate) {
 	if(
 		arrayKeyValue($department_pickupdates, "id", $pickupdate["id"])
+		&& $product["start_availability_date"] <= $pickupdate["pickupdate"]
 		&& (!$product["end_availability_date"] || $product["end_availability_date"] >= $pickupdate["pickupdate"])
 	) {
 		$pickupdate["formatted_pickupdate"] = date("d.m.Y", strtotime($pickupdate["pickupdate"]));
