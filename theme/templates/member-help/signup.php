@@ -85,6 +85,7 @@ $email = $model->getProperty("email", "value");
 					<div class="terms">
 						<h3>Godkend brug af oplysninger</h3>
 						<p class="metatext">Vis denne side til personen og bed personen selv om at sætte krydset.</p>
+						<p><em>You must accept the terms of use of your personal information. Please read the <a href="http://kbhff.dk/persondata">English translation of our privacy policy</a>.</em></p>
 						<p>Vi opbevarer og anvender følgende informationer om dig: Dit navn, e-mailadresse, telefonnummer og indkøb hos os.
 						<p>Vi videregiver ikke disse oplysninger til nogen tredjepart, men du er selv ansvarlig for de persondata, du skriver på foreningens offentlige sider, eksempelvis wikien.</p>
 						<p>Det er en forudsætning for din indmeldelse, at du giver dit samtykke til disse betingelser.</p>

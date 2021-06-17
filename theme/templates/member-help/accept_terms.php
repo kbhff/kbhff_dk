@@ -4,9 +4,9 @@ global $UC;
 ?>
 <div class="scene i:member_help_accept_terms accept_terms">
 
-	<h1>Samtykke om behandling af persondata</h1>
+	<h1>Behandling af persondata</h1>
 
-	<p>OBS! På næste side findes fortrolige oplysninger om KBHFFs medlemmer. Ved at klikke videre giver du samtykke til, at du behandler disse oplysninger fortroligt og ansvarsfuldt.</p>
+	<p>OBS! På næste side findes fortrolige oplysninger om KBHFFs medlemmer. Ved at klikke videre bekræfter du, at du vil behandle disse oplysninger fortroligt og ansvarsfuldt.</p>
 	<p>Warning! You're about to enter an area with sensitive information and by proceeding you agree to handling this information responsibly.</p>
 
 
