@@ -634,6 +634,8 @@ class Shop extends ShopCore {
 		$user_id = false;
 		$item_id = false;
 		$department_id = false;
+		// sorting order
+		$order = false;
 		
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
@@ -642,18 +644,23 @@ class Shop extends ShopCore {
 					case "user_id"           : $user_id                = $_value; break;
 					case "item_id"           : $item_id                = $_value; break;
 					case "department_id"     : $department_id          = $_value; break;
+					case "order"             : $order                  = $_value; break;
 				}
 			}
 		}
 
-		$sql = "SELECT DISTINCT order_items.*, orders.user_id 
+		$sql = "SELECT DISTINCT order_items.*, orders.user_id, users.nickname, items.created_at 
 		FROM ".$this->db_pickupdates." AS pickupdates, "
 		.$this->db_department_pickupdate_order_items." AS department_pickupdate_order_items, "
 		.$this->db_order_items." AS order_items, "
-		.$this->db_orders." AS orders 
+		.$this->db_orders." AS orders, "
+		.SITE_DB.".items AS items, "
+		.SITE_DB.".users AS users 
 		WHERE department_pickupdate_order_items.pickupdate_id = $pickupdate_id
 		AND department_pickupdate_order_items.order_item_id = order_items.id
 		AND order_items.order_id = orders.id
+		AND users.id = orders.user_id
+		AND items.id = order_items.item_id
 		AND orders.status != 3"; 
 
 		if($order_id) {
@@ -667,6 +674,11 @@ class Shop extends ShopCore {
 		}
 		if($department_id) {
 			$sql .= " AND department_pickupdate_order_items.department_id = $department_id";
+		}
+
+		// sorting order
+		if($order) {
+			$sql .= " ORDER BY ".$order;
 		}
 
 		if($query->sql($sql)) {
