@@ -148,8 +148,23 @@ class TypeMessage extends TypeMessageCore {
 			// create final HTML
 			$final_html = html_entity_decode($this->mergeMessageIntoLayout($message));
 	
-			// send final HTML
-			if(mailer()->sendBulk(["from_email" => "it@kbhff.dk", "recipients" => $recipients, "subject" => $name, "html" => $final_html])) {
+			if(count($recipients) < 1000) {
+
+				// send final HTML
+				$result = mailer()->sendBulk(["from_email" => "it@kbhff.dk", "recipients" => $recipients, "subject" => $name, "html" => $final_html]);
+			}
+			else {
+
+				$recipient_chunks = array_chunk($recipients, 1000);
+				foreach ($recipient_chunks as $recipient_chunk) {
+					
+					// send final HTML
+					$result = mailer()->sendBulk(["from_email" => "it@kbhff.dk", "recipients" => $recipient_chunk, "subject" => $name, "html" => $final_html]);
+					
+				}
+			}
+
+			if($result) {
 	
 				global $page;
 				$page->addLog("TypeKbhffMessage->sendKbhffMessage: user_id:".session()->value("user_id").", department_id:".$department_id);
