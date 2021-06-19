@@ -176,6 +176,9 @@ class TypeMessage extends TypeMessageCore {
 				if($department_id == 'all_departments') {
 					$receiving_department = "All departments";
 				}
+				elseif($department_id == 'all_departments_all_members') {
+					$receiving_department = "All departments incl. inactive members";
+				}
 				else {
 					global $DC;
 					$department = $DC->getDepartment(["id" => $department_id]);
