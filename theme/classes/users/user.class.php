@@ -279,11 +279,11 @@ class User extends UserCore {
 		// Get content of $_POST array that have been mapped to the model entities object
 		$this->getPostedEntities();
 
+		$user = $this->getKbhffUser();
 		// print_r ($action);
 		// Check that the number of REST parameters is as expected and that the listed entries are valid.
-		if(count($action) == 1 && $this->validateList(array("department_id"))) {
+		if(count($action) == 1 && $this->validateList(array("department_id")) && $user && $user["membership"] && isset($user["membership"]["subscription_id"])) {
 
-			$user = $this->getKbhffUser();
 			$user_id = $user["id"];
 			$department_id = $this->getProperty("department_id", "value");
 

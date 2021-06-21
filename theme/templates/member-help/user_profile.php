@@ -260,9 +260,18 @@ if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Fr
 						</div>
 
 						<ul class="actions">
+
+							<? if($is_member && $is_active): ?>
+							
 							<li class="change-department third-width"><a href="<?=$action[1]?>/afdeling" class="button">Ret afd.</a></li>
 							<li class="change-membership third-width"><a href="<?=$action[1]?>/medlemskab" class="button">Ret Med.</a></li>
 							<li class="cancel-membership third-width"><a href="<?=$action[1]?>/opsig" class="button warning">Opsig</a></li>
+							<? elseif($is_member): ?>
+
+							<li class="reactivate-membership half-width"><a href="<?=$action[1]?>/genaktiver" class="button">Genaktiver</a></li>
+							<li class="cancel-membership half-width"><a href="<?=$action[1]?>/opsig" class="button warning">Opsig</a></li>
+							
+							<? endif; ?>
 							
 						</ul>
 					</div>
@@ -304,6 +313,8 @@ if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Fr
 				</div>
 			</div>
 
+			<? if($is_member && $is_active): ?>
+			
 			<div class="section renewal">
 				<div class="c-box">
 					<h3>Medlemskabsfornyelse</h3>
@@ -322,6 +333,7 @@ if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Fr
 
 				</div>
 			</div>
+			<? endif; ?>
 
 			<div class="section user_group">
 			<? if($allow_user_group_display): ?>

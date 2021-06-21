@@ -249,11 +249,19 @@ $unpaid_orders = $SC->getUnpaidOrders();
 						</div>
 
 						<ul class="actions">
+							<? if($is_member && $is_active): ?>
+							
 							<? $unpaid_membership ? $width = "third-width" : $width = "half-width" ?>
-							<li class="change-info <?= $width ?>"><a href="/profil/afdeling" class="button">Ret</a></li>
+							<li class="change-info <?= $width ?>"><a <?= $is_active ? 'href="/profil/afdeling"' : "" ?> class="button <?= $is_active ? "" : "disabled"?>">Ret</a></li>
 							<li class="cancel-membership <?= $width ?>"><a href="/profil/opsig" class="button warning">Opsig</a></li>
 							<? if($unpaid_membership): ?>
 							<li class="pay-membership <?= $width ?>"><a href="/butik/betaling/"<?=$user["membership"]["order"]["order_no"] ?>" class="button primary">Betal</a></li>"
+							<? endif; ?>
+
+							<? elseif($is_member): ?>
+							
+							<li class="reactivate-membership half-width"><a href="/profil/medlemskab/genaktiver" class="button">Genaktiver</a></li>
+							<li class="cancel-membership half-width"><a href="/profil/opsig" class="button warning">Opsig</a></li>
 							<? endif; ?>
 						</ul>
 					</div>
@@ -315,7 +323,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 				</div>
 			</div>
 
-			<? if($is_member): ?>
+			<? if($is_member && $is_active): ?>
 			<div class="section renewal">
 				<div class="c-box">
 					<h3>Medlemskabsfornyelse</h3>

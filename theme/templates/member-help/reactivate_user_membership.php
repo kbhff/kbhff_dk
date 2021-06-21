@@ -30,6 +30,8 @@ $this->pageTitle("Genaktiver medlemskab");
 	<h1>Genaktivering af medlemskab</h1>
 	<? if($user["membership"] && !$user["membership"]["subscription_id"]): ?>	
 	<p>Ved genaktivering vil der blive oprettet en ordre på 1 stk. kontingent, og du vil blive ført til en betalingsside, hvor medlemmet kan betale.</p>
+	<p>Hvis medlemmet har behov for at skifte afdeling, kan det gøres, når medlemskabet er genaktiveret.</p>
+
 
 	<?= $UC->formStart("reactivateUserMembership/$user_id", ["class" => "form_reactivate"]) ?> 
 

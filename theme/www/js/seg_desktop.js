@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-06-16 17:13:52
+asset-builder @ 2021-06-21 15:16:37
 */
 
 /*seg_desktop_include.js*/
@@ -9475,92 +9475,95 @@ Util.Modules["profile"] = new function() {
 			var box_department = u.qs(".department", this);
 			if(button_membership) {
 				button_membership.scene = this;
-				u.clickableElement(button_membership); 
-				button_membership.clicked = function() {
-					this.response = function(response) {
-						this.is_requesting = false;
-						u.rc(this, "loading");
-						var form_department = u.qs(".form_department", response);
-						form_department.scene = this.scene;
-						var warning = u.qs("p.warning", response);
-						var div_fields = u.qs("div.fields", box_membership);
-						var divs_membership = u.qsa(".membership-info", div_fields);
-						var ul_buttons = u.qs("ul.actions", div_fields);
-						u.ass(divs_membership[3], {"display":"none"});
-						u.ass(ul_buttons, {"display":"none"});
-						u.ae(box_membership, form_department);
-						u.f.init(form_department);
-						u.ae(div_fields, form_department);
-						if(warning) {
-							u.ae(div_fields, warning);
-						}
-						form_department.submitted = function() {
-							var data = this.getData();
-							this.response = function(response) {
-								this.is_requesting = false;
-								u.rc(this, "loading");
-								var new_fields = u.qs(".membership .fields", response);
-								box_membership.replaceChild(new_fields, div_fields);
-								var new_department_box = u.qs(".department", response);
-								right_panel.replaceChild(new_department_box, box_department);
-								if (message = u.qs("p.message", response)) {
-									var fields = u.qs("div.fields", box_membership)
-									u.ie(fields, message);
-									if (message.t_done) {
-										u.t.resetTimer(t_done);
-									}
-									message.done = function() {
-										u.ass(this, {
-											"transition":"all .5s ease",
+				button_membership.a = u.qs("a", button_membership);
+				if(button_membership.a.getAttribute("href")) {
+					u.clickableElement(button_membership); 
+					button_membership.clicked = function() {
+						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
+							var form_department = u.qs(".form_department", response);
+							form_department.scene = this.scene;
+							var warning = u.qs("p.warning", response);
+							var div_fields = u.qs("div.fields", box_membership);
+							var divs_membership = u.qsa(".membership-info", div_fields);
+							var ul_buttons = u.qs("ul.actions", div_fields);
+							u.ass(divs_membership[3], {"display":"none"});
+							u.ass(ul_buttons, {"display":"none"});
+							u.ae(box_membership, form_department);
+							u.f.init(form_department);
+							u.ae(div_fields, form_department);
+							if(warning) {
+								u.ae(div_fields, warning);
+							}
+							form_department.submitted = function() {
+								var data = this.getData();
+								this.response = function(response) {
+									this.is_requesting = false;
+									u.rc(this, "loading");
+									var new_fields = u.qs(".membership .fields", response);
+									box_membership.replaceChild(new_fields, div_fields);
+									var new_department_box = u.qs(".department", response);
+									right_panel.replaceChild(new_department_box, box_department);
+									if (message = u.qs("p.message", response)) {
+										var fields = u.qs("div.fields", box_membership)
+										u.ie(fields, message);
+										if (message.t_done) {
+											u.t.resetTimer(t_done);
+										}
+										message.done = function() {
+											u.ass(this, {
+												"transition":"all .5s ease",
+												"transform":"translate3d(0px, -10px, 0px)",
+												"opacity":"0"
+											});
+											u.t.setTimer(this, function() {
+												this.parentNode.removeChild(this);
+											}, 500);
+										}
+										message.transitioned = function() {
+											this.t_done = u.t.setTimer(this, this.done, 2400);
+										}
+										u.ass(message, {
+											"color":"#3e8e17",
+											"padding-bottom":"5px",
 											"transform":"translate3d(0px, -10px, 0px)",
 											"opacity":"0"
 										});
-										u.t.setTimer(this, function() {
-											this.parentNode.removeChild(this);
-										}, 500);
+										u.a.transition(message, "all .5s ease");
+										u.ass(message, {
+											"transform":"translate3d(0px, 0, 0px)",
+											"opacity":"1"
+										});
 									}
-									message.transitioned = function() {
-										this.t_done = u.t.setTimer(this, this.done, 2400);
-									}
-									u.ass(message, {
-										"color":"#3e8e17",
-										"padding-bottom":"5px",
-										"transform":"translate3d(0px, -10px, 0px)",
-										"opacity":"0"
-									});
-									u.a.transition(message, "all .5s ease");
-									u.ass(message, {
-										"transform":"translate3d(0px, 0, 0px)",
-										"opacity":"1"
-									});
+									this.scene.initMembershipBox();
 								}
-								this.scene.initMembershipBox();
+								if (!this.is_requesting) {
+									this.is_requesting = true;
+									u.ac(this, "loading");
+									u.request(this, this.action, {"data":data, "method":"POST"});
+								}
 							}
-							if (!this.is_requesting) {
-								this.is_requesting = true;
-								u.ac(this, "loading");
-								u.request(this, this.action, {"data":data, "method":"POST"});
+							form_department.actions["cancel"].clicked = function() {
+								this.response = function(response) {
+									this.is_requesting = false;
+									u.rc(this, "loading");
+									var new_fields = u.qs(".membership .fields", response);
+									box_membership.replaceChild(new_fields, div_fields);
+									this._form.scene.initMembershipBox();
+								}
+								if (!this.is_requesting) {
+									this.is_requesting = true;
+									u.ac(this, "loading");
+									u.request(this, "/profil");
+								}
 							}
 						}
-						form_department.actions["cancel"].clicked = function() {
-							this.response = function(response) {
-								this.is_requesting = false;
-								u.rc(this, "loading");
-								var new_fields = u.qs(".membership .fields", response);
-								box_membership.replaceChild(new_fields, div_fields);
-								this._form.scene.initMembershipBox();
-							}
-							if (!this.is_requesting) {
-								this.is_requesting = true;
-								u.ac(this, "loading");
-								u.request(this, "/profil");
-							}
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, "/profil/afdeling");
 						}
-					}
-					if (!this.is_requesting) {
-						this.is_requesting = true;
-						u.ac(this, "loading");
-						u.request(this, "/profil/afdeling");
 					}
 				}
 			}

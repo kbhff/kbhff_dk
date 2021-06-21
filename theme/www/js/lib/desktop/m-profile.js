@@ -35,153 +35,159 @@ Util.Modules["profile"] = new function() {
 			if(button_membership) {
 				// Create references to scene
 				button_membership.scene = this;
+				button_membership.a = u.qs("a", button_membership);
 
-				u.clickableElement(button_membership); // Add click event to button and ignore href redirect.
-				button_membership.clicked = function() {
+				// Ret-button is enabled
+				if(button_membership.a.getAttribute("href")) {
+				
+					u.clickableElement(button_membership); // Add click event to button and ignore href redirect.
+					button_membership.clicked = function() {
 
-					this.response = function(response) {
-						// Update request state
-						this.is_requesting = false;
-						u.rc(this, "loading");
+						this.response = function(response) {
+							// Update request state
+							this.is_requesting = false;
+							u.rc(this, "loading");
 
-						// Query form to inject and create a reference to scene on it
-						var form_department = u.qs(".form_department", response);
-						form_department.scene = this.scene;
+							// Query form to inject and create a reference to scene on it
+							var form_department = u.qs(".form_department", response);
+							form_department.scene = this.scene;
 
-						var warning = u.qs("p.warning", response);
-						
-						// Query elements to use
-						var div_fields = u.qs("div.fields", box_membership);
-						var divs_membership = u.qsa(".membership-info", div_fields);
-						var ul_buttons = u.qs("ul.actions", div_fields);
-
-						// Hide department field and buttons
-						u.ass(divs_membership[3], {"display":"none"});
-						u.ass(ul_buttons, {"display":"none"});
-
-						// Append form and initialize it
-						u.ae(box_membership, form_department);
-						u.f.init(form_department);
-
-						// Insert form into fields
-						u.ae(div_fields, form_department);
-
-						if(warning) {
-							u.ae(div_fields, warning);
-						}
-
-						// Update button
-						form_department.submitted = function() {
-							var data = this.getData();
-
-							this.response = function(response) {
-								// Update request state
-								this.is_requesting = false;
-								u.rc(this, "loading");
+							var warning = u.qs("p.warning", response);
 							
-								// Replace current fields div with the updated one
-								var new_fields = u.qs(".membership .fields", response);
-								box_membership.replaceChild(new_fields, div_fields);
+							// Query elements to use
+							var div_fields = u.qs("div.fields", box_membership);
+							var divs_membership = u.qsa(".membership-info", div_fields);
+							var ul_buttons = u.qs("ul.actions", div_fields);
 
-								// Replace department box with updated box
-								var new_department_box = u.qs(".department", response);
-								right_panel.replaceChild(new_department_box, box_department);
+							// Hide department field and buttons
+							u.ass(divs_membership[3], {"display":"none"});
+							u.ass(ul_buttons, {"display":"none"});
 
-								if (message = u.qs("p.message", response)) {
-									var fields = u.qs("div.fields", box_membership)
-									u.ie(fields, message);
+							// Append form and initialize it
+							u.ae(box_membership, form_department);
+							u.f.init(form_department);
+
+							// Insert form into fields
+							u.ae(div_fields, form_department);
+
+							if(warning) {
+								u.ae(div_fields, warning);
+							}
+
+							// Update button
+							form_department.submitted = function() {
+								var data = this.getData();
+
+								this.response = function(response) {
+									// Update request state
+									this.is_requesting = false;
+									u.rc(this, "loading");
 								
-									// If previous message didn't finish deleting
-									if (message.t_done) {
-										u.t.resetTimer(t_done);
-									}
+									// Replace current fields div with the updated one
+									var new_fields = u.qs(".membership .fields", response);
+									box_membership.replaceChild(new_fields, div_fields);
 
-									message.done = function() {
-										u.ass(this, {
-											"transition":"all .5s ease",
+									// Replace department box with updated box
+									var new_department_box = u.qs(".department", response);
+									right_panel.replaceChild(new_department_box, box_department);
+
+									if (message = u.qs("p.message", response)) {
+										var fields = u.qs("div.fields", box_membership)
+										u.ie(fields, message);
+									
+										// If previous message didn't finish deleting
+										if (message.t_done) {
+											u.t.resetTimer(t_done);
+										}
+
+										message.done = function() {
+											u.ass(this, {
+												"transition":"all .5s ease",
+												"transform":"translate3d(0px, -10px, 0px)",
+												"opacity":"0"
+											});
+
+											u.t.setTimer(this, function() {
+												this.parentNode.removeChild(this);
+											}, 500);
+										}
+
+										message.transitioned = function() {
+											this.t_done = u.t.setTimer(this, this.done, 2400);
+										}
+
+										// State before animation
+										u.ass(message, {
+											"color":"#3e8e17",
+											"padding-bottom":"5px",
 											"transform":"translate3d(0px, -10px, 0px)",
 											"opacity":"0"
 										});
 
-										u.t.setTimer(this, function() {
-											this.parentNode.removeChild(this);
-										}, 500);
+										// Animate
+										u.a.transition(message, "all .5s ease");
+										u.ass(message, {
+											"transform":"translate3d(0px, 0, 0px)",
+											"opacity":"1"
+										});
 									}
 
-									message.transitioned = function() {
-										this.t_done = u.t.setTimer(this, this.done, 2400);
-									}
-
-									// State before animation
-									u.ass(message, {
-										"color":"#3e8e17",
-										"padding-bottom":"5px",
-										"transform":"translate3d(0px, -10px, 0px)",
-										"opacity":"0"
-									});
-
-									// Animate
-									u.a.transition(message, "all .5s ease");
-									u.ass(message, {
-										"transform":"translate3d(0px, 0, 0px)",
-										"opacity":"1"
-									});
+									// Init new box on scene
+									this.scene.initMembershipBox();
 								}
 
-								// Init new box on scene
-								this.scene.initMembershipBox();
+								// Prevent making the request more than once
+								if (!this.is_requesting) {
+									// Update request state
+									this.is_requesting = true;
+									u.ac(this, "loading");
+									// Make request
+									u.request(this, this.action, {"data":data, "method":"POST"});
+								}
+
 							}
 
-							// Prevent making the request more than once
-							if (!this.is_requesting) {
-								// Update request state
-								this.is_requesting = true;
-								u.ac(this, "loading");
-								// Make request
-								u.request(this, this.action, {"data":data, "method":"POST"});
-							}
+							// Cancel button
+							form_department.actions["cancel"].clicked = function() {
 
+								this.response = function(response) {
+									// Update request state
+									this.is_requesting = false;
+									u.rc(this, "loading");
+
+									// Replce with non-updated fields
+									var new_fields = u.qs(".membership .fields", response);
+									box_membership.replaceChild(new_fields, div_fields);
+
+									// "this" is the cancel button.
+									//  the "_form" property refers to the inputs form even though its not in HTML form scope.
+									this._form.scene.initMembershipBox();
+								}
+
+								// Prevent making the request more than once
+								if (!this.is_requesting) {
+									// Update request state
+									this.is_requesting = true;
+									u.ac(this, "loading");
+									// Make request
+									u.request(this, "/profil");
+								}
+
+							}
 						}
 
-						// Cancel button
-						form_department.actions["cancel"].clicked = function() {
-
-							this.response = function(response) {
-								// Update request state
-								this.is_requesting = false;
-								u.rc(this, "loading");
-
-								// Replce with non-updated fields
-								var new_fields = u.qs(".membership .fields", response);
-								box_membership.replaceChild(new_fields, div_fields);
-
-								// "this" is the cancel button.
-								//  the "_form" property refers to the inputs form even though its not in HTML form scope.
-								this._form.scene.initMembershipBox();
-							}
-
-							// Prevent making the request more than once
-							if (!this.is_requesting) {
-								// Update request state
-								this.is_requesting = true;
-								u.ac(this, "loading");
-								// Make request
-								u.request(this, "/profil");
-							}
-
+						// Prevent making the request more than once
+						if (!this.is_requesting) {
+							// Update request state
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							// Make request
+							u.request(this, "/profil/afdeling");
 						}
-					}
 
-					// Prevent making the request more than once
-					if (!this.is_requesting) {
-						// Update request state
-						this.is_requesting = true;
-						u.ac(this, "loading");
-						// Make request
-						u.request(this, "/profil/afdeling");
 					}
-
 				}
+				
 			}
 
 			// "Opsig" button

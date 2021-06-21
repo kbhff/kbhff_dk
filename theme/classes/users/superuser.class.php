@@ -523,10 +523,12 @@ IT
 		// Get content of $_POST array that have been "quality-assured" by Janitor
 		$this->getPostedEntities();
 
+		$user_id = $action[1];
+		$user = $this->getKbhffUser(["user_id" => $user_id]);
+
 		// Check that the number of REST parameters is as expected and that the listed entries are valid.
-		if(count($action) == 2 && $this->validateList(array("department_id"))) {
+		if(count($action) == 1 && $this->validateList(array("department_id")) && $user && $user["membership"] && isset($user["membership"]["subscription_id"])) {
 			
-			$user_id = $action[1];
 			$department_id = $this->getProperty("department_id", "value");
 
 			// Create user_department table if it doesn't already exist
