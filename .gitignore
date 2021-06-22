@@ -23,3 +23,4 @@ nbproject/*
 
 ci/CodeIgniter_2.0.2/application/logs/*
 ci/CodeIgniter-2.2.6/application/logs/*
+apache/httpd-vhosts.conf
