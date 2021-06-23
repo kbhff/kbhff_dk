@@ -118,10 +118,22 @@ else {
 		<?= $UC->formStart("/butik?login=true", array("class" => "login labelstyle:inject")) ?>
 			<?= $UC->input("login_forward", ["type" => "hidden", "value" => "/butik"]); ?>
 			<fieldset>
-				<?= $UC->input("username", array("type" => "string", "label" => "Email or mobile number", "required" => true, "value" => $username, "pattern" => "[\w\.\-_]+@[\w\-\.]+\.\w{2,10}|([\+0-9\-\.\s\(\)]){5,18}", "hint_message" => "You can log in using either your email or mobile number.", "error_message" => "You entered an invalid email or mobile number.")); ?>
-				<?= $UC->input("password", array("type" => "password", "label" => "Password", "required" => true, "hint_message" => "Type your password", "error_message" => "Your password should be between 8-20 characters.")); ?>
+				<?= $UC->input("username", array(
+					"required" => true,
+					"value" => $username,
+					"pattern" => "^(1|[0-9]{4,5}|[\+0-9\-\.\s\(\)]{5,18}|[\w\.\-_\+]+@[\w\-\.]+\.\w{2,10})$",
+					"label" => "Brugernavn",
+					"hint_message" => "Brug dit medlemsnr., email eller telefonnummer som brugernavn",
+					"error_message" => "Det ligner ikke et gyldigt brugernavn",
+				)); ?>
+				<?= $UC->input("password", array(
+					"required" => true,
+					"min" => 1,
+					"label" => "Adgangskode",
+					"hint_message" => "Skriv din adgangskode",
+					"error_message" => "Ugyldig adgangskode",
+				)); ?>
 			</fieldset>
-
 			<ul class="actions">
 				<?= $UC->submit("Log ind", array("class" => "primary", "wrapper" => "li.login")) ?>
 			</ul>
@@ -133,7 +145,7 @@ else {
 	
 	<? 
 	// user is inactive member
-	elseif($user["membership"] && !$user["membership"]["subscription_id"]): ?>
+	elseif($user["membe	rship"] && !$user["membership"]["subscription_id"]): ?>
 	<div class="inactive_member">
 		<h2>Dit medlemskab er inaktivt</h2>
 		<p>For at kunne bestille grøntsager skal du først <a href="/profil/medlemskab/genaktiver">genaktivere dit medlemskab</a>.</p>
