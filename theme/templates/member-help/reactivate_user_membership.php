@@ -35,7 +35,7 @@ $this->pageTitle("Genaktiver medlemskab");
 
 	<?= $UC->formStart("reactivateUserMembership/$user_id", ["class" => "form_reactivate"]) ?> 
 
-		<?= $HTML->serverMessages() ?>
+		<?= $HTML->serverMessages(["type" => "error"]) ?>
 
 		<fieldset>
 			
