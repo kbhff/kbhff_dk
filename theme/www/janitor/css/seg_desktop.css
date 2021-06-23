@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-06-16 16:08:07
+asset-builder @ 2021-06-23 15:30:00
 */
 
 /*seg_desktop_include.css*/
@@ -537,6 +537,7 @@ body #selection_options ul.actions li {padding: 0 5px 0 0;}
 #content .scene.shopList ul.tabs li.waiting {color: orange;}
 #content .scene.shopList ul.tabs li.pending {color: red;}
 #content .scene.shopList ul.tabs li.complete {color: green;}
+#content .scene.shopList ul.items > li {min-height: 75px;}
 #content .scene.shopList ul.items > li dl.info dt.price {display: none;}
 #content .scene.shopList ul.items > li dl.info dd.price {position: absolute; top: 10px; right: 30px; font-size: 26px;}
 #content .scene.shopList ul.items ul.actions {top: 35px;}
