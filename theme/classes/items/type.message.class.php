@@ -111,19 +111,6 @@ class TypeMessage extends TypeMessageCore {
 				}
 	
 			}
-			elseif($department_id == "all_departments_all_members") {
-				
-				// get all active members
-				$members = $MC->getMembers();
-	
-				// convert member list to recipients list
-				foreach ($members as $member) {
-					
-					$member_email = $UC->getUsernames(["user_id" => $member["user"]["id"], "type" => "email"]);
-					$recipients[] = $member_email ? $member_email["username"] : "";
-				}
-	
-			}
 			else {
 				// get department users with active membership
 				$users = $UC->getDepartmentUsers($department_id, ["only_active_members" => true]);
@@ -175,9 +162,6 @@ class TypeMessage extends TypeMessageCore {
 	
 				if($department_id == 'all_departments') {
 					$receiving_department = "All departments";
-				}
-				elseif($department_id == 'all_departments_all_members') {
-					$receiving_department = "All departments incl. inactive members";
 				}
 				else {
 					global $DC;
