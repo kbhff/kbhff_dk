@@ -48,14 +48,12 @@ if($action) {
 		if($model->sendKbhffMessageTest($action)) {
 
 			message()->resetMessages();
-			message()->addMessage("Testbeskeden blev afsendt.");
 			header("Location: /massemail/kvittering");
 			exit();
 		}
 		else {
 			
 			message()->resetMessages();
-			message()->addMessage("Noget gik galt.", array("type" => "error"));
 		}
 
 	}
