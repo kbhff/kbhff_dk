@@ -358,8 +358,6 @@ if($action) {
 		
 		// Method returns false
 		else {
-			message()->resetMessages();
-			message()->addMessage("Afdeling blev ikke opdateret.", ["type" => "error"]);
 			header("Location: /medlemshjaelp/brugerprofil/$action[1]");
 			exit();
 		}

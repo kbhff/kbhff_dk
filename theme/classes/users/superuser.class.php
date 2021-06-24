@@ -522,6 +522,7 @@ IT
 	function updateUserDepartment($action) {
 		// Get content of $_POST array that have been "quality-assured" by Janitor
 		$this->getPostedEntities();
+		message()->resetMessages();
 
 		$user_id = $action[1];
 		$user = $this->getKbhffUser(["user_id" => $user_id]);
@@ -541,25 +542,27 @@ IT
 
 			if ($old_department) {
 				
-				// Update department
-				$sql = "UPDATE ".SITE_DB.".user_department SET department_id = $department_id WHERE user_id = $user_id";
+				if($old_department["id"] != $department_id) {
 
-				if($query->sql($sql)) {
+					// Update department
+					$sql = "UPDATE ".SITE_DB.".user_department SET department_id = $department_id WHERE user_id = $user_id";
+	
+					if($query->sql($sql)) {
+	
+						// get updated user
+						$user = $this->getKbhffUser(["user_id" => $user_id]);
+	
+						// send notifications to admin
+						$this->sendMemberLeftNotification($user, ["old_department" => $old_department]);
+						$this->sendNewMemberNotification($user);
+	
+						message()->addMessage("Afdeling er opdateret");
+						return true;
+					}
 
-					// get updated user
-					$user = $this->getKbhffUser(["user_id" => $user_id]);
-
-					// send notifications to admin
-					$this->sendMemberLeftNotification($user, ["old_department" => $old_department]);
-					$this->sendNewMemberNotification($user);
-
-					message()->resetMessages();
-					message()->addMessage("Afdeling er opdateret");
-					return true;
+					message()->addMessage("Afdeling blev ikke opdateret.", ["type" => "error"]);
 				}
-				else {
-					return false;
-				}
+
 			}
 			
 			else {
@@ -572,10 +575,11 @@ IT
 
 					$this->sendNewMemberNotification($user);
 
-					message()->resetMessages();
 					message()->addMessage("Afdeling er opdateret");
 					return true;
 				}
+
+				message()->addMessage("Afdeling blev ikke opdateret.", ["type" => "error"]);
 			}
 
 		}

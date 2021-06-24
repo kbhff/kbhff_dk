@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-06-24 13:03:12
+asset-builder @ 2021-06-24 13:28:41
 */
 
 /*seg_desktop_include.js*/
@@ -9062,7 +9062,8 @@ Util.Modules["user_profile"] = new function() {
 							u.rc(this, "loading");
 							var div_membership = u.qs(".membership .fields", response);
 							box_membership.replaceChild(div_membership, form_department);
-							if (message = u.qs("div.messages", response)) {
+							message = u.qs("div.messages", response);
+							if (message) {
 								u.ie(box_membership, message);
 								message.transitioned = function() {
 									message.innerHTML = "";

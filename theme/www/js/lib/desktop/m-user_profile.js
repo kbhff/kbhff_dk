@@ -87,8 +87,8 @@ Util.Modules["user_profile"] = new function() {
 							
 							box_membership.replaceChild(div_membership, form_department);
 							
-							
-							if (message = u.qs("div.messages", response)) {
+							message = u.qs("div.messages", response);
+							if (message) {
 							
 								u.ie(box_membership, message);
 								
