@@ -97,6 +97,9 @@ else {
 	<div class="login">
 		<h2>Log ind</h2>
 		<p>Du skal logge ind før du kan fortsætte.</p>
+
+		<?= $HTML->serverMessages(["type" => "error"]) ?>
+
 		<?= $UC->formStart("/medlemshjaelp/butik/".$member_user_id."?login=true", array("class" => "login labelstyle:inject")) ?>
 			<?= $UC->input("login_forward", ["type" => "hidden", "value" => "/medlemshjaelp/butik/".$member_user_id]); ?>
 			<fieldset>
@@ -140,6 +143,8 @@ else {
 	<?
 	// clerk is already logged in, show memberhelp-shop
 	else: ?>
+
+	<?= $HTML->serverMessages(["type" => "error"]) ?>
 
 	<div class="c-wrapper">
 		<div class="c-box obs">
