@@ -29,7 +29,7 @@ Util.Modules["profile"] = new function() {
 			
 			// Query elements for syncing
 			var right_panel = u.qs(".c-one-third", this);
-			var box_department = u.qs(".department", this);
+			var box_department = u.qs(".membership-info.department", this);
 
 			// "Ret" button
 			if(button_membership) {
@@ -86,10 +86,6 @@ Util.Modules["profile"] = new function() {
 									// Replace current fields div with the updated one
 									var new_fields = u.qs(".membership .fields", response);
 									box_membership.replaceChild(new_fields, div_fields);
-
-									// Replace department box with updated box
-									var new_department_box = u.qs(".department", response);
-									right_panel.replaceChild(new_department_box, box_department);
 
 									if (message = u.qs("p.message", response)) {
 										var fields = u.qs("div.fields", box_membership)
@@ -155,7 +151,7 @@ Util.Modules["profile"] = new function() {
 									this.is_requesting = false;
 									u.rc(this, "loading");
 
-									// Replce with non-updated fields
+									// Replace with non-updated fields
 									var new_fields = u.qs(".membership .fields", response);
 									box_membership.replaceChild(new_fields, div_fields);
 

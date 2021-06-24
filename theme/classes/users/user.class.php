@@ -295,19 +295,24 @@ class User extends UserCore {
 
 			//Check if the user is associated with a department and adjust query accordingly
 			if ($old_department) {
-				//Update department
-				$sql = "UPDATE ".SITE_DB.".user_department SET department_id = $department_id WHERE user_id = $user_id";
 
-				if($query->sql($sql)) {
+				if($old_department["id"] != $department_id) {
+					
+					//Update department
+					$sql = "UPDATE ".SITE_DB.".user_department SET department_id = $department_id WHERE user_id = $user_id";
+	
+					if($query->sql($sql)) {
+	
+						$user = $this->getKbhffUser();
+	
+						// send notifications to admin
+						$this->sendMemberLeftNotification($user, ["old_department" => $old_department]);
+						$this->sendNewMemberNotification($user);
+	
+						message()->addMessage("Afdeling blev opdateret.");
+						return true;
+					}
 
-					$user = $this->getKbhffUser();
-
-					// send notifications to admin
-					$this->sendMemberLeftNotification($user, ["old_department" => $old_department]);
-					$this->sendNewMemberNotification($user);
-
-					message()->addMessage("Afdeling blev opdateret.");
-					return true;
 				}
 			}
 			else {
