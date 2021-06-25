@@ -145,7 +145,7 @@ else {
 	
 	<? 
 	// user is inactive member
-	elseif($user["membe	rship"] && !$user["membership"]["subscription_id"]): ?>
+	elseif($user["membership"] && !$user["membership"]["subscription_id"]): ?>
 	<div class="inactive_member">
 		<h2>Dit medlemskab er inaktivt</h2>
 		<p>For at kunne bestille grøntsager skal du først <a href="/profil/medlemskab/genaktiver">genaktivere dit medlemskab</a>.</p>
