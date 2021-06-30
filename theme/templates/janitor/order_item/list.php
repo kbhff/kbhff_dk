@@ -8,7 +8,7 @@ global $DC;
 include_once("classes/users/superuser.class.php");
 $UC = new SuperUser();
 
-$order_items = $SC->getOrderItems(["where" => "items.itemtype REGEXP '^(legacy)?product.*)'"]);
+$order_items = $SC->getOrderItems(["where" => "items.itemtype REGEXP '^(legacy)?product.*'"]);
 if($order_items) {
 	foreach ($order_items as $key => $order_item) {
 		
