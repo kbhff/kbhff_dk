@@ -112,6 +112,14 @@ class TypeMessage extends TypeMessageCore {
 	
 			}
 			else {
+
+				// no department_id was sent
+				if(!$department_id) {
+					// use current user's department
+					$department = $UC->getUserDepartment(["user_id" => session()->value("user_id")]);
+					$department_id = $department ? $department["id"] : false;
+				}
+
 				// get department users with active membership
 				$users = $UC->getDepartmentUsers($department_id, ["only_active_members" => true]);
 	
