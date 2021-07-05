@@ -77,7 +77,7 @@ $department = $model->getDepartment(array("name" => $department_name));
 			<? if($department["mobilepay_id"]): ?>
 			<div class="c-box mobilepay">
 				<h3>MobilePay</h3>
-				<p>MobilePay betalinger direkte til afdelingen kan se på: <br /><?= $department["mobilepay_id"] ?></p>
+				<p>MobilePay betalinger direkte til afdelingen kan ske på: <br /><?= $department["mobilepay_id"] ?></p>
 			</div>
 			<? endif; ?>
 		</div>
