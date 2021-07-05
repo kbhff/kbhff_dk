@@ -29,6 +29,16 @@ if($user && $user["membership"] && $user["membership"]["subscription_id"]) {
 	$model->deleteItemtypeFromCart("signupfee");
 }
 
+if(!$UC->hasEmailAddress()) {
+
+	$page->page(array(
+		"templates" => "profile/update_email.php",
+		"type" => "login",
+		"page_title" => "Angiv e-mailadresse"
+	));
+	exit();
+}
+
 if($action) {
 	
 	# /butik/kurv

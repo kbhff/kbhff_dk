@@ -185,7 +185,7 @@ if($item && $item["status"] >= 0) {
 							"wrapper" => "li.send_verification_link.invite",
 							"class" => "send_verification_link invite",
 							"inputs" => [
-								"template" => "verify_new_email"
+								"template" => "verify_invite_email"
 							]
 						)) ?>
 					<? else: ?>

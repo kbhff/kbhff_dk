@@ -11,6 +11,7 @@ $action = $page->actions();
 $IC = new Items();
 $UC = new User();
 $MC = new Member();
+$query = new Query();
 
 
 $page->bodyClass("profil");
@@ -88,7 +89,6 @@ if(!$UC->hasAcceptedTerms()) {
 	exit();
 
 }
-
 
 if($action) {
 
@@ -246,6 +246,22 @@ if($action) {
 		}
 	}
 
+	// profil/updateEmail
+	else if($action[0] == "updateEmail" && $page->validateCsrfToken()) {
+
+		//Method returns true
+		if($UC->updateEmail($action)) {
+
+			message()->addMessage("Din e-mailadresse blev opdateret.");
+		}
+		else {
+			message()->addMessage("Det lykkedes ikke at opdatere din e-mailadresse.");
+		}
+		
+		header("Location: /profil");
+		exit();
+	}
+
 	// profil/updateUserPassword
 	else if($action[0] == "updateUserPassword" && $page->validateCsrfToken()) {
 
@@ -289,6 +305,15 @@ if($action) {
 
 }
 
+if(!$UC->hasEmailAddress()) {
+
+	$page->page(array(
+		"templates" => "profile/update_email.php",
+		"type" => "login",
+		"page_title" => "Angiv e-mailadresse"
+	));
+	exit();
+}
 
 // Default template
 $page->page(array(

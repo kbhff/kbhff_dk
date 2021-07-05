@@ -1234,5 +1234,29 @@ IT
 	// }
 
 
+	function hasEmailAddress($_options = false) {
+		
+		// default values
+		$user_id = false;
+
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+
+					case "user_id"        : $user_id          = $_value; break;
+				}
+			}
+		}
+
+		if($user_id) {
+
+			$user = $this->getKbhffUser(["user_id" => $user_id]);
+			if($user && $user["email"]) {
+				return $user["email"];
+			}
+		}
+
+		return false;
+	}
 }
 ?>

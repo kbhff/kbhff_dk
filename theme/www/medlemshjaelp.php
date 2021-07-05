@@ -231,6 +231,16 @@ if($action) {
 			exit();
 		}
 
+		if(count($action) == 2 && !$model->hasEmailAddress(["user_id" => $action[1]])) {
+
+			$page->page(array(
+				"templates" => "member-help/update_user_email.php",
+				"type" => "login",
+				"page_title" => "Angiv e-mailadresse"
+			));
+			exit();
+		}
+
 		# /medlemshjaelp/brugerprofil/#user_id#
 		if(count($action) == 2) {
 			$page->page(array(
@@ -328,6 +338,8 @@ if($action) {
 				}
 			}
 
+			
+
 		}
 	}
 	
@@ -346,6 +358,21 @@ if($action) {
 		}
 	}
 	
+	# /medlemshjaelp/updateEmail
+	else if($action[0] == "updateEmail" && $page->validateCsrfToken()) {
+
+		//Method returns true
+		if($model->updateEmail($action)) {
+			message()->addMessage("Medlemmets e-mailadresse blev opdateret.");
+		}
+		else {
+			message()->addMessage("Det lykkedes ikke at opdatere medlemmets e-mailadresse.");
+		}
+		
+		header("Location: /medlemshjaelp/brugerprofil/$action[1]");
+		exit();
+	}
+
 	# /medlemshjaelp/updateUserDepartment
 	else if($action[0] == "updateUserDepartment" && $page->validateCsrfToken()) {
 
@@ -597,51 +624,62 @@ if($action) {
 
 				$cart_reference = $action[2];
 				$cart_id = $action[3];
+				$cart = $SC->getCarts(["cart_id" => $cart_id]);
 
-				// convert cart to order
-				$order = $SC->newOrderFromCart(["newOrderFromCart", $cart_id, $cart_reference]);
-				if($order) {	
-					
-					$order_no = $order["order_no"];
-					$user_id = $order["user_id"];
-					$user = $model->getKbhffUser(["user_id" => $user_id]);
-					$total_order_price = $SC->getTotalOrderPrice($order["id"]);
-					
-					// send notification email to admin
-					mailer()->send(array(
-						"recipients" => SHOP_ORDER_NOTIFIES,
-						"subject" => SITE_URL . " - New order ($order_no) created on behalf of: $user_id",
-						"message" => "Check out the new order: " . SITE_URL . "/janitor/admin/user/orders/" . $user_id,
-						"tracking" => false
-						// "template" => "system"
-					));
+				$user_id = $cart ? $cart["user_id"] : false;
+				$user = $model->getKbhffUser(["user_id" => $user_id]);
 
-					// order confirmation mail
-					mailer()->send(array(
-						"recipients" => $user["email"],
-						"values" => array(
-							"NICKNAME" => $user["nickname"], 
-							"ORDER_NO" => $order_no, 
-							"ORDER_ID" => $order["id"], 
-							"ORDER_PRICE" => formatPrice($total_order_price) 
-						),
-						// "subject" => SITE_URL . " – Thank you for your order!",
-						"tracking" => false,
-						"template" => "order_confirmation"
-					));
+				if($user["email"]) {
+
+					// convert cart to order
+					$order = $SC->newOrderFromCart(["newOrderFromCart", $cart_id, $cart_reference]);
+					if($order) {	
+						
+						$order_no = $order["order_no"];
+						$user_id = $order["user_id"];
+						$user = $model->getKbhffUser(["user_id" => $user_id]);
+						$total_order_price = $SC->getTotalOrderPrice($order["id"]);
+						
+						// send notification email to admin
+						mailer()->send(array(
+							"recipients" => SHOP_ORDER_NOTIFIES,
+							"subject" => SITE_URL . " - New order ($order_no) created on behalf of: $user_id",
+							"message" => "Check out the new order: " . SITE_URL . "/janitor/admin/user/orders/" . $user_id,
+							"tracking" => false
+							// "template" => "system"
+						));
+	
+						// order confirmation mail
+						mailer()->send(array(
+							"recipients" => $user["email"],
+							"values" => array(
+								"NICKNAME" => $user["nickname"], 
+								"ORDER_NO" => $order_no, 
+								"ORDER_ID" => $order["id"], 
+								"ORDER_PRICE" => formatPrice($total_order_price) 
+							),
+							// "subject" => SITE_URL . " – Thank you for your order!",
+							"tracking" => false,
+							"template" => "order_confirmation"
+						));
+						
+						// redirect to payment
+						message()->resetMessages();
+						header("Location: /medlemshjaelp/betaling/".$order["order_no"]);
+						exit();
+					}
 					
-					// redirect to payment
-					message()->resetMessages();
-					header("Location: /medlemshjaelp/betaling/".$order["order_no"]);
-					exit();
+					// error
+					else {
+						message()->resetMessages();
+						message()->addMessage("Det mislykkedes at omdanne indkøbskurven til en ordre.", array("type" => "error"));
+						header("Location: /medlemshjaelp/fejl");
+						exit();
+					}
 				}
-				
-				// error
 				else {
 					message()->resetMessages();
-					message()->addMessage("Det mislykkedes at omdanne indkøbskurven til en ordre.", array("type" => "error"));
-					header("Location: /medlemshjaelp/fejl");
-					exit();
+					header("Location: /medlemshjaelp/angiv-email");
 				}
 
 				
@@ -743,6 +781,7 @@ if($action) {
 
 					if($payment_method_result["status"] === "STRIPE_ERROR")	{
 						$payment_method_result["message"] = "Der skete en fejl i behandlingen af din betaling.";
+
 					}
 					else if($payment_method_result["status"] === "ORDER_NOT_FOUND")	{
 						$payment_method_result["message"] = "Ordren blev ikke fundet.";
