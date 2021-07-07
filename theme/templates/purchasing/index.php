@@ -20,7 +20,7 @@ $legacy_products = $IC->getItems(["where" => "itemtype = 'legacyproduct'", "orde
 $products_legacy_products = array_merge($products, $legacy_products);
 
 if($next_pickupdate) {
-
+	
 	foreach ($products_legacy_products as $key => $product) {
 		
 		$pickupdate_product_order_items = $SC->getPickupdateOrderItems($next_pickupdate["id"], ["item_id" => $product["id"]]);
@@ -30,11 +30,33 @@ if($next_pickupdate) {
 				$pickupdate_product_order_item_count += $order_item["quantity"];
 			}
 		}
+		// no orders for legacyproduct -> remove from array
+		else if($product["itemtype"] == "legacyproduct") {
+			unset($products_legacy_products[$key]);
+			continue;
+		}
 
 		$products_legacy_products[$key]["total_order_item_count"] = $pickupdate_product_order_item_count;
+		
+	}
+	
+	foreach ($departments as $department_key => $department) {
+		foreach ($products_legacy_products as $product_key => $product) {
+			
+			$department_pickupdate_product_order_items = $SC->getPickupdateOrderItems($next_pickupdate["id"], ["department_id" => $department["id"], "item_id" => $product["id"]]);
+			$department_pickupdate_product_order_item_count = 0;
+			if($department_pickupdate_product_order_items) {
+				foreach ($department_pickupdate_product_order_items as $order_item) {
+					$department_pickupdate_product_order_item_count += $order_item["quantity"];
+				}
+			}
+
+			$departments[$department_key]["product_quantities"][$product["id"]] = $department_pickupdate_product_order_item_count;
+		}
+
 	}
 
-	
+		
 	
 }
 
@@ -51,6 +73,8 @@ if($next_pickupdate) {
 	<? if($next_pickupdate): ?>
 	<div class="c-wrapper order-list">
 		<h2>Ordrer til udlevering <?= date("d.m.Y", strtotime($next_pickupdate["pickupdate"])) ?></h2>
+		
+		<!--
 		<ul class="list">
 			
 			<li class="labels">
@@ -100,6 +124,30 @@ if($next_pickupdate) {
 			</li>
 
 		</ul>
+		-->
+		
+		<table>
+			<tr class="col-labels">
+				<th class="col-departments" title="Afdelinger" scope="col">Afdelinger</th>
+				<? foreach($products_legacy_products as $product): ?>
+				<th class="col-product" scope="col" title="<?= $product["name"] ?>"><?= $product["name"] ?></th>
+				<? endforeach; ?>
+			</tr>
+			<? foreach($departments as $department): ?>
+			<tr class="department-quantities">
+				<th class="department" scope="row"><?= $department["name"] ?></th>
+					<? foreach($department["product_quantities"] as $product_id => $quantity): ?>
+				<td class="quantity"><?= $quantity ?></td>
+					<? endforeach; ?>
+			</tr>
+			<? endforeach; ?>
+			<tr class="totals">
+				<th class="total" scope="row">Total</th>
+				<? foreach($products_legacy_products as $product): ?>
+				<td class="total_quantity"><?= $product["total_order_item_count"] ?></td>
+				<? endforeach; ?>
+			</tr>
+		</table>
 	</div>
 	<? endif; ?>
 
