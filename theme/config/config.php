@@ -24,8 +24,8 @@ define("DEFAULT_CURRENCY_ISO", "DKK");
 
 define("SITE_LOGIN_URL", "/login");
 
-define("SITE_SIGNUP", "/bliv-medlem");
-define("SITE_SIGNUP_URL", "/signup");
+define("SITE_SIGNUP", true);
+define("SITE_SIGNUP_URL", "/bliv-medlem");
 
 define("SITE_ITEMS", true);
 
