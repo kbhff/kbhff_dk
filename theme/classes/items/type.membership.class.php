@@ -63,7 +63,8 @@ class TypeMembership extends Itemtype {
 		$this->addToModel("classname", array(
 			"type" => "string",
 			"label" => "CSS Class",
-			"hint_message" => "CSS class for custom styling. If you don't know what this is, just leave it empty"
+			"hint_message" => "CSS class for custom styling. If you don't know what this is, just leave it empty",
+			"error_message" => "Classname is invalid.",
 		));
 
 		// subscribed_message
@@ -71,7 +72,8 @@ class TypeMembership extends Itemtype {
 			"type" => "integer",
 			"label" => "Welcome message",
 			"required" => true,
-			"hint_message" => "Select a message to send to users when they subscribe to this membership"
+			"hint_message" => "Select a message to send to users when they subscribe to this membership",
+			"error_message" => "Subscribed_message_id is invalid.",
 		));
 
 		// Description

@@ -10,14 +10,11 @@ include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 $action = $page->actions();
 
 
-$page->pageTitle("the Janitor @ kaestel.dk")
-?>
-<? $page->header(array("type" => "janitor")) ?>
+$page->pageTitle("the Janitor @ kaestel.dk");
 
-<div class="scene front">
-	<h1><?= SITE_NAME ?> Admin</h1>
+$page->page(array(
+	"type" => "janitor",
+	"templates" => "janitor/front/index.php"
+));
+exit();
 
-
-</div>
-
-<? $page->footer(array("type" => "janitor")) ?>

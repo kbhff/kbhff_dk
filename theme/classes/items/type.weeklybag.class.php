@@ -67,7 +67,8 @@ class TypeWeeklybag extends Itemtype {
 			"min" => 1,
 			"max" => 53,
 			"required" => true,
-			"hint_message" => "State the week number for this bag."
+			"hint_message" => "State the week number for this bag.",
+			"error_message" => "Week is invalid.",
 		));
 		// year
 		$this->addToModel("year", array(
@@ -76,7 +77,8 @@ class TypeWeeklybag extends Itemtype {
 			"min" => 2019,
 			"max" => 2100,
 			"required" => true,
-			"hint_message" => "State the year for this bag."
+			"hint_message" => "State the year for this bag.",
+			"error_message" => "Year is invalid.",
 		));
 
 		// description

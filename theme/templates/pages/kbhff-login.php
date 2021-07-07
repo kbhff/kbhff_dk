@@ -100,7 +100,7 @@ $username = stringOr(getPost("username"), session()->value("temp-username"));
 
 
 <?	if(defined("SITE_SIGNUP") && SITE_SIGNUP): ?>
-		<p class="signup">Endnu ikke medlem? <a href="<?= SITE_SIGNUP ?>">Meld dig ind nu</a>.</p>
+		<p class="signup">Endnu ikke medlem? <a href="<?= SITE_SIGNUP_URL ?>">Meld dig ind nu</a>.</p>
 <?	endif; ?>
 
 </div>
