@@ -528,7 +528,7 @@ IT
 		$user = $this->getKbhffUser(["user_id" => $user_id]);
 
 		// Check that the number of REST parameters is as expected and that the listed entries are valid.
-		if(count($action) == 2 && $this->validateList(array("department_id")) && $user && $user["membership"] && isset($user["membership"]["subscription_id"])) {
+		if(count($action) == 2 && $this->validateList(array("department_id")) && $user && !($user["membership"] && !isset($user["membership"]["subscription_id"]))) {
 			
 			$department_id = $this->getProperty("department_id", "value");
 
@@ -552,9 +552,11 @@ IT
 						// get updated user
 						$user = $this->getKbhffUser(["user_id" => $user_id]);
 	
-						// send notifications to admin
-						$this->sendMemberLeftNotification($user, ["old_department" => $old_department]);
-						$this->sendNewMemberNotification($user);
+						if($user["membership"]) {
+							// send notifications to admin
+							$this->sendMemberLeftNotification($user, ["old_department" => $old_department]);
+							$this->sendNewMemberNotification($user);
+						}
 	
 						message()->addMessage("Afdeling er opdateret");
 						return true;
@@ -573,7 +575,9 @@ IT
 					// get updated user
 					$user = $this->getKbhffUser(["user_id" => $user_id]);
 
-					$this->sendNewMemberNotification($user);
+					if($user["membership"]) {
+						$this->sendNewMemberNotification($user);
+					}
 
 					message()->addMessage("Afdeling er opdateret");
 					return true;
