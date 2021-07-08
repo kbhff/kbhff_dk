@@ -434,6 +434,35 @@ if($action) {
 
 		if($order) {
 
+			$order_no = $order["order_no"];
+			$user_id = $order["user_id"];
+			$user = $model->getKbhffUser(["user_id" => $user_id]);
+			$total_order_price = $SC->getTotalOrderPrice($order["id"]);
+			
+			// send notification email to admin
+			mailer()->send(array(
+				"recipients" => SHOP_ORDER_NOTIFIES,
+				"subject" => SITE_URL . " - New order ($order_no) created on behalf of: $user_id",
+				"message" => "Check out the new order: " . SITE_URL . "/janitor/admin/user/orders/" . $user_id,
+				"tracking" => false
+				// "template" => "system"
+			));
+
+			// order confirmation mail
+			mailer()->send(array(
+				"recipients" => $user["email"],
+				"values" => array(
+					"NICKNAME" => $user["nickname"], 
+					"ORDER_NO" => $order_no, 
+					"ORDER_ID" => $order["id"], 
+					"ORDER_PRICE" => formatPrice($total_order_price) 
+				),
+				// "subject" => SITE_URL . " – Thank you for your order!",
+				"tracking" => false,
+				"template" => "order_confirmation"
+			));
+
+			// update user renewal preference
 			$_POST["membership_renewal"] = 1;
 			$result = $model->updateUserRenewalOptOut(["updateUserRenewalOptOut", $user_id]);
 			unset($_POST);
