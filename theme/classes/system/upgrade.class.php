@@ -20,7 +20,7 @@ class Upgrade extends UpgradeCore {
 		$pdpoi_info = $this->tableInfo($pdpoi);
 		$pdpci_info = $this->tableInfo($pdpoi);
 
-		// pdpoi has old design
+		// project_department_pickupdate_order_items has old design
 		if($pdpoi_info && isset($pdpoi_info["columns"]["department_id"]) && isset($pdpoi_info["columns"]["pickupdate_id"])) {
 
 			// restructure pdpoi columns
@@ -48,7 +48,7 @@ class Upgrade extends UpgradeCore {
 			}
 		}
 
-		// pdpci has old design
+		// project_department_pickupdate_cart_items has old design
 		if($pdpci_info && isset($pdpci_info["columns"]["department_id"]) && isset($pdpci_info["columns"]["pickupdate_id"])) {
 
 			// restructure pdpci columns
