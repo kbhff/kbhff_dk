@@ -23,7 +23,8 @@ class Upgrade extends UpgradeCore {
 		// project_department_pickupdate_order_items has old design
 		if($pdpoi_info && isset($pdpoi_info["columns"]["department_id"]) && isset($pdpoi_info["columns"]["pickupdate_id"])) {
 
-			// restructure pdpoi columns
+			// add and populate department_pickupdate_id column
+			// table will be restructured later by UpgradeCore::synchronizeTable
 			$sql = "SELECT * FROM ".$pdpoi;
 			if($query->sql($sql)) {
 				$pdpoi_rows = $query->results();
@@ -51,7 +52,8 @@ class Upgrade extends UpgradeCore {
 		// project_department_pickupdate_cart_items has old design
 		if($pdpci_info && isset($pdpci_info["columns"]["department_id"]) && isset($pdpci_info["columns"]["pickupdate_id"])) {
 
-			// restructure pdpci columns
+			// add and populate department_pickupdate_id column
+			// table will be restructured later by UpgradeCore::synchronizeTable
 			$sql = "SELECT * FROM ".$pdpci;
 			if($query->sql($sql)) {
 				$pdpci_rows = $query->results();
