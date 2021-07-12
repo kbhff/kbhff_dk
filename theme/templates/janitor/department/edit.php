@@ -98,7 +98,7 @@ $department_pickupdates = $model->getDepartmentPickupdates($department_id);
 		<ul class="items">
 			<? foreach($upcoming_pickupdates as $pickupdate): 
 			
-			$status = arrayKeyValue($department_pickupdates, "id", $pickupdate["id"]) !== false ? "added" : "";
+			$status = arrayKeyValue($department_pickupdates, "pickupdate_id", $pickupdate["id"]) !== false ? "added" : "";
 
 			?>
 			<li class="item <?= $status ?>">

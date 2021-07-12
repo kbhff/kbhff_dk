@@ -22,7 +22,7 @@ $product = $IC->getItem(["id" => $order_item["item_id"], "extend" => true]);
 
 foreach ($pickupdates as $pickupdate) {
 	if(
-		arrayKeyValue($department_pickupdates, "id", $pickupdate["id"]) !== false
+		arrayKeyValue($department_pickupdates, "pickupdate_id", $pickupdate["id"]) !== false
 		&& $product["start_availability_date"] <= $pickupdate["pickupdate"]
 		&& (!$product["end_availability_date"] || $product["end_availability_date"] >= $pickupdate["pickupdate"])
 	) {

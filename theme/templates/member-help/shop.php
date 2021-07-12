@@ -204,7 +204,7 @@ else {
 								foreach ($pickupdates as $pickupdate) {
 									
 									// department is open on pickupdate
-									if(arrayKeyValue($product_department_pickupdates, "id", $pickupdate["id"]) !== false) {
+									if(arrayKeyValue($product_department_pickupdates, "pickupdate_id", $pickupdate["id"]) !== false) {
 										
 										
 										if($product["end_availability_date"]) {
@@ -382,7 +382,7 @@ else {
 					
 					<? foreach($cart_pickupdates as $pickupdate): 
 
-						$pickupdate_cart_items = $SC->getCartPickupdateItems($pickupdate["id"], ["cart_reference" => $cart_reference]);
+						$pickupdate_cart_items = $SC->getPickupdateCartItems($pickupdate["id"], ["cart_reference" => $cart_reference]);
 
 					?>
 						<? if($pickupdate_cart_items): ?>

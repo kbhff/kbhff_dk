@@ -500,7 +500,7 @@ class Department extends Model {
 			}
 		}
 
-		$sql = "SELECT pickupdates.* FROM ".$this->db_pickupdates." AS department_pickupdates, ".SITE_DB.".project_pickupdates AS pickupdates WHERE department_pickupdates.pickupdate_id = pickupdates.id AND department_pickupdates.department_id = $department_id";
+		$sql = "SELECT department_pickupdates.*, pickupdates.pickupdate FROM ".$this->db_pickupdates." AS department_pickupdates, ".SITE_DB.".project_pickupdates AS pickupdates WHERE department_pickupdates.pickupdate_id = pickupdates.id AND department_pickupdates.department_id = $department_id";
 		
 		if($pickupdate_id) {
 
@@ -512,6 +512,10 @@ class Department extends Model {
 		}
 		
 		if($query->sql($sql)) {
+
+			if($pickupdate_id) {
+				return $query->result(0);
+			}
 
 			return $query->results();
 		}

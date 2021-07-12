@@ -208,7 +208,7 @@ else {
 								foreach ($pickupdates as $pickupdate) {
 									
 									// department is open on pickupdate
-									if(arrayKeyValue($product_department_pickupdates, "id", $pickupdate["id"]) !== false) {
+									if(arrayKeyValue($product_department_pickupdates, "pickupdate_id", $pickupdate["id"]) !== false) {
 										
 										
 										if($product["end_availability_date"]) {
@@ -386,7 +386,7 @@ else {
 				<ul class="pickupdates">
 					
 						<? foreach($cart_pickupdates as $pickupdate): 
-							$pickupdate_cart_items = $model->getCartPickupdateItems($pickupdate["id"]);
+							$pickupdate_cart_items = $model->getPickupdateCartItems($pickupdate["id"]);
 							if($pickupdate_cart_items): ?>
 						
 					<li class="pickupdate">

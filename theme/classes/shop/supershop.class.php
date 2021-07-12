@@ -372,10 +372,24 @@ class SuperShop extends SuperShopCore {
 			$query = new Query();
 			$query->checkDbExistence($this->db_pickupdates);
 			$query->checkDbExistence($this->db_department_pickupdate_cart_items);
+			$query->checkDbExistence($this->db_department_pickupdates);
+
 
 			$cart_id = $cart["id"];
 
-			$sql = "SELECT DISTINCT pickupdates.* FROM ".$this->db_pickupdates." AS pickupdates, ".$this->db_department_pickupdate_cart_items." AS department_pickupdate_cart_items, ".$this->db_cart_items." AS cart_items WHERE cart_items.cart_id = $cart_id AND cart_items.id = department_pickupdate_cart_items.cart_item_id AND pickupdates.id = department_pickupdate_cart_items.pickupdate_id ORDER BY pickupdates.pickupdate ASC";
+			$sql = "
+			SELECT 
+				DISTINCT pickupdates.* 
+			FROM ".$this->db_pickupdates." AS pickupdates, "
+				.$this->db_department_pickupdate_cart_items." AS department_pickupdate_cart_items, "
+				.$this->db_department_pickupdates." AS department_pickupdates, "
+				.$this->db_cart_items." AS cart_items 
+			WHERE cart_items.cart_id = $cart_id 
+				AND cart_items.id = department_pickupdate_cart_items.cart_item_id 
+				AND department_pickupdates.id = department_pickupdate_cart_items.department_pickupdate_id 
+				AND pickupdates.id = department_pickupdates.pickupdate_id  
+			ORDER BY pickupdates.pickupdate ASC";
+
 			if($query->sql($sql)) {
 	
 				$cart_pickupdates = $query->results();
@@ -388,7 +402,7 @@ class SuperShop extends SuperShopCore {
 		return false;
 	}
 	
-	function getCartPickupdateItems($pickupdate_id, $_options = false) {
+	function getPickupdateCartItems($pickupdate_id, $_options = false) {
 
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
@@ -403,7 +417,16 @@ class SuperShop extends SuperShopCore {
 
 		if($cart && $cart["items"]) {
 
-			$sql = "SELECT cart_items.* FROM ".$this->db_department_pickupdate_cart_items." AS department_pickupdate_cart_items, ".$this->db_cart_items." AS cart_items WHERE department_pickupdate_cart_items.pickupdate_id = $pickupdate_id AND cart_items.id = department_pickupdate_cart_items.cart_item_id AND cart_items.cart_id = ".$cart["id"];
+			$sql = "
+			SELECT cart_items.* 
+			FROM ".$this->db_department_pickupdate_cart_items." AS department_pickupdate_cart_items, "
+				.$this->db_department_pickupdates." AS department_pickupdates, "
+				.$this->db_cart_items." AS cart_items 
+			WHERE department_pickupdates.pickupdate_id = $pickupdate_id 
+				AND department_pickupdates.id = department_pickupdate_cart_items.department_pickupdate_id 
+				AND cart_items.id = department_pickupdate_cart_items.cart_item_id 
+				AND cart_items.cart_id = ".$cart["id"];
+				
 			if($query->sql($sql)) {
 				
 				$cart_pickupdate_items = $query->results();
@@ -675,9 +698,9 @@ class SuperShop extends SuperShopCore {
 						$order_item["item_name"] = $item_name;
 	
 						// add cart_item's pickupdate to order_item
-						$pickupdate = $this->getCartItemPickupdate($cart_item["id"]);
-						if($pickupdate) {
-							$this->addDepartmentPickupdateOrderItem($user_department["id"], $pickupdate["id"], $order_item_id);
+						$cart_item_department_pickupdate = $this->getCartItemDepartmentPickupdate($cart_item["id"]);
+						if($cart_item_department_pickupdate && $user_department["id"] === $cart_item_department_pickupdate["department_id"]) {
+							$this->addDepartmentPickupdateOrderItem($user_department["id"], $cart_item_department_pickupdate["pickupdate_id"], $order_item_id);
 						}
 	
 						return $order_item;

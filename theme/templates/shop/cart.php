@@ -151,7 +151,7 @@ if($cart && $cart["items"]) {
 
 			<? foreach($cart_pickupdates as $pickupdate): 
 
-				$pickupdate_cart_items = $model->getCartPickupdateItems($pickupdate["id"]);
+				$pickupdate_cart_items = $model->getPickupdateCartItems($pickupdate["id"]);
 
 			?>
 				<? if($pickupdate_cart_items): ?>

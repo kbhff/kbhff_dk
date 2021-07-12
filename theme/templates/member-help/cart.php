@@ -178,7 +178,7 @@ if($cart && $cart["items"]) {
 
 				<? foreach($cart_pickupdates as $pickupdate): 
 	
-					$pickupdate_cart_items = $SC->getCartPickupdateItems($pickupdate["id"], ["cart_reference" => $cart_reference]);
+					$pickupdate_cart_items = $SC->getPickupdateCartItems($pickupdate["id"], ["cart_reference" => $cart_reference]);
 	
 				?>
 					<? if($pickupdate_cart_items): ?>
