@@ -10,7 +10,7 @@ include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 $action = $page->actions();
 
 
-$page->pageTitle("the Janitor @ kaestel.dk");
+$page->pageTitle("the Janitor @ ".SITE_URL);
 
 $page->page(array(
 	"type" => "janitor",
