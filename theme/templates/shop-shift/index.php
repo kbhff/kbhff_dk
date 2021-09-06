@@ -119,7 +119,7 @@ if($department_pickupdate_order_items) {
 				$user = $UC->getUsers(["user_id" => $order_item["user_id"]]);
 				
 			?>
-				<li class="listing">
+				<li class="listing order_item_id:<?= $order_item["id"] ?>">
 					<span class="user_name"><?= $user ? $user["nickname"] : "" ?></span>
 					<span class="product_name"><?= $order_item["quantity"] ?> x <?= $order_item["name"] ?></span>
 					<span class="button">
@@ -132,7 +132,6 @@ if($department_pickupdate_order_items) {
 								],
 								"confirm-value" => "Bekræft",
 								"wait-value" => "Vent",
-								"dom-submit" => true,
 								"class" => "primary",
 							]) ?>
 							<? else: ?>
@@ -142,7 +141,6 @@ if($department_pickupdate_order_items) {
 								],
 								"confirm-value" => "Bekræft",
 								"wait-value" => "Vent",
-								"dom-submit" => true,
 							]) ?>
 							<? endif; ?>
 						</ul>

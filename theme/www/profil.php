@@ -305,7 +305,7 @@ if($action) {
 
 }
 
-if(!$UC->hasEmailAddress()) {
+if(session()->value("user_id") > 1 && !$UC->hasEmailAddress()) {
 
 	$page->page(array(
 		"templates" => "profile/update_email.php",
