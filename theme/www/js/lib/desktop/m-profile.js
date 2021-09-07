@@ -807,7 +807,9 @@ Util.Modules["profile"] = new function() {
 				order.order_item_id = u.cv(order, "order_item_id");
 				order.span_pickupdate = u.qs("span.pickupdate", order);
 				order.span_date = u.qs("span.date", order.span_pickupdate);
+				order.span_change_until = u.qs("span.change-until", order);
 				order.bn_edit = u.qs("li.change a.button:not(.disabled)", order);
+
 
 				if(order.bn_edit) {
 
@@ -841,6 +843,8 @@ Util.Modules["profile"] = new function() {
 										this.response = function(response) {
 											this.order.bn_edit.form.parentNode.removeChild(this.order.bn_edit.form);
 											delete this.order.bn_edit.form;
+
+											this.order.span_change_until.innerHTML = u.qs("span.change-until", u.ge("order_item_id:"+this.order.order_item_id, response)).innerHTML;
 
 											this.order.span_date.innerHTML = u.qs("span.date", u.ge("order_item_id:"+this.order.order_item_id, response)).innerHTML;
 
