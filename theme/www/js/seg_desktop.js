@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-09-03 15:38:04
+asset-builder @ 2021-09-07 10:37:34
 */
 
 /*seg_desktop_include.js*/
@@ -10313,10 +10313,13 @@ Util.Modules["shop_shift"] = new function() {
 			listing.scene = this;
 			listing.li = u.qs("li.confirm", listing);
 			listing.li.listing = listing;
+			this.status = u.qs("ul.status", this);
 			listing.li.confirmed = function(response) {
 				response.listing = u.ge("order_item_id:" + listing.order_item_id, response);
 				response.listing.li = u.qs("li.confirm", response.listing);
+				response.status = u.qs("ul.status", response);
 				this.listing.list.replaceChild(response.listing, this.listing);
+				this.listing.scene.status.parentNode.replaceChild(response.status, this.listing.scene.status);
 				u.m.oneButtonForm.init(response.listing.li);
 				this.listing.scene.initDeliveryButton(response.listing);
 			}
