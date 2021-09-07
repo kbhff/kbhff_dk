@@ -37,7 +37,7 @@ $this->pageTitle("Afdelinger");
 
 		<ul class="actions">
 			<li class="cancel"><a href="/" class="button">Annullér</a></li>
-			<?= $UC->submit("Opdater", array("class" => "primary", "wrapper" => "li.save")) ?>
+			<?= $UC->submit("Opdater", array("class" => "primary disabled", "wrapper" => "li.save")) ?>
 		</ul>
 
 	<?= $UC->formEnd() ?>

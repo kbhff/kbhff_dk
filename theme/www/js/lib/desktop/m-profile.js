@@ -70,6 +70,21 @@ Util.Modules["profile"] = new function() {
 							// Insert form into fields
 							u.ae(div_fields, form_department);
 
+							form_department.save = u.qs(".save input", form_department);
+							form_department.department_select = u.qs("#input_department_id", form_department);
+							form_department.department_select.initial_value = form_department.department_select.value;
+
+							form_department.changed = function() {
+
+								if(this.department_select.value === this.department_select.initial_value) {
+									u.ac(this.save, "disabled")
+								}
+								else {
+									u.rc(this.save, "disabled");
+								}
+								
+							}
+
 							if(warning) {
 								u.ae(div_fields, warning);
 							}
@@ -82,7 +97,6 @@ Util.Modules["profile"] = new function() {
 									// Update request state
 									this.is_requesting = false;
 									u.rc(this, "loading");
-								
 									// Replace current fields div with the updated one
 									var new_fields = u.qs(".membership .fields", response);
 									box_membership.replaceChild(new_fields, div_fields);

@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-09-07 10:37:34
+asset-builder @ 2021-09-07 13:51:50
 */
 
 /*seg_desktop_include.js*/
@@ -9494,6 +9494,17 @@ Util.Modules["profile"] = new function() {
 							u.ae(box_membership, form_department);
 							u.f.init(form_department);
 							u.ae(div_fields, form_department);
+							form_department.save = u.qs(".save input", form_department);
+							form_department.department_select = u.qs("#input_department_id", form_department);
+							form_department.department_select.initial_value = form_department.department_select.value;
+							form_department.changed = function() {
+								if(this.department_select.value === this.department_select.initial_value) {
+									u.ac(this.save, "disabled")
+								}
+								else {
+									u.rc(this.save, "disabled");
+								}
+							}
 							if(warning) {
 								u.ae(div_fields, warning);
 							}
@@ -9952,6 +9963,7 @@ Util.Modules["profile"] = new function() {
 				order.order_item_id = u.cv(order, "order_item_id");
 				order.span_pickupdate = u.qs("span.pickupdate", order);
 				order.span_date = u.qs("span.date", order.span_pickupdate);
+				order.span_change_until = u.qs("span.change-until", order);
 				order.bn_edit = u.qs("li.change a.button:not(.disabled)", order);
 				if(order.bn_edit) {
 					order.bn_edit.order = order;
@@ -9974,6 +9986,7 @@ Util.Modules["profile"] = new function() {
 										this.response = function(response) {
 											this.order.bn_edit.form.parentNode.removeChild(this.order.bn_edit.form);
 											delete this.order.bn_edit.form;
+											this.order.span_change_until.innerHTML = u.qs("span.change-until", u.ge("order_item_id:"+this.order.order_item_id, response)).innerHTML;
 											this.order.span_date.innerHTML = u.qs("span.date", u.ge("order_item_id:"+this.order.order_item_id, response)).innerHTML;
 											u.rc(this.order, "edit");
 											this.order.bn_edit.innerHTML = "Ret";
