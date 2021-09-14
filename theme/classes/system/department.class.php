@@ -389,19 +389,57 @@ class Department extends Model {
 			// Ask the database to delete the row with the id that came from $action. 
 			$id = $action[1];
 			$query = new Query();
-			
-			$sql = "SELECT * FROM ".SITE_DB.".user_department as u WHERE u.department_id = $id";
-			// print_r($sql);exit();
-			if($query->sql($sql)) {
-				message()->addMessage("Department could not be deleted due to its users.", array("type" => "error"));
-				return false;
+			$SC = new Shop();
+
+			$department = $this->getDepartment(["id" => $id]);
+			if($department)	{
+
+				$sql = "SELECT * FROM ".SITE_DB.".user_department as u WHERE u.department_id = $id";
+				// print_r($sql);exit();
+				if($query->sql($sql)) {
+					message()->addMessage("Department could not be deleted because it has users.", array("type" => "error"));
+					return false;
+				}
+	
+				$department_order_items = $SC->getDepartmentOrderItems($id);
+				$order_item_links = [];
+	
+				if($department_order_items) {
+	
+					foreach ($department_order_items as $order_item) {
+						
+						if(isset($order_item["pickupdate"]) AND $order_item["pickupdate"] <= date("Y-m-d") AND isset($order_item["shipped_by"])) {
+	
+							message()->addMessage("Department could not be deleted, because it is associated with delivered orders.", array("type" => "error"));
+							return false;
+	
+						}
+						else {
+							$order_item_links[] = SITE_URL."/janitor/order-item/edit/".$order_item["id"];
+						}
+					}
+				}			
+				
+				$sql = "DELETE FROM ".$this->db." WHERE id = '$id'";
+				if($query->sql($sql)) {
+	
+					if($department_order_items) {
+	
+						// send notification email to admin
+						mailer()->send(array(
+							"recipients" => ADMIN_EMAIL,
+							"subject" => SITE_URL . " - ACTION NEEDED: Order items have been orphaned",
+							"message" => "The department ".$department['name']." has been deleted from the system. This has caused ".count($department_order_items)." order items to lose their time and place of pickup. \n\nHere are links to each of the affected order items:\n\n".implode("\n", $order_item_links). ". \n\nFollow the links to assign a new department/pickupdate to each order item.",
+							"tracking" => false
+							// "template" => "system"
+						));
+					}
+	
+					message()->addMessage("Department deleted");
+					return true;		
+				}
 			}
 			
-			$sql = "DELETE FROM ".$this->db." WHERE id = '$id'";
-			if($query->sql($sql)) {
-				message()->addMessage("Department deleted");
-				return true;		
-			}
 
 		}
 		message()->addMessage("Department could not be deleted.", array("type" => "error"));

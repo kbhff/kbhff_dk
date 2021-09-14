@@ -591,14 +591,20 @@ class Shop extends ShopCore {
 
 		$sql = "SELECT 
 				order_items.*, orders.user_id, 
-				orders.order_no 
+				orders.order_no, pp.pickupdate 
 			FROM "
 				.$this->db_order_items." AS order_items, "
 				.$this->db_orders." AS orders, "
+				.SITE_DB.".project_department_pickupdate_order_items AS pdpoi, "
+				.SITE_DB.".project_department_pickupdates AS pdp, "
+				.SITE_DB.".project_pickupdates AS pp, "
 				.SITE_DB.".items AS items "." 
 			WHERE 
 				order_items.order_id = orders.id
 				AND orders.status < 3
+				AND order_items.id = pdpoi.order_item_id
+				AND pdp.id = pdpoi.department_pickupdate_id
+				AND pp.id = pdp.pickupdate_id 
 				AND order_items.item_id = items.id";
 				
 
@@ -755,6 +761,30 @@ class Shop extends ShopCore {
 		}
 
 		return false;
+	}
+
+	function getDepartmentOrderItems($department_id) {
+		
+		$query = new Query();
+
+		$sql = "
+			SELECT soi.*, pp.pickupdate, pd.id AS department_id 
+			FROM ".SITE_DB.".shop_order_items soi 
+				JOIN ".SITE_DB.".project_department_pickupdate_order_items pdpoi ON soi.id = pdpoi.order_item_id 
+				JOIN ".SITE_DB.".project_department_pickupdates pdp ON pdp.id = pdpoi.department_pickupdate_id 
+				JOIN ".SITE_DB.".project_departments pd ON pd.id = pdp.department_id 
+				JOIN ".SITE_DB.".project_pickupdates pp ON pp.id = pdp.pickupdate_id 
+			WHERE 
+				pd.id = $department_id";
+		
+		if($query->sql($sql)) {
+
+			return $query->results();
+
+		}
+
+		return false;
+
 	}
 
 	function addCartItemToOrder($cart_item, $order) {
