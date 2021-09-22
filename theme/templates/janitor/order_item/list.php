@@ -8,7 +8,7 @@ global $DC;
 include_once("classes/users/superuser.class.php");
 $UC = new SuperUser();
 
-$order_items = $SC->getOrderItems(["where" => "items.itemtype REGEXP '^product.*'"]);
+$order_items = $SC->getOrderItems(["where" => "items.itemtype REGEXP '^product.*' AND order_items.shipped_by IS NULL"]);
 if($order_items) {
 	foreach ($order_items as $key => $order_item) {
 		
@@ -47,7 +47,7 @@ if($order_items) {
 ?>
 <div class="scene i:scene defaultList shopList">
 	<h1>Ordered products</h1>
-	<p><em>Note:</em> Each ordered product corresponds to an <em>order_item</em> in the database, which is part of an <em>order</em> that may contain several order_items. Products that belong to a cancelled order are not shown.</p>
+	<p><em>Note:</em> Each ordered product corresponds to an <em>order_item</em> in the database, which is part of an <em>order</em> that may contain several order_items. Products that belong to a cancelled order are not shown, nor are products that have been picked up.</p>
 
 	<div class="all_items i:defaultList filters">
 		<? if($order_items): ?>
