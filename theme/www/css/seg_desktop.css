@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-09-07 13:51:50
+asset-builder @ 2021-09-22 11:10:46
 */
 
 /*seg_desktop_include.css*/
@@ -1352,6 +1352,8 @@ position: relative;
 
 
 /*s-shop_shift.css*/
+#content div.shop_shift ul.subnavigation li {text-align: center;}
+#content div.shop_shift ul.subnavigation li {width: 25%;}
 #content div.shop_shift ul.actions {text-align: left;}
 #content div.shop_shift .tally ul.actions {text-align: right;}
 #content div.shop_shift .info form {font-size: 0; padding-bottom: 0;}

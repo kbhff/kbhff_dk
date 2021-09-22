@@ -1,4 +1,7 @@
 /* INDEX */
+#content div.shop_shift ul.subnavigation li {text-align: center;}
+#content div.shop_shift ul.subnavigation li {width: 25%;}
+
 #content div.shop_shift ul.actions {text-align: left;}
 
 #content div.shop_shift .tally ul.actions {text-align: right;}
