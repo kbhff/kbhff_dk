@@ -519,48 +519,53 @@ class Shop extends ShopCore {
 		$DC = new Department();
 
 		$order_item_id = $action[1];
+		$order_item = $this->getOrderItems(["order_item_id" => $order_item_id]);
 		
 		$department_id = getPost("department_id", "value");
 		$pickupdate_id = getPost("pickupdate_id", "value");
 		$department_pickupdate = $DC->getDepartmentPickupdates($department_id, ["pickupdate_id" => $pickupdate_id]);
 
-		if($this->getOrderItemDepartmentPickupdate($order_item_id)) {
+		// order_item exists and is not yet shipped
+		if($order_item && !isset($order_item["shipped_by"])) {
 
-			if($department_pickupdate) {
-				
-				$sql = "UPDATE ".$this->db_department_pickupdate_order_items." SET department_pickupdate_id = ".$department_pickupdate["id"]." WHERE order_item_id = $order_item_id";
+			if($this->getOrderItemDepartmentPickupdate($order_item_id)) {
+	
+				if($department_pickupdate) {
+					
+					$sql = "UPDATE ".$this->db_department_pickupdate_order_items." SET department_pickupdate_id = ".$department_pickupdate["id"]." WHERE order_item_id = $order_item_id";
+				}
+				else {
+	
+					message()->addMessage("The chosen department/pickupdate is not available. The department may be closed that day.", ["type" => "error"]);
+					return false;
+				}
 			}
 			else {
-
-				message()->addMessage("The chosen department/pickupdate is not available. The department may be closed that day.", ["type" => "error"]);
-				return false;
+	
+				if($department_pickupdate) {
+	
+					$sql = "
+					INSERT INTO "
+						.$this->db_department_pickupdate_order_items." 
+					SET 
+						department_pickupdate_id = ".$department_pickupdate["id"].", 
+						order_item_id = $order_item_id";
+				}
+				else {
+	
+					message()->addMessage("The chosen department/pickupdate is not available. The department may be closed that day.", ["type" => "error"]);
+					return false;
+				}
 			}
-		}
-		else {
-
-			if($department_pickupdate) {
-
-				$sql = "
-				INSERT INTO "
-					.$this->db_department_pickupdate_order_items." 
-				SET 
-					department_pickupdate_id = ".$department_pickupdate["id"].", 
-					order_item_id = $order_item_id";
+	
+			if($query->sql($sql)) {
+	
+				global $page;
+				$page->addLog("Shop->setOrderItemDepartmentPickupdate: user_id:".session()->value("user_id").", order_item_id:$order_item_id, department_pickupdate_id:".$department_pickupdate["id"]);
+	
+				message()->addMessage("Pickup date and department was set");
+				return $this->getOrderItemDepartmentPickupdate($order_item_id);
 			}
-			else {
-
-				message()->addMessage("The chosen department/pickupdate is not available. The department may be closed that day.", ["type" => "error"]);
-				return false;
-			}
-		}
-
-		if($query->sql($sql)) {
-
-			global $page;
-			$page->addLog("Shop->setOrderItemDepartmentPickupdate: user_id:".session()->value("user_id").", order_item_id:$order_item_id, department_pickupdate_id:".$department_pickupdate["id"]);
-
-			message()->addMessage("Pickup date and department was set");
-			return $this->getOrderItemDepartmentPickupdate($order_item_id);
 		}
 
 		message()->addMessage("Could not set pickupdate and department", ["type" => "error"]);
