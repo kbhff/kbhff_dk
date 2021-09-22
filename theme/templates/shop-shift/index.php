@@ -67,11 +67,22 @@ if($department_pickupdate_order_items) {
 		}
 	}
 }
+
+$shop_shift_subnavigation = $this->navigation("sub-butiksvagt");
+
 ?>
 
 <div class="scene shop_shift i:shop_shift">
 	
 	<div class="banner i:banner variant:1 format:jpg"></div>
+
+	<? if($shop_shift_subnavigation && isset($shop_shift_subnavigation["nodes"])) { ?>
+	<ul class="subnavigation">
+		<? foreach($shop_shift_subnavigation["nodes"] as $node): ?>
+		<li><a href="<?= $node["link"] ?>" <?= $node["target"] ? 'target = '.$node["target"] : '' ?>><?= $node["name"] ?></a></li>
+		<? endforeach;?>
+	</ul>
+	<? } ?>
 
 	<h1>Ordreliste <span class="value"><?= $department["name"] ?: " - " ?></h1>
 	<? if($all_pickupdates && $pickupdate): ?>

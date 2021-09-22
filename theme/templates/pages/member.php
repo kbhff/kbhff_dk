@@ -17,7 +17,7 @@ $member_subnavigation = $this->navigation("sub-member");
 	<? if($member_subnavigation && isset($member_subnavigation["nodes"])) { ?>
 	<ul class="subnavigation">
 		<? foreach($member_subnavigation["nodes"] as $node): ?>
-		<li><a href="<?= $node["link"] ?>"><?= $node["name"] ?></a></li>
+		<li><a href="<?= $node["link"] ?>" <?= $node["target"] ? 'target = '.$node["target"] : '' ?>><?= $node["name"] ?></a></li>
 		<? endforeach;?>
 	</ul>
 	<? } ?>
