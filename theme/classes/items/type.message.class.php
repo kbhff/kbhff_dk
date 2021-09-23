@@ -58,7 +58,8 @@ class TypeMessage extends TypeMessageCore {
 	
 			// create final HTML
 			$final_html = html_entity_decode($this->mergeMessageIntoLayout($message));
-	
+			$name = prepareForHTML($name);
+
 			$recipients[] = $user["email"];
 	
 			// send final HTML
@@ -142,7 +143,8 @@ class TypeMessage extends TypeMessageCore {
 	
 			// create final HTML
 			$final_html = html_entity_decode($this->mergeMessageIntoLayout($message));
-	
+			$name = prepareForHTML($name);
+
 			if(count($recipients) < 1000) {
 
 				// send final HTML
