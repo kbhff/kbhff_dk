@@ -418,6 +418,7 @@ if($action) {
 						case "incorrect_cvc"            : $message = "Forkert sikkerhedskode."; break;
 						case "incorrect_zip"            : $message = "Kortets postnummer kunne ikke bekræftes."; break;
 						case "card_declined"            : $message = "Kortet blev afvist."; break;
+						case "resource_missing"         : $message = "Ugyldigt ID."; break;
 					}
 					if($payment_method_result["decline_code"]) {
 						switch($payment_method_result["decline_code"]) {
@@ -520,6 +521,7 @@ if($action) {
 						case "incorrect_cvc"            : $message = "Forkert sikkerhedskode."; break;
 						case "incorrect_zip"            : $message = "Kortets postnummer kunne ikke bekræftes."; break;
 						case "card_declined"            : $message = "Kortet blev afvist."; break;
+						case "resource_missing"         : $message = "Ugyldigt ID."; break;
 					}
 					if($payment_method_result["decline_code"]) {
 						switch($payment_method_result["decline_code"]) {
