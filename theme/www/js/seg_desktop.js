@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-09-22 11:10:46
+asset-builder @ 2021-10-11 12:13:14
 */
 
 /*seg_desktop_include.js*/
@@ -9462,6 +9462,7 @@ Util.Modules["profile"] = new function() {
 		scene.scrolled = function() {
 		}
 		scene.ready = function() {
+			//			
 			this.initMembershipBox();
 			this.initUserinfoBox();
 			this.initPasswordBox();
@@ -9473,7 +9474,7 @@ Util.Modules["profile"] = new function() {
 			var button_membership = u.qs(".membership li.change-info", this);
 			var button_cancel = u.qs(".membership li.cancel-membership", this);
 			var right_panel = u.qs(".c-one-third", this);
-			var box_department = u.qs(".membership-info.department", this);
+			var box_department = u.qs(".section.department", this);
 			if(button_membership) {
 				button_membership.scene = this;
 				button_membership.a = u.qs("a", button_membership);
@@ -9515,6 +9516,9 @@ Util.Modules["profile"] = new function() {
 									u.rc(this, "loading");
 									var new_fields = u.qs(".membership .fields", response);
 									box_membership.replaceChild(new_fields, div_fields);
+									var old_department_address = u.qs(".department .c-box");
+									var new_department_address = u.qs(".department .c-box", response);
+									box_department.replaceChild(new_department_address, old_department_address);
 									if (message = u.qs("p.message", response)) {
 										var fields = u.qs("div.fields", box_membership)
 										u.ie(fields, message);
