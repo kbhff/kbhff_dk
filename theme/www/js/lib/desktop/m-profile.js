@@ -8,15 +8,15 @@ Util.Modules["profile"] = new function() {
 		scene.scrolled = function() {
 			// u.bug("scene.scrolled", this);
 		}
-
+		
 		scene.ready = function() {
-//			// u.bug("scene.ready", this);
+			//			// u.bug("scene.ready", this);
 			this.initMembershipBox();
 			this.initUserinfoBox();
 			this.initPasswordBox();
 			this.initRenewalBox();
 			this.initOrderList();
-
+			
 		}
 		
 		// Medlemskab box
@@ -25,12 +25,12 @@ Util.Modules["profile"] = new function() {
 			var box_membership = u.qs(".membership > .c-box", this);
 			var button_membership = u.qs(".membership li.change-info", this);
 			var button_cancel = u.qs(".membership li.cancel-membership", this);
-
+			
 			
 			// Query elements for syncing
 			var right_panel = u.qs(".c-one-third", this);
-			var box_department = u.qs(".membership-info.department", this);
-
+			var box_department = u.qs(".section.department", this);
+			
 			// "Ret" button
 			if(button_membership) {
 				// Create references to scene
@@ -39,7 +39,7 @@ Util.Modules["profile"] = new function() {
 
 				// Ret-button is enabled
 				if(button_membership.a.getAttribute("href")) {
-				
+					
 					u.clickableElement(button_membership); // Add click event to button and ignore href redirect.
 					button_membership.clicked = function() {
 
@@ -88,7 +88,7 @@ Util.Modules["profile"] = new function() {
 							if(warning) {
 								u.ae(div_fields, warning);
 							}
-
+							
 							// Update button
 							form_department.submitted = function() {
 								var data = this.getData();
@@ -100,6 +100,10 @@ Util.Modules["profile"] = new function() {
 									// Replace current fields div with the updated one
 									var new_fields = u.qs(".membership .fields", response);
 									box_membership.replaceChild(new_fields, div_fields);
+
+									var old_department_address = u.qs(".department .c-box");
+									var new_department_address = u.qs(".department .c-box", response);
+									box_department.replaceChild(new_department_address, old_department_address);
 
 									if (message = u.qs("p.message", response)) {
 										var fields = u.qs("div.fields", box_membership)
