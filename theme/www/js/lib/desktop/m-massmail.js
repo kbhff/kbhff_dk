@@ -12,10 +12,19 @@ Util.Modules["massmail"] = new function() {
 		scene.ready = function() {
 			u.bug("scene.ready", this);
 
+			
+
 			var form = u.qs("form");
 			u.f.init(form, this);
 			form.scene = this;
 			form.p_status = u.qs(".status", form);
+
+			form.updated = function(iN) {
+				
+				window.onbeforeunload = function() {
+					return 'Du har ændringer, der ikke er gemt!';
+				}
+			}
 
 			form.submitted = function(iN) {
 

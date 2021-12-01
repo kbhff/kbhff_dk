@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-10-11 12:13:14
+asset-builder @ 2021-12-01 17:56:17
 */
 
 /*seg_desktop_include.js*/
@@ -10359,6 +10359,11 @@ Util.Modules["massmail"] = new function() {
 			u.f.init(form, this);
 			form.scene = this;
 			form.p_status = u.qs(".status", form);
+			form.updated = function(iN) {
+				window.onbeforeunload = function() {
+					return 'Du har ændringer, der ikke er gemt!';
+				}
+			}
 			form.submitted = function(iN) {
 				if(iN.hasAttribute("formaction")) {
 					form.response = function(response) {
@@ -10508,6 +10513,11 @@ Util.Modules["purchasing"] = new function() {
 		scene.scrolled = function() {
 		}
 		scene.ready = function() {
+			var form = u.qs("form.choose_date");
+			u.f.init(form);
+			form.updated = function() {
+				this.submit();
+			}
 			this.products = u.qsa("div.products li.listing", this);
 			var i, product, image;
 			for(i = 0; i < this.products.length; i++) {

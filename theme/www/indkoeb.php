@@ -153,6 +153,26 @@ if($action) {
 
 	}
 
+	else if($action[0] == "selectPickupdate" && count($action) == 1) {
+		
+		$pickupdate_id = getPost("pickupdate_id", "value");
+
+		$pickupdate = $PC->getPickupdate(["id" => $pickupdate_id]);
+
+		if($pickupdate && $pickupdate["pickupdate"] == date("Y-m-d") ) {
+
+			// redirect to leave POST state
+			header("Location: /indkoeb");
+			exit();			
+		}
+
+		// redirect to leave POST state
+		header("Location: /indkoeb/".$pickupdate_id);
+		exit();			
+
+	}
+
+
 	else if(count($action) == 2 && $action[0] == "updatePickupdateDepartments" && $page->validateCsrfToken()) {
 
 		if($DC->updatePickupdateDepartments($action)) {

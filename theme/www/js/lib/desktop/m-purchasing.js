@@ -12,6 +12,12 @@ Util.Modules["purchasing"] = new function() {
 		scene.ready = function() {
 			// u.bug("scene.ready", this);
 
+			var form = u.qs("form.choose_date");
+			u.f.init(form);
+			form.updated = function() {
+				this.submit();
+			}
+
 			this.products = u.qsa("div.products li.listing", this);
 			var i, product, image;
 			for(i = 0; i < this.products.length; i++) {

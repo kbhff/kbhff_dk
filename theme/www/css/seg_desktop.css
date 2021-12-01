@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-10-11 12:13:14
+asset-builder @ 2021-12-01 17:56:17
 */
 
 /*seg_desktop_include.css*/
@@ -1777,6 +1777,11 @@ div.overlay .field.password {
 #content .scene.accountant .calculated {padding-bottom: 46px; border-bottom: 1px;}
 
 /*s-purchasing.css*/
+#content .scene.purchasing .order-list form {font-size: 0; padding: 12px 0; width: 66%;}
+#content .scene.purchasing .order-list form div.field {display: inline-block; vertical-align: top; width: calc(100% - 109px);}
+#content .scene.purchasing .order-list form ul.actions {display: inline-block; font-size: 0; vertical-align: top; width: 65px; padding: 0 0 0 10px; margin-top: 14px; margin-right: 12px;}
+#content .scene.purchasing .order-list form ul.actions li {padding: 0; font-size: 0;}
+#content .scene.purchasing .order-list form ul.actions input {padding-top: 5px; padding-bottom: 5px;}
 #content .scene.purchasing .c-wrapper.order-list {padding: 0 0 46px; border-bottom: 1px solid #999999;}
 #content .scene.purchasing .c-wrapper.order-list ul.list {padding: 0 12px; margin: 0; list-style: none;}
 #content .scene.purchasing .c-wrapper.order-list ul.list > li {padding: 0;

@@ -13,17 +13,24 @@ $IC = new Items();
 
 $upcoming_pickupdates = $PC->getPickupdates(["after" => date("Y-m-d")]);
 $next_pickupdate = $upcoming_pickupdates ? $upcoming_pickupdates[0] : false;
+if($action) {
+	$pickupdate = $PC->getPickupdate(["id" => $action[0]]);
+	$pickupdate_is_today = false;
+}
+else {
+	$pickupdate = $next_pickupdate;
+}
 
 $departments = $DC->getDepartments();
 $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 1, "order" => "created_at", "extend" => ["mediae" => true]]);
 $legacy_products = $IC->getItems(["where" => "itemtype = 'legacyproduct'", "order" => "created_at", "extend" => ["mediae" => true]]);
 $products_legacy_products = array_merge($products, $legacy_products);
 
-if($next_pickupdate) {
+if($pickupdate) {
 	
 	foreach ($products_legacy_products as $key => $product) {
 		
-		$pickupdate_product_order_items = $SC->getPickupdateOrderItems($next_pickupdate["id"], ["item_id" => $product["id"]]);
+		$pickupdate_product_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["item_id" => $product["id"]]);
 		$pickupdate_product_order_item_count = 0;
 		if($pickupdate_product_order_items) {
 			foreach ($pickupdate_product_order_items as $order_item) {
@@ -43,7 +50,7 @@ if($next_pickupdate) {
 	foreach ($departments as $department_key => $department) {
 		foreach ($products_legacy_products as $product_key => $product) {
 			
-			$department_pickupdate_product_order_items = $SC->getPickupdateOrderItems($next_pickupdate["id"], ["department_id" => $department["id"], "item_id" => $product["id"]]);
+			$department_pickupdate_product_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["department_id" => $department["id"], "item_id" => $product["id"]]);
 			$department_pickupdate_product_order_item_count = 0;
 			if($department_pickupdate_product_order_items) {
 				foreach ($department_pickupdate_product_order_items as $order_item) {
@@ -70,9 +77,16 @@ if($next_pickupdate) {
 
 	<?= $HTML->serverMessages(); ?>
 
-	<? if($next_pickupdate): ?>
+	<? if($pickupdate): ?>
+	
 	<div class="c-wrapper order-list">
-		<h2>Ordrer til udlevering <?= date("d.m.Y", strtotime($next_pickupdate["pickupdate"])) ?></h2>
+		<h2>Ordrer til udlevering</h2>
+		<?= $HTML->formStart("selectPickupdate", ["class" => "labelstyle:inject form choose_date"]); ?>
+			<?= $HTML->input("pickupdate_id", ["label" => "Udleveringsdag", "type" => "select", "value" => $pickupdate ? $pickupdate["id"] : false, "options" => $HTML->toOptions($upcoming_pickupdates, "id", "pickupdate")]); ?>
+			<ul class="actions">
+				<?= $HTML->submit("Vælg", ["wrapper" => "li.select", "class" => "primary"]); ?>
+			</ul>
+		<?= $HTML->formEnd(); ?>
 		
 		<!--
 		<ul class="list">
@@ -91,7 +105,7 @@ if($next_pickupdate) {
 				<span class="department" title="<?= $department["name"] ?>"><?= $department["name"] ?></span>
 				
 				<? foreach($products_legacy_products as $product): 
-					$department_pickupdate_product_order_items = $SC->getPickupdateOrderItems($next_pickupdate["id"], ["department_id" => $department["id"], "item_id" => $product["id"]]);
+					$department_pickupdate_product_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["department_id" => $department["id"], "item_id" => $product["id"]]);
 					$department_pickupdate_product_order_item_count = 0;
 					if($department_pickupdate_product_order_items) {
 						foreach ($department_pickupdate_product_order_items as $order_item) {
@@ -109,7 +123,7 @@ if($next_pickupdate) {
 			<li class="totals">
 				<span class="total">Total</span>
 				<? foreach($products_legacy_products as $product): 
-					$pickupdate_product_order_items = $SC->getPickupdateOrderItems($next_pickupdate["id"], ["item_id" => $product["id"]]);
+					$pickupdate_product_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["item_id" => $product["id"]]);
 					$pickupdate_product_order_item_count = 0;
 					if($pickupdate_product_order_items) {
 						foreach ($pickupdate_product_order_items as $order_item) {
