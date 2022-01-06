@@ -16,7 +16,7 @@ $is_membership_paid = $is_member && $is_active && $user["membership"]["order"]["
 $orders = $SC->getOrders();
 $order_items_pickupdates = $SC->getOrderItemsPickupdates($user["id"], ["after" => date("Y-m-d")]);
 
-$order_items_without_pickupdate = $SC->getOrderItems(["pickupdate_department" => "none"]);
+$order_items_without_pickupdate = $SC->getOrderItems(["department_pickupdate" => "none"]);
 
 $unpaid_membership = $UC->hasUnpaidMembership();
 $unpaid_orders = $SC->getUnpaidOrders();

@@ -8,7 +8,7 @@ global $DC;
 include_once("classes/users/superuser.class.php");
 $UC = new SuperUser();
 
-$order_items = $SC->getOrderItems(["where" => "items.itemtype REGEXP '^product.*' AND order_items.shipped_by IS NULL"]);
+$order_items = $SC->getOrderItems(["where" => "i.itemtype REGEXP '^product.*' AND soi.shipped_by IS NULL"]);
 if($order_items) {
 	foreach ($order_items as $key => $order_item) {
 		

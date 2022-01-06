@@ -594,45 +594,34 @@ class Shop extends ShopCore {
 			}
 		}
 
-		$sql = "SELECT 
-				order_items.*, orders.user_id, 
-				orders.order_no, pp.pickupdate 
-			FROM "
-				.$this->db_order_items." AS order_items, "
-				.$this->db_orders." AS orders, "
-				.SITE_DB.".project_department_pickupdate_order_items AS pdpoi, "
-				.SITE_DB.".project_department_pickupdates AS pdp, "
-				.SITE_DB.".project_pickupdates AS pp, "
-				.SITE_DB.".items AS items "." 
-			WHERE 
-				order_items.order_id = orders.id
-				AND orders.status < 3
-				AND order_items.id = pdpoi.order_item_id
-				AND pdp.id = pdpoi.department_pickupdate_id
-				AND pp.id = pdp.pickupdate_id 
-				AND order_items.item_id = items.id";
+		$sql = "SELECT
+					soi.*,
+					so.user_id,
+					so.order_no,
+					pp.pickupdate
+				FROM kbhff_dk.shop_order_items soi
+					JOIN kbhff_dk.items i ON i.id = soi.item_id
+					JOIN kbhff_dk.shop_orders so ON so.id = soi.order_id
+					LEFT JOIN kbhff_dk.project_department_pickupdate_order_items pdpoi ON pdpoi.order_item_id = soi.id
+					LEFT JOIN kbhff_dk.project_department_pickupdates pdp ON pdp.id = pdpoi.department_pickupdate_id
+					LEFT JOIN kbhff_dk.project_pickupdates pp ON pp.id = pdp.pickupdate_id
+				WHERE soi.item_id = i.id";
 				
 
 		if($order_item_id) {
-			$sql .= " AND order_items.id = ".$order_item_id;
+			$sql .= " AND soi.id = ".$order_item_id;
 		}
 		if($user_id) {
-			$sql .= " AND orders.user_id = ".$user_id;
+			$sql .= " AND so.user_id = ".$user_id;
 		}
 		if($order_id) {
-			$sql .= " AND orders.id = ".$order_id;
+			$sql .= " AND so.id = ".$order_id;
 		}
 		if($department_pickupdate == "none") {
-			$sql .= " AND order_items.id NOT IN (
-				SELECT department_pickupdate_order_items.order_item_id 
-				FROM ".$this->db_department_pickupdate_order_items." AS department_pickupdate_order_items 
-				)";
+			$sql .= " AND pdp.id IS NULL";
 		}
 		if($department_pickupdate == "only") {
-			$sql .= " AND order_items.id IN (
-				SELECT department_pickupdate_order_items.order_item_id 
-				FROM ".$this->db_department_pickupdate_order_items." AS department_pickupdate_order_items 
-				)";
+			$sql .= " AND pdp.id IS NOT NULL";
 		}
 		if($where) {
 			$sql .= " AND ".$where;
