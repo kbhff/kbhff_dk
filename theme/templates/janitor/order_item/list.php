@@ -8,6 +8,7 @@ global $DC;
 include_once("classes/users/superuser.class.php");
 $UC = new SuperUser();
 
+// get undelivered order_items (department_pickupdate cannot be changed for delivered oi's, so don't show them)
 $order_items = $SC->getOrderItems(["where" => "i.itemtype REGEXP '^product.*' AND soi.shipped_by IS NULL"]);
 if($order_items) {
 	foreach ($order_items as $key => $order_item) {
