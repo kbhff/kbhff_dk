@@ -16,7 +16,7 @@ $user_department = $UC->getUserDepartment(["user_id" => $user_id]);
 $user = $UC->getKbhffUser(["user_id" => $user_id]);
 
 // get unshipped order_items for user
-$unshipped_order_items = $SC->getOrderItems(["user_id" => $user_id, "where" => "soi.shipped_by IS NULL AND i.itemtype REGEXP '^(legacy)?product'"]);
+$unshipped_order_items = $SC->getOrderItems(["user_id" => $user_id, "where" => "soi.shipped_by IS NULL AND pp.pickupdate > CURDATE() AND i.itemtype REGEXP '^(legacy)?product'"]);
 
 $this->pageTitle("Afdelinger");
 ?>

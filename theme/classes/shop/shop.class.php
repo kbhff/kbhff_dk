@@ -605,7 +605,7 @@ class Shop extends ShopCore {
 					LEFT JOIN kbhff_dk.project_department_pickupdate_order_items pdpoi ON pdpoi.order_item_id = soi.id
 					LEFT JOIN kbhff_dk.project_department_pickupdates pdp ON pdp.id = pdpoi.department_pickupdate_id
 					LEFT JOIN kbhff_dk.project_pickupdates pp ON pp.id = pdp.pickupdate_id
-				WHERE soi.item_id = i.id";
+				WHERE so.status < 3";
 				
 
 		if($order_item_id) {
