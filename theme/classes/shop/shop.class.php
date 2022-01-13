@@ -517,54 +517,75 @@ class Shop extends ShopCore {
 
 		include_once("classes/system/department.class.php");
 		$DC = new Department();
+		$IC = new Items();
+		include_once("classes/shop/pickupdate.class.php");
+		$PC = new Pickupdate();
+		$model = $IC->TypeObject("product");
 
 		$order_item_id = $action[1];
 		$order_item = $this->getOrderItems(["order_item_id" => $order_item_id]);
+		$item = $IC->getItem(["id" => $order_item["item_id"], "extend" => true]);
 		
 		$department_id = getPost("department_id", "value");
 		$pickupdate_id = getPost("pickupdate_id", "value");
+		$pickupdate = $PC->getPickupdate(["id" => $pickupdate_id]);
 		$department_pickupdate = $DC->getDepartmentPickupdates($department_id, ["pickupdate_id" => $pickupdate_id]);
+		
+		if($order_item) {
 
-		// order_item exists and is not yet shipped
-		if($order_item && !isset($order_item["shipped_by"])) {
-
-			if($this->getOrderItemDepartmentPickupdate($order_item_id)) {
+			$item_availability = $model->checkProductAvailability($order_item["item_id"], $pickupdate["pickupdate"]);
 	
-				if($department_pickupdate) {
-					
-					$sql = "UPDATE ".$this->db_department_pickupdate_order_items." SET department_pickupdate_id = ".$department_pickupdate["id"]." WHERE order_item_id = $order_item_id";
+			// order_item is not yet shipped and has an availability status
+			if(!isset($order_item["shipped_by"]) && $item_availability) {
+	
+	
+				// item is available
+				if($item_availability["status"] == "AVAILABLE") {
+	
+					if($this->getOrderItemDepartmentPickupdate($order_item_id)) {
+			
+						if($department_pickupdate) {
+							
+							$sql = "UPDATE ".$this->db_department_pickupdate_order_items." SET department_pickupdate_id = ".$department_pickupdate["id"]." WHERE order_item_id = $order_item_id";
+						}
+						else {
+			
+							message()->addMessage("The chosen department/pickupdate is not available. The department may be closed that day.", ["type" => "error"]);
+							return false;
+						}
+					}
+					else {
+			
+						if($department_pickupdate) {
+			
+							$sql = "
+							INSERT INTO "
+								.$this->db_department_pickupdate_order_items." 
+							SET 
+								department_pickupdate_id = ".$department_pickupdate["id"].", 
+								order_item_id = $order_item_id";
+						}
+						else {
+			
+							message()->addMessage("The chosen department/pickupdate is not available. The department may be closed that day.", ["type" => "error"]);
+							return false;
+						}
+					}
 				}
-				else {
-	
-					message()->addMessage("The chosen department/pickupdate is not available. The department may be closed that day.", ["type" => "error"]);
+				elseif ($item_availability["status"] == "UNAVAILABLE") {
+					message()->addMessage("The product is not available on the chosen date.", ["type" => "error"]);
 					return false;
 				}
-			}
-			else {
 	
-				if($department_pickupdate) {
-	
-					$sql = "
-					INSERT INTO "
-						.$this->db_department_pickupdate_order_items." 
-					SET 
-						department_pickupdate_id = ".$department_pickupdate["id"].", 
-						order_item_id = $order_item_id";
+		
+				if($query->sql($sql)) {
+		
+					global $page;
+					$page->addLog("Shop->setOrderItemDepartmentPickupdate: user_id:".session()->value("user_id").", order_item_id:$order_item_id, department_pickupdate_id:".$department_pickupdate["id"]);
+		
+					message()->addMessage("Pickup date and department was set");
+					return $this->getOrderItemDepartmentPickupdate($order_item_id);
 				}
-				else {
-	
-					message()->addMessage("The chosen department/pickupdate is not available. The department may be closed that day.", ["type" => "error"]);
-					return false;
-				}
-			}
-	
-			if($query->sql($sql)) {
-	
-				global $page;
-				$page->addLog("Shop->setOrderItemDepartmentPickupdate: user_id:".session()->value("user_id").", order_item_id:$order_item_id, department_pickupdate_id:".$department_pickupdate["id"]);
-	
-				message()->addMessage("Pickup date and department was set");
-				return $this->getOrderItemDepartmentPickupdate($order_item_id);
 			}
 		}
 

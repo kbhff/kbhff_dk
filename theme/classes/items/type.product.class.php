@@ -438,6 +438,31 @@ class TypeProduct extends Itemtype {
 		}
 	}
 
+	function checkProductAvailability($item_id, $date) {
+
+		$IC = new Items();
+
+		$item =$IC->getItem(["id" => $item_id, "extend" => true]);
+		
+		// item exists and is a product
+		if($item && preg_match("/^product\w*$/", $item["itemtype"])) {
+			
+			if(
+				$item["start_availability_date"] <= $date 
+				&& (!$item["end_availability_date"] || $item["end_availability_date"] >= $date)
+			) {
+
+				return ["status" => "AVAILABLE"];
+			}
+
+			return ["status" => "UNAVAILABLE"];
+
+		}
+		
+		return false;
+
+	}
+
 }
 
 ?>
