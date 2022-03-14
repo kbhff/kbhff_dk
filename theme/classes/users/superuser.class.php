@@ -1381,19 +1381,25 @@ IT
 			$users = array_merge($users, $query->results());
 		}
 
-		// cancel each user
-		foreach ($users as $user) {
+		if($users) {
 
-			$unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user["id"]]);
-
-			foreach ($unpaid_orders as $order) {
-				$SC->cancelOrder(["cancelOrder", $order["id"], $user["id"]]);
+			// cancel unpaid orders for each user and then the user
+			foreach ($users as $user) {
+	
+				$unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user["id"]]);
+	
+				foreach ($unpaid_orders as $order) {
+					$SC->cancelOrder(["cancelOrder", $order["id"], $user["id"]]);
+					
+				}
 				
+				$this->cancel(["cancel", $user["id"]]);
 			}
-			
-			$this->cancel(["cancel", $user["id"]]);
+
+			return true;
 		}
 		
+		return false;
 	}
 }
 ?>

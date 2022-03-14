@@ -2,6 +2,7 @@
 $access_item["/sendRenewalNotices"] = true;
 $access_item["/cancelUnpaidOrders"] = true;
 $access_item["/sendCancellationWarnings"] = true;
+$access_item["/anonymizeUsers"] = true;
 
 if(isset($read_access) && $read_access) {
 	return;
@@ -50,6 +51,19 @@ if(is_array($action) && count($action)) {
 		exit();
 
 	}
+
+	else if(preg_match("/^anonymizeUsers$/", $action[0])) {
+
+		include_once("classes/users/superuser.class.php");
+		$SC = new SuperUser();
+
+		$output = new Output();
+		$output->screen($SC->anonymizeUsers($action));
+		exit();
+
+	}
+	
+		
 
 }
 
