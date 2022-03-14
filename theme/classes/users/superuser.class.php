@@ -1262,5 +1262,138 @@ IT
 
 		return false;
 	}
+
+	function anonymizeUsers($action) {
+
+		$query = new Query();
+		$users = false;
+
+		$unpaid_orders = false;
+		include_once("classes/shop/supershop.class.php");
+		$SC = new SuperShop();
+		
+		// select users that have not accepted terms
+		$sql = "
+		SELECT u.*
+		FROM 
+			kbhff_dk.users u
+			LEFT JOIN kbhff_dk.user_log_agreements ula ON u.id = ula.user_id
+		WHERE
+			ula.user_id IS NULL
+			AND u.id NOT IN (1)
+			AND u.status = 1
+		";
+
+		if($query->sql($sql)) {
+			$users = $query->results();
+		}
+
+		// select users that have accepted terms, with status 0 and unpaid signupfee
+		$sql = "
+		(
+			SELECT u.*
+			FROM kbhff_dk.users u
+				LEFT JOIN kbhff_dk.user_log_agreements ula ON u.id = ula.user_id
+				LEFT JOIN kbhff_dk.user_members um ON um.user_id = u.id
+				LEFT JOIN kbhff_dk.user_usernames uu ON uu.user_id = u.id
+				LEFT JOIN kbhff_dk.shop_orders so ON so.user_id = u.id 
+				LEFT JOIN kbhff_dk.shop_order_items soi ON soi.order_id = so.id
+				LEFT JOIN kbhff_dk.items i ON i.id = soi.item_id 
+			WHERE
+				uu.type = 'email'
+				AND ula.user_id IS NOT NULL -- NOT NULL if want those that have accepted terms OR NULL if we want those that have NOT accepted terms
+				AND u.status = 0 -- active members only. Can comment out to get all members.
+		)
+		EXCEPT
+		(	
+			SELECT u.*
+			FROM kbhff_dk.users u
+				LEFT JOIN kbhff_dk.shop_orders so ON so.user_id = u.id
+				LEFT JOIN kbhff_dk.shop_order_items soi ON soi.order_id = so.id
+				LEFT JOIN kbhff_dk.shop_payments sp ON sp.order_id = so.id
+				LEFT JOIN kbhff_dk.items i ON i.id = soi.item_id
+				LEFT JOIN kbhff_dk.user_members um ON um.user_id = u.id
+			WHERE
+				i.itemtype = 'signupfee' -- kontingent. Use 'signupfee' for indmeldelsesgebyr
+				AND so.payment_status = 2 -- is paid
+				AND sp.created_at >= '2021-01-01' -- payment date is on or after
+		)
+		";
+
+		if($query->sql($sql)) {
+			$users = array_merge($users, $query->results());
+		}
+
+		// select users that have accepted terms, with status 0 and unpaid signupfee
+		$sql = "
+		(
+			SELECT DISTINCT u.*
+			FROM kbhff_dk.users u
+			LEFT JOIN kbhff_dk.user_log_agreements ula ON u.id = ula.user_id
+			LEFT JOIN kbhff_dk.user_members um ON um.user_id = u.id
+			LEFT JOIN kbhff_dk.user_usernames uu ON uu.user_id = u.id
+			LEFT JOIN kbhff_dk.shop_orders so ON so.user_id = u.id 
+			LEFT JOIN kbhff_dk.shop_order_items soi ON soi.order_id = so.id
+			LEFT JOIN kbhff_dk.items i ON i.id = soi.item_id 
+			WHERE
+			uu.type = 'email'
+			AND ula.name = 'terms'
+			AND ula.user_id IS NOT NULL -- NOT NULL if want those that have accepted terms OR NULL if we want those that have NOT accepted terms
+			AND u.status = 1 -- active members only. Can comment out to get all members.
+			AND u.id NOT IN(1, 2, 3, 10334, 10199, 10209, 10211, 10208, 10210, 10200, 10201, 10206, 10213, 10202, 6497, 7343, 9051, 9109, 10145)
+		
+		)
+		EXCEPT 
+		(	
+			SELECT
+			u.*
+			FROM
+			kbhff_dk.users u
+			LEFT JOIN kbhff_dk.shop_orders so ON so.user_id = u.id
+			LEFT JOIN kbhff_dk.shop_order_items soi ON soi.order_id = so.id
+			LEFT JOIN kbhff_dk.shop_payments sp ON sp.order_id = so.id
+			LEFT JOIN kbhff_dk.items i ON i.id = soi.item_id
+			LEFT JOIN kbhff_dk.user_members um ON um.user_id = u.id
+			WHERE
+			i.itemtype = 'membership'
+			AND so.payment_status = 2 -- is paid
+			AND sp.created_at >= '2021-05-01' -- payment date is on or after
+		)
+		EXCEPT 
+		(	
+			SELECT
+			u.*
+			FROM
+			kbhff_dk.users u
+			LEFT JOIN kbhff_dk.shop_orders so ON so.user_id = u.id
+			LEFT JOIN kbhff_dk.shop_order_items soi ON soi.order_id = so.id
+			LEFT JOIN kbhff_dk.shop_payments sp ON sp.order_id = so.id
+			LEFT JOIN kbhff_dk.items i ON i.id = soi.item_id
+			LEFT JOIN kbhff_dk.user_members um ON um.user_id = u.id
+			WHERE
+			i.itemtype = 'signupfee'
+			AND so.payment_status = 2 -- is paid
+			AND sp.created_at >= '2021-01-01' -- payment date is on or after
+		)
+		";
+
+		if($query->sql($sql)) {
+			$users = array_merge($users, $query->results());
+		}
+
+		// cancel each user
+		foreach ($users as $user) {
+
+			$unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user["id"]]);
+
+			foreach ($unpaid_orders as $order) {
+				$SC->cancelOrder(["cancelOrder", $order["id"], $user["id"]]);
+				
+			}
+			
+			$this->cancel(["cancel", $user["id"]]);
+		}
+		
+	}
 }
 ?>
