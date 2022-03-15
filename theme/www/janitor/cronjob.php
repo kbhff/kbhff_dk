@@ -52,17 +52,6 @@ if(is_array($action) && count($action)) {
 
 	}
 
-	else if(preg_match("/^anonymizeUsers$/", $action[0])) {
-
-		include_once("classes/users/superuser.class.php");
-		$SC = new SuperUser();
-
-		$output = new Output();
-		$output->screen($SC->anonymizeUsers($action));
-		exit();
-
-	}
-	
 		
 
 }
