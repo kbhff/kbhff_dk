@@ -666,10 +666,13 @@ class Department extends Model {
 					$pickupdate = $PC->getPickupdate(["id" => $pickupdate_id]);
 					$department = $this->getDepartment(["id" => $department_id]);
 
+					
 					$order_item_links = [];
 					foreach ($department_pickupdate_order_items as $order_item) {
 						
 						$order_item_links[] = SITE_URL."/janitor/order-item/edit/".$order_item["id"];
+						
+						$SC->addOrderItemLog($order_item["id"], session()->value("user_id"));
 					}
 
 					// send notification email to admin

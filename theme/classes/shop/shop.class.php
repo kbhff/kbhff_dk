@@ -37,6 +37,7 @@ class Shop extends ShopCore {
 		$this->db_pickupdates = SITE_DB.".project_pickupdates";
 		$this->db_department_pickupdate_cart_items = SITE_DB.".project_department_pickupdate_cart_items";
 		$this->db_department_pickupdate_order_items = SITE_DB.".project_department_pickupdate_order_items";
+		$this->db_order_item_log = SITE_DB.".project_order_item_log";
 
 		$this->db_department_pickupdates = SITE_DB.".project_department_pickupdates";
 
@@ -406,7 +407,17 @@ class Shop extends ShopCore {
 
 			$sql = "INSERT INTO ".$this->db_department_pickupdate_order_items." SET order_item_id = $order_item_id, department_pickupdate_id = ".$department_pickupdate["id"];
 			if($query->sql($sql)) {
-	
+
+				$department_pickupdate_order_item_id = $query->lastInsertId();
+				$order_item_department_pickupdate = $this->getOrderItemDepartmentPickupdate($order_item_id);
+
+				$this->addOrderItemLog($order_item_id, session()->value("user_id"), [
+					"department_pickupdate_order_item_id" => $department_pickupdate_order_item_id,
+					"department_pickupdate_id" => $department_pickupdate["id"],
+					"pickupdate" => $order_item_department_pickupdate["pickupdate"],
+					"department" => $order_item_department_pickupdate["department"]
+				]);
+
 				global $page;
 				$page->addLog("Shop->addDepartmentPickupdateOrderItem: user_id:".session()->value("user_id").", order_item_id:$order_item_id, department_pickupdate_id:".$department_pickupdate["id"]);
 	
@@ -488,6 +499,7 @@ class Shop extends ShopCore {
 		SELECT 
 			department_pickupdates.*, 
 			department_pickupdate_order_items.order_item_id, 
+			department_pickupdate_order_items.id AS department_pickupdate_order_item_id, 
 			pickupdates.pickupdate, 
 			departments.name AS department 
 		FROM "
@@ -542,11 +554,21 @@ class Shop extends ShopCore {
 				// item is available
 				if($item_availability["status"] == "AVAILABLE") {
 	
-					if($this->getOrderItemDepartmentPickupdate($order_item_id)) {
+					$order_item_department_pickupdate = $this->getOrderItemDepartmentPickupdate($order_item_id);
+
+					if($order_item_department_pickupdate) {
 			
 						if($department_pickupdate) {
+
+							if($department_pickupdate["id"] !== $order_item_department_pickupdate["id"]) {
+
+								$sql = "UPDATE ".$this->db_department_pickupdate_order_items." SET department_pickupdate_id = ".$department_pickupdate["id"]." WHERE order_item_id = $order_item_id";
+							}
+							else {
+
+								return $order_item_department_pickupdate;
+							}
 							
-							$sql = "UPDATE ".$this->db_department_pickupdate_order_items." SET department_pickupdate_id = ".$department_pickupdate["id"]." WHERE order_item_id = $order_item_id";
 						}
 						else {
 			
@@ -579,7 +601,16 @@ class Shop extends ShopCore {
 	
 		
 				if($query->sql($sql)) {
-		
+
+					$order_item_department_pickupdate = $this->getOrderItemDepartmentPickupdate($order_item_id);
+
+					$this->addOrderItemLog($order_item_id, session()->value("user_id"), [
+						"department_pickupdate_order_item_id" => $order_item_department_pickupdate["department_pickupdate_order_item_id"],
+						"department_pickupdate_id" => $order_item_department_pickupdate["id"],
+						"pickupdate" => $order_item_department_pickupdate["pickupdate"],
+						"department" => $order_item_department_pickupdate["department"]
+					]);
+
 					global $page;
 					$page->addLog("Shop->setOrderItemDepartmentPickupdate: user_id:".session()->value("user_id").", order_item_id:$order_item_id, department_pickupdate_id:".$department_pickupdate["id"]);
 		
@@ -602,6 +633,7 @@ class Shop extends ShopCore {
 		$order_id = false;
 		$department_pickupdate = false;
 		$where = false;
+		$order = false;
 
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
@@ -611,6 +643,8 @@ class Shop extends ShopCore {
 					case "order_id"              : $order_id                   = $_value; break;
 					case "department_pickupdate" : $department_pickupdate      = $_value; break;
 					case "where"                 : $where                      = $_value; break;
+					
+					case "order"                 : $order                      = $_value; break;
 				}
 			}
 		}
@@ -619,13 +653,16 @@ class Shop extends ShopCore {
 					soi.*,
 					so.user_id,
 					so.order_no,
-					pp.pickupdate
+					so.created_at,
+					pp.pickupdate,
+					pd.name AS department
 				FROM kbhff_dk.shop_order_items soi
 					JOIN kbhff_dk.items i ON i.id = soi.item_id
 					JOIN kbhff_dk.shop_orders so ON so.id = soi.order_id
 					LEFT JOIN kbhff_dk.project_department_pickupdate_order_items pdpoi ON pdpoi.order_item_id = soi.id
 					LEFT JOIN kbhff_dk.project_department_pickupdates pdp ON pdp.id = pdpoi.department_pickupdate_id
 					LEFT JOIN kbhff_dk.project_pickupdates pp ON pp.id = pdp.pickupdate_id
+					LEFT JOIN kbhff_dk.project_departments pd ON pd.id = pdp.department_id
 				WHERE so.status < 3";
 				
 
@@ -646,6 +683,9 @@ class Shop extends ShopCore {
 		}
 		if($where) {
 			$sql .= " AND ".$where;
+		}
+		if($order) {
+			$sql .= " ORDER BY ".$order;
 		}
 
 		if($query->sql($sql)) {
@@ -874,6 +914,73 @@ class Shop extends ShopCore {
 			}
 		}
 
+		return false;
+	}
+
+	function addOrderItemLog($order_item_id, $user_id, $_options = false) {
+
+		$query = new Query();
+		$query->checkDbExistence($this->db_order_item_log);
+
+		$department_pickupdate_order_item_id = false;
+		$department_pickupdate_id = false;
+		$pickupdate = false;
+		$department = false;
+
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+					case "department_pickupdate_order_item_id"     : $department_pickupdate_order_item_id     = $_value; break;
+					case "department_pickupdate_id"                : $department_pickupdate_id                = $_value; break;
+					case "pickupdate"                              : $pickupdate                              = $_value; break;
+					case "department"                              : $department                              = $_value; break;
+				}
+			}
+		}
+
+
+		$sql = "INSERT INTO ".$this->db_order_item_log." SET order_item_id = $order_item_id, user_id = $user_id";
+
+		if($department_pickupdate_order_item_id) {
+			$sql .= ", department_pickupdate_order_item_id = $department_pickupdate_order_item_id";
+		}
+		if($department_pickupdate_id) {
+			$sql .= ", department_pickupdate_id = $department_pickupdate_id";
+		}
+		if($pickupdate) {
+			$sql .= ", pickupdate = '$pickupdate'";
+		}
+		if($department) {
+			$sql .= ", department = '$department'";
+		}
+
+		if($query->sql($sql)) {
+
+			$department_pickupdate_order_item_log_id = $query->lastInsertId();
+
+			return $department_pickupdate_order_item_log_id;
+		}
+
+		return false;
+
+	}
+
+	function getOrderItemLog($order_item_id) {
+
+		$query = new Query();
+		$query->checkDbExistence($this->db_order_item_log);
+
+		$sql = "
+		SELECT log.*
+		FROM ".$this->db_order_item_log." AS log 
+		WHERE log.order_item_id = $order_item_id
+		ORDER BY log.created_at ASC";
+
+		if($query->sql($sql)) {
+
+			return $query->results();
+		}
+		
 		return false;
 	}
 
