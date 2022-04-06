@@ -1,5 +1,5 @@
 function unsupported() {
-	document.body.innerHTML = '<h1 style="text-align: center; margin: 20% 15% 15%; font-family: Arial; color: #333333">Your browser is NOT supported. It is more outdated than steam-engines, typewriters and VHS tapes, so stop acting surprised.</h1>';
+	document.body.innerHTML = '<h1 style="text-align: center; margin: 20% 15% 15%; font-family: Arial; color: #333333">Unfortunately you are accessing our website with a browser version that is no longer supported by this website. Please try updating your browser or accessing the website using a different device.</h1>';
 }
 
 window.onload = unsupported;
