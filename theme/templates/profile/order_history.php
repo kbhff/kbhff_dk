@@ -25,11 +25,11 @@ $order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $user["id"], "orde
 	<div class="banner i:banner variant:random format:jpg"></div>
 
 	<?= $HTML->serverMessages(["type" => "error"]); ?>
-
+	
+	<h1>Alle Bestillinger</h1>
 	<div class="c-wrapper">
 
 			<div class="section orders">
-				<h2>Alle Bestillinger</h2>
 
 			<? if($upcoming_order_items || $past_order_items || $order_items_no_pickupdate): ?>
 
@@ -75,7 +75,7 @@ $order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $user["id"], "orde
 									<span class="new_pickupdate"><?= date("d.m.Y", strtotime($entry["pickupdate"])) ?></span> 
 									<span class="new_department">(<?= $entry["department"] ?>)</span>.
 									<? elseif($order_item_log[$key-1]["pickupdate"]): ?>
-									slettede bestillingen fra
+									fjernede bestillingen fra afhentningsdagen
 									<span class="old_pickupdate"><?= date("d.m.Y", strtotime($order_item_log[$key-1]["pickupdate"])) ?></span> 
 									<span class="old_department">(<?= $order_item_log[$key-1]["department"] ?>)</span>
 									<? elseif($entry["pickupdate"]): ?>
@@ -141,7 +141,7 @@ $order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $user["id"], "orde
 									<span class="new_pickupdate"><?= date("d.m.Y", strtotime($entry["pickupdate"])) ?></span> 
 									<span class="new_department">(<?= $entry["department"] ?>)</span>.
 									<? elseif($order_item_log[$key-1]["pickupdate"]): ?>
-									slettede bestillingen fra
+									fjernede bestillingen fra afhentningsdagen
 									<span class="old_pickupdate"><?= date("d.m.Y", strtotime($order_item_log[$key-1]["pickupdate"])) ?></span>									<span class="old_department">(<?= $order_item_log[$key-1]["department"] ?>)</span>
 									<? elseif($entry["pickupdate"]): ?>
 									planlagde afhentning af bestillingen:  
@@ -202,7 +202,7 @@ $order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $user["id"], "orde
 									<span class="new_pickupdate"><?= date("d.m.Y", strtotime($entry["pickupdate"])) ?></span> 
 									<span class="new_department">(<?= $entry["department"] ?>)</span>.
 									<? elseif($order_item_log[$key-1]["pickupdate"]): ?>
-									slettede bestillingen fra
+									fjernede bestillingen fra afhentningsdagen
 									<span class="old_pickupdate"><?= date("d.m.Y", strtotime($order_item_log[$key-1]["pickupdate"])) ?></span>									<span class="old_department">(<?= $order_item_log[$key-1]["department"] ?>)</span>
 									<? elseif($entry["pickupdate"]): ?>
 									planlagde afhentning af bestillingen:  
