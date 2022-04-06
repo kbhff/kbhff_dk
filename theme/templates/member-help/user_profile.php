@@ -203,7 +203,7 @@ if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Fr
 				<ul class="actions">
 					<!-- <li class="view-orders"><a href="#" class="button">Se gamle bestillinger</a></li> -->
 					<li class="new-order"><a <?= $unpaid_membership ? "" : "href='/medlemshjaelp/butik/$member_user_id'" ?> class="button primary <?= $unpaid_membership ? "disabled" : "" ?>">Ny bestilling</a></li>
-					<li class="all-orders"><a href="/medlemshjaelp/brugerprofil/<?= $member_user_id ?>/ordre-historik" class="button">Se ældre bestillinger</a></li>
+					<li class="all-orders"><a href="/medlemshjaelp/brugerprofil/<?= $member_user_id ?>/ordre-historik" class="button">Se alle bestillinger</a></li>
 
 				</ul>
 			</div>

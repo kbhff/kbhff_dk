@@ -148,7 +148,7 @@ $unpaid_orders = $SC->getUnpaidOrders();
 				<ul class="actions">
 					<!-- <li class="view-orders"><a href="#" class="button">Se gamle bestillinger</a></li> -->
 					<li class="new-order"><a href="/butik" class="button primary">Ny bestilling</a></li>
-					<li class="all-orders"><a href="/profil/ordre-historik" class="button">Se ældre bestillinger</a></li>
+					<li class="all-orders"><a href="/profil/ordre-historik" class="button">Se alle bestillinger</a></li>
 				</ul>
 			</div>
 
