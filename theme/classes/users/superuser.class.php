@@ -1263,5 +1263,452 @@ IT
 		return false;
 	}
 
+
+	function getUserLogAgreement($agreement_name, $_options = false) {
+
+		$user_id = false;
+
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+
+					case "user_id"        : $user_id          = $_value; break;
+				}
+			}
+		}
+
+		if($user_id && $agreement_name) {
+			$query = new Query();
+			$sql = "SELECT * FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id AND name = '".$agreement_name."'";
+			if($query->sql($sql)) {
+				
+				$accepted_at = $query->result(0, "accepted_at");
+				return $accepted_at;
+			}
+		}
+
+		return false;
+	}
+
+	function setUserLogAgreement($agreement_name, $_options = false) {
+
+		$user_id = false;
+		$query = new Query();
+
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+
+					case "user_id"        : $user_id          = $_value; break;
+				}
+			}
+		}
+
+		if(!$this->getUserLogAgreement($agreement_name, ["user_id" => $user_id])) {
+			
+			$sql = "INSERT INTO ".SITE_DB.".user_log_agreements SET user_id = $user_id, name = '".$agreement_name."'";
+			if($query->sql($sql)) {
+				
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	function unsetUserLogAgreement($agreement_name, $_options = false) {
+
+		$user_id = false;
+		$query = new Query();
+
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+
+					case "user_id"        : $user_id          = $_value; break;
+				}
+			}
+		}
+
+		if($this->getUserLogAgreement($agreement_name, ["user_id" => $user_id])) {
+
+			$sql = "DELETE FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id AND name = '".$agreement_name."'";
+			if($query->sql($sql)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Update the current user's email agreements.
+	 *
+	 * @param array $action REST parameters of current request
+	 * @return boolean
+	 */
+	function updateEmailAgreements($action){
+		// Get content of $_POST array that have been mapped to the model entities object
+		$this->getPostedEntities();
+
+		// print_r ($action);
+		// Check that the number of REST parameters is as expected and that the listed entries are valid.
+		if(count($action) == 2 && $this->validateList(["ordering_reminder", "pickup_reminder"] )) {
+
+			$user_id = $action[1];
+			$ordering_reminder = $this->getProperty("ordering_reminder", "value");
+			$pickup_reminder = $this->getProperty("pickup_reminder", "value");
+
+			$query = new Query();
+
+			if($ordering_reminder && $this->getUserLogAgreement("disable_ordering_reminder", ["user_id" => $user_id])) {
+
+				$this->unsetUserLogAgreement("disable_ordering_reminder", ["user_id" => $user_id]);
+
+			}
+			elseif(!$ordering_reminder && !$this->getUserLogAgreement("disable_ordering_reminder", ["user_id" => $user_id])) {
+
+				$this->setUserLogAgreement("disable_ordering_reminder", ["user_id" => $user_id]);
+
+			}
+
+			if($pickup_reminder && $this->getUserLogAgreement("disable_pickup_reminder", ["user_id" => $user_id])) {
+
+				$this->unsetUserLogAgreement("disable_pickup_reminder", ["user_id" => $user_id]);
+
+			}
+			elseif(!$pickup_reminder && !$this->getUserLogAgreement("disable_pickup_reminder", ["user_id" => $user_id])) {
+
+				$this->setUserLogAgreement("disable_pickup_reminder", ["user_id" => $user_id]);
+
+			}
+
+			return true;
+
+		}
+
+		return false;
+		
+	}
+
+	function sendPickupReminders($action) {
+
+		if(count($action) == 2) {
+
+			$user_id = $action[1];
+			$user = $this->getKbhffUser(["user_id" => $user_id]);
+
+
+			mailer()->send([
+				"recipients" => [$user["email"]],
+				"template" => "pickup_reminder",
+				"values" => [
+					"NICKNAME" => $user["nickname"],
+				]
+			]);
+		}
+		else {
+
+			include_once("classes/shop/pickupdate.class.php");
+			$PC = new Pickupdate;
+			
+			$recipients = [];
+
+			// get next scheduled pickupdate
+			$pickupdate = $PC->getPickupdate(["pickupdate" => date("Y-m-d", strtotime("next ".PICKUP_DAY))]);
+
+
+
+			$pickup_reminder_datetime = date("Y-m-d H:i", strtotime("next ".PICKUP_DAY) - PICKUP_REMINDER_TIME_DELTA_HOURS*60*60);
+			$current_datetime = date("Y-m-d H:i");
+
+			if($pickupdate && $pickup_reminder_datetime == $current_datetime) {
+
+				$SC = new Shop;
+
+				$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate["id"]);
+				if($pickupdate_order_items) {
+
+					foreach ($pickupdate_order_items as $poi) {
+
+						$user = $this->getKbhffUser(["user_id" => $poi["user_id"]]);
+
+						// order_item user is not already among recipients 
+						// and has not opted out from pickup reminders
+						if(!in_array($user["email"], $recipients) && !$this->getUserLogAgreement("disable_pickup_reminder", ["user_id" => $poi["user_id"]])) {
+
+							// add to recipients
+							$recipients[] = $user["email"];
+
+							// send reminder
+							mailer()->send([
+								"recipients" => [$user["email"]],
+								"template" => "pickup_reminder",
+								"values" => [
+									"NICKNAME" => $user["nickname"],
+									"PICKUPDATE" => date("d.m.Y", strtotime($pickupdate["pickupdate"]))
+								]
+							]);
+						}
+					}
+				}
+			}
+			
+			return true;
+		}
+
+	}
+
+	function sendOrderingReminders($action) {
+
+		if(count($action) == 2) {
+
+			$user_id = $action[1];
+			$user = $this->getKbhffUser(["user_id" => $user_id]);
+
+
+			mailer()->send([
+				"recipients" => [$user["email"]],
+				"template" => "ordering_reminder",
+				"values" => [
+					"NICKNAME" => $user["nickname"],
+					"DEADLINE_DATE" => date("d.m.Y", strtotime(ORDERING_DEADLINE_TIME)),
+					"DEADLINE_TIME" => date("H:i", strtotime(ORDERING_DEADLINE_TIME))
+				]
+			]);
+		}
+		else {
+
+			include_once("classes/shop/pickupdate.class.php");
+			$PC = new Pickupdate;
+			
+			$recipients = [];
+
+			// get next+1 scheduled pickupdate
+			$pickupdate = $PC->getPickupdate(["pickupdate" => date("Y-m-d", strtotime(PICKUP_DAY." next week"))]);
+
+			$ordering_reminder_datetime = date("Y-m-d H:i", strtotime(ORDERING_DEADLINE_TIME) - ORDERING_REMINDER_TIME_DELTA_HOURS*60*60);
+			$current_datetime = date("Y-m-d H:i");
+
+			if($pickupdate && $ordering_reminder_datetime == $current_datetime) {
+
+				$SC = new Shop;
+
+				$users = $this->getAllActiveUsers();
+
+				if($users) {
+
+					foreach ($users as $user) {
+
+						$kbhff_user = $this->getKbhffUser(["user_id" => $user["id"]]);
+
+						// order_item user is not already among recipients 
+						// and has not opted out from pickup reminders
+						if(!in_array($kbhff_user["email"], $recipients) && !$this->getUserLogAgreement("disable_ordering_reminder", ["user_id" => $user["id"]])) {
+
+							// add to recipients
+							$recipients[] = $kbhff_user["email"];
+
+							// send reminder
+							mailer()->send([
+								"recipients" => [$kbhff_user["email"]],
+								"template" => "ordering_reminder",
+								"values" => [
+									"NICKNAME" => $kbhff_user["nickname"],
+									"DEADLINE_DATE" => date("d.m.Y", strtotime(ORDERING_DEADLINE_TIME)),
+									"DEADLINE_TIME" => date("H:i", strtotime(ORDERING_DEADLINE_TIME))
+								]
+							]);
+						}
+					}
+				}
+			}
+			
+			return true;
+		}
+
+	}
+
+		/**
+	 * Update usernames from posted values. 
+	 * 
+	 * Expects $email and $username_id from $_POST.
+	 * /janitor/admin/user/updateEmail/#user_id#
+	 *
+	 * @param array $action user_id in $action[1]
+	 * 
+	 * @return array|true|false Returns status code indicating whether email was updated/unchanged/already existing. Returns true if email was deleted (updated to blank). False on error.
+	 */
+	function updateEmail($action) {
+
+		// Get posted values to make them available for models
+		$this->getPostedEntities();
+
+		// does action match expected
+		if(count($action) == 2) {
+
+			$user_id = $action[1];
+			$query = new Query();
+
+			$user = $this->getKbhffUser(["user_id" => $user_id]);
+
+			// make sure type tables exist
+			$query->checkDbExistence($this->db_usernames);
+
+			$email = $this->getProperty("email", "value");
+			$verification_status = $this->getProperty("verification_status", "value");
+
+			$username_id = getPost("username_id");
+
+			// email was sent
+			if($email) {
+
+				// check if email already exists
+
+				// On current user_id
+				$sql = "SELECT id FROM $this->db_usernames WHERE username = '$email' AND user_id = $user_id".($username_id ? " AND id != $username_id" : "");
+				// debug([$sql]);
+				if($query->sql($sql)) {
+
+					message()->addMessage("Email already exists for this user", array("type" => "error"));
+					$status = ["email_status" => "ALREADY_EXISTS"];
+					return $status;
+				}
+
+				// On other user_id
+				else {
+					$sql = "SELECT id FROM $this->db_usernames WHERE username = '$email'".($username_id ? " AND id != $username_id" : "");
+					// debug([$sql]);
+					if($query->sql($sql)) {
+
+						message()->addMessage("Email is used by another user", array("type" => "error"));
+						$status = ["email_status" => "ALREADY_EXISTS"];
+						return $status;
+					}
+				}
+
+
+				// Generate new verification code
+				$verification_code = randomKey(8);
+
+
+
+				// New username
+				if(!$username_id) {
+
+					// Insert new username
+					$sql = "INSERT INTO $this->db_usernames SET username = '$email', verification_code = '$verification_code', type = 'email', user_id = $user_id";
+					// debug([$sql]);
+					if($query->sql($sql)){
+
+						$username_id = $query->lastInsertId();
+
+						message()->addMessage("Email added");
+						$status = [
+							"email_status" => "UPDATED",
+						];
+
+					}
+
+				}
+
+
+				// Modifying existing username
+				else if($username_id) {
+
+					$current_username = $this->getUsernames(array("username_id" => $username_id));
+
+
+
+					// email is changed
+					if($current_username && $current_username["type"] === "email" && $email != $current_username["username"]) {
+
+						$sql = "UPDATE $this->db_usernames SET username = '$email', verified = 0, verification_code = '$verification_code' WHERE id = $username_id";
+						// debug([$sql]);
+						if($query->sql($sql)) {
+
+							// send verification email to user's new email
+							mailer()->send(array(
+								"values" => array(
+									"NICKNAME" => $user["nickname"], 
+									"EMAIL" => $email, 
+									"VERIFICATION" => $verification_code,
+									// "PASSWORD" => $mail_password
+								), 
+								"track_clicks" => false,
+								"recipients" => $email, 
+								"template" => "verify_changed_email"
+							));
+
+							// send verification email to user's old email
+							mailer()->send(array(
+								"values" => array(
+									"NICKNAME" => $user["nickname"], 
+									"NEW_EMAIL" => $email, 
+									// "PASSWORD" => $mail_password
+								), 
+								"track_clicks" => false,
+								"recipients" => $current_username["username"], 
+								"template" => "email_change_notice"
+							));
+
+							// Delete verification logs
+							$sql = "DELETE FROM ".SITE_DB.".user_log_verification_links WHERE username_id = $username_id";
+							// debug([$sql]);
+							$query->sql($sql);
+
+							message()->addMessage("Email updated");
+							$status = ["email_status" => "UPDATED"];
+
+						}
+
+					}
+
+					// email is NOT changed
+					else if($current_username && $current_username["type"] === "email" && $email == $current_username["username"]) {
+
+						message()->addMessage("Email unchanged");
+						$status = ["email_status" => "UNCHANGED"];
+
+					}
+
+				}
+
+
+				// Map username_id to response
+				$status["username_id"] = $username_id;
+
+
+				// update verification status
+				$result = $this->setVerificationStatus($username_id, $user_id, $verification_status);
+				if($result && isset($result["verification_status"])) {
+
+					$status["verification_status"] = $result["verification_status"];
+					return $status;
+
+				}
+
+			}
+			// Email was empty, username_id was sent – delete username
+			else if(!$email && $username_id) {
+
+				$sql = "DELETE FROM $this->db_usernames WHERE id = $username_id AND user_id = $user_id AND type = 'email'";
+				// debug([$sql]);
+				if($query->sql($sql)) {
+					message()->addMessage("Email deleted");
+					return true;
+				}
+
+			}
+
+		}
+
+		message()->addMessage("Could not update email", array("type" => "error"));
+		return false;
+
+	}
 }
 ?>

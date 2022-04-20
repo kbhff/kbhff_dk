@@ -43,3 +43,10 @@ define("RENEWAL_DATE", "05-01");
 define("SITE_PAYMENT_REGISTER_INTENT", SITE_URL."/butik/betalingsgateway/{GATEWAY}/register-intent");
 define("SITE_PAYMENT_REGISTER_PAID_INTENT", SITE_URL."/butik/betalingsgateway/{GATEWAY}/register-paid-intent");
 
+// cronjob runs every hour, 59th minute
+define("ORDERING_DEADLINE_TIME", "Wednesday 23:59");
+define("ORDERING_REMINDER_TIME_DELTA_HOURS", 8);
+
+// cronjob runs every hour, 0th minute
+define("PICKUP_DAY", "Wednesday");
+define("PICKUP_REMINDER_TIME_DELTA_HOURS", 4);

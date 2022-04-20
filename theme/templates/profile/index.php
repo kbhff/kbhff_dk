@@ -353,10 +353,18 @@ $unpaid_orders = $SC->getUnpaidOrders();
 					</div>
 
 					<ul class="actions">
-						<li class="submit"><input type="submit" value="Tilmeld" name="subscribe" class="button" /></li>
+						<li class="submit full-width"><input type="submit" value="Tilmeld" name="subscribe" class="button full-width" /></li>
 					</ul>
 				</form>
 
+			</div>
+			<div class="c-box message_center i:message_center">
+				<h3>Beskedpræferencer</h3>
+				<ul class="actions">
+					<li class="link full-width">
+						<?= $HTML->link("Gå til beskedcenter", "/profil/beskedcenter", ["class" => "button"]) ?>
+					</li>
+				</ul>
 			</div>
 			<? endif; ?>
 

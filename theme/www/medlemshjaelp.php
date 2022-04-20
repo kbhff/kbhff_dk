@@ -340,7 +340,16 @@ if($action) {
 				}
 			}
 
-			
+			# /medlemshjaelp/brugerprofil/#user_id#/beskedcenter
+			else if($action[2] == "beskedcenter") {
+				$page->page(array(
+					"templates" => "member-help/user_message_center.php",
+					"type" => "admin"
+				));
+				exit();
+			}
+
+
 
 		}
 	}
@@ -457,8 +466,22 @@ if($action) {
 		]);
 		exit();
 	}
-	
 
+
+	// /profil/updateEmailAgreements/#user_id#
+	else if($action[0] == "updateEmailAgreements" && $page->validateCsrfToken()) {
+
+		$result = $model->updateEmailAgreements($action);
+
+		if($result) {
+
+			header("Location: /medlemshjaelp/brugerprofil/".$action[1]."/beskedcenter");
+			exit();
+
+		}
+	}
+	
+	
 	# /medlemshjaelp/deleteUserInformation
 	else if($action[0] == "deleteUserInformation") {
 		

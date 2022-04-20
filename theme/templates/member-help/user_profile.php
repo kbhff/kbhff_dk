@@ -333,6 +333,15 @@ if($is_member && $is_active && $member_user["membership"]["item"]["name"] == "Fr
 
 				</div>
 			</div>
+			<div class="c-box message_center i:message_center">
+				<h3>Beskedpræferencer</h3>
+				<ul class="actions">
+					<li class="link full-width">
+						<?= $HTML->link("Gå til beskedcenter", "/medlemshjaelp/brugerprofil/".$member_user_id."/beskedcenter", ["class" => "button"]) ?>
+					</li>
+				</ul>
+			</div>
+
 			<? endif; ?>
 
 			<div class="section user_group">

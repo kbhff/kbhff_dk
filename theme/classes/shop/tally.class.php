@@ -961,6 +961,34 @@ class Tally extends Model {
 
 		return $csv;
 	}
+
+
+	function sendTallyNotClosedReminders($action) {
+
+		// get unclosed tallies from yesterday
+		$tallies = $this->getTallies(["creation_date" => date("Y-m-d", strtotime("Yesterday")), "status" => 1]);
+
+		if($tallies) {
+
+			foreach ($tallies as $tally) {
+				
+				// send notification email to admin
+				mailer()->send(array(
+					"recipients" => ADMIN_EMAIL,
+					"subject" => SITE_URL . " - ACTION NEEDED: The tally ".$tally["name"]." has not been closed.",
+					"message" => "The tally ".$tally["name"]." has not been closed.",
+					"tracking" => false
+					// "template" => "system"
+				));		
+			}
+		}
+
+
+		// for each tally
+			// get tally department
+			// send reminder to admin with link to tally
+
+	}
 }
 
 ?>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Ordrebekræftelse fra Københavns Fødevarefællesskab</title>
+	<title>Deadline for bestilling af poser nærmer sig / The deadline for ordering your bags is coming up</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 	<style type="text/css">
@@ -42,7 +42,7 @@
 <body style="color: #000000; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space; margin: 0; padding: 0;">
 
 <div class="preview ignore_text" style="display: none; font-size: 1px; color: #ffffff; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0.001; overflow: hidden">
-	Tak for din ordre! Dit ordrenummer er <em>{ORDER_NO}</em>. Den samlede pris er {ORDER_PRICE}. 
+	Husk at bestille dine grøntsager.
 </div>
 
 <div style="background-color: #ffffff; text-align: center; padding: 0; margin: 0 10px;">
@@ -63,48 +63,44 @@
 	<tr>
 		<td align="left" style="text-align: left;">
 			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 20px 0 30px;">
-				Hej <em>{NICKNAME}</em>,
-			</p>
-			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 20px 0 30px;">
-				Tak for din ordre!
+				Kære <em>{NICKNAME}</em>,
 			</p>
 			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
-				Dit ordrenummer er <em>{ORDER_NO}</em>. Den samlede pris er {ORDER_PRICE} Ordren indeholder følgende:
+				Dette er en venlig påmindelse om at deadline for bestilling af grøntposer og varer til næste uge er d. {DEADLINE_DATE} kl. {DEADLINE_TIME}.
 			</p>
 			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
-				{ORDER_DETAILS}
-			</p>
-			<p style="font-family: Verdana, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0;">
-				Klik på linket for at se din ordre og faktura:
-			</p>
-			<table>
-			<tr>
-				<td bgcolor="#ffffff" style="padding: 14px  0px; font-family: Arial, sans-serif; font-size: 28px; color: #3e8e17; margin: 30px 0;"><a href="{SITE_URL}/janitor/admin/profile/orders/view/{ORDER_ID}">Se ordre og faktura</td>
-			</tr>
-			</table>
-			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
-				Husk at du kan flytte din ordre til andre afhentningsdatoer før bestillingsfristen udløber en uge før ordrens nuværende leveringsdag. Det er derfor en god idé at sikre dig at afhentningstid og -sted passer før du afhenter din ordre – denne mail er <em>ikke</em> gyldig som dokumentation for afhentningstidspunkt. Du kan ændre afhentningsdag og se dine bestillinger på <a href="{SITE_URL}/profil" style="font-family: Arial, sans-serif; font-size: 14px; text-decoration: none; color: #000000;"><strong style="color: #3e8e17;">Min Side</strong></a>.
+				Bestil dine grøntsager <a href="{SITE_URL}/profil" style="font-family: Arial, sans-serif; font-size: 14px; text-decoration: none; color: #000000;"><strong style="color: #3e8e17;">her</strong></a> eller kom ned til din afdeling i åbningstiden.
 			</p>
 			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
-				Hvis du mener, at ovenstående ikke er korrekt, eller hvis du har spørgsmål vedrørende ordren eller betaling heraf, er du meget velkommen til at kontakte os ved at besvare denne mail. 
+				Hvis du ikke ønsker at modtage denne påmindelse i fremtiden, kan du <a href="{SITE_URL}/profil/beskedcenter" style="font-family: Arial, sans-serif; font-size: 14px; text-decoration: none; color: #000000;"><strong style="color: #3e8e17;">ændre dine beskedpræferencer</strong></a>.
 			</p>
-				<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 15px 0;">
-				Grønne hilsner,
-				</p>
+			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 15px 0;">
+			Grønne hilsner,<br/>
+			KBHFF
+			</p>
 		</td>
 	</tr>
-	<tr>
-		<td height="10" style="height: 10px; font-size: 1px; line-height: 1px;">&nbsp;</td>
-	</tr>
-	<tr>
+	<hr>
+	<tr style="border-top: 1px solid #000;">
 		<td align="left" style="text-align: left;">
-			<h2 style="margin: 0; padding: 0; color: #000000; font-family: 'voresfont', Arial, sans-serif; font-size: 15px; line-height: 15px; font-weight: 400;">
-				<a href="{SITE_URL}" style="font-family: 'voresfont', Arial, sans-serif; font-size: 15px; line-height: 15px; font-weight: 400; color: #000000; text-decoration: none;">Københavns Fødevarefællesskab</a>
-			</h2>
+			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 20px 0 30px;">
+				Dear <em>{NICKNAME}</em>,
+			</p>
+			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
+				This is a friendly reminder that the deadline for ordering your vegetable bags for next week is on {DEADLINE_DATE} at {DEADLINE_TIME}.
+			</p>
+			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
+				Order your vegetables <a href="{SITE_URL}/profil" style="font-family: Arial, sans-serif; font-size: 14px; text-decoration: none; color: #000000;"><strong style="color: #3e8e17;">here</strong></a> or visit your local department during their opening hours.
+			</p>
+			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 30px;">
+				If you do not wish to receive this reminder in the future, you can <a href="{SITE_URL}/profil/beskedcenter" style="font-family: Arial, sans-serif; font-size: 14px; text-decoration: none; color: #000000;"><strong style="color: #3e8e17;">change your messaging preferences</strong></a>.
+			</p>
+			<p style="font-family: Arial, sans-serif; font-size: 15px; color: #000000; padding: 0; margin: 30px 0 15px 0;">
+			Green regards,<br/>
+			KBHFF
+			</p>
+			
 		</td>
-	</tr>
-	<tr>
-		<td height="30" style="height: 30px; font-size: 1px; line-height: 1px;">&nbsp;</td>
 	</tr>
 	</table>
 </div>

@@ -83,6 +83,18 @@ class User extends UserCore {
 			"hint_message" => "Vil du have dit medlemskab automatisk fornyet og betalt hvert år?",
 			"error_message" => "Fejl"
 		));
+
+		// Ordering reminder e-mail opt in/out
+		$this->addToModel("ordering_reminder", array(
+			"type" => "checkbox",
+			"label" => "Bestilling – Påmindelser om at bestille varer inden deadline.", 
+		));
+
+		// Pickupdate reminder e-mail opt in/out
+		$this->addToModel("pickup_reminder", array(
+			"type" => "checkbox",
+			"label" => "Afhentning – Påmindelser om at afhente varer inden deadline.", 
+		));
 		 
 	}
 
@@ -488,6 +500,38 @@ IT",
 		return true;
 	}
 
+
+	function email_changed($old_email, $new_email, $verification_code) {
+		
+		$user = $this->getUser();
+
+		// send verification email to user's new email
+		mailer()->send(array(
+			"values" => array(
+				"NICKNAME" => $user["nickname"], 
+				"EMAIL" => $new_email, 
+				"VERIFICATION" => $verification_code,
+				// "PASSWORD" => $mail_password
+			), 
+			"track_clicks" => false,
+			"recipients" => $new_email, 
+			"template" => "verify_changed_email"
+		));
+
+		// send verification email to user's old email
+		mailer()->send(array(
+			"values" => array(
+				"NICKNAME" => $user["nickname"], 
+				"NEW_EMAIL" => $new_email, 
+				// "PASSWORD" => $mail_password
+			), 
+			"track_clicks" => false,
+			"recipients" => $old_email, 
+			"template" => "email_change_notice"
+		));
+		
+	}
+
 	/**
 	 * Update password for current user
 	 *
@@ -500,6 +544,9 @@ IT",
 		$user_id = session()->value("user_id");
 
 		if(count($action) == 1 && $user_id) {
+
+			$user = $this->getKbhffUser();
+
 			// If user already has a password
 			if($this->hasPassword()) {
 				// does values validate
@@ -547,6 +594,21 @@ IT",
 			}
 		}
 		return false;
+	}
+
+	function password_changed($new_password) {
+		
+		$user = $this->getKbhffUser();
+		
+		// send verification email to user
+		mailer()->send(array(
+			"values" => array(
+				"NICKNAME" => $user["nickname"], 
+			), 
+			"track_clicks" => false,
+			"recipients" => $user["email"], 
+			"template" => "password_change_notice"
+		));
 	}
 
 	/**
@@ -969,6 +1031,113 @@ IT",
 
 		return false;
 	}
+
+	function getUserLogAgreement($agreement_name, $_options = false) {
+
+		$user_id = session()->value("user_id");
+
+		if($user_id && $agreement_name) {
+			$query = new Query();
+			$sql = "SELECT * FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id AND name = '".$agreement_name."'";
+			if($query->sql($sql)) {
+				
+				$accepted_at = $query->result(0, "accepted_at");
+				return $accepted_at;
+			}
+		}
+
+		return false;
+	}
+
+	function setUserLogAgreement($agreement_name, $_options = false) {
+
+		$user_id = session()->value("user_id");
+		$query = new Query();
+
+		if(!$this->getUserLogAgreement($agreement_name)) {
+			
+			$sql = "INSERT INTO ".SITE_DB.".user_log_agreements SET user_id = $user_id, name = '".$agreement_name."'";
+			if($query->sql($sql)) {
+				
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	function unsetUserLogAgreement($agreement_name, $_options = false) {
+
+		$user_id = session()->value("user_id");
+		$query = new Query();
+
+		if($this->getUserLogAgreement($agreement_name)) {
+
+			$sql = "DELETE FROM ".SITE_DB.".user_log_agreements WHERE user_id = $user_id AND name = '".$agreement_name."'";
+			if($query->sql($sql)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Update the current user's email agreements.
+	 *
+	 * @param array $action REST parameters of current request
+	 * @return boolean
+	 */
+	function updateEmailAgreements($action){
+		// Get content of $_POST array that have been mapped to the model entities object
+		$this->getPostedEntities();
+
+		// print_r ($action);
+		// Check that the number of REST parameters is as expected and that the listed entries are valid.
+		if(count($action) == 1 && $this->validateList(["ordering_reminder", "pickup_reminder"] )) {
+
+			$user = $this->getKbhffUser();
+			$user_id = $user["id"];
+			$ordering_reminder = $this->getProperty("ordering_reminder", "value");
+			$pickup_reminder = $this->getProperty("pickup_reminder", "value");
+
+			$query = new Query();
+
+			if($ordering_reminder && $this->getUserLogAgreement("disable_ordering_reminder")) {
+
+				$this->unsetUserLogAgreement("disable_ordering_reminder");
+
+			}
+			elseif(!$ordering_reminder && !$this->getUserLogAgreement("disable_ordering_reminder")) {
+
+				$this->setUserLogAgreement("disable_ordering_reminder");
+
+			}
+
+			if($pickup_reminder && $this->getUserLogAgreement("disable_pickup_reminder")) {
+
+				$this->unsetUserLogAgreement("disable_pickup_reminder");
+
+			}
+			elseif(!$pickup_reminder && !$this->getUserLogAgreement("disable_pickup_reminder")) {
+
+				$this->setUserLogAgreement("disable_pickup_reminder");
+
+			}
+
+			return true;
+
+		}
+
+		return false;
+		
+		
+	}
+	
+
 }
 
 ?>

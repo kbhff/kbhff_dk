@@ -154,6 +154,15 @@ if($action) {
 		exit();
 	}
 
+	// /profil/beskedcenter
+	else if($action[0] == "beskedcenter") {
+		$page->page(array(
+			"templates" => "profile/message_center.php",
+			"type" => "member"
+		));
+		exit();
+	}
+
 	// /profil/updateUserDepartment
 	// Handling updateUserDepartment method, specified in user.class.php
 	else if($action[0] == "updateUserDepartment" && $page->validateCsrfToken()) {
@@ -199,6 +208,19 @@ if($action) {
 
 			header("Location: /profil");
 			exit();
+		}
+	}
+
+	// /profil/updateEmailAgreements
+	else if($action[0] == "updateEmailAgreements" && $page->validateCsrfToken()) {
+
+		$result = $UC->updateEmailAgreements($action);
+
+		if($result) {
+
+			header("Location: /profil/beskedcenter");
+			exit();
+
 		}
 	}
 
