@@ -5,7 +5,6 @@ $access_item["/sendPickupReminders"] = true;
 $access_item["/sendTallyNotClosedReminders"] = true;
 $access_item["/cancelUnpaidOrders"] = true;
 $access_item["/sendCancellationWarnings"] = true;
-$access_item["/anonymizeUsers"] = true;
 
 if(isset($read_access) && $read_access) {
 	return;
