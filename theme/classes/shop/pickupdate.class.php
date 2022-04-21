@@ -290,6 +290,7 @@ class Pickupdate extends Model {
 			$pickupdate = $this->getPickupdate(["id" => $pickupdate_id]);
 
 			$SC = new Shop();
+			$pickupdate_cart_items = $SC->getPickupdateCartItems($pickupdate_id);
 			$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate_id);
 			
 			$sql = "DELETE FROM ".$this->db." WHERE id = '$pickupdate_id'";
@@ -297,6 +298,16 @@ class Pickupdate extends Model {
 
 			// if pickupdate has order_items, only allow deletion of future pickup dates
 			if($pickupdate_order_items && $pickupdate["pickupdate"] > date("Y-m-d") && $query->sql($sql)) {
+
+				if($pickupdate_cart_items) {
+
+					// delete orphaned cart_items
+					foreach ($pickupdate_cart_items as $cart_item) {
+						
+						$SC->deleteFromCart(["deleteFromCart", $cart_item["cart_reference"], $cart_item["id"] ]);
+	
+					}
+				}
 
 				$order_item_links = [];
 				foreach ($pickupdate_order_items as $order_item) {

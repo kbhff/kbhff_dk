@@ -252,29 +252,50 @@ class Shop extends ShopCore {
 	function getPickupdateCartItems($pickupdate_id, $_options = false) {
 
 		$query = new Query();
-		$cart = $this->getCart();
 
-		if($cart && $cart["items"]) {
+		$cart_reference = false;
+		$department_id = false;
 
-			$sql = "
-			SELECT cart_items.* 
-			FROM ".$this->db_department_pickupdate_cart_items." AS department_pickupdate_cart_items, "
-				.$this->db_department_pickupdates." AS department_pickupdates, "
-				.$this->db_cart_items." AS cart_items 
-			WHERE department_pickupdates.pickupdate_id = $pickupdate_id 
-				AND department_pickupdates.id = department_pickupdate_cart_items.department_pickupdate_id 
-				AND cart_items.id = department_pickupdate_cart_items.cart_item_id 
-				AND cart_items.cart_id = ".$cart["id"];
-			if($query->sql($sql)) {
-				
-				$cart_pickupdate_items = $query->results();
-				
-				return $cart_pickupdate_items;
-				
+		if($_options !== false) {
+			foreach($_options as $_option => $_value) {
+				switch($_option) {
+					case "cart_reference"             : $cart_reference                  = $_value; break;
+					case "department_id"              : $department_id                   = $_value; break;
+				}
 			}
 		}
 
+		$sql = "
+		SELECT 
+			sci.*, 
+			sc.cart_reference,
+			pd.id AS department_id, pd.name AS department_name
+		FROM 
+			".SITE_DB.".shop_cart_items sci 
+			LEFT JOIN ".SITE_DB.".shop_carts sc ON sc.id = sci.cart_id 
+			LEFT JOIN ".SITE_DB.".project_department_pickupdate_cart_items pdpci ON pdpci.cart_item_id = sci.id
+			LEFT JOIN ".SITE_DB.".project_department_pickupdates pdp ON pdp.id = pdpci.department_pickupdate_id 
+			LEFT JOIN ".SITE_DB.".project_departments pd ON pd.id = pdp.department_id 
+			LEFT JOIN ".SITE_DB.".project_pickupdates pp ON pp.id = pdp.pickupdate_id 
+		WHERE 
+			pp.id = $pickupdate_id
+		";
 
+		if($cart_reference) {
+			$sql .= " AND sc.cart_reference = '".$cart_reference."'";
+		}
+		
+		if($department_id) {
+			$sql .= " AND pd.id = $department_id";
+		}
+		
+		if($query->sql($sql)) {
+			
+			$cart_pickupdate_items = $query->results();
+			
+			return $cart_pickupdate_items;
+			
+		}
 		
 		return false;
 	}
@@ -818,6 +839,31 @@ class Shop extends ShopCore {
 		return false;
 	}
 
+	function getDepartmentCartItems($department_id) {
+		
+		$query = new Query();
+
+		$sql = "
+			SELECT sci.*, pp.pickupdate, pd.id AS department_id, sc.cart_reference
+			FROM ".SITE_DB.".shop_cart_items sci 
+				LEFT JOIN ".SITE_DB.".shop_carts sc ON sc.id = sci.cart_id 
+				LEFT JOIN ".SITE_DB.".project_department_pickupdate_cart_items pdpci ON pdpci.cart_item_id = sci.id 
+				LEFT JOIN ".SITE_DB.".project_department_pickupdates pdp ON pdp.id = pdpci.department_pickupdate_id 
+				LEFT JOIN ".SITE_DB.".project_departments pd ON pd.id = pdp.department_id 
+				LEFT JOIN ".SITE_DB.".project_pickupdates pp ON pp.id = pdp.pickupdate_id 
+			WHERE 
+				pd.id = $department_id";
+		
+		if($query->sql($sql)) {
+
+			return $query->results();
+
+		}
+
+		return false;
+
+	}
+	
 	function getDepartmentOrderItems($department_id) {
 		
 		$query = new Query();

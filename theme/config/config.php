@@ -9,6 +9,7 @@ header("Content-type: text/html; charset=UTF-8");
 error_reporting(E_ALL);
 
 define("VERSION", "0.7.9.2");
+define("UI_BUILD", "UN-BUILT");
 
 define("SITE_UID", "KBHFF");
 define("SITE_NAME", "Københavns Fødevarefællesskab");
@@ -43,10 +44,9 @@ define("RENEWAL_DATE", "05-01");
 define("SITE_PAYMENT_REGISTER_INTENT", SITE_URL."/butik/betalingsgateway/{GATEWAY}/register-intent");
 define("SITE_PAYMENT_REGISTER_PAID_INTENT", SITE_URL."/butik/betalingsgateway/{GATEWAY}/register-paid-intent");
 
-// cronjob runs every hour, 59th minute
 define("ORDERING_DEADLINE_TIME", "Wednesday 23:59");
 define("ORDERING_REMINDER_TIME_DELTA_HOURS", 8);
 
-// cronjob runs every hour, 0th minute
 define("PICKUP_DAY", "Wednesday");
 define("PICKUP_REMINDER_TIME_DELTA_HOURS", 4);
+

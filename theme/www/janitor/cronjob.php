@@ -5,6 +5,7 @@ $access_item["/sendPickupReminders"] = true;
 $access_item["/sendTallyNotClosedReminders"] = true;
 $access_item["/cancelUnpaidOrders"] = true;
 $access_item["/sendCancellationWarnings"] = true;
+$access_item["/removeExceededDeadlineCartItems"] = true;
 
 if(isset($read_access) && $read_access) {
 	return;
@@ -87,6 +88,16 @@ if(is_array($action) && count($action)) {
 
 	}
 
+	else if(preg_match("/^removeExceededDeadlineCartItems$/", $action[0])) {
+
+		include_once("classes/shop/supershop.class.php");
+		$SC = new SuperShop();
+
+		$output = new Output();
+		$output->screen($SC->removeExceededDeadlineCartItems($action));
+		exit();
+
+	}
 		
 
 }

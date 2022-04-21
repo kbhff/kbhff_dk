@@ -1167,18 +1167,6 @@ if($action) {
 
 	}
 
-	// Class interface
-	else if(preg_match("/^removePastPickupdateCartItems$/", $action[0])) {
-
-		include_once("classes/shop/supershop.class.php");
-		$SC = new SuperShop();
-
-		$output = new Output();
-		$output->screen($SC->removePastPickupdateCartItems($action));
-		exit();
-
-	}
-
 }
 
 // go to shop index directly

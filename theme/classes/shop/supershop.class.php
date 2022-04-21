@@ -144,29 +144,36 @@ class SuperShop extends SuperShopCore {
 	
 
 	/**
-	 * Remove cart items that belongs to a past pickupdate
+	 * Remove cart items that have exceeded the ordering deadline
 	 *
 	 * Run by cron job
 	 * 
 	 * @return boolean
 	 */
-	function removePastPickupdateCartItems($action) {
+	function removeExceededDeadlineCartItems($action) {
 
 		if(count($action) == 1) {
 
 			$query = new Query();
 
-			$sql = "DELETE cart_items 
-			FROM ".$this->db_cart_items." AS cart_items
-			JOIN ".$this->db_department_pickupdate_cart_items." AS department_pickupdate_cart_items 
-			ON cart_items.id = department_pickupdate_cart_items.cart_item_id 
-			JOIN ".$this->db_pickupdates." AS pickupdates 
-			ON pickupdates.id = department_pickupdate_cart_items.pickupdate_id
-			WHERE pickupdates.pickupdate < CURDATE()"; 
+			include_once("classes/shop/pickupdate.class.php");
+			$PC = new Pickupdate();
 
-			if($query->sql($sql)) {
+			// get pickupdate 6 days from now, if it exists
+			// 6 days because cart_items will only be removed when the deadline day has passed completely
+			$pickupdate = $PC->getPickupdate(["pickupdate" => date("Y-m-d", strtotime("+6 days"))]);
+			if($pickupdate) {
+
+				$pickupdate_cart_items = $this->getPickupdateCartItems($pickupdate["id"]);
+
+				foreach ($pickupdate_cart_items as $cart_item) {
+
+					$this->deleteFromCart(["deleteFromCart", $cart_item["cart_reference"], $cart_item["id"]]);
+
+				}
 
 				return true;
+
 			}
 
 		}
@@ -402,45 +409,6 @@ class SuperShop extends SuperShopCore {
 		return false;
 	}
 	
-	function getPickupdateCartItems($pickupdate_id, $_options = false) {
-
-		if($_options !== false) {
-			foreach($_options as $_option => $_value) {
-				switch($_option) {
-					case "cart_reference"             : $cart_reference                  = $_value; break;
-				}
-			}
-		}
-
-		$query = new Query();
-		$cart = $this->getCarts(["cart_reference" => $cart_reference]);
-
-		if($cart && $cart["items"]) {
-
-			$sql = "
-			SELECT cart_items.* 
-			FROM ".$this->db_department_pickupdate_cart_items." AS department_pickupdate_cart_items, "
-				.$this->db_department_pickupdates." AS department_pickupdates, "
-				.$this->db_cart_items." AS cart_items 
-			WHERE department_pickupdates.pickupdate_id = $pickupdate_id 
-				AND department_pickupdates.id = department_pickupdate_cart_items.department_pickupdate_id 
-				AND cart_items.id = department_pickupdate_cart_items.cart_item_id 
-				AND cart_items.cart_id = ".$cart["id"];
-				
-			if($query->sql($sql)) {
-				
-				$cart_pickupdate_items = $query->results();
-				
-				return $cart_pickupdate_items;
-				
-			}
-		}
-
-
-		
-		return false;
-	}
-
 	function getCartItemsWithoutPickupdate($_options = false) {
 
 		if($_options !== false) {

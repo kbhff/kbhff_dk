@@ -386,7 +386,7 @@ else {
 				<ul class="pickupdates">
 					
 						<? foreach($cart_pickupdates as $pickupdate): 
-							$pickupdate_cart_items = $model->getPickupdateCartItems($pickupdate["id"]);
+							$pickupdate_cart_items = $model->getPickupdateCartItems($pickupdate["id"], ["cart_reference" => $cart["cart_reference"]]);
 							if($pickupdate_cart_items): ?>
 						
 					<li class="pickupdate">

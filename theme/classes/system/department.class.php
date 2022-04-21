@@ -401,6 +401,7 @@ class Department extends Model {
 					return false;
 				}
 	
+				$department_cart_items = $SC->getDepartmentCartItems($id);
 				$department_order_items = $SC->getDepartmentOrderItems($id);
 				$order_item_links = [];
 	
@@ -422,6 +423,17 @@ class Department extends Model {
 				
 				$sql = "DELETE FROM ".$this->db." WHERE id = '$id'";
 				if($query->sql($sql)) {
+
+					if($department_cart_items) {
+						
+						// delete orphaned cart_items
+						foreach ($department_cart_items as $cart_item) {
+											
+							$SC->deleteFromCart(["deleteFromCart", $cart_item["cart_reference"], $cart_item["id"] ]);
+
+						}
+
+					}
 	
 					if($department_order_items) {
 	
@@ -653,11 +665,23 @@ class Department extends Model {
 			$query = new Query();
 
 			$SC = new Shop();
+
+			$department_pickupdate_cart_items = $SC->getPickupdateCartItems($pickupdate_id, ["department_id" => $department_id]);
 			$department_pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate_id, ["department_id" => $department_id]);
 
 			$sql = "DELETE FROM ".$this->db_pickupdates." WHERE department_id = $department_id AND pickupdate_id = $pickupdate_id";
 	
 			if($query->sql($sql)) {
+
+				if($department_pickupdate_cart_items) {
+
+					// delete orphaned cart_items
+					foreach ($department_pickupdate_cart_items as $cart_item) {
+
+						$SC->deleteFromCart(["deleteFromCart", $cart_item["cart_reference"], $cart_item["id"] ]);
+						
+					}
+				}
 
 				if($department_pickupdate_order_items) {
 
