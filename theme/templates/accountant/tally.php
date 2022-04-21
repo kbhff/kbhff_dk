@@ -16,8 +16,8 @@ $payouts = $TC->getPayouts($tally_id);
 $revenues = $TC->getMiscRevenues($tally_id);
 $calculated_sales_by_the_piece = $TC->calculateSalesByThePiece($tally_id);
 $cash_order_items_summary = $TC->cashOrderItemsSummary($tally_id);
-$opened_by = $UC->getUser(["user_id" => $tally["opened_by"]]);
-$closed_by = $UC->getUser(["user_id" => $tally["closed_by"]]);
+$opened_by = $UC->getKbhffUser(["user_id" => $tally["opened_by"]]);
+$closed_by = $UC->getKbhffUser(["user_id" => $tally["closed_by"]]);
 
 ?>
 
