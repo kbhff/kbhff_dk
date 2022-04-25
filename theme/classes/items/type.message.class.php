@@ -214,6 +214,8 @@ class TypeMessage extends TypeMessageCore {
 			$sql .= " WHERE id = $id";
 		}
 
+		$sql .= " ORDER BY created_at DESC";
+
 		if($query->sql($sql)) {
 
 			if($id) {
