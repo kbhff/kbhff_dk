@@ -718,6 +718,27 @@ class SuperShop extends SuperShopCore {
 		$user_id = $order["user_id"];
 		$user = $UC->getKbhffUser(["user_id" => $user_id]);
 		$total_order_price = $this->getTotalOrderPrice($order["id"]);
+
+		$order_details = "";
+		$order_items = $this->getOrderItems(["order_id" => $order["id"]]);
+		if($order_items) {
+
+			foreach ($order_items as $order_item) {
+				
+				$order_details .= $order_item["quantity"]." x ";
+				$order_details .= $order_item["name"];
+
+				$order_item_department_pickupdate = $this->getOrderItemDepartmentPickupdate($order_item["id"]);
+				if($order_item_department_pickupdate) {
+
+					$order_details .= " – Afhentes ".date("d.m.Y", strtotime($order_item_department_pickupdate["pickupdate"]))." (".$order_item_department_pickupdate["department"].")";
+				}
+
+				$order_details .= "<br>";
+
+			}
+
+		}
 		
 		// send notification email to admin
 		mailer()->send(array(
@@ -728,14 +749,15 @@ class SuperShop extends SuperShopCore {
 			// "template" => "system"
 		));
 
-		// order confirmation mail
 		mailer()->send(array(
 			"recipients" => $user["email"],
+			"reply_to" => SHOP_ORDER_NOTIFIES,
 			"values" => array(
 				"NICKNAME" => $user["nickname"], 
-				"ORDER_NO" => $order_no, 
+				"ORDER_NO" => $order["order_no"], 
 				"ORDER_ID" => $order["id"], 
-				"ORDER_PRICE" => formatPrice($total_order_price) 
+				"ORDER_PRICE" => formatPrice($total_order_price),
+				"ORDER_DETAILS" => $order_details
 			),
 			// "subject" => SITE_URL . " – Thank you for your order!",
 			"tracking" => false,
