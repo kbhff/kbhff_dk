@@ -331,6 +331,16 @@ class Pickupdate extends Model {
 			// pickupdates without order_items can freely be deleted
 			elseif($query->sql($sql)) {
 
+				if($pickupdate_cart_items) {
+
+					// delete orphaned cart_items
+					foreach ($pickupdate_cart_items as $cart_item) {
+						
+						$SC->deleteFromCart(["deleteFromCart", $cart_item["cart_reference"], $cart_item["id"] ]);
+	
+					}
+				}
+
 				$deletion_success = true;
 			}
 
