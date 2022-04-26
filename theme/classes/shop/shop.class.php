@@ -383,12 +383,18 @@ class Shop extends ShopCore {
 
 		if($department_id && $pickupdate_id) {
 
-			$sql = "SELECT cart_items.* 
-			FROM ".$this->db_cart_items." AS cart_items, ".$this->db_department_pickupdate_cart_items." AS department_pickupdate_cart_items 
-			WHERE cart_items.cart_id = $cart_id 
-			AND cart_items.item_id = $item_id 
-			AND cart_items.id = department_pickupdate_cart_items.cart_item_id 
-			AND department_pickupdate_cart_items.pickupdate_id = $pickupdate_id";
+			$sql = "
+			SELECT sci.*
+			FROM ".SITE_DB.".shop_cart_items sci 
+				LEFT JOIN ".SITE_DB.".project_department_pickupdate_cart_items pdpci ON pdpci.cart_item_id = sci.id 
+				LEFT JOIN ".SITE_DB.".project_department_pickupdates pdp ON pdp.id = pdpci.department_pickupdate_id 
+			WHERE 
+				sci.cart_id = $cart_id
+				AND sci.item_id = $item_id
+				AND pdp.department_id = $department_id
+				AND pdp.pickupdate_id = $pickupdate_id
+			";
+
 		}
 		else {
 
