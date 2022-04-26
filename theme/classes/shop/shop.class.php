@@ -1125,6 +1125,7 @@ class Shop extends ShopCore {
 
 		mailer()->send(array(
 			"recipients" => $user["email"],
+			"reply_to" => SHOP_ORDER_NOTIFIES,
 			"values" => array(
 				"NICKNAME" => $user["nickname"], 
 				"ORDER_NO" => $order["order_no"], 
