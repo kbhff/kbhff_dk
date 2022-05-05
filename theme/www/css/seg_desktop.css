@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-12-01 17:56:17
+asset-builder @ 2022-05-05 10:41:06
 */
 
 /*seg_desktop_include.css*/
@@ -953,43 +953,82 @@ position: relative;
 	font-size: 26px;
 	padding-bottom: 25px;
 }
-#content div.order_history ul.orders {margin: 0; list-style: none;}
-#content div.order_history ul.orders li {
+#content div.order_history div.header {
+	margin-left: 12px;
+	margin-right: 12px;
 	display: flex;
 	flex-flow: row nowrap;
+	border-bottom: 1px solid #000000;
+	margin-top: 10px;
+	padding: 0 0 0 20px;
+}
+#content div.order_history div.header > span {
+	display: block;
+	font-size: 14px;
+	padding: 3px 4px;
+	flex: 1 1;
+	align-self: center;
+	text-transform: uppercase;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+}
+#content div.order_history ul.order_items {margin: 0; list-style: none;}
+#content div.order_history ul.order_items > li {
+	position: relative;
+	padding: 0 0 0 20px;
+}
+#content div.order_history ul.order_items > li > div.info {
+	display: flex;
+	flex-flow: row nowrap;
+}
+#content div.order_history ul.order_items li.log_entries {
+}
+#content div.order_history ul.order_items li.log_entries svg {
+	position: absolute;
+	top: 7px;
+	left: 5px;
+	stroke: #000000;
+	transform: rotate(-90deg);
+}
+#content div.order_history ul.order_items li.log_entries.open svg {
+	top: 11px;
+	transform: rotate(0deg);
+}
+#content div.order_history ul.order_items li.log_entries ul.order_item_log_entries {
+	display: none;
+	margin: 0;
+	list-style: none;
+	padding: 0 0 10px;
+}
+#content div.order_history ul.order_items li.log_entries.open ul.order_item_log_entries {
+	display: block;
+}
+#content div.order_history ul.order_items li.log_entries.open ul.order_item_log_entries li {
 	padding: 0;
 }
-#content div.order_history ul.orders > li > span {
+#content div.order_history div.info span {
 	display: block;
 	font-size: 14px;
 	padding: 3px 4px;
 	flex: 1 1;
 	align-self: center;
 }
-#content div.order_history ul.orders li.order_item:nth-child(2n) {
+#content div.order_history ul.order_items li.order_item:nth-child(2n) {
 	background-color: #DDDDDD;
 }
-#content div.order_history ul.orders li.order {
-	border-bottom: 1px solid #000000;
-	margin-top: 30px;
+#content div.order_history div.info span.pickupdate {
+	flex: 0 0 80px;
 }
-#content div.order_history ul.orders li.order span {
-	text-transform: uppercase;
-	font-size: 20px;
-	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+#content div.order_history div.info span.department {
+	flex: 0 0 110px;
 }
-#content div.order_history ul.orders > li.order > span.order_date {
+#content div.order_history div.info span.order_date {
 	flex: 0 0 100px;
 }
-#content div.order_history ul.orders > li.order > span.order_number {
-	flex: 1 1;
-}
-#content div.order_history ul.orders > li.order > span.total_price {
-	text-align: right;
+#content div.order_history div.info span.order_no {
 	flex: 0 0 100px;
 }
-#content div.order_history ul.orders > li > span.order_item {
-	flex: 1 1;
+#content div.order_history div.info span.status {
+	flex: 0 0 100px;
 }
 
 

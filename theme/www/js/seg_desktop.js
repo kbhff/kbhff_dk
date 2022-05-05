@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-12-01 17:56:17
+asset-builder @ 2022-05-05 10:41:06
 */
 
 /*seg_desktop_include.js*/
@@ -10007,6 +10007,23 @@ Util.Modules["profile"] = new function() {
 			}
 		}
 		scene.ready();
+	}
+}
+
+
+/*m-order_history.js*/
+Util.Modules["order_history"] = new function() {
+	this.init = function(scene) {
+		var log_entries = u.qsa(".log_entries", scene);
+		var i, log_entry;
+		for(i = 0; i < log_entries.length; i++) {
+			log_entry = log_entries[i];
+			u.addExpandArrow(log_entry);
+			u.ce(log_entry);
+			log_entry.clicked = function() {
+				u.tc(this, "open");
+			}
+		}
 	}
 }
 

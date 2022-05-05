@@ -37,6 +37,8 @@ document.write('<script type="text/javascript" src="/js/lib/desktop/m-department
 document.write('<script type="text/javascript" src="/js/lib/desktop/m-user_profile.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/m-profile.js"></script>');
 
+document.write('<script type="text/javascript" src="/js/lib/desktop/m-order_history.js"></script>');
+
 document.write('<script type="text/javascript" src="/js/lib/desktop/m-forgot.js"></script>');
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/m-tally.js"></script>');
