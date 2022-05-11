@@ -26,7 +26,7 @@ $this->pageTitle("Rediger produkt");
 	<h1>Rediger produkt</h1>
 	<h2>Produktoplysninger</h2>
 	
-	<?= $model->formStart("updateProduct/".$product["id"], ["class" => "labelstyle:inject update"]); ?>
+	<?= $model->formStart("updateProduct/".$product["id"], ["class" => "labelstyle:inject update", "enctype" => "multipart/form-data"]); ?>
 
 		<div class="c-wrapper">
 			<div class="c-one-half">

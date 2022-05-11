@@ -13,7 +13,7 @@ $this->pageTitle("Tilføj nyt produkt");
 	<h2>Produktoplysninger</h2>
 
 	
-	<?= $model->formStart("addNewProduct", ["class" => "labelstyle:inject add"]); ?>
+	<?= $model->formStart("addNewProduct", ["class" => "labelstyle:inject add", "enctype" => "multipart/form-data"]); ?>
 
 		<div class="c-wrapper">
 			<div class="c-one-half">
