@@ -1422,8 +1422,8 @@ IT
 
 
 
-			$pickup_reminder_datetime = date("Y-m-d H:i", strtotime("next ".PICKUP_DAY) - PICKUP_REMINDER_TIME_DELTA_HOURS*60*60);
-			$current_datetime = date("Y-m-d H:i");
+			$pickup_reminder_datetime = date("Y-m-d H", strtotime("next ".PICKUP_DAY) - PICKUP_REMINDER_TIME_DELTA_HOURS*60*60);
+			$current_datetime = date("Y-m-d H");
 
 			if($pickupdate && $pickup_reminder_datetime == $current_datetime) {
 
@@ -1432,7 +1432,7 @@ IT
 				$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate["id"]);
 				if($pickupdate_order_items) {
 
-					foreach ($pickupdate_order_items as $poi) {
+					foreach($pickupdate_order_items as $poi) {
 
 						$user = $this->getKbhffUser(["user_id" => $poi["user_id"]]);
 
@@ -1455,9 +1455,10 @@ IT
 						}
 					}
 				}
+				return true;
 			}
-			
-			return true;
+
+			return false;
 		}
 
 	}
