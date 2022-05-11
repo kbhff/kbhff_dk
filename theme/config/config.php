@@ -47,6 +47,7 @@ define("SITE_PAYMENT_REGISTER_PAID_INTENT", SITE_URL."/butik/betalingsgateway/{G
 define("ORDERING_DEADLINE_TIME", "Wednesday 23:59");
 define("ORDERING_REMINDER_TIME_DELTA_HOURS", 8);
 
-define("PICKUP_DAY", "Wednesday");
-define("PICKUP_REMINDER_TIME_DELTA_HOURS", 4);
+// define("PICKUP_DAY", "Wednesday");
+// define("PICKUP_REMINDER_TIME_DELTA_HOURS", 4);
+define("PICKUP_REMINDER_TIME_DELTA_HOURS", -12);
 
