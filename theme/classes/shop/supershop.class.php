@@ -162,13 +162,16 @@ class SuperShop extends SuperShopCore {
 			// get pickupdate 6 days from now, if it exists
 			// 6 days because cart_items will only be removed when the deadline day has passed completely
 			$pickupdate = $PC->getPickupdate(["pickupdate" => date("Y-m-d", strtotime("+6 days"))]);
+			debug(["pickupdate", $pickupdate]);
 
 			if($pickupdate) {
 
 				$pickupdate_cart_items = $this->getPickupdateCartItems($pickupdate["id"]);
+				debug(["pickupdate_cart_items", $pickupdate_cart_items]);
 				foreach($pickupdate_cart_items as $cart_item) {
 
-					$this->deleteFromCart(["deleteFromCart", $cart_item["cart_reference"], $cart_item["id"]]);
+					$test = $this->deleteFromCart(["deleteFromCart", $cart_item["cart_reference"], $cart_item["id"]]);
+					debug(["test delete", $test]);
 
 				}
 
