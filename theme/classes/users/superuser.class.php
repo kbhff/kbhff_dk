@@ -1491,8 +1491,8 @@ IT
 			// get next+1 scheduled pickupdate
 			$pickupdate = $PC->getPickupdate(["pickupdate" => date("Y-m-d", strtotime(PICKUP_DAY." next week"))]);
 
-			$ordering_reminder_datetime = date("Y-m-d H:i", strtotime(ORDERING_DEADLINE_TIME) - ORDERING_REMINDER_TIME_DELTA_HOURS*60*60);
-			$current_datetime = date("Y-m-d H:i");
+			$ordering_reminder_datetime = date("Y-m-d H", strtotime(ORDERING_DEADLINE_TIME) - ORDERING_REMINDER_TIME_DELTA_HOURS*60*60);
+			$current_datetime = date("Y-m-d H");
 
 			if($pickupdate && $ordering_reminder_datetime == $current_datetime) {
 
@@ -1502,7 +1502,7 @@ IT
 
 				if($users) {
 
-					foreach ($users as $user) {
+					foreach($users as $user) {
 
 						$kbhff_user = $this->getKbhffUser(["user_id" => $user["id"]]);
 
@@ -1526,9 +1526,10 @@ IT
 						}
 					}
 				}
+				return true;
 			}
-			
-			return true;
+
+			return false;
 		}
 
 	}
