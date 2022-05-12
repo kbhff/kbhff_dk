@@ -45,9 +45,10 @@ define("SITE_PAYMENT_REGISTER_INTENT", SITE_URL."/butik/betalingsgateway/{GATEWA
 define("SITE_PAYMENT_REGISTER_PAID_INTENT", SITE_URL."/butik/betalingsgateway/{GATEWAY}/register-paid-intent");
 
 define("ORDERING_DEADLINE_TIME", "Wednesday 23:59");
-define("ORDERING_REMINDER_TIME_DELTA_HOURS", 8);
+// define("ORDERING_REMINDER_TIME_DELTA_HOURS", 8);
+define("ORDERING_REMINDER_TIME_DELTA_HOURS", -13.5);
 
-// define("PICKUP_DAY", "Wednesday");
+define("PICKUP_DAY", "Wednesday");
 // define("PICKUP_REMINDER_TIME_DELTA_HOURS", 4);
-define("PICKUP_REMINDER_TIME_DELTA_HOURS", -12);
+define("PICKUP_REMINDER_TIME_DELTA_HOURS", -37.5);
 

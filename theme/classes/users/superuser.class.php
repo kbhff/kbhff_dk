@@ -1425,6 +1425,8 @@ IT
 			$pickup_reminder_datetime = date("Y-m-d H", strtotime("next ".PICKUP_DAY) - PICKUP_REMINDER_TIME_DELTA_HOURS*60*60);
 			$current_datetime = date("Y-m-d H");
 
+			debug(["pickupdate", $pickupdate, "pickup_reminder_datetime", $pickup_reminder_datetime, "current_datetime", $current_datetime]);
+
 			if($pickupdate && $pickup_reminder_datetime == $current_datetime) {
 
 				$SC = new Shop;
@@ -1493,6 +1495,8 @@ IT
 
 			$ordering_reminder_datetime = date("Y-m-d H", strtotime(ORDERING_DEADLINE_TIME) - ORDERING_REMINDER_TIME_DELTA_HOURS*60*60);
 			$current_datetime = date("Y-m-d H");
+
+			debug(["pickupdate", $pickupdate, "ordering_reminder_datetime", $ordering_reminder_datetime, "current_datetime", $current_datetime]);
 
 			if($pickupdate && $ordering_reminder_datetime == $current_datetime) {
 
