@@ -1501,6 +1501,7 @@ IT
 			$PC = new Pickupdate;
 			
 			$recipients = [];
+			$values = [];
 
 			// get next+1 scheduled pickupdate
 			$pickupdate = $PC->getPickupdate(["pickupdate" => date("Y-m-d", strtotime(PICKUP_DAY." next week"))]);
@@ -1528,19 +1529,35 @@ IT
 
 							// add to recipients
 							$recipients[] = $kbhff_user["email"];
+							$values[$user["email"]] = [
+								"NICKNAME" => $kbhff_user["nickname"],
+								"DEADLINE_DATE" => date("d.m.Y", strtotime(ORDERING_DEADLINE_TIME)),
+								"DEADLINE_TIME" => date("H:i", strtotime(ORDERING_DEADLINE_TIME))
+							];
 
 							// send reminder
-							mailer()->send([
-								"recipients" => [$kbhff_user["email"]],
-								"template" => "ordering_reminder",
-								"values" => [
-									"NICKNAME" => $kbhff_user["nickname"],
-									"DEADLINE_DATE" => date("d.m.Y", strtotime(ORDERING_DEADLINE_TIME)),
-									"DEADLINE_TIME" => date("H:i", strtotime(ORDERING_DEADLINE_TIME))
-								]
-							]);
+							// mailer()->send([
+							// 	"recipients" => [$kbhff_user["email"]],
+							// 	"template" => "ordering_reminder",
+							// 	"values" => [
+							// 		"NICKNAME" => $kbhff_user["nickname"],
+							// 		"DEADLINE_DATE" => date("d.m.Y", strtotime(ORDERING_DEADLINE_TIME)),
+							// 		"DEADLINE_TIME" => date("H:i", strtotime(ORDERING_DEADLINE_TIME))
+							// 	]
+							// ]);
 						}
 					}
+
+					if($recipients) {
+						// send reminder
+						$test = mailer()->sendBulk([
+							"recipients" => $recipients,
+							"template" => "ordering_reminder",
+							"values" => $values,
+						]);
+						debug(["mail result", $test]);
+					}
+
 				}
 				return true;
 			}
