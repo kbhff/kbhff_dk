@@ -1529,7 +1529,7 @@ IT
 
 							// add to recipients
 							$recipients[] = $kbhff_user["email"];
-							$values[$user["email"]] = [
+							$values[$kbhff_user["email"]] = [
 								"NICKNAME" => $kbhff_user["nickname"],
 								"DEADLINE_DATE" => date("d.m.Y", strtotime(ORDERING_DEADLINE_TIME)),
 								"DEADLINE_TIME" => date("H:i", strtotime(ORDERING_DEADLINE_TIME))
