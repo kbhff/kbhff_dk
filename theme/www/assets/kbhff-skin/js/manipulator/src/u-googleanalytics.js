@@ -1,7 +1,7 @@
 u.includeGoogleAnalytics = function() {
 	if(typeof(ga) !== "function") {
 
-		u.bug("includeGoogleAnalytics");
+		// u.bug("includeGoogleAnalytics");
 
 	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -51,11 +51,15 @@ u.includeGoogleAnalytics = function() {
 					}
 				}
 
+
 				// Set missing eventAction (if possible)
 				if(!eventAction && event && event.type) {
 					eventAction = event.type;
 				}
-				else if(!eventAction) {
+				else if(!eventAction && event) {
+					eventAction = event;
+				}
+ 				else if(!eventAction) {
 					eventAction = "Unknown";
 				}
 
@@ -66,6 +70,7 @@ u.includeGoogleAnalytics = function() {
 				else if(!eventLabel) {
 					eventLabel = this.nodeSnippet(node);
 				}
+
 
 				//ga('send', 'event', [eventCategory], [eventAction], [eventLabel], [eventValue], [fieldsObject]);
 				ga('send', 'event', {
@@ -94,18 +99,32 @@ u.includeGoogleAnalytics = function() {
 
 			// Simple label generator
 			this.nodeSnippet = function(node) {
-				return u.cutString(u.text(node).trim(), 20) + "(<"+node.nodeName+">)";
+				if(node.id) {
+					return node.id;
+				}
+				else if(node._a && node._a.id) {
+					return node._a.id;
+				}
+				else if(u.text(node)) {
+					return u.cutString(u.text(node).trim(), 20);
+				}
+				else if(event && event.currentTarget && event.currentTarget.url) {
+					return event.currentTarget.url;
+				}
+				else {
+					return node.nodeName + (node.className ? "."+node.className : "");
+				}
+				
+				// return u.cutString(u.text(node).trim(), 20) + (node.id ? node.id : node._a.id ? node._a.id : "(<"+node.nodeName+">)");
 			}
+
 		}
 
 	}
 
-
-
 }
 
 if(u.ga_account && !u.cookies_disallowed) {
-	u.bug("includeGoogleAnalytics allowed");
+	// u.bug("includeGoogleAnalytics allowed");
 	u.includeGoogleAnalytics();
-
 }

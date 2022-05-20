@@ -2,16 +2,12 @@ u.includeGoogleTagManager = function() {
 	if(typeof(gtag) !== "function") {
 
 		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
-		gtag('config', u.gtm_account);
-
 		dataLayer.push({'gtm.start': new Date().getTime()});
 		dataLayer.push({'event': 'gtm.js'});
 
-		u.ae(document.head, "script", {src: "https://www.googletagmanager.com/gtag/js?id="+u.gtm_account, async: true})
+		u.ae(document.head, "script", {src: "https://www.googletagmanager.com/gtm.js?id="+u.gtm_account, async: true})
 
-		u.bug("includeGoogleTagManager");
+		// u.bug("includeGoogleTagManager");
 
 		u.stats = new function() {
 
@@ -25,7 +21,7 @@ u.includeGoogleTagManager = function() {
 
 			// track event
 			this.event = function(node, _options) {
-
+				u.bug("options", _options);
 				// default values
 				var event = false;
 				var eventCategory = "Uncategorized";
@@ -53,9 +49,13 @@ u.includeGoogleTagManager = function() {
 					}
 				}
 
+
 				// Set missing eventAction (if possible)
 				if(!eventAction && event && event.type) {
 					eventAction = event.type;
+				}
+				else if(!eventAction && event) {
+					eventAction = event;
 				}
 				else if(!eventAction) {
 					eventAction = "Unknown";
@@ -70,8 +70,14 @@ u.includeGoogleTagManager = function() {
 					eventLabel = this.nodeSnippet(node);
 				}
 
+				if(!event) {
+					event = eventLabel + " " + eventAction;
+				}
+
+
 				//ga('send', 'event', [eventCategory], [eventAction], [eventLabel], [eventValue], [fieldsObject]);
 				window.dataLayer.push({
+					"event": event,
 					"eventCategory": eventCategory, 
 					"eventAction": eventAction,
 					"eventLabel": eventLabel,
@@ -104,16 +110,14 @@ u.includeGoogleTagManager = function() {
 				
 				// return u.cutString(u.text(node).trim(), 20) + (node.id ? node.id : node._a.id ? node._a.id : "(<"+node.nodeName+">)");
 			}
+
 		}
 
 	}
-
-
 
 }
 
 if(u.gtm_account && !u.cookies_disallowed) {
 	u.bug("includeGoogleTagManager allowed");
 	u.includeGoogleTagManager();
-
 }
