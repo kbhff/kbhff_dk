@@ -1,6 +1,6 @@
 /*
 Manipulator v0.9.3-kbhff_dk Copyright 2008-2021 https://manipulator.parentnode.dk
-js-merged @ 2022-05-20 20:34:44
+js-merged @ 2022-05-20 20:55:39
 */
 
 /*seg_smartphone_include.js*/
@@ -3031,7 +3031,6 @@ Util.Form = u.f = new function() {
 						allowed_proportions[i] = u.round(eval(allowed_proportions[i]), 4);
 					}
 				}
-				u.bug("vali", (files.length >= min && files.length <= max), (!pattern || files.every(function(node) {u.bug("test", u.cv(node, "format")); return pattern.indexOf("."+u.cv(node, "format")) !== -1})));
 				if(
 					(files.length >= min && files.length <= max)
 					&&
