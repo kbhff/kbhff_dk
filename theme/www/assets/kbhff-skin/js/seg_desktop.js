@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2022-05-20 20:40:07
+asset-builder @ 2022-05-20 20:58:35
 */
 
 /*seg_desktop_include.js*/
@@ -2989,7 +2989,6 @@ Util.Form = u.f = new function() {
 						allowed_proportions[i] = u.round(eval(allowed_proportions[i]), 4);
 					}
 				}
-				u.bug("vali", (files.length >= min && files.length <= max), (!pattern || files.every(function(node) {u.bug("test", u.cv(node, "format")); return pattern.indexOf("."+u.cv(node, "format")) !== -1})));
 				if(
 					(files.length >= min && files.length <= max)
 					&&
