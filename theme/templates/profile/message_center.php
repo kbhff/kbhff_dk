@@ -13,6 +13,8 @@ $disable_pickup_reminder = $UC->getUserLogAgreement("disable_pickup_reminder");
 
 	<h2>E-mail</h2>
 
+	<?= $HTML->serverMessages() ?>
+
 	<?= $UC->formStart("updateEmailAgreements", array("class" => "accept")) ?>
 
 		<fieldset>

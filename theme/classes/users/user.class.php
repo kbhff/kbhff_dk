@@ -87,13 +87,13 @@ class User extends UserCore {
 		// Ordering reminder e-mail opt in/out
 		$this->addToModel("ordering_reminder", array(
 			"type" => "checkbox",
-			"label" => "Bestilling – Påmindelser om at bestille varer inden deadline.", 
+			"label" => "Bestilling – Påmindelser om at bestille varer inden deadline – sendes ".translate(date("l", strtotime(ORDERING_DEADLINE_TIME . "- ".ORDERING_REMINDER_TIME_DELTA_HOURS." hours")))." kl. ".date("H:i", strtotime(ORDERING_DEADLINE_TIME . "- ".ORDERING_REMINDER_TIME_DELTA_HOURS." hours")).".", 
 		));
 
 		// Pickupdate reminder e-mail opt in/out
 		$this->addToModel("pickup_reminder", array(
 			"type" => "checkbox",
-			"label" => "Afhentning – Påmindelser om at afhente varer inden deadline.", 
+			"label" => "Afhentning – Påmindelser om at afhente varer inden deadline – sendes ".translate(date("l", strtotime(PICKUP_DAY . "- ".PICKUP_REMINDER_TIME_DELTA_HOURS." hours")))." kl. ".date("H:i", strtotime(PICKUP_DAY . "- ".PICKUP_REMINDER_TIME_DELTA_HOURS." hours")).".", 
 		));
 		 
 	}
@@ -1128,15 +1128,14 @@ IT",
 
 			}
 
+			message()->addMessage("Dine preferencer er gemt.");
 			return true;
 
 		}
 
+		message()->addMessage("Dine preferencer kunne ikke gemmes - prøv venligst igen.");
 		return false;
-		
-		
 	}
-	
 
 }
 

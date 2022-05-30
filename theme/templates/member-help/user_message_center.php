@@ -4,6 +4,9 @@ global $action;
 
 $member_user_id = $action[1];
 
+$UC = new SuperUser();
+$user = $UC->getKbhffUser(["user_id" => $member_user_id]);
+
 $disable_ordering_reminder = $model->getUserLogAgreement("disable_ordering_reminder", ["user_id" => $member_user_id]);
 $disable_pickup_reminder = $model->getUserLogAgreement("disable_pickup_reminder", ["user_id" => $member_user_id]);
 
@@ -12,9 +15,11 @@ $disable_pickup_reminder = $model->getUserLogAgreement("disable_pickup_reminder"
 
 	<h1>Beskedcenter</h1>
 
-	<p>Her kan du ændre dine præferencer for modtagelse af e-mails.</p>
+	<p>Her kan du ændre præferencer for <?=$user["firstname"] ? $user["firstname"] : $user["nickname"]?>'s modtagelse af e-mails.</p>
 
 	<h2>E-mail</h2>
+
+	<?= $HTML->serverMessages() ?>
 
 	<?= $model->formStart("updateEmailAgreements/".$member_user_id, array("class" => "accept")) ?>
 
