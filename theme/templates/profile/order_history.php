@@ -49,7 +49,7 @@ $order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $user["id"], "orde
 
 				 ?>
 
-					<li class="order_item<?= $order_item_log ? " log_entries" : "" ?>">
+					<li class="order_item<?= $order_item_log && count($order_item_log) > 1 ? " log_entries" : "" ?>">
 						<div class="info">
 							<span class="pickupdate"><?= date("d.m.Y", strtotime($order_item["pickupdate"])) ?></span>
 							<span class="department"><?= $order_item["department"] ?></span>
@@ -57,7 +57,7 @@ $order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $user["id"], "orde
 							<span class="order_no"><?= $order_item["order_no"] ?></span>
 							<span class="order_date"><span class="date"><?= date("d.m.Y", strtotime($order_item["created_at"])) ?></span></span>
 						</div>
-						<? if($order_item_log): ?>
+						<? if($order_item_log && count($order_item_log) > 1): ?>
 						<ul class="order_item_log_entries">
 						<? foreach($order_item_log AS $key => $entry): 
 							$log_user = $UC->getKbhffUser(["user_id" => $entry["user_id"]]);
@@ -96,8 +96,6 @@ $order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $user["id"], "orde
 						<? endif; ?>
 					</li>
 
-
-
 				<? endforeach; ?>
 
 				</ul>
@@ -123,7 +121,7 @@ $order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $user["id"], "orde
 
 				 ?>
 
-					<li class="order_item<?= $order_item_log ? " log_entries" : "" ?>">
+					<li class="order_item<?= $order_item_log && count($order_item_log) > 1 ? " log_entries" : "" ?>">
 						<div class="info">
 							<span class="pickupdate"><?= date("d.m.Y", strtotime($order_item["pickupdate"])) ?></span>
 							<span class="department"><?= $order_item["department"] ?></span>
@@ -132,7 +130,7 @@ $order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $user["id"], "orde
 							<span class="order_date"><span class="date"><?= date("d.m.Y", strtotime($order_item["created_at"])) ?></span></span>
 							<span class="status"><?= $order_item["shipped_by"] ? "Leveret" : "Ikke leveret" ?></span>
 						</div>
-						<? if($order_item_log): ?>
+						<? if($order_item_log && count($order_item_log) > 1): ?>
 						<ul class="order_item_log_entries">
 						<? foreach($order_item_log AS $key => $entry): 
 							$log_user = $UC->getKbhffUser(["user_id" => $entry["user_id"]]);
@@ -181,7 +179,7 @@ $order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $user["id"], "orde
 				<h3>Bestillinger uden afhentningstid og -sted</h3>
 				<p>Skriv til <a href="mailto:it@kbhff.dk">it@kbhff.dk</a> for at føje tid/sted til disse bestillinger.</p>
 
-				<div class="info">
+				<div class="info header">
 					<span class="product">Vare</span>
 					<span class="order_no">Ordre nr.</span>
 					<span class="order_date">Bestilt</span>
@@ -194,14 +192,14 @@ $order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $user["id"], "orde
 
 				 ?>
 
-					<li class="order_item<?= $order_item_log ? " log_entries" : "" ?>">
+					<li class="order_item<?= $order_item_log && count($order_item_log) > 1 ? " log_entries" : "" ?>">
 						<div class="info">
 							<span class="product"><?= $order_item["quantity"] > 1 ? $order_item["quantity"]." x " : ""?><?= $order_item["name"] ?></span>
 							<span class="order_no"><?= $order_item["order_no"] ?></span>
 							<span class="order_date"><span class="date"><?= date("d.m.Y", strtotime($order_item["created_at"])) ?></span></span>
 						</div>
 
-						<? if($order_item_log): ?>
+						<? if($order_item_log && count($order_item_log) > 1): ?>
 						<ul class="order_item_log_entries">
 							<? foreach($order_item_log AS $key => $entry): 
 							$log_user = $UC->getKbhffUser(["user_id" => $entry["user_id"]]);

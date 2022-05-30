@@ -27,7 +27,7 @@ $order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $member_user_id, "
 
 
 
-<div class="scene profile user_profile order_history i:order_history">
+<div class="scene order_history i:order_history">
 
 	<div class="c-wrapper">
 		<div class="c-box obs">
@@ -46,25 +46,32 @@ $order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $member_user_id, "
 
 			<? if($upcoming_order_items || $past_order_items || $order_items_no_pickupdate): ?>
 
-				<? if($upcoming_order_items): ?>				
+				<? if($upcoming_order_items): ?>
 				<div class="upcoming_order_items">
 					<h3>Kommende bestillinger</h3>
+
+					<div class="info header">
+						<span class="pickupdate">Afhentes</span>
+						<span class="department">Afdeling</span>
+						<span class="product">Vare</span>
+						<span class="order_no">Ordre nr.</span>
+						<span class="order_date">Bestilt</span>
+					</div>
 					<ul class="order_items">
 
 					<? foreach($upcoming_order_items as $order_item):
-
-						
 						$order_item_log = $SC->getOrderItemLog($order_item["id"]);
-
 					 ?>
 
-						<li class="order_item">
-							<span class="pickupdate"><?= date("d.m.Y", strtotime($order_item["pickupdate"])) ?></span>
-							<span class="department">(<?= $order_item["department"] ?>):</span>
-							<span class="product"><?= $order_item["quantity"] > 1 ? $order_item["quantity"]." x " : ""?><?= $order_item["name"] ?></span> – 
-							<span class="order_no">Ordrenr. <?= $order_item["order_no"] ?> – </span>
-							<span class="order_date"><span class="date">Bestilt <?= date("d.m.Y", strtotime($order_item["created_at"])) ?></span></span>
-							<? if($order_item_log): ?>
+						<li class="order_item<?= $order_item_log && count($order_item_log) > 1 ? " log_entries" : "" ?>">
+							<div class="info">
+								<span class="pickupdate"><?= date("d.m.Y", strtotime($order_item["pickupdate"])) ?></span>
+								<span class="department"><?= $order_item["department"] ?></span>
+								<span class="product"><?= $order_item["quantity"] > 1 ? $order_item["quantity"]." x " : ""?><?= $order_item["name"] ?></span>
+								<span class="order_no"><?= $order_item["order_no"] ?></span>
+								<span class="order_date"><span class="date"><?= date("d.m.Y", strtotime($order_item["created_at"])) ?></span></span>
+							</div>
+							<? if($order_item_log && count($order_item_log) > 1): ?>
 							<ul class="order_item_log_entries">
 							<? foreach($order_item_log AS $key => $entry): 
 								$log_user = $UC->getKbhffUser(["user_id" => $entry["user_id"]]);
@@ -111,26 +118,35 @@ $order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $member_user_id, "
 				</div>
 				<? endif; ?>
 
-				<? if($past_order_items): ?>				
+				<? if($past_order_items): ?>
 				<div class="past_order_items">
 					<h3>Tidligere bestillinger</h3>
+
+					<div class="info header">
+						<span class="pickupdate">Afhentes</span>
+						<span class="department">Afdeling</span>
+						<span class="product">Vare</span>
+						<span class="order_no">Ordre nr.</span>
+						<span class="order_date">Bestilt</span>
+						<span class="status">Status</span>
+					</div>
 					<ul class="order_items">
 
 					<? foreach($past_order_items as $order_item):
-
-						
 						$order_item_log = $SC->getOrderItemLog($order_item["id"]);
 
 					 ?>
 
-						<li class="order_item">
-							<span class="pickupdate"><?= date("d.m.Y", strtotime($order_item["pickupdate"])) ?></span>
-							<span class="department">(<?= $order_item["department"] ?>):</span>
-							<span class="product"><?= $order_item["quantity"] > 1 ? $order_item["quantity"]." x " : ""?><?= $order_item["name"] ?></span> – 
-							<span class="order_no">Ordrenr. <?= $order_item["order_no"] ?> – </span>
-							<span class="order_date"><span class="date">Bestilt <?= date("d.m.Y", strtotime($order_item["created_at"])) ?></span></span>
-							<span class="delivery_status"><?= $order_item["shipped_by"] ? "– Leveret" : "– Ikke leveret" ?></span>
-							<? if($order_item_log): ?>
+						<li class="order_item<?= $order_item_log && count($order_item_log) > 1 ? " log_entries" : "" ?>">
+							<div class="info">
+								<span class="pickupdate"><?= date("d.m.Y", strtotime($order_item["pickupdate"])) ?></span>
+								<span class="department"><?= $order_item["department"] ?></span>
+								<span class="product"><?= $order_item["quantity"] > 1 ? $order_item["quantity"]." x " : ""?><?= $order_item["name"] ?></span>
+								<span class="order_no"><?= $order_item["order_no"] ?></span>
+								<span class="order_date"><span class="date"><?= date("d.m.Y", strtotime($order_item["created_at"])) ?></span></span>
+								<span class="status"><?= $order_item["shipped_by"] ? "Leveret" : "Ikke leveret" ?></span>
+							</div>
+							<? if($order_item_log && count($order_item_log) > 1): ?>
 							<ul class="order_item_log_entries">
 							<? foreach($order_item_log AS $key => $entry): 
 								$log_user = $UC->getKbhffUser(["user_id" => $entry["user_id"]]);
@@ -162,37 +178,45 @@ $order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $member_user_id, "
 									<span class="new_department">(<?= $entry["department"] ?>)</span>
 									<? endif; ?>
 								</li>
+
 								<? endif; ?>
 								<? endforeach; ?>
 							</ul>
 							<? endif; ?>
 						</li>
 
-
-
-					<? endforeach; ?>	
+					<? endforeach; ?>
 
 					</ul>
 				</div>
 				<? endif; ?>
 
-				<? if($order_items_no_pickupdate): ?>				
+				<? if($order_items_no_pickupdate): ?>
 				<div class="order_items_no_pickupdate">
 					<h3>Bestillinger uden afhentningstid og -sted</h3>
 					<p>Skriv til <a href="mailto:it@kbhff.dk">it@kbhff.dk</a> for at føje tid/sted til disse bestillinger.</p>
+
+					<div class="info header">
+						<span class="product">Vare</span>
+						<span class="order_no">Ordre nr.</span>
+						<span class="order_date">Bestilt</span>
+					</div>
+
 					<ul class="order_items">
 
 					<? foreach($order_items_no_pickupdate as $order_item):
 
-						
 						$order_item_log = $SC->getOrderItemLog($order_item["id"]);
 
 					 ?>
 
-						<li class="order_item">
-							<span class="product"><?= $order_item["quantity"] > 1 ? $order_item["quantity"]." x " : ""?><?= $order_item["name"] ?></span> – 
-							<span class="order_no">Ordrenr. <?= $order_item["order_no"] ?> – </span>
-							<span class="order_date"><span class="date">Bestilt <?= date("d.m.Y", strtotime($order_item["created_at"])) ?></span></span>							<? if($order_item_log): ?>
+						<li class="order_item<?= $order_item_log && count($order_item_log) > 1 ? " log_entries" : "" ?>">
+							<div class="info">
+								<span class="product"><?= $order_item["quantity"] > 1 ? $order_item["quantity"]." x " : ""?><?= $order_item["name"] ?></span>
+								<span class="order_no"><?= $order_item["order_no"] ?></span>
+								<span class="order_date"><span class="date"><?= date("d.m.Y", strtotime($order_item["created_at"])) ?></span></span>
+							</div>
+							<? if($order_item_log && count($order_item_log) > 1): ?>
 							<ul class="order_item_log_entries">
 								<? foreach($order_item_log AS $key => $entry): 
 								$log_user = $UC->getKbhffUser(["user_id" => $entry["user_id"]]);
@@ -229,7 +253,7 @@ $order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $member_user_id, "
 							<? endif; ?>
 						</li>
 
-					<? endforeach; ?>	
+					<? endforeach; ?>
 
 					</ul>
 				</div>
