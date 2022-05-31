@@ -973,7 +973,7 @@ class Tally extends Model {
 				
 				// send notification email to admin
 				mailer()->send(array(
-					"recipients" => ADMIN_EMAIL,
+					"recipients" => "it@kbhff.dk",
 					"subject" => SITE_URL . " - ACTION NEEDED: The tally ".$tally["name"]." has not been closed.",
 					"message" => "The tally ".$tally["name"]." has not been closed.",
 					"tracking" => false
