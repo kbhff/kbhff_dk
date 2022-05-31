@@ -159,7 +159,7 @@ class Tally extends Model {
 		}
 
 		$query = new Query();
-		$sql = "SELECT * FROM ".$this->db;		
+		$sql = "SELECT * FROM ".$this->db;
 		$where = [];
 
 		if($department_id || $status || $creation_date) {
@@ -190,7 +190,6 @@ class Tally extends Model {
 		}
 
 		$sql .= " ORDER BY $order";
-
 
 		if($query->sql($sql)) {
 			return $query->results();
@@ -981,8 +980,11 @@ class Tally extends Model {
 					// "template" => "system"
 				));		
 			}
+
+			return true;
 		}
 
+		return false;
 
 		// for each tally
 			// get tally department
