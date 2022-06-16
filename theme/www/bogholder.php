@@ -54,14 +54,14 @@ if($action) {
 
 			$TC->getPostedEntities();
 			
-			$creation_date = getPost("creation_date");
+			$created_at = getPost("created_at");
 
-			$csv = $TC->createCsv($creation_date);
+			$csv = $TC->createCsv($created_at);
 
 			header('Content-Description: File Transfer');
 			header('Content-Type: text/text');
 			header("Content-Type: application/force-download");
-			header('Content-Disposition: attachment; filename='.$creation_date."_kbhff_regnskab.csv");
+			header('Content-Disposition: attachment; filename='.$created_at."_kbhff_regnskab.csv");
 			header('Expires: 0');
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			header('Pragma: public');

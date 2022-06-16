@@ -143,7 +143,9 @@ class Tally extends Model {
 		$order = "name ASC";
 		
 		$department_id = false;
-		$creation_date = false;
+		$created_at = false;
+		$created_before = false;
+
 		$status = false;
 
 
@@ -151,41 +153,49 @@ class Tally extends Model {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
 					case "order"           : $order                = $_value; break;
+
 					case "department_id"   : $department_id        = $_value; break;
+
+					case "created_at"      : $created_at           = $_value; break;
+					case "created_before"  : $created_before       = $_value; break;
+
 					case "status"          : $status               = $_value; break;
-					case "creation_date"   : $creation_date        = $_value; break;
 				}
 			}
 		}
 
 		$query = new Query();
 		$sql = "SELECT * FROM ".$this->db;
-		$where = [];
 
-		if($department_id || $status || $creation_date) {
+		if($department_id || $status || $created_at || $created_before) {
 			$sql .= " WHERE ";
 		}
 
-		if($department_id) {
 
+		if($department_id) {
 			$sql .= "department_id = $department_id";
 		}
-		if($creation_date) {
+
+		if($created_at) {
 
 			if($department_id) {
-				
 				$sql .= " AND ";
 			}
-
-			$sql .= "created_at LIKE '$creation_date%'";
+			$sql .= "created_at LIKE '$created_at%'";
 		}
+		else if($created_before) {
+
+			if($department_id) {
+				$sql .= " AND ";
+			}
+			$sql .= "created_at < '$created_before'";
+		}
+
 		if($status) {
 
-			if($creation_date || $department_id) {
-				
+			if($created_before || $created_at || $department_id) {
 				$sql .= " AND ";
 			}
-
 			$sql .= "status = $status";
 		}
 
@@ -878,7 +888,7 @@ class Tally extends Model {
 		return false; 
 	}
 
-	function createCsv($creation_date) {
+	function createCsv($created_at) {
 
 		include_once("classes/system/department.class.php");
 		$DC = new Department();
@@ -887,7 +897,7 @@ class Tally extends Model {
 		$UC = new SuperUser();
 
 
-		$tallies = $this->getTallies(["creation_date" => $creation_date, "status" => 2, "order" => "department_id ASC"]);
+		$tallies = $this->getTallies(["created_at" => $created_at, "status" => 2, "order" => "department_id ASC"]);
 
 		$csv_arr = [];
 
@@ -965,7 +975,8 @@ class Tally extends Model {
 	function sendTallyNotClosedReminders($action) {
 
 		// get unclosed tallies from yesterday
-		$tallies = $this->getTallies(["creation_date" => date("Y-m-d", strtotime("Yesterday")), "status" => 1]);
+		$tallies = $this->getTallies(["created_before" => date("Y-m-d"), "status" => 1]);
+
 
 		if($tallies) {
 
@@ -973,9 +984,10 @@ class Tally extends Model {
 				
 				// send notification email to admin
 				mailer()->send(array(
+					// "recipients" => "martin@think.dk",
 					"recipients" => "it@kbhff.dk",
 					"subject" => SITE_URL . " - ACTION NEEDED: The tally ".$tally["name"]." has not been closed.",
-					"message" => "The tally ".$tally["name"]." has not been closed.",
+					"message" => "The tally ".$tally["name"]." has not been closed.\n\nYou can see the open tally here: ".SITE_URL."/butiksvagt/kasse/".$tally["id"],
 					"tracking" => false
 					// "template" => "system"
 				));		

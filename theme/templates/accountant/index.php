@@ -30,7 +30,7 @@ Klik på Næste.</li>
 		<?= $TC->formStart("download", ["class" => "labelstyle:inject form"]); ?>
 		<fieldset>
 			<div class="c-one-half">
-				<?= $TC->input("creation_date", [
+				<?= $TC->input("creation_at", [
 					"type" => "date",
 					"label" => "Afregningsdato",
 					"required" => true,
