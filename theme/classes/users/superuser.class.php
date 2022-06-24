@@ -1499,7 +1499,7 @@ IT
 
 			include_once("classes/shop/pickupdate.class.php");
 			$PC = new Pickupdate;
-			
+
 			$recipients = [];
 			$values = [];
 
