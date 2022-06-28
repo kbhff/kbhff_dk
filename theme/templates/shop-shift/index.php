@@ -9,71 +9,77 @@ $UC = new SuperUser();
 include_once("classes/shop/pickupdate.class.php");
 $PC = new Pickupdate();
 
+$shop_shift_subnavigation = $this->navigation("sub-butiksvagt");
+
+
 $department = $UC->getUserDepartment(["user_id" => session()->value("user_id")]);
 
-$tally = $TC->getTally(["department_id" => $department ? $department["id"] : false]);
-$tally_id = $tally ? $tally["id"] : false;
+if($department) {
 
-$pickupdate = false;
+	$tally = $TC->getTally(["department_id" => $department["id"]]);
+	$tally_id = $tally ? $tally["id"] : false;
 
-// get today's pickupdate, or closest past pickupdate (look 1 week back)
-$previous_pickupdate = $PC->getPickupdates(["after" => date("Y-m-d", strtotime("-8 days")), "before" => date("Y-m-d")]);
-// get future pickupdates
-$upcoming_pickupdates = $PC->getPickupdates(["after" => date("Y-m-d"), "before" => date("Y-m-d", strtotime("+15 days"))]);
+	$pickupdate = false;
 
-$all_pickupdates = false;
-if($previous_pickupdate && $upcoming_pickupdates) {
-	$all_pickupdates = array_merge($previous_pickupdate, $upcoming_pickupdates);
-}
-elseif ($previous_pickupdate) {
-	$all_pickupdates = $previous_pickupdate;
-}
-elseif ($upcoming_pickupdates) {
-	$all_pickupdates = $upcoming_pickupdates;
-}
+	// get today's pickupdate, or closest past pickupdate (look 1 week back)
+	$previous_pickupdate = $PC->getPickupdates(["after" => date("Y-m-d", strtotime("-8 days")), "before" => date("Y-m-d")]);
+	// get future pickupdates
+	$upcoming_pickupdates = $PC->getPickupdates(["after" => date("Y-m-d"), "before" => date("Y-m-d", strtotime("+15 days"))]);
 
-$pickupdate_is_today = true;
-if($action) {
-	$pickupdate = $PC->getPickupdate(["id" => $action[0]]);
-	$pickupdate_is_today = false;
-}
-if(!$pickupdate) {
-	$pickupdate = $PC->getPickupdate(["pickupdate" => date("Y-m-d")]);
-}
-if(!$pickupdate) {
+	$all_pickupdates = false;
+	if($previous_pickupdate && $upcoming_pickupdates) {
+		$all_pickupdates = array_merge($previous_pickupdate, $upcoming_pickupdates);
+	}
+	elseif ($previous_pickupdate) {
+		$all_pickupdates = $previous_pickupdate;
+	}
+	elseif ($upcoming_pickupdates) {
+		$all_pickupdates = $upcoming_pickupdates;
+	}
+
+	$pickupdate_is_today = true;
+	if($action) {
+		$pickupdate = $PC->getPickupdate(["id" => $action[0]]);
+		$pickupdate_is_today = false;
+	}
+	if(!$pickupdate) {
+		$pickupdate = $PC->getPickupdate(["pickupdate" => date("Y-m-d")]);
+	}
+	if(!$pickupdate) {
 	
-	$next_pickupdate = $upcoming_pickupdates ? $upcoming_pickupdates[0] : false;
-	$pickupdate = $next_pickupdate;
-	$pickupdate_is_today = false;
-}
+		$next_pickupdate = $upcoming_pickupdates ? $upcoming_pickupdates[0] : false;
+		$pickupdate = $next_pickupdate;
+		$pickupdate_is_today = false;
+	}
 
 
-$department_pickupdate_order_items = $pickupdate ? $SC->getPickupdateOrderItems($pickupdate["id"], ["department_id" => $department["id"], "order" => "nickname, created_at ASC"]) : false;
+	$department_pickupdate_order_items = $pickupdate ? $SC->getPickupdateOrderItems($pickupdate["id"], ["department_id" => $department["id"], "order" => "nickname, created_at ASC"]) : false;
 
-$order_items_total_quantity = 0;
-$order_items_total_delivered_quantity = 0;
-$order_items_total_undelivered_quantity = 0;
+	$order_items_total_quantity = 0;
+	$order_items_total_delivered_quantity = 0;
+	$order_items_total_undelivered_quantity = 0;
 
-if($department_pickupdate_order_items) {
+	if($department_pickupdate_order_items) {
 
-	foreach ($department_pickupdate_order_items as $order_item) {
+		foreach ($department_pickupdate_order_items as $order_item) {
 		
-		$order_items_total_quantity += $order_item["quantity"];
-		if(isset($order_item["shipped_by"])) {
-			$order_items_total_delivered_quantity += $order_item["quantity"];
-		}
-		else {
-			$order_items_total_undelivered_quantity += $order_item["quantity"];
+			$order_items_total_quantity += $order_item["quantity"];
+			if(isset($order_item["shipped_by"])) {
+				$order_items_total_delivered_quantity += $order_item["quantity"];
+			}
+			else {
+				$order_items_total_undelivered_quantity += $order_item["quantity"];
+			}
 		}
 	}
+
 }
 
-$shop_shift_subnavigation = $this->navigation("sub-butiksvagt");
 
 ?>
 
 <div class="scene shop_shift i:shop_shift">
-	
+
 	<div class="banner i:banner variant:1 format:jpg"></div>
 
 	<? if($shop_shift_subnavigation && isset($shop_shift_subnavigation["nodes"])) { ?>
@@ -83,6 +89,9 @@ $shop_shift_subnavigation = $this->navigation("sub-butiksvagt");
 		<? endforeach;?>
 	</ul>
 	<? } ?>
+
+
+<? if($department): ?>
 
 	<h1>Ordreliste <span class="value"><?= $department["name"] ?: " - " ?></h1>
 	<? if($all_pickupdates && $pickupdate): ?>
@@ -105,7 +114,7 @@ $shop_shift_subnavigation = $this->navigation("sub-butiksvagt");
 		<div class="c-one-third tally">
 
 			<ul class="actions">
-				<li class="shop"><a href="/butiksvagt/kasse/<?= $tally_id ?>" class="button primary">Åbn kasseregnskab</a></li>
+				<li class="shop"><a href="/butiksvagt/kasse/<?= $tally_id ? $tally_id : "opret/".$department["id"] ?>" class="button primary">Åbn kasseregnskab</a></li>
 			</ul>
 
 		</div>
@@ -172,5 +181,11 @@ $shop_shift_subnavigation = $this->navigation("sub-butiksvagt");
 	</div>
 	<? endif; ?>
 
+<? else: ?>
+
+	<h1>Du er ikke tilknyttet en afdeling.</h1>
+	<p>Du kan kun være butiksvagt i den afdeling du er tilknyttet.</p>
+
+<? endif; ?>
 	
 </div>

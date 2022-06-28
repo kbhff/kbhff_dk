@@ -30,6 +30,7 @@ if($action) {
 
 		$tally_id = $action[1];
 
+
 		// /butiksvagt/kasse/#tally_id#
 		if(count($action) == 2) {
 	
@@ -38,6 +39,15 @@ if($action) {
 				"type" => "admin"
 			]);
 	
+			exit();
+	
+		}
+		// /butiksvagt/kasse/opret/#department_id#
+		else if(count($action) == 3 && $action[1] == "opret") {
+	
+			$tally = $TC->getTally(["department_id" => $action[2], "create" => true]);
+
+			header("Location: /butiksvagt/kasse/".$tally["id"]);
 			exit();
 	
 		}

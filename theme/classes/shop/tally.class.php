@@ -127,11 +127,9 @@ class Tally extends Model {
 			"error_message" => "Fejl"
 		]);
 
-
-
-
 	}
-	
+
+
 	/**
 	 * Get list of tallies from database.
 	 *
@@ -272,14 +270,18 @@ class Tally extends Model {
 		$id = false;
 		$name = false;
 		$department_id = false;
-		
+
+		$create_tally = false;
+
 		// Search through $_options to find recognized parameters
 		if($_options !== false) {
 			foreach($_options as $_option => $_value) {
 				switch($_option) {
 					case "id"                   : $id             = $_value; break;
 					case "name"                 : $name           = $_value; break;
-					case "department_id"       : $department_id  = $_value; break;
+					case "department_id"        : $department_id  = $_value; break;
+
+					case "create"               : $create_tally   = $_value; break;
 				}
 			}
 		}
@@ -306,7 +308,9 @@ class Tally extends Model {
 			if($query->sql($sql)) {
 				return $query->result(0);
 			}
-			else {
+
+			// No tally exists, and ok to create new tally
+			else if($create_tally) {
 
 				include_once("classes/system/department.class.php");
 				$DC = new Department;
@@ -406,7 +410,7 @@ class Tally extends Model {
 				$user_id = session()->value("user_id");
 				$page->addLog("Tally: tally_id:$id updated by user_id:$user_id; sql = '$sql'");
 
-				return $this->getTally(["id"=>$id]);
+				return $this->getTally(["id" => $id]);
 			}
 
 		}
@@ -577,8 +581,6 @@ class Tally extends Model {
 		return false;
 
 	}
-
-
 
 	function deleteRevenue($action) {
 

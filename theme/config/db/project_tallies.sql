@@ -10,14 +10,13 @@ CREATE TABLE `SITE_DB`.`project_tallies` (
 
   `comment` text NOT NULL DEFAULT '',
 
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `modified_at` timestamp NULL DEFAULT NULL,
-
   `status` int(11) NOT NULL DEFAULT 1,
 
   `opened_by` int(11) NOT NULL,
   `closed_by` int(11) DEFAULT NULL,
 
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified_at` timestamp NULL DEFAULT NULL,
 
 
   PRIMARY KEY (`id`),

@@ -58,7 +58,7 @@ class SuperShop extends SuperShopCore {
 						include_once("classes/shop/tally.class.php");
 						$TC = new Tally();
 
-						$tally = $TC->getTally(["department_id" => $department["id"]]);
+						$tally = $TC->getTally(["department_id" => $department["id"], "create" => true]);
 
 						if($tally) {
 
