@@ -32,9 +32,9 @@ $this->pageTitle("Kasseregnskab");
 
 			<dl class="info">
 				<dt>Afdeling:</dt>
-				<dd><?=$department["name"] ?></dd>
+				<dd><?= $department["name"] ?></dd>
 				<dt>Oprettet:</dt>
-				<dd><?=date("d.m.Y H:i:s") ?></dd>
+				<dd><?= date("d.m.Y H:i:s", strtotime($tally["created_at"])) ?></dd>
 			</dl>
 
 			<p>Som kassemester/butiksvagt skal du holde øje med ind- og udbetalinger af kontanter under din vagt. På denne side skal du derfor udfylde nedenstående felter i løbet af vagten. Du kan løbende klikke “Gem og gå tilbage”, men til sidst i vagten er det vigtigt at du klikker “Godkend regnskab og luk kasse”, så kassen er klar til at blive udfyldt i næste uge.</p>
