@@ -3,10 +3,17 @@ Util.Modules["shop"] = new function() {
 //		u.bug("scene init:", this);
 
 		scene.resized = function() {
-//			u.bug("scene.resized:", this);
+			u.bug("scene.resized:", this, u.absY(this.sidebar));
 
 			if(this.sidebar) {
+
+				u.ass(this.sidebar, {
+					top: 0
+				});
+
 				this.sidebar.start_y = u.absY(this.sidebar);
+
+				this.scrolled();
 			}
 
 		}
@@ -16,10 +23,12 @@ Util.Modules["shop"] = new function() {
 
 			if(this.sidebar) {
 
-				if(page.offsetHeight - 52 - page.scrolled_y < this.sidebar.offsetHeight) {
-					// do nothing
-				}
-				else if(this.sidebar.start_y < page.scrolled_y) {
+				// if((page.offsetHeight - 52) - page.scrolled_y < this.sidebar.start_y) {
+				// 	u.bug("yay")
+				// 	// do nothing
+				// }
+				// else
+				if(this.sidebar.start_y < page.scrolled_y) {
 					if(!this.sidebar.is_fixed) {
 						this.sidebar.is_fixed = true;
 						u.ac(this.sidebar, "fixed");
@@ -31,6 +40,9 @@ Util.Modules["shop"] = new function() {
 				else if(this.sidebar.is_fixed) {
 					this.sidebar.is_fixed = false;
 					u.rc(this.sidebar, "fixed");
+					u.ass(this.sidebar, {
+						top: 0
+					});
 				}
 
 			}
