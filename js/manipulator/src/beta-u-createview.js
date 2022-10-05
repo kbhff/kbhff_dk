@@ -13,14 +13,16 @@
  * @param {string} _options.data_url - External source of data
  * @param _options.target - Element to append view onto
  * @param _options.initializer - Attach an initializer to rendered template
- * @param _options.callback_rendered - Callback rendered
+ * @param _options.callback_rendered - Callback initial render
+ * @param _options.callback_state_changed - Callback on each stateChange
+ * 
  * @returns node - view
 */
 u.createView = function(_options) {
 
 	// u.bug("u.createView", _options);
 
-
+	
 	var template = false;
 	var template_url = false;
 
@@ -36,28 +38,30 @@ u.createView = function(_options) {
 
 
 	var callback_rendered = "templateRendered";
+	var callback_state_changed = "templateStateChanged";
 
 
 	// apply parameters
-	if (obj(_options)) {
+	if(obj(_options)) {
 		var _argument;
 		for(_argument in _options) {
 			switch(_argument) {
 
-				case "template"          : template            = _options[_argument]; break;
-				case "template_path"     : template_path       = _options[_argument]; break;
+				case "template"               : template = _options[_argument]; break;
+				case "template_path"          : template_path = _options[_argument]; break;
+				case "template_url"           : template_url = _options[_argument]; break;
 
-				case "template_url"      : template_url        = _options[_argument]; break;
-				case "type"              : type                = _options[_argument]; break;
+				case "type"                   : type = _options[_argument]; break;
 
-				case "data"              : data                = _options[_argument]; break;
-				case "data_url"          : data_url            = _options[_argument]; break;
+				case "data"                   : data = _options[_argument]; break;
+				case "data_url"               : data_url = _options[_argument]; break;
 
-				case "target"            : target              = _options[_argument]; break;
+				case "target"                 : target = _options[_argument]; break;
 
-				case "initializer"       : initializer         = _options[_argument]; break;
+				case "initializer"            : initializer = _options[_argument]; break;
 
-				case "callback_rendered" : callback_rendered   = _options[_argument]; break;
+				case "callback_rendered"      : callback_rendered = _options[_argument]; break;
+				case "callback_state_changed" : callback_state_changed = _options[_argument]; break;
 
 			}
 		}
@@ -68,7 +72,7 @@ u.createView = function(_options) {
 
 	if(target) {
 
-		view = u.ae(target, "div", {class:"view loading"});
+		view = u.ae(target, "div", {class: "view loading"});
 
 	}
 	else {
@@ -102,13 +106,13 @@ u.createView = function(_options) {
 		this._rv_template = false;
 
 		// apply parameters
-		if (obj(_options)) {
+		if(obj(_options)) {
 			var _argument;
 			for(_argument in _options) {
 				switch(_argument) {
 
-					case "template"          : template            = _options[_argument]; break;
-					case "data"              : data                = _options[_argument]; break;
+					case "template"      : template           = _options[_argument]; break;
+					case "data"          : data               = _options[_argument]; break;
 
 				}
 			}
@@ -116,6 +120,7 @@ u.createView = function(_options) {
 
 
 		if(template) {
+			// u.bug("template")
 
 			this._rv_template = template;
 			this._stateChanged();
@@ -129,13 +134,13 @@ u.createView = function(_options) {
 
 
 		if(data) {
-			// u.bug("data", data);
 
 			this._rv_data = data;
 			this._stateChanged();
 
 		}
 		else if(data_url) {
+			// u.bug("data_url")
 
 			this.loadData();
 
@@ -145,7 +150,7 @@ u.createView = function(_options) {
 
 
 	view.loadTemplate = function() {
-		// u.bug("loadTemplate", this._rv_template_path + this._rv_template_url.url)
+		// u.bug("loadTemplate", this._rv_template_path + this._rv_template_url.url);
 
 		this._rv_template = false;
 
@@ -160,18 +165,17 @@ u.createView = function(_options) {
 
 		// Get template
 		u.request(this, this._rv_template_path + this._rv_template_url.url, {
-			"method":(this._rv_template_url.method ? this._rv_template_url.method : "GET"),
-			"data":(this._rv_template_url.data ? this._rv_template_url.data : ""),
-
-
-			"callback":"_templateLoaded"
+			"method": (this._rv_template_url.method ? this._rv_template_url.method : "GET"),
+			"data": (this._rv_template_url.data ? this._rv_template_url.data : ""),
+			"callback": "_templateLoaded"
 		});
 
 	}
 
 
 	view.loadData = function(_options) {
-	
+		// u.bug("loadData", this._rv_data_url);
+
 		this._rv_data = false;
 
 		this._dataLoaded = function(response) {
@@ -181,10 +185,9 @@ u.createView = function(_options) {
 		}
 
 		u.request(this, this._rv_data_url.url, {
-			"method":(this._rv_template_url.method ? this._rv_template_url.method : "GET"),
-			"data":(this._rv_template_url.data ? this._rv_template_url.data : ""),
-
-			callback: "_dataLoaded"
+			"method": (this._rv_template_url.method ? this._rv_template_url.method : "GET"),
+			"data": (this._rv_template_url.data ? this._rv_template_url.data : ""),
+			"callback": "_dataLoaded"
 		});
 
 	}
@@ -212,22 +215,35 @@ u.createView = function(_options) {
 			// }
 
 			// Only load initializer once
-			if (!this._initialized && this._rv_initializer) {
+			if(!this._initialized && this._rv_initializer) {
 				// console.log("View init: ", this);
 				this._initialized = true;
 
-				Util.Modules[view._rv_initializer].init(this);
+				if(obj(Util.Modules[this._rv_initializer])) {
+					Util.Modules[this._rv_initializer].init(this);
+				}
+
+				if(fun(this[callback_rendered])) {
+					this[callback_rendered]();
+				}
 			}
+			else {
+				if(fun(this[callback_rendered])) {
+					this[callback_rendered]();
+				}
+			}
+
 
 			// Init any i:{init} present in view
 			u.init(this);
 
-			if(this[callback_rendered]) {
-				this[callback_rendered]();
+
+			if(fun(this[callback_state_changed])) {
+				this[callback_state_changed]();
 			}
 
 
-			u.rc(this, "loading");
+			// u.rc(this, "loading");
 		}
 	}
 
