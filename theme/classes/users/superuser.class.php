@@ -1386,6 +1386,7 @@ IT
 
 			}
 
+			message()->addMessage("Preferencer er gemt.");
 			return true;
 
 		}
