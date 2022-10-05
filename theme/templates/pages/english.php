@@ -79,7 +79,7 @@ $english_subnavigation = $this->navigation("sub-english");
 			<div class="c-box actions">
 				<h3>Shortcuts</h3>
 				<ul class="actions">
-					<li><a href="http://kbhffwiki.org/tiki-index.php?page=Vagtplaner" class="shift">Take a shift</a></li>
+					<li><a href="https://wiki.kbhff.dk/tiki-index.php?page=Vagtplaner" class="shift">Take a shift</a></li>
 					<li><a href="/butik" class="order">Order a bag</a></li>
 					<li><a href="/bliv-medlem" class="member">Become a member</a></li>
 				</ul>

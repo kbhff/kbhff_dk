@@ -114,7 +114,7 @@ $post_items = $IC->getItems([
 				<h3>Genveje</h3>
 				<ul class="actions">
 					<? if(session()->value("user_id") != 1): ?>
-					<li><a href="http://kbhffwiki.org/tiki-index.php?page=Vagtplaner" class="shift">Ta' en vagt</a></li>
+					<li><a href="https://wiki.kbhff.dk/tiki-index.php?page=Vagtplaner" class="shift">Ta' en vagt</a></li>
 					<? endif; ?>
 					<li><a href="/butik" class="order">Bestil en pose</a></li>
 					<li><a href="/bliv-medlem" class="member">Bliv medlem</a></li>
