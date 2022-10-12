@@ -67,7 +67,7 @@
 		<ul class="servicenavigation">
 			<li class="keynav navigation nofollow"><a href="#navigation">To navigation</a></li>
 <?		if(session()->value("user_id") && session()->value("user_group_id") > 1): ?>
-			<li class="keynav wiki nofollow"><a href="http://kbhffwiki.org" target="_blank">Wiki</a></li>
+			<li class="keynav wiki nofollow"><a href="https://wiki.kbhff.dk" target="_blank">Wiki</a></li>
 			<?= $HTML->link("Janitor", "/janitor", ["wrapper" => "li.keynav.front"]) ?>
 			<li class="keynav user nofollow"><a href="/login/logoff">Logoff</a></li>
 <?		else: ?>
