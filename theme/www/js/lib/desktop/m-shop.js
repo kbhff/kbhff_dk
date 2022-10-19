@@ -7,9 +7,9 @@ Util.Modules["shop"] = new function() {
 
 			if(this.sidebar) {
 
-				u.ass(this.sidebar, {
-					top: 0
-				});
+				// u.ass(this.sidebar, {
+				// 	top: 0
+				// });
 
 				this.sidebar.start_y = u.absY(this.sidebar);
 
@@ -28,20 +28,23 @@ Util.Modules["shop"] = new function() {
 				// 	// do nothing
 				// }
 				// else
-				if(this.sidebar.start_y < page.scrolled_y) {
+				if(this.sidebar.start_y < page.scrolled_y && this.sidebar.offsetHeight < page.browser_h) {
+					// u.bug("fix", "translate3d(0, "+(page.scrolled_y - this.sidebar.start_y)+"px)")
 					if(!this.sidebar.is_fixed) {
 						this.sidebar.is_fixed = true;
 						u.ac(this.sidebar, "fixed");
 					}
 					u.ass(this.sidebar, {
-						top: page.scrolled_y - this.sidebar.start_y + "px"
+						transform: "translate3d(0, "+(page.scrolled_y - this.sidebar.start_y)+"px, 0)",
+						// top: page.scrolled_y - this.sidebar.start_y + "px"
 					});
 				}
 				else if(this.sidebar.is_fixed) {
 					this.sidebar.is_fixed = false;
 					u.rc(this.sidebar, "fixed");
 					u.ass(this.sidebar, {
-						top: 0
+						transform: "none",
+						// top: 0
 					});
 				}
 
