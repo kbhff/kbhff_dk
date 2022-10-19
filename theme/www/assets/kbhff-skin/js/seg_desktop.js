@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2022-10-05 18:25:15
+asset-builder @ 2022-10-19 20:02:01
 */
 
 /*seg_desktop_include.js*/
@@ -7597,12 +7597,17 @@ Util.Modules["banner"] = new function() {
 	this.init = function(div) {
 		var variant = u.cv(div, "variant");
 		var format = u.cv(div, "format");
-		if (variant == "random" || !variant) {
+		if(variant == "random" || !variant) {
 			variant = u.random(1, 4);
 		}
 		var image = u.ae(div, "img", {class:"fit-width"});	
 		u.ae(div, "div", {class:"logo"});
 		image.loaded = function(queue) {
+			this.onload = function() {
+				if(page) {
+					page.resized();
+				}
+			}
 			this.src = queue[0].image.src;
 			if(page) {
 				page.resized();

@@ -4,7 +4,7 @@ Util.Modules["banner"] = new function() {
 		var variant = u.cv(div, "variant");
 		var format = u.cv(div, "format");
 
-		if (variant == "random" || !variant) {
+		if(variant == "random" || !variant) {
 			variant = u.random(1, 4);
 		}
 
@@ -13,6 +13,12 @@ Util.Modules["banner"] = new function() {
 		u.ae(div, "div", {class:"logo"});
 
 		image.loaded = function(queue) {
+
+			this.onload = function() {
+				if(page) {
+					page.resized();
+				}
+			}
 
 			this.src = queue[0].image.src;
 
