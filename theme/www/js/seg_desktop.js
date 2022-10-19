@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2022-10-05 18:53:36
+asset-builder @ 2022-10-19 21:32:51
 */
 
 /*seg_desktop_include.js*/
@@ -7588,12 +7588,17 @@ Util.Modules["banner"] = new function() {
 	this.init = function(div) {
 		var variant = u.cv(div, "variant");
 		var format = u.cv(div, "format");
-		if (variant == "random" || !variant) {
+		if(variant == "random" || !variant) {
 			variant = u.random(1, 4);
 		}
 		var image = u.ae(div, "img", {class:"fit-width"});	
 		u.ae(div, "div", {class:"logo"});
 		image.loaded = function(queue) {
+			this.onload = function() {
+				if(page) {
+					page.resized();
+				}
+			}
 			this.src = queue[0].image.src;
 			if(page) {
 				page.resized();
@@ -8358,9 +8363,6 @@ Util.Modules["shop"] = new function() {
 		scene.resized = function() {
 			u.bug("scene.resized:", this, u.absY(this.sidebar));
 			if(this.sidebar) {
-				u.ass(this.sidebar, {
-					top: 0
-				});
 				this.sidebar.start_y = u.absY(this.sidebar);
 				this.scrolled();
 			}
@@ -8368,20 +8370,20 @@ Util.Modules["shop"] = new function() {
 		scene.scrolled = function() {
 			if(this.sidebar) {
 				// 	
-				if(this.sidebar.start_y < page.scrolled_y) {
+				if(this.sidebar.start_y < page.scrolled_y && this.sidebar.offsetHeight < page.browser_h) {
 					if(!this.sidebar.is_fixed) {
 						this.sidebar.is_fixed = true;
 						u.ac(this.sidebar, "fixed");
 					}
 					u.ass(this.sidebar, {
-						top: page.scrolled_y - this.sidebar.start_y + "px"
+						transform: "translate3d(0, "+(page.scrolled_y - this.sidebar.start_y)+"px, 0)",
 					});
 				}
 				else if(this.sidebar.is_fixed) {
 					this.sidebar.is_fixed = false;
 					u.rc(this.sidebar, "fixed");
 					u.ass(this.sidebar, {
-						top: 0
+						transform: "none",
 					});
 				}
 			}
