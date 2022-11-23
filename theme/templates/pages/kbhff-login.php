@@ -69,7 +69,7 @@ $username = stringOr(getPost("username"), session()->value("temp-username"));
 	</p>
 <? endif; ?>
 
-	<?= $model->formStart("dual", array("class" => "login labelstyle:inject")) ?>
+	<?= $model->formStart("login", array("class" => "login labelstyle:inject")) ?>
 
 	
 
