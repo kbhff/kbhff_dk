@@ -287,7 +287,7 @@ class HTML extends HTMLCore {
 
 
 	// Create pagination element
-	function pagination($pagination_items, $_options = false) {
+	function frontendPagination($pagination_items, $_options = false) {
 
 
 		// Make links for page or sindex

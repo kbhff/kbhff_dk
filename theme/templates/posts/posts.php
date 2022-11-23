@@ -85,7 +85,7 @@ $categories = $IC->getTags(array("context" => $itemtype, "order" => "value"));
 			</ul>
 
 
-			<?= $HTML->pagination($items, [
+			<?= $HTML->frontendPagination($items, [
 				"base_url" => "/nyheder",
 			]) ?>
 
