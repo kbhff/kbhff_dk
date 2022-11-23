@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2021-06-23 15:33:15
+asset-builder @ 2022-11-23 22:07:41
 */
 
 /*seg_smartphone_include.css*/
@@ -620,6 +620,7 @@ body.invoice #content div.scene .payment_info {position: absolute; bottom: 50px;
 #content .defaultList.userList > ul.actions li.online {float: right; padding: 0 0 10px 10px;}
 #content .defaultList.userList > ul.actions li.unverified_usernames {float: right; padding: 0 0 10px 10px;}
 #content .defaultEdit.userEdit > ul.actions li.cancel {float: right; padding: 0 0 10px 10px;}
+#content .defaultEdit.userEdit > ul.actions li.notice {float: right; padding: 8px 0 10px 10px;}
 #content .scene.userEdit > div.usernames {border-bottom: 1px solid #bbbbbb;}
 #content .scene.userEdit > div.usernames div.email {padding-bottom: 20px; position: relative;}
 #content .scene.userEdit > div.usernames form.email {font-size: 0; display: inline-block; vertical-align: top;}
@@ -721,6 +722,11 @@ body.invoice #content div.scene .payment_info {position: absolute; bottom: 50px;
 #content .defaultEdit.userMember ul.actions li.user {float: right; padding: 0 0 10px 10px;}
 #content .defaultEdit.userMember div.orders {border-bottom: 1px solid #bbbbbb;}
 #content .defaultEdit.userMember div.orders ul.items {padding-bottom: 25px;}
+#content .scene.memberList ul.items > li dl.info dt.custom_price {display: none;}
+#content .scene.memberList ul.items > li dl.info dd.custom_price {position: absolute; top: 10px; right: 90px; font-size: 22px;}
+#content .scene.memberList ul.items > li dl.info dt.price {display: none;}
+#content .scene.memberList ul.items > li dl.info dd.price {position: absolute; top: 10px; right: 90px; font-size: 22px;}
+#content .scene.memberList ul.items > li dl.info dd.custom_price ~ dd.price {text-decoration: line-through; top: 40px; font-size: 18px;}
 #content .defaultList.userContentList div.comments ul.items > li {}
 #content .defaultList.usersNotVerified > ul.actions li.remind_selected,
 #content .defaultList.usersNotVerified > ul.actions li.remind {float: right; padding: 0 0 10px 10px;}
@@ -849,16 +855,16 @@ body.invoice #content div.scene .payment_info {position: absolute; bottom: 50px;
 #content div.all_items ul.items > li ul.info+ul.actions li,
 #content div.all_items ul.items > li p+ul.actions li,
 #content div.all_items ul.items > li ul.tags+ul.actions li {padding-top: 10px;}
-#content div.all_items div.filter {padding: 10px 0 4px; min-height: 28px; background: #f5f7f8; border-bottom: 1px solid #bbbbbb; position: relative; overflow: hidden;}
-#content div.all_items div.filter ul.tags {padding-right: 15px;}
-#content div.all_items div.filter ul.tags li {font-size: 15px; background-color: #dedede; color: #313942; cursor: pointer;}
-#content div.all_items div.filter ul.tags li.selected,
-#content div.all_items div.filter ul.tags li:active {background-color: #313942; color: #ffffff;}
-#content div.all_items div.filter.filtering {background: red;}
-#content div.all_items div.filter form {}
-#content div.all_items div.filter .field {padding: 0 13px 6px;}
-#content div.all_items div.filter .field label {display: none;}
-#content div.all_items div.filter .field input {}
+#content div.filter {padding: 10px 0 4px; min-height: 28px; background: #f5f7f8; border-bottom: 1px solid #bbbbbb; position: relative; overflow: hidden;}
+#content div.filter ul.tags {padding-right: 15px;}
+#content div.filter ul.tags li {font-size: 15px; background-color: #dedede; color: #313942; cursor: pointer;}
+#content div.filter ul.tags li.selected,
+#content div.filter ul.tags li:active {background-color: #313942; color: #ffffff;}
+#content div.filter.filtering {background: red;}
+#content div.filter form {}
+#content div.filter .field {padding: 0 13px 6px;}
+#content div.filter .field label {display: none;}
+#content div.filter .field input {}
 #content div.all_items.sortable ul.items > li.item div.drag {width: 30px; height: 30px; position: absolute; top: 4px; left: 7px; 
 	background: transparent url(../assets/janitor/admin/img/bg_icons2.png) no-repeat 10px -440px; cursor: move;
 }
@@ -913,10 +919,22 @@ body.invoice #content div.scene .payment_info {position: absolute; bottom: 50px;
 }
 #content .scene.defaultEdit > div.media form.upload div.field.files.loading ul.filelist li {visibility: hidden;}
 #content .scene.defaultEdit > div.media div.preview {position: relative; margin: 0 28px 10px; background-color: #dedede; background-position: center center; background-repeat: no-repeat; height: 120px;}
-#content .scene.defaultEdit > div.media div.preview div.play {padding: 0; position: absolute; top: 0; left: 0; width: 30px; height: 30px; display: block; text-indent: -9999px; border: none; border-radius: 0; cursor: pointer; border-bottom-right-radius: 5px;
-	background-color: #ffffff; background-repeat: no-repeat; background-position: 6px -248px;
-	background-image: url(../assets/janitor/admin/img/bg_icons.png);
-	background-size: 40px auto;
+#content .scene.defaultEdit > div.media div.preview div.controls {padding: 0; position: absolute; top: 0; left: 0; width: 60px; height: 30px; display: block; border-radius: 0; cursor: pointer; border-bottom-right-radius: 5px; overflow: hidden;}
+#content .scene.defaultEdit > div.media div.preview div.play {width: 30px; height: 30px; display: inline-block;
+	background-color: #ffffff; background-repeat: no-repeat; background-position: 5px 5px;
+	background-image: url(../assets/janitor/admin/img/bn_play.svg);
+	background-size: 20px auto;
+}
+#content .scene.defaultEdit > div.media div.preview.playing div.play {
+	background-image: url(../assets/janitor/admin/img/bn_pause.svg);
+}
+#content .scene.defaultEdit > div.media div.preview div.mute {width: 30px; height: 30px; display: inline-block;
+	background-color: #ffffff; background-repeat: no-repeat; background-position: 5px 5px;
+	background-image: url(../assets/janitor/admin/img/bn_audio.svg);
+	background-size: 20px auto;
+}
+#content .scene.defaultEdit > div.media div.preview.muted div.mute {
+	background-image: url(../assets/janitor/admin/img/bn_audio_off.svg);
 }
 #content .scene.defaultEdit > div.media div.preview.pdf,
 #content .scene.defaultEdit > div.media div.preview.zip {
@@ -927,7 +945,7 @@ body.invoice #content div.scene .payment_info {position: absolute; bottom: 50px;
 #content .scene.defaultEdit > div.media ul.previewlist {padding: 0 20px 10px; text-align: left; position: relative;}
 #content .scene.defaultEdit > div.media ul.previewlist > li {margin: 0 10px 20px; position: relative;}
 #content .scene.defaultEdit > div.media ul.previewlist > li.dragged {z-index: 2;}
-#content .scene.defaultEdit > div.media ul.previewlist > li div.preview {height: 100%; margin: 0; width: 100px; min-width: 50px; height: 120px;}
+#content .scene.defaultEdit > div.media ul.previewlist > li div.preview {margin: 0; width: 100px; min-width: 50px; height: 120px;}
 #content .scene.defaultEdit > div.media div.preview form.edit {background-color: rgba(0,0,0, 0.7); position: absolute; bottom: 0; left: 0; width: 100%;}
 #content .scene.defaultEdit > div.media div.preview form.edit div.field {padding: 0px 3px;}
 #content .scene.defaultEdit > div.media div.preview form.edit div.field input {font-size: 13px; width: calc(100% - 18px);}

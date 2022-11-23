@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2022-10-19 21:32:51
+asset-builder @ 2022-11-23 22:07:30
 */
 
 /*seg_desktop_include.css*/
@@ -1847,6 +1847,25 @@ div.overlay .field.password {
 #content .scene.purchasing .c-wrapper.order-list ul.list li.totals span.order_item_count {
 	border-left: 1px solid #999999;
 }
+#content .scene.purchasing .c-wrapper.order-list table.orders {
+	table-layout: fixed;
+	width: 100%;
+	border-collapse: collapse;
+}
+#content .scene.purchasing .c-wrapper.order-list table.orders tr {border-bottom: 1px solid #000000; padding: 3px 0;}
+#content .scene.purchasing .c-wrapper.order-list table.orders tr:last-child {border: none;}
+#content .scene.purchasing .c-wrapper.order-list table.orders tr:nth-child(even) {
+	background-color: #dedede;
+}
+#content .scene.purchasing .c-wrapper.order-list table.orders th,
+#content .scene.purchasing .c-wrapper.order-list table.orders td {border-left: 1px solid #000000;}
+#content .scene.purchasing .c-wrapper.order-list table.orders td {text-align: center;}
+#content .scene.purchasing .c-wrapper.order-list table.orders th.departments {width: 170px; border: none;}
+#content .scene.purchasing .c-wrapper.order-list table.orders th.department,
+#content .scene.purchasing .c-wrapper.order-list table.orders th.total {text-align: center; vertical-align: bottom;}
+#content .scene.purchasing .c-wrapper.order-list table.orders th.department span,
+#content .scene.purchasing .c-wrapper.order-list table.orders th.total span {writing-mode: sideways-lr; padding: 0 0 5px;}
+#content .scene.purchasing .c-wrapper.order-list table.orders th.product {text-align: right; padding-right: 5px; border: none;}
 #content .scene.purchasing .c-wrapper.products {padding: 0 0 46px; border-bottom: 1px solid #999999;}
 #content .scene.purchasing .c-wrapper.products ul.list {padding: 0 12px; margin: 0; list-style: none;}
 #content .scene.purchasing .c-wrapper.products ul.list > li {padding: 0;
