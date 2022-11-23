@@ -140,7 +140,7 @@ if($pickupdate) {
 		</ul>
 		-->
 		
-		<table>
+		<!--table>
 			<tr class="col-labels">
 				<th class="col-departments" title="Afdelinger" scope="col">Afdelinger</th>
 				<? foreach($products_legacy_products as $product): ?>
@@ -161,7 +161,30 @@ if($pickupdate) {
 				<td class="total_quantity"><?= $product["total_order_item_count"] ?></td>
 				<? endforeach; ?>
 			</tr>
+		</table-->
+
+
+		<table class="orders">
+			<tr class="col-labels">
+				<th class="departments" title="Afdelinger" scope="col"></th>
+				<? foreach($departments as $department): ?>
+				<th class="department" scope="col" title="<?= $department["name"] ?>"><span><?= $department["name"] ?></span></th>
+				<? endforeach; ?>
+				<th class="total" scope="row"><span>Total</span></th>
+			</tr>
+
+			<? foreach($products_legacy_products as $product): ?>
+			<tr class="product-quantities">
+				<th class="product" scope="col" title="<?= $product["name"] ?>"><?= $product["name"] ?></th>
+
+				<? foreach($departments as $department): ?>
+				<td class="quantity"><?= $department["product_quantities"][$product["id"]] ?></td>
+				<? endforeach; ?>
+				<td class="total_quantity"><?= $product["total_order_item_count"] ?></td>
+			</tr>
+			<? endforeach; ?>
 		</table>
+
 	</div>
 	<? endif; ?>
 

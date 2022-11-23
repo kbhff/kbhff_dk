@@ -408,7 +408,7 @@ class Tally extends Model {
 
 				global $page;
 				$user_id = session()->value("user_id");
-				$page->addLog("Tally: tally_id:$id updated by user_id:$user_id; sql = '$sql'");
+				logger()->addLog("Tally: tally_id:$id updated by user_id:$user_id; sql = '$sql'");
 
 				return $this->getTally(["id" => $id]);
 			}
@@ -447,7 +447,7 @@ class Tally extends Model {
 
 				global $page;
 				$user_id = session()->value("user_id");
-				$page->addLog("Tally: tally_id:$id deleted by user_id:$user_id");
+				logger()->addLog("Tally: tally_id:$id deleted by user_id:$user_id");
 
 				return true;		
 			}
@@ -481,7 +481,7 @@ class Tally extends Model {
 
 				global $page;
 				$user_id = session()->value("user_id");
-				$page->addLog("Tally: payout_id:$payout_id added to tally_id:$tally_id by user_id:$user_id");
+				logger()->addLog("Tally: payout_id:$payout_id added to tally_id:$tally_id by user_id:$user_id");
 
 				return $payout_id;
 			}
@@ -506,7 +506,7 @@ class Tally extends Model {
 
 				global $page;
 				$user_id = session()->value("user_id");
-				$page->addLog("Tally: payout_id:$payout_id deleted from tally_id:$tally_id by user_id:$user_id");
+				logger()->addLog("Tally: payout_id:$payout_id deleted from tally_id:$tally_id by user_id:$user_id");
 
 				return true;
 			}
@@ -571,7 +571,7 @@ class Tally extends Model {
 
 				global $page;
 				$user_id = session()->value("user_id");
-				$page->addLog("Tally: revenue_id:$revenue_id added to tally_id:$tally_id by user_id:$user_id");
+				logger()->addLog("Tally: revenue_id:$revenue_id added to tally_id:$tally_id by user_id:$user_id");
 
 				return $revenue_id;
 			}
@@ -596,7 +596,7 @@ class Tally extends Model {
 
 				global $page;
 				$user_id = session()->value("user_id");
-				$page->addLog("Tally: revenue_id:$revenue_id deleted from tally_id:$tally_id by user_id:$user_id");
+				logger()->addLog("Tally: revenue_id:$revenue_id deleted from tally_id:$tally_id by user_id:$user_id");
 
 				return true;
 			}
@@ -764,7 +764,7 @@ class Tally extends Model {
 				if($query->sql($sql)) {
 	
 					global $page;
-					$page->addLog("Tally: tally_id:$tally_id closed by user_id:$user_id");
+					logger()->addLog("Tally: tally_id:$tally_id closed by user_id:$user_id");
 		
 					return $tally_id;
 				}

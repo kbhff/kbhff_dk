@@ -255,7 +255,7 @@ class Pickupdate extends Model {
 	
 					global $page;
 					$user_id = session()->value("user_id");
-					$page->addLog("Pickupdate: pickupdate id:$id updated by user_id:$user_id; sql = '$sql'");
+					logger()->addLog("Pickupdate: pickupdate id:$id updated by user_id:$user_id; sql = '$sql'");
 	
 					return $this->getPickupdate(["id"=>$id]);
 				}
@@ -349,7 +349,7 @@ class Pickupdate extends Model {
 				message()->addMessage("Pickupdate deleted");	
 				global $page;
 				$user_id = session()->value("user_id");
-				$page->addLog("Pickupdate: pickupdate id:$pickupdate_id deleted by user_id:$user_id");
+				logger()->addLog("Pickupdate: pickupdate id:$pickupdate_id deleted by user_id:$user_id");
 
 				return true;
 			}

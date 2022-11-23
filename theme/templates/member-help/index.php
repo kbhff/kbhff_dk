@@ -13,7 +13,7 @@ $department_id = false;
 $users = false;
 $search_value = "";
 
-$global_search_allowed = $page->validatePath("/medlemshjaelp/globalSearch"); 
+$global_search_allowed = security()->validatePath("/medlemshjaelp/globalSearch"); 
 
 $search_users = $model->searchUsers($action);
 if($search_users) {
@@ -52,7 +52,7 @@ if (!$department_id && $user_department) {
 		<div class="c-three-quarters">
 			<fieldset>
 				<?= $model->input("search_member") ?>
-				<? if($page->validatePath("/medlemshjaelp/globalSearch")): ?>
+				<? if(security()->validatePath("/medlemshjaelp/globalSearch")): ?>
 				<?= $model->input("department_id", array("type" => "select", "hint_message" => "Begræns din søgning til en afdeling.", "error_message" => "Du kan søge på den enkelte afdeling eller vælge 'alle afdelinger'.", "value" => $department_id, "options" => $HTML->toOptions($departments, "id", "name", ["add" => ["all" => "Alle afdelinger"]]),)); ?>
 				<? else: ?>
 				<?= $model->input("department_id", ["type" => "hidden", "value" => $department_id]) ?>

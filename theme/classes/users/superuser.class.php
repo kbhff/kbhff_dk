@@ -718,7 +718,7 @@ IT
 
 		// Log that the method has been started
 		global $page;
-		$page->addLog("user->newUserFromMemberHelp: initiated");
+		logger()->addLog("user->newUserFromMemberHelp: initiated");
 
 		// only attempt user creation if signups are allowed for this site
 		if(defined("SITE_SIGNUP") && SITE_SIGNUP) {
@@ -731,7 +731,7 @@ IT
 
 			// if user hasn't accepted terms, return error
 			if(!$terms) {
-				$page->addLog("user->newUserFromMemberHelp: missing terms agreement");
+				logger()->addLog("user->newUserFromMemberHelp: missing terms agreement");
 				return array("status" => "MISSING_TERMS");
 			}
 			
@@ -740,7 +740,7 @@ IT
 			$user_id = $this->getLoginUserId($email);
 			if($user_id) {
 				// print_r($user_id[0]["user_id"]);exit();
-				$page->addLog("user->newUserFromMemberHelp: user exists ($email)");
+				logger()->addLog("user->newUserFromMemberHelp: user exists ($email)");
 				return array("status" => "USER_EXISTS", "existing_user_id" => $user_id);
 			}
 
@@ -825,7 +825,7 @@ IT
 							$password = password_hash($raw_password, PASSWORD_DEFAULT);
 							$sql = "INSERT INTO ".$this->db_passwords." SET user_id = $user_id, password = '$password'";
 							if(!$query->sql($sql)) {
-								$page->addLog("user->newUserFromMemberHelp failed: (couldn't write password to db)");
+								logger()->addLog("user->newUserFromMemberHelp failed: (couldn't write password to db)");
 								return false;
 							}
 						}
@@ -838,7 +838,7 @@ IT
 						// VERIFICATION EMAIL
 	
 						// add log
-						$page->addLog("user->newUserFromMemberHelp: created: " . $email . ", user_id:$user_id");
+						logger()->addLog("user->newUserFromMemberHelp: created: " . $email . ", user_id:$user_id");
 	
 						// verification code success
 						// send activation email
@@ -929,7 +929,7 @@ IT
 			}
 		}
 
-		$page->addLog("user->newUserFromMemberHelp failed: (missing info)");
+		logger()->addLog("user->newUserFromMemberHelp failed: (missing info)");
 		return false;
 	}
 	

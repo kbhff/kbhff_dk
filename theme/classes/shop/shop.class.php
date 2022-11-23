@@ -446,7 +446,7 @@ class Shop extends ShopCore {
 				]);
 
 				global $page;
-				$page->addLog("Shop->addDepartmentPickupdateOrderItem: user_id:".session()->value("user_id").", order_item_id:$order_item_id, department_pickupdate_id:".$department_pickupdate["id"]);
+				logger()->addLog("Shop->addDepartmentPickupdateOrderItem: user_id:".session()->value("user_id").", order_item_id:$order_item_id, department_pickupdate_id:".$department_pickupdate["id"]);
 	
 				return true;
 			}
@@ -639,7 +639,7 @@ class Shop extends ShopCore {
 					]);
 
 					global $page;
-					$page->addLog("Shop->setOrderItemDepartmentPickupdate: user_id:".session()->value("user_id").", order_item_id:$order_item_id, department_pickupdate_id:".$department_pickupdate["id"]);
+					logger()->addLog("Shop->setOrderItemDepartmentPickupdate: user_id:".session()->value("user_id").", order_item_id:$order_item_id, department_pickupdate_id:".$department_pickupdate["id"]);
 		
 					message()->addMessage("Pickup date and department was set");
 					return $this->getOrderItemDepartmentPickupdate($order_item_id);

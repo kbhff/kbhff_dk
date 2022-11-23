@@ -27,7 +27,7 @@ $page->pageTitle("Massemail");
 
 if($action) {
 
-	if(count($action) == 1 && $action[0] == "sendKbhffMessage" && $page->validateCsrfToken()) {
+	if(count($action) == 1 && $action[0] == "sendKbhffMessage" && security()->validateCsrfToken()) {
 
 		if($model->sendKbhffMessage($action)) {
 
@@ -43,7 +43,7 @@ if($action) {
 		}
 
 	}
-	if(count($action) == 1 && $action[0] == "sendKbhffMessageTest" && $page->validateCsrfToken()) {
+	if(count($action) == 1 && $action[0] == "sendKbhffMessageTest" && security()->validateCsrfToken()) {
 
 		if($model->sendKbhffMessageTest($action)) {
 

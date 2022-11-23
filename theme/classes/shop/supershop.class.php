@@ -67,7 +67,7 @@ class SuperShop extends SuperShopCore {
 						
 					}
 
-					$page->addLog("SuperShop->addPayment: order_id:$order_id, payment_method_id:$payment_method_id, payment_amount:$payment_amount");
+					logger()->addLog("SuperShop->addPayment: order_id:$order_id, payment_method_id:$payment_method_id, payment_amount:$payment_amount");
 
 					message()->addMessage("Payment added");
 					return $payment_id;
@@ -255,7 +255,7 @@ class SuperShop extends SuperShopCore {
 
 							$warned[] = $order["id"];
 	
-							$page->addLog("SuperShop->sendOrderCancellationWarnings: order cancellation warning sent to user_id:".$order["user_id"]);
+							logger()->addLog("SuperShop->sendOrderCancellationWarnings: order cancellation warning sent to user_id:".$order["user_id"]);
 						}
 	
 					}
@@ -348,7 +348,7 @@ class SuperShop extends SuperShopCore {
 									"track_clicks" => false
 								));
 	
-								$page->addLog("SuperShop->sendOrderCancellationNotices: order cancellation notice sent to user_id:".$order["user_id"]);
+								logger()->addLog("SuperShop->sendOrderCancellationNotices: order cancellation notice sent to user_id:".$order["user_id"]);
 							}
 	
 						}

@@ -52,7 +52,7 @@ if($action) {
 	}
 
 	# /butik/addToCart
-	else if($action[0] == "addToCart" && $page->validateCsrfToken()) {
+	else if($action[0] == "addToCart" && security()->validateCsrfToken()) {
 
 		$cart = $model->addToCart(array("addToCart"));
 
@@ -71,7 +71,7 @@ if($action) {
 	}
 
 	# /butik/cancelOrder/#order_id#
-	else if(count($action) == 2 && $action[0] == "cancelOrder" && $page->validateCsrfToken()) {
+	else if(count($action) == 2 && $action[0] == "cancelOrder" && security()->validateCsrfToken()) {
 
 		$result = $model->cancelOrder(["cancelOrder", $action[1]]);
 
@@ -90,7 +90,7 @@ if($action) {
 	}
 
 	# /butik/updateCartItemQuantity/#cart_reference#/#cart_item_id#
-	else if($action[0] == "updateCartItemQuantity" && $page->validateCsrfToken()) {
+	else if($action[0] == "updateCartItemQuantity" && security()->validateCsrfToken()) {
 
 		message()->resetMessages();
 
@@ -115,7 +115,7 @@ if($action) {
 	}
 
 	# /butik/deleteFromCart/#cart_reference#/#cart_item_id#
-	else if($action[0] == "deleteFromCart" && $page->validateCsrfToken()) {
+	else if($action[0] == "deleteFromCart" && security()->validateCsrfToken()) {
 
 		// create new user
 		$cart = $model->deleteFromCart($action);
@@ -246,7 +246,7 @@ if($action) {
 		}
 
 		// process payment method for cart
-		else if(count($action) == 5 && $action[2] === "kurv" && $action[4] == "process" && $page->validateCsrfToken()) {
+		else if(count($action) == 5 && $action[2] === "kurv" && $action[4] == "process" && security()->validateCsrfToken()) {
 
 			$gateway = $action[1];
 			$cart_reference = $action[3];
@@ -343,7 +343,7 @@ if($action) {
 		}
 
 		// process payment method for order
-		else if(count($action) == 5 && $action[2] === "ordre" && $action[4] == "process" && $page->validateCsrfToken()) {
+		else if(count($action) == 5 && $action[2] === "ordre" && $action[4] == "process" && security()->validateCsrfToken()) {
 
 			$gateway = $action[1];
 			$order_no = $action[3];
@@ -446,7 +446,7 @@ if($action) {
 		}
 
 		// process payment method for orders
-		else if(count($action) == 5 && $action[2] === "ordrer" && $action[4] == "process" && $page->validateCsrfToken()) {
+		else if(count($action) == 5 && $action[2] === "ordrer" && $action[4] == "process" && security()->validateCsrfToken()) {
 
 			$gateway = $action[1];
 			$order_ids = $action[3];
@@ -840,7 +840,7 @@ if($action) {
 
 
 	# /butik/selectPaymentMethodForOrder
-	else if($action[0] == "selectPaymentMethodForOrder" && $page->validateCsrfToken()) {
+	else if($action[0] == "selectPaymentMethodForOrder" && security()->validateCsrfToken()) {
 
 		// register payment method
 		$result = $model->selectPaymentMethodForOrder(array("selectPaymentMethodForOrder"));
@@ -920,7 +920,7 @@ if($action) {
 	}
 
 	# /butik/selectPaymentMethodForOrders
-	else if($action[0] == "selectPaymentMethodForOrders" && $page->validateCsrfToken()) {
+	else if($action[0] == "selectPaymentMethodForOrders" && security()->validateCsrfToken()) {
 
 		// register payment method
 		$result = $model->selectPaymentMethodForOrders(array("selectPaymentMethodForOrders"));
@@ -1082,7 +1082,7 @@ if($action) {
 	}
 
 	# /butik/updateProfile
-	else if($action[0] == "updateProfile" && $page->validateCsrfToken()) {
+	else if($action[0] == "updateProfile" && security()->validateCsrfToken()) {
 
 		// create new user
 		$UC = new User();
@@ -1094,7 +1094,7 @@ if($action) {
 	}
 
 	# /butik/selectAddress
-	else if($action[0] == "selectAddress" && $page->validateCsrfToken()) {
+	else if($action[0] == "selectAddress" && security()->validateCsrfToken()) {
 
 		if($model->updateCart(array("updateCart"))) {
 			// redirect to leave POST state
@@ -1111,7 +1111,7 @@ if($action) {
 	}
 
 	# /butik/addAddress
-	else if($action[0] == "addAddress" && count($action) == 2 && $page->validateCsrfToken()) {
+	else if($action[0] == "addAddress" && count($action) == 2 && security()->validateCsrfToken()) {
 
 		$UC = new User();
 		$address = $UC->addAddress(array("addAddress"));
@@ -1151,7 +1151,7 @@ if($action) {
 	}
 
 	# /butik/setOrderItemDepartmentPickupdate/#order_item_id#
-	else if($action[0] == "setOrderItemDepartmentPickupdate" && $page->validateCsrfToken()) {
+	else if($action[0] == "setOrderItemDepartmentPickupdate" && security()->validateCsrfToken()) {
 
 		if($model->setOrderItemDepartmentPickupdate($action)) {
 

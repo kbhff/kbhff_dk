@@ -23,7 +23,7 @@ if($action) {
 
 	// Custom DUAL CodeIgniter/Janitor login
 	// login/dual
-	if(count($action) == 1 && $action[0] == "dual" && $page->validateCsrfToken()) {
+	if(count($action) == 1 && $action[0] == "dual" && security()->validateCsrfToken()) {
 		session()->reset("temp-username");
 
 		$username = getPost("username");
@@ -277,7 +277,7 @@ if($action) {
 
 
 	// login/confirmAccount
-	else if(count($action) == 1 && $action[0] == "confirmAccount" && $page->validateCsrfToken()) {
+	else if(count($action) == 1 && $action[0] == "confirmAccount" && security()->validateCsrfToken()) {
 
 		$username = session()->value("temp-username");
 		$verification_code = getPost("verification_code");
@@ -327,7 +327,7 @@ if($action) {
 
 
 	// login/setPassword
-	else if(count($action) == 1 && $action[0] == "setPassword" && $page->validateCsrfToken()) {
+	else if(count($action) == 1 && $action[0] == "setPassword" && security()->validateCsrfToken()) {
 
 		$result = $model->setFirstPassword();
 
@@ -387,7 +387,7 @@ if($action) {
 	}
 
 	// login/requestReset
-	else if(count($action) == 1 && $action[0] == "requestReset" && $page->validateCsrfToken()) {
+	else if(count($action) == 1 && $action[0] == "requestReset" && security()->validateCsrfToken()) {
 
 		// request password reset
 		if($model->requestPasswordReset($action)) {
@@ -404,7 +404,7 @@ if($action) {
 	}
 
 	// login/validateCode
-	else if(count($action) == 1 && $action[0] == "validateCode" && $page->validateCsrfToken()) {
+	else if(count($action) == 1 && $action[0] == "validateCode" && security()->validateCsrfToken()) {
 
 		// code is valid
 		$token = $model->validateCode($action);
@@ -423,7 +423,7 @@ if($action) {
 	}
 
 	// login/resetPassword
-	else if(count($action) == 1 && $action[0] == "resetPassword" && $page->validateCsrfToken()) {
+	else if(count($action) == 1 && $action[0] == "resetPassword" && security()->validateCsrfToken()) {
 
 		// creating new password
 		if($model->resetPassword($action)) {

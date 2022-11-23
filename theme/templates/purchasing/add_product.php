@@ -12,6 +12,7 @@ $this->pageTitle("Tilføj nyt produkt");
 	<h1>Opret nyt produkt</h1>
 	<h2>Produktoplysninger</h2>
 
+	<?= $HTML->serverMessages(); ?>
 	
 	<?= $model->formStart("addNewProduct", ["class" => "labelstyle:inject add", "enctype" => "multipart/form-data"]); ?>
 

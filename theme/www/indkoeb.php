@@ -69,7 +69,7 @@ if($action) {
 
 	}
 
-	else if(count($action) == 1 && $action[0] == "addNewProduct" && $page->validateCsrfToken()) {
+	else if(count($action) == 1 && $action[0] == "addNewProduct" && security()->validateCsrfToken()) {
 
 		$item = $supermodel->addNewProduct($action);
 
@@ -79,14 +79,20 @@ if($action) {
 			
 		}
 		else {
-			header("Location: /indkoeb/nyt-produkt");
+			// standard template
+			$page->page(array(
+				"templates" => "purchasing/add_product.php",
+				"type" => "admin"
+			));
+			
+			// header("Location: /indkoeb/nyt-produkt");
 		}
 
 		exit();
 
 	}
 
-	else if(count($action) == 2 && $action[0] == "updateProduct" && $page->validateCsrfToken()) {
+	else if(count($action) == 2 && $action[0] == "updateProduct" && security()->validateCsrfToken()) {
 		
 		$item_id = $action[1];
 		$item = $IC->getItem(array("id" => $item_id, "extend" => ["mediae" => true, "prices" => true]));
@@ -108,7 +114,7 @@ if($action) {
 
 	}
 
-	else if(count($action) == 2 && $action[0] == "disableProduct" && $page->validateCsrfToken()) {
+	else if(count($action) == 2 && $action[0] == "disableProduct" && security()->validateCsrfToken()) {
 		
 		$item_id = $action[1];
 		$item = $IC->getItem(array("id" => $item_id));
@@ -134,7 +140,7 @@ if($action) {
 
 	}
 
-	else if(count($action) == 1 && $action[0] == "savePickupdate" && $page->validateCsrfToken()) {
+	else if(count($action) == 1 && $action[0] == "savePickupdate" && security()->validateCsrfToken()) {
 
 		if($PC->savePickupdate($action)) {
 
@@ -173,7 +179,7 @@ if($action) {
 	}
 
 
-	else if(count($action) == 2 && $action[0] == "updatePickupdateDepartments" && $page->validateCsrfToken()) {
+	else if(count($action) == 2 && $action[0] == "updatePickupdateDepartments" && security()->validateCsrfToken()) {
 
 		if($DC->updatePickupdateDepartments($action)) {
 

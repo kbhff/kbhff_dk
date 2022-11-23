@@ -711,7 +711,7 @@ class Department extends Model {
 				}
 
 				global $page;
-				$page->addLog("Department->removePickupdate: user_id:".session()->value("user_id").", pickupdate_id:$pickupdate_id, orphaned order_items: ".$department_pickupdate_order_items ? count($department_pickupdate_order_items) : "0");
+				logger()->addLog("Department->removePickupdate: user_id:".session()->value("user_id").", pickupdate_id:$pickupdate_id, orphaned order_items: ".$department_pickupdate_order_items ? count($department_pickupdate_order_items) : "0");
 				return true;
 			}
 		}

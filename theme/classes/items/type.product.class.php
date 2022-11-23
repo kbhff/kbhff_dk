@@ -131,7 +131,8 @@ class TypeProduct extends Itemtype {
 		$this->getPostedEntities();
 
 		// Validating generic product entities - the remaining entities will be validated on save()
-		if(count($action) == 1 && $this->validateList(["product_type", "price_1", "price_2"])) {
+		// if(count($action) == 1 && $this->validateList(["product_type", "price_1", "price_2"])) {
+		if(count($action) == 1 && $this->validateList(["product_type", "price_1", "price_2", "single_media"])) {
 
 			$product_type = $this->getProperty("product_type", "value");
 			$price_1 = $this->getProperty("price_1", "value");

@@ -133,7 +133,7 @@ class SuperSubscription extends SuperSubscriptionCore {
 							"track_clicks" => false
 						));
 						
-						$page->addLog("SuperSubscription->sendRenewalNotices: renewal notice sent to user_id:".$user_id);
+						logger()->addLog("SuperSubscription->sendRenewalNotices: renewal notice sent to user_id:".$user_id);
 		
 					}
 					else {
@@ -149,7 +149,7 @@ class SuperSubscription extends SuperSubscriptionCore {
 							"track_clicks" => false
 						));
 						
-						$page->addLog("SuperSubscription->sendRenewalNotices: deactivation notice sent to user_id:".$user_id);
+						logger()->addLog("SuperSubscription->sendRenewalNotices: deactivation notice sent to user_id:".$user_id);
 
 
 					}

@@ -164,7 +164,7 @@ class TypeMessage extends TypeMessageCore {
 			if($result) {
 	
 				global $page;
-				$page->addLog("TypeKbhffMessage->sendKbhffMessage: user_id:".session()->value("user_id").", department_id:".$department_id);
+				logger()->addLog("TypeKbhffMessage->sendKbhffMessage: user_id:".session()->value("user_id").", department_id:".$department_id);
 	
 				// add to Kbhff message log
 				$query = new Query();

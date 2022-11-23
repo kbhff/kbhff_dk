@@ -42,7 +42,7 @@ if($user["membership"] && !$user["membership"]["subscription_id"]) {
 }
 
 // Allow accept terms
-if($action && count($action) == 1 && $action[0] == "accept" && $page->validateCsrfToken()) {
+if($action && count($action) == 1 && $action[0] == "accept" && security()->validateCsrfToken()) {
 
 	$UC->acceptedTerms(["name" => "memberhelp"]);
 
@@ -65,7 +65,7 @@ if($action) {
 	if($action[0] == "soeg") {
 		
 		// users that are not allowed to make global searches can only search their own department
-		if(!$page->validatePath("/medlemshjaelp/globalSearch")) {
+		if(!security()->validatePath("/medlemshjaelp/globalSearch")) {
 			$user_department = $UC->getUserDepartment();
 			$department_id = getPost("department_id");
 			
@@ -112,7 +112,7 @@ if($action) {
 
 	
 	# /medlemshjaelp/save
-	else if($action[0] == "save" && $page->validateCsrfToken()) {
+	else if($action[0] == "save" && security()->validateCsrfToken()) {
 		
 		// create new user
 		$user = $model->newUserFromMemberHelp(["newUserFromMemberHelp"]);
@@ -214,7 +214,7 @@ if($action) {
 	else if($action[0] == "brugerprofil") {
 		
 		// Allow accept terms
-		if(count($action) == 3 && $action[2] == "user_accept" && $page->validateCsrfToken()) {
+		if(count($action) == 3 && $action[2] == "user_accept" && security()->validateCsrfToken()) {
 
 			$model->acceptedTerms(["user_id" => $action[1]]);
 
@@ -355,7 +355,7 @@ if($action) {
 	}
 	
 	# /medlemshjaelp/updateUserInformation
-	else if($action[0] == "updateUserInformation" && $page->validateCsrfToken()) {
+	else if($action[0] == "updateUserInformation" && security()->validateCsrfToken()) {
 
 		//Method returns true
 		if($model->updateUserInformation($action)) {
@@ -370,7 +370,7 @@ if($action) {
 	}
 	
 	# /medlemshjaelp/updateEmail
-	else if($action[0] == "updateEmail" && $page->validateCsrfToken()) {
+	else if($action[0] == "updateEmail" && security()->validateCsrfToken()) {
 
 		//Method returns true
 		if($model->updateEmail($action)) {
@@ -385,7 +385,7 @@ if($action) {
 	}
 
 	# /medlemshjaelp/updateUserDepartment
-	else if($action[0] == "updateUserDepartment" && $page->validateCsrfToken()) {
+	else if($action[0] == "updateUserDepartment" && security()->validateCsrfToken()) {
 
 		//Method returns true
 		
@@ -402,7 +402,7 @@ if($action) {
 	}
 	
 	# /medlemshjaelp/updateUserMembership
-	else if($action[0] == "updateUserMembership" && $page->validateCsrfToken()) {
+	else if($action[0] == "updateUserMembership" && security()->validateCsrfToken()) {
 
 		//Method returns true
 		if ($model->changeMembership($action)) {
@@ -419,7 +419,7 @@ if($action) {
 	}
 
 	# /medlemshjaelp/updateUserMembershipRenewal/#user_id#
-	else if($action[0] == "updateUserMembershipRenewal" && count($action) == 2 && $page->validateCsrfToken()) {
+	else if($action[0] == "updateUserMembershipRenewal" && count($action) == 2 && security()->validateCsrfToken()) {
 
 		$user_id = $action[1];
 		$result = $model->updateUserRenewalOptOut($action);
@@ -438,7 +438,7 @@ if($action) {
 	}
 
 	# /medlemshjaelp/reactivateUserMembership/#user_id#
-	else if($action[0] == "reactivateUserMembership" && count($action) == 2 && $page->validateCsrfToken()) {
+	else if($action[0] == "reactivateUserMembership" && count($action) == 2 && security()->validateCsrfToken()) {
 
 		$user_id = $action[1];
 		$order = $MC->switchMembership($action);
@@ -469,7 +469,7 @@ if($action) {
 
 
 	// /profil/updateEmailAgreements/#user_id#
-	else if($action[0] == "updateEmailAgreements" && $page->validateCsrfToken()) {
+	else if($action[0] == "updateEmailAgreements" && security()->validateCsrfToken()) {
 
 		$result = $model->updateEmailAgreements($action);
 
@@ -521,7 +521,7 @@ if($action) {
 	}
 
 	# /medlemshjaelp/updateUserPassword
-	else if($action[0] == "updateUserPassword" && $page->validateCsrfToken()) {
+	else if($action[0] == "updateUserPassword" && security()->validateCsrfToken()) {
 
 		//Method returns true
 		if($model->updateUserPassword($action[1])) {
@@ -540,7 +540,7 @@ if($action) {
 	}
 	
 	# /medlemshjaelp/updateUserUserGroup/#user_id#
-	else if($action[0] == "updateUserUserGroup" && $page->validateCsrfToken()) {
+	else if($action[0] == "updateUserUserGroup" && security()->validateCsrfToken()) {
 
 		//Method returns true
 		if($model->updateUserUserGroup($action)) {
@@ -586,7 +586,7 @@ if($action) {
 			}
 			
 			# /medlemshjaelp/butik/addToCart/#cart_reference#
-			else if($action[1] == "addToCart" && $page->validateCsrfToken()) {
+			else if($action[1] == "addToCart" && security()->validateCsrfToken()) {
 
 				$cart_reference = $action[2];
 				$cart = $SC->addToCart(["addToCart", $cart_reference]);
@@ -607,7 +607,7 @@ if($action) {
 		else if(count($action) == 4) {
 
 			# /medlemshjaelp/butik/updateCartItemQuantity/#cart_reference#/#cart_item_id#
-			if($action[1] == "updateCartItemQuantity" && $page->validateCsrfToken()) {
+			if($action[1] == "updateCartItemQuantity" && security()->validateCsrfToken()) {
 
 				message()->resetMessages();
 
@@ -630,7 +630,7 @@ if($action) {
 			}
 
 			# /medlemshjaelp/butik/deleteFromCart/#cart_reference#/#cart_item_id#
-			else if($action[1] == "deleteFromCart" && $page->validateCsrfToken()) {
+			else if($action[1] == "deleteFromCart" && security()->validateCsrfToken()) {
 
 				$cart = $SC->deleteFromCart(["deleteFromCart", $action[2], $action[3]]);
 
@@ -732,7 +732,7 @@ if($action) {
 		} 
 		
 		# /medlemshjaelp/betaling/stripe/ordre/#order_no#/process
-		else if(count($action) === 5 && $action[4] == "process" && $page->validateCsrfToken()) {
+		else if(count($action) === 5 && $action[4] == "process" && security()->validateCsrfToken()) {
 			
 			$gateway = $action[1];
 			$order_no = $action[3];
@@ -918,7 +918,7 @@ if($action) {
 	}
 
 	# /medlemshjaelp/setOrderItemDepartmentPickupdate/#order_item_id#
-	else if($action[0] == "setOrderItemDepartmentPickupdate" && $page->validateCsrfToken()) {
+	else if($action[0] == "setOrderItemDepartmentPickupdate" && security()->validateCsrfToken()) {
 
 		$order_item_id = $action[1];
 		$order_item = $SC->getOrderItems(["order_item_id" => $order_item_id]);

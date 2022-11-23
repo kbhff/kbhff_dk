@@ -237,7 +237,7 @@ class TypeSignupfee extends Itemtype {
 
 		
 		global $page;
-		$page->addLog("signupfee->ordered: order_id:".$order["id"]);
+		logger()->addLog("signupfee->ordered: order_id:".$order["id"]);
 		// print "\n<br>###$order_item_item_id### ordered (membership)\n<br>";
 	}
 	

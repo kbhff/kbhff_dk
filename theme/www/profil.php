@@ -19,7 +19,7 @@ $page->pageTitle("Min side");
 
 
 // Allow accept terms
-if($action && count($action) == 1 && $action[0] == "accept" && $page->validateCsrfToken()) {
+if($action && count($action) == 1 && $action[0] == "accept" && security()->validateCsrfToken()) {
 
 	$UC->acceptedTerms();
 
@@ -39,7 +39,7 @@ else if ($action) {
 	
 
 	// profil/deleteUserInformation
-	else if($action[0] == "deleteUserInformation" && $page->validateCsrfToken()) {
+	else if($action[0] == "deleteUserInformation" && security()->validateCsrfToken()) {
 		// If the method is requested by JavaScript
 		if($_SERVER["HTTP_X_REQUESTED_WITH"]) {
 			// Method returns true and deletes user
@@ -93,7 +93,7 @@ if(!$UC->hasAcceptedTerms()) {
 if($action) {
 
 	// Allow update
-	if($action[0] == "update" && $page->validateCsrfToken()) {
+	if($action[0] == "update" && security()->validateCsrfToken()) {
 		$UC->update($action);
 	}
 
@@ -165,7 +165,7 @@ if($action) {
 
 	// /profil/updateUserDepartment
 	// Handling updateUserDepartment method, specified in user.class.php
-	else if($action[0] == "updateUserDepartment" && $page->validateCsrfToken()) {
+	else if($action[0] == "updateUserDepartment" && security()->validateCsrfToken()) {
 
 		//Method returns true
 		if($UC->updateUserDepartment($action)) {
@@ -194,7 +194,7 @@ if($action) {
 	}
 
 	// /profil/updateMembershipRenewal
-	else if($action[0] == "updateMembershipRenewal" && $page->validateCsrfToken()) {
+	else if($action[0] == "updateMembershipRenewal" && security()->validateCsrfToken()) {
 
 		$result = $UC->updateRenewalOptOut($action);
 
@@ -212,7 +212,7 @@ if($action) {
 	}
 
 	// /profil/updateEmailAgreements
-	else if($action[0] == "updateEmailAgreements" && $page->validateCsrfToken()) {
+	else if($action[0] == "updateEmailAgreements" && security()->validateCsrfToken()) {
 
 		$result = $UC->updateEmailAgreements($action);
 
@@ -225,7 +225,7 @@ if($action) {
 	}
 
 	// profil/reactivateMembership
-	else if($action[0] == "reactivateMembership" && $page->validateCsrfToken()) {
+	else if($action[0] == "reactivateMembership" && security()->validateCsrfToken()) {
 
 		$order = $MC->switchMembership($action);
 
@@ -251,7 +251,7 @@ if($action) {
 	}
 
 	// profil/updateUserInformation
-	else if($action[0] == "updateUserInformation" && $page->validateCsrfToken()) {
+	else if($action[0] == "updateUserInformation" && security()->validateCsrfToken()) {
 
 		//Method returns true
 		if($UC->updateUserInformation($action)) {
@@ -269,7 +269,7 @@ if($action) {
 	}
 
 	// profil/updateEmail
-	else if($action[0] == "updateEmail" && $page->validateCsrfToken()) {
+	else if($action[0] == "updateEmail" && security()->validateCsrfToken()) {
 
 		//Method returns true
 		if($UC->updateEmail($action)) {
@@ -285,7 +285,7 @@ if($action) {
 	}
 
 	// profil/updateUserPassword
-	else if($action[0] == "updateUserPassword" && $page->validateCsrfToken()) {
+	else if($action[0] == "updateUserPassword" && security()->validateCsrfToken()) {
 
 		$result = $UC->setPassword($action);
 		//Method returns true

@@ -29,7 +29,7 @@ if(is_array($action) && count($action)) {
 	}
 
 	// Class interface
-	else if($page->validateCsrfToken() && preg_match("/[run]+/", $action[0])) {
+	else if(security()->validateCsrfToken() && preg_match("/[run]+/", $action[0])) {
 
 		include_once("classes/system/upgrade.class.php");
 		$UC = new Upgrade();

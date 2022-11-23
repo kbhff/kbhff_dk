@@ -20,7 +20,7 @@ $page->pageTitle("Bliv medlem");
 if($action) {
 	
 	# /bliv-medlem/addToCart
-	if($action[0] == "addToCart" && $page->validateCsrfToken()) {
+	if($action[0] == "addToCart" && security()->validateCsrfToken()) {
 
 		// user is already a user
 		$user_id = session()->value("user_id");
@@ -115,7 +115,7 @@ if($action) {
 	}
 
 	# /bliv-medlem/save
-	else if($action[0] == "save" && $page->validateCsrfToken()) {
+	else if($action[0] == "save" && security()->validateCsrfToken()) {
 
 			
 		// create new user
@@ -183,7 +183,7 @@ if($action) {
 	# /bliv-medlem/bekraeft
 	else if($action[0] == "bekraeft") {
 
-		if (count($action) == 1 && $page->validateCsrfToken()) {
+		if (count($action) == 1 && security()->validateCsrfToken()) {
 
 			$username = session()->value("signup_email");
 			$verification_code = getPost("verification_code");

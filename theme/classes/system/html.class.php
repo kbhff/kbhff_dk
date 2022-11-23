@@ -17,7 +17,7 @@ class HTML extends HTMLCore {
 		$_ = '';
 
 		$_ .= '<div class="comments i:comments item_id:'.$item["item_id"].'"';
-		$_ .= '	data-comment-add="'.$page->validPath($add_path).'"';
+		$_ .= '	data-comment-add="'.security()->validPath($add_path).'"';
 		$_ .= '	data-csrf-token="'.session()->value("csrf").'"';
 		$_ .= '	>';
 		$_ .= '	<h2 class="comments">Comments</h2>';

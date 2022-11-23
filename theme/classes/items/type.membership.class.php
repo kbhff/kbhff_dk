@@ -171,7 +171,7 @@ class TypeMembership extends Itemtype {
 
 
 		global $page;
-		$page->addLog("membership->addedToCart: added_item:".$added_item_id);
+		logger()->addLog("membership->addedToCart: added_item:".$added_item_id);
 
 	}
 
@@ -307,7 +307,7 @@ class TypeMembership extends Itemtype {
 		}
 		
 		global $page;
-		$page->addLog("membership->ordered: order_id:".$order["id"]);
+		logger()->addLog("membership->ordered: order_id:".$order["id"]);
 		// print "\n<br>###$item_id### ordered (membership)\n<br>";
 	}
 
@@ -323,7 +323,7 @@ class TypeMembership extends Itemtype {
 
 
 		global $page;
-		$page->addLog("membership->shipped: order_id:".$order["id"]);
+		logger()->addLog("membership->shipped: order_id:".$order["id"]);
 
 	}
 
@@ -389,7 +389,7 @@ class TypeMembership extends Itemtype {
 			$query->sql($sql);
 
 			global $page;
-			$page->addLog("membership->subscribed: item_id:$item_id, user_id:$user_id, order_id:".$order_id);
+			logger()->addLog("membership->subscribed: item_id:$item_id, user_id:$user_id, order_id:".$order_id);
 
 		}
 
@@ -407,7 +407,7 @@ class TypeMembership extends Itemtype {
 		if($subscription) {
 
 			global $page;
-			$page->addLog("membership->unsubscribed: item_id:".$subscription["item_id"].", user_id:".$subscription["user_id"]);
+			logger()->addLog("membership->unsubscribed: item_id:".$subscription["item_id"].", user_id:".$subscription["user_id"]);
 
 		}
 

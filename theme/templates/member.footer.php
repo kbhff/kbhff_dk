@@ -43,11 +43,11 @@ function recurseNodes($nodes, $_parent_path) {
 		if($node["link"]) {
 
 			// Does user have access
-			if($page->validatePath($node["link"])) {
+			if(security()->validatePath($node["link"])) {
 				$content .= '<a href="'.$node["link"].'"' . ($node["target"] ? $HTML->attribute("target", "_blank") : "").'>'.$node["name"].'</a>';
 			}
 			// Does node have fallback url?
-			else if($node["fallback"] && $page->validatePath($node["fallback"])) {
+			else if($node["fallback"] && security()->validatePath($node["fallback"])) {
 				$content .= '<a href="'.$node["fallback"].'"' . ($node["target"] ? $HTML->attribute("target", "_blank") : "").'>'.$node["name"].'</a>';
 			}
 

@@ -52,7 +52,7 @@ if($action) {
 	
 		}
 		// /butiksvagt/kasse/#tally_id#/updateTally
-		elseif(count($action) == 3 && $action[2] == "updateTally" && $page->validateCsrfToken()) {
+		elseif(count($action) == 3 && $action[2] == "updateTally" && security()->validateCsrfToken()) {
 	
 			$tally = $TC->updateTally($action);
 	
@@ -79,7 +79,7 @@ if($action) {
 		}
 
 		// /butiksvagt/kasse/#tally_id#/saveTally
-		elseif(count($action) == 3 && $action[2] == "saveTally" && $page->validateCsrfToken()) {
+		elseif(count($action) == 3 && $action[2] == "saveTally" && security()->validateCsrfToken()) {
 
 			$tally = $TC->updateTally($action);
 	
@@ -106,7 +106,7 @@ if($action) {
 		}
 
 		// /butiksvagt/kasse/#tally_id#/closeTally
-		elseif(count($action) == 3 && $action[2] == "closeTally" && $page->validateCsrfToken()) {
+		elseif(count($action) == 3 && $action[2] == "closeTally" && security()->validateCsrfToken()) {
 	
 			$tally_id = $TC->closeTally($action);
 	
@@ -146,7 +146,7 @@ if($action) {
 			}
 
 			// /butiksvagt/kasse/#tally_id#/udbetaling/addPayout
-			elseif(count($action) == 4 && $action[3] == "addPayout" && $page->validateCsrfToken()) {
+			elseif(count($action) == 4 && $action[3] == "addPayout" && security()->validateCsrfToken()) {
 		
 				$payout = $TC->addPayout($action);
 		
@@ -173,7 +173,7 @@ if($action) {
 			}
 
 			// /butiksvagt/kasse/#tally_id#/udbetaling/deletePayout/#payout_id#
-			elseif(count($action) == 5 && $action[3] == "deletePayout" && $page->validateCsrfToken()) {
+			elseif(count($action) == 5 && $action[3] == "deletePayout" && security()->validateCsrfToken()) {
 		
 				$payout_id = $action[4];
 
@@ -219,7 +219,7 @@ if($action) {
 			}
 
 			// /butiksvagt/kasse/#tally_id#/andre-indtaegter/addRevenue
-			elseif(count($action) == 4 && $action[3] == "addRevenue" && $page->validateCsrfToken()) {
+			elseif(count($action) == 4 && $action[3] == "addRevenue" && security()->validateCsrfToken()) {
 		
 				$revenue = $TC->addRevenue($action);
 		
@@ -246,7 +246,7 @@ if($action) {
 			}
 
 			// /butiksvagt/kasse/#tally_id#/andre-indtaegter/deleteRevenue/#revenue_id#
-			elseif(count($action) == 5 && $action[3] == "deleteRevenue" && $page->validateCsrfToken()) {
+			elseif(count($action) == 5 && $action[3] == "deleteRevenue" && security()->validateCsrfToken()) {
 		
 				$revenue_id = $action[4];
 
