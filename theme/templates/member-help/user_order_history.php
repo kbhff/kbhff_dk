@@ -21,7 +21,8 @@ $orders = $SC->getOrders(["user_id" => $member_user_id]);
 $orders = $SC->getOrders(["user_id" => $member_user_id]);
 $upcoming_order_items = $SC->getOrderItems(["user_id" => $member_user_id, "order" => "pp.pickupdate ASC, so.order_no", "department_pickupdate" => "only", "where" => "i.itemtype REGEXP '^product.*' AND pp.pickupdate >= CURDATE()"]);
 $past_order_items = $SC->getOrderItems(["user_id" => $member_user_id, "order" => "pp.pickupdate DESC, so.order_no", "department_pickupdate" => "only", "where" => "i.itemtype REGEXP '^product.*' AND pp.pickupdate < CURDATE()"]);
-$order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $member_user_id, "order" => "so.order_no","department_pickupdate" => "none", "where" => "i.itemtype REGEXP '^product.*'"]);
+// $order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $member_user_id, "order" => "so.order_no","department_pickupdate" => "none", "where" => "i.itemtype REGEXP '^product.*'"]);
+$order_items_no_pickupdate = $SC->getOrderItems(["user_id" => $member_user_id, "order" => "so.order_no","department_pickupdate" => "none"]);
 
 ?>
 
