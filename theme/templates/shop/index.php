@@ -40,7 +40,25 @@ if($user_id != 1) {
 		$products = $DC->getDepartmentProducts($department["id"]);
 		$pickupdates = $PC->getPickupdates(["after" => date("Y-m-d", strtotime("+1 week"))]);
 		$department_pickupdates = $DC->getDepartmentPickupdates($department["id"]);
-		
+
+
+
+		// Arrange for temporery custom order of products based on product id's
+
+		$product_2_index = arrayKeyValue($products, "id", 476);
+		if($product_2_index !== false) {
+			$product_2 = $products[$product_2_index];
+			unset($products[$product_2_index]);
+			array_unshift($products, $product_2);
+		}
+
+		$product_1_index = arrayKeyValue($products, "id", 475);
+		if($product_1_index !== false) {
+			$product_1 = $products[$product_1_index];
+			unset($products[$product_1_index]);
+			array_unshift($products, $product_1);
+		}
+
 	}
 	$orders = $model->getOrders();
 	$unpaid_membership = $UC->hasUnpaidMembership();
