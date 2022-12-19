@@ -10,8 +10,8 @@ $department = $user ? $user["department"] : false;
 
 $departments = $DC->getDepartments();
 
-$send_to_department_members = $this->checkpermissions("/massemail", "/sendToDepartmentMembers", ["/sendToDepartmentMembers" => true]);
-$send_to_all_members = $this->checkpermissions("/massemail", "/sendToAllMembers", ["/sendToAllMembers" => true]);
+$send_to_department_members = security()->checkPermissions("/massemail", "/sendToDepartmentMembers", ["/sendToDepartmentMembers" => true]);
+$send_to_all_members = security()->checkPermissions("/massemail", "/sendToAllMembers", ["/sendToAllMembers" => true]);
 
 
 ?>
