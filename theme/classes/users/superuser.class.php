@@ -1485,16 +1485,20 @@ IT
 			$user_id = $action[1];
 			$user = $this->getKbhffUser(["user_id" => $user_id]);
 
+			if(isset($user["email"]) && $user["email"] && !$this->getUserLogAgreement("disable_ordering_reminder", ["user_id" => $user["id"]])) {
 
-			mailer()->send([
-				"recipients" => [$user["email"]],
-				"template" => "ordering_reminder",
-				"values" => [
-					"NICKNAME" => $user["nickname"],
-					"DEADLINE_DATE" => date("d.m.Y", strtotime(ORDERING_DEADLINE_TIME)),
-					"DEADLINE_TIME" => date("H:i", strtotime(ORDERING_DEADLINE_TIME))
-				]
-			]);
+				mailer()->send([
+					"recipients" => [$user["email"]],
+					"template" => "ordering_reminder",
+					"values" => [
+						"NICKNAME" => $user["nickname"],
+						"DEADLINE_DATE" => date("d.m.Y", strtotime(ORDERING_DEADLINE_TIME)),
+						"DEADLINE_TIME" => date("H:i", strtotime(ORDERING_DEADLINE_TIME))
+					]
+				]);
+
+			}
+
 		}
 		else {
 
@@ -1556,7 +1560,6 @@ IT
 							"template" => "ordering_reminder",
 							"values" => $values,
 						]);
-						debug(["mail result", $test]);
 					}
 
 				}
