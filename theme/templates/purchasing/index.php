@@ -27,9 +27,9 @@ $legacy_products = $IC->getItems(["where" => "itemtype = 'legacyproduct'", "orde
 $products_legacy_products = array_merge($products, $legacy_products);
 
 if($pickupdate) {
-	
+
 	foreach ($products_legacy_products as $key => $product) {
-		
+
 		$pickupdate_product_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["item_id" => $product["id"]]);
 		$pickupdate_product_order_item_count = 0;
 		if($pickupdate_product_order_items) {
@@ -44,9 +44,9 @@ if($pickupdate) {
 		}
 
 		$products_legacy_products[$key]["total_order_item_count"] = $pickupdate_product_order_item_count;
-		
+
 	}
-	
+
 	foreach ($departments as $department_key => $department) {
 		foreach ($products_legacy_products as $product_key => $product) {
 			
@@ -63,8 +63,6 @@ if($pickupdate) {
 
 	}
 
-		
-	
 }
 
 ?>
@@ -166,7 +164,7 @@ if($pickupdate) {
 
 		<table class="orders">
 			<tr class="col-labels">
-				<th class="departments" title="Afdelinger" scope="col"></th>
+				<th class="departments" title="Afdelinger" scope="col">&nbsp;</th>
 				<? foreach($departments as $department): ?>
 				<th class="department" scope="col" title="<?= $department["name"] ?>"><span><?= $department["name"] ?></span></th>
 				<? endforeach; ?>
