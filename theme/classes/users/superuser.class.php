@@ -504,11 +504,11 @@ IT
 	function getAllActiveUsers() {
 
 		$query = new Query();
-		
-		$sql = "SELECT * FROM ".$this->db." WHERE id != 1 AND user_group_id IS NOT NULL ORDER BY nickname";
+
+		$sql = "SELECT u.id AS id FROM ".$this->db." AS u LEFT JOIN ".SITE_DB.".user_members AS um ON u.id = um.user_id WHERE u.id != 1 AND u.user_group_id IS NOT NULL AND um.subscription_id IS NOT NULL ORDER BY nickname";
 		if($query->sql($sql)) {
 			return $query->results();
-	   }
+		}
 	}
 
 
@@ -1153,8 +1153,8 @@ IT
 				if($user["membership"] && !$user["membership"]["subscription_id"]) {
 
 					return "REACTIVATION REQUIRED";
-				}	
-				
+				}
+
 				$this->unsetUserRenewalOptOut($user_id);
 
 				return "RENEWAL ENABLED";
