@@ -18,11 +18,9 @@ $page->pageTitle("Login");
 if($action) {
 
 
-
 	// LOGIN
 
-	// Custom DUAL CodeIgniter/Janitor login
-	// login/dual
+	// login
 	if(count($action) == 1 && $action[0] == "login" && security()->validateCsrfToken()) {
 		session()->reset("temp-username");
 
@@ -36,108 +34,6 @@ if($action) {
 			exit();
 		}
 
-		
-		// If user has no Janitor password, but is an old CodeIgniter user, then try to login to CodeIgniter and, if successful, create Janitor password from CI 
-		// Requires existing data to be moved to Janitor	
-		
-	// 	// check if user has Janitor password
-	// 	$query = new Query();
-	// 	$sql = "SELECT user_id FROM ".SITE_DB.".user_usernames as usernames WHERE usernames.username='$username' AND user_id IN (SELECT user_id FROM ".SITE_DB.".user_passwords)";
-	// 	// print $sql;
-	// 	if(!$query->sql($sql)) {
-	//
-	//
-	// 		// check if user is an old CodeIgniter user
-	//
-	// 		// $username is an email (contains @) -> find corresponding CI user ID
-	// 		if(strpos($username, '@') ==! false) {
-	// 			$sql = "SELECT uid FROM ".SITE_DB.".ff_persons AS ff_usernames WHERE ff_usernames.email='$username'";
-	// 			// print "hej"; exit;
-	// 		}
-	//
-	// 		// $username is a telephone number (number > 6 digits) -> find corresponding CI user ID
-	// 		else if (is_numeric($username) && strlen((string)$username) > 6) {
-	// 			$sql = "SELECT uid FROM ".SITE_DB.".ff_persons AS ff_usernames WHERE ff_usernames.tel='$username' OR ff_usernames.tel2='$username'";
-	// 		}
-	//
-	// 		// check if $username is a CI user ID
-	// 		else {
-	// 			$sql = "SELECT uid FROM ".SITE_DB.".ff_persons AS ff_usernames WHERE ff_usernames.uid='$username'";
-	// 		}
-	//
-	// 		if($query->sql($sql)) {
-	//
-	// 			$member_no = $query->result(0, "uid");
-	// 			// print $member_no;
-	//
-	// 			// Do CI login TODO: Do a check before loading curl for CI and fix CI password overriding Janitor password (if set)
-	// 			include_once("classes/helpers/curl.class.php");
-	// 			$curl = new CurlRequest();
-	// 			$params = array(
-	// 				"useragent" => $_SERVER["HTTP_USER_AGENT"],
-	// 				"method" => "POST",
-	// 				"post_fields" => ["pw" => getPost("password"), "user" => $member_no, "hts" => time()]
-	// 			);
-	// 			$curl->init($params);
-	// 			$result = $curl->exec(SITE_URL."/minside/login");
-	//
-	// 			// Did login result in session cookie? And was login successful
-	// 			if($result["cookies"] && count($result["cookies"]) > 1 && preg_match("/kbhff_session/", $result["cookies"][0]) && preg_match("/kbhff_login\t1/", $result["cookies"][1])) {
-	//
-	// 				// get cookie details
-	// 				list($hostname, $subdomain, $path, $secure, $expiry, $name, $value) = explode("\t", $result["cookies"][0]);
-	//
-	// 				// set CI session cookie
-	// 				setcookie(
-	// 					$name,
-	// 					$value,
-	// 					false,
-	// 					"/"
-	// 				);
-	//
-	//
-	// 				// Requires existing data to be moved to Janitor
-	//
-	// 				// print getPost("password");
-	//
-	// 				// Create new password for user to prepare for Janitor login, based on current successful CI login
-	// 				$password = password_hash(getPost("password"), PASSWORD_DEFAULT);
-	//
-	//
-	// 				// Let's try to get the user_id
-	// 				$sql = "SELECT usernames.user_id AS user_id FROM ".SITE_DB.".user_usernames as usernames WHERE usernames.username='$username'";
-	// //				print $sql."<br>\n";
-	// 				if($query->sql($sql)) {
-	//
-	// 					$user_id = $query->result(0,"user_id");
-	// 					$sql = "INSERT INTO ".SITE_DB.".user_passwords SET user_id = $user_id, password = '$password'";
-	// 					$query->sql($sql);
-	//
-	// 				}
-	//
-	// 			}
-	//
-	// 			// User could not be logged in – save username temporarily and redirect back to login to leave POST state
-	// 			else {
-	// 				session()->value("temp-username", getPost("username"));
-	// 				message()->addMessage("Ugyldig adgangskode", ["type"=>"error"]);
-	// 				header("Location: /login");
-	// 				exit();
-	// 			}
-	//
-	// 		}
-	//
-	// 		// user does not have Janitor password and is not a CI user. Then it must be a new user that was signed up via member-help.
-	// 		else {
-	//
-	// 			$username = getPost("username");
-	// 			session()->value("temp-username", $username);
-	//
-	// 		}
-	//
-	// 	}
-
-		
 		// Perform Janitor login and redirect to /profil, if no other redirect location is found
 		if(!session()->value("login_forward")) {
 
@@ -147,7 +43,6 @@ if($action) {
 		// $login_status = $page->login();
 		$login_status = security()->login();
 
-		// print_r($login_status);exit;
 
 		// remove any English messages added by Janitor backend
 		message()->resetMessages();
@@ -189,32 +84,6 @@ if($action) {
 	// login/logoff
 	else if(count($action) == 1 && $action[0] == "logoff") {
 
-// 		// CI logoff
-// 		include_once("classes/helpers/curl.class.php");
-// 		$curl = new CurlRequest();
-// 		$params = array(
-// 			"useragent" => $_SERVER["HTTP_USER_AGENT"],
-// 			"method" => "GET",
-// 			"cookie" => $_COOKIE["kbhff_session"]
-// 		);
-// 		$curl->init($params);
-// 		$result = $curl->exec(SITE_URL."/logud");
-//
-// 		// Logoff seems to be successful
-// //		if($result["http_code"] == 200) {
-//
-// 			// clear CI session cookie
-// 			setcookie(
-// 				"kbhff_session",
-// 				"",
-// 				time()-3600,
-// 				"/"
-// 			);
-//
-// //		}
-
-		// Janitor logoff
-		// $page->logoff();
 		security()->logoff();
 
 		exit();
