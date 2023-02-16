@@ -43,7 +43,7 @@ if($user_id != 1) {
 
 
 
-		// Arrange for temporery custom order of products based on product id's
+		// Arrange for temporary custom order of products based on product id's
 
 		$product_2_index = arrayKeyValue($products, "id", 476);
 		if($product_2_index !== false) {
