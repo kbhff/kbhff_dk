@@ -8,7 +8,7 @@ $TC = new Taglist();
 
 $taglist = $TC->getTaglist(["handle" => "faq"]);
 $categories = $taglist["tags"];
-// debug([$categories]);
+// debug([$taglist, $categories]);
 
 
 ?>
