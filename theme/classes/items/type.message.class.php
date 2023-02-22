@@ -34,8 +34,11 @@ class TypeMessage extends TypeMessageCore {
 		$user = $UC->getKbhffUser();
 
 		$this->getPostedEntities();
+
 		$name = $this->getProperty("name", "value");
 		$description = $this->getProperty("description", "value");
+		$department_id = getPost("department_id", "value");
+
 		if(isset($_POST["html"]) && isset($_POST["description"]) && $name) {
 			
 			// custom handling of description
@@ -61,9 +64,28 @@ class TypeMessage extends TypeMessageCore {
 			$name = prepareForHTML($name);
 
 			$recipients[] = $user["email"];
-	
+
+			// Set correct sender email
+			if($department_id == "all_departments") {
+				$from_email = "info@kbhff.dk";
+			}
+			else {
+
+				if(!$department_id) {
+					// use current user's department
+					$department = $UC->getUserDepartment(["user_id" => session()->value("user_id")]);
+				}
+				else {
+					global $DC;
+					$department = $DC->getDepartment(["id"=>$department_id]);
+				}
+
+				$from_email = $department["email"];
+
+			}
+
 			// send final HTML
-			if(mailer()->send(["from_email" => "it@kbhff.dk", "recipients" => $recipients, "subject" => $name, "html" => $final_html])) {
+			if(mailer()->send(["from_email" => $from_email, "recipients" => $recipients, "subject" => $name, "html" => $final_html])) {
 				return true;
 			}
 		}
@@ -110,7 +132,9 @@ class TypeMessage extends TypeMessageCore {
 					$member_email = $UC->getUsernames(["user_id" => $member["user"]["id"], "type" => "email"]);
 					$recipients[] = $member_email ? $member_email["username"] : "";
 				}
-	
+
+				$from_email = "info@kbhff.dk";
+
 			}
 			else {
 
@@ -119,6 +143,10 @@ class TypeMessage extends TypeMessageCore {
 					// use current user's department
 					$department = $UC->getUserDepartment(["user_id" => session()->value("user_id")]);
 					$department_id = $department ? $department["id"] : false;
+				}
+				else {
+					global $DC;
+					$department = $DC->getDepartment(["id"=>$department_id]);
 				}
 
 				// get department users with active membership
@@ -130,8 +158,12 @@ class TypeMessage extends TypeMessageCore {
 					$user_email = $UC->getUsernames(["user_id" => $user["id"], "type" => "email"]);
 					$recipients[] = $user_email ? $user_email["username"] : "";
 				}
-	
+
+				$from_email = $department["email"];
 			}
+
+			$recipients[] = "info@kbhff.dk";
+
 	
 			// create quasi message item
 			$message = [
@@ -140,7 +172,7 @@ class TypeMessage extends TypeMessageCore {
 				"html" => $html,
 				"layout" => "template-mass_mail.html"
 			];
-	
+
 			// create final HTML
 			$final_html = html_entity_decode($this->mergeMessageIntoLayout($message));
 			$name = prepareForHTML($name);
@@ -148,16 +180,16 @@ class TypeMessage extends TypeMessageCore {
 			if(count($recipients) < 1000) {
 
 				// send final HTML
-				$result = mailer()->sendBulk(["from_email" => "it@kbhff.dk", "recipients" => $recipients, "subject" => $name, "html" => $final_html]);
+				$result = mailer()->sendBulk(["from_email" => $from_email, "recipients" => $recipients, "subject" => $name, "html" => $final_html]);
 			}
 			else {
 
 				$recipient_chunks = array_chunk($recipients, 1000);
 				foreach ($recipient_chunks as $recipient_chunk) {
-					
+
 					// send final HTML
-					$result = mailer()->sendBulk(["from_email" => "it@kbhff.dk", "recipients" => $recipient_chunk, "subject" => $name, "html" => $final_html]);
-					
+					$result = mailer()->sendBulk(["from_email" => $from_email, "recipients" => $recipient_chunk, "subject" => $name, "html" => $final_html]);
+
 				}
 			}
 
