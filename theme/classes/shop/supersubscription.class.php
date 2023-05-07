@@ -121,7 +121,6 @@ class SuperSubscription extends SuperSubscriptionCore {
 
 					if($this->allowRenewal($subscription)) {
 
-						
 						mailer()->send(array(
 							"values" => array(
 								"FROM" => ADMIN_EMAIL,
@@ -132,12 +131,12 @@ class SuperSubscription extends SuperSubscriptionCore {
 							"template" => "renewal_notice",
 							"track_clicks" => false
 						));
-						
+
 						logger()->addLog("SuperSubscription->sendRenewalNotices: renewal notice sent to user_id:".$user_id);
 		
 					}
 					else {
-						
+
 						mailer()->send(array(
 							"values" => array(
 								"FROM" => ADMIN_EMAIL,
@@ -148,7 +147,7 @@ class SuperSubscription extends SuperSubscriptionCore {
 							"template" => "deactivation_notice",
 							"track_clicks" => false
 						));
-						
+
 						logger()->addLog("SuperSubscription->sendRenewalNotices: deactivation notice sent to user_id:".$user_id);
 
 

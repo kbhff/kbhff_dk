@@ -17,6 +17,7 @@ $member_user_user_group = $UC->getUserGroups(["user_group_id" => $member_user["u
 $department = $UC->getUserDepartment(["user_id" => $member_user_id]);
 $member_user_name = $member_user['nickname'] ? $member_user['nickname'] : $member_user['firstname'] . " " . $member_user['lastname'];
 
+
 // Get membership status
 $is_member = $member_user["membership"] ? $member_user["membership"]["id"] : false;
 $is_active = isset($member_user["membership"]["subscription_id"]) ? true : false;

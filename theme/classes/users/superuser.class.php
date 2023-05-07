@@ -86,9 +86,8 @@ class SuperUser extends SuperUserCore {
 				$MC = new SuperMember();
 				$user["membership"] = $MC->getMembers(["user_id" => $user_id]);
 			}
-	
+
 			$user["department"] = $this->getUserDepartment(["user_id" => $user_id]);
-			// print_r($user);
 	
 			return $user;
 		}
@@ -1258,6 +1257,7 @@ IT
 			if($user && $user["email"]) {
 				return $user["email"];
 			}
+
 		}
 
 		return false;

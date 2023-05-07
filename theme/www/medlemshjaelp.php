@@ -60,7 +60,7 @@ if(!$UC->hasAcceptedTerms(["name" => "memberhelp"])) {
 }
 
 if($action) {
-	
+
 	# /medlemshjaelp/soeg
 	if($action[0] == "soeg") {
 		
@@ -212,7 +212,7 @@ if($action) {
 	
 	# /medlemshjaelp/brugerprofil
 	else if($action[0] == "brugerprofil") {
-		
+
 		// Allow accept terms
 		if(count($action) == 3 && $action[2] == "user_accept" && security()->validateCsrfToken()) {
 
@@ -262,6 +262,7 @@ if($action) {
 				));
 				exit();
 			}
+
 			# /medlemshjaelp/brugerprofil/#user_id#/opsig
 			elseif($action[2] == "opsig") {
 				$page->page(array(
@@ -270,7 +271,7 @@ if($action) {
 				));
 				exit();
 			}
-			
+
 			# /medlemshjaelp/brugerprofil/#user_id#/medlemskab
 			elseif($action[2] == "medlemskab") {
 
@@ -308,7 +309,7 @@ if($action) {
 				));
 				exit();
 			}
-			
+
 			# /medlemshjaelp/brugerprofil/#user_id#/oplysninger
 			else if($action[2] == "oplysninger") {
 				$page->page(array(
@@ -325,7 +326,7 @@ if($action) {
 				));
 				exit();
 			}
-			
+
 			# /medlemshjaelp/brugerprofil/#user_id#/kodeord
 			else if($action[2] == "accepter") {
 				//Method returns true
@@ -352,6 +353,7 @@ if($action) {
 
 
 		}
+
 	}
 	
 	# /medlemshjaelp/updateUserInformation
