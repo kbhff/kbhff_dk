@@ -62,7 +62,6 @@ class SuperUser extends SuperUserCore {
 
 		if($user) {
 
-			 
 			$query = new Query();
 
 			$user["mobile"] = "";
@@ -75,12 +74,11 @@ class SuperUser extends SuperUserCore {
 					$user[$username["type"]] = $username["username"];
 				}
 			}
-	
-	
-			$user["addresses"] = $this->getAddresses();
-	
-			$user["maillists"] = $this->getMaillists();
-	
+
+			$user["addresses"] = $this->getAddresses(["user_id" => $user_id]);
+
+			$user["maillists"] = $this->getMaillists(["user_id" => $user_id]);
+
 			if((defined("SITE_SHOP") && SITE_SHOP)) {
 				include_once("classes/users/supermember.class.php");
 				$MC = new SuperMember();

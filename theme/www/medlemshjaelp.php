@@ -219,11 +219,11 @@ if($action) {
 			$model->acceptedTerms(["user_id" => $action[1]]);
 
 			header("Location: /medlemshjaelp/brugerprofil/".$action[1]);
-
+			exit();
 		}
 
 		// User must always accept terms - force dialogue if user has not accepted the terms
-		if(count($action) == 2 && !$model->hasAcceptedTerms(["user_id" => $action[1]])) {
+		else if(count($action) == 2 && !$model->hasAcceptedTerms(["user_id" => $action[1]])) {
 
 			$page->page(array(
 				"templates" => "member-help/user_accept_terms.php",
@@ -233,7 +233,7 @@ if($action) {
 			exit();
 		}
 
-		if(count($action) == 2 && !$model->hasEmailAddress(["user_id" => $action[1]])) {
+		else if(count($action) == 2 && !$model->hasEmailAddress(["user_id" => $action[1]])) {
 
 			$page->page(array(
 				"templates" => "member-help/update_user_email.php",
@@ -244,7 +244,8 @@ if($action) {
 		}
 
 		# /medlemshjaelp/brugerprofil/#user_id#
-		if(count($action) == 2) {
+		else  if(count($action) == 2) {
+
 			$page->page(array(
 				"templates" => "member-help/user_profile.php",
 				"type" => "admin"
