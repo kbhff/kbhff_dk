@@ -54,6 +54,8 @@ class SuperSubscription extends SuperSubscriptionCore {
 
 	function renewalDenied($subscription) {
 
+		logger()->addLog("SuperUser->renewalDenied: item_id:".$subscription["item_id"].", subscription_id:".$subscription["id"].", user_id:".$subscription["user_id"].", expires_at:".$subscription["expires_at"]);
+
 		include_once("classes/users/supermember.class.php");
 		$MC = new SuperMember();
 
