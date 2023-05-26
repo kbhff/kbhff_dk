@@ -115,7 +115,7 @@ if($item) {
 						$related_signupfee_item = $IC->getItem(["status" => 1, "itemtype" => "signupfee", "where" => "signupfee.associated_membership_id=".$item["item_id"], "extend" => ["prices" => true]]);
 				?>
 
-					<li class="item membership item_id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle" data-readstate="<?= $item["readstate"] ?>">
+					<li class="item membership item_id:<?= $item["item_id"] ?>" itemscope itemtype="http://schema.org/NewsArticle">
 
 						<h3 itemprop="headline"><a href="/bliv-medlem/medlemskaber/<?= $item["fixed_url_identifier"] ?>"><?= strip_tags($item["name"]) ?></a></h3>
 
