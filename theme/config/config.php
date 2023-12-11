@@ -9,7 +9,7 @@ header("Content-type: text/html; charset=UTF-8");
 error_reporting(E_ALL);
 
 define("VERSION", "0.7.9.2");
-define("UI_BUILD", "20221214-173605");
+define("UI_BUILD", "20231211-114926");
 
 define("SITE_UID", "KBHFF");
 define("SITE_NAME", "Københavns Fødevarefællesskab");

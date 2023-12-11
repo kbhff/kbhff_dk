@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2022-11-23 22:07:30
+asset-builder @ 2023-12-11 11:49:17
 */
 
 /*seg_desktop_include.js*/
@@ -8361,7 +8361,6 @@ Util.Modules["signupfees"] = new function() {
 Util.Modules["shop"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
-			u.bug("scene.resized:", this, u.absY(this.sidebar));
 			if(this.sidebar) {
 				this.sidebar.start_y = u.absY(this.sidebar);
 				this.scrolled();
@@ -8916,126 +8915,44 @@ Util.Modules["member_help_payment"] = new function() {
 			u.bug("scene.ready:", this);
 			var payment_options = u.qs("div.payment_options", this);
 			var mobilepay_form = u.qs("form.mobilepay", payment_options);
-			var mobilepay_fieldset = u.qs("fieldset", mobilepay_form);
-			var mobilepay_checkbox_field = u.qs(".field.checkbox", mobilepay_fieldset);
-			var mobilepay_checkbox = u.qs("input[type=checkbox]", mobilepay_checkbox_field);
-			var mobilepay_code_div = u.qs("div.code", mobilepay_fieldset);
+			if(mobilepay_form) {
+				var mobilepay_fieldset = u.qs("fieldset", mobilepay_form);
+				var mobilepay_checkbox_field = u.qs(".field.checkbox", mobilepay_fieldset);
+				var mobilepay_checkbox = u.qs("input[type=checkbox]", mobilepay_checkbox_field);
+				var mobilepay_code_div = u.qs("div.code", mobilepay_fieldset);
+			}
 			var cash_form = u.qs("form.cash", payment_options);
-			var cash_fieldset = u.qs("fieldset", cash_form);
-			var cash_checkbox_field = u.qs(".field.checkbox", cash_fieldset);
-			var cash_checkbox = u.qs("input[type=checkbox]", cash_checkbox_field);
-			var cash_instructions = u.qs("div.instructions", cash_fieldset);
-			var card_form = u.qs("form.card", payment_options);
-			var card_fieldset = u.qs("fieldset", card_form);
+			if(cash_form) {
+				var cash_fieldset = u.qs("fieldset", cash_form);
+				var cash_checkbox_field = u.qs(".field.checkbox", cash_fieldset);
+				var cash_checkbox = u.qs("input[type=checkbox]", cash_checkbox_field);
+				var cash_instructions = u.qs("div.instructions", cash_fieldset);
+			}
+			var card_form = u.qs("div.card", payment_options);
+			if(card_form) {
+				var card_fieldset = u.qs("div.fieldset", card_form);
+			}
 			var fieldset_height = u.actualHeight(mobilepay_fieldset);
 			var mobilepay_code_div_height = u.actualHeight(mobilepay_code_div);
-			u.as(cash_fieldset, "height", fieldset_height + "px"); 
-			u.as(cash_instructions, "height", mobilepay_code_div_height + "px"); 
-			u.as(card_fieldset, "height", fieldset_height + "px"); 
 			if(mobilepay_form) {
 				u.f.init(mobilepay_form);
 			}
 			if(cash_form) {
+				u.as(cash_fieldset, "height", fieldset_height + "px"); 
+				u.as(cash_instructions, "height", mobilepay_code_div_height + "px"); 
 				u.f.init(cash_form);
 			}
-			u.f.customValidate["card"] = function(iN) {
-				var card_number = iN.val().replace(/ /g, "");
-				if(u.paymentCards.validateCardNumber(card_number)) {
-					u.f.inputIsCorrect(iN);
-					u.f.validate(iN._form.inputs["card_cvc"]);
-				}
-				else {
-					u.f.inputHasError(iN);
-				}
-			}
-			u.f.customValidate["exp_month"] = function(iN) {
-				var month = iN.val();
-				var year = iN._form.inputs["card_exp_year"].val();
-				if(year && parseInt(year) < 100) {
-					year = parseInt("20"+year);
-				}
-				if(u.paymentCards.validateExpMonth(month)) {
-					u.f.inputIsCorrect(iN);
-				}
-				else {
-					u.f.inputHasError(iN);
-				}
-				if(!iN.validating_year) {
-					iN._form.inputs["card_exp_year"].validating_month = true;
-					u.f.validate(iN._form.inputs["card_exp_year"]);
-					iN._form.inputs["card_exp_year"].validating_month = false;
-				}
-			}
-			u.f.customValidate["exp_year"] = function(iN) {
-				var year = iN.val();
-				var month = iN._form.inputs["card_exp_month"].val();
-				if(year && parseInt(year) < 100) {
-					year = parseInt("20"+year);
-				}
-				if(!iN.validating_month) {
-					iN._form.inputs["card_exp_month"].validating_year = true;
-					u.f.validate(iN._form.inputs["card_exp_month"]);
-					iN._form.inputs["card_exp_month"].validating_year = false;
-				}
-				if(u.paymentCards.validateExpDate(month, year)) {
-					u.f.inputIsCorrect(iN);
-				}
-				else if(!month && u.paymentCards.validateExpYear(year)) {
-					u.rc(iN, "correct");
-					u.rc(iN.field, "correct");
-				}
-				else {
-					u.f.inputHasError(iN);
-					u.f.inputHasError(iN._form.inputs["card_exp_month"]);
-				}
-			}
-			u.f.customValidate["cvc"] = function(iN) {
-				var cvc = iN.val();
-				var card_number = iN._form.inputs["card_number"].val().replace(/ /g, "");
-				if(u.paymentCards.validateCVC(cvc, card_number)) {
-					u.f.inputIsCorrect(iN);
-				}
-				else {
-					u.f.inputHasError(iN);
-				}
-			}
-			u.f.init(card_form);
-			card_form.submitted = function() {
-				if(!this.is_submitting) {
-					this.is_submitting = true;
-					this.DOMsubmit();
-				}
-			}
-			card_form.inputs["card_number"].updated = function(iN) {
-				var value = this.val();
-				this.value = u.paymentCards.formatCardNumber(value.replace(/ /g, ""));
-				var card = u.paymentCards.getCardTypeFromNumber(value);
-				if(card && card.type != this.current_card) {
-					if(this.current_card) {
-						u.rc(this, this.current_card);
-					}
-					this.current_card = card.type;
-					u.ac(this, this.current_card);
-				}
-				else if(!card) {
-					if(this.current_card) {
-						u.rc(this, this.current_card);
+			if(card_form) {
+				u.as(card_fieldset, "height", fieldset_height + "px"); 
+				card_form.submitted = function() {
+					if(!this.is_submitting) {
+						this.is_submitting = true;
+						this.DOMsubmit();
 					}
 				}
-			}
-			card_form.inputs["card_exp_year"].changed = function(iN) {
-				var year = parseInt(this.val());
-				if(year > 99) {
-					if(year > 2000 && year < 2100) {
-						this.val(year-2000);
-					}
-				}
-			}
-			card_form.inputs["card_exp_month"].changed = function(iN) {
-				var month = parseInt(this.val());
-				if(month < 10) {
-					this.val("0"+month);
-				}
+				// 
+				// 
+				// 
 			}
 			if(mobilepay_form && cash_form) {
 				u.e.addEvent(mobilepay_checkbox_field, "change", function() {
@@ -9057,35 +8974,41 @@ Util.Modules["member_help_payment"] = new function() {
 					}
 				});
 			}
-			var cash_tab = u.insertElement(payment_options, "h4", {"class":"tab cash_tab","html":"Kontant"});
-			var card_tab = u.ie(payment_options, "h4", {"class":"tab card_tab","html":"Betalingskort"});
-			var mobilepay_tab = u.ie(payment_options, "h4", {"class":"tab mobilepay_tab","html":"MobilePay"});
-			u.e.click(mobilepay_tab);
-			mobilepay_tab.clicked = function () {
-				u.as(cash_form, "display", "none");
-				u.as(card_form, "display", "none");
-				u.as(mobilepay_form, "display", "block");
-				u.as(cash_tab, "backgroundColor", "#BBBBBB");
-				u.as(card_tab, "backgroundColor", "#BBBBBB");
-				u.as(mobilepay_tab, "backgroundColor", "#f2f2f2f2");
+			if(cash_form) {
+				var cash_tab = u.ie(payment_options, "h4", {"class":"tab cash_tab","html":"Kontant"});
+				u.e.click(cash_tab);
+				cash_tab.clicked = function () {
+					u.as(mobilepay_form, "display", "none");
+					u.as(card_form, "display", "none");
+					u.as(cash_form, "display", "block");
+					u.as(mobilepay_tab, "backgroundColor", "#BBBBBB");
+					u.as(card_tab, "backgroundColor", "#BBBBBB");
+					u.as(cash_tab, "backgroundColor", "#f2f2f2")
+				}
 			}
-			u.e.click(card_tab);
-			card_tab.clicked = function () {
-				u.as(mobilepay_form, "display", "none");
-				u.as(cash_form, "display", "none");
-				u.as(card_form, "display", "block");
-				u.as(mobilepay_tab, "backgroundColor", "#BBBBBB");
-				u.as(cash_tab, "backgroundColor", "#BBBBBB");
-				u.as(card_tab, "backgroundColor", "#f2f2f2f2")
+			if(card_form) {
+				var card_tab = u.ie(payment_options, "h4", {"class":"tab card_tab","html":"Betalingskort"});
+				u.e.click(card_tab);
+				card_tab.clicked = function () {
+					u.as(mobilepay_form, "display", "none");
+					u.as(cash_form, "display", "none");
+					u.as(card_form, "display", "block");
+					u.as(mobilepay_tab, "backgroundColor", "#BBBBBB");
+					u.as(cash_tab, "backgroundColor", "#BBBBBB");
+					u.as(card_tab, "backgroundColor", "#f2f2f2")
+				}
 			}
-			u.e.click(cash_tab);
-			cash_tab.clicked = function () {
-				u.as(mobilepay_form, "display", "none");
-				u.as(card_form, "display", "none");
-				u.as(cash_form, "display", "block");
-				u.as(mobilepay_tab, "backgroundColor", "#BBBBBB");
-				u.as(card_tab, "backgroundColor", "#BBBBBB");
-				u.as(cash_tab, "backgroundColor", "#f2f2f2f2")
+			if(mobilepay_form) {
+				var mobilepay_tab = u.ie(payment_options, "h4", {"class":"tab mobilepay_tab","html":"MobilePay"});
+				u.e.click(mobilepay_tab);
+				mobilepay_tab.clicked = function () {
+					u.as(cash_form, "display", "none");
+					u.as(card_form, "display", "none");
+					u.as(mobilepay_form, "display", "block");
+					u.as(cash_tab, "backgroundColor", "#BBBBBB");
+					u.as(card_tab, "backgroundColor", "#BBBBBB");
+					u.as(mobilepay_tab, "backgroundColor", "#f2f2f2");
+				}
 			}
 		}
 		scene.ready();
@@ -9261,211 +9184,217 @@ Util.Modules["user_profile"] = new function() {
 			var button_cancel = u.qs(".membership li.cancel-membership", this);
 			var button_department = u.qs(".membership li.change-department", this);
 			var section_user_group = u.qs(".section.user_group");
-			button_membership.scene = this;
-			button_cancel.scene = this; 
-			button_department.scene = this;
 			var right_panel = u.qs(".c-one-third", this);
-			u.clickableElement(button_department); 
-			button_department.clicked = function() {
-				this.response = function(response) {
-					this.is_requesting = false;
-					u.rc(this, "loading");
-					var form_department = u.qs(".form_department", response);
-					form_department.scene = this.scene;
-					var warning = u.qs("p.warning", response);
-					var form_fieldset = u.qs("fieldset", form_department);
-					var div_fields = u.qs("div.fields", box_membership);
-					var divs_membership = u.qsa(".membership-info", div_fields)	;
-					var ul_buttons = u.qs("ul.actions", div_fields);
-					u.ass(divs_membership[3], {"display":"none"});
-					u.ass(ul_buttons, {"display":"none"});
-					u.ae(box_membership, form_department);
-					u.f.init(form_department);
-					u.ie(form_department, div_fields);
-					u.ae(div_fields, form_fieldset);
-					if(warning) {
-						u.ae(div_fields, warning);
-					}
-					form_department.submitted = function() {
-						var data = this.getData();
-						this.response = function(response) {
-							this.is_requesting = false;
-							u.rc(this, "loading");
-							var div_membership = u.qs(".membership .fields", response);
-							box_membership.replaceChild(div_membership, form_department);
-							message = u.qs("div.messages", response);
-							if (message) {
-								u.ie(box_membership, message);
-								message.transitioned = function() {
-									message.innerHTML = "";
-								}
-								u.a.transition(message, "all 4s ease-in");
-								u.a.opacity(message, 0.5);	
-							}
-							this.scene.initMembershipBox();
-						}
-						if (!this.is_requesting) {
-							this.is_requesting = true;
-							u.ac(this, "loading");
-							u.request(this, this.action, {"data":data, "method":"POST"});
-						}
-					}
-					form_department.actions["cancel"].clicked = function() {
-						this.response = function(response) {
-							this.is_requesting = false;
-							u.rc(this, "loading");
-							var div_membership = u.qs(".membership .fields", response);
-							box_membership.replaceChild(div_membership, this._form);
-							this._form.scene.initMembershipBox();
-						}
-						if (!this.is_requesting) {
-							this.is_requesting = true;
-							u.ac(this, "loading");
-							u.request(this, this.baseURI);
-						}
-					}
-				}
-				if (!this.is_requesting) {
-					this.is_requesting = true;
-					u.ac(this, "loading");
-					u.request(this, this.url);
-				}
-			}
-			u.clickableElement(button_membership); 
-			button_membership.clicked = function() {
-				this.response = function(response) {
-					this.is_requesting = false;
-					u.rc(this, "loading");
-					var form_membership = u.qs(".form_membership", response);
-					form_membership.scene = this.scene;
-					var form_fieldset = u.qs("fieldset", form_membership);
-					var div_fields = u.qs("div.fields", box_membership);
-					var divs_membership = u.qsa(".membership-info", div_fields)	;
-					var ul_buttons = u.qs("ul.actions", div_fields);
-					u.ass(divs_membership[2], {"display":"none"});
-					u.ass(ul_buttons, {"display":"none"});
-					u.ae(box_membership, form_membership);
-					u.f.init(form_membership);
-					u.ie(form_membership, div_fields);
-					div_fields.insertBefore(form_fieldset, divs_membership[1].nextSibling);
-					form_membership.submitted = function() {
-						var data = this.getData();
-						this.response = function(response) {
-							this.is_requesting = false;
-							u.rc(this, "loading");
-							var div_membership = u.qs(".membership .fields", response);
-							box_membership.replaceChild(div_membership, form_membership);
-							var new_section_user_group = u.qs(".section.user_group", response);
-							section_user_group.parentNode.replaceChild(new_section_user_group, section_user_group);
-							if (message = u.qs("div.messages", response)) {
-								u.ie(box_membership, message);
-								message.transitioned = function() {
-									message.innerHTML = "";
-								}
-								u.a.transition(message, "all 4s ease-in");
-								u.a.opacity(message, 0.5);	
-							}
-							this.scene.initMembershipBox();
-						}
-						if (!this.is_requesting) {
-							this.is_requesting = true;
-							u.ac(this, "loading");
-							u.request(this, this.action, {"data":data, "method":"POST"});
-						}
-					}
-					form_membership.actions["cancel"].clicked = function() {
-						this.response = function(response) {
-							this.is_requesting = false;
-							u.rc(this, "loading");
-							var div_membership = u.qs(".membership .fields", response);
-							box_membership.replaceChild(div_membership, this._form);
-							this._form.scene.initMembershipBox();
-						}
-						if (!this.is_requesting) {
-							this.is_requesting = true;
-							u.ac(this, "loading");
-							u.request(this, this.baseURI);
-						}
-					}
-				}
-				if (!this.is_requesting) {
-					this.is_requesting = true;
-					u.ac(this, "loading");
-					u.request(this, this.url);
-				}
-			}
-			u.clickableElement(button_cancel);
-			button_cancel.clicked = function() {
-				this.scene.url = this.url;
-				console.log(this.scene.url);
-				this.scene.overlay = u.overlay({title:"Du er ved at udmelde et medlem.", height:200,width:600, class:"confirm_cancel_membership"});
-				var p_warning = u.ae(this.scene.overlay.div_content, "p", {
-					html:"Du er ved at melde et medlem ud af KBHFF. Er du sikker?"
-				});
-				var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
-					class:"actions"
-				});
-				var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"button delete_me","value":"Meld medlemmet ud af KBHFF"});
-				var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"button regret primary", "value":"Fortryd udmelding"});
-				delete_me.scene = this.scene;
-				regret.scene = this.scene;
-				u.e.click(delete_me)
-				delete_me.clicked = function () {
+			if(button_department) {
+				button_department.scene = this;
+				u.clickableElement(button_department); 
+				button_department.clicked = function() {
 					this.response = function(response) {
 						this.is_requesting = false;
 						u.rc(this, "loading");
-						var confirm_cancellation = u.qs(".scene.delete_user_information", response);
-						confirm_cancellation.scene = this.scene;
-						u.ass(this.scene.overlay.div_header.h2, {"display":"none"});
-						u.ass(p_warning, {"display":"none"});
-						u.ass(ul_actions, {"display":"none"});
-						u.ae(this.scene.overlay.div_content, confirm_cancellation);
-						var form_confirm_cancellation = u.qs("form.confirm_cancellation");
-						form_confirm_cancellation.scene = this.scene;
-						u.f.init(form_confirm_cancellation);
-						form_confirm_cancellation.submitted = function () {
+						var form_department = u.qs(".form_department", response);
+						form_department.scene = this.scene;
+						var warning = u.qs("p.warning", response);
+						var form_fieldset = u.qs("fieldset", form_department);
+						var div_fields = u.qs("div.fields", box_membership);
+						var divs_membership = u.qsa(".membership-info", div_fields)	;
+						var ul_buttons = u.qs("ul.actions", div_fields);
+						u.ass(divs_membership[3], {"display":"none"});
+						u.ass(ul_buttons, {"display":"none"});
+						u.ae(box_membership, form_department);
+						u.f.init(form_department);
+						u.ie(form_department, div_fields);
+						u.ae(div_fields, form_fieldset);
+						if(warning) {
+							u.ae(div_fields, warning);
+						}
+						form_department.submitted = function() {
 							var data = this.getData();
 							this.response = function(response) {
 								this.is_requesting = false;
 								u.rc(this, "loading");
-								if (response.cms_object == "JS-request") {
-									location.href = "/medlemshjaelp";
-								}
-								else if (response.cms_object != "JS-request") {
-									if (message = u.qs("div.messages", response)) {
-										u.ass(this, {"display":"none"})
-										u.ae(this.scene.overlay.div_content, message);
-										var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
-											class:"actions"
-										});
-										var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
-										button_close.scene = this.scene;
-										u.e.click(button_close)
-										button_close.clicked = function () {
-											this.scene.overlay.close ();
-										}
+								var div_membership = u.qs(".membership .fields", response);
+								box_membership.replaceChild(div_membership, form_department);
+								message = u.qs("div.messages", response);
+								if (message) {
+									u.ie(box_membership, message);
+									message.transitioned = function() {
+										message.innerHTML = "";
 									}
-									else {
-										location.href = "/medlemshjaelp";
-									}
+									u.a.transition(message, "all 4s ease-in");
+									u.a.opacity(message, 0.5);	
 								}
+								this.scene.initMembershipBox();
 							}
 							if (!this.is_requesting) {
 								this.is_requesting = true;
 								u.ac(this, "loading");
-								u.request(this, this.action, {"data":data, "method":"POST", "headers":{"X-Requested-With":"XMLHttpRequest"}});
+								u.request(this, this.action, {"data":data, "method":"POST"});
+							}
+						}
+						form_department.actions["cancel"].clicked = function() {
+							this.response = function(response) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								var div_membership = u.qs(".membership .fields", response);
+								box_membership.replaceChild(div_membership, this._form);
+								this._form.scene.initMembershipBox();
+							}
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.baseURI);
 							}
 						}
 					}
 					if (!this.is_requesting) {
 						this.is_requesting = true;
 						u.ac(this, "loading");
-						u.request(this, this.scene.url);
+						u.request(this, this.url);
 					}
 				}
-				u.e.click(regret)
-				regret.clicked = function () {
-					this.scene.overlay.close ();
+			}
+			if(button_membership) {
+				button_membership.scene = this;
+				u.clickableElement(button_membership); 
+				button_membership.clicked = function() {
+					this.response = function(response) {
+						this.is_requesting = false;
+						u.rc(this, "loading");
+						var form_membership = u.qs(".form_membership", response);
+						form_membership.scene = this.scene;
+						var form_fieldset = u.qs("fieldset", form_membership);
+						var div_fields = u.qs("div.fields", box_membership);
+						var divs_membership = u.qsa(".membership-info", div_fields)	;
+						var ul_buttons = u.qs("ul.actions", div_fields);
+						u.ass(divs_membership[2], {"display":"none"});
+						u.ass(ul_buttons, {"display":"none"});
+						u.ae(box_membership, form_membership);
+						u.f.init(form_membership);
+						u.ie(form_membership, div_fields);
+						div_fields.insertBefore(form_fieldset, divs_membership[1].nextSibling);
+						form_membership.submitted = function() {
+							var data = this.getData();
+							this.response = function(response) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								var div_membership = u.qs(".membership .fields", response);
+								box_membership.replaceChild(div_membership, form_membership);
+								var new_section_user_group = u.qs(".section.user_group", response);
+								section_user_group.parentNode.replaceChild(new_section_user_group, section_user_group);
+								if (message = u.qs("div.messages", response)) {
+									u.ie(box_membership, message);
+									message.transitioned = function() {
+										message.innerHTML = "";
+									}
+									u.a.transition(message, "all 4s ease-in");
+									u.a.opacity(message, 0.5);	
+								}
+								this.scene.initMembershipBox();
+							}
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.action, {"data":data, "method":"POST"});
+							}
+						}
+						form_membership.actions["cancel"].clicked = function() {
+							this.response = function(response) {
+								this.is_requesting = false;
+								u.rc(this, "loading");
+								var div_membership = u.qs(".membership .fields", response);
+								box_membership.replaceChild(div_membership, this._form);
+								this._form.scene.initMembershipBox();
+							}
+							if (!this.is_requesting) {
+								this.is_requesting = true;
+								u.ac(this, "loading");
+								u.request(this, this.baseURI);
+							}
+						}
+					}
+					if (!this.is_requesting) {
+						this.is_requesting = true;
+						u.ac(this, "loading");
+						u.request(this, this.url);
+					}
+				}
+			}
+			if(button_cancel) {
+				button_cancel.scene = this; 
+				u.clickableElement(button_cancel);
+				button_cancel.clicked = function() {
+					this.scene.url = this.url;
+					console.log(this.scene.url);
+					this.scene.overlay = u.overlay({title:"Du er ved at udmelde et medlem.", height:200,width:600, class:"confirm_cancel_membership"});
+					var p_warning = u.ae(this.scene.overlay.div_content, "p", {
+						html:"Du er ved at melde et medlem ud af KBHFF. Er du sikker?"
+					});
+					var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
+						class:"actions"
+					});
+					var delete_me = u.f.addAction(ul_actions, {"type":"button", "name":"delete_me", "class":"button delete_me","value":"Meld medlemmet ud af KBHFF"});
+					var regret = u.f.addAction(ul_actions, {"type":"button", "name":"regret", "class":"button regret primary", "value":"Fortryd udmelding"});
+					delete_me.scene = this.scene;
+					regret.scene = this.scene;
+					u.e.click(delete_me)
+					delete_me.clicked = function () {
+						this.response = function(response) {
+							this.is_requesting = false;
+							u.rc(this, "loading");
+							var confirm_cancellation = u.qs(".scene.delete_user_information", response);
+							confirm_cancellation.scene = this.scene;
+							u.ass(this.scene.overlay.div_header.h2, {"display":"none"});
+							u.ass(p_warning, {"display":"none"});
+							u.ass(ul_actions, {"display":"none"});
+							u.ae(this.scene.overlay.div_content, confirm_cancellation);
+							var form_confirm_cancellation = u.qs("form.confirm_cancellation");
+							form_confirm_cancellation.scene = this.scene;
+							u.f.init(form_confirm_cancellation);
+							form_confirm_cancellation.submitted = function () {
+								var data = this.getData();
+								this.response = function(response) {
+									this.is_requesting = false;
+									u.rc(this, "loading");
+									if (response.cms_object == "JS-request") {
+										location.href = "/medlemshjaelp";
+									}
+									else if (response.cms_object != "JS-request") {
+										if (message = u.qs("div.messages", response)) {
+											u.ass(this, {"display":"none"})
+											u.ae(this.scene.overlay.div_content, message);
+											var ul_actions = u.ae(this.scene.overlay.div_content, "ul", {
+												class:"actions"
+											});
+											var button_close = u.f.addAction(ul_actions, {"type":"button", "name":"button_close", "class":"button button_close primary","value":"Luk"});
+											button_close.scene = this.scene;
+											u.e.click(button_close)
+											button_close.clicked = function () {
+												this.scene.overlay.close ();
+											}
+										}
+										else {
+											location.href = "/medlemshjaelp";
+										}
+									}
+								}
+								if (!this.is_requesting) {
+									this.is_requesting = true;
+									u.ac(this, "loading");
+									u.request(this, this.action, {"data":data, "method":"POST", "headers":{"X-Requested-With":"XMLHttpRequest"}});
+								}
+							}
+						}
+						if (!this.is_requesting) {
+							this.is_requesting = true;
+							u.ac(this, "loading");
+							u.request(this, this.scene.url);
+						}
+					}
+					u.e.click(regret)
+					regret.clicked = function () {
+						this.scene.overlay.close ();
+					}
 				}
 			}
 		}

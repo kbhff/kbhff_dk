@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2022-12-14 17:36:05
+asset-builder @ 2023-12-11 11:49:26
 */
 
 /*seg_desktop_include.css*/
@@ -211,7 +211,6 @@ div.field.checkbox label,
 div.field.boolean label {width: auto; display: inline-block; vertical-align: top; font-size: 1.077rem; line-height: 1em;}
 div.field.radiobuttons {padding-bottom: 15px;}
 div.field.radiobuttons > label {display: block; font-size: 1.077rem; line-height: 1em; padding: 0 0 0 3px;}
-div.field.radiobuttons > label:after {content: ":";}
 div.field.radiobuttons div.item {padding: 8px 0 0;}
 div.field.radiobuttons div.item input {width: auto; height: auto; padding: 0; margin: 1px 10px 0 3px; border: 0;}
 div.field.radiobuttons div.item label {font-size: 1.077rem; line-height: 1em; display: inline-block; vertical-align: top; text-align: left; width: auto;}
@@ -246,6 +245,74 @@ div.field.location.geolocation div.geolocation {width: 30px; height: 30px; displ
 div.field.location.geolocation div.latitude input,
 div.field.location.geolocation div.longitude input {width: 158px;}
 iframe#geolocationmap {width: 300px; height: 300px; position: absolute; top: 0; left: 0; z-index: 100; border: 1px solid #666666; background-color: #ffffff;}
+div.field.dropdown {}
+div.field.dropdown select {display: none;}
+div.field.dropdown div.virtual {
+	vertical-align: top;
+	display: inline-block;
+	box-shadow: inset 0 1px 2px #dedede; background: #ffffff; border: 1px solid #dcdcdc; 
+	border-radius: 3px; margin: 2px; outline: none; position: relative; z-index: 1; 
+	width: 366px; height: 24px; padding: 2px 6px;
+}
+div.field.dropdown.focus div.virtual {margin: 0; border: 3px solid #5c5c5c;}
+div.field.dropdown div.virtual div.input {width: 342px; display: inline-block; vertical-align: top;
+	font-size: 14px;
+	line-height: 16px;
+	padding: 4px 0;
+	border: none;
+	outline: none;
+}
+div.field.dropdown div.virtual div.input.selection:not(.default) {
+	color: green;
+}
+div.field.dropdown div.virtual div.button {
+	z-index: 2;
+	position: relative;
+	vertical-align: top;
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	width: 24px;
+	height: 24px;
+	cursor: pointer;
+}
+div.field.dropdown div.virtual div.button svg {width: 24px; height: 24px; margin: 0;
+	fill: #000000; stroke: #000000; stroke-width: 2px;
+}
+div.field.dropdown div.virtual div.options {z-index: 1; margin: 3px -9px 0; position: relative; background-color: #ffffff; box-sizing: border-box; height: 0; overflow: hidden;}
+div.field.dropdown div.virtual div.options ul.options {border: 3px solid #5c5c5c; border-top: none; display: block;}
+div.field.dropdown div.virtual div.options ul.options li {
+	padding: 6px 6px;
+	text-align: right;
+	cursor: pointer;
+	font-size: 14px;
+	display: block;
+}
+div.field.dropdown div.virtual div.options ul.options li.hover {
+	background-color: #dedede;
+}
+div.field input.default,
+div.field select.default,
+div.field textarea.default,
+div.field .pseudolabel,
+div.field div.virtual .input.default,
+div.field div.virtual div.options ul.options li.default {color: #aaaaaa;}
+div.field .indicator {position: absolute; top: 4px; left: 415px; width: 25px; height: 25px;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: left center;
+	background-size: 16px auto;
+}
+div.field.required .indicator {
+	background-image: url(../assets/janitor/admin/img/bg_required.svg);
+}
+div.field.radiobuttons .indicator,
+div.field.checkbox .indicator,
+div.field.boolean .indicator {position: static; display: inline-block; vertical-align: top; width: 14px; height: 14px; margin-left: 4px;}
+div.field.files .indicator {left: 387px; top: 0px;}
+div.field.correct .indicator {
+	background-image: url(../assets/janitor/admin/img/bg_correct.svg);
+}
 div.field.focus input,
 div.field.focus textarea {margin: 0;}
 div.field.focus select {padding: 1px 3px 4px 0px;}
@@ -264,21 +331,7 @@ div.field.files.focus ul.filelist {border-color: #c8e183;}
 div.field.files.focus ul.filelist li.label {background-color: #c8e183;}
 div.field.location.focus input {margin: 2px; border: 1px solid #dcdcdc;}
 div.field.location.focus input.focus {margin: 0; border: 3px solid #5c5c5c;}
-div.field input.default,
-div.field select.default,
-div.field textarea.default,
-div.field .pseudolabel {color: #aaaaaa;}
-div.field .indicator {position: absolute; top: 4px; left: 420px; width: 25px; height: 25px;}
-div.field.required .indicator {
-	background: transparent url(../assets/janitor/admin/img/bg_icons.png) no-repeat 0 -292px;
-}
-div.field.text.required .indicator {background-position: 0 -296px;}
-div.field.radiobuttons .indicator,
-div.field.checkbox .indicator,
-div.field.boolean .indicator {top: -5px;}
-div.field.files .indicator {left: 392px; top: 0px;}
-div.field.correct .indicator {background-position: 0 -320px;}
-div.field.text.correct .indicator {background-position: 0 -321px;}
+div.field.focus div.virtual {margin: 0; border: 3px solid #5c5c5c;}
 div.field.error input,
 div.field.error textarea {margin: 0;}
 div.field.error select {padding: 3px 3px 2px 0px;}
@@ -296,6 +349,7 @@ div.field.boolean.error input {margin: 1px 10px 0 3px; border: none;}
 div.field.location.error input {margin: 2px; border: 1px solid #dcdcdc;}
 div.field.location.error input.error {margin: 0; border: 3px solid #f8c9bb;}
 div.field.files.error ul.filelist {border-color: #f8c9bb;}
+div.field.error div.virtual {margin: 0; border: 3px solid #f8c9bb;}
 ul.actions {padding: 0 25px;}
 ul.actions li {width: auto; height: auto; display: inline-block; padding: 0 5px 10px; vertical-align: top;
 	-moz-user-select: none;
@@ -352,133 +406,153 @@ ul.actions input.button.disabled,
 ul.actions a.button.disabled:hover,
 #content ul.actions a.button.disabled:hover,
 ul.actions input.button.disabled:hover {cursor: default !important; color: #aaaaaa !important; background-color: #eeeeee !important;}
-div.field div.help {position: absolute; left: 455px; top: 0; width: 200px; line-height: 1.2em;}
-div.field.files div.help {left: 422px;}
-div.field div.error,
-div.field div.hint {display: none; padding: 5px; border-radius: 3px; font-size: 12px;}
-div.field div.error {border: 1px solid #bbbbbb; color: #a27366; background: #f8c9bb;}
-div.field.error div.error {display: block;}
-div.field div.hint {z-index: 9; border: 1px solid #bbbbbb; color: #5d7731; background: #c8e183;}
-div.field.focus div.hint,
-div.field.hover div.hint {display: block;}
-div.field.error div.hint {border-bottom-left-radius: 0; border-bottom-right-radius: 0;}
-div.field.focus div.hint+div.error,
-div.field.hover div.hint+div.error {border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;}
-#content .field.html {padding-top: 20px; padding-bottom: 10px; margin-bottom: 10px; z-index: 3;}
-#content .field.html div.help {left: 555px;}
-#content .field.html.optionsshown {z-index: 60 !important;}
-#content .field.html div.html_editor_hint {width: 383px;}
-#content .field.html div.html_editor_hint_content {display: none;}
-#content .field.html div.html_editor_hint h3,
-#content .field.html div.html_editor_hint h4,
-#content .field.html div.html_editor_hint p {padding: 0 0 5px;}
-#content .field.html div.html_editor_hint p+h3,
-#content .field.html div.html_editor_hint p+h4 {padding: 10px 0 5px;}
-#content .field.html div.html_editor_hint .open,
-#content .field.html div.html_editor_hint .close {font-size: 1rem; line-height: 1em; cursor: pointer; vertical-align: top; margin: 3px 3px 0; border-radius: 13px; background-color: #313942; padding: 6px 10px 7px; color: #ffffff; margin: 10px 0 20px; text-align: center;}
-#content .field.html > textarea {display: none;}
-#content .field.html.focus > textarea {margin: 2px; border: 1px solid #dcdcdc;}
-#content .field.html > textarea.show {display: block; height: 200px; width: 470px;}
-#content .field.html > label {display: block;  width: 477px; font-size: 12px;}
-#content .field.html > label span {font-size: 10px; float: right; padding: 1px 0 0; cursor: pointer;}
-#content .field.html > .indicator {top: 33px;}
-#content .field.html .viewer {display: none;}
-#content .field.html .editor { width: 482px; position: relative; z-index: 3;}
-#content .field.html .editor .indicator {left: 490px;}
-#content .field.html ul.options {height: 40px; display: block; vertical-align: top; width: 30px; position: relative; z-index: 1; padding: 0;}
-#content .field.html ul.options li {font-size: 1rem; line-height: 1em; cursor: pointer; vertical-align: top; margin: 3px 3px 0; border-radius: 13px; background-color: #313942; padding: 6px 10px 7px; color: #ffffff; width: 330px; display: none;}
-#content .field.html ul.options li:hover {background-color: #64ad8e;}
-#content .field.html ul.options li.add {display: inline-block; font-size: 16px; line-height: 1em; padding: 2px 4px 4px; width: 14px; text-align: center;}
-#content .field.html ul.options.show li.add {top: 0; left: 0; background-color: #df0000;}
-#content .field.html ul.options.show li {display: inline-block; position: relative; top: -26px; left: 26px;}
-#content .field.html .editor div.tag {margin: 0 0 1px; padding: 0 0 0 30px; background-color: #dcdcdc; position: relative; border-radius: 3px; border: 2px solid #f5f7f8;}
-#content .field.html .editor div.dragged {z-index: 15;}
-#content .field.html .editor div.tag .drag {display: none; position: absolute; top: 0px; left: -20px; border-top-left-radius: 15px; border-bottom-left-radius: 15px; background: #dedede; width: 30px; height: 30px; cursor: move;
+div.field div.help {position: absolute; left: 435px; top: 0; width: 200px; line-height: 1.2em;}
+div.field.files div.help {left: 407px;}
+div.field > div.help > div.error,
+div.field > div.help > div.hint {display: none; padding: 5px; border-radius: 3px; font-size: 12px;}
+div.field > div.help > div.error {border: 1px solid #bbbbbb; color: #a27366; background: #f8c9bb;}
+div.field.error > div.help > div.error {display: block;}
+div.field > div.help > div.hint {z-index: 9; border: 1px solid #bbbbbb; color: #5d7731; background: #c8e183;}
+div.field.focus > div.help > div.hint,
+div.field.hover > div.help > div.hint {display: block;}
+div.field.error > div.help > div.hint {border-bottom-left-radius: 0; border-bottom-right-radius: 0;}
+div.field.focus > div.help > div.hint+div.error,
+div.field.hover > div.help > div.hint+div.error {border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;}
+div.field.html {padding-top: 20px; padding-bottom: 10px; margin-bottom: 10px; z-index: 3;}
+div.field.html > div.help {left: 535px;}
+div.field.html.optionsshown {z-index: 60 !important;}
+div.field.html div.html_editor_hint {width: 383px;}
+div.field.html div.html_editor_hint_content {display: none;}
+div.field.html div.html_editor_hint h3,
+div.field.html div.html_editor_hint h4,
+div.field.html div.html_editor_hint p {padding: 0 0 5px;}
+div.field.html div.html_editor_hint p+h3,
+div.field.html div.html_editor_hint p+h4 {padding: 10px 0 5px;}
+div.field.html div.html_editor_hint .open,
+div.field.html div.html_editor_hint .close {font-size: 1rem; line-height: 1em; cursor: pointer; vertical-align: top; margin: 3px 3px 0; border-radius: 13px; background-color: #313942; padding: 6px 10px 7px; color: #ffffff; margin: 10px 0 20px; text-align: center;}
+div.field.html > textarea {display: none;}
+div.field.html.focus > textarea {margin: 2px; border: 1px solid #dcdcdc;}
+div.field.html > textarea.show {display: block; height: 200px; width: 470px;}
+div.field.html > label {display: block;  width: 477px; font-size: 12px;}
+div.field.html > label span {font-size: 10px; float: right; padding: 1px 0 0; cursor: pointer;}
+div.field.html > .indicator {top: 37px; left: 515px;}
+div.field.html .viewer {display: none;}
+div.field.html .editor { width: 482px; position: relative; z-index: 3;}
+div.field.html ul.new_tag_options {display: block; vertical-align: top; position: relative; z-index: 1; padding: 0 0 10px !important; margin: 0 !important;}
+div.field.html ul.new_tag_options li {font-size: 1rem; line-height: 1em !important; color: #000000; cursor: pointer; margin: 3px 3px 0; border-radius: 13px; background-color: #dedede; padding: 6px 10px 7px !important;  display: block;}
+div.field.html ul.new_tag_options li:hover {background-color: #5c5c5c; color: #ffffff;}
+div.field.html .editor div.tag {margin: 0 0 1px; padding: 0 0 0 30px; background-color: #dcdcdc; position: relative; border-radius: 3px; border: 2px solid #f5f7f8;}
+div.field.html .editor div.dragged {background-color: #5c5c5c; border-color: #5c5c5c;}
+div.field.html .editor div.tag.dragged .drag {background-color: #5c5c5c;}
+div.field.html .editor div.tag.dragged ul.type li {color: #ffffff;}
+div.field.html .editor div.tag .drag {display: none; position: absolute; top: 0px; left: -20px; border-top-left-radius: 15px; border-bottom-left-radius: 15px; background: #dedede; width: 30px; height: 30px; cursor: move;
 	background: #dedede url(../assets/janitor/admin/img/bg_icons.png) no-repeat 6px -93px;
 }
-#content .field.html .editor div.tag:hover .drag {display: block;}
-#content .field.html .editor div.tag .remove {display: none; position: absolute; top: 0px; right: -15px; border-radius: 15px; background: #dedede; width: 30px; height: 30px; cursor: pointer;
+div.field.html .editor div.tag:hover .drag {display: block;}
+div.field.html .editor div.tag ul.tag_options {display: none; z-index: 10; position: absolute; top: 0px; right: -14px; list-style: none !important; padding: 0 !important; margin: 0 !important;}
+div.field.html .editor div.tag ul.tag_options li {z-index: 1; position: absolute; border-radius: 15px; background: #dedede; width: 30px; height: 30px; cursor: pointer; padding: 0 !important; box-sizing: border-box; display: block;}
+div.field.html .editor div.tag ul.tag_options li:hover {z-index: 2;}
+div.field.html .editor div.tag.classname_open ul.tag_options,
+div.field.html .editor:not(.reordering) div.tag:hover ul.tag_options {display: block;}
+div.field.html .editor div.tag ul.tag_options li.add {top: 13px; right: 0px; font-size: 16px; line-height: 1em; padding: 6px 4px 0 !important; text-align: center;}
+div.field.html .editor div.tag ul.tag_options li.add:hover {background-color: #3E8E17; color: #ffffff;}
+div.field.html .editor div.tag ul.tag_options li.remove {top: 0px; right: -23px;
 	background: #dedede url(../assets/janitor/admin/img/bg_icons.png) no-repeat 8px -42px;
 }
-#content .field.html .editor div.tag:hover .remove {display: block;}
-#content .field.html .editor div.tag .classname {display: none; position: absolute; top: 0px; right: -45px; border-radius: 15px; background: #dedede; width: 30px; height: 30px; cursor: pointer;}
-#content .field.html .editor div.tag .classname.open {width: auto; display: block;}
-#content .field.html .editor div.tag .classname span {display: inline-block; vertical-align: top; font-size: 10px; padding-top: 8px; padding-left: 6px;}
-#content .field.html .editor div.tag .classname form {margin: 0; display: inline-block; vertical-align: top;}
-#content .field.html .editor div.tag .classname form .field {padding: 0 12px 0 3px;}
-#content .field.html .editor div.tag .classname form .field input {height: 20px; width: 100px;}
-#content .field.html .editor div.tag .classname form .field.focus input {border: 1px solid #dedede; margin: 2px;}
-#content .field.html .editor div.tag:hover .classname {display: block;}
-#content .field.html .editor div.tag ul.type {display: block; z-index: 5; position: absolute; width: 30px; top: 0px; left: 0px; padding: 0;}
-#content .field.html .editor div.tag ul.type li {display: none; text-transform: uppercase; padding: 9px 4px; text-align: center; font-size: 11px; cursor: default;}
-#content .field.html .editor div.tag ul.type.clickable li {cursor: pointer;}
-#content .field.html .editor div.tag ul.type li.selected {display: block;}
-#content .field.html .editor div.tag ul.type.open {z-index: 10; border: 2px solid #5c5c5c; margin: -2px; background-color: #F5F7F8;}
-#content .field.html .editor div.tag ul.type.open li {display: block; color: #5c5c5c !important;}
-#content .field.html .editor div.tag ul.type.open li:hover {background-color: #dedede;}
-#content .field.html .editor div.tag ul.type.open li.selected {background-color: #5c5c5c !important; color: #ffffff !important;}
-#content .field.html .editor div.tag ul.type li.code {font-size: 8px; padding-top: 11px;}
-#content .field.html .editor div.tag ul.type li.media {font-size: 8px; padding-top: 11px;}
-#content .field.html .editor div.tag ul.type li.youtube {font-size: 8px; padding: 7px 5px; max-width: 4.4ch; word-wrap: break-word;}
-#content .field.html .editor div.tag ul.type li.vimeo {font-size: 8px; padding-top: 11px;}
-#content .field.html .editor div.tag div.text {display: inline-block; vertical-align: top; width: 434px; height: auto; padding: 4px 6px; line-height: 1.375em; border-radius: 3px; background-color: #F5F7F8; color: #333333; box-shadow: inset 0 1px 2px #dedede; background: #ffffff; border: 1px solid #dcdcdc; min-height: 20px; outline: none;}
-#content .field.html .editor div.tag div.text em,
-#content .field.html .editor div.tag div.text strong,
-#content .field.html .editor div.tag div.text a,
-#content .field.html .editor div.tag div.text span,
-#content .field.html .editor div.tag div.text sup {background-color: rgba(255, 0, 0, 0.3); cursor: default; font-size: inherit;}
-#content .field.html .editor div.tag div.text sup {line-height: 1em; font-size: 11px;}
-#content .field.html .editor div.tag.focus {background-color: #5c5c5c; padding: 0 0 0 30px; border: 2px solid #5c5c5c;}
-#content .field.html .editor div.tag.focus div.text {border-color: #5c5c5c;}
-#content .field.html .editor div.tag.focus .drag {background-color: #5c5c5c; top: -2px;}
-#content .field.html .editor div.tag.focus ul.type li {color: #ffffff;}
-#content .field.html .editor div.tag.h1 div.text {font-size: 36px;}
-#content .field.html .editor div.tag.h2 div.text {font-size: 30px;}
-#content .field.html .editor div.tag.h3 div.text {font-size: 20px;}
-#content .field.html .editor div.tag.h4 div.text {font-size: 16px;}
-#content .field.html .editor div.tag.h5 div.text {font-size: 14px;}
-#content .field.html .editor div.tag.p div.text {font-size: 14px;}
-#content .field.html .editor div.tag.code div.text {font-size: 12px; line-height: 1.761em; white-space: pre-wrap;
+div.field.html .editor div.tag ul.tag_options li.remove:hover {background-color: #C22414;}
+div.field.html .editor div.tag:nth-child(2) ul.tag_options li.remove {display: none;}
+div.field.html .editor div.tag ul.tag_options li.classname {top: -15px; right: 0px;}
+div.field.html .editor div.tag ul.tag_options li.classname.open {width: auto; white-space: nowrap; font-size: 0;}
+div.field.html .editor div.tag ul.tag_options li.classname span {display: inline-block; vertical-align: top; font-size: 10px; line-height: 1em; padding-top: 9px; padding-left: 6px;}
+div.field.html .editor div.tag ul.tag_options li.classname:hover {background-color: #5c5c5c; color: #ffffff;}
+div.field.html .editor div.tag ul.tag_options li.classname form {margin: 0; display: inline-block; vertical-align: top;}
+div.field.html .editor div.tag ul.tag_options li.classname form .field {padding: 0 12px 0 3px;}
+div.field.html .editor div.tag ul.tag_options li.classname form .field input {height: 20px; width: 100px;}
+div.field.html .editor div.tag ul.tag_options li.classname form .field.focus input {border: 1px solid #dedede; margin: 2px;}
+div.field.html .editor div.tag span.classname {position: absolute; top: -7px; right: 12px; background: #dedede; border-radius: 6px; font-size: 9px; display: block; padding: 2px 5px; line-height: 9px;}
+div.field.html .editor div.tag ul.type {display: block; z-index: 5; position: absolute; width: 30px; top: 0px; left: 0px; padding: 0;}
+div.field.html .editor div.tag ul.type li {display: none; text-transform: uppercase; padding: 9px 4px; text-align: center; font-size: 11px; cursor: default;}
+div.field.html .editor div.tag ul.type.clickable li {cursor: pointer;}
+div.field.html .editor div.tag ul.type li.selected {display: block;}
+div.field.html .editor div.tag ul.type.open {z-index: 10; border: 2px solid #5c5c5c; margin: -2px; background-color: #F5F7F8;}
+div.field.html .editor div.tag ul.type.open li {display: block; color: #5c5c5c !important;}
+div.field.html .editor div.tag ul.type.open li:hover {background-color: #dedede;}
+div.field.html .editor div.tag ul.type.open li.selected {background-color: #5c5c5c !important; color: #ffffff !important;}
+div.field.html .editor div.tag ul.type li.code {font-size: 8px; padding-top: 11px;}
+div.field.html .editor div.tag ul.type li.media {font-size: 8px; padding-top: 11px;}
+div.field.html .editor div.tag ul.type li.youtube {font-size: 8px; padding: 7px 5px; max-width: 4.4ch; word-wrap: break-word;}
+div.field.html .editor div.tag ul.type li.vimeo {font-size: 8px; padding-top: 11px;}
+div.field.html .editor div.tag div.text {display: inline-block; vertical-align: top; width: 434px; height: auto; padding: 4px 6px; line-height: 1.375em; border-radius: 3px; background-color: #F5F7F8; color: #333333; box-shadow: inset 0 1px 2px #dedede; background: #ffffff; border: 1px solid #dcdcdc; min-height: 20px; outline: none;}
+div.field.html .editor div.tag div.text em,
+div.field.html .editor div.tag div.text strong,
+div.field.html .editor div.tag div.text a,
+div.field.html .editor div.tag div.text span,
+div.field.html .editor div.tag div.text sup {background-color: rgba(255, 0, 0, 0.3); cursor: default; font-size: inherit;}
+div.field.html .editor div.tag div.text sup {line-height: 1em; font-size: 11px;}
+div.field.html .editor div.tag.focus {background-color: #5c5c5c; padding: 0 0 0 30px; border: 2px solid #5c5c5c;}
+div.field.html .editor div.tag.focus div.text {border-color: #5c5c5c;}
+div.field.html .editor div.tag.focus .drag {background-color: #5c5c5c; top: -2px;}
+div.field.html .editor div.tag.focus ul.type li {color: #ffffff;}
+div.field.html .editor div.tag.h1 div.text {font-size: 36px;}
+div.field.html .editor div.tag.h2 div.text {font-size: 30px;}
+div.field.html .editor div.tag.h3 div.text {font-size: 20px;}
+div.field.html .editor div.tag.h4 div.text {font-size: 16px;}
+div.field.html .editor div.tag.h5 div.text {font-size: 14px;}
+div.field.html .editor div.tag.p div.text {font-size: 14px;}
+div.field.html .editor div.tag.code div.text {font-size: 12px; line-height: 1.761em; white-space: pre-wrap;
 	font-family: "Monaco", "Courier New", "Courier";
 	-moz-tab-size: 4;
 	-o-tab-size: 4;
 	tab-size: 4;
 }
-#content .field.html .editor div.tag.ul {padding-left: 50px;}
-#content .field.html .editor div.tag.ol {padding-left: 50px;}
-#content .field.html .editor div.tag div.li {font-size: 14px;}
-#content .field.html .editor div.tag div.li div.text {width: 414px;}
-#content .field.html .editor div.tag.file .text {padding: 0 6px; height: 28px;}
-#content .field.html .editor div.tag.file.done .text {color: #aaaaaa; font-size: 13px; padding: 4px 6px; line-height: 1.461em; height: auto; text-decoration: underline;}
-#content .field.html .editor div.tag.file.done.focus .text {color: #333333;}
-#content .field.html .editor div.tag.file .text label {padding: 5px 0 0; display: block; text-align: center; position: absolute; z-index: 1; width: 432px; color: #aaaaaa;}
-#content .field.html .editor div.tag.file input {width: 416px; opacity: 0; height: 18px; position: relative; z-index: 2;
+div.field.html .editor div.tag.ul {padding-left: 50px;}
+div.field.html .editor div.tag.ol {padding-left: 50px;}
+div.field.html .editor div.tag div.li {font-size: 14px;}
+div.field.html .editor div.tag div.li div.text {width: 414px;}
+div.field.html .editor div.tag.file .text {padding: 0 6px; height: 28px;}
+div.field.html .editor div.tag.file.done .text {color: #aaaaaa; font-size: 13px; padding: 4px 6px; line-height: 1.461em; height: auto; text-decoration: underline;}
+div.field.html .editor div.tag.file.done.focus .text {color: #333333;}
+div.field.html .editor div.tag.file .text label {padding: 5px 0 0; display: block; text-align: center; position: absolute; z-index: 1; width: 432px; color: #aaaaaa;}
+div.field.html .editor div.tag.file input {width: 416px; opacity: 0; height: 18px; position: relative; z-index: 2;
 	font-size: 130px;
 }
-#content .field.html .editor div.tag.media .text {padding: 0 6px; height: 28px;}
-#content .field.html .editor div.tag.media.done .text {color: #aaaaaa; font-size: 13px; padding: 4px 6px; line-height: 1.461em; height: auto;}
-#content .field.html .editor div.tag.media.done.focus .text {color: #333333;}
-#content .field.html .editor div.tag.media .text label {padding: 5px 0 0; display: block; text-align: center; position: absolute; z-index: 1; width: 432px; color: #aaaaaa;}
-#content .field.html .editor div.tag.media input {width: 416px; opacity: 0; height: 18px; position: relative; z-index: 2;
+div.field.html .editor div.tag.media .text {padding: 0 6px; height: 28px;}
+div.field.html .editor div.tag.media.done .text {color: #aaaaaa; font-size: 13px; padding: 4px 6px; line-height: 1.461em; height: auto;}
+div.field.html .editor div.tag.media.done.focus .text {color: #333333;}
+div.field.html .editor div.tag.media .text label {padding: 5px 0 0; display: block; text-align: center; position: absolute; z-index: 1; width: 432px; color: #aaaaaa;}
+div.field.html .editor div.tag.media input {width: 416px; opacity: 0; height: 18px; position: relative; z-index: 2;
 	font-size: 130px;
 }
-#content .field.html .editor div.tag.media img {width: 444px; margin: 2px;}
-#content .field.html .editor div.tag.vimeo .text,
-#content .field.html .editor div.tag.youtube .text {padding: 0 6px; height: 28px; color: #aaaaaa; font-size: 13px; padding: 4px 6px; line-height: 1.461em; height: auto;}
-#content .field.html .editor div.tag.vimeo.focus .text,
-#content .field.html .editor div.tag.youtube.focus .text {color: #333333;}
-body #selection_options {z-index: 1100; position: absolute; background-color: #F5F7F8; border: 3px solid #5c5c5c; margin: 0px 0 0 10px; padding: 15px; border-radius: 5px;}
-body #selection_options h3 {padding: 0 0 10px; text-align: left; font-size: 13px;}
-body #selection_options ul.options + form {margin-top: 10px; border-top: 1px solid #5c5c5c; padding-top: 10px;}
-body #selection_options ul.options li {display: block; font-size: 13px; padding: 5px 0; cursor: pointer;}
-body #selection_options ul.options li.link {text-decoration: underline;}
-body #selection_options ul.options li.em {font-style: italic;}
-body #selection_options ul.options li.strong {font-weight: 700;}
-body #selection_options .field {margin-left: -2px; padding: 0 0 5px;}
-body #selection_options .field.string input {width: 150px;}
-body #selection_options .field .help {left: 180px;}
-body #selection_options ul.actions {padding: 10px 0 0;}
-body #selection_options ul.actions li {padding: 0 5px 0 0;}
+div.field.html .editor div.tag.media img,
+div.field.html .editor div.tag.media video {width: 444px; margin: 2px;}
+div.field.html .editor div.tag.vimeo .text,
+div.field.html .editor div.tag.youtube .text {padding: 0 6px; height: 28px; color: #aaaaaa; font-size: 13px; padding: 4px 6px; line-height: 1.461em; height: auto;}
+div.field.html .editor div.tag.vimeo.focus .text,
+div.field.html .editor div.tag.youtube.focus .text {color: #333333;}
+div.field.html .editor .selection_options {background-color: #F5F7F8; border: 3px solid #5c5c5c; border-bottom: 0; margin: 0 0 -3px; padding: 10px 15px; border-top-left-radius: 3px; border-top-right-radius: 3px;}
+div.field.html .editor .selection_options h3 {padding: 0 0 10px; text-align: left; font-size: 13px;}
+div.field.html .editor .selection_options ul.options {
+	display: flex;
+	justify-content: space-between;
+}
+div.field.html .editor .selection_options + div.tag {background-color: #5c5c5c; padding: 0 0 0 30px; border: 2px solid #5c5c5c;}
+div.field.html .editor .selection_options + div.tag div.text {border-color: #5c5c5c;}
+div.field.html .editor .selection_options ul.options li {font-size: 13px; box-sizing: border-box; padding: 0 10px; cursor: pointer;}
+div.field.html .editor .selection_options ul.options li.link {text-decoration: underline;}
+div.field.html .editor .selection_options ul.options li.em {font-style: italic;}
+div.field.html .editor .selection_options ul.options li.strong {font-weight: 700;}
+div.field.html .editor .selection_options .field {margin-left: -2px; padding: 0 0 15px;}
+div.field.html .editor .selection_options .field.string input {width: calc(100% - 18px);}
+div.field.html .editor .selection_options .field .help {left: 510px;}
+div.field.html .editor .selection_options ul.actions {padding: 2px 0 0 10px !important;}
+div.field.html .editor .selection_options ul.actions li {padding: 0 !important;}
+div.field.html .editor .selection_options ul.actions li input {box-shadow: none;}
+div.field.html .editor .selection_options form {font-size: 0; padding-top: 10px;}
+div.field.html .editor .selection_options fieldset,
+div.field.html .editor .selection_options ul.actions {display: inline-block; vertical-align: top;}
+div.field.html .editor .selection_options fieldset {width: calc(100% - 90px);}
+div.field.html .editor .selection_options .field .indicator {display: none;}
+div.field.html .editor .selection_options .field.error {position: relative; }
 .delete_selection {position: absolute; z-index: 1150; top: 0; left: 0; border-radius: 8px; width: 14px; height: 14px; font-size: 10px; line-height: 14px; text-align: center; background: #ffffff; border: 1px solid #000000; cursor: pointer;}
 .edit_selection {position: absolute; z-index: 1150; top: 0; left: 0; border-radius: 8px; width: 14px; height: 14px; font-size: 10px; line-height: 14px; text-align: center; background: #ffffff; border: 1px solid #000000; cursor: pointer;}
 

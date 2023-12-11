@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2022-12-14 17:36:05
+asset-builder @ 2023-12-11 11:49:26
 */
 
 /*seg_smartphone_include.js*/
@@ -353,6 +353,7 @@ Util.Animation = u.a = new function() {
 Util.saveCookie = function(name, value, _options) {
 	var expires = true;
 	var path = false;
+	var samesite = "lax";
 	var force = false;
 	if(obj(_options)) {
 		var _argument;
@@ -360,6 +361,7 @@ Util.saveCookie = function(name, value, _options) {
 			switch(_argument) {
 				case "expires"	: expires	= _options[_argument]; break;
 				case "path"		: path		= _options[_argument]; break;
+				case "samesite"	: samesite	= _options[_argument]; break;
 				case "force"	: force		= _options[_argument]; break;
 			}
 		}
@@ -374,7 +376,7 @@ Util.saveCookie = function(name, value, _options) {
 		return;
 	}
 	if(expires === false) {
-		expires = ";expires=Mon, 04-Apr-2020 05:00:00 GMT";
+		expires = ";expires="+(new Date((new Date()).getTime() + (1000*60*60*24*365))).toGMTString();
 	}
 	else if(str(expires)) {
 		expires = ";expires="+expires;
@@ -388,7 +390,8 @@ Util.saveCookie = function(name, value, _options) {
 	else {
 		path = "";
 	}
-	document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + path + expires;
+	samesite = ";samesite="+samesite;
+	document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + path + expires + samesite;
 }
 Util.getCookie = function(name) {
 	var matches;
@@ -745,7 +748,10 @@ Util.clickableElement = u.ce = function(node, _options) {
 		u.ac(node, "link");
 		if(a.getAttribute("href") !== null) {
 			node.url = a.href;
-			a.removeAttribute("href");
+			a.url = a.href;
+			node.onclick = function(event) {
+				event.preventDefault();
+			}
 			node._a = a;
 		}
 	}
@@ -909,10 +915,10 @@ u.containsOrIs = function(scope, node) {
 u.elementMatches = u.em = function(node, selector) {
 	return node.matches(selector);
 }
-Util.insertAfter = u.ia = function(after_node, insert_node) {
+Util.insertAfter = u.ia = function(insert_node, after_node) {
 	var next_node = u.ns(after_node);
 	if(next_node) {
-		after_node.parentNode.insertBefore(next_node, insert_node);
+		after_node.parentNode.insertBefore(insert_node, next_node);
 	}
 	else {
 		after_node.parentNode.appendChild(insert_node);
@@ -1242,7 +1248,7 @@ Util.Events = u.e = new function() {
 			}
 			if(this.e_drag || this.e_swipe) {
 				u.e.addMoveEvent(this, u.e._pick);
-				u.e.addEndEvent(this, u.e._cancelPick);
+				this.e_cancelPick = u.e.addWindowEndEvent(this, u.e._cancelPick);
 			}
 			if(this.e_scroll) {
 				u.e.addMoveEvent(this, u.e._scrollStart);
@@ -1294,7 +1300,7 @@ Util.Events = u.e = new function() {
 		u.e.addStartEvent(node, this._inputStart);
 	}
 	this._held = function(event) {
-		this.e_hold_options.event = event;
+		this.e_hold_options.event = this.e_hold_options.event || "hold";
 		u.stats.event(this, this.e_hold_options);
 		u.e.resetNestedEvents(this);
 		if(fun(this.held)) {
@@ -1309,7 +1315,7 @@ Util.Events = u.e = new function() {
 	}
 	this._clicked = function(event) {
 		if(this.e_click_options) {
-			this.e_click_options.event = event;
+			this.e_click_options.event = this.e_click_options.event || "click";
 			u.stats.event(this, this.e_click_options);
 		}
 		u.e.resetNestedEvents(this);
@@ -1327,7 +1333,7 @@ Util.Events = u.e = new function() {
 	this._rightclicked = function(event) {
 		u.bug("_rightclicked:", this);
 		if(this.e_rightclick_options) {
-			this.e_rightclick_options.event = event;
+			this.e_rightclick_options.event = this.e_rightclick_options.event || "rightclick";
 			u.stats.event(this, this.e_rightclick_options);
 		}
 		u.e.resetNestedEvents(this);
@@ -1343,7 +1349,7 @@ Util.Events = u.e = new function() {
 	}
 	this._dblclicked = function(event) {
 		if(u.t.valid(this.t_clicked) && event) {
-			this.e_dblclick_options.event = event;
+			this.e_dblclick_options.event = this.e_dblclick_options.event || "doubleclick";
 			u.stats.event(this, this.e_dblclick_options);
 			u.e.resetNestedEvents(this);
 			if(fun(this.dblclicked)) {
@@ -1425,9 +1431,22 @@ u.e.addDOMReadyEvent = function(action) {
 		}
 		else {
 			var id = u.randomString();
-			window["DOMReady_" + id] = action;
-			eval('window["_DOMReady_' + id + '"] = function() {window["DOMReady_'+id+'"](); u.e.removeEvent(document, "DOMContentLoaded", window["_DOMReady_' + id + '"])}');
-			u.e.addEvent(document, "DOMContentLoaded", window["_DOMReady_" + id]);
+			window["_DOMReady_" + id] = {
+				id: id,
+				action: action,
+				callback: function(event) {
+					if(fun(this.action)) {
+						this.action.bind(window)(event);
+					}
+					else if(fun(this[this.action])){
+						this[this.action].bind(window)(event);
+					}
+ 					u.e.removeEvent(document, "DOMContentLoaded", window["_DOMReady_" + this.id].eventCallback); 
+					delete window["_DOMReady_" + this.id];
+				}
+			}
+			eval('window["_DOMReady_' + id + '"].eventCallback = function() {window["_DOMReady_'+id+'"].callback(event);}');
+			u.e.addEvent(document, "DOMContentLoaded", window["_DOMReady_" + id].eventCallback);
 		}
 	}
 	else {
@@ -1440,81 +1459,124 @@ u.e.addOnloadEvent = function(action) {
 	}
 	else {
 		var id = u.randomString();
-		window["Onload_" + id] = action;
-		eval('window["_Onload_' + id + '"] = function() {window["Onload_'+id+'"](); u.e.removeEvent(window, "load", window["_Onload_' + id + '"])}');
-		u.e.addEvent(window, "load", window["_Onload_" + id]);
+		window["_Onload_" + id] = {
+			id: id,
+			action: action,
+			callback: function(event) {
+				if(fun(this.action)) {
+					this.action.bind(window)(event);
+				}
+				else if(fun(this[this.action])){
+					this[this.action].bind(window)(event);
+				}
+				u.e.removeEvent(document, "load", window["_Onload_" + this.id].eventCallback); 
+				delete window["_Onload_" + this.id];
+			}
+		}
+		eval('window["_Onload_' + id + '"].eventCallback = function() {u.bug("load");window["_Onload_'+id+'"].callback(event);}');
+		u.e.addEvent(window, "load", window["_Onload_" + id].eventCallback);
 	}
 }
 u.e.addWindowEvent = function(node, type, action) {
 	var id = u.randomString();
-	window["_OnWindowEvent_node_"+ id] = node;
-	if(fun(action)) {
-		eval('window["_OnWindowEvent_callback_' + id + '"] = function(event) {window["_OnWindowEvent_node_'+ id + '"]._OnWindowEvent_callback_'+id+' = '+action+'; window["_OnWindowEvent_node_'+ id + '"]._OnWindowEvent_callback_'+id+'(event);};');
-	} 
-	else {
-		eval('window["_OnWindowEvent_callback_' + id + '"] = function(event) {if(fun(window["_OnWindowEvent_node_'+ id + '"]["'+action+'"])) {window["_OnWindowEvent_node_'+id+'"]["'+action+'"](event);}};');
-	}
-	u.e.addEvent(window, type, window["_OnWindowEvent_callback_" + id]);
+	window["_OnWindowEvent_"+ id] = {
+		id: id,
+		node: node,
+		type: type,
+		action: action,
+		callback: function(event) {
+			if(fun(this.action)) {
+				this.action.bind(this.node)(event);
+			}
+			else if(fun(this[this.action])){
+				this[this.action](event);
+			}
+		}
+	};
+	eval('window["_OnWindowEvent_' + id + '"].eventCallback = function(event) {window["_OnWindowEvent_'+ id + '"].callback(event);}');
+	u.e.addEvent(window, type, window["_OnWindowEvent_" + id].eventCallback);
 	return id;
 }
-u.e.removeWindowEvent = function(node, type, id) {
-	u.e.removeEvent(window, type, window["_OnWindowEvent_callback_"+id]);
-	delete window["_OnWindowEvent_node_"+id];
-	delete window["_OnWindowEvent_callback_"+id];
+u.e.removeWindowEvent = function(id) {
+	if(window["_OnWindowEvent_" + id]) {
+		u.e.removeEvent(window, window["_OnWindowEvent_"+id].type, window["_OnWindowEvent_"+id].eventCallback);
+		delete window["_OnWindowEvent_"+id];
+	}
 }
 u.e.addWindowStartEvent = function(node, action) {
 	var id = u.randomString();
-	window["_Onstart_node_"+ id] = node;
-	if(fun(action)) {
-		eval('window["_Onstart_callback_' + id + '"] = function(event) {window["_Onstart_node_'+ id + '"]._Onstart_callback_'+id+' = '+action+'; window["_Onstart_node_'+ id + '"]._Onstart_callback_'+id+'(event);};');
-	} 
-	else {
-		eval('window["_Onstart_callback_' + id + '"] = function(event) {if(fun(window["_Onstart_node_'+ id + '"]["'+action+'"])) {window["_Onstart_node_'+id+'"]["'+action+'"](event);}};');
-	}
-	u.e.addStartEvent(window, window["_Onstart_callback_" + id]);
+	window["_OnWindowStartEvent_"+ id] = {
+		id: id,
+		node: node,
+		action: action,
+		callback: function(event) {
+			if(fun(this.action)) {
+				this.action.bind(this.node)(event);
+			}
+			else if(fun(this[this.action])){
+				this[this.action](event);
+			}
+		}
+	};
+	eval('window["_OnWindowStartEvent_' + id + '"].eventCallback = function(event) {window["_OnWindowStartEvent_'+ id + '"].callback(event);}');
+	u.e.addStartEvent(window, window["_OnWindowStartEvent_" + id].eventCallback);
 	return id;
 }
-u.e.removeWindowStartEvent = function(node, id) {
-	u.e.removeStartEvent(window, window["_Onstart_callback_"+id]);
-	delete window["_Onstart_node_"+id]["_Onstart_callback_"+id];
-	delete window["_Onstart_node_"+id];
-	delete window["_Onstart_callback_"+id];
+u.e.removeWindowStartEvent = function(id) {
+	if(window["_OnWindowStartEvent_" + id]) {
+		u.e.removeStartEvent(window, window["_OnWindowStartEvent_"+id].eventCallback);
+		delete window["_OnWindowStartEvent_"+id];
+	}
 }
 u.e.addWindowMoveEvent = function(node, action) {
 	var id = u.randomString();
-	window["_Onmove_node_"+ id] = node;
-	if(fun(action)) {
-		eval('window["_Onmove_callback_' + id + '"] = function(event) {window["_Onmove_node_'+ id + '"]._Onmove_callback_'+id+' = '+action+'; window["_Onmove_node_'+ id + '"]._Onmove_callback_'+id+'(event);};');
-	} 
-	else {
-		eval('window["_Onmove_callback_' + id + '"] = function(event) {if(fun(window["_Onmove_node_'+ id + '"]["'+action+'"])) {window["_Onmove_node_'+id+'"]["'+action+'"](event);}};');
-	}
-	u.e.addMoveEvent(window, window["_Onmove_callback_" + id]);
+	window["_OnWindowMoveEvent_"+ id] = {
+		id: id,
+		node: node,
+		action: action,
+		callback: function(event) {
+			if(fun(this.action)) {
+				this.action.bind(this.node)(event);
+			}
+			else if(fun(this[this.action])){
+				this[this.action](event);
+			}
+		}
+	};
+	eval('window["_OnWindowMoveEvent_' + id + '"].eventCallback = function(event) {window["_OnWindowMoveEvent_'+ id + '"].callback(event);}');
+	u.e.addMoveEvent(window, window["_OnWindowMoveEvent_" + id].eventCallback);
 	return id;
 }
-u.e.removeWindowMoveEvent = function(node, id) {
-	u.e.removeMoveEvent(window, window["_Onmove_callback_" + id]);
-	delete window["_Onmove_node_"+ id]["_Onmove_callback_"+id];
-	delete window["_Onmove_node_"+ id];
-	delete window["_Onmove_callback_"+ id];
+u.e.removeWindowMoveEvent = function(id) {
+	if(window["_OnWindowMoveEvent_" + id]) {
+		u.e.removeMoveEvent(window, window["_OnWindowMoveEvent_"+id].eventCallback);
+		delete window["_OnWindowMoveEvent_"+id];
+	}
 }
 u.e.addWindowEndEvent = function(node, action) {
 	var id = u.randomString();
-	window["_Onend_node_"+ id] = node;
-	if(fun(action)) {
-		eval('window["_Onend_callback_' + id + '"] = function(event) {window["_Onend_node_'+ id + '"]._Onend_callback_'+id+' = '+action+'; window["_Onend_node_'+ id + '"]._Onend_callback_'+id+'(event);};');
-	} 
-	else {
-		eval('window["_Onend_callback_' + id + '"] = function(event) {if(fun(window["_Onend_node_'+ id + '"]["'+action+'"])) {window["_Onend_node_'+id+'"]["'+action+'"](event);}};');
-	}
-	u.e.addEndEvent(window, window["_Onend_callback_" + id]);
+	window["_OnWindowEndEvent_"+ id] = {
+		id: id,
+		node: node,
+		action: action,
+		callback: function(event) {
+			if(fun(this.action)) {
+				this.action.bind(this.node)(event);
+			}
+			else if(fun(this[this.action])){
+				this[this.action](event);
+			}
+		}
+	};
+	eval('window["_OnWindowEndEvent_' + id + '"].eventCallback = function(event) {window["_OnWindowEndEvent_'+ id + '"].callback(event);}');
+	u.e.addEndEvent(window, window["_OnWindowEndEvent_" + id].eventCallback);
 	return id;
 }
-u.e.removeWindowEndEvent = function(node, id) {
-	u.e.removeEndEvent(window, window["_Onend_callback_" + id]);
-	delete window["_Onend_node_"+ id]["_Onend_callback_"+id];
-	delete window["_Onend_node_"+ id];
-	delete window["_Onend_callback_"+ id];
+u.e.removeWindowEndEvent = function(id) {
+	if(window["_OnWindowEndEvent_" + id]) {
+		u.e.removeEndEvent(window, window["_OnWindowEndEvent_" + id].eventCallback);
+		delete window["_OnWindowEndEvent_"+id];
+	}
 }
 u.e.resetDragEvents = function(node) {
 	node._moves_pick = 0;
@@ -1524,8 +1586,7 @@ u.e.resetDragEvents = function(node) {
 	this.removeEvent(node, "touchmove", this._drag);
 	this.removeEvent(node, "mouseup", this._drop);
 	this.removeEvent(node, "touchend", this._drop);
-	this.removeEvent(node, "mouseup", this._cancelPick);
-	this.removeEvent(node, "touchend", this._cancelPick);
+	this.removeWindowEndEvent(node.e_cancelPick);
 	this.removeEvent(node, "mouseout", this._dropOut);
 	this.removeEvent(node, "mousemove", this._scrollStart);
 	this.removeEvent(node, "touchmove", this._scrollStart);
@@ -2035,8 +2096,8 @@ Util.Form = u.f = new function() {
 			}
 		}
 		if(!field._custom_initialized) {
-			if(u.hc(field, "string|email|tel|number|integer|password|date|datetime")) {
-				field.type = field.className.match(/(?:^|\b)(string|email|tel|number|integer|password|date|datetime)(?:\b|$)/)[0];
+			if(u.hc(field, "string|email|tel|number|integer|password")) {
+				field.type = field.className.match(/(?:^|\b)(string|email|tel|number|integer|password)(?:\b|$)/)[0];
 				field.input = u.qs("input", field);
 				field.input._form = _form;
 				field.input.label = u.qs("label[for='"+field.input.id+"']", field);
@@ -2049,6 +2110,32 @@ Util.Form = u.f = new function() {
 			}
 			else if(u.hc(field, "text")) {
 				field.type = "text";
+				field.input = u.qs("textarea", field);
+				field.input._form = _form;
+				field.input.label = u.qs("label[for='"+field.input.id+"']", field);
+				field.input.field = field;
+				field.input.val = this._value;
+				if(u.hc(field, "autoexpand")) {
+					u.ass(field.input, {
+						"overflow": "hidden"
+					});
+					field.input.setHeight = function() {
+						u.ass(this, {
+							height: "auto"
+						});
+						u.ass(this, {
+							height: (this.scrollHeight) + "px"
+						});
+					}
+					u.e.addEvent(field.input, "input", field.input.setHeight);
+					field.input.setHeight();
+				}
+				u.e.addEvent(field.input, "keyup", this._updated);
+				u.e.addEvent(field.input, "change", this._changed);
+				this.activateInput(field.input);
+			}
+			else if(u.hc(field, "json")) {
+				field.type = "json";
 				field.input = u.qs("textarea", field);
 				field.input._form = _form;
 				field.input.label = u.qs("label[for='"+field.input.id+"']", field);
@@ -2115,6 +2202,19 @@ Util.Form = u.f = new function() {
 					this.activateInput(input);
 				}
 			}
+			else if(u.hc(field, "date|datetime")) {
+				field.type = field.className.match(/(?:^|\b)(date|datetime)(?:\b|$)/)[0];
+				field.input = u.qs("input", field);
+				field.input._form = _form;
+				field.input.label = u.qs("label[for='"+field.input.id+"']", field);
+				field.input.field = field;
+				field.input.val = this._value_date;
+				u.e.addEvent(field.input, "keyup", this._updated);
+				u.e.addEvent(field.input, "change", this._changed);
+				u.e.addEvent(field.input, "change", this._updated);
+				this.inputOnEnter(field.input);
+				this.activateInput(field.input);
+			}
 			else if(u.hc(field, "files")) {
 				field.type = "files";
 				field.input = u.qs("input", field);
@@ -2131,8 +2231,6 @@ Util.Form = u.f = new function() {
 				field.uploaded_files = u.qsa("li.uploaded", field.filelist);
 				this._update_filelist.bind(field.input)();
 				u.e.addEvent(field.input, "change", this._update_filelist);
-				u.e.addEvent(field.input, "change", this._updated);
-				u.e.addEvent(field.input, "change", this._changed);
 				if(u.e.event_support != "touch") {
 					u.e.addEvent(field.input, "dragenter", this._focus);
 					u.e.addEvent(field.input, "dragleave", this._blur);
@@ -2150,9 +2248,20 @@ Util.Form = u.f = new function() {
 				this.validate(field.input);
 			}
 		}
+		if(field.virtual_input && !field.virtual_input.tabindex) {
+			field.virtual_input.setAttribute("tabindex", 0);
+			field.input.setAttribute("tabindex", 0);
+		}
+		else if(field.input && field.input.getAttribute("readonly")) {
+			field.input.setAttribute("tabindex", -1);
+		}
+		else if(field.input && !field.input.tabindex) {
+			field.input.setAttribute("tabindex", 0);
+		}
 	}
 	this.initButton = function(_form, action) {
 		action._form = _form;
+		action.setAttribute("tabindex", 0);
 		this.buttonOnEnter(action);
 		this.activateButton(action);
 	}
@@ -2270,6 +2379,16 @@ Util.Form = u.f = new function() {
 		}
 		return (this.selectedIndex >= 0 && this.default_value != this.options[this.selectedIndex].value) ? this.options[this.selectedIndex].value : "";
 	}
+	this._value_date = function(value) {
+		if(value !== undefined) {
+			this.value = value;
+			if(value !== this.default_value) {
+				u.rc(this, "default");
+			}
+			u.f.validate(this);
+		}
+		return (this.value != this.default_value) ? this.value.replace("T", " ") : "";
+	}
 	this._value_file = function(value) {
 		if(value !== undefined) {
 			if(value === "") {
@@ -2298,6 +2417,7 @@ Util.Form = u.f = new function() {
 		return "";
 	}
 	this._changed = function(event) {
+		u.f.positionHint(this.field);
 		if(fun(this[this._form._callback_changed])) {
 			this[this._form._callback_changed](this);
 		}
@@ -2334,12 +2454,50 @@ Util.Form = u.f = new function() {
 		var i;
 		var files = this.val();
 		this.field.filelist.innerHTML = "";
-		u.ae(this.field.filelist, "li", {html:this.field.hint ? u.text(this.field.hint) : u.text(this.label), class:"label"})
+		this.e_updated = event;
+		u.ae(this.field.filelist, "li", {
+			"html":this.field.hint ? u.text(this.field.hint) : u.text(this.label), class:"label",
+		});
 		if(files && files.length) {
 			u.ac(this.field, "has_new_files");
-			var i;
+			var i, file, li_file;
+			this.field.filelist.load_queue = 0;
 			for(i = 0; i < files.length; i++) {
-				u.ae(this.field.filelist, "li", {html:files[i].name, class:"new"})
+				file = files[i];
+				li_file = u.ae(this.field.filelist, "li", {"html":file.name, "class":"new format:"+file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase()})
+				li_file.input = this;
+				if(file.type.match(/image/)) {
+					li_file.image = new Image();
+					li_file.image.li = li_file;
+					u.ac(li_file, "loading");
+					this.field.filelist.load_queue++;
+					li_file.image.onload = function() {
+						u.ac(this.li, "width:"+this.width);
+						u.ac(this.li, "height:"+this.height);
+						u.rc(this.li, "loading");
+						this.li.input.field.filelist.load_queue--;
+						delete this.li.image;
+						u.f.filelistUpdated(this.li.input);
+					}
+					li_file.image.src = URL.createObjectURL(file);
+				}
+				else if(file.type.match(/video/)) {
+					li_file.video = document.createElement("video");
+					li_file.video.preload = "metadata";
+					li_file.video.li = li_file;
+					u.ac(li_file, "loading");
+					this.field.filelist.load_queue++;
+					li_file.video.onloadedmetadata = function() {
+						u.bug("loaded", this);
+						u.ac(this.li, "width:"+this.videoWidth);
+						u.ac(this.li, "height:"+this.videoHeight);
+						u.rc(this.li, "loading");
+						this.li.input.field.filelist.load_queue--;
+						delete this.li.video;
+						u.f.filelistUpdated(this.li.input);
+					}
+					li_file.video.src = URL.createObjectURL(file);
+				}
 			}
 			if(this.multiple) {
 				for(i = 0; i < this.field.uploaded_files.length; i++) {
@@ -2349,6 +2507,7 @@ Util.Form = u.f = new function() {
 			else {
 				this.field.uploaded_files = [];
 			}
+			u.f.filelistUpdated(this);
 		}
 		else if(this.field.uploaded_files && this.field.uploaded_files.length) {
 			u.rc(this.field, "has_new_files");
@@ -2359,6 +2518,57 @@ Util.Form = u.f = new function() {
 		}
 		else {
 			u.rc(this.field, "has_new_files");
+		}
+	}
+	this.filelistUpdated = function(input) {
+		if(input.field.filelist.load_queue === 0) {
+			this._changed.bind(input.field.input)(input.e_updated);
+			this._updated.bind(input.field.input)(input.e_updated);
+			delete input.e_updated;
+		}
+	}
+	this.updateFilelistStatus = function(form, response) {
+		if(form && form.inputs && response && response.cms_status == "success" && response.cms_object && response.cms_object.mediae) {
+			var mediae = JSON.parse(JSON.stringify(response.cms_object.mediae));
+			var filelists = u.qsa("div.field.files ul.filelist", form);
+			var i, j, k, filelist, old_files, old_file, new_files, new_files;
+			for(i = 0; i < filelists.length; i++) {
+				filelist = filelists[i];
+				new_files = u.qsa("li.new", filelist);
+				if(new_files.length) {
+					old_files = u.qsa("li.uploaded", filelist);
+					if(old_files.length) {
+						for(j in mediae) {
+							media = mediae[j];
+							if(media.variant.match("^" + filelist.field.input.name.replace(/\[\]$/, "") + "(\-|$)")) {
+								for(k = 0; k < old_files.length; k++) {
+									old_file = old_files[k];
+									if(u.cv(old_file, "media_id") == media.id) {
+										delete mediae[j];
+									}
+								}
+							}
+						}
+					}
+					if(Object.keys(mediae).length) {
+						for(j in mediae) {
+							media = mediae[j];
+							if(media.variant.match("^"+filelist.field.input.name.replace(/\[\]$/, "")+"(\-|$)")) {
+								for(k = 0; k < new_files.length; k++) {
+									new_file = new_files[k];
+									if(u.text(new_file) == media.name || u.text(new_file)+".zip" == media.name) {
+										new_file.innerHTML = media.name;
+										u.rc(new_file, "new");
+										u.ac(new_file, "uploaded media_id:"+media.id+" variant:"+media.variant+" format:"+media.format+" width:"+media.width+" height:"+media.height);
+										delete mediae[j];
+									}
+								}
+							}
+						}
+					}
+				}
+				filelist.field.uploaded_files = u.qsa("li.uploaded", filelist);
+			}
 		}
 	}
 	this._mouseenter = function(event) {
@@ -2534,55 +2744,17 @@ Util.Form = u.f = new function() {
 					return;
 				}
 			}
-			var input_middle = field.input.offsetTop + (field.input.offsetHeight / 2);
-			var help_top = input_middle - field.help.offsetHeight / 2;
+			var input_middle, help_top;
+			if(field.virtual_input) {
+				input_middle = field.virtual_input.parentNode.offsetTop + (field.virtual_input.parentNode.offsetHeight / 2);
+			}
+			else {
+				input_middle = field.input.offsetTop + (field.input.offsetHeight / 2);
+			}
+			help_top = input_middle - field.help.offsetHeight / 2;
 			u.ass(field.help, {
 				"top": help_top + "px"
 			});
-		}
-	}
-	this.updateFilelistStatus = function(form, response) {
-		if(form && form.inputs && response && response.cms_status == "success" && response.cms_object && response.cms_object.mediae) {
-			var mediae = JSON.parse(JSON.stringify(response.cms_object.mediae));
-			var filelists = u.qsa("div.field.files ul.filelist", form);
-			var i, j, k, filelist, old_files, old_file, new_files, new_files;
-			for(i = 0; i < filelists.length; i++) {
-				filelist = filelists[i];
-				new_files = u.qsa("li.new", filelist);
-				if(new_files.length) {
-					old_files = u.qsa("li.uploaded", filelist);
-					if(old_files.length) {
-						for(j in mediae) {
-							media = mediae[j];
-							if(media.variant.match("^" + filelist.field.input.name.replace(/\[\]$/, "") + "(\-|$)")) {
-								for(k = 0; k < old_files.length; k++) {
-									old_file = old_files[k];
-									if(u.cv(old_file, "media_id") == media.id) {
-										delete mediae[j];
-									}
-								}
-							}
-						}
-					}
-					if(Object.keys(mediae).length) {
-						for(j in mediae) {
-							media = mediae[j];
-							if(media.variant.match("^"+filelist.field.input.name.replace(/\[\]$/, "")+"(\-|$)")) {
-								for(k = 0; k < new_files.length; k++) {
-									new_file = new_files[k];
-									if(u.text(new_file) == media.name || u.text(new_file)+".zip" == media.name) {
-										new_file.innerHTML = media.name;
-										u.rc(new_file, "new");
-										u.ac(new_file, "uploaded media_id:"+media.id+" variant:"+media.variant+" format:"+media.format+" width:"+media.width+" height:"+media.height);
-										delete mediae[j];
-									}
-								}
-							}
-						}
-					}
-				}
-				filelist.field.uploaded_files = u.qsa("li.uploaded", filelist);
-			}
 		}
 	}
 	this.inputHasError = function(iN) {
@@ -2633,6 +2805,7 @@ Util.Form = u.f = new function() {
 			delete iN.is_correct;
 			this.updateInputValidationState(iN);
 		}
+		this.positionHint(iN.field);
 	}
 	this.updateInputValidationState = function(iN) {
 		if(iN.has_error && fun(iN[iN._form._callback_validation_failed])) {
@@ -2824,6 +2997,30 @@ Util.Form = u.f = new function() {
 					this.inputHasError(iN);
 				}
 			}
+			else if(u.hc(iN.field, "json")) {
+				min = Number(u.cv(iN.field, "min"));
+				max = Number(u.cv(iN.field, "max"));
+				min = min ? min : 2;
+				max = max ? max : 10000000;
+				if(
+					iN.val().length >= min && 
+					iN.val().length <= max && 
+					(function(value) {
+						try {
+							JSON.parse(value);
+							return true;
+						}
+						catch(exception) {
+							return false;
+						}
+					}(iN.val()))
+				) {
+					this.inputIsCorrect(iN);
+				}
+				else {
+					this.inputHasError(iN);
+				}
+			}
 			else if(u.hc(iN.field, "date")) {
 				min = u.cv(iN.field, "min");
 				max = u.cv(iN.field, "max");
@@ -2868,21 +3065,35 @@ Util.Form = u.f = new function() {
 				min = min ? min : 1;
 				max = max ? max : 10000000;
 				pattern = iN.getAttribute("accept");
-				var i, value = iN.val(), files = [];
-				if(iN.field.uploaded_files && iN.field.uploaded_files.length) {
-					for(i = 0; i < iN.field.uploaded_files.length; i++) {
-						files.push("." + u.cv(iN.field.uploaded_files[i], "format").toLowerCase());
-					}
+				if(pattern) {
+					pattern = pattern.split(",");
 				}
-				if(value && value.length) {
-					for(i = 0; i < value.length; i++) {
-						files.push(value[i].name.substring(value[i].name.lastIndexOf(".")).toLowerCase());
+				var i, files = Array.prototype.slice.call(u.qsa("li:not(.label)", iN.field.filelist));
+				var min_width = Number(iN.getAttribute("data-min-width"));
+				var min_height = Number(iN.getAttribute("data-min-height"));
+				var allowed_sizes = iN.getAttribute("data-allowed-sizes");
+				if(allowed_sizes) {
+					allowed_sizes = allowed_sizes.split(",");
+				}
+				var allowed_proportions = iN.getAttribute("data-allowed-proportions");
+				if(allowed_proportions) {
+					allowed_proportions = allowed_proportions.split(",");
+					for(i = 0; i < allowed_proportions.length; i++) {
+						allowed_proportions[i] = u.round(eval(allowed_proportions[i]), 4);
 					}
 				}
 				if(
 					(files.length >= min && files.length <= max)
 					&&
-					(!pattern || files.every(function(v) {return pattern.split(",").indexOf(v) !== -1}))
+					(!pattern || files.every(function(node) {return pattern.indexOf("."+u.cv(node, "format")) !== -1}))
+					&&
+					(!min_width || files.every(function(node) {return u.cv(node, "width") >= min_width}))
+					&&
+					(!min_height || files.every(function(node) {return u.cv(node, "height") >= min_height}))
+					&&
+					(!allowed_sizes || files.every(function(node) {return allowed_sizes.indexOf(u.cv(node, "width")+"x"+u.cv(node, "height")) !== -1}))
+					&&
+					(!allowed_proportions || files.every(function(node) {return allowed_proportions.indexOf(u.round(Number(u.cv(node, "width"))/Number(u.cv(node, "height")), 4)) !== -1}))
 				) {
 					this.inputIsCorrect(iN);
 				}
@@ -3316,7 +3527,8 @@ Util.Form.customLabelStyle["inject"] = function(iN) {
 		iN.default_value = u.text(iN.label);
 		u.e.addEvent(iN, "focus", u.f._changed_state);
 		u.e.addEvent(iN, "blur", u.f._changed_state);
-		if(iN.type.match(/number|integer|password|datetime|date/)) {
+		u.e.addEvent(iN, "change", u.f._changed_state);
+		if(iN.type.match(/number|integer|password/)) {
 			iN.pseudolabel = u.ae(iN.parentNode, "span", {"class":"pseudolabel", "html":iN.default_value});
 			iN.pseudolabel.iN = iN;
 			u.as(iN.pseudolabel, "top", iN.offsetTop+"px");
@@ -3336,14 +3548,22 @@ u.f._changed_state = function() {
 u.f.updateDefaultState = function(iN) {
 	if(iN.is_focused || iN.val() !== "") {
 		u.rc(iN, "default");
-		if(iN.val() === "") {
+		if(iN.field.virtual_input) {
+			u.rc(iN.field.virtual_input, "default");
+		}
+		if(iN.val() === "" && !iN.type.match(/date|datetime/)) {
 			iN.val("");
 		}
 	}
 	else {
 		if(iN.val() === "") {
 			u.ac(iN, "default");
-			iN.val(iN.default_value);
+			if(obj(iN.field.virtual_input)) {
+				u.ac(iN.field.virtual_input, "default");
+			}
+			if(!iN.type.match(/date|datetime/)) {
+				iN.val(iN.default_value);
+			}
 		}
 	}
 }
@@ -3353,7 +3573,17 @@ Util.Form.customInit["html"] = function(field) {
 	field.input._form = field._form;
 	field.input.label = u.qs("label[for='"+field.input.id+"']", field);
 	field.input.field = field;
-	field.input.val = u.f._value;
+	field._html_value = function(value) {
+		if(value !== undefined) {
+			this.value = value;
+			if(value !== this.default_value) {
+				u.rc(this, "default");
+			}
+			u.f.validate(this);
+		}
+		return (this.value != this.default_value && u.text(this.field._viewer)) ? this.value : "";
+	}
+	field.input.val = field._html_value;
 	u.f.textEditor(field);
 }
 Util.Form.customValidate["html"] = function(iN) {
@@ -3420,13 +3650,22 @@ u.f.textEditor = function(field) {
 		field.item_id = item_id_match[1];
 	}
 	field._viewer = u.ae(field, "div", {"class":"viewer"});
+	field.insertBefore(field._viewer, field.help)
+	field._viewer.field = field;
 	field._editor = u.ae(field, "div", {"class":"editor"});
+	field.insertBefore(field._editor, field.help)
 	field._editor.field = field;
-	u.ae(field._editor, field.indicator);
+	if(!fun(u.f.fixFieldHTML)) {
+		u.ae(field._editor, field.indicator);
+	}
+	field._editor.picked = function() {
+		u.ac(this, "reordering");
+	}
 	field._editor.dropped = function() {
+		u.rc(this, "reordering");
 		this.field.update();
 	}
-	field.addOptions = function() {
+	field.addRawHTMLButton = function() {
 		this.bn_show_raw = u.ae(this.input.label, "span", {"html":"(RAW HTML)"});
 		this.bn_show_raw.field = this;
 		u.ce(this.bn_show_raw);
@@ -3437,89 +3676,6 @@ u.f.textEditor = function(field) {
 			else {
 				u.ac(this.field.input, "show");
 			}
-		}
-		this.options = u.ae(this, "ul", {"class":"options"});
-		this.bn_add = u.ae(this.options, "li", {"class":"add", "html":"+"});
-		this.bn_add.field = field;
-		u.ce(this.bn_add);
-		u.ce(this.options);
-		this.options.inputStarted = function(event) {
-			u.e.kill(event);
-		}
-		this.bn_add.clicked = function(event) {
-			if(u.hc(this.field.options, "show")) {
-				u.rc(this.field.options, "show");
-				u.rc(this.field, "optionsshown");
-				if(this.start_event_id) {
-					u.e.removeWindowStartEvent(this, this.start_event_id);
-					delete this.start_event_id;
-				}
-			}
-			else {
-				u.ac(this.field.options, "show");
-				u.ac(this.field, "optionsshown");
-				this.start_event_id = u.e.addWindowStartEvent(this, this.clicked);
-			}
-		}
-		if(this.text_allowed.length) {
-			this.bn_add_text = u.ae(this.options, "li", {"class":"text", "html":"Text ("+this.text_allowed.join(", ")+")"});
-			this.bn_add_text.field = this;
-			u.ce(this.bn_add_text);
-			this.bn_add_text.clicked = function(event) {
-				this.field.addTextTag(this.field.text_allowed[0]);
-				this.field.bn_add.clicked();
-			}
-		}
-		if(this.list_allowed.length) {
-			this.bn_add_list = u.ae(this.options, "li", {"class":"list", "html":"List ("+this.list_allowed.join(", ")+")"});
-			this.bn_add_list.field = this;
-			u.ce(this.bn_add_list);
-			this.bn_add_list.clicked = function(event) {
-				this.field.addListTag(this.field.list_allowed[0]);
-				this.field.bn_add.clicked();
-			}
-		}
-		if(this.code_allowed.length) {
-			this.bn_add_code = u.ae(this.options, "li", {"class":"code", "html":"Code"});
-			this.bn_add_code.field = this;
-			u.ce(this.bn_add_code);
-			this.bn_add_code.clicked = function(event) {
-				this.field.addCodeTag(this.field.code_allowed[0]);
-				this.field.bn_add.clicked();
-			}
-		}
-		if(this.media_allowed.length && this.item_id && this.media_add_action && this.media_delete_action && !u.browser("IE", "<=9")) {
-			this.bn_add_media = u.ae(this.options, "li", {"class":"list", "html":"Media ("+this.media_allowed.join(", ")+")"});
-			this.bn_add_media.field = this;
-			u.ce(this.bn_add_media);
-			this.bn_add_media.clicked = function(event) {
-				this.field.addMediaTag();
-				this.field.bn_add.clicked();
-			}
-		}
-		else if(this.media_allowed.length) {
-			u.bug("some information is missing to support media upload:\nitem_id="+this.item_id+"\nmedia_add_action="+this.media_add_action+"\nmedia_delete_action="+this.media_delete_action);
-		}
-		if(this.ext_video_allowed.length) {
-			this.bn_add_ext_video = u.ae(this.options, "li", {"class":"video", "html":"External video ("+this.ext_video_allowed.join(", ")+")"});
-			this.bn_add_ext_video.field = this;
-			u.ce(this.bn_add_ext_video);
-			this.bn_add_ext_video.clicked = function(event) {
-				this.field.addExternalVideoTag(this.field.ext_video_allowed[0]);
-				this.field.bn_add.clicked();
-			}
-		}
-		if(this.file_allowed.length && this.item_id && this.file_add_action && this.file_delete_action && !u.browser("IE", "<=9")) {
-			this.bn_add_file = u.ae(this.options, "li", {"class":"file", "html":"Downloadable file"});
-			this.bn_add_file.field = this;
-			u.ce(this.bn_add_file);
-			this.bn_add_file.clicked = function(event) {
-				this.field.addFileTag();
-				this.field.bn_add.clicked();
-			}
-		}
-		else if(this.file_allowed.length) {
-			u.bug("some information is missing to support file upload:\nitem_id="+this.item_id+"\nfile_add_action="+this.file_add_action+"\nfile_delete_action="+this.file_delete_action);
 		}
 	}
 	field.update = function() {
@@ -3574,7 +3730,6 @@ u.f.textEditor = function(field) {
 		}
 	}
 	field.updateContent = function() {
-		u.bug("updateContent");
 		var tags = u.qsa("div.tag", this);
 		this.input.val("");
 		var i, node, tag, type, value, j, html = "";
@@ -3613,7 +3768,7 @@ u.f.textEditor = function(field) {
 		}
 		this.input.val(html);
 	}
-	field.createTag = function(allowed_tags, type) {
+	field.createTag = function(allowed_tags, type, className) {
 		var tag = u.ae(this._editor, "div", {"class":"tag"});
 		tag.field = this;
 		tag._drag = u.ae(tag, "div", {"class":"drag"});
@@ -3621,23 +3776,10 @@ u.f.textEditor = function(field) {
 		tag._drag.tag = tag;
 		this.createTagSelector(tag, allowed_tags);
 		tag._type.val(type);
-		tag.bn_remove = u.ae(tag, "div", {"class":"remove"});
-		tag.bn_remove.field = this;
-		tag.bn_remove.tag = tag;
-		u.ce(tag.bn_remove);
-		tag.bn_remove.clicked = function() {
-			this.field.deleteTag(this.tag);
+		if(className) {
+			tag._classname = className;
 		}
-		if(u.hc(tag, this.list_allowed.join("|")) || u.hc(tag, this.text_allowed.join("|")) || u.hc(tag, this.code_allowed.join("|"))) {
-			tag.bn_classname = u.ae(tag, "div", {"class":"classname"});
-			u.ae(tag.bn_classname, "span", {"html":"CSS"});
-			tag.bn_classname.field = this;
-			tag.bn_classname.tag = tag;
-			u.ce(tag.bn_classname);
-			tag.bn_classname.clicked = function() {
-				this.field.classnameTag(this.tag);
-			}
-		}
+		this.addTagOptions(tag);
 		return tag;
 	}
 	field.deleteTag = function(tag) {
@@ -3652,7 +3794,6 @@ u.f.textEditor = function(field) {
 			this._editor.updateTargets();
 			this._editor.updateDraggables();
 			this.update();
-			this._form.submit();
 		}
 	}
 	field.classnameTag = function(tag) {
@@ -3662,12 +3803,24 @@ u.f.textEditor = function(field) {
 			var input_classname = u.f.addField(fieldset, {"label":"classname", "name":"classname", "error_message":"", "value":tag._classname});
 			input_classname.tag = tag;
 			u.ac(tag.bn_classname, "open");
+			u.ac(tag, "classname_open");
 			u.f.init(form);
 			input_classname.input.focus();
 			input_classname.input.blurred = function() {
 				this.field.tag._classname = this.val();
 				this.field.tag.bn_classname.removeChild(this._form);
 				u.rc(this.field.tag.bn_classname, "open");
+				u.rc(this.field.tag, "classname_open");
+				if(!this.field.tag.mirror) {
+					this.field.tag.mirror = u.ae(this.field.tag, "span", {"class":"classname"});
+				}
+				if(this.field.tag._classname && this.field.tag._classname != "") {
+					this.field.tag.mirror.innerHTML = this.field.tag._classname;
+				}
+				else {
+					this.field.tag.mirror.parentNode.removeChild(this.field.tag.mirror);
+					delete this.field.tag.mirror;
+				}
 				this.field.tag.field.update();
 			}
 		}
@@ -3707,6 +3860,12 @@ u.f.textEditor = function(field) {
 		}
 		if(allowed_tags.length > 1) {
 			u.ce(tag._type);
+			tag._type.inputStarted = function(event) {
+				var selection = window.getSelection();
+				if(selection && selection.type && u.contains(this.tag, selection.anchorNode)) {
+					u.e.kill(event);
+				}
+			}
 			tag._type.clicked = function(event) {
 				u.t.resetTimer(this.t_autohide);
 				if(u.hc(this, "open")) {
@@ -3758,6 +3917,151 @@ u.f.textEditor = function(field) {
 			}
 		}
 	}
+	field.addTagOptions = function(tag) {
+		tag.ul_tag_options = u.ae(tag, "ul", {"class":"tag_options"});
+		tag.bn_add = u.ae(tag.ul_tag_options, "li", {"class":"add", "html":"+"});
+		tag.bn_add.field = field;
+		tag.bn_add.tag = tag;
+		u.ce(tag.bn_add);
+		u.ce(tag.ul_tag_options);
+		tag.ul_tag_options.inputStarted = function(event) {
+			u.e.kill(event);
+		}
+		tag.bn_add.clicked = function(event) {
+			this.cleanupOptions = function(event) {
+				if(this.field.ul_new_tag_options) {
+					this.field.ul_new_tag_options.parentNode.removeChild(this.field.ul_new_tag_options);
+					delete this.field.ul_new_tag_options;
+					if(this.start_event_id) {
+						u.e.removeWindowStartEvent(this.start_event_id);
+						delete this.start_event_id;
+					}
+				}
+			}
+			if(this.field.ul_new_tag_options) {
+				this.cleanupOptions();
+			}
+			this.start_event_id = u.e.addWindowStartEvent(this, this.cleanupOptions);
+			this.field.ul_new_tag_options = u.ae(this.field._editor, "ul", {"class":"new_tag_options"});
+			u.ia(this.field.ul_new_tag_options, this.tag);
+			if(this.field.text_allowed.length) {
+				this.bn_add_text = u.ae(this.field.ul_new_tag_options, "li", {"class":"text", "html":"Text ("+this.field.text_allowed.join(", ")+")"});
+				this.bn_add_text.field = this.field;
+				this.bn_add_text.tag = this.tag;
+				u.ce(this.bn_add_text);
+				this.bn_add_text.inputStarted = function(event) {
+					u.e.kill(event);
+				}
+				this.bn_add_text.clicked = function(event) {
+					var tag = this.field.addTextTag(this.field.text_allowed[0]);
+					u.ia(tag, this.tag);
+					this.tag.bn_add.cleanupOptions();
+					tag._input.focus();
+				}
+			}
+			if(this.field.list_allowed.length) {
+				this.bn_add_list = u.ae(this.field.ul_new_tag_options, "li", {"class":"list", "html":"List ("+this.field.list_allowed.join(", ")+")"});
+				this.bn_add_list.field = this.field;
+				this.bn_add_list.tag = this.tag;
+				u.ce(this.bn_add_list);
+				this.bn_add_list.inputStarted = function(event) {
+					u.e.kill(event);
+				}
+				this.bn_add_list.clicked = function(event) {
+					var tag = this.field.addListTag(this.field.list_allowed[0]);
+					u.ia(tag, this.tag);
+					this.tag.bn_add.cleanupOptions();
+					tag._input.focus();
+				}
+			}
+			if(this.field.code_allowed.length) {
+				this.bn_add_code = u.ae(this.field.ul_new_tag_options, "li", {"class":"code", "html":"Code"});
+				this.bn_add_code.field = this.field;
+				this.bn_add_code.tag = this.tag;
+				u.ce(this.bn_add_code);
+				this.bn_add_code.inputStarted = function(event) {
+					u.e.kill(event);
+				}
+				this.bn_add_code.clicked = function(event) {
+					var tag = this.field.addCodeTag(this.field.code_allowed[0]);
+					u.ia(tag, this.tag);
+					this.tag.bn_add.cleanupOptions();
+					tag._input.focus();
+				}
+			}
+			if(this.field.media_allowed.length && this.field.item_id && this.field.media_add_action && this.field.media_delete_action && !u.browser("IE", "<=9")) {
+				this.bn_add_media = u.ae(this.field.ul_new_tag_options, "li", {"class":"list", "html":"Media ("+this.field.media_allowed.join(", ")+")"});
+				this.bn_add_media.field = this.field;
+				this.bn_add_media.tag = this.tag;
+				u.ce(this.bn_add_media);
+				this.bn_add_media.inputStarted = function(event) {
+					u.e.kill(event);
+				}
+				this.bn_add_media.clicked = function(event) {
+					var tag = this.field.addMediaTag();
+					u.ia(tag, this.tag);
+					this.tag.bn_add.cleanupOptions();
+					tag._input.focus();
+				}
+			}
+			else if(this.field.media_allowed.length) {
+				u.bug("some information is missing to support media upload:\nitem_id="+this.field.item_id+"\nmedia_add_action="+this.field.media_add_action+"\nmedia_delete_action="+this.field.media_delete_action);
+			}
+			if(this.field.ext_video_allowed.length) {
+				this.bn_add_ext_video = u.ae(this.field.ul_new_tag_options, "li", {"class":"video", "html":"External video ("+this.field.ext_video_allowed.join(", ")+")"});
+				this.bn_add_ext_video.field = this.field;
+				this.bn_add_ext_video.tag = this.tag;
+				u.ce(this.bn_add_ext_video);
+				this.bn_add_ext_video.inputStarted = function(event) {
+					u.e.kill(event);
+				}
+				this.bn_add_ext_video.clicked = function(event) {
+					var tag = this.field.addExternalVideoTag(this.field.ext_video_allowed[0]);
+					u.ia(tag, this.tag);
+					this.tag.bn_add.cleanupOptions();
+					tag._input.focus();
+				}
+			}
+			if(this.field.file_allowed.length && this.field.item_id && this.field.file_add_action && this.field.file_delete_action && !u.browser("IE", "<=9")) {
+				this.bn_add_file = u.ae(this.field.ul_new_tag_options, "li", {"class":"file", "html":"Downloadable file"});
+				this.bn_add_file.field = this.field;
+				this.bn_add_file.tag = this.tag;
+				u.ce(this.bn_add_file);
+				this.bn_add_file.inputStarted = function(event) {
+					u.e.kill(event);
+				}
+				this.bn_add_file.clicked = function(event) {
+					var tag = this.field.addFileTag();
+					u.ia(tag, this.tag);
+					this.tag.bn_add.cleanupOptions();
+					tag._input.focus();
+				}
+			}
+			else if(this.field.file_allowed.length) {
+				u.bug("some information is missing to support file upload:\nitem_id="+this.field.item_id+"\nfile_add_action="+this.field.file_add_action+"\nfile_delete_action="+this.field.file_delete_action);
+			}
+		}
+		tag.bn_remove = u.ae(tag.ul_tag_options, "li", {"class":"remove"});
+		tag.bn_remove.field = this;
+		tag.bn_remove.tag = tag;
+		u.ce(tag.bn_remove);
+		tag.bn_remove.clicked = function() {
+			this.field.deleteTag(this.tag);
+		}
+		tag.bn_classname = u.ae(tag.ul_tag_options, "li", {"class":"classname"});
+		u.ae(tag.bn_classname, "span", {"html":"CSS"});
+		tag.bn_classname.field = this;
+		tag.bn_classname.tag = tag;
+		u.ce(tag.bn_classname);
+		tag.bn_classname.clicked = function() {
+			this.field.classnameTag(this.tag);
+		}
+		if(tag._classname) {
+			if(!tag.mirror) {
+				tag.mirror = u.ae(tag, "span", {"class":"classname", "html":tag._classname});
+			}
+		}
+	}
 	field.addExternalVideoTag = function(type, node) {
 		var tag = this.createTag(this.ext_video_allowed, type);
 		tag._input = u.ae(tag, "div", {"class":"text", "contentEditable":true});
@@ -3805,8 +4109,14 @@ u.f.textEditor = function(field) {
 			tag._height = u.cv(node, "height");
 			tag._input.contentEditable = true;
 			tag._input.innerHTML = u.qs("a", node).innerHTML;
-			tag._image = u.ie(tag, "img");
-			tag._image.src = "/images/"+tag._item_id+"/"+tag._variant+"/400x."+tag._format;
+			if(tag._format.match(/gif|png|jpg|svg|avif|webp/)) {
+				tag._image = u.ie(tag, "img");
+				tag._image.src = "/images/"+tag._item_id+"/"+tag._variant+"/400x."+tag._format;
+			}
+			else if(tag._format.match(/mp4|mov/)) {
+				tag._image = u.ie(tag, "video");
+				tag._image.src = "/videos/"+tag._item_id+"/"+tag._variant+"/400x."+tag._format;
+			}
 			tag._input.val = function(value) {
 				if(value !== undefined) {
 					this.innerHTML = value;
@@ -3872,8 +4182,14 @@ u.f.textEditor = function(field) {
 				this.tag._name = response.cms_object["name"]
 				this.tag._item_id = response.cms_object["item_id"]
 				this.tag._input.contentEditable = true;
-				this.tag._image = u.ie(this.tag, "img");
-				this.tag._image.src = "/images/"+this.tag._item_id+"/"+this.tag._variant+"/400x."+this.tag._format;
+				if(this.tag._format.match(/gif|png|jpg|svg|avif|webp/)) {
+					this.tag._image = u.ie(this.tag, "img");
+					this.tag._image.src = "/images/"+this.tag._item_id+"/"+this.tag._variant+"/400x."+this.tag._format;
+				}
+				else if(this.tag._format.match(/mp4|mov/)) {
+					this.tag._image = u.ie(this.tag, "video");
+					this.tag._image.src = "/videos/"+this.tag._item_id+"/"+this.tag._variant+"/400x."+this.tag._format;
+				}
 				this.tag._input.innerHTML = this.tag._name + " ("+ u.round((this.tag._filesize/1000), 2) +"Kb)";
 				this.tag._input.val = function(value) {
 					if(value !== undefined) {
@@ -3999,8 +4315,8 @@ u.f.textEditor = function(field) {
 		}
 		this.field.update();
 	}
-	field.addCodeTag = function(type, value) {
-		var tag = this.createTag(this.code_allowed, type);
+	field.addCodeTag = function(type, value, className) {
+		var tag = this.createTag(this.code_allowed, type, className);
 		tag._input = u.ae(tag, "div", {"class":"text", "contentEditable":true});
 		tag._input.tag = tag;
 		tag._input.field = this;
@@ -4042,7 +4358,7 @@ u.f.textEditor = function(field) {
 	}
 	field._code_updated = function(event) {
 		if(this._selection_event_id) {
-			u.e.removeWindowEndEvent(this, this._selection_event_id);
+			u.e.removeWindowEndEvent(this._selection_event_id);
 			delete this._selection_event_id;
 		}
 		var selection = window.getSelection(); 
@@ -4107,8 +4423,8 @@ u.f.textEditor = function(field) {
 		}
 		this.field.update();
 	}
-	field.addListTag = function(type, value) {
-		var tag = this.createTag(this.list_allowed, type);
+	field.addListTag = function(type, value, className) {
+		var tag = this.createTag(this.list_allowed, type, className);
 		this.addListItem(tag, value);
 		this._editor.updateTargets();
 		this._editor.updateDraggables();
@@ -4123,6 +4439,7 @@ u.f.textEditor = function(field) {
 		li._input.tag = tag;
 		li._input.field = this;
 		li._input._form = this._form;
+		tag._input = li._input;
 		li._input.val = function(value) {
 			if(value !== undefined) {
 				this.innerHTML = value;
@@ -4144,8 +4461,8 @@ u.f.textEditor = function(field) {
 		this._editor.updateDraggables();
 		return li;
 	}
-	field.addTextTag = function(type, value) {
-		var tag = this.createTag(this.text_allowed, type);
+	field.addTextTag = function(type, value, className) {
+		var tag = this.createTag(this.text_allowed, type, className);
 		tag._input = u.ae(tag, "div", {"class":"text", "contentEditable":true});
 		tag._input.tag = tag;
 		tag._input.field = this;
@@ -4187,7 +4504,7 @@ u.f.textEditor = function(field) {
 	}
 	field._changed_content = function(event) {
 		if(this._selection_event_id) {
-			u.e.removeWindowEndEvent(this, this._selection_event_id);
+			u.e.removeWindowEndEvent(this._selection_event_id);
 			delete this._selection_event_id;
 		}
 		var selection = window.getSelection(); 
@@ -4277,7 +4594,6 @@ u.f.textEditor = function(field) {
 		}
 		this.field.hideSelectionOptions();
 		if(selection && !selection.isCollapsed) {
-			u.bug("selection:", this);
 			var node = selection.anchorNode;
 			while(node != this) {
 				if(node.nodeName == "HTML" || !node.parentNode) {
@@ -4288,6 +4604,9 @@ u.f.textEditor = function(field) {
 			if(node == this) {
 				this.field.showSelectionOptions(this, selection);
 			}
+		}
+		else {
+			this.field.hideSelectionOptions();
 		}
 		this.field.update();
 	}
@@ -4313,34 +4632,59 @@ u.f.textEditor = function(field) {
 		u.rc(this.field, "focus");
 		u.as(this.field, "zIndex", this.field._base_z_index);
 		u.f.positionHint(this.field);
-		this.field.hideSelectionOptions();
 	}
 	field._pasted_content = function(event) {
 		u.e.kill(event);
-		var i, node;
+		var i, node, text, range, new_tag, current_tag, selection, paste_parts, text_parts, text_nodes;
 		var paste_content = event.clipboardData.getData("text/plain");
 		if(paste_content !== "") {
-			var selection = window.getSelection();
+			selection = window.getSelection();
 			if(!selection.isCollapsed) {
 				selection.deleteFromDocument();
 			}
-			var paste_parts = paste_content.trim().split(/\n\r|\n|\r/g);
-				var text_nodes = [];
-				for(i = 0; i < paste_parts.length; i++) {
-					text = paste_parts[i];
-					u.bug("text part", text);
-					text_nodes.push(document.createTextNode(text));
-					if(paste_parts.length && i < paste_parts.length-1) {
-						text_nodes.push(document.createElement("br"));
+			if(u.hc(this.tag, "ul|ol")) {
+				u.bug("must be handled – paste in list input");
+			}
+			if(u.hc(this.tag, "code")) {
+				paste_parts = [paste_content];
+			}
+			else {
+				paste_parts = paste_content.trim().split(/\n\r\n\r|\n\n|\r\r/g);
+			}
+			text_tags = [];
+			for(i = 0; i < paste_parts.length; i++) {
+				text_block = paste_parts[i].trim();
+				if(text_block) {
+					nodes = [];
+					text_parts = text_block.split(/\n\r|\n|\r/g);
+					for(j = 0; j < text_parts.length; j++) {
+						text = text_parts[j];
+						nodes.push(document.createTextNode(text));
+						if(j < text_parts.length - 1) {
+							nodes.push(document.createElement("br"));
+						}
 					}
+					text_tags.push(nodes);
 				}
-				for(i = text_nodes.length-1; i >= 0; i--) {
-					node = text_nodes[i];
-					var range = selection.getRangeAt(0);
+			}
+			current_tag = this.tag;
+			for(i = 0; i < text_tags.length; i++) {
+				nodes = text_tags[i];
+				for(j = 0; j < nodes.length; j++) {
+					node = nodes[j];
+					selection = window.getSelection();
+					range = selection.getRangeAt(0);
 					range.insertNode(node);
 					selection.addRange(range);
+					selection.collapseToEnd();
 				}
-				selection.collapseToEnd();
+				if(i < text_tags.length - 1) {
+					new_tag = this.field.addTextTag(this.field.text_allowed[0]);
+					u.ia(new_tag, current_tag);
+					current_tag = new_tag;
+					current_tag._input.focus();
+				}
+			}
 		}
 	}
 	field.findPreviousInput = function(iN) {
@@ -4405,20 +4749,18 @@ u.f.textEditor = function(field) {
 		this.update();
 	}
 	field.showSelectionOptions = function(node, selection) {
-		var x = u.absX(node);
-		var y = u.absY(node);
-		this.selection_options = u.ae(document.body, "div", {"id":"selection_options"});
-		u.as(this.selection_options, "top", y+"px");
-		u.as(this.selection_options, "left", (x + node.offsetWidth) +"px");
+		this.hideSelectionOptions();
+		this.hideDeleteOrEditOptions();
+		this.selection_options = u.ae(node.field._editor, "div", {"class":"selection_options"});
+		node.field._editor.insertBefore(this.selection_options, node.tag);
 		var ul = u.ae(this.selection_options, "ul", {"class":"options"});
 		this.selection_options._link = u.ae(ul, "li", {"class":"link", "html":"Link"});
 		this.selection_options._link.field = this;
-		this.selection_options._link.tag = node;
+		this.selection_options._link.tag = node.tag;
 		this.selection_options._link.selection = selection;
 		u.ce(this.selection_options._link);
 		this.selection_options._link.inputStarted = function(event) {
 			u.e.kill(event);
-			this.field.selection_options.is_active = true;
 		}
 		this.selection_options._link.clicked = function(event) {
 			u.e.kill(event);
@@ -4426,7 +4768,7 @@ u.f.textEditor = function(field) {
 		}
 		this.selection_options._em = u.ae(ul, "li", {"class":"em", "html":"Italic"});
 		this.selection_options._em.field = this;
-		this.selection_options._em.tag = node;
+		this.selection_options._em.tag = node.tag;
 		this.selection_options._em.selection = selection;
 		u.ce(this.selection_options._em);
 		this.selection_options._em.inputStarted = function(event) {
@@ -4438,7 +4780,7 @@ u.f.textEditor = function(field) {
 		}
 		this.selection_options._strong = u.ae(ul, "li", {"class":"strong", "html":"Bold"});
 		this.selection_options._strong.field = this;
-		this.selection_options._strong.tag = node;
+		this.selection_options._strong.tag = node.tag;
 		this.selection_options._strong.selection = selection;
 		u.ce(this.selection_options._strong);
 		this.selection_options._strong.inputStarted = function(event) {
@@ -4450,7 +4792,7 @@ u.f.textEditor = function(field) {
 		}
 		this.selection_options._sup = u.ae(ul, "li", {"class":"sup", "html":"Superscript"});
 		this.selection_options._sup.field = this;
-		this.selection_options._sup.tag = node;
+		this.selection_options._sup.tag = node.tag;
 		this.selection_options._sup.selection = selection;
 		u.ce(this.selection_options._sup);
 		this.selection_options._sup.inputStarted = function(event) {
@@ -4462,20 +4804,30 @@ u.f.textEditor = function(field) {
 		}
 		this.selection_options._span = u.ae(ul, "li", {"class":"span", "html":"CSS class"});
 		this.selection_options._span.field = this;
-		this.selection_options._span.tag = node;
+		this.selection_options._span.tag = node.tag;
 		this.selection_options._span.selection = selection;
 		u.ce(this.selection_options._span);
 		this.selection_options._span.inputStarted = function(event) {
 			u.e.kill(event);
-			this.field.selection_options.is_active = true;
 		}
 		this.selection_options._span.clicked = function(event) {
 			u.e.kill(event);
 			this.field.addSpanTag(this.selection, this.tag);
 		}
 	}
+	field.hideDeleteOrEditOptions = function(node) {
+		var options = u.qsa(".delete_selection, .edit_selection");
+		var i, option;
+		for(i = 0; i < options.length; i++) {
+			option = options[i];
+			if(!node || option.node !== node) {
+				option.node.out();
+			}
+		}
+	}
 	field.deleteOrEditOption = function(node) {
 		node.over = function(event) {
+			this.field.hideDeleteOrEditOptions(this);
 			if(!this.bn_delete) {
 				this.bn_delete = u.ae(document.body, "span", {"class":"delete_selection", "html":"X"});
 				this.bn_delete.node = this;
@@ -4529,7 +4881,7 @@ u.f.textEditor = function(field) {
 				delete this.bn_edit;
 			}
 		}
-		u.e.hover(node, {"delay":1000});
+		u.e.hover(node, {"delay":500});
 	}
 	field.activateInlineFormatting = function(input, tag) {
 		var i, node;
@@ -4538,7 +4890,12 @@ u.f.textEditor = function(field) {
 			node = inline_tags[i];
 			node.field = input.field;
 			node.tag = tag;
-			this.deleteOrEditOption(node);
+			if(!u.text(node)) {
+				node.parentNode.removeChild(node);
+			}
+			else {
+				this.deleteOrEditOption(node);
+			}
 		}
 	}
 	field.addAnchorTag = function(selection, tag) {
@@ -4550,10 +4907,11 @@ u.f.textEditor = function(field) {
 		try {
 			range.surroundContents(a);
 			selection.removeAllRanges();
-			this.anchorOptions(a);
+			this.editAnchorTag(a);
 			this.deleteOrEditOption(a);
 		}
 		catch(exception) {
+			u.bug("exception", exception)
 			selection.removeAllRanges();
 			this.hideSelectionOptions();
 			alert("You cannot cross the boundaries of another selection. Yet.");
@@ -4561,11 +4919,11 @@ u.f.textEditor = function(field) {
 	}
 	field.anchorOptions = function(a) {
 		var form = u.f.addForm(this.selection_options, {"class":"labelstyle:inject"});
-		u.ae(form, "h3", {"html":"Link options"});
 		var fieldset = u.f.addFieldset(form);
 		var input_url = u.f.addField(fieldset, {
 			"label":"url", 
-			"name":"url", 
+			"name":"url",
+			"required": true,
 			"value":a.href.replace(location.protocol + "//" + document.domain, ""), 
 			"pattern":"(http[s]?:\\/\\/|mailto:|tel:)[^$]+|\/[^$]*",
 			"error_message":"Must start with /, http:// or https://, mailto: or tel:"
@@ -4582,6 +4940,7 @@ u.f.textEditor = function(field) {
 			"class":"button"
 		});
 		u.f.init(form);
+		form.inputs["url"].focus();
 		form.a = a;
 		form.field = this;
 		form.submitted = function() {
@@ -4603,11 +4962,9 @@ u.f.textEditor = function(field) {
 	}
 	field.editAnchorTag = function(a) {
 		this.hideSelectionOptions();
-		var x = u.absX(a.tag);
-		var y = u.absY(a.tag);
-		this.selection_options = u.ae(document.body, "div", {"id":"selection_options"});
-		u.as(this.selection_options, "top", y+"px");
-		u.as(this.selection_options, "left", (x + a.tag.offsetWidth) +"px");
+		this.hideDeleteOrEditOptions();
+		this.selection_options = u.ae(a.field._editor, "div", {"class":"selection_options"});
+		a.field._editor.insertBefore(this.selection_options, a.tag);
 		this.selection_options.is_active = false;
 		this.anchorOptions(a);
 	}
@@ -4673,7 +5030,7 @@ u.f.textEditor = function(field) {
 		try {
 			range.surroundContents(span);
 			selection.removeAllRanges();
-			this.spanOptions(span);
+			this.editSpanTag(span);
 			this.deleteOrEditOption(span);
 		}
 		catch(exception) {
@@ -4684,19 +5041,15 @@ u.f.textEditor = function(field) {
 	}
 	field.editSpanTag = function(span) {
 		this.hideSelectionOptions();
-		var x = u.absX(span.tag);
-		var y = u.absY(span.tag);
-		this.selection_options = u.ae(document.body, "div", {"id":"selection_options"});
-		u.as(this.selection_options, "top", y+"px");
-		u.as(this.selection_options, "left", (x + span.tag.offsetWidth) +"px");
-		this.selection_options.is_active = false;
+		this.hideDeleteOrEditOptions();
+		this.selection_options = u.ae(span.field._editor, "div", {"class":"selection_options"});
+		span.field._editor.insertBefore(this.selection_options, span.tag);
 		this.spanOptions(span);
 	}
 	field.spanOptions = function(span) {
 		var form = u.f.addForm(this.selection_options, {"class":"labelstyle:inject"});
-		u.ae(form, "h3", {"html":"CSS class"});
 		var fieldset = u.f.addFieldset(form);
-		var input_classname = u.f.addField(fieldset, {"label":"classname", "name":"classname", "value":span.className, "error_message":""});
+		var input_classname = u.f.addField(fieldset, {"label":"CSS class", "name":"classname", "value":span.className, "error_message":""});
 		var bn_save = u.f.addAction(form, {"value":"Save class", "class":"button"});
 		u.f.init(form);
 		form.span = span;
@@ -4712,7 +5065,7 @@ u.f.textEditor = function(field) {
 			this.field.hideSelectionOptions();
 		}
 	}
-	field._viewer.innerHTML = field.input.val();
+	field._viewer.innerHTML = field.input.value;
 	u.sortable(field._editor, {"draggables":"div.tag", "targets":"div.editor"});
 	var value, node, i, tag, j, lis, li;
 	var nodes = u.cn(field._viewer, {"exclude":"br"});
@@ -4738,26 +5091,17 @@ u.f.textEditor = function(field) {
 			}
 			else if(field.text_allowed && node.nodeName.toLowerCase().match(field.text_allowed.join("|"))) {
 				value = node.innerHTML.trim().replace(/(<br>|<br \/>)$/, "").replace(/\n\r|\n|\r/g, "<br>"); 
-				tag = field.addTextTag(node.nodeName.toLowerCase(), value);
-				if(node.className) {
-					tag._classname = node.className;
-				}
+				tag = field.addTextTag(node.nodeName.toLowerCase(), value, node.className);
 				field.activateInlineFormatting(tag._input, tag);
 			}
 			else if(node.nodeName.toLowerCase() == "code") {
-				tag = field.addCodeTag(node.nodeName.toLowerCase(), node.innerHTML);
-				if(node.className) {
-					tag._classname = node.className;
-				}
+				tag = field.addCodeTag(node.nodeName.toLowerCase(), node.innerHTML, node.className);
 				field.activateInlineFormatting(tag._input, tag);
 			}
 			else if(field.list_allowed.length && node.nodeName.toLowerCase().match(field.list_allowed.join("|"))) {
 				var lis = u.qsa("li", node);
 				value = lis[0].innerHTML.trim().replace(/(<br>|<br \/>)$/, "").replace(/\n\r|\n|\r/g, "<br>");
-				tag = field.addListTag(node.nodeName.toLowerCase(), value);
-				if(node.className) {
-					tag._classname = node.className;
-				}
+				tag = field.addListTag(node.nodeName.toLowerCase(), value, node.className);
 				var li = u.qs("div.li", tag);
 				field.activateInlineFormatting(li._input, li);
 				if(lis.length > 1) {
@@ -4804,8 +5148,10 @@ u.f.textEditor = function(field) {
 	}
 	field._editor.updateTargets();
 	field._editor.updateDraggables();
+	field._editor.detectSortableLayout();
 	field.updateViewer();
-	field.addOptions();
+	field.updateContent();
+	field.addRawHTMLButton();
 }
 Util.Form.customInit["location"] = function(field) {
 	field.type = "location";
@@ -5037,6 +5383,540 @@ Util.Form.location = function(field) {
 		}
 		navigator.geolocation.getCurrentPosition(window._foundLocation, window._noLocation);
 	}
+}
+Util.Form.customInit["dropdown"] = function(field) {
+	field.type = "dropdown";
+	field.input = u.qs("select", field);
+	field.input._form = field._form;
+	field.input.label = u.qs("label[for='"+field.input.id+"']", field);
+	field.input.field = field;
+	field._value_select = function(value) {
+		if(value !== undefined) {
+			if(value.match(/^new::/)) {
+				if(!this.field.new_option) {
+					this.field.new_option = document.createElement("option");
+					this.add(this.field.new_option);
+				}
+				var text = value.replace(/^new::/, "");
+				this.field.new_option.value = value;
+				this.field.new_option.text = text;
+				this.selectedIndex = this.options.length-1;
+				u.f.validate(this);
+				this.field.virtual_input.val(text);
+				return this.selectedIndex;
+			}
+			var i, option;
+			for(i = 0; i < this.options.length; i++) {
+				option = this.options[i];
+				if(option.value == value) {
+					this.selectedIndex = i;
+					u.f.validate(this);
+					this.field.virtual_input.val(option.text);
+					return i;
+				}
+			}
+			if(value === "") {
+				this.selectedIndex = -1;
+				u.f.validate(this);
+				this.field.virtual_input.val("");
+				return -1;
+			}
+			return false;
+		}
+		else {
+			return (this.selectedIndex >= 0 && this.default_value != this.options[this.selectedIndex].value) ? this.options[this.selectedIndex].value : "";
+		}
+	}
+	field.input.val = field._value_select;
+	u.e.addEvent(field.input, "change", u.f._changed);
+	u.e.addEvent(field.input, "update", u.f._updated);
+	var virtual_input_wrapper = u.ae(field, "div", {"class": "virtual"});
+	field.virtual_input = u.ae(virtual_input_wrapper, "div", {"class": "input", "contentEditable": "true"});
+	field.insertBefore(virtual_input_wrapper, field.input);
+	field.virtual_input._form = field._form;
+	field.virtual_input.field = field;
+	field._value_virtual = function(value) {
+		if(value !== undefined) {
+			if(!this.is_focused) {
+				this.innerHTML = value;
+			}
+			this.field.selected_option = false;
+			u.rc(this, "selection");
+			var i, option;
+			for(i = 0; i < this.field.dropdown_options.nodes.length; i++) {
+				option = this.field.dropdown_options.nodes[i];
+				if(option.option_text == value) {
+					u.ac(this, "selection");
+					this.field.selected_option = option;
+					this.field.input.dispatchEvent(new Event("change"));
+					return;
+				}
+			}
+			this.field.input.dispatchEvent(new Event("change"));
+		}
+		else {
+			return u.text(this);
+		}
+	}
+	field.virtual_input.val = field._value_virtual;
+	field.virtual_input.clicked = function(event) {
+		if(!this.is_focused) {
+			this.field.activateSearchCursor();
+		}
+	}
+	u.e.click(field.virtual_input);
+	field.virtual_input.preKeyEvent = function (event) {
+		if(event.keyCode == 27) {
+			u.e.kill(event);
+			this.field._show_all = false;
+			this.field.activateSearchCursor();
+		}
+		else if(event.keyCode == 13) {
+			u.e.kill(event);
+			if(this.field.highlighted_option) {
+				this.field.selectOption(this.field.highlighted_option);
+			}
+		}
+		else if(event.shiftKey && event.keyCode == 9) {
+			this._blur({"target": document.body});
+		}
+		else if(event.keyCode == 9) {
+			if(this.field.highlighted_option) {
+				u.e.kill(event);
+				this.field.selectOption(this.field.highlighted_option);
+			}
+			else {
+				this._blur({"target": document.body});
+			}
+		}
+		else if(event.keyCode == 32) {
+			if(this.field.highlighted_option) {
+				u.e.kill(event);
+				this.field.selectOption(this.field.highlighted_option);
+			}
+		}
+		else if(event.keyCode == 38 && !event.shiftKey) {
+			u.e.kill(event);
+			this.field.highlightPreviousOption();
+		}
+		else if(event.keyCode == 40 && !event.shiftKey) {
+			u.e.kill(event);
+			if(this.field.available_options) {
+				this.field.highlightNextOption();
+			}
+			else {
+				this.field._show_all = true;
+			}
+		}
+	}
+	field.virtual_input.postKeyEvent = function(event) {
+		var value = this.field.virtual_input.val();
+		if(!value) {
+			this.field._show_all = true;
+		}
+		else if(event.keyCode == 8 || event.keyCode == 32 || event.keyCode >= 65) {
+			this.field._show_all = false;
+		}
+		if(!this.field.selected_option || this.field.selected_option.option_text != value) {
+			this.field.selected_option = false;
+			var i, option;
+			for(i = 0; i < this.field.dropdown_options.nodes.length; i++) {
+				option = this.field.dropdown_options.nodes[i];
+				if(option.option_text.toLowerCase() == value.toLowerCase()) {
+					this.field.selected_option = option;
+					break;
+				}
+			}
+			this.field.updateDropdownValue();
+		}
+		u.t.resetTimer(this.field.t_search);
+		this.field.t_search = u.t.setTimer(this.field, this.field.searchOptions, 200);
+	}
+	u.e.addEvent(field.virtual_input, "keyup", field.virtual_input.postKeyEvent);
+	u.e.addEvent(field.virtual_input, "keydown", field.virtual_input.preKeyEvent);
+	field.virtual_input._focus = function(event) {
+		if(!this.is_focused) {
+			this.field.blur_event_id = u.e.addWindowStartEvent(this, this._blur);
+		}
+		this.field.is_focused = true;
+		this.is_focused = true;
+		u.ac(this.field, "focus");
+		u.ac(this, "focus");
+		u.ac(this.field.virtual_input, "focus");
+		u.as(this.field, "zIndex", this._form._focus_z_index);
+		u.f.positionHint(this.field);
+		this.field.activateSearchCursor();
+		if(typeof(this.focused) == "function") {
+			this.focused();
+		}
+		else if(this.field.input && typeof(this.field.input.focused) == "function") {
+			this.field.input.focused(this);
+		}
+		if(typeof(this._form.focused) == "function") {
+			this._form.focused(this);
+		}
+	}
+	field.virtual_input._blur = function(event) {
+		if(!u.contains(this.field, event.target)) {
+			u.e.removeWindowStartEvent(this, this.field.blur_event_id);
+			this.field.is_focused = false;
+			this.is_focused = false;
+			u.rc(this.field, "focus");
+			u.rc(this, "focus");
+			u.rc(this.field.virtual_input, "focus");
+			u.as(this.field, "zIndex", this.field._base_z_index);
+			this._used = true;
+			this.field._show_all = false;
+			this.field.updateDropdownValue();
+			this.field.hideOptions();
+			u.f.validate(this.field.input);
+			if(typeof(this.blurred) == "function") {
+				this.blurred();
+			}
+			else if(this.field.input && typeof(this.field.input.blurred) == "function") {
+				this.field.input.blurred(this);
+			}
+			if(typeof(this._form.blurred) == "function") {
+				this._form.blurred(this);
+			}
+		}
+	}
+	u.e.addEvent(field.virtual_input, "focus", field.virtual_input._focus);
+	field.bn_dropdown = u.ae(virtual_input_wrapper, "div", {"class": "button"});
+	field.bn_dropdown.arrow = u.svg({
+		"name":"arrow",
+		"node":field.bn_dropdown,
+		"class":"arrow",
+		"width":30,
+		"height":30,
+		"viewBox": "0 0 30 30",
+		"shapes":[
+			{
+				"type": "line",
+				"x1": 8,
+				"y1": 12,
+				"x2": 15,
+				"y2": 19
+			},
+			{
+				"type": "line",
+				"x1": 22,
+				"y1": 12,
+				"x2": 15,
+				"y2": 19
+			}
+		]
+	});
+	field.bn_dropdown.field = field;
+	u.ce(field.bn_dropdown);
+	field.bn_dropdown.clicked = function() {
+		if(this.field.is_expanded) {
+			this.field._show_all = false;
+			this.field.hideOptions();
+		}
+		else {
+			this.field._show_all = true;
+			this.field.searchOptions();
+		}
+		this.field.virtual_input.focus();
+	}
+	field.bn_dropdown.keyEvent = function(event) {
+		if (event.keyCode == 13 || event.keyCode == 32 || event.keyCode == 40) {
+			u.e.kill(event);
+			this.clicked();
+		}
+	}
+	u.e.addEvent(field.bn_dropdown, "keydown", field.bn_dropdown.keyEvent);
+	field.dropdown_options = u.ae(virtual_input_wrapper, "div", {"class": "options"});
+	field.dropdown_options_list = u.ae(field.dropdown_options, "ul", {"class": "options"});
+	field.dropdown_options.field = field;
+	field.activateSearchCursor = function() {
+		this.virtual_input.focus();
+		var range = document.createRange();
+		range.selectNodeContents(this.virtual_input);
+		if(this.input.val()) {
+			range.collapse(false);
+		}
+		var selection = window.getSelection();
+		selection.removeAllRanges();
+		selection.addRange(range);
+	}
+	field.showOptions = function() {
+		u.ass(this.dropdown_options, {
+			transition: "all 0.3s ease-in-out",
+			height: this.dropdown_options_list.offsetHeight + "px"
+		});
+		this.is_expanded = true;
+	}
+	field.hideOptions = function() {
+		if(this.is_expanded) {
+			this.dropdown_options.transitioned = function() {
+				if(fun(this.field.optionsHidden)) {
+					this.field.optionsHidden();
+				}
+			}
+			u.ass(this.dropdown_options, {
+				transition: "all 0.2s ease-in-out",
+				height: "0px"
+			});
+			this.is_expanded = false;
+		}
+		else if(fun(this.optionsHidden)) {
+			this.optionsHidden();
+		}
+		if(this.highlighted_option) {
+			u.rc(this.highlighted_option, "hover");
+			this.highlighted_option = false;
+		}
+	}
+	field.highlightNextOption = function() {
+		if(this.available_options) {
+			var node;
+			if(this.highlighted_option) {
+				node = u.ns(this.highlighted_option);
+			}
+			else {
+				node = this.dropdown_options.nodes[0];
+			}
+			while(node && node.is_hidden) {
+				node = u.ns(node);
+			}
+			if(node) {
+				if(this.highlighted_option) {
+					u.rc(this.highlighted_option, "hover");
+				}
+				u.ac(node, "hover");
+				this.highlighted_option = node;
+				this.showHighlighedOption();
+			}
+		}
+	}
+	field.highlightPreviousOption = function() {
+		var node;
+		if(this.highlighted_option) {
+			node = u.ps(this.highlighted_option);
+		}
+		while(node && node.is_hidden) {
+			node = u.ps(node);
+		}
+		if(node) {
+			if(this.highlighted_option) {
+				u.rc(this.highlighted_option, "hover");
+			}
+			u.ac(node, "hover");
+			this.highlighted_option = node;
+			this.showHighlighedOption()
+		}
+		else {
+			if(this.highlighted_option) {
+				u.rc(this.highlighted_option, "hover");
+				this.highlighted_option = false;
+			}
+		}
+	}
+	field.showHighlighedOption = function() {
+		if(this.highlighted_option) {
+			if(this.highlighted_option.offsetTop + this.highlighted_option.offsetHeight > this.dropdown_options.offsetHeight + this.dropdown_options.scrollTop) {
+				this.dropdown_options.scrollTop = (this.highlighted_option.offsetTop + this.highlighted_option.offsetHeight) - this.dropdown_options.offsetHeight;
+			}
+			else if(this.highlighted_option.offsetTop < this.dropdown_options.scrollTop) {
+				this.dropdown_options.scrollTop = this.highlighted_option.offsetTop;
+			}
+		}
+	}
+	field.searchOptions = function() {
+		var i, node;
+		this.available_options = false;
+		if(this._show_all) {
+			for(i = 0; i < this.dropdown_options.nodes.length; i++) {
+				node = this.dropdown_options.nodes[i];
+				if(this.selected_option == node) {
+					u.ass(node, {
+						"display": "none",
+					});
+					if(node == this.highlighted_option) {
+						this.highlighted_option = false;
+						u.rc(node, "hover");
+					}
+					node.is_hidden = true;
+				}
+				else {
+					u.ass(node, {
+						"display": "block",
+					});
+					node.innerHTML = node.option_text.replace(value_reg_exp, "<span>$1</span>");
+					node.is_hidden = false;
+					this.available_options = true;
+				}
+			}
+		}
+		else {
+			var value = this.virtual_input.val();
+			var value_reg_exp = new RegExp("(" + value + ")", "gi");
+			for(i = 0; i < this.dropdown_options.nodes.length; i++) {
+				node = this.dropdown_options.nodes[i];
+				if(value && node.option_text.match(value_reg_exp) && this.selected_option != node) {
+					u.ass(node, {
+						"display": "block",
+					});
+					node.innerHTML = node.option_text.replace(value_reg_exp, "<span>$1</span>");
+					node.is_hidden = false;
+					this.available_options = true;
+				}
+				else {
+					u.ass(node, {
+						"display": "none",
+					});
+					if(node == this.highlighted_option) {
+						this.highlighted_option = false;
+						u.rc(node, "hover");
+					}
+					node.is_hidden = true;
+				}
+			}
+		}
+		if(this.available_options) {
+			this.showOptions();
+		}
+		else {
+			this.hideOptions();
+		}
+	}
+	field.selectOption = function(li) {
+		this._show_all = false;
+		this.virtual_input.innerHTML = li.option_text;
+		if(this.highlighted_option) {
+			u.rc(this.highlighted_option, "hover");
+			this.highlighted_option = false;
+		}
+		this.selected_option = li;
+		this.updateDropdownValue();
+		this.hideOptions();
+		this.activateSearchCursor();
+	}
+	field.updateDropdownValue = function() {
+		var value = this.virtual_input.val();
+		if(this.selected_option) {
+			this.input.val(this.selected_option.option_value);
+		}
+		else if(value) {
+			this.input.val("new::"+value);
+		}
+		else {
+			this.input.val("");
+		}
+		this.input.dispatchEvent(new Event("change"));
+	}
+	field.addOption = function (node) {
+		if(node.text) {
+			var li = u.ae(this.dropdown_options_list, "li", {"class": (!node.value ? "default" : ""), "html": node.text});
+			li.field = this;
+			li.option_value = node.value;
+			li.option_text = node.text;
+			u.ce(li);
+			li.inputStarted = function (event) {
+				u.e.kill(event);
+				this.field.selectOption(this);
+			}
+			u.e.hover(li);
+			li.over = function (event) {
+				if(this.field.highlighted_option) {
+					u.rc(this.field.highlighted_option, "hover");
+				}
+				u.ac(this, "hover");
+				this.field.highlighted_option = this;
+			}
+			this.dropdown_options.nodes.push(li);
+		}
+	}
+	field.loadOptions = function() {
+		var existing_value = this.input.val();
+		this.dropdown_options.nodes = [];
+		var i, node;
+		for(i = 0; i < this.input.options.length; i++) {
+			node = this.input.options[i];
+			this.addOption(node);
+		}
+		this.input.val(existing_value);
+	}
+	u.f.activateInput(field.input);
+	u.f.validate(field.input);
+	field.loadOptions();
+}
+Util.Form.customValidate["dropdown"] = function(iN) {
+	if (iN.val() !== "") {
+		u.f.inputIsCorrect(iN);
+	} else {
+		u.f.inputHasError(iN);
+	}
+}
+Util.Form.customBuild["dropdown"] = function(node, _options) {
+	var field_name = "js_name";
+	var field_label = "Label";
+	var field_type = "string";
+	var field_value = "";
+	var field_options = [];
+	var field_class = "";
+	var field_id = "";
+	var field_disabled = false;
+	var field_required = false;
+	var field_error_message = "There is an error in your input";
+	var field_hint_message = "";
+	if(typeof(_options) == "object") {
+		var _argument;
+		for(_argument in _options) {
+			switch(_argument) {
+				case "name"					: field_name			= _options[_argument]; break;
+				case "label"				: field_label			= _options[_argument]; break;
+				case "type"					: field_type			= _options[_argument]; break;
+				case "value"				: field_value			= _options[_argument]; break;
+				case "options"				: field_options			= _options[_argument]; break;
+				case "class"				: field_class			= _options[_argument]; break;
+				case "id"					: field_id				= _options[_argument]; break;
+				case "disabled"				: field_disabled		= _options[_argument]; break;
+				case "required"				: field_required		= _options[_argument]; break;
+				case "error_message"		: field_error_message	= _options[_argument]; break;
+				case "hint_message"			: field_hint_message	= _options[_argument]; break;
+			}
+		}
+	}
+	field_id = field_id ? field_id : "input_"+field_type+"_"+field_name;
+	field_class += field_disabled ? (!field_class.match(/(^| )disabled( |$)/) ? " disabled" : "") : "";
+	field_class += field_required ? (!field_class.match(/(^| )required( |$)/) ? " required" : "") : "";
+	var field = u.ae(node, "div", {"class":"field "+field_type+" "+field_class});
+	attributes = {
+		"id":field_id, 
+		"name":field_name, 
+		"disabled":field_disabled
+	};
+	u.ae(field, "label", {"for":field_id, "html":field_label});
+	var select = u.ae(field, "select", u.f.verifyAttributes(attributes));
+	if(field_options) {
+		if(field_options.length) {
+			var i, option, selected_option;
+			for(i = 0; option = field_options[i]; i++) {
+				if(option.value == field_value) {
+					selected_option = u.ae(select, "option", { "value": option.value, "html": option.text, "selected": "selected" });
+				}
+				else {
+					u.ae(select, "option", { "value": option.value, "html": option.text });
+				}
+			}
+			if(!selected_option && !field_value) {
+				select.selectedIndex = -1;
+			}
+		}
+	}
+	if(field_hint_message || field_error_message) {
+		var help = u.ae(field, "div", {"class":"help"});
+		if(field_hint_message) {
+			u.ae(help, "div", { "class": "hint", "html": field_hint_message });
+		}
+		if(field_error_message) {
+			u.ae(help, "div", { "class": "error", "html": field_error_message });
+		}
+	}
+	return field;
 }
 Util.absoluteX = u.absX = function(node) {
 	if(node.offsetParent) {
@@ -5344,6 +6224,7 @@ Util.mediaPlayer = function(_options) {
 	player._autoplay = false;
 	player._muted = false;
 	player._loop = false;
+	player._preload = false;
 	player._playsinline = false;
 	player._crossorigin = "anonymous";
 	player._controls = false;
@@ -5438,10 +6319,12 @@ Util.mediaPlayer = function(_options) {
 			}
 		}
 		player.mute = function() {
+			this._muted = true;
 			this.media.muted = true;
 		}
 		player.unmute = function() {
-			this.media.removeAttribute(muted);
+			this._muted = false;
+			this.media.muted = false;
 		}
 	}
 	else {
@@ -5466,6 +6349,7 @@ u.setupMedia = function(player, _options) {
 				case "autoplay"     : player._autoplay               = _options[_argument]; break;
 				case "muted"        : player._muted                  = _options[_argument]; break;
 				case "loop"         : player._loop                   = _options[_argument]; break;
+				case "preload"      : player._preload                = _options[_argument]; break;
 				case "playsinline"  : player._playsinline            = _options[_argument]; break;
 				case "controls"     : player._controls               = _options[_argument]; break;
 				case "ff_skip"      : player._ff_skip                = _options[_argument]; break;
@@ -5478,6 +6362,7 @@ u.setupMedia = function(player, _options) {
 	player.media.muted = player._muted;
 	player.media.playsinline = player._playsinline;
 	player.media.setAttribute("playsinline", player._playsinline);
+	player.media.setAttribute("preload", player._preload);
 	player.media.setAttribute("crossorigin", player._crossorigin);
 	u.setupMediaControls(player, player._controls);
 	player.currentTime = 0;
@@ -5563,8 +6448,8 @@ u.setupMedia = function(player, _options) {
 	}
 }
 u.correctMediaSource = function(player, src) {
-	var param = src.match(/\?[^$]+/) ? src.match(/(\?[^$]+)/)[1] : "";
-	src = src.replace(/\?[^$]+/, "");
+	var param = src.match(/(\?|\#)[^$]+/) ? src.match(/((\?|\#)[^$]+)/)[1] : "";
+	src = src.replace(/(\?|\#)[^$]+/, "");
 	if(player.type == "video") {
 		src = src.replace(/(\.m4v|\.mp4|\.webm|\.ogv|\.3gp|\.mov)$/, "");
 		if(player.flash) {
@@ -5818,7 +6703,8 @@ u.detectMediaAutoplay = function(player) {
 		u.e.addEvent(u.test_autoplay, "playing", u.test_autoplay.playing);
 		u.e.addEvent(u.test_autoplay, "error", u.test_autoplay.error);
 		if(u.test_autoplay.canPlayType("video/mp4")) {
-			var data = "data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAAxJtZGF0AAACoAYF//+c3EXpvebZSLeWLNgg2SPu73gyNjQgLSBjb3JlIDE1NyAtIEguMjY0L01QRUctNCBBVkMgY29kZWMgLSBDb3B5bGVmdCAyMDAzLTIwMTggLSBodHRwOi8vd3d3LnZpZGVvbGFuLm9yZy94MjY0Lmh0bWwgLSBvcHRpb25zOiBjYWJhYz0xIHJlZj0zIGRlYmxvY2s9MTowOjAgYW5hbHlzZT0weDM6MHgxMTMgbWU9aGV4IHN1Ym1lPTcgcHN5PTEgcHN5X3JkPTEuMDA6MC4wMCBtaXhlZF9yZWY9MSBtZV9yYW5nZT0xNiBjaHJvbWFfbWU9MSB0cmVsbGlzPTEgOHg4ZGN0PTEgY3FtPTAgZGVhZHpvbmU9MjEsMTEgZmFzdF9wc2tpcD0xIGNocm9tYV9xcF9vZmZzZXQ9LTIgdGhyZWFkcz0xIGxvb2thaGVhZF90aHJlYWRzPTEgc2xpY2VkX3RocmVhZHM9MCBucj0wIGRlY2ltYXRlPTEgaW50ZXJsYWNlZD0wIGJsdXJheV9jb21wYXQ9MCBjb25zdHJhaW5lZF9pbnRyYT0wIGJmcmFtZXM9MyBiX3B5cmFtaWQ9MiBiX2FkYXB0PTEgYl9iaWFzPTAgZGlyZWN0PTEgd2VpZ2h0Yj0xIG9wZW5fZ29wPTAgd2VpZ2h0cD0yIGtleWludD0yNTAga2V5aW50X21pbj0yNSBzY2VuZWN1dD00MCBpbnRyYV9yZWZyZXNoPTAgcmNfbG9va2FoZWFkPTQwIHJjPWNyZiBtYnRyZWU9MSBjcmY9MjMuMCBxY29tcD0wLjYwIHFwbWluPTAgcXBtYXg9NjkgcXBzdGVwPTQgaXBfcmF0aW89MS40MCBhcT0xOjEuMDAAgAAAABpliIQAM//+9uy+BTYUyFCXESoMDuxA1w9RcQAAAAlBmiJsQr/+RRgAAAAIAZ5BeQr/IeHeAgBMYXZjNTguMzUuMTAwAEIgCMEYOCEQBGCMHCEQBGCMHCEQBGCMHCEQBGCMHAAABXNtb292AAAAbG12aGQAAAAAAAAAAAAAAAAAAAPoAAAAeAABAAABAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAACb3RyYWsAAABcdGtoZAAAAAMAAAAAAAAAAAAAAAEAAAAAAAAAeAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAMAAAADAAAAAAACRlZHRzAAAAHGVsc3QAAAAAAAAAAQAAAHgAAAQAAAEAAAAAAedtZGlhAAAAIG1kaGQAAAAAAAAAAAAAAAAAADIAAAAGAFXEAAAAAAAtaGRscgAAAAAAAAAAdmlkZQAAAAAAAAAAAAAAAFZpZGVvSGFuZGxlcgAAAAGSbWluZgAAABR2bWhkAAAAAQAAAAAAAAAAAAAAJGRpbmYAAAAcZHJlZgAAAAAAAAABAAAADHVybCAAAAABAAABUnN0YmwAAACmc3RzZAAAAAAAAAABAAAAlmF2YzEAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAMAAwAEgAAABIAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY//8AAAAwYXZjQwFkAAr/4QAXZ2QACqzZTewEQAAAAwBAAAAMg8SJZYABAAZo6+PLIsAAAAAQcGFzcAAAAAEAAAABAAAAGHN0dHMAAAAAAAAAAQAAAAMAAAIAAAAAFHN0c3MAAAAAAAAAAQAAAAEAAAAoY3R0cwAAAAAAAAADAAAAAQAABAAAAAABAAAGAAAAAAEAAAIAAAAAHHN0c2MAAAAAAAAAAQAAAAEAAAADAAAAAQAAACBzdHN6AAAAAAAAAAAAAAADAAACwgAAAA0AAAAMAAAAFHN0Y28AAAAAAAAAAQAAADAAAAIudHJhawAAAFx0a2hkAAAAAwAAAAAAAAAAAAAAAgAAAAAAAAB1AAAAAAAAAAAAAAABAQAAAAABAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAJGVkdHMAAAAcZWxzdAAAAAAAAAABAAAAdQAAAAAAAQAAAAABpm1kaWEAAAAgbWRoZAAAAAAAAAAAAAAAAAAArEQAABQAVcQAAAAAAC1oZGxyAAAAAAAAAABzb3VuAAAAAAAAAAAAAAAAU291bmRIYW5kbGVyAAAAAVFtaW5mAAAAEHNtaGQAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAAAAAAAAQAAAAx1cmwgAAAAAQAAARVzdGJsAAAAZ3N0c2QAAAAAAAAAAQAAAFdtcDRhAAAAAAAAAAEAAAAAAAAAAAACABAAAAAArEQAAAAAADNlc2RzAAAAAAOAgIAiAAIABICAgBRAFQAAAAAAEX4AAAymBYCAgAISEAaAgIABAgAAABhzdHRzAAAAAAAAAAEAAAAFAAAEAAAAABxzdHNjAAAAAAAAAAEAAAABAAAABQAAAAEAAAAoc3RzegAAAAAAAAAAAAAABQAAABcAAAAGAAAABgAAAAYAAAAGAAAAFHN0Y28AAAAAAAAAAQAAAwsAAAAac2dwZAEAAAByb2xsAAAAAgAAAAH//wAAABxzYmdwAAAAAHJvbGwAAAABAAAABQAAAAEAAABidWR0YQAAAFptZXRhAAAAAAAAACFoZGxyAAAAAAAAAABtZGlyYXBwbAAAAAAAAAAAAAAAAC1pbHN0AAAAJal0b28AAAAdZGF0YQAAAAEAAAAATGF2ZjU4LjIwLjEwMA==";
+			var data = "data:audio/aac;base64,//FQgAPf/N4CAExhdmM1OC45MS4xMDAAQiAIwRg4//FQgAG//CEQBGCMHP/xUIABv/whEARgjBz/8VCAAb/8IRAEYIwc//FQgAG//CEQBGCMHP/xUIABv/whEARgjBw=";
+			// var data = "data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAAxJtZGF0AAACoAYF//+c3EXpvebZSLeWLNgg2SPu73gyNjQgLSBjb3JlIDE1NyAtIEguMjY0L01QRUctNCBBVkMgY29kZWMgLSBDb3B5bGVmdCAyMDAzLTIwMTggLSBodHRwOi8vd3d3LnZpZGVvbGFuLm9yZy94MjY0Lmh0bWwgLSBvcHRpb25zOiBjYWJhYz0xIHJlZj0zIGRlYmxvY2s9MTowOjAgYW5hbHlzZT0weDM6MHgxMTMgbWU9aGV4IHN1Ym1lPTcgcHN5PTEgcHN5X3JkPTEuMDA6MC4wMCBtaXhlZF9yZWY9MSBtZV9yYW5nZT0xNiBjaHJvbWFfbWU9MSB0cmVsbGlzPTEgOHg4ZGN0PTEgY3FtPTAgZGVhZHpvbmU9MjEsMTEgZmFzdF9wc2tpcD0xIGNocm9tYV9xcF9vZmZzZXQ9LTIgdGhyZWFkcz0xIGxvb2thaGVhZF90aHJlYWRzPTEgc2xpY2VkX3RocmVhZHM9MCBucj0wIGRlY2ltYXRlPTEgaW50ZXJsYWNlZD0wIGJsdXJheV9jb21wYXQ9MCBjb25zdHJhaW5lZF9pbnRyYT0wIGJmcmFtZXM9MyBiX3B5cmFtaWQ9MiBiX2FkYXB0PTEgYl9iaWFzPTAgZGlyZWN0PTEgd2VpZ2h0Yj0xIG9wZW5fZ29wPTAgd2VpZ2h0cD0yIGtleWludD0yNTAga2V5aW50X21pbj0yNSBzY2VuZWN1dD00MCBpbnRyYV9yZWZyZXNoPTAgcmNfbG9va2FoZWFkPTQwIHJjPWNyZiBtYnRyZWU9MSBjcmY9MjMuMCBxY29tcD0wLjYwIHFwbWluPTAgcXBtYXg9NjkgcXBzdGVwPTQgaXBfcmF0aW89MS40MCBhcT0xOjEuMDAAgAAAABpliIQAM//+9uy+BTYUyFCXESoMDuxA1w9RcQAAAAlBmiJsQr/+RRgAAAAIAZ5BeQr/IeHeAgBMYXZjNTguMzUuMTAwAEIgCMEYOCEQBGCMHCEQBGCMHCEQBGCMHCEQBGCMHAAABXNtb292AAAAbG12aGQAAAAAAAAAAAAAAAAAAAPoAAAAeAABAAABAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAACb3RyYWsAAABcdGtoZAAAAAMAAAAAAAAAAAAAAAEAAAAAAAAAeAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAMAAAADAAAAAAACRlZHRzAAAAHGVsc3QAAAAAAAAAAQAAAHgAAAQAAAEAAAAAAedtZGlhAAAAIG1kaGQAAAAAAAAAAAAAAAAAADIAAAAGAFXEAAAAAAAtaGRscgAAAAAAAAAAdmlkZQAAAAAAAAAAAAAAAFZpZGVvSGFuZGxlcgAAAAGSbWluZgAAABR2bWhkAAAAAQAAAAAAAAAAAAAAJGRpbmYAAAAcZHJlZgAAAAAAAAABAAAADHVybCAAAAABAAABUnN0YmwAAACmc3RzZAAAAAAAAAABAAAAlmF2YzEAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAMAAwAEgAAABIAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY//8AAAAwYXZjQwFkAAr/4QAXZ2QACqzZTewEQAAAAwBAAAAMg8SJZYABAAZo6+PLIsAAAAAQcGFzcAAAAAEAAAABAAAAGHN0dHMAAAAAAAAAAQAAAAMAAAIAAAAAFHN0c3MAAAAAAAAAAQAAAAEAAAAoY3R0cwAAAAAAAAADAAAAAQAABAAAAAABAAAGAAAAAAEAAAIAAAAAHHN0c2MAAAAAAAAAAQAAAAEAAAADAAAAAQAAACBzdHN6AAAAAAAAAAAAAAADAAACwgAAAA0AAAAMAAAAFHN0Y28AAAAAAAAAAQAAADAAAAIudHJhawAAAFx0a2hkAAAAAwAAAAAAAAAAAAAAAgAAAAAAAAB1AAAAAAAAAAAAAAABAQAAAAABAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAJGVkdHMAAAAcZWxzdAAAAAAAAAABAAAAdQAAAAAAAQAAAAABpm1kaWEAAAAgbWRoZAAAAAAAAAAAAAAAAAAArEQAABQAVcQAAAAAAC1oZGxyAAAAAAAAAABzb3VuAAAAAAAAAAAAAAAAU291bmRIYW5kbGVyAAAAAVFtaW5mAAAAEHNtaGQAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAAAAAAAAQAAAAx1cmwgAAAAAQAAARVzdGJsAAAAZ3N0c2QAAAAAAAAAAQAAAFdtcDRhAAAAAAAAAAEAAAAAAAAAAAACABAAAAAArEQAAAAAADNlc2RzAAAAAAOAgIAiAAIABICAgBRAFQAAAAAAEX4AAAymBYCAgAISEAaAgIABAgAAABhzdHRzAAAAAAAAAAEAAAAFAAAEAAAAABxzdHNjAAAAAAAAAAEAAAABAAAABQAAAAEAAAAoc3RzegAAAAAAAAAAAAAABQAAABcAAAAGAAAABgAAAAYAAAAGAAAAFHN0Y28AAAAAAAAAAQAAAwsAAAAac2dwZAEAAAByb2xsAAAAAgAAAAH//wAAABxzYmdwAAAAAHJvbGwAAAABAAAABQAAAAEAAABidWR0YQAAAFptZXRhAAAAAAAAACFoZGxyAAAAAAAAAABtZGlyYXBwbAAAAAAAAAAAAAAAAC1pbHN0AAAAJal0b28AAAAdZGF0YQAAAAEAAAAATGF2ZjU4LjIwLjEwMA==";
 			u.test_autoplay.volume = 0.01;
 			u.test_autoplay.autoplay = true;
 			u.test_autoplay.playsinline = true;
@@ -5908,13 +6794,11 @@ u.navigation = function(_options) {
 			if(location.hash.length < 2) {
 				window._man_nav_path = u.h.getCleanUrl(location.href);
 				u.h.navigate(window._man_nav_path);
-				u.init(initialization_scope);
 			}
 			else if(location.hash.match(/^#\//) && u.h.getCleanHash(location.hash) != u.h.getCleanUrl(location.href)) {
 				callback_after_init = u.h.getCleanHash(location.hash);
 			}
 			else {
-				u.init(initialization_scope);
 			}
 		}
 		else {
@@ -5924,7 +6808,6 @@ u.navigation = function(_options) {
 				callback_after_init = window._man_nav_path;
 			}
 			else {
-				u.init(initialization_scope);
 			}
 		}
 		var random_string = u.randomString(8);
@@ -6015,7 +6898,7 @@ u._queueLoader = function() {
 				u._preloader_processes++;
 				u.rc(next, "waiting");
 				u.ac(next, "loading");
-				if(next._file.match(/png|jpg|gif|svg/)) {
+				if(next._file.match(/png|jpg|gif|svg|avif|webp/)) {
 					next.loaded = function(event) {
 						this.image = event.target;
 						this._image = this.image;
@@ -6556,11 +7439,19 @@ u.sortable = function(scope, _options) {
 				u.ac(this.scope._shadow_node, "shadow");
 				this.scope._recalculateRelativeShadowOffset();
 				var _start_width = u.gcs(this, "width");
+				var _z_index;
+				if(this._z_index != "auto") {
+					_z_index = this._z_index + 1;
+				}
+				else {
+					_z_index = 55;
+				}
 				u.ass(this.scope._shadow_node, {
 					width: _start_width,
 					position: "absolute",
 					left: ((event_x - this.scope._shadow_node._rel_ox) - this._mouse_ox) + "px",
 					top: ((event_y - this.scope._shadow_node.rel_oy) - this._mouse_oy) + "px",
+					"z-index": _z_index,
 				});
 				u.ac(this, "dragged");
 				this._event_move_id = u.e.addWindowMoveEvent(this, this.scope._sortableDrag);
@@ -6733,11 +7624,11 @@ u.sortable = function(scope, _options) {
 			u.e.removeEndEvent(node, this._cancelSortablePick);
 			u.e.removeOverEvent(node, this._sortableOver);
 			if(node._event_move_id) {
-				u.e.removeWindowMoveEvent(node, node._event_move_id);
+				u.e.removeWindowMoveEvent(node._event_move_id);
 				delete node._event_move_id;
 			}
 			if(node._event_end_id) {
-				u.e.removeWindowEndEvent(node, node._event_end_id);
+				u.e.removeWindowEndEvent(node._event_end_id);
 				delete node._event_end_id;
 			}
 			u.e.removeOutEvent(node.drag, this._sortableOut);
@@ -6842,7 +7733,7 @@ u.sortable = function(scope, _options) {
 			var i, target;
 			for(i = 0; i < this.target_nodes.length; i++) {
 				target = this.target_nodes[i];
-					if((target._n_top || target._n_bottom) && (u.cn(target).length > 1 || target._n_display != "block")) {
+					if((target._n_top || target._n_bottom) && (u.cn(target, {include: this._draggable_selector}).length > 1 || target._n_display != "block")) {
 						target._layout = "horizontal";
 					}
 					else if(target._n_left || target._n_right) {
@@ -6903,6 +7794,7 @@ u.sortable = function(scope, _options) {
 				draggable_node.parentNode._n_bottom = draggable_node.parentNode._n_bottom === undefined ? _top + _height : (draggable_node.parentNode._n_bottom == _top + _height ? draggable_node.parentNode._n_bottom : false);
 				draggable_node.parentNode._n_right = draggable_node.parentNode._n_right === undefined ? _left + _width : (draggable_node.parentNode._n_right == _left + _width ? draggable_node.parentNode._n_right : false);
 				draggable_node.parentNode._n_display = draggable_node.parentNode._n_display === undefined ? _display : (draggable_node.parentNode._n_display == _display ? draggable_node.parentNode._n_display : false);
+				draggable_node._z_index = u.gcs(draggable_node, "zIndex");
 				if(this._allow_nesting) {
 					draggable_node.sub_target = u.qs(this._target_selector, draggable_node);
 					if(draggable_node.sub_target) {
@@ -7202,6 +8094,9 @@ Util.svg = function(svg_object) {
 	if(svg_object.id) {
 		svg.setAttributeNS(null, "id", svg_object.id);
 	}
+	if(svg_object.viewBox) {
+		svg.setAttributeNS(null, "viewBox", svg_object.viewBox);
+	}
 	if(svg_object.node) {
 		svg.node = svg_object.node;
 	}
@@ -7211,8 +8106,8 @@ Util.svg = function(svg_object) {
 	return svg;
 }
 Util.svgShape = function(svg, svg_object) {
+	var detail, svg_shape;
 	svg_shape = document.createElementNS("http://www.w3.org/2000/svg", svg_object["type"]);
-	svg_object["type"] = null;
 	delete svg_object["type"];
 	for(detail in svg_object) {
 		svg_shape.setAttributeNS(null, detail, svg_object[detail]);
@@ -7566,7 +8461,7 @@ Util.Timer = u.t = new function() {
 	this._timers = new Array();
 	this.setTimer = function(node, action, timeout, param) {
 		var id = this._timers.length;
-		param = param ? param : {"target":node, "type":"timeout"};
+		param = param != undefined ? param : {"target":node, "type":"timeout"};
 		this._timers[id] = {"_a":action, "_n":node, "_p":param, "_t":setTimeout("u.t._executeTimer("+id+")", timeout)};
 		return id;
 	}
@@ -7664,7 +8559,7 @@ Util.getVar = function(param, url) {
 
 
 /*u-settings.js*/
-u.gapi_key = "AIzaSyAVqnYpqFln-qAYsp5rkEGs84mrhmGQB_I";
+u.gapi_key = "";
 
 
 /*u-basics.js*/
@@ -8349,8 +9244,11 @@ Util.Modules["oneButtonForm"] = new function() {
 					this.response = function(response) {
 						u.rc(this, "submitting");
 						u.rc(this._ob_submit_button, "disabled");
-						if(fun(page.notify)) {
+						if(typeof(page) !== 'undefined' && obj(page) && fun(page.notify)) {
 							page.notify(response);
+						}
+						else if(typeof(app) !== 'undefined' && obj(app) && fun(app.notify)) {
+							app.notify(response);
 						}
 						this.restore();
 						if(!response.cms_status || response.cms_status == "success") {
@@ -8535,542 +9433,6 @@ u.notifier = function(node) {
 			}
 		}
 		this.t_notifier = u.t.setTimer(this.notifications, this.notifications.hide, this.notifications.hide_delay, output);
-	}
-}
-
-
-/*u-media.js*/
-Util.audioPlayer = function(_options) {
-	_options = _options || {};
-	_options.type = "audio";
-	return u.mediaPlayer(_options);
-}
-Util.videoPlayer = function(_options) {
-	_options = _options || {};
-	_options.type = "video";
-	return u.mediaPlayer(_options);
-}
-Util.mediaPlayer = function(_options) {
-	var player = document.createElement("div");
-	player.type = _options && _options.type || "video";
-	u.ac(player, player.type+"player");
-	player._autoplay = false;
-	player._muted = false;
-	player._loop = false;
-	player._playsinline = false;
-	player._crossorigin = "anonymous";
-	player._controls = false;
-	player._controls_playpause = false;
-	player._controls_play = false;
-	player._controls_pause = false;
-	player._controls_stop = false;
-	player._controls_zoom = false;
-	player._controls_volume = false;
-	player._controls_search = false;
-	player._ff_skip = 2;
-	player._rw_skip = 2;
-	player.media = u.ae(player, player.type);
-	if(player.media && fun(player.media.play)) {
-		player.load = function(src, _options) {
-			if(u.hc(this, "playing")) {
-				this.stop();
-			}
-			u.setupMedia(this, _options);
-			if(src) {
-				this.media.src = u.correctMediaSource(this, src);
-				this.media.load();
-			}
-		}
-		player.play = function(position) {
-			if(this.media.currentTime && position !== undefined) {
-				this.media.currentTime = position;
-			}
-			if(this.media.src) {
-				return this.media.play();
-			}
-		}
-		player.loadAndPlay = function(src, _options) {
-			var position = 0;
-			if(obj(_options)) {
-				var _argument;
-				for(_argument in _options) {
-					switch(_argument) {
-						case "position"		: position		= _options[_argument]; break;
-					}
-				}
-			}
-			this.load(src, _options);
-			return this.play(position);
-		}
-		player.pause = function() {
-			this.media.pause();
-		}
-		player.stop = function() {
-			this.media.pause();
-			if(this.media.currentTime) {
-				this.media.currentTime = 0;
-			}
-		}
-		player.ff = function() {
-			if(this.media.src && this.media.currentTime && this.mediaLoaded) {
-				this.media.currentTime = (this.media.duration - this.media.currentTime >= this._ff_skip) ? (this.media.currentTime + this._ff_skip) : this.media.duration;
-				this.media._timeupdate();
-			}
-		}
-		player.rw = function() {
-			if(this.media.src && this.media.currentTime && this.mediaLoaded) {
-				this.media.currentTime = (this.media.currentTime >= this._rw_skip) ? (this.media.currentTime - this._rw_skip) : 0;
-				this.media._timeupdate();
-			}
-		}
-		player.togglePlay = function() {
-			if(u.hc(this, "playing")) {
-				this.pause();
-			}
-			else {
-				this.play();
-			}
-		}
-		player.volume = function(value) {
-			this.media.volume = value;
-			if(value === 0) {
-				u.ac(this, "muted");
-			}
-			else {
-				u.rc(this, "muted");
-			}
-		}
-		player.toggleSound = function() {
-			if(this.media.volume) {
-				this.media.volume = 0;
-				u.ac(this, "muted");
-			}
-			else {
-				this.media.volume = 1;
-				u.rc(this, "muted");
-			}
-		}
-		player.mute = function() {
-			this._muted = true;
-			this.media.muted = true;
-		}
-		player.unmute = function() {
-			this._muted = false;
-			this.media.muted = false;
-		}
-	}
-	else {
-		player.load = function() {}
-		player.play = function() {}
-		player.loadAndPlay = function() {}
-		player.pause = function() {}
-		player.stop = function() {}
-		player.ff = function() {}
-		player.rw = function() {}
-		player.togglePlay = function() {}
-	}
-	u.setupMedia(player, _options);
-	u.detectMediaAutoplay(player);
-	return player;
-}
-u.setupMedia = function(player, _options) {
-	if(obj(_options)) {
-		var _argument;
-		for(_argument in _options) {
-			switch(_argument) {
-				case "autoplay"     : player._autoplay               = _options[_argument]; break;
-				case "muted"        : player._muted                  = _options[_argument]; break;
-				case "loop"         : player._loop                   = _options[_argument]; break;
-				case "playsinline"  : player._playsinline            = _options[_argument]; break;
-				case "controls"     : player._controls               = _options[_argument]; break;
-				case "ff_skip"      : player._ff_skip                = _options[_argument]; break;
-				case "rw_skip"      : player._rw_skip                = _options[_argument]; break;
-			}
-		}
-	}
-	player.media.autoplay = player._autoplay;
-	player.media.loop = player._loop;
-	player.media.muted = player._muted;
-	player.media.playsinline = player._playsinline;
-	player.media.setAttribute("playsinline", player._playsinline);
-	player.media.setAttribute("crossorigin", player._crossorigin);
-	u.setupMediaControls(player, player._controls);
-	player.currentTime = 0;
-	player.duration = 0;
-	player.mediaLoaded = false;
-	player.metaLoaded = false;
-	if(!player.media.player) {
-		player.media.player = player;
-		player.media._loadstart = function(event) {
-			u.ac(this.player, "loading");
-			if(fun(this.player.loading)) {
-				this.player.loading(event);
-			}
-		}
-		u.e.addEvent(player.media, "loadstart", player.media._loadstart);
-		player.media._canplaythrough = function(event) {
-			u.rc(this.player, "loading");
-			if(fun(this.player.canplaythrough)) {
-				this.player.canplaythrough(event);
-			}
-		}
-		u.e.addEvent(player.media, "canplaythrough", player.media._canplaythrough);
-		player.media._playing = function(event) {
-			u.rc(this.player, "loading|paused");
-			u.ac(this.player, "playing");
-			if(fun(this.player.playing)) {
-				this.player.playing(event);
-			}
-		}
-		u.e.addEvent(player.media, "playing", player.media._playing);
-		player.media._paused = function(event) {
-			u.rc(this.player, "playing|loading");
-			u.ac(this.player, "paused");
-			if(fun(this.player.paused)) {
-				this.player.paused(event);
-			}
-		}
-		u.e.addEvent(player.media, "pause", player.media._paused);
-		player.media._stalled = function(event) {
-			u.rc(this.player, "playing|paused");
-			u.ac(this.player, "loading");
-			if(fun(this.player.stalled)) {
-				this.player.stalled(event);
-			}
-		}
-		u.e.addEvent(player.media, "stalled", player.media._paused);
-		player.media._error = function(event) {
-			if(fun(this.player.error)) {
-				this.player.error(event);
-			}
-		}
-		u.e.addEvent(player.media, "error", player.media._error);
-		player.media._ended = function(event) {
-			u.rc(this.player, "playing|paused");
-			if(fun(this.player.ended)) {
-				this.player.ended(event);
-			}
-		}
-		u.e.addEvent(player.media, "ended", player.media._ended);
-		player.media._loadedmetadata = function(event) {
-			this.player.duration = this.duration;
-			this.player.currentTime = this.currentTime;
-			this.player.metaLoaded = true;
-			if(fun(this.player.loadedmetadata)) {
-				this.player.loadedmetadata(event);
-			}
-		}
-		u.e.addEvent(player.media, "loadedmetadata", player.media._loadedmetadata);
-		player.media._loadeddata = function(event) {
-			this.player.mediaLoaded = true;
-			if(fun(this.player.loadeddata)) {
-				this.player.loadeddata(event);
-			}
-		}
-		u.e.addEvent(player.media, "loadeddata", player.media._loadeddata);
-		player.media._timeupdate = function(event) {
-			this.player.currentTime = this.currentTime;
-			if(fun(this.player.timeupdate)) {
-				this.player.timeupdate(event);
-			}
-		}
-		u.e.addEvent(player.media, "timeupdate", player.media._timeupdate);
-	}
-}
-u.correctMediaSource = function(player, src) {
-	var param = src.match(/\?[^$]+/) ? src.match(/(\?[^$]+)/)[1] : "";
-	src = src.replace(/\?[^$]+/, "");
-	if(player.type == "video") {
-		src = src.replace(/(\.m4v|\.mp4|\.webm|\.ogv|\.3gp|\.mov)$/, "");
-		if(player.flash) {
-			return src+".mp4"+param;
-		}
-		else if(player.media.canPlayType("video/mp4")) {
-			return src+".mp4"+param;
-		}
-		else if(player.media.canPlayType("video/ogg")) {
-			return src+".ogv"+param;
-		}
-		else if(player.media.canPlayType("video/3gpp")) {
-			return src+".3gp"+param;
-		}
-		else {
-			return src+".mov"+param;
-		}
-	}
-	else {
-		src = src.replace(/(.mp3|.ogg|.wav)$/, "");
-		if(player.flash) {
-			return src+".mp3"+param;
-		}
-		if(player.media.canPlayType("audio/mpeg")) {
-			return src+".mp3"+param;
-		}
-		else if(player.media.canPlayType("audio/ogg")) {
-			return src+".ogg"+param;
-		}
-		else {
-			return src+".wav"+param;
-		}
-	}
-}
-u.setupMediaControls = function(player, _options) {
-	if(obj(_options)) {
-		var _argument;
-		for(_argument in _options) {
-			switch(_argument) {
-				case "playpause"    : player._controls_playpause     = _options[_argument]; break;
-				case "play"         : player._controls_play          = _options[_argument]; break;
-				case "stop"         : player._controls_stop          = _options[_argument]; break;
-				case "pause"        : player._controls_pause         = _options[_argument]; break;
-				case "volume"       : player._controls_volume        = _options[_argument]; break;
-				case "search"       : player._controls_search        = _options[_argument]; break;
-			}
-		}
-	}
-	player._custom_controls = obj(_options) && (
-		player._controls_playpause ||
-		player._controls_play ||
-		player._controls_stop ||
-		player._controls_pause ||
-		player._controls_volume ||
-		player._controls_search
-	) || false;
-	if(player._custom_controls || !_options) {
-		player.media.removeAttribute("controls");
-	}
-	else {
-		player.media.controls = player._controls;
-	}
-	if(!player._custom_controls && player.controls) {
-		player.removeChild(player.controls);
-		delete player.controls;
-	}
-	else if(player._custom_controls) {
-		if(!player.controls) {
-			player.controls = u.ae(player, "div", {"class":"controls"});
-			player.controls.player = player;
-			player.controls.out = function() {
-				u.a.transition(this, "all 0.3s ease-out");
-				u.ass(this, {
-					"opacity":0
-				});
-			}
-			player.controls.over = function() {
-				u.a.transition(this, "all 0.5s ease-out");
-				u.ass(this, {
-					"opacity":1
-				});
-			}
-			u.e.hover(player.controls);
-		}
-		if(player._controls_playpause) {
-			if(!player.controls.playpause) {
-				player.controls.playpause = u.ae(player.controls, "a", {"class":"playpause"});
-				player.controls.playpause.player = player;
-				u.e.click(player.controls.playpause);
-				player.controls.playpause.clicked = function(event) {
-					this.player.togglePlay();
-				}
-			}
-		}
-		else if(player.controls.playpause) {
-			player.controls.playpause.parentNode.removeChild(player.controls.playpause);
-			delete player.controls.playpause;
-		}
-		if(player._controls_play) {
-			if(!player.controls.play) {
-				player.controls.play = u.ae(player.controls, "a", {"class":"play"});
-				player.controls.play.player = player;
-				u.e.click(player.controls.play);
-				player.controls.play.clicked = function(event) {
-					this.player.togglePlay();
-				}
-			}
-		}
-		else if(player.controls.play) {
-			player.controls.play.parentNode.removeChild(player.controls.play);
-			delete player.controls.play;
-		}
-		if(player._controls_pause) {
-			if(!player.controls.pause) {
-				player.controls.pause = u.ae(player.controls, "a", {"class":"pause"});
-				player.controls.pause.player = player;
-				u.e.click(player.controls.pause);
-				player.controls.pause.clicked = function(event) {
-					this.player.togglePlay();
-				}
-			}
-		}
-		else if(player.controls.pause) {
-			player.controls.pause.parentNode.removeChild(player.controls.pause);
-			delete player.controls.pause;
-		}
-		if(player._controls_stop) {
-			if(!player.controls.stop) {
-				player.controls.stop = u.ae(player.controls, "a", {"class":"stop" });
-				player.controls.stop.player = player;
-				u.e.click(player.controls.stop);
-				player.controls.stop.clicked = function(event) {
-					this.player.stop();
-				}
-			}
-		}
-		else if(player.controls.stop) {
-			player.controls.stop.parentNode.removeChild(player.controls.stop);
-			delete player.controls.stop;
-		}
-		if(player._controls_search) {
-			if(!player.controls.search) {
-				player.controls.search_ff = u.ae(player.controls, "a", {"class":"ff"});
-				player.controls.search_ff._default_display = u.gcs(player.controls.search_ff, "display");
-				player.controls.search_ff.player = player;
-				player.controls.search_rw = u.ae(player.controls, "a", {"class":"rw"});
-				player.controls.search_rw._default_display = u.gcs(player.controls.search_rw, "display");
-				player.controls.search_rw.player = player;
-				u.e.click(player.controls.search_ff);
-				player.controls.search_ff.ffing = function() {
-					this.t_ffing = u.t.setTimer(this, this.ffing, 100);
-					this.player.ff();
-				}
-				player.controls.search_ff.inputStarted = function(event) {
-					this.ffing();
-				}
-				player.controls.search_ff.clicked = function(event) {
-					u.t.resetTimer(this.t_ffing);
-				}
-				u.e.click(player.controls.search_rw);
-				player.controls.search_rw.rwing = function() {
-					this.t_rwing = u.t.setTimer(this, this.rwing, 100);
-					this.player.rw();
-				}
-				player.controls.search_rw.inputStarted = function(event) {
-					this.rwing();
-				}
-				player.controls.search_rw.clicked = function(event) {
-					u.t.resetTimer(this.t_rwing);
-					this.player.rw();
-				}
-				player.controls.search = true;
-			}
-			else {
-				u.as(player.controls.search_ff, "display", player.controls.search_ff._default_display);
-				u.as(player.controls.search_rw, "display", player.controls.search_rw._default_display);
-			}
-		}
-		else if(player.controls.search) {
-			u.as(player.controls.search_ff, "display", "none");
-			u.as(player.controls.search_rw, "display", "none");
-		}
-		if(player._controls_zoom && !player.controls.zoom) {}
-		else if(player.controls.zoom) {}
-		if(player._controls_volume && !player.controls.volume) {}
-		else if(player.controls.volume) {}
-		// 
-	}
-}
-u.detectMediaAutoplay = function(player) {
-	if(!u.media_autoplay_detection) {
-		u.media_autoplay_detection = [player];
-		u.test_autoplay = document.createElement("video");
-		u.test_autoplay.check = function() {
-			if(u.media_can_autoplay !== undefined && u.media_can_autoplay_muted !== undefined) {
-				for(var i = 0, player; i < u.media_autoplay_detection.length; i++) {
-					player = u.media_autoplay_detection[i];
-					player.can_autoplay = u.media_can_autoplay;
-					player.can_autoplay_muted = u.media_can_autoplay_muted;
-					if(fun(player.ready)) {
-						player.ready();
-					}
-				}
-				u.media_autoplay_detection = true;
-				u.test_autoplay.pause();
-				delete u.test_autoplay;
-			}
-		}
-		u.test_autoplay.playing = function(event) {
-			u.media_can_autoplay = true;
-			u.media_can_autoplay_muted = true;
-			this.check();
-		}
-		u.test_autoplay.notplaying = function() {
-			u.media_can_autoplay = false;
-			u.test_autoplay.muted = true;
-			var promise = u.test_autoplay.play();
-			if(promise && fun(promise.then)) {
-				promise.then(
-					function(){
-						if(u.test_autoplay) {
-							u.t.resetTimer(window.u.test_autoplay.t_check);
-							u.test_autoplay.playing_muted();
-						}
-					}
-				).catch(
-					function() {
-						if(u.test_autoplay) {
-							u.t.resetTimer(window.u.test_autoplay.t_check)
-							u.test_autoplay.notplaying_muted();
-						}
-					}
-				);
-				u.test_autoplay.t_check = u.t.setTimer(u.test_autoplay, function(){
-					u.test_autoplay.pause();
-				}, 1000);
-			}
-		}
-		u.test_autoplay.playing_muted = function() {
-			u.media_can_autoplay_muted = true;
-			this.check();
-		}
-		u.test_autoplay.notplaying_muted = function() {
-			u.media_can_autoplay_muted = false;
-			this.check();
-		}
-		u.test_autoplay.error = function(event) {
-			u.media_can_autoplay = false;
-			u.media_can_autoplay_muted = false;
-			this.check();
-		}
-		u.e.addEvent(u.test_autoplay, "playing", u.test_autoplay.playing);
-		u.e.addEvent(u.test_autoplay, "error", u.test_autoplay.error);
-		if(u.test_autoplay.canPlayType("video/mp4")) {
-			var data = "data:audio/aac;base64,//FQgAPf/N4CAExhdmM1OC45MS4xMDAAQiAIwRg4//FQgAG//CEQBGCMHP/xUIABv/whEARgjBz/8VCAAb/8IRAEYIwc//FQgAG//CEQBGCMHP/xUIABv/whEARgjBw=";
-			// var data = "data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAAxJtZGF0AAACoAYF//+c3EXpvebZSLeWLNgg2SPu73gyNjQgLSBjb3JlIDE1NyAtIEguMjY0L01QRUctNCBBVkMgY29kZWMgLSBDb3B5bGVmdCAyMDAzLTIwMTggLSBodHRwOi8vd3d3LnZpZGVvbGFuLm9yZy94MjY0Lmh0bWwgLSBvcHRpb25zOiBjYWJhYz0xIHJlZj0zIGRlYmxvY2s9MTowOjAgYW5hbHlzZT0weDM6MHgxMTMgbWU9aGV4IHN1Ym1lPTcgcHN5PTEgcHN5X3JkPTEuMDA6MC4wMCBtaXhlZF9yZWY9MSBtZV9yYW5nZT0xNiBjaHJvbWFfbWU9MSB0cmVsbGlzPTEgOHg4ZGN0PTEgY3FtPTAgZGVhZHpvbmU9MjEsMTEgZmFzdF9wc2tpcD0xIGNocm9tYV9xcF9vZmZzZXQ9LTIgdGhyZWFkcz0xIGxvb2thaGVhZF90aHJlYWRzPTEgc2xpY2VkX3RocmVhZHM9MCBucj0wIGRlY2ltYXRlPTEgaW50ZXJsYWNlZD0wIGJsdXJheV9jb21wYXQ9MCBjb25zdHJhaW5lZF9pbnRyYT0wIGJmcmFtZXM9MyBiX3B5cmFtaWQ9MiBiX2FkYXB0PTEgYl9iaWFzPTAgZGlyZWN0PTEgd2VpZ2h0Yj0xIG9wZW5fZ29wPTAgd2VpZ2h0cD0yIGtleWludD0yNTAga2V5aW50X21pbj0yNSBzY2VuZWN1dD00MCBpbnRyYV9yZWZyZXNoPTAgcmNfbG9va2FoZWFkPTQwIHJjPWNyZiBtYnRyZWU9MSBjcmY9MjMuMCBxY29tcD0wLjYwIHFwbWluPTAgcXBtYXg9NjkgcXBzdGVwPTQgaXBfcmF0aW89MS40MCBhcT0xOjEuMDAAgAAAABpliIQAM//+9uy+BTYUyFCXESoMDuxA1w9RcQAAAAlBmiJsQr/+RRgAAAAIAZ5BeQr/IeHeAgBMYXZjNTguMzUuMTAwAEIgCMEYOCEQBGCMHCEQBGCMHCEQBGCMHCEQBGCMHAAABXNtb292AAAAbG12aGQAAAAAAAAAAAAAAAAAAAPoAAAAeAABAAABAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAACb3RyYWsAAABcdGtoZAAAAAMAAAAAAAAAAAAAAAEAAAAAAAAAeAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAMAAAADAAAAAAACRlZHRzAAAAHGVsc3QAAAAAAAAAAQAAAHgAAAQAAAEAAAAAAedtZGlhAAAAIG1kaGQAAAAAAAAAAAAAAAAAADIAAAAGAFXEAAAAAAAtaGRscgAAAAAAAAAAdmlkZQAAAAAAAAAAAAAAAFZpZGVvSGFuZGxlcgAAAAGSbWluZgAAABR2bWhkAAAAAQAAAAAAAAAAAAAAJGRpbmYAAAAcZHJlZgAAAAAAAAABAAAADHVybCAAAAABAAABUnN0YmwAAACmc3RzZAAAAAAAAAABAAAAlmF2YzEAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAMAAwAEgAAABIAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY//8AAAAwYXZjQwFkAAr/4QAXZ2QACqzZTewEQAAAAwBAAAAMg8SJZYABAAZo6+PLIsAAAAAQcGFzcAAAAAEAAAABAAAAGHN0dHMAAAAAAAAAAQAAAAMAAAIAAAAAFHN0c3MAAAAAAAAAAQAAAAEAAAAoY3R0cwAAAAAAAAADAAAAAQAABAAAAAABAAAGAAAAAAEAAAIAAAAAHHN0c2MAAAAAAAAAAQAAAAEAAAADAAAAAQAAACBzdHN6AAAAAAAAAAAAAAADAAACwgAAAA0AAAAMAAAAFHN0Y28AAAAAAAAAAQAAADAAAAIudHJhawAAAFx0a2hkAAAAAwAAAAAAAAAAAAAAAgAAAAAAAAB1AAAAAAAAAAAAAAABAQAAAAABAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAJGVkdHMAAAAcZWxzdAAAAAAAAAABAAAAdQAAAAAAAQAAAAABpm1kaWEAAAAgbWRoZAAAAAAAAAAAAAAAAAAArEQAABQAVcQAAAAAAC1oZGxyAAAAAAAAAABzb3VuAAAAAAAAAAAAAAAAU291bmRIYW5kbGVyAAAAAVFtaW5mAAAAEHNtaGQAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAAAAAAAAQAAAAx1cmwgAAAAAQAAARVzdGJsAAAAZ3N0c2QAAAAAAAAAAQAAAFdtcDRhAAAAAAAAAAEAAAAAAAAAAAACABAAAAAArEQAAAAAADNlc2RzAAAAAAOAgIAiAAIABICAgBRAFQAAAAAAEX4AAAymBYCAgAISEAaAgIABAgAAABhzdHRzAAAAAAAAAAEAAAAFAAAEAAAAABxzdHNjAAAAAAAAAAEAAAABAAAABQAAAAEAAAAoc3RzegAAAAAAAAAAAAAABQAAABcAAAAGAAAABgAAAAYAAAAGAAAAFHN0Y28AAAAAAAAAAQAAAwsAAAAac2dwZAEAAAByb2xsAAAAAgAAAAH//wAAABxzYmdwAAAAAHJvbGwAAAABAAAABQAAAAEAAABidWR0YQAAAFptZXRhAAAAAAAAACFoZGxyAAAAAAAAAABtZGlyYXBwbAAAAAAAAAAAAAAAAC1pbHN0AAAAJal0b28AAAAdZGF0YQAAAAEAAAAATGF2ZjU4LjIwLjEwMA==";
-			u.test_autoplay.volume = 0.01;
-			u.test_autoplay.autoplay = true;
-			u.test_autoplay.playsinline = true;
-			u.test_autoplay.setAttribute("playsinline", true);
-			u.test_autoplay.src = data;
-			var promise = u.test_autoplay.play();
-			if(promise && fun(promise.then)) {
-				u.e.removeEvent(u.test_autoplay, "playing", u.test_autoplay.playing);
-				u.e.removeEvent(u.test_autoplay, "error", u.test_autoplay.error);
-				promise.then(
-					u.test_autoplay.playing.bind(u.test_autoplay)
-				).catch(
-					u.test_autoplay.notplaying.bind(u.test_autoplay)
-				);
-			}
-		}
-		else {
-			u.media_can_autoplay = true;
-			u.media_can_autoplay_muted = true;
-			u.t.setTimer(u.test_autoplay, function() {
-				this.check();
-			}, 20);
-		}
-	}
-	else if(u.media_autoplay_detection !== true) {
-		u.media_autoplay_detection.push(player);
-	}
-	else {
-		u.t.setTimer(player, function() {
-			this.can_autoplay = u.media_can_autoplay;
-			this.can_autoplay_muted = u.media_can_autoplay_muted;
-			if(fun(this.ready)){
-				this.ready();
-			}
-		}, 20);
 	}
 }
 
@@ -10216,6 +10578,83 @@ Util.Modules["defaultComments"] = new function() {
 }
 
 
+/*m-default_editors.js*/
+Util.Modules["defaultEditors"] = new function() {
+	this.init = function(div) {
+		div.item_id = u.cv(div, "item_id");
+		div.remove_editor_url = div.getAttribute("data-editor-remove");
+		div.csrf_token = div.getAttribute("data-csrf-token");
+		div._form_editors = u.qs("form.editors", div);
+		div._list_editors = u.qs("ul.editors", div);
+		if(div._form_editors) {
+			div._form_editors.div = div;
+			u.f.init(div._form_editors);
+			div._form_editors.submitted = function(iN) {
+				this.response = function(response) {
+					page.notify(response);
+					if(response.cms_status == "success" && response.cms_object && response.cms_object !== true) {
+						if(!this.div._list_editors) {
+							this.div._list_editors = u.ae(this.parentNode, "ul", {"class":"items editors"});
+							this.parentNode.insertBefore(this.div._list_editors, this);
+							var p_no_editors = u.qs("p", this.div);
+							if(p_no_editors) {
+								p_no_editors.parentNode.removeChild(p_no_editors);
+							}
+						}
+						var editor_li = u.ae(this.div._list_editors, "li", {"class":"editor editor_id:"+response.cms_object["id"]});
+						u.ae(editor_li, "h3", {"html":response.cms_object["nickname"]});
+						this.div.initEditor(editor_li);
+						this.reset();
+					}
+					else if(response.cms_status == "success" && response.cms_object && response.cms_object === true) {
+						this.reset();
+					}
+				}
+				u.request(this, this.action, {"method":"post", "data" : this.getData()});
+			}
+		}
+		div.initEditor = function(node) {
+			node.div = this;
+			if(this.remove_editor_url) {
+				node.editor_id = u.cv(node, "editor_id");
+				node._ul_actions = u.ae(node, "ul", {"class":"actions"});
+				node._li_remove = u.ae(node._ul_actions, "li", {"class":"remove"});
+				node._form_remove = u.f.addForm(node._li_remove, {
+					"action":this.remove_editor_url, 
+					"class":"remove"
+				});
+				node._form_remove.node = node;
+				u.f.addField(node._form_remove, {
+					"type":"hidden",
+					"name":"csrf-token", 
+					"value":div.csrf_token
+				});
+				u.f.addField(node._form_remove, {
+					"type":"hidden",
+					"name":"editor_id", 
+					"value":node.editor_id
+				});
+				u.f.addAction(node._form_remove, {
+					"value":"Remove",
+					"class":"button remove"
+				});
+				node._form_remove.setAttribute("data-success-function", "removed");
+				node._form_remove.setAttribute("data-confirm-value", "Are you sure?");
+				u.m.oneButtonForm.init(node._form_remove);
+				node._form_remove.removed = function(response) {
+					this.node.parentNode.removeChild(this.node);
+				}
+			}
+		}
+		div.editors = u.qsa("li.editor", div._list_editors);
+		var i, node;
+		for(i = 0; node = div.editors[i]; i++) {
+			div.initEditor(node);
+		}
+	}
+}
+
+
 /*m-default_prices.js*/
 Util.Modules["defaultPrices"] = new function() {
 	this.init = function(div) {
@@ -10464,6 +10903,154 @@ Util.Modules["defaultDeveloper"] = new function() {
 		}
 	}
 }
+
+/*m-event_tickets.js*/
+Util.Modules["ticketEvent"] = new function() {
+	this.init = function(div) {
+		div.item_id = u.cv(div, "item_id");
+		div.remove_event_url = div.getAttribute("data-event-remove");
+		div.csrf_token = div.getAttribute("data-csrf-token");
+		div._form_event = u.qs("form.event", div);
+		div._list_events = u.qs("ul.events", div);
+		if(div._form_event) {
+			div._form_event.div = div;
+			u.f.init(div._form_event);
+			div._form_event.submitted = function(iN) {
+				this.response = function(response) {
+					page.notify(response);
+					if(response.cms_status == "success" && response.cms_object) {
+						if(!this.div._list_events) {
+							this.div._list_events = u.ae(this.parentNode, "ul", {"class":"items events"});
+							this.parentNode.insertBefore(this.div._list_events, this);
+							var p_no_events = u.qs("p", this.div);
+							if(p_no_events) {
+								p_no_events.parentNode.removeChild(p_no_events);
+							}
+						}
+						this.div._list_events.innerHTML = "";
+						var event_li = u.ae(this.div._list_events, "li", {"class":"event event_id:"+response.cms_object["event_id"]});
+						u.ae(event_li, "h3", {"html":response.cms_object["event_name"]});
+						this.div.initEvent(event_li);
+						this.reset();
+					}
+				}
+				u.request(this, this.action, {"method":"post", "data" : this.getData()});
+			}
+		}
+		div.initEvent = function(node) {
+			node.div = this;
+			if(this.remove_event_url) {
+				node.event_id = u.cv(node, "event_id");
+				node._ul_actions = u.ae(node, "ul", {"class":"actions"});
+				node._li_remove = u.ae(node._ul_actions, "li", {"class":"remove"});
+				node._form_remove = u.f.addForm(node._li_remove, {
+					"action":this.remove_event_url, 
+					"class":"remove"
+				});
+				node._form_remove.node = node;
+				u.f.addField(node._form_remove, {
+					"type":"hidden",
+					"name":"csrf-token", 
+					"value":div.csrf_token
+				});
+				u.f.addField(node._form_remove, {
+					"type":"hidden",
+					"name":"event_id", 
+					"value":node.event_id
+				});
+				u.f.addAction(node._form_remove, {
+					"value":"Remove from event",
+					"class":"button remove"
+				});
+				node._form_remove.setAttribute("data-success-function", "removed");
+				node._form_remove.setAttribute("data-confirm-value", "Are you sure?");
+				u.m.oneButtonForm.init(node._form_remove);
+				node._form_remove.removed = function(response) {
+					this.node.parentNode.removeChild(this.node);
+				}
+			}
+		}
+		div.events = u.qsa("li.event", div._list_events);
+		var i, node;
+		for(i = 0; node = div.events[i]; i++) {
+			div.initEvent(node);
+		}
+	}
+}
+Util.Modules["eventTickets"] = new function() {
+	this.init = function(div) {
+		div.item_id = u.cv(div, "item_id");
+		div.remove_ticket_url = div.getAttribute("data-ticket-remove");
+		div.csrf_token = div.getAttribute("data-csrf-token");
+		div._form_ticket = u.qs("form.ticket", div);
+		div._list_tickets = u.qs("ul.tickets", div);
+		if(div._form_ticket) {
+			div._form_ticket.div = div;
+			u.f.init(div._form_ticket);
+			div._form_ticket.submitted = function(iN) {
+				this.response = function(response) {
+					page.notify(response);
+					if(response.cms_status == "success" && response.cms_object) {
+						if(!this.div._list_tickets) {
+							this.div._list_tickets = u.ae(this.parentNode, "ul", {"class":"items tickets"});
+							this.parentNode.insertBefore(this.div._list_tickets, this);
+							var p_no_tickets = u.qs("p", this.div);
+							if(p_no_tickets) {
+								p_no_tickets.parentNode.removeChild(p_no_tickets);
+							}
+						}
+						var event_li = u.ae(this.div._list_tickets, "li", {"class":"ticket ticket_id:"+response.cms_object["ticket_id"]});
+						u.ae(event_li, "h3", {"html":response.cms_object["ticket_name"]});
+						this.inputs["item_ticket"].removeChild(this.inputs["item_ticket"].options[this.inputs["item_ticket"].selectedIndex]);
+						this.div.initTicket(event_li);
+						this.reset();
+					}
+				}
+				u.request(this, this.action, {"method":"post", "data" : this.getData()});
+			}
+		}
+		div.initTicket = function(node) {
+			node.div = this;
+			if(this.remove_ticket_url) {
+				node.ticket_id = u.cv(node, "ticket_id");
+				node._ul_actions = u.ae(node, "ul", {"class":"actions"});
+				node._li_remove = u.ae(node._ul_actions, "li", {"class":"remove"});
+				node._form_remove = u.f.addForm(node._li_remove, {
+					"action":this.remove_ticket_url, 
+					"class":"remove"
+				});
+				node._form_remove.node = node;
+				u.f.addField(node._form_remove, {
+					"type":"hidden",
+					"name":"csrf-token", 
+					"value":div.csrf_token
+				});
+				u.f.addField(node._form_remove, {
+					"type":"hidden",
+					"name":"ticket_id", 
+					"value":node.ticket_id
+				});
+				u.f.addAction(node._form_remove, {
+					"value":"Remove ticket",
+					"class":"button remove"
+				});
+				node._form_remove.setAttribute("data-success-function", "removed");
+				node._form_remove.setAttribute("data-confirm-value", "Are you sure?");
+				u.m.oneButtonForm.init(node._form_remove);
+				node._form_remove.removed = function(response) {
+					u.ae(this.node.div._form_ticket.inputs["item_ticket"], "option", {"html": node.innerHTML, "value": node.ticket_id});
+					this.node.parentNode.removeChild(this.node);
+				}
+			}
+		}
+		div.tickets = u.qsa("li.ticket", div._list_tickets);
+		var i, node;
+		for(i = 0; node = div.tickets[i]; i++) {
+			div.initTicket(node);
+		}
+	}
+}
+
 
 /*m-navigations.js*/
 Util.Modules["navigationNodes"] = new function() {
@@ -11295,7 +11882,6 @@ Util.Modules["capturePaymentNew"] = new function() {
 /*m-system.js*/
 Util.Modules["cacheList"] = new function() {
 	this.init = function(div) {
-		u.bug("div cacheList")
 		div.csrf_token = div.getAttribute("data-csrf-token");
 		div.flush_url = div.getAttribute("data-flush-url");
 		var entries = u.qsa("li.item", div);

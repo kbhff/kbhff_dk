@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2022-11-23 22:07:30
+asset-builder @ 2023-12-11 11:49:17
 */
 
 /*seg_desktop_include.css*/
@@ -1519,9 +1519,10 @@ position: relative;
 #content .member_help_payment div.payment_options h4.tab {display: inline-block; background-color: #f2f2f2f2; padding: 6px calc(2.5% + 10px); margin-right: 6px; cursor:pointer;}
 #content .member_help_payment div.payment_options h4.cash_tab {background-color: #bbbbbb;}
 #content .member_help_payment div.payment_options h4.card_tab {background-color: #bbbbbb;}
-#content .member_help_payment form.cash {display:none;}
-#content .member_help_payment form.card {display:none;}
-#content .member_help_payment form fieldset {background-color: #f2f2f2; position: relative; padding-bottom: 40px} 
+#content .member_help_payment form.cash {display: none;}
+#content .member_help_payment div.card {display: none;}
+#content .member_help_payment form fieldset,
+#content .member_help_payment div.fieldset {background-color: #f2f2f2; position: relative; padding-bottom: 40px} 
 #content .member_help_payment form.mobilepay .qr {float: right; position: relative;}
 #content .member_help_payment form.mobilepay .qr::before {z-index: 1; content: ""; display: block; position: absolute; top: 12px; bottom: 12px; border: 1px solid #999; border-width: 0 0 0 1px;}
 #content .member_help_payment form.mobilepay .qr img {padding: 0; margin: 14px;}
@@ -1530,13 +1531,10 @@ position: relative;
 #content .member_help_payment form.mobilepay .code p {width: 50%; margin-top: -5px; padding-bottom: 12px;}
 #content .member_help_payment form.mobilepay .code p.payment_info {font-size: 24px; padding-bottom: 8px;}
 #content .member_help_payment form div.cash.instructions p {font-size: 16px; padding: 12px 12px 12px;}
-#content .member_help_payment form.card .field.card {padding-top: 14px;}
-#content .member_help_payment form.card .field.exp_month,
-#content .member_help_payment form.card .field.exp_year {display: inline-block; width: 65px;}
-#content .member_help_payment form.card .field.cvc {width: 85px; float: right;}
-#content .member_help_payment form.card span.slash {font-size: 26px; vertical-align: middle; position: relative; top: 10px;}
+#content .member_help_payment div.card ul.card {list-style: none; margin: 0; padding: 0;}
+#content .member_help_payment div.card p {font-size: 16px; padding: 12px 12px 12px;}
 #content .member_help_payment form .checkbox {padding: 12px 10px; position: absolute; bottom: 0;}
-#content .member_help_payment form ul.actions {width: 100%; margin-left: 0; padding-left: 0; margin-top: 12px;}
+#content .member_help_payment ul.actions {width: 100%; margin-left: 0; padding-left: 0; margin-top: 12px;}
 #content .member_help ul.actions {text-align:center}
 #content div.user_profile .c-wrapper > .c-one-third .section:first-child {
 	margin-top: 0px;
