@@ -7,6 +7,18 @@
 
 class Shop extends ShopCore {
 
+
+	public $db_departments;
+	public $db_pickupdates;
+	public $db_department_pickupdate_cart_items;
+	public $db_department_pickupdate_order_items;
+	public $db_order_item_log;
+	public $db_department_pickupdates;
+	public $order_statuses_dk;
+	public $payment_statuses_dk;
+	public $shipping_statuses_dk;
+
+
 	/**
 	* Defines order-statuses in danish. 
 	*/

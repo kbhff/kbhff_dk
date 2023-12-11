@@ -38,6 +38,10 @@
 
 class TypeProduct extends Itemtype {
 
+
+	public $db_department_pickupdate_order_items;
+
+
 	/**
 	* Init, set varnames, validation rules
 	*/

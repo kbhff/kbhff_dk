@@ -6,6 +6,10 @@
 
 class TypeMessage extends TypeMessageCore {
 
+
+	public $db_log;
+
+
 	/**
 	* Initialization: set variable names and validation rules.
 	*

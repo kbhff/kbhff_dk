@@ -40,6 +40,10 @@
 include_once("classes/items/type.product.class.php");
 class TypeProductSeasonalbag extends TypeProduct {
 
+
+	public $db;
+
+
 	/**
 	* Init, set varnames, validation rules
 	*/

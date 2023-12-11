@@ -7,12 +7,21 @@
  **/
 class Tally extends Model {
 
+
+	public $db;
+	public $db_payouts;
+	public $db_misc_revenues;
+	public $db_cash_payments;
+
+
 	/**
 	* Initialization: set variable names and validation rules for Tally model.
 	*
 	* @return void 
 	*/
 	function __construct() {
+
+
 
 		// Construct Model class, passing the Tally model as a parameter. 
 		// The Model class is constructed *before* adding values to Tally model to ensure Tally overwrites the standard values of Model 

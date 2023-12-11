@@ -7,6 +7,10 @@
  **/
 class Pickupdate extends Model {
 
+
+	public $db;
+
+
 	/**
 	* Initialization: set variable names and validation rules for Pickupdate model.
 	*

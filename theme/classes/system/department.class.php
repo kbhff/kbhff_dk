@@ -7,6 +7,12 @@
  **/
 class Department extends Model {
 
+
+	public $db;
+	public $db_products;
+	public $db_pickupdates;
+
+
 	/**
 	* Initialization: set variable names and validation rules for Department model.
 	*

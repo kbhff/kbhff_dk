@@ -1,6 +1,6 @@
 <?php
 
-require_once('includes/qr_codes/bacon-qr-code/vendor/autoload.php');
+require_once('includes/qr_codes/bacon-qr-code-2.0.0/vendor/autoload.php');
 
 use BaconQrCode\Renderer\Color\ColorInterface;
 use BaconQrCode\Renderer\ImageRenderer;
