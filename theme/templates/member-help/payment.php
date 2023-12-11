@@ -227,7 +227,47 @@ else {
 		</ul>
 		<?= $model->formEnd() ?>
 
-		<?= $model->formStart("betaling/stripe/ordre/".$order_no."/process", array("class" => "card")) ?>
+
+
+		<? if($payment_methods): ?>
+
+		<div class="card">
+			<div class="fieldset">
+				<p>Du bliver viderestillet til betalingsvinduet når du klikker på knappen nedenfor.</p>
+			</div>
+
+			<ul class="card">
+
+			<? foreach($payment_methods as $payment_method): ?>
+				<? if($payment_method["state"] === "public"): ?>
+				<? // debug([$payment_method]) ?>
+
+				<li class="payment_method<?= $payment_method["classname"] ? " ".$payment_method["classname"] : "" ?>">
+
+					<ul class="actions">
+						<?= $HTML->oneButtonForm(
+						"Betal med " . $payment_method["name"], 
+						"/medlemshjaelp/betaling/selectPaymentMethodForOrder", 
+						array(
+							"inputs" => array(
+								"order_id" => $order["id"], 
+								"payment_method_id" => $payment_method["id"]
+							),
+							"confirm-value" => false,
+							"wait-value" => "Vent venligst",
+							"dom-submit" => true,
+							"class" => "primary",
+							"name" => "continue",
+							"wrapper" => "li.continue.".$payment_method["classname"],
+						)) ?>
+					</ul>
+				</li>
+				<? endif; ?>
+			<? endforeach; ?>
+
+			</ul>
+		</div>
+		<?/*= $model->formStart("betaling/stripe/ordre/".$order_no."/process", array("class" => "card")) ?>
 
 			<fieldset>
 				<?= $model->input("card_number", array("type" => "tel", "label" => "Kortnummer", "hint_message" => "Indtast dit kortnummer", "error_message" => "Ugyldigt kortnummer")); ?>
@@ -241,9 +281,11 @@ else {
 			<ul class="actions">
 				<?= $model->submit("Betal ".formatPrice($total_order_price), array("class" => "primary", "wrapper" => "li.pay")) ?>
 			</ul>
-			<?= $model->formEnd() ?>
-			
-			<?= $model->formStart("registerPayment/".$order_no, ["class" => "cash"]) ?>
+		<?= $model->formEnd() */ ?>
+		<? endif; ?>
+
+
+		<?= $model->formStart("registerPayment/".$order_no, ["class" => "cash"]) ?>
 			<fieldset class="cash">
 				<?= $model->input("payment_amount", array("type" => "hidden", "value" => $total_order_price["price"])); ?>
 				<?= $model->input("payment_method_id", array("type" => "hidden", "value" => $cash_payment_method_id)); ?>

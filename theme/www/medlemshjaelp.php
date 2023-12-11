@@ -715,9 +715,195 @@ if($action) {
 
 	# /medlemshjaelp/betaling
 	else if($action[0] == "betaling") {
-		
+
+
+		# /medlemshjaelp/betaling/selectPaymentMethodForOrder
+		if(count($action) === 2 && $action[1] == "selectPaymentMethodForOrder" && security()->validateCsrfToken()) {
+
+			// register payment method
+			$result = $SC->selectPaymentMethodForOrder(array("selectPaymentMethodForOrder"));
+			if($result) {
+
+				if($result["status"] === "PROCEED_TO_GATEWAY") {
+
+					$success_url = SITE_URL . "/medlemshjaelp/betaling/".$result["order_no"]."/".$result["payment_gateway"]."/success/{CHECKOUT_SESSION_ID}";
+					$cancel_url = SITE_URL . "/medlemshjaelp/betaling/".$result["order_no"];
+
+					$session = $SC->createOrderPaymentSession($result["order_no"], $success_url, $cancel_url);
+
+					// Redirect to gateway
+					if($session && $session["url"]) {
+
+						header("Location: ".$session["url"], true, 303);
+						exit();
+
+					}
+					else if($session["status"] === "ORDER_NOT_FOUND") {
+
+						// Some error from Stripe
+						message()->addMessage($result["message"], ["type" => "error"]);
+						header("Location: /medlemshjaelp/betaling/".$result["order_no"]);
+						exit();
+
+					}
+					else {
+
+						// redirect to leave POST state
+						message()->addMessage("Vi kunne ikke få en betalingssession fra ".ucfirst($result["payment_gateway"])." – prøv igen.", ["type" => "error"]);
+						header("Location: /medlemshjaelp/betaling/".$result["order_no"]);
+						exit();
+
+					}
+
+				}
+				// else if($result["status"] === "PROCEED_TO_RECEIPT") {
+				//
+				// 	// redirect to leave POST state
+				// 	header("Location: /butik/kvittering/ordre/".$result["order_no"]."/".superNormalize($result["payment_name"]));
+				// 	exit();
+				//
+				// }
+
+			}
+
+			// redirect to leave POST state
+			message()->addMessage("Ukendt betalingsmetode – prøv igen.", ["type" => "error"]);
+			header("Location: /medlemshjaelp/betaling/".$result["order_no"]);
+			exit();
+
+		}
+
+
+		// process payment session response
+		// /medlemshjaelp/betaling/#order_no#/#gateway#/success/#session_id#
+		else if(count($action) == 5 && $action[3] == "success") {
+
+
+			$order_no = $action[1];
+			$session_id = $action[4];
+			$gateway = $action[2];
+
+
+			include_once("classes/shop/supershop.class.php");
+			$SC = new SuperShop();
+
+
+			$checkout_session = payments()->retrieveCheckoutSession($session_id);
+			if($checkout_session) {
+
+				$result = [];
+
+				$result["status"] = false;
+				$result["reference"] = false;
+
+				if(isset($checkout_session["metadata"])) {
+
+					// Look for checkout reference (payment for order)
+					if(isset($checkout_session["metadata"]["order_no"])) {
+
+						$result["reference"] = "order";
+						$result["order_no"] = $checkout_session["metadata"]["order_no"];
+
+
+						// Is setup intent complete
+						if(isset($checkout_session["setup_intent"]) && $checkout_session["setup_intent"]) {
+
+
+							$setup_intent = payments()->retrieveSetupIntent($checkout_session["setup_intent"]);
+							// debug([$setup_intent]);
+
+							if($setup_intent && isset($setup_intent["payment_method"]) && $setup_intent["payment_method"]) {
+
+								$payment_method = $setup_intent["payment_method"];
+								if($payment_method) {
+
+									$result["order"] =  $SC->getOrders(["order_no" => $result["order_no"]]);
+									$result["user_id"] = $result["order"]["user_id"];
+
+									$result["return_url"] = SITE_URL."/medlemshjaelp/betaling/stripe/register-paid-intent";
+									// $result["return_url"] = str_replace("{GATEWAY}", $gateway, SITE_PAYMENT_REGISTER_PAID_INTENT);
+									$intent_result = payments()->requestPaymentIntentForOrder(
+										$result["order"], 
+										$setup_intent["payment_method"], 
+										$result["return_url"]
+									);
+
+									if($intent_result) {
+
+										$result = array_merge($result, $intent_result);
+
+									}
+
+								}
+
+							}
+							else {
+								$result["status"] === "CARD_NOT_FOUND";
+							}
+
+						}
+
+					}
+
+				}
+				else {
+					$result["status"] === "REFERENCE_NOT_FOUND";
+				}
+
+
+			}
+			else {
+				$result["status"] === "STRIPE_ERROR";
+			}
+
+
+
+			if($result["status"] === "PAYMENT_CAPTURED") {
+
+				// redirect to leave POST state
+				header("Location: ".$result["return_url"]."/?payment_intent=".$result["payment_intent_id"]);
+				exit();
+
+			}
+			else if($result["status"] === "PAYMENT_READY") {
+
+				// redirect to leave POST state
+				header("Location: ".$result["return_url"]."/?payment_intent=".$result["payment_intent_id"]);
+				exit();
+
+			}
+			else if($result["status"] === "ACTION_REQUIRED") {
+
+				// redirect to leave POST state
+				header("Location: ".$result["action"]);
+				exit();
+	
+			}
+
+			else if($result["status"] === "STRIPE_ERROR" || $result["status"] === "CARD_NOT_FOUND" || $result["status"] === "REFERENCE_NOT_FOUND") {
+
+				if($result["status"] === "STRIPE_ERROR" || $result["status"] === "CARD_NOT_FOUND")	{
+					$result["message"] = "Der skete en fejl i behandlingen af betalingen.";
+				}
+				else if($result["status"] === "REFERENCE_NOT_FOUND")	{
+					$result["message"] = "Kurven eller ordren blev ikke fundet. Prøv igen.";
+				}
+
+				// Some error from Stripe
+				message()->addMessage($result["message"], ["type" => "error"]);
+				header("Location: /medlemshjaelp/betaling/".$order_no);
+				exit();
+
+			}
+
+			message()->addMessage("Der skete en ukendt fejl. Prøv igen.", ["type" => "error"]);
+			header("Location: /butik/betal");
+			exit();
+
+		}
+
 		# /medlemshjaelp/betaling/#order_no#
-		if(count($action) === 2) {
+		else if(count($action) === 2) {
 			$page->page(array(
 				"templates" => "member-help/payment.php",
 				"type" => "admin"
@@ -733,109 +919,115 @@ if($action) {
 			));
 			exit();
 		} 
-		
-		# /medlemshjaelp/betaling/stripe/ordre/#order_no#/process
-		else if(count($action) === 5 && $action[4] == "process" && security()->validateCsrfToken()) {
-			
-			$gateway = $action[1];
-			$order_no = $action[3];
 
 
-			$payment_method_result = $SC->processCardForOrder($action);
-			if($payment_method_result) {
-
-				if($payment_method_result["status"] === "success") {
-
-					$return_url = SITE_URL."/medlemshjaelp/betaling/stripe/register-paid-intent";
-					$result = payments()->requestPaymentIntentForOrder(
-						$payment_method_result["order"], 
-						$payment_method_result["card"]["id"], 
-						$return_url
-					);
-					if($result) {
-
-						if($result["status"] === "PAYMENT_CAPTURED") {
-
-							// redirect to leave POST state
-							header("Location: $return_url/?payment_intent=".$result["payment_intent_id"]);
-							exit();
-
-						}
-						else if($result["status"] === "ACTION_REQUIRED") {
-
-							// redirect to leave POST state
-							header("Location: ".$result["action"]);
-							exit();
-					
-						}
-
-						else if($result["status"] === "CARD_ERROR") {
-
-							// Janitor Validation failed
-							message()->addMessage($result["message"], ["type" => "error"]);
-							// redirect to leave POST state
-							header("Location: /medlemshjaelp/betalingsgateway/".$gateway."/ordre/".$order_no);
-							exit();
-
-						}
-
-					}
-
-				}
-				else if($payment_method_result["status"] === "STRIPE_ERROR" || $payment_method_result["status"] === "ORDER_NOT_FOUND") {
-
-					if($payment_method_result["status"] === "STRIPE_ERROR")	{
-						$payment_method_result["message"] = "Der skete en fejl i behandlingen af din betaling.";
-
-					}
-					else if($payment_method_result["status"] === "ORDER_NOT_FOUND")	{
-						$payment_method_result["message"] = "Ordren blev ikke fundet.";
-					}
-
-					message()->addMessage($payment_method_result["message"], ["type" => "error"]);
-					// redirect to leave POST state
-					header("Location: /medlemshjaelp/betaling/$order_no");
-					exit();
-
-				}
-				else if($payment_method_result["status"] === "CARD_ERROR") {
-
-					switch($payment_method_result["code"]) {
-
-						case "incorrect_number"         : $message = "Forkert kortnummer."; break;
-						case "invalid_number"           : $message = "Kortnummeret er ikke et gyldigt kreditkortnummer."; break;
-						case "invalid_expiry_month"     : $message = "Ugyldig udløbsdato."; break;
-						case "invalid_expiry_year"      : $message = "Ugyldigt udløbsår."; break;
-						case "invalid_cvc"              : $message = "Ugyldig sikkerhedskode."; break;
-						case "expired_card"             : $message = "Kortet er udløbet."; break;
-						case "incorrect_cvc"            : $message = "Forkert sikkerhedskode."; break;
-						case "incorrect_zip"            : $message = "Kortets postnummer kunne ikke bekræftes."; break;
-						case "card_declined"            : $message = "Kortet blev afvist."; break;
-					}
-					if($payment_method_result["decline_code"]) {
-						switch($payment_method_result["decline_code"]) {
-
-							case "insufficient_funds"         : $message = "Kortet blev afvist. Der er ikke penge nok på kontoen."; break;
-						}
-					}
 
 
-					message()->addMessage($message, ["type" => "error"]);
-					// redirect to leave POST state
-					header("Location: /medlemshjaelp/betaling/$order_no");
-					exit();
-				}
 
-			}
+		// # /medlemshjaelp/betaling/stripe/ordre/#order_no#/process
+		// else if(count($action) === 5 && $action[4] == "process" && security()->validateCsrfToken()) {
+		//
+		// 	$gateway = $action[1];
+		// 	$order_no = $action[3];
+		//
+		//
+		// 	$payment_method_result = $SC->processCardForOrder($action);
+		// 	if($payment_method_result) {
+		//
+		// 		if($payment_method_result["status"] === "success") {
+		//
+		// 			$return_url = SITE_URL."/medlemshjaelp/betaling/stripe/register-paid-intent";
+		// 			$result = payments()->requestPaymentIntentForOrder(
+		// 				$payment_method_result["order"],
+		// 				$payment_method_result["card"]["id"],
+		// 				$return_url
+		// 			);
+		// 			if($result) {
+		//
+		// 				if($result["status"] === "PAYMENT_CAPTURED") {
+		//
+		// 					// redirect to leave POST state
+		// 					header("Location: $return_url/?payment_intent=".$result["payment_intent_id"]);
+		// 					exit();
+		//
+		// 				}
+		// 				else if($result["status"] === "ACTION_REQUIRED") {
+		//
+		// 					// redirect to leave POST state
+		// 					header("Location: ".$result["action"]);
+		// 					exit();
+		//
+		// 				}
+		//
+		// 				else if($result["status"] === "CARD_ERROR") {
+		//
+		// 					// Janitor Validation failed
+		// 					message()->addMessage($result["message"], ["type" => "error"]);
+		// 					// redirect to leave POST state
+		// 					header("Location: /medlemshjaelp/betalingsgateway/".$gateway."/ordre/".$order_no);
+		// 					exit();
+		//
+		// 				}
+		//
+		// 			}
+		//
+		// 		}
+		// 		else if($payment_method_result["status"] === "STRIPE_ERROR" || $payment_method_result["status"] === "ORDER_NOT_FOUND") {
+		//
+		// 			if($payment_method_result["status"] === "STRIPE_ERROR")	{
+		// 				$payment_method_result["message"] = "Der skete en fejl i behandlingen af din betaling.";
+		//
+		// 			}
+		// 			else if($payment_method_result["status"] === "ORDER_NOT_FOUND")	{
+		// 				$payment_method_result["message"] = "Ordren blev ikke fundet.";
+		// 			}
+		//
+		// 			message()->addMessage($payment_method_result["message"], ["type" => "error"]);
+		// 			// redirect to leave POST state
+		// 			header("Location: /medlemshjaelp/betaling/$order_no");
+		// 			exit();
+		//
+		// 		}
+		// 		else if($payment_method_result["status"] === "CARD_ERROR") {
+		//
+		// 			switch($payment_method_result["code"]) {
+		//
+		// 				case "incorrect_number"         : $message = "Forkert kortnummer."; break;
+		// 				case "invalid_number"           : $message = "Kortnummeret er ikke et gyldigt kreditkortnummer."; break;
+		// 				case "invalid_expiry_month"     : $message = "Ugyldig udløbsdato."; break;
+		// 				case "invalid_expiry_year"      : $message = "Ugyldigt udløbsår."; break;
+		// 				case "invalid_cvc"              : $message = "Ugyldig sikkerhedskode."; break;
+		// 				case "expired_card"             : $message = "Kortet er udløbet."; break;
+		// 				case "incorrect_cvc"            : $message = "Forkert sikkerhedskode."; break;
+		// 				case "incorrect_zip"            : $message = "Kortets postnummer kunne ikke bekræftes."; break;
+		// 				case "card_declined"            : $message = "Kortet blev afvist."; break;
+		// 			}
+		// 			if($payment_method_result["decline_code"]) {
+		// 				switch($payment_method_result["decline_code"]) {
+		//
+		// 					case "insufficient_funds"         : $message = "Kortet blev afvist. Der er ikke penge nok på kontoen."; break;
+		// 				}
+		// 			}
+		//
+		//
+		// 			message()->addMessage($message, ["type" => "error"]);
+		// 			// redirect to leave POST state
+		// 			header("Location: /medlemshjaelp/betaling/$order_no");
+		// 			exit();
+		// 		}
+		//
+		// 	}
+		//
+		//
+		// 	// Janitor Validation failed
+		// 	message()->addMessage($payment_method_result["message"], ["type" => "error"]);
+		// 	// redirect to leave POST state
+		// 	header("Location: /medlemshjaelp/betaling/$order_no");
+		// 	exit();
+		//
+		// }
 
 
-			// Janitor Validation failed
-			message()->addMessage($payment_method_result["message"], ["type" => "error"]);
-			// redirect to leave POST state
-			header("Location: /medlemshjaelp/betaling/$order_no");
-			exit();	
-			
-		}
 
 		# /medlemshjaelp/betaling/stripe/register-paid-intent
 		else if(count($action) == 3 && $action[2] == "register-paid-intent") {

@@ -46,9 +46,7 @@ if($user_id != 1) {
 	$unpaid_membership = $UC->hasUnpaidMembership();
 
 	// Only get payment methods if cart has items
-	if($cart["items"]) {
-		
-
+	if($cart && $cart["items"]) {
 
 		// Get the total cart price
 		$total_cart_price = $model->getTotalCartPrice($cart["id"]);
@@ -66,12 +64,12 @@ if($user_id != 1) {
 		$cart_pickupdates = $model->getCartPickupdates();
 		$cart_items_without_pickupdate = $model->getCartItemsWithoutPickupdate();
 
+
+		// Get address info
+		$delivery_address = $UC->getAddresses(array("address_id" => $cart["delivery_address_id"]));
+		$billing_address = $UC->getAddresses(array("address_id" => $cart["billing_address_id"]));
+
 	}
-
-
-	// Get address info
-	$delivery_address = $UC->getAddresses(array("address_id" => $cart["delivery_address_id"]));
-	$billing_address = $UC->getAddresses(array("address_id" => $cart["billing_address_id"]));
 
 }
 
@@ -139,7 +137,7 @@ else {
 
 	<div class="all_items">
 		<h2>Din kurv</h2>
-		<? if($cart["items"]): ?>
+		<? if($cart && $cart["items"]): ?>
 		
 		<? if($cart_items_without_pickupdate): ?>
 		<ul class="items">
@@ -303,7 +301,7 @@ else {
 
 		<? 
 		// Only show payment options if cart has items
-		if($cart["items"] && $total_cart_price && $total_cart_price["price"] !== 0): ?>
+		if($cart && $cart["items"] && $total_cart_price && $total_cart_price["price"] !== 0): ?>
 
 
 	<div class="payment_method">
@@ -412,7 +410,7 @@ else {
 
 		<? 
 		// Cart has items but total price is 0 – skip payment and confirm order
-		elseif($cart["items"] && $total_cart_price && $total_cart_price["price"] === 0): ?>
+		elseif($cart && $cart["items"] && $total_cart_price && $total_cart_price["price"] === 0): ?>
 
 
 	<div class="confirm">

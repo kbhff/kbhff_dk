@@ -1,0 +1,27 @@
+@import url(../../assets/kbhff-skin/css/seg_desktop.css);
+
+
+@import url(desktop/s-login.css);
+@import url(desktop/s-profile.css);
+@import url(desktop/s-signup.css);
+@import url(desktop/s-front.css);
+@import url(desktop/s-post.css);
+@import url(desktop/s-memberships.css);
+@import url(desktop/s-posts.css);
+@import url(desktop/s-shop.css);
+@import url(desktop/s-shop_shift.css);
+@import url(desktop/s-member_help.css);
+@import url(desktop/s-overlay.css);
+@import url(desktop/s-tally.css);
+@import url(desktop/s-accountant.css);
+@import url(desktop/s-purchasing.css);
+@import url(desktop/s-mass_mail.css);
+
+@import url(desktop/s-departments.css);
+
+@import url(desktop/s-weeklybags.css);
+@import url(desktop/s-faq.css);
+
+
+@import url(desktop/s-general.css);
+

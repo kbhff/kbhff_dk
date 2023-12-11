@@ -35,25 +35,29 @@ if($action) {
 			message()->addMessage("Beskeden blev afsendt.");
 			header("Location: /massemail/kvittering");
 			exit();
+
 		}
 		else {
-			
+
 			message()->resetMessages();
 			message()->addMessage("Noget gik galt.", array("type" => "error"));
+
 		}
 
 	}
-	if(count($action) == 1 && $action[0] == "sendKbhffMessageTest" && security()->validateCsrfToken()) {
+	else if(count($action) == 1 && $action[0] == "sendKbhffMessageTest" && security()->validateCsrfToken()) {
 
 		if($model->sendKbhffMessageTest($action)) {
 
 			message()->resetMessages();
 			header("Location: /massemail/kvittering");
 			exit();
+
 		}
 		else {
-			
+
 			message()->resetMessages();
+
 		}
 
 	}

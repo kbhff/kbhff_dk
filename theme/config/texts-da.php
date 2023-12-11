@@ -9,5 +9,7 @@ $__translations = [
 	"Friday" => "fredag",
 	"Saturday" => "lørdag",
 	"Sunday" => "søndag",
+
+	"For the payment of {AMOUNT} upon shipment of order." => "Til betaling af {AMOUNT} for din ordre.",
 ];
 	

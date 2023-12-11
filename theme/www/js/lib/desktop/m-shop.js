@@ -3,7 +3,7 @@ Util.Modules["shop"] = new function() {
 //		u.bug("scene init:", this);
 
 		scene.resized = function() {
-			u.bug("scene.resized:", this, u.absY(this.sidebar));
+			// u.bug("scene.resized:", this, u.absY(this.sidebar));
 
 			if(this.sidebar) {
 

@@ -83,7 +83,6 @@ if($order && $order["payment_status"] != 2 && $order["status"] != 3) {
 			<ul class="payment_methods">
 
 			<? foreach($user_payment_methods as $user_payment_method): ?>
-			<!-- <? debug([$user_payment_method]) ?> -->
 
 				<? if($user_payment_method && $user_payment_method["cards"]): ?>
 

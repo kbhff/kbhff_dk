@@ -473,7 +473,7 @@ else {
 						<span class="pickupdate"><?= date("d.m.Y", strtotime($pickupdate["pickupdate"])) ?></span>
 						<? if($order_item["quantity"] > 1): ?>
 						<span class="quantity"><?= $order_item["quantity"] ?></span>
-						<span class="x"><?= " x " ?></span>
+						<span class="x">&nbsp;x&nbsp;</span>
 						<? endif; ?>
 						<span class="product"><?= $order_item["name"] ?></span>
 					</li>
