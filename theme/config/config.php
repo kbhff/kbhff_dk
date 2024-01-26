@@ -17,7 +17,7 @@ define("SITE_URL", (isset($_SERVER["HTTPS"]) ? "https" : "http")."://".$_SERVER[
 define("SITE_EMAIL", "info@kbhff.dk");
 
 define("DEFAULT_PAGE_DESCRIPTION", "");
-define("DEFAULT_PAGE_IMAGE", "/img/logo.png");
+define("DEFAULT_PAGE_IMAGE", "/img/banners/pi_".rand(1,4).".jpg");
 
 define("DEFAULT_LANGUAGE_ISO", "DA");
 define("DEFAULT_COUNTRY_ISO", "DK");
