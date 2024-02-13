@@ -213,6 +213,19 @@ if($action) {
 	# /medlemshjaelp/brugerprofil
 	else if($action[0] == "brugerprofil") {
 
+		// Make sure this is a valid user
+		$member_user = $model->getUsers(["user_id" => $action[1]]);
+
+		if($action[1] == 1 || $member_user["status"] < 0) {
+
+			$page->page(array(
+				"templates" => "member-help/user_invalid.php",
+				"page_title" => "Ugyldig bruger"
+			));
+			exit();
+
+		}
+
 		// Allow accept terms
 		if(count($action) == 3 && $action[2] == "user_accept" && security()->validateCsrfToken()) {
 
