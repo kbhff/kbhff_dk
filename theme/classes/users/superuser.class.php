@@ -966,6 +966,8 @@ IT
 					SITE_DB.".users u LEFT OUTER JOIN ".SITE_DB.".user_department ud ON u.id = ud.user_id LEFT JOIN ".SITE_DB.".user_usernames un ON un.user_id = u.id 
 				WHERE 
 					u.id <> $user_id 
+					AND u.id != 1
+					AND u.status >= 0
 					AND (un.username LIKE '%$search_value%' 
 					OR u.nickname LIKE '%$search_value%' 
 					OR u.firstname LIKE '%$search_value%' 
