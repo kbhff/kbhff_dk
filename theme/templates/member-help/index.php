@@ -103,9 +103,9 @@ if (!$department_id && $user_department) {
 			<li class="user">
 				<ul class="user_info">
 					<?= '<li class="name search">'.preg_replace("/$search_value/i", "<span class=highlight_string>$0</span>", $user["firstname"]." ".$user["lastname"]).'</li>' ?>
-					<?= '<li class="email search">'.$user["email"] ? preg_replace("/$search_value/i", "<span class=highlight_string>$0</span>", $user["email"]) : "".'</li>' ?>
-					<?= '<li class="mobile search">'.$user["mobile"] ? preg_replace("/$search_value/i", "<span class=highlight_string>$0</span>", $user["mobile"]) : "".'</li>'?>
-					<?= '<li class="member_no search">'.$user["member_no"] ? preg_replace("/$search_value/i", "<span class=highlight_string>$0</span>", $user["member_no"]) : "".'</li>' ?>
+					<?= '<li class="email search">'.($user["email"] ? preg_replace("/$search_value/i", "<span class=highlight_string>$0</span>", $user["email"]) : "").'</li>' ?>
+					<?= '<li class="mobile search">'.($user["mobile"] ? preg_replace("/$search_value/i", "<span class=highlight_string>$0</span>", $user["mobile"]) : "").'</li>'?>
+					<?= '<li class="member_no search">'.($user["member_no"] ? preg_replace("/$search_value/i", "<span class=highlight_string>$0</span>", $user["member_no"]) : "").'</li>' ?>
 					<?= '<li class="department">'.$user["department"].'</li>' ?>
 					<li class="profile">
 						<ul class="actions">
