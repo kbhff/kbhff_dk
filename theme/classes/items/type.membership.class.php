@@ -181,6 +181,8 @@ class TypeMembership extends Itemtype {
 
 
 	function ordered($order_item, $order) {
+		// debug(["ordered", $order_item, $order]);
+
 
 		include_once("classes/shop/supersubscription.class.php");
 		include_once("classes/users/supermember.class.php");
@@ -219,7 +221,7 @@ class TypeMembership extends Itemtype {
 					}
 					else {
 						$_POST["custom_price"] = null;
-					}					
+					}
 					
 					$subscription = $SuperSubscriptionClass->updateSubscription(["updateSubscription", $subscription_id]);
 					unset($_POST);
@@ -288,7 +290,7 @@ class TypeMembership extends Itemtype {
 				}
 				else {
 					$_POST["custom_price"] = null;
-				}					
+				}
 				
 				$subscription = $SuperSubscriptionClass->addSubscription(["addSubscription"]);
 				$subscription_id = $subscription["id"];
@@ -338,9 +340,9 @@ class TypeMembership extends Itemtype {
 	 * @return void
 	 */
 	function subscribed($subscription) {
-		// print_r($subscription);
-		
-		
+		// debug(["subscribed", $subscription]);
+
+
 		// check for subscription error
 		if($subscription && $subscription["item_id"] && $subscription["user_id"]) {
 

@@ -601,7 +601,7 @@ if($action) {
 					$order = $model->getOrders(["cart_reference" => $id_result["cart_reference"]]) ?: $model->newOrderFromCart(["newOrderFromCart", $id_result["cart_reference"]]);
 					// Clear messages
 					message()->resetMessages();
-					
+
 				}
 				else {
 					$order = false;
@@ -621,7 +621,7 @@ if($action) {
 						exit();
 					}
 					else if($order["payment_status"] == 2) {
-						
+
 						// redirect to leave POST state
 						header("Location: /butik/kvittering/ny-ordre/".$order["order_no"]."/".superNormalize($id_result["gateway"]));
 						exit();
