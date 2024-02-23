@@ -768,6 +768,23 @@ class SuperShop extends SuperShopCore {
 		));
 	}
 
+
+	// Cron method to clean up system before new renewal
+	function cancelUnpaidRenewalOrdersFromLastYear() {
+
+		$query = new Query();
+		$sql = "SELECT o.id AS order_id, o.payment_status AS payment_status, oi.name AS order_item_name FROM ".$this->db_orders." AS o, ".UT_ITEMS." AS i, ".$this->db_order_items." AS oi WHERE o.payment_status = 0 AND o.id = oi.order_id AND i.id = oi.item_id AND (i.itemtype = 'membership' OR i.itemtype = 'signupfee') AND o.created_at < '".date("Y-d-m H:i.s", strtotime("- 1 day"))."'";
+		
+		$query->sql($sql);
+		
+		$result = $query->results();
+		
+		debug([$sql, $result]);
+
+		
+	}
+
+
 }
 
 ?>
