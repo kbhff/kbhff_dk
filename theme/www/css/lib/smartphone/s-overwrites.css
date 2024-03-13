@@ -1,0 +1,179 @@
+/* HEADER */
+#header {
+    width: auto;
+    padding: 12px;
+}
+
+#header .logo {
+    font-size: 1.3em;
+}
+
+#header ul.servicenavigation {
+    top: 12px;
+    width: 30%;
+    text-align: end;
+    line-height: inherit;
+    right: 12px;
+}
+
+#header ul.servicenavigation li {
+    display: block;
+    line-height: inherit;
+}
+
+/* NAVIGATION */
+#navigation {
+    width: 100%;
+}
+
+#navigation ul.navigation {
+    margin: 0 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+#navigation ul.navigation li {
+    flex: auto;
+    text-align: center;
+    margin: 0;
+}
+
+/* SUB-NAVIGATION */
+#content .scene ul.subnavigation li {
+    width: auto;
+}
+
+#content .scene ul.subnavigation li a {
+    text-transform: none;
+    padding: 12px;
+}
+
+/* LOGIN */
+#content .scene.login form {
+    width: auto;
+}
+
+#content .scene.login p {
+    width: auto;
+}
+
+
+/* CONTENT */
+#content {
+    width: 100%;
+}
+
+#content img {
+    height: 206px;
+    object-fit: cover;
+}
+
+#content div.c-two-thirds {
+    width: calc(100% - 12px);
+}
+
+#content div.c-one-third {
+    width: 100%;
+}
+
+#content div.c-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.c-two-thirds {
+    order: 2;
+}
+
+.c-one-third {
+    order: 1;
+}
+
+#content h1+p,
+#content h1+h3,
+#content h1+.c-wrapper,
+#content h1+div.messages {
+    padding-top: 0;
+}
+
+/* SHOP */
+#content .scene.shop div.sidebar.fixed {
+    transform: none !important;
+}
+
+#content .scene.shop div.cart div.total {
+    width: 45%;
+    display: inline-block;
+}
+
+#content .scene.shop div.cart ul.actions {
+    width: 45%;
+    display: inline-block;
+}
+
+#content .scene.shop p {
+    padding-bottom: 4px;
+}
+
+#content .scene.shop ul {
+    padding-bottom: 8px;
+}
+
+#content .scene.shop ul.products li.product div.product p {
+    padding-left: 12px;
+    display: inline-block;
+}
+
+#content .scene.shop ul.products li.product div.product h3 span.name {
+    display: block;
+}
+
+#content .scene.shop ul.products li.product div.product h3 span.price {
+    color: #3e8e17;
+    display: block;
+    float: left;
+}
+
+/* FRONT-PAGE NEWS */
+#content .front div.news ul.items li.item .image {
+    background-repeat: no-repeat;
+}
+
+#content .front div.news ul.items li.item {
+    width: calc(100% - 12px);
+}
+
+
+/* SIGNUP */
+#content .scene.signupfees ul.actions input {
+    width: 100%;
+    white-space: normal;
+}
+
+#content .scene.signupfees h3 {
+    text-transform: none;
+}
+
+#content .scene.signupfees h3.price {
+    text-transform: none;
+}
+
+#content .scene.signupfees h3 span.price {
+    color: #3e8e17;
+}
+
+/* DEPARTMENTS */
+#content .scene.departments ul.departments>li {
+    width: 50%;
+}
+
+/* FOOTER */
+#footer {
+    height: auto;
+    padding: 12px;
+}
+
+#footer ul.servicenavigation {
+    width: 100%;
+}
