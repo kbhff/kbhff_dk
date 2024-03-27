@@ -1,7 +1,21 @@
+#navigation {position: absolute; z-index: 5; width: 100%; top: 0; display: none; overflow-x: hidden;
+	background: #ffffff;}
+#navigation ul {padding-top: 80px;}
+#navigation ul li {padding: 0px 12px 3px 12px; margin-bottom: 3px;font-size: 20px; color: #000000; display: block; text-align: center;
+}
+#navigation ul li.admin,
+#navigation ul li.user {border-top: 1px solid #888888; margin-top: 10px;}
+#navigation ul li.admin+li.user {border: none; margin: 0;}
+
+#navigation ul li:active {text-decoration: none;}
+
+
+
+
+/*
+
 #navigation {
 	position: relative;
-	width: 936px;
-	margin: 0 auto;
 }
 
 #navigation ul.navigation,
@@ -16,8 +30,8 @@
 	display: none;
 	background-color: #fff;
 	left: -5px;
-	white-space: nowrap;	
-	
+	white-space: nowrap;
+
 }
 
 #navigation ul.navigation li {
@@ -25,7 +39,7 @@
 	margin-right: 3px;
 	position: relative;
 }
-
+*/
 #navigation ul.navigation li.path > h4,
 #navigation ul.navigation li.path > h5,
 #navigation ul.navigation li.path > a,
@@ -34,7 +48,7 @@
 #navigation ul.navigation li.selected > a {
 	background-color: #3e8e17;
 	border: 0px solid #3e8e17;
-	padding: 5px 12px;
+	padding: 8px 12px;
 	color: #fff;
 }
 
@@ -62,7 +76,7 @@
 #navigation ul.navigation ul li h4,
 #navigation ul.navigation ul li a{
 	background-color: #666;
-	
+
 }
 
 #navigation ul.navigation h5:hover,
@@ -74,7 +88,4 @@
 	cursor: pointer;
 }
 
-/* push buttons to the right */
-#navigation.member ul.navigation > li.volunteer,
-#navigation.admin ul.navigation > li.profile,
-#navigation.public ul.navigation > li.profile {float: right; margin-right: 0; margin-left: 5px;}
+*/

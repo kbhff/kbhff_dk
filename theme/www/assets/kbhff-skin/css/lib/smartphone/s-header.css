@@ -1,0 +1,80 @@
+#header {
+	position: fixed;
+	width: 100%;
+	z-index: 10;
+/*	width: 936px;*/
+/*	margin: 0 auto;*/
+	padding: 12px 0;
+}
+#header .logo {
+	position: relative;
+	z-index: 10;
+	box-sizing: border-box;
+	height: 50px;
+	margin-left: 12px;
+	width: 50px;
+	display: inline-block;
+	background: #ffffff url(../../../img/logos/logo-stempel_sort_stor.png) no-repeat center center;
+	background-size: 50px;
+	border-radius: 25px;
+	overflow: hidden;
+	text-indent: -9999px;
+}
+/*
+#header ul.servicenavigation {
+	display: none;
+
+	position: absolute;
+	line-height: 6px;
+	top: 36px;
+	right: 0px;
+}
+
+#header ul.servicenavigation li {
+	display: inline-block;
+	padding-left: 16px;
+	line-height: 14px;
+}
+#header ul.servicenavigation li.navigation {
+	display: none;
+}
+#header ul.servicenavigation a {
+	color: #666;
+}
+#header ul.servicenavigation a:hover {
+	color: #3e8e17;
+	text-decoration: underline;
+}
+*/
+
+#header .servicenavigation {
+/*	position: absolute; top: 12px; left: 0; z-index: 9; width: 100%; height: 50px; background: rgba(255, 255, 255, 0.8); border-radius: 30px; opacity: 0; overflow: hidden;*/
+}
+#header .servicenavigation li {display: none;}
+#header .servicenavigation li.navigation {display: block; position: absolute; right: 12px; top: 12px; width: 30px; height: 35px; padding: 15px 10px 0; background: #ffffff; border-radius: 25px; overflow: hidden;
+	z-index: 10;
+}
+#header .servicenavigation li.navigation div {height: 2px; margin: 0; background: #000000;}
+#header .servicenavigation li.navigation.open div {background: #aaaaaa;}
+#header .servicenavigation li.navigation a {display: none;}
+
+#header .servicenavigation li.navigation div:nth-child(3) {
+	transform: translate(0, 8px);
+}
+#header .servicenavigation li.navigation div:nth-child(4) {
+	transform: translate(0, 16px);
+}
+
+#header .servicenavigation li.navigation.open div:nth-child(3) {
+	opacity: 0;
+}
+#header .servicenavigation li.navigation.open div:nth-child(2) {
+	transform-origin: center center;
+	transform: translate(0, 12px) rotate(45deg) ;
+	margin: 0px;
+}
+#header .servicenavigation li.navigation.open div:nth-child(4) {
+	transform-origin: center center;
+	transform: translate(0px, 8px) rotate(-45deg);
+	margin: 0px;
+}

@@ -1,0 +1,100 @@
+#content {
+	padding-top: 70px;
+    width: unset;
+}
+
+#content div.messages p.message,
+#content div.messages p.error {margin-left: 12px; margin-right: 12px;}
+
+#content div.c-one-quarter {
+	width: 50%;
+}
+#content div.c-one-third,
+#content div.c-one-half,
+#content div.c-two-thirds {
+    width: unset;
+}
+
+
+#content div.c-box.c-one-quarter,
+#content div.c-primary-box.c-one-quarter {
+	width: unset;
+}
+
+#content div.c-box.c-one-third,
+#content div.c-primary-box.c-one-third {
+	width: unset;
+}
+
+#content div.c-box.c-one-half,
+#content div.c-primary-box.c-one-half {
+	width: unset;
+}
+
+#content div.c-box.c-two-thirds,
+#content div.c-primary-box.c-two-thirds {
+	width: unset;
+}
+
+#content div.c-box.c-four-quarters,
+#content div.c-primary-box.c-four-quarters {
+	width: unset;
+}
+
+/* Nesting */
+#content div.c-two-thirds > div.c-one-third {
+	width: 50%;
+}
+#content div.c-one-half > div.c-one-quarter {
+	width: 50%;
+}
+#content div.c-three-quarters > div.c-one-quarter {
+	width: 50%;
+}
+#content div.c-three-quarters > div.c-one-half {
+	width: unset;
+}
+
+#content div.c-two-thirds > div.c-box.c-one-third,
+#content div.c-two-thirds > div.c-primary-box.c-one-third {
+	width: calc(50% - 24px);
+}
+#content div.c-one-half > div.c-box.c-one-quarter,
+#content div.c-one-half > div.c-primary-box.c-one-quarter {
+	width: calc(50% - 24px);
+}
+#content div.c-three-quarters > div.c-box.c-one-quarter,
+#content div.c-three-quarters > div.c-primary-box.c-one-quarter {
+	width: calc(50% - 24px);
+}
+#content div.c-three-quarters > div.c-box.c-one-half,
+#content div.c-three-quarters > div.c-primary-box.c-one-half {
+	width: unset
+}
+
+
+#content div.c-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.c-two-thirds {
+    order: 2;
+}
+
+.c-one-third {
+    order: 1;
+}
+
+
+#content .banner > div.logo {width: unset; height: 100%; aspect-ratio: 1.5;
+	background-image: url(/img/banners/smartphone/logo_layover.png);
+}
+
+
+/*#content h1+p,
+#content h1+h3,
+#content h1+.c-wrapper,
+#content h1+div.messages {
+    padding-top: 0;
+}*/

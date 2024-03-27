@@ -1,6 +1,6 @@
 /*
 Manipulator v0.9.3-kbhff_dk Copyright 2008-2021 https://manipulator.parentnode.dk
-js-merged @ 2022-10-05 18:20:54
+js-merged @ 2024-03-27 21:37:06
 */
 
 /*seg_seo_include.js*/

@@ -19,6 +19,7 @@
 	letter-spacing: 1px;
 	text-transform: uppercase;
 }
+#header span.highlight {display: block;}
 
 #header ul.servicenavigation {
 	position: absolute;
