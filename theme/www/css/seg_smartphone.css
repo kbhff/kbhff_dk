@@ -1,10 +1,10 @@
 /*
-asset-builder @ 2024-03-13 08:32:15
+asset-builder @ 2024-03-27 23:48:03
 */
 
 /*seg_smartphone_include.css*/
 
-/*seg_desktop.css*/
+/*seg_smartphone.css*/
 body {
 	background: #ffffff;
 	margin: 0;
@@ -18,7 +18,6 @@ body {
 #page {}
 body span.highlight,
 #page span.highlight {color: #3e8e17;}
-#header span.highlight {display: block;}
 h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dd, dt {padding: 0; margin: 0;}
 h1, h2, h3, h4, h5, h6, p, li, dd, dt, span, a {line-height: 1em; font-weight: 400;}
 ul {list-style: none;}
@@ -381,69 +380,62 @@ div.field.html .editor .selection_options ul.actions li {padding: 0;}
 .delete_selection {position: absolute; z-index: 1150; top: 0; left: 0; border-radius: 8px; width: 14px; height: 14px; font-size: 10px; line-height: 14px; text-align: center; background: #ffffff; border: 1px solid #000000; cursor: pointer;}
 .edit_selection {position: absolute; z-index: 1150; top: 0; left: 0; border-radius: 8px; width: 14px; height: 14px; font-size: 10px; line-height: 14px; text-align: center; background: #ffffff; border: 1px solid #000000; cursor: pointer;}
 #header {
-	position: relative;
-	width: 936px;
-	margin: 0 auto;
-	padding: 36px 0 18px;
+	position: fixed;
+	width: 100%;
+	z-index: 10;
+	padding: 12px 0;
 }
 #header .logo {
-	box-sizing: border-box;
-	height: 66px;
-	padding: 0 0 0 68px;
-	display: inline-block;
-	background: transparent url(../assets/kbhff-skin/img/logos/logo-stempel_sort_stor.png) no-repeat center left;
-	background-size: 60px;
-	letter-spacing: 1px;
-	font-family: 'voresfont', Arial, Helvetica, sans-serif;
-	font-size: 30px;
-	line-height: 32px;
-	letter-spacing: 1px;
-	text-transform: uppercase;
-}
-#header ul.servicenavigation {
-	position: absolute;
-	line-height: 6px;
-	top: 36px;
-	right: 0px;
-}
-#header ul.servicenavigation li {
-	display: inline-block;
-	padding-left: 16px;
-	line-height: 14px;
-}
-#header ul.servicenavigation li.navigation {
-	display: none;
-}
-#header ul.servicenavigation a {
-	color: #666;
-}
-#header ul.servicenavigation a:hover {
-	color: #3e8e17;
-	text-decoration: underline;
-}
-#navigation {
-position: relative;
-	width: 936px;
-	margin: 0 auto;
-}
-#navigation ul.navigation,
-#navigation ul.navigation ul {
-	font-size: 0;
-}
-#navigation ul.navigation ul {
-	position: absolute;
-	z-index: 100;
-	opacity: 0;
-	display: none;
-	background-color: #fff;
-	left: -5px;
-	white-space: nowrap;	
-}
-#navigation ul.navigation li {
-	display: inline-block;
-	margin-right: 3px;
 	position: relative;
+	z-index: 10;
+	box-sizing: border-box;
+	height: 50px;
+	margin-left: 12px;
+	width: 50px;
+	display: inline-block;
+	background: #ffffff url(../assets/kbhff-skin/img/logos/logo-stempel_sort_stor.png) no-repeat center center;
+	background-size: 50px;
+	border-radius: 25px;
+	overflow: hidden;
+	text-indent: -9999px;
 }
+#header .servicenavigation {
+}
+#header .servicenavigation li {display: none;}
+#header .servicenavigation li.navigation {display: block; position: absolute; right: 12px; top: 12px; width: 30px; height: 35px; padding: 15px 10px 0; background: #ffffff; border-radius: 25px; overflow: hidden;
+	z-index: 10;
+}
+#header .servicenavigation li.navigation div {height: 2px; margin: 0; background: #000000;}
+#header .servicenavigation li.navigation.open div {background: #aaaaaa;}
+#header .servicenavigation li.navigation a {display: none;}
+#header .servicenavigation li.navigation div:nth-child(3) {
+	transform: translate(0, 8px);
+}
+#header .servicenavigation li.navigation div:nth-child(4) {
+	transform: translate(0, 16px);
+}
+#header .servicenavigation li.navigation.open div:nth-child(3) {
+	opacity: 0;
+}
+#header .servicenavigation li.navigation.open div:nth-child(2) {
+	transform-origin: center center;
+	transform: translate(0, 12px) rotate(45deg) ;
+	margin: 0px;
+}
+#header .servicenavigation li.navigation.open div:nth-child(4) {
+	transform-origin: center center;
+	transform: translate(0px, 8px) rotate(-45deg);
+	margin: 0px;
+}
+#navigation {position: absolute; z-index: 5; width: 100%; top: 0; display: none; overflow-x: hidden;
+	background: #ffffff;}
+#navigation ul {padding-top: 80px;}
+#navigation ul li {padding: 0px 12px 3px 12px; margin-bottom: 3px;font-size: 20px; color: #000000; display: block; text-align: center;
+}
+#navigation ul li.admin,
+#navigation ul li.user {border-top: 1px solid #888888; margin-top: 10px;}
+#navigation ul li.admin+li.user {border: none; margin: 0;}
+#navigation ul li:active {text-decoration: none;}
 #navigation ul.navigation li.path > h4,
 #navigation ul.navigation li.path > h5,
 #navigation ul.navigation li.path > a,
@@ -452,7 +444,7 @@ position: relative;
 #navigation ul.navigation li.selected > a {
 	background-color: #3e8e17;
 	border: 0px solid #3e8e17;
-	padding: 5px 12px;
+	padding: 8px 12px;
 	color: #fff;
 }
 #navigation ul.navigation ul li {
@@ -484,9 +476,7 @@ position: relative;
 #navigation ul.navigation h5:hover {
 	cursor: pointer;
 }
-#navigation.member ul.navigation > li.volunteer,
-#navigation.admin ul.navigation > li.profile,
-#navigation.public ul.navigation > li.profile {float: right; margin-right: 0; margin-left: 5px;}
+*/
 #content {
 	margin: 0 auto;
 	position: relative;
@@ -755,6 +745,81 @@ position: relative;
 	background: transparent url(../assets/kbhff-skin/img/banners/desktop/logo_layover.png) no-repeat top left;
 	background-size: 100% auto;
 }
+#content {
+	padding-top: 70px;
+    width: unset;
+}
+#content div.messages p.message,
+#content div.messages p.error {margin-left: 12px; margin-right: 12px;}
+#content div.c-one-quarter {
+	width: 50%;
+}
+#content div.c-one-third,
+#content div.c-one-half,
+#content div.c-two-thirds {
+    width: unset;
+}
+#content div.c-box.c-one-quarter,
+#content div.c-primary-box.c-one-quarter {
+	width: unset;
+}
+#content div.c-box.c-one-third,
+#content div.c-primary-box.c-one-third {
+	width: unset;
+}
+#content div.c-box.c-one-half,
+#content div.c-primary-box.c-one-half {
+	width: unset;
+}
+#content div.c-box.c-two-thirds,
+#content div.c-primary-box.c-two-thirds {
+	width: unset;
+}
+#content div.c-box.c-four-quarters,
+#content div.c-primary-box.c-four-quarters {
+	width: unset;
+}
+#content div.c-two-thirds > div.c-one-third {
+	width: 50%;
+}
+#content div.c-one-half > div.c-one-quarter {
+	width: 50%;
+}
+#content div.c-three-quarters > div.c-one-quarter {
+	width: 50%;
+}
+#content div.c-three-quarters > div.c-one-half {
+	width: unset;
+}
+#content div.c-two-thirds > div.c-box.c-one-third,
+#content div.c-two-thirds > div.c-primary-box.c-one-third {
+	width: calc(50% - 24px);
+}
+#content div.c-one-half > div.c-box.c-one-quarter,
+#content div.c-one-half > div.c-primary-box.c-one-quarter {
+	width: calc(50% - 24px);
+}
+#content div.c-three-quarters > div.c-box.c-one-quarter,
+#content div.c-three-quarters > div.c-primary-box.c-one-quarter {
+	width: calc(50% - 24px);
+}
+#content div.c-three-quarters > div.c-box.c-one-half,
+#content div.c-three-quarters > div.c-primary-box.c-one-half {
+	width: unset
+}
+#content div.c-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+.c-two-thirds {
+    order: 2;
+}
+.c-one-third {
+    order: 1;
+}
+#content .banner > div.logo {width: unset; height: 100%; aspect-ratio: 1.5;
+	background-image: url(../assets/kbhff-skin/img/banners/smartphone/logo_layover.png);
+}
 #footer {
 	height: 48px;
 	background: #484848;
@@ -773,6 +838,10 @@ position: relative;
 #footer ul.servicenavigation li.copyright {
 	float: left;
 	padding-left: 0;
+}
+#footer {padding: 0 12px;}
+#footer ul.servicenavigation {
+	width: unset;
 }
 
 
@@ -1079,7 +1148,7 @@ position: relative;
 	display: inline-block;
 	vertical-align: top;
 	position: relative;
-	width: calc(50% - 24px);
+	width: calc(49.99% - 24px);
 	height: 300px;
 	margin: 12px;
 	padding: 0;
@@ -2082,79 +2151,11 @@ div.overlay .field.password {
 }
 
 /*s-overwrites.css*/
-#header {
-    width: auto;
-    padding: 12px;
-}
-#header .logo {
-    font-size: 1.3em;
-}
-#header ul.servicenavigation {
-    top: 12px;
-    width: 30%;
-    text-align: end;
-    line-height: inherit;
-    right: 12px;
-}
-#header ul.servicenavigation li {
-    display: block;
-    line-height: inherit;
-}
-#navigation {
-    width: 100%;
-}
-#navigation ul.navigation {
-    margin: 0 12px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-}
-#navigation ul.navigation li {
-    flex: auto;
-    text-align: center;
-    margin: 0;
-}
-#content .scene ul.subnavigation li {
-    width: auto;
-}
-#content .scene ul.subnavigation li a {
-    text-transform: none;
-    padding: 12px;
-}
 #content .scene.login form {
     width: auto;
 }
 #content .scene.login p {
     width: auto;
-}
-#content {
-    width: 100%;
-}
-#content img {
-    height: 206px;
-    object-fit: cover;
-}
-#content div.c-two-thirds {
-    width: calc(100% - 12px);
-}
-#content div.c-one-third {
-    width: 100%;
-}
-#content div.c-wrapper {
-    display: flex;
-    flex-direction: column;
-}
-.c-two-thirds {
-    order: 2;
-}
-.c-one-third {
-    order: 1;
-}
-#content h1+p,
-#content h1+h3,
-#content h1+.c-wrapper,
-#content h1+div.messages {
-    padding-top: 0;
 }
 #content .scene.shop div.sidebar.fixed {
     transform: none !important;
@@ -2189,7 +2190,16 @@ div.overlay .field.password {
     background-repeat: no-repeat;
 }
 #content .front div.news ul.items li.item {
-    width: calc(100% - 12px);
+    width: calc(100% - 24px);
+	height: auto;
+}
+#content .front div.news ul.items li.item h3 {margin-top: 0;}
+#content .front div.news ul.items li.item .image {
+	height: auto;
+	min-height: auto;
+	aspect-ratio: 16/9;
+	position: static;
+	background-size: 100% auto;
 }
 #content .scene.signupfees ul.actions input {
     width: 100%;
@@ -2207,10 +2217,4 @@ div.overlay .field.password {
 #content .scene.departments ul.departments>li {
     width: 50%;
 }
-#footer {
-    height: auto;
-    padding: 12px;
-}
-#footer ul.servicenavigation {
-    width: 100%;
-}
+
