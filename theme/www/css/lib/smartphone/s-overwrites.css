@@ -1,5 +1,5 @@
 /* HEADER */
-#header {
+/*#header {
     width: auto;
     padding: 12px;
 }
@@ -20,9 +20,9 @@
     display: block;
     line-height: inherit;
 }
-
+*/
 /* NAVIGATION */
-#navigation {
+/*#navigation {
     width: 100%;
 }
 
@@ -39,7 +39,6 @@
     margin: 0;
 }
 
-/* SUB-NAVIGATION */
 #content .scene ul.subnavigation li {
     width: auto;
 }
@@ -47,7 +46,7 @@
 #content .scene ul.subnavigation li a {
     text-transform: none;
     padding: 12px;
-}
+}*/
 
 /* LOGIN */
 #content .scene.login form {
@@ -60,16 +59,16 @@
 
 
 /* CONTENT */
-#content {
+/*#content {
     width: 100%;
 }
-
-#content img {
+*/
+/*#content img {
     height: 206px;
     object-fit: cover;
 }
-
-#content div.c-two-thirds {
+*/
+/*#content div.c-two-thirds {
     width: calc(100% - 12px);
 }
 
@@ -95,7 +94,7 @@
 #content h1+.c-wrapper,
 #content h1+div.messages {
     padding-top: 0;
-}
+}*/
 
 /* SHOP */
 #content .scene.shop div.sidebar.fixed {
@@ -141,9 +140,18 @@
 }
 
 #content .front div.news ul.items li.item {
-    width: calc(100% - 12px);
+    width: calc(100% - 24px);
+	height: auto;
 }
+#content .front div.news ul.items li.item h3 {margin-top: 0;}
 
+#content .front div.news ul.items li.item .image {
+	height: auto;
+	min-height: auto;
+	aspect-ratio: 16/9;
+	position: static;
+	background-size: 100% auto;
+}
 
 /* SIGNUP */
 #content .scene.signupfees ul.actions input {
@@ -169,11 +177,11 @@
 }
 
 /* FOOTER */
-#footer {
+/*#footer {
     height: auto;
     padding: 12px;
 }
 
 #footer ul.servicenavigation {
     width: 100%;
-}
+}*/

@@ -1,4 +1,4 @@
-document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/seg_desktop.js"></script>');
+document.write('<script type="text/javascript" src="/assets/kbhff-skin/js/seg_smartphone.js"></script>');
 
 document.write('<script type="text/javascript" src="/js/lib/u-settings.js"></script>');
 
