@@ -1,6 +1,6 @@
 /*
 Manipulator v0.9.3-kbhff_dk Copyright 2008-2021 https://manipulator.parentnode.dk
-js-merged @ 2022-10-05 18:20:54
+js-merged @ 2024-03-27 21:37:05
 */
 
 /*seg_smartphone_include.js*/
@@ -1498,7 +1498,7 @@ u.e.addOnloadEvent = function(action) {
 				delete window["_Onload_" + this.id];
 			}
 		}
-		eval('window["_Onload_' + id + '"].eventCallback = function() {u.bug("load");window["_Onload_'+id+'"].callback(event);}');
+		eval('window["_Onload_' + id + '"].eventCallback = function() {window["_Onload_'+id+'"].callback(event);}');
 		u.e.addEvent(window, "load", window["_Onload_" + id].eventCallback);
 	}
 }
@@ -1569,7 +1569,7 @@ u.e.addWindowMoveEvent = function(node, action) {
 		}
 	};
 	eval('window["_OnWindowMoveEvent_' + id + '"].eventCallback = function(event) {window["_OnWindowMoveEvent_'+ id + '"].callback(event);}');
-	u.e.addMoveEvent(window, type, window["_OnWindowMoveEvent_" + id].eventCallback);
+	u.e.addMoveEvent(window, window["_OnWindowMoveEvent_" + id].eventCallback);
 	return id;
 }
 u.e.removeWindowMoveEvent = function(id) {
@@ -2135,8 +2135,8 @@ Util.Form = u.f = new function() {
 			}
 		}
 		if(!field._custom_initialized) {
-			if(u.hc(field, "string|email|tel|number|integer|password|date|datetime")) {
-				field.type = field.className.match(/(?:^|\b)(string|email|tel|number|integer|password|date|datetime)(?:\b|$)/)[0];
+			if(u.hc(field, "string|email|tel|number|integer|password")) {
+				field.type = field.className.match(/(?:^|\b)(string|email|tel|number|integer|password)(?:\b|$)/)[0];
 				field.input = u.qs("input", field);
 				field.input._form = _form;
 				field.input.label = u.qs("label[for='"+field.input.id+"']", field);
@@ -2240,6 +2240,19 @@ Util.Form = u.f = new function() {
 					this.inputOnEnter(input);
 					this.activateInput(input);
 				}
+			}
+			else if(u.hc(field, "date|datetime")) {
+				field.type = field.className.match(/(?:^|\b)(date|datetime)(?:\b|$)/)[0];
+				field.input = u.qs("input", field);
+				field.input._form = _form;
+				field.input.label = u.qs("label[for='"+field.input.id+"']", field);
+				field.input.field = field;
+				field.input.val = this._value_date;
+				u.e.addEvent(field.input, "keyup", this._updated);
+				u.e.addEvent(field.input, "change", this._changed);
+				u.e.addEvent(field.input, "change", this._updated);
+				this.inputOnEnter(field.input);
+				this.activateInput(field.input);
 			}
 			else if(u.hc(field, "files")) {
 				field.type = "files";
@@ -2405,6 +2418,16 @@ Util.Form = u.f = new function() {
 			}
 		}
 		return (this.selectedIndex >= 0 && this.default_value != this.options[this.selectedIndex].value) ? this.options[this.selectedIndex].value : "";
+	}
+	this._value_date = function(value) {
+		if(value !== undefined) {
+			this.value = value;
+			if(value !== this.default_value) {
+				u.rc(this, "default");
+			}
+			u.f.validate(this);
+		}
+		return (this.value != this.default_value) ? this.value.replace("T", " ") : "";
 	}
 	this._value_file = function(value) {
 		if(value !== undefined) {
@@ -3544,6 +3567,1598 @@ u.f.addAction = function(node, _options) {
 }
 
 
+/*u-form-field-html.js*/
+Util.Form.customInit["html"] = function(field) {
+	field.type = "html";
+	field.input = u.qs("textarea", field);
+	field.input._form = field._form;
+	field.input.label = u.qs("label[for='"+field.input.id+"']", field);
+	field.input.field = field;
+	field._html_value = function(value) {
+		if(value !== undefined) {
+			this.value = value;
+			if(value !== this.default_value) {
+				u.rc(this, "default");
+			}
+			u.f.validate(this);
+		}
+		return (this.value != this.default_value && u.text(this.field._viewer)) ? this.value : "";
+	}
+	field.input.val = field._html_value;
+	u.f.textEditor(field);
+}
+Util.Form.customValidate["html"] = function(iN) {
+	min = Number(u.cv(iN.field, "min"));
+	max = Number(u.cv(iN.field, "max"));
+	min = min ? min : 1;
+	max = max ? max : 10000000;
+	pattern = iN.getAttribute("pattern");
+	if(
+		u.text(iN.field._viewer) &&
+		u.text(iN.field._viewer).length >= min && 
+		u.text(iN.field._viewer).length <= max && 
+		(!pattern || iN.val().match("^"+pattern+"$"))
+	) {
+		u.f.inputIsCorrect(iN);
+	}
+	else {
+		u.f.inputHasError(iN);
+	}
+}
+Util.Form.customHintPosition["html"] = function(field) {
+	var input_middle = field._editor.offsetTop + (field._editor.offsetHeight / 2);
+	var help_top = input_middle - field.help.offsetHeight / 2;
+	u.ass(field.help, {
+		"top": help_top + "px"
+	});
+}
+u.f.textEditor = function(field) {
+	field.text_support = "h1,h2,h3,h4,h5,h6,p";
+	field.code_support = "code";
+	field.list_support = "ul,ol";
+	field.media_support = "png,jpg,mp4";
+	field.ext_video_support = "youtube,vimeo";
+	field.file_support = "download"; 
+	field.allowed_tags = u.cv(field, "tags");
+	if(!field.allowed_tags) {
+		u.bug("allowed_tags not specified")
+		return;
+	}
+	field.filterAllowedTags = function(type) {
+		tags = this.allowed_tags.split(",");
+		this[type+"_allowed"] = new Array();
+		var tag, i;
+		for(i = 0; i < tags.length; i++) {
+			tag = tags[i];
+			if(tag.match("^("+this[type+"_support"].split(",").join("|")+")$")) {
+				this[type+"_allowed"].push(tag);
+			}
+		}
+	}
+	field.filterAllowedTags("text");
+	field.filterAllowedTags("list");
+	field.filterAllowedTags("media");
+	field.filterAllowedTags("ext_video");
+	field.filterAllowedTags("file");
+	field.filterAllowedTags("code");
+	field.file_add_action = field.getAttribute("data-file-add");
+	field.file_delete_action = field.getAttribute("data-file-delete");
+	field.media_add_action = field.getAttribute("data-media-add");
+	field.media_delete_action = field.getAttribute("data-media-delete");
+	field.item_id;
+	var item_id_match = field._form.action.match(/\/([0-9]+)(\/|$)/);
+	if(item_id_match) {
+		field.item_id = item_id_match[1];
+	}
+	field._viewer = u.ae(field, "div", {"class":"viewer"});
+	field.insertBefore(field._viewer, field.help)
+	field._viewer.field = field;
+	field._editor = u.ae(field, "div", {"class":"editor"});
+	field.insertBefore(field._editor, field.help)
+	field._editor.field = field;
+	if(!fun(u.f.fixFieldHTML)) {
+		u.ae(field._editor, field.indicator);
+	}
+	field._editor.picked = function() {
+		u.ac(this, "reordering");
+	}
+	field._editor.dropped = function() {
+		u.rc(this, "reordering");
+		this.field.update();
+	}
+	field.addRawHTMLButton = function() {
+		this.bn_show_raw = u.ae(this.input.label, "span", {"html":"(RAW HTML)"});
+		this.bn_show_raw.field = this;
+		u.ce(this.bn_show_raw);
+		this.bn_show_raw.clicked = function() {
+			if(u.hc(this.field.input, "show")) {
+				u.rc(this.field.input, "show");
+			}
+			else {
+				u.ac(this.field.input, "show");
+			}
+		}
+	}
+	field.update = function() {
+		this.updateViewer();
+		this.updateContent();
+		if(fun(this.updated)) {
+			this.updated(this.input);
+		}
+		if(fun(this.changed)) {
+			this.changed(this.input);
+		}
+		if(this.input._form && fun(this.input._form.updated)) {
+			this.input._form.updated(this.input);
+		}
+		if(this.input._form && fun(this.input._form.changed)) {
+			this.input._form.changed(this.input);
+		}
+	}
+	field.updateViewer = function() {
+		var tags = u.qsa("div.tag", this);
+		var i, tag, j, list, li, lis, div, p, a;
+		this._viewer.innerHTML = "";
+		for(i = 0; i < tags.length; i++) {
+			tag = tags[i];
+			if(u.hc(tag, this.text_allowed.join("|"))) {
+				u.ae(this._viewer, tag._type.val(), {"html":tag._input.val()});
+			}
+			else if(u.hc(tag, this.list_allowed.join("|"))) {
+				list = u.ae(this._viewer, tag._type.val());
+				lis = u.qsa("div.li", tag);
+				for(j = 0; j < lis.length; j++) {
+					li = lis[j];
+					li = u.ae(list, tag._type.val(), {"html":li._input.val()});
+				}
+			}
+			else if(u.hc(tag, this.ext_video_allowed.join("|")) && tag._video_id) {
+				div = u.ae(this._viewer, "div", {"class":tag._type.val()+" video_id:"+tag._video_id});
+			}
+			else if(u.hc(tag, "code")) {
+				div = u.ae(this._viewer, "code", {"html":tag._input.val()});
+			}
+			else if(u.hc(tag, "file") && tag._variant) {
+				div = u.ae(this._viewer, "div", {"class":"file item_id:"+tag._item_id+" variant:"+tag._variant+" name:"+encodeURIComponent(tag._name)+" filesize:"+tag._filesize});
+				p = u.ae(div, "p");
+				a = u.ae(p, "a", {"href":"/download/"+tag._item_id+"/"+tag._variant+"/"+tag._name, "html":tag._input.val()});
+			}
+			else if(u.hc(tag, "media") && tag._variant) {
+				div = u.ae(this._viewer, "div", {"class":"media item_id:"+tag._item_id+" variant:"+tag._variant+" name:"+encodeURIComponent(tag._name)+" filesize:"+tag._filesize + " format:"+tag._format});
+				p = u.ae(div, "p");
+				a = u.ae(p, "a", {"href":"/images/"+tag._item_id+"/"+tag._variant+"/480x."+tag._format, "html":tag._input.val()});
+			}
+		}
+	}
+	field.updateContent = function() {
+		var tags = u.qsa("div.tag", this);
+		this.input.val("");
+		var i, node, tag, type, value, j, html = "";
+		for(i = 0; i < tags.length; i++) {
+			tag = tags[i];
+			if(u.hc(tag, this.text_allowed.join("|"))) {
+				type = tag._type.val();
+				html += '<'+type + (tag._classname ? (' class="'+tag._classname+'"') : '')+'>'+tag._input.val()+'</'+type+'>'+"\n";
+			}
+			else if(u.hc(tag, this.list_allowed.join("|"))) {
+				type = tag._type.val();
+				html += "<"+type+(tag._classname ? (' class="'+tag._classname+'"') : '')+">\n";
+				lis = u.qsa("div.li", tag);
+				for(j = 0; j < lis.length; j++) {
+					li = lis[j];
+					html += "\t<li>"+li._input.val()+"</li>\n";
+				}
+				html += "</"+type+">\n";
+			}
+			else if(u.hc(tag, this.ext_video_allowed.join("|")) && tag._video_id) {
+				html += '<div class="'+tag._type.val()+' video_id:'+tag._video_id+'"></div>\n';
+			}
+			else if(u.hc(tag, "code")) {
+				html += '<code'+(tag._classname ? (' class="'+tag._classname+'"') : '')+'>'+tag._input.val()+'</code>'+"\n";
+			}
+			else if(u.hc(tag, "media") && tag._variant) {
+				html += '<div class="media item_id:'+tag._item_id+' variant:'+tag._variant+' name:'+encodeURIComponent(tag._name)+' filesize:'+tag._filesize+' format:'+tag._format+' width:'+tag._width+' height:'+tag._height+'">'+"\n";
+				html += '\t<p><a href="/images/'+tag._item_id+'/'+tag._variant+'/480x.'+tag._format+'">'+tag._input.val()+"</a></p>";
+				html += "</div>\n";
+			}
+			else if(u.hc(tag, "file") && tag._variant) {
+				html += '<div class="file item_id:'+tag._item_id+' variant:'+tag._variant+' name:'+encodeURIComponent(tag._name)+' filesize:'+tag._filesize+'">'+"\n";
+				html += '\t<p><a href="/download/'+tag._item_id+'/'+tag._variant+'/'+tag._name+'">'+tag._input.val()+"</a></p>";
+				html += "</div>\n";
+			}
+		}
+		this.input.val(html);
+	}
+	field.createTag = function(allowed_tags, type, className) {
+		var tag = u.ae(this._editor, "div", {"class":"tag"});
+		tag.field = this;
+		tag._drag = u.ae(tag, "div", {"class":"drag"});
+		tag._drag.field = this;
+		tag._drag.tag = tag;
+		this.createTagSelector(tag, allowed_tags);
+		tag._type.val(type);
+		if(className) {
+			tag._classname = className;
+		}
+		this.addTagOptions(tag);
+		return tag;
+	}
+	field.deleteTag = function(tag) {
+		if(u.qsa("div.tag", this).length > 1) {
+			if(u.hc(tag, "file")) {
+				this.deleteFile(tag);
+			}
+			else if(u.hc(tag, "media")) {
+				this.deleteMedia(tag);
+			}
+			tag.parentNode.removeChild(tag);
+			this._editor.updateTargets();
+			this._editor.updateDraggables();
+			this.update();
+		}
+	}
+	field.classnameTag = function(tag) {
+		if(!u.hc(tag.bn_classname, "open")) {
+			var form = u.f.addForm(tag.bn_classname, {"class":"labelstyle:inject"});
+			var fieldset = u.f.addFieldset(form);
+			var input_classname = u.f.addField(fieldset, {"label":"classname", "name":"classname", "error_message":"", "value":tag._classname});
+			input_classname.tag = tag;
+			u.ac(tag.bn_classname, "open");
+			u.ac(tag, "classname_open");
+			u.f.init(form);
+			input_classname.input.focus();
+			input_classname.input.blurred = function() {
+				this.field.tag._classname = this.val();
+				this.field.tag.bn_classname.removeChild(this._form);
+				u.rc(this.field.tag.bn_classname, "open");
+				u.rc(this.field.tag, "classname_open");
+				if(!this.field.tag.mirror) {
+					this.field.tag.mirror = u.ae(this.field.tag, "span", {"class":"classname"});
+				}
+				if(this.field.tag._classname && this.field.tag._classname != "") {
+					this.field.tag.mirror.innerHTML = this.field.tag._classname;
+				}
+				else {
+					this.field.tag.mirror.parentNode.removeChild(this.field.tag.mirror);
+					delete this.field.tag.mirror;
+				}
+				this.field.tag.field.update();
+			}
+		}
+	}
+	field.createTagSelector = function(tag, allowed_tags) {
+		var i, allowed_tag;
+		tag._type = u.ae(tag, "ul", {"class":"type"});
+		tag._type.field = this;
+		tag._type.tag = tag;
+		for(i = 0; allowed_tag = allowed_tags[i]; i++) {
+			u.ae(tag._type, "li", {"html":allowed_tag, "class":allowed_tag});
+		}
+		tag._type.val = function(value) {
+			if(value !== undefined) {
+				var i, option;
+				for(i = 0; i < this.childNodes.length; i++) {
+					option = this.childNodes[i];
+					if(u.text(option) == value) {
+						if(this.selected_option) {
+							u.rc(this.selected_option, "selected");
+							u.rc(this.tag, u.text(this.selected_option));
+						}
+						u.ac(option, "selected");
+						this.selected_option = option;
+						u.ac(this.tag, value);
+						return option;
+					}
+				}
+				u.ac(this.childNodes[0], "selected");
+				this.selected_option = this.childNodes[0];
+				u.ac(this.tag, u.text(this.childNodes[0]));
+				return this.childNodes[0];
+			}
+			else {
+				return u.text(this.selected_option);
+			}
+		}
+		if(allowed_tags.length > 1) {
+			u.ce(tag._type);
+			tag._type.inputStarted = function(event) {
+				var selection = window.getSelection();
+				if(selection && selection.type && u.contains(this.tag, selection.anchorNode)) {
+					u.e.kill(event);
+				}
+			}
+			tag._type.clicked = function(event) {
+				u.t.resetTimer(this.t_autohide);
+				if(u.hc(this, "open")) {
+					u.rc(this, "open");
+					u.rc(this.tag, "focus");
+					u.ass(this.field, {
+						"zIndex": this.field._base_z_index
+					});
+					u.as(this, "top", 0);
+					if(event.target) {
+						this.val(u.text(event.target));
+					}
+					u.e.removeEvent(this, "mouseout", this.autohide);
+					u.e.removeEvent(this, "mouseover", this.delayautohide);
+					this.field.returnFocus(this.tag);
+					this.field.update();
+				}
+				else {
+					u.ac(this, "open");
+					u.ac(this.tag, "focus");
+					u.ass(this.field, {
+						"zIndex": this.field._form._focus_z_index,
+					});
+					u.as(this, "top", -(this.selected_option.offsetTop) + "px");
+					u.e.addEvent(this, "mouseout", this.autohide);
+					u.e.addEvent(this, "mouseover", this.delayautohide);
+				}
+			}
+			tag._type.hide = function() {
+				u.rc(this, "open");
+				if(!this.field.is_focused) {
+					u.rc(this.tag, "focus");
+					u.ass(this.field, {
+						"zIndex": this.field._base_z_index
+					});
+					this.field.returnFocus(this);
+				}
+				u.as(this, "top", 0);
+				u.e.removeEvent(this, "mouseout", this.autohide);
+				u.e.removeEvent(this, "mouseover", this.delayautohide);
+				u.t.resetTimer(this.t_autohide);
+			}
+			tag._type.autohide = function(event) {
+				u.t.resetTimer(this.t_autohide);
+				this.t_autohide = u.t.setTimer(this, this.hide, 800);
+			}
+			tag._type.delayautohide = function(event) {
+				u.t.resetTimer(this.t_autohide);
+			}
+		}
+	}
+	field.addTagOptions = function(tag) {
+		tag.ul_tag_options = u.ae(tag, "ul", {"class":"tag_options"});
+		tag.bn_add = u.ae(tag.ul_tag_options, "li", {"class":"add", "html":"+"});
+		tag.bn_add.field = field;
+		tag.bn_add.tag = tag;
+		u.ce(tag.bn_add);
+		u.ce(tag.ul_tag_options);
+		tag.ul_tag_options.inputStarted = function(event) {
+			u.e.kill(event);
+		}
+		tag.bn_add.clicked = function(event) {
+			this.cleanupOptions = function(event) {
+				if(this.field.ul_new_tag_options) {
+					this.field.ul_new_tag_options.parentNode.removeChild(this.field.ul_new_tag_options);
+					delete this.field.ul_new_tag_options;
+					if(this.start_event_id) {
+						u.e.removeWindowStartEvent(this.start_event_id);
+						delete this.start_event_id;
+					}
+				}
+			}
+			if(this.field.ul_new_tag_options) {
+				this.cleanupOptions();
+			}
+			this.start_event_id = u.e.addWindowStartEvent(this, this.cleanupOptions);
+			this.field.ul_new_tag_options = u.ae(this.field._editor, "ul", {"class":"new_tag_options"});
+			u.ia(this.field.ul_new_tag_options, this.tag);
+			if(this.field.text_allowed.length) {
+				this.bn_add_text = u.ae(this.field.ul_new_tag_options, "li", {"class":"text", "html":"Text ("+this.field.text_allowed.join(", ")+")"});
+				this.bn_add_text.field = this.field;
+				this.bn_add_text.tag = this.tag;
+				u.ce(this.bn_add_text);
+				this.bn_add_text.inputStarted = function(event) {
+					u.e.kill(event);
+				}
+				this.bn_add_text.clicked = function(event) {
+					var tag = this.field.addTextTag(this.field.text_allowed[0]);
+					u.ia(tag, this.tag);
+					this.tag.bn_add.cleanupOptions();
+					tag._input.focus();
+				}
+			}
+			if(this.field.list_allowed.length) {
+				this.bn_add_list = u.ae(this.field.ul_new_tag_options, "li", {"class":"list", "html":"List ("+this.field.list_allowed.join(", ")+")"});
+				this.bn_add_list.field = this.field;
+				this.bn_add_list.tag = this.tag;
+				u.ce(this.bn_add_list);
+				this.bn_add_list.inputStarted = function(event) {
+					u.e.kill(event);
+				}
+				this.bn_add_list.clicked = function(event) {
+					var tag = this.field.addListTag(this.field.list_allowed[0]);
+					u.ia(tag, this.tag);
+					this.tag.bn_add.cleanupOptions();
+					tag._input.focus();
+				}
+			}
+			if(this.field.code_allowed.length) {
+				this.bn_add_code = u.ae(this.field.ul_new_tag_options, "li", {"class":"code", "html":"Code"});
+				this.bn_add_code.field = this.field;
+				this.bn_add_code.tag = this.tag;
+				u.ce(this.bn_add_code);
+				this.bn_add_code.inputStarted = function(event) {
+					u.e.kill(event);
+				}
+				this.bn_add_code.clicked = function(event) {
+					var tag = this.field.addCodeTag(this.field.code_allowed[0]);
+					u.ia(tag, this.tag);
+					this.tag.bn_add.cleanupOptions();
+					tag._input.focus();
+				}
+			}
+			if(this.field.media_allowed.length && this.field.item_id && this.field.media_add_action && this.field.media_delete_action && !u.browser("IE", "<=9")) {
+				this.bn_add_media = u.ae(this.field.ul_new_tag_options, "li", {"class":"list", "html":"Media ("+this.field.media_allowed.join(", ")+")"});
+				this.bn_add_media.field = this.field;
+				this.bn_add_media.tag = this.tag;
+				u.ce(this.bn_add_media);
+				this.bn_add_media.inputStarted = function(event) {
+					u.e.kill(event);
+				}
+				this.bn_add_media.clicked = function(event) {
+					var tag = this.field.addMediaTag();
+					u.ia(tag, this.tag);
+					this.tag.bn_add.cleanupOptions();
+					tag._input.focus();
+				}
+			}
+			else if(this.field.media_allowed.length) {
+				u.bug("some information is missing to support media upload:\nitem_id="+this.field.item_id+"\nmedia_add_action="+this.field.media_add_action+"\nmedia_delete_action="+this.field.media_delete_action);
+			}
+			if(this.field.ext_video_allowed.length) {
+				this.bn_add_ext_video = u.ae(this.field.ul_new_tag_options, "li", {"class":"video", "html":"External video ("+this.field.ext_video_allowed.join(", ")+")"});
+				this.bn_add_ext_video.field = this.field;
+				this.bn_add_ext_video.tag = this.tag;
+				u.ce(this.bn_add_ext_video);
+				this.bn_add_ext_video.inputStarted = function(event) {
+					u.e.kill(event);
+				}
+				this.bn_add_ext_video.clicked = function(event) {
+					var tag = this.field.addExternalVideoTag(this.field.ext_video_allowed[0]);
+					u.ia(tag, this.tag);
+					this.tag.bn_add.cleanupOptions();
+					tag._input.focus();
+				}
+			}
+			if(this.field.file_allowed.length && this.field.item_id && this.field.file_add_action && this.field.file_delete_action && !u.browser("IE", "<=9")) {
+				this.bn_add_file = u.ae(this.field.ul_new_tag_options, "li", {"class":"file", "html":"Downloadable file"});
+				this.bn_add_file.field = this.field;
+				this.bn_add_file.tag = this.tag;
+				u.ce(this.bn_add_file);
+				this.bn_add_file.inputStarted = function(event) {
+					u.e.kill(event);
+				}
+				this.bn_add_file.clicked = function(event) {
+					var tag = this.field.addFileTag();
+					u.ia(tag, this.tag);
+					this.tag.bn_add.cleanupOptions();
+					tag._input.focus();
+				}
+			}
+			else if(this.field.file_allowed.length) {
+				u.bug("some information is missing to support file upload:\nitem_id="+this.field.item_id+"\nfile_add_action="+this.field.file_add_action+"\nfile_delete_action="+this.field.file_delete_action);
+			}
+		}
+		tag.bn_remove = u.ae(tag.ul_tag_options, "li", {"class":"remove"});
+		tag.bn_remove.field = this;
+		tag.bn_remove.tag = tag;
+		u.ce(tag.bn_remove);
+		tag.bn_remove.clicked = function() {
+			this.field.deleteTag(this.tag);
+		}
+		tag.bn_classname = u.ae(tag.ul_tag_options, "li", {"class":"classname"});
+		u.ae(tag.bn_classname, "span", {"html":"CSS"});
+		tag.bn_classname.field = this;
+		tag.bn_classname.tag = tag;
+		u.ce(tag.bn_classname);
+		tag.bn_classname.clicked = function() {
+			this.field.classnameTag(this.tag);
+		}
+		if(tag._classname) {
+			if(!tag.mirror) {
+				tag.mirror = u.ae(tag, "span", {"class":"classname", "html":tag._classname});
+			}
+		}
+	}
+	field.addExternalVideoTag = function(type, node) {
+		var tag = this.createTag(this.ext_video_allowed, type);
+		tag._input = u.ae(tag, "div", {"class":"text", "contentEditable":true});
+		tag._input.tag = tag;
+		tag._input.field = this;
+		if(node) {
+			tag._video_id = u.cv(node, "video_id");
+			tag._input.innerHTML = tag._video_id;
+		}
+		tag._input.val = function(value) {
+			if(value !== undefined) {
+				this.innerHTML = value;
+			}
+			return this.innerHTML;
+		}
+		u.e.addEvent(tag._input, "keydown", tag.field._changing_content);
+		u.e.addEvent(tag._input, "keyup", this._changed_ext_video_content);
+		u.e.addEndEvent(tag._input, this._changed_ext_video_content);
+		u.e.addEvent(tag._input, "focus", tag.field._focused_content);
+		u.e.addEvent(tag._input, "blur", tag.field._blurred_content);
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
+		return tag;
+	}
+	field._changed_ext_video_content = function(event) {
+		if(this.val() && !this.val().replace(/<br>/, "")) {
+			this.val("");
+		}
+		this.tag._video_id = this.val();
+		this.tag.field.update();
+	}
+	field.addMediaTag = function(node) {
+		var tag = this.createTag(["media"], "media");
+		tag._input = u.ae(tag, "div", {"class":"text"});
+		tag._input.tag = tag;
+		tag._input.field = this;
+		tag._input._form = this._form;
+		if(node) {
+			tag._name = u.cv(node, "name");
+			tag._item_id = u.cv(node, "item_id");
+			tag._filesize = u.cv(node, "filesize");
+			tag._format = u.cv(node, "format");
+			tag._variant = u.cv(node, "variant");
+			tag._width = u.cv(node, "width");
+			tag._height = u.cv(node, "height");
+			tag._input.contentEditable = true;
+			tag._input.innerHTML = u.qs("a", node).innerHTML;
+			if(tag._format.match(/gif|png|jpg|svg|avif|webp/)) {
+				tag._image = u.ie(tag, "img");
+				tag._image.src = "/images/"+tag._item_id+"/"+tag._variant+"/400x."+tag._format;
+			}
+			else if(tag._format.match(/mp4|mov/)) {
+				tag._image = u.ie(tag, "video");
+				tag._image.src = "/videos/"+tag._item_id+"/"+tag._variant+"/400x."+tag._format;
+			}
+			tag._input.val = function(value) {
+				if(value !== undefined) {
+					this.innerHTML = value;
+				}
+				return this.innerHTML;
+			}
+			u.e.addEvent(tag._input, "keydown", tag.field._changing_content);
+			u.e.addEvent(tag._input, "keyup", this._changed_media_content);
+			u.e.addEndEvent(tag._input, this._changed_media_content);
+			u.e.addEvent(tag._input, "focus", tag.field._focused_content);
+			u.e.addEvent(tag._input, "blur", tag.field._blurred_content);
+			u.ac(tag, "done");
+		}
+		else {
+			tag._text = tag._input;
+			tag._text.tag = tag;
+			tag._text.field = this;
+			tag._label = u.ae(tag._text, "label", {"html":"Drag media here"});
+			tag._input = u.ae(tag._text, "input", {"type":"file", "name":"htmleditor_media[]"});
+			tag._input.tag = tag;
+			tag._input.field = this;
+			tag._input._form = this._form;
+			tag._input.val = function(value) {return false;}
+			u.e.addEvent(tag._input, "change", this._media_updated);
+			u.e.addEvent(tag._input, "focus", this._focused_content);
+			u.e.addEvent(tag._input, "blur", this._blurred_content);
+			if(u.e.event_pref == "mouse") {
+				u.e.addEvent(tag._input, "mouseenter", u.f._mouseenter);
+				u.e.addEvent(tag._input, "mouseleave", u.f._mouseleave);
+			}
+		}
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
+		return tag;
+	}
+	field.deleteMedia = function(tag) {
+		var form_data = new FormData();
+		form_data.append("csrf-token", this._form.inputs["csrf-token"].val());
+		tag.response = function(response) {
+			page.notify(response);
+			if(response.cms_status && response.cms_status == "success") {
+				this.field.update();
+			}
+		}
+		u.request(tag, this.file_delete_action+"/"+tag._item_id+"/"+tag._variant, {"method":"post", "data":form_data});
+	}
+	field._media_updated = function(event) {
+		var form_data = new FormData();
+		form_data.append(this.name, this.files[0], this.value);
+		form_data.append("csrf-token", this._form.inputs["csrf-token"].val());
+		form_data.append("input-name", this.tag.field.input.name);
+		this.response = function(response) {
+			page.notify(response);
+			if(response.cms_status && response.cms_status == "success") {
+				this.parentNode.removeChild(this.tag._label);
+				this.parentNode.removeChild(this);
+				this.tag._input = this.tag._text;
+				this.tag._variant = response.cms_object["variant"];
+				this.tag._filesize = response.cms_object["filesize"]
+				this.tag._format = response.cms_object["format"]
+				this.tag._width = response.cms_object["width"]
+				this.tag._height = response.cms_object["height"]
+				this.tag._name = response.cms_object["name"]
+				this.tag._item_id = response.cms_object["item_id"]
+				this.tag._input.contentEditable = true;
+				if(this.tag._format.match(/gif|png|jpg|svg|avif|webp/)) {
+					this.tag._image = u.ie(this.tag, "img");
+					this.tag._image.src = "/images/"+this.tag._item_id+"/"+this.tag._variant+"/400x."+this.tag._format;
+				}
+				else if(this.tag._format.match(/mp4|mov/)) {
+					this.tag._image = u.ie(this.tag, "video");
+					this.tag._image.src = "/videos/"+this.tag._item_id+"/"+this.tag._variant+"/400x."+this.tag._format;
+				}
+				this.tag._input.innerHTML = this.tag._name + " ("+ u.round((this.tag._filesize/1000), 2) +"Kb)";
+				this.tag._input.val = function(value) {
+					if(value !== undefined) {
+						this.innerHTML = value;
+					}
+					return this.innerHTML;
+				}
+				u.e.addEvent(this.tag._input, "keydown", this.tag.field._changing_content);
+				u.e.addEvent(this.tag._input, "keyup", this.tag.field._changed_media_content);
+				u.e.addEndEvent(this.tag._input, this.tag.field._changed_media_content);
+				u.e.addEvent(this.tag._input, "focus", this.tag.field._focused_content);
+				u.e.addEvent(this.tag._input, "blur", this.tag.field._blurred_content);
+				u.ac(this.tag, "done");
+				this.tag.field.update();
+				this.tag.field._form.submit();
+			}
+		}
+		u.request(this, this.field.media_add_action+"/"+this.field.item_id, {"method":"post", "data":form_data});
+	}
+	field._changed_media_content = function(event) {
+		if(this.val() && !this.val().replace(/<br>/, "")) {
+			this.val("");
+		}
+		this.field.update();
+	}
+	field.addFileTag = function(node) {
+		var tag = this.createTag(["file"], "file");
+		tag._input = u.ae(tag, "div", {"class":"text"});
+		tag._input.tag = tag;
+		tag._input.field = this;
+		tag._input._form = this._form;
+		if(node) {
+			tag._input.contentEditable = true;
+			tag._variant = u.cv(node, "variant");
+			tag._name = u.cv(node, "name");
+			tag._item_id = u.cv(node, "item_id");
+			tag._filesize = u.cv(node, "filesize");
+			tag._input.innerHTML = u.qs("a", node).innerHTML;
+			tag._input.val = function(value) {
+				if(value !== undefined) {
+					this.innerHTML = value;
+				}
+				return this.innerHTML;
+			}
+			u.e.addEvent(tag._input, "keydown", tag.field._changing_content);
+			u.e.addEvent(tag._input, "keyup", this._changed_file_content);
+			u.e.addEndEvent(tag._input, this._changed_file_content);
+			u.e.addEvent(tag._input, "focus", tag.field._focused_content);
+			u.e.addEvent(tag._input, "blur", tag.field._blurred_content);
+			u.ac(tag, "done");
+		}
+		else {
+			tag._text = tag._input;
+			tag._text.tag = tag;
+			tag._text.field = this;
+			tag._label = u.ae(tag._text, "label", {"html":"Drag file here"});
+			tag._input = u.ae(tag._text, "input", {"type":"file", "name":"htmleditor_file[]"});
+			tag._input.tag = tag;
+			tag._input.field = this;
+			tag._input._form = this._form;
+			tag._input.val = function(value) {return false;}
+			u.e.addEvent(tag._input, "change", this._file_updated);
+			u.e.addEvent(tag._input, "focus", this._focused_content);
+			u.e.addEvent(tag._input, "blur", this._blurred_content);
+			if(u.e.event_pref == "mouse") {
+				u.e.addEvent(tag._input, "mouseenter", u.f._mouseenter);
+				u.e.addEvent(tag._input, "mouseleave", u.f._mouseleave);
+			}
+		}
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
+		return tag;
+	}
+	field.deleteFile = function(tag) {
+		var form_data = new FormData();
+		form_data.append("csrf-token", this._form.inputs["csrf-token"].val());
+		tag.response = function(response) {
+			page.notify(response);
+			if(response.cms_status && response.cms_status == "success") {
+				this.field.update();
+			}
+		}
+		u.request(tag, this.file_delete_action+"/"+tag._item_id+"/"+tag._variant, {"method":"post", "data":form_data});
+	}
+	field._file_updated = function(event) {
+		var form_data = new FormData();
+		form_data.append(this.name, this.files[0], this.value);
+		form_data.append("csrf-token", this._form.inputs["csrf-token"].val());
+		form_data.append("input-name", this.tag.field.input.name);
+		this.response = function(response) {
+			page.notify(response);
+			if(response.cms_status && response.cms_status == "success") {
+				this.parentNode.removeChild(this.tag._label);
+				this.parentNode.removeChild(this);
+				this.tag._variant = response.cms_object["variant"];
+				this.tag._filesize = response.cms_object["filesize"]
+				this.tag._name = response.cms_object["name"]
+				this.tag._item_id = response.cms_object["item_id"]
+				this.tag._text.contentEditable = true;
+				this.tag._text.innerHTML = this.tag._name + " ("+ u.round((this.tag._filesize/1000), 2) +"Kb)";
+				this.tag._input = this.tag._text;
+				this.tag._input.val = function(value) {
+					if(value !== undefined) {
+						this.innerHTML = value;
+					}
+					return this.innerHTML;
+				}
+				u.e.addEvent(this.tag._input, "keydown", this.tag.field._changing_content);
+				u.e.addEvent(this.tag._input, "keyup", this.tag.field._changed_file_content);
+				u.e.addEvent(this.tag._input, "mouseup", this.tag.field._changed_file_content);
+				u.e.addEvent(this.tag._input, "focus", this.tag.field._focused_content);
+				u.e.addEvent(this.tag._input, "blur", this.tag.field._blurred_content);
+				u.ac(this.tag, "done");
+				this.tag.field.update();
+				this.tag.field._form.submit();
+			}
+		}
+		u.request(this, this.field.file_add_action+"/"+this.field.item_id, {"method":"post", "data":form_data});
+	}
+	field._changed_file_content = function(event) {
+		if(this.val() && !this.val().replace(/<br>/, "")) {
+			this.val("");
+		}
+		this.field.update();
+	}
+	field.addCodeTag = function(type, value, className) {
+		var tag = this.createTag(this.code_allowed, type, className);
+		tag._input = u.ae(tag, "div", {"class":"text", "contentEditable":true});
+		tag._input.tag = tag;
+		tag._input.field = this;
+		tag._input._form = this._form;
+		tag._input.val = function(value) {
+			if(value !== undefined) {
+				this.innerHTML = value;
+			}
+			return this.innerHTML;
+		}
+		tag._input.val(u.stringOr(value));
+		u.e.addEvent(tag._input, "keydown", this._changing_code_content);
+		u.e.addEvent(tag._input, "keyup", this._code_updated);
+		u.e.addStartEvent(tag._input, this._code_selection_started);
+		u.e.addEvent(tag._input, "focus", this._focused_content);
+		u.e.addEvent(tag._input, "blur", this._blurred_content);
+		if(u.e.event_pref == "mouse") {
+			u.e.addEvent(tag._input, "mouseenter", u.f._mouseenter);
+			u.e.addEvent(tag._input, "mouseleave", u.f._mouseleave);
+		}
+		u.e.addEvent(tag._input, "paste", this._pasted_content);
+		tag.addNew = function() {
+			this.field.addTextItem(this.field.text_allowed[0]);
+		}
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
+		return tag;
+	}
+	field._code_selection_started = function(event) {
+		this._selection_event_id = u.e.addWindowEndEvent(this, this.field._code_updated);
+	}
+	field._changing_code_content = function(event) {
+		if(event.keyCode == 13 || event.keyCode == 9) {
+			u.e.kill(event);
+		}
+		if(event.keyCode == 9 && event.shiftKey) {
+			this.field.backwards_tab = true;
+		}
+	}
+	field._code_updated = function(event) {
+		if(this._selection_event_id) {
+			u.e.removeWindowEndEvent(this._selection_event_id);
+			delete this._selection_event_id;
+		}
+		var selection = window.getSelection(); 
+		if(event.keyCode == 13) {
+			u.e.kill(event);
+			if(selection && selection.isCollapsed) {
+				var br = document.createTextNode("\n");
+				range = selection.getRangeAt(0);
+				range.insertNode(br);
+				range.collapse(false);
+				var selection = window.getSelection();
+				selection.removeAllRanges();
+				selection.addRange(range);
+			}
+		}
+		if(event.keyCode == 9) {
+			u.e.kill(event);
+			if(selection && selection.isCollapsed) {
+				var br = document.createTextNode("\t");
+				range = selection.getRangeAt(0);
+				range.insertNode(br);
+				range.collapse(false);
+				var selection = window.getSelection();
+				selection.removeAllRanges();
+				selection.addRange(range);
+			}
+		}
+		else if(event.keyCode == 8) {
+			if(this.is_deletable) {
+				u.e.kill(event);
+				var all_tags = u.qsa("div.tag", this.field);
+				var prev = this.field.findPreviousInput(this);
+				if(prev) {
+					this.tag.parentNode.removeChild(this.tag);
+					prev.focus();
+				}
+				this.field._editor.updateTargets();
+				this.field._editor.updateDraggables();
+			}
+			else if(!this.val() || !this.val().replace(/<br>/, "")) {
+				this.is_deletable = true;
+			}
+			else if(selection.anchorNode != this && selection.anchorNode.innerHTML == "") {
+				selection.anchorNode.parentNode.removeChild(selection.anchorNode);
+			}
+		}
+		else {
+			this.is_deletable = false;
+		}
+		this.field.hideSelectionOptions();
+		if(selection && !selection.isCollapsed) {
+			var node = selection.anchorNode;
+			while(node != this) {
+				if(node.nodeName == "HTML" || !node.parentNode) {
+					break;
+				}
+				node = node.parentNode;
+			}
+			if(node == this) {
+				this.field.showSelectionOptions(this, selection);
+			}
+		}
+		// 	
+		this.field.update();
+	}
+	field.addListTag = function(type, value, className) {
+		var tag = this.createTag(this.list_allowed, type, className);
+		this.addListItem(tag, value);
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
+		return tag;
+	}
+	field.addListItem = function(tag, value) {
+		var li = u.ae(tag, "div", {"class":"li"});
+		li.tag = tag;
+		li.field = this;
+		li._input = u.ae(li, "div", {"class":"text", "contentEditable":true});
+		li._input.li = li;
+		li._input.tag = tag;
+		li._input.field = this;
+		li._input._form = this._form;
+		tag._input = li._input;
+		li._input.val = function(value) {
+			if(value !== undefined) {
+				this.innerHTML = value;
+			}
+			return this.innerHTML;
+		}
+		li._input.val(u.stringOr(value));
+		u.e.addEvent(li._input, "keydown", this._changing_content);
+		u.e.addEvent(li._input, "keyup", this._changed_content);
+		u.e.addStartEvent(li._input, this._selection_started);
+		u.e.addEvent(li._input, "focus", this._focused_content);
+		u.e.addEvent(li._input, "blur", this._blurred_content);
+		if(u.e.event_pref == "mouse") {
+			u.e.addEvent(li._input, "mouseenter", u.f._mouseenter);
+			u.e.addEvent(li._input, "mouseleave", u.f._mouseleave);
+		}
+		u.e.addEvent(li._input, "paste", this._pasted_content);
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
+		return li;
+	}
+	field.addTextTag = function(type, value, className) {
+		var tag = this.createTag(this.text_allowed, type, className);
+		tag._input = u.ae(tag, "div", {"class":"text", "contentEditable":true});
+		tag._input.tag = tag;
+		tag._input.field = this;
+		tag._input._form = this._form;
+		tag._input.val = function(value) {
+			if(value !== undefined) {
+				this.innerHTML = value;
+			}
+			return this.innerHTML;
+		}
+		tag._input.val(u.stringOr(value));
+		u.e.addEvent(tag._input, "keydown", this._changing_content);
+		u.e.addEvent(tag._input, "keyup", this._changed_content);
+		u.e.addStartEvent(tag._input, this._selection_started);
+		u.e.addEvent(tag._input, "focus", this._focused_content);
+		u.e.addEvent(tag._input, "blur", this._blurred_content);
+		if(u.e.event_pref == "mouse") {
+			u.e.addEvent(tag._input, "mouseenter", u.f._mouseenter);
+			u.e.addEvent(tag._input, "mouseleave", u.f._mouseleave);
+		}
+		u.e.addEvent(tag._input, "paste", this._pasted_content);
+		tag.addNew = function() {
+			this.field.addTextItem(this.field.text_allowed[0]);
+		}
+		this._editor.updateTargets();
+		this._editor.updateDraggables();
+		return tag;
+	}
+	field._changing_content = function(event) {
+		if(event.keyCode == 13) {
+			u.e.kill(event);
+		}
+		if(event.keyCode == 9 && event.shiftKey) {
+			this.field.backwards_tab = true;
+		}
+	}
+	field._selection_started = function(event) {
+		this._selection_event_id = u.e.addWindowEndEvent(this, this.field._changed_content);
+	}
+	field._changed_content = function(event) {
+		if(this._selection_event_id) {
+			u.e.removeWindowEndEvent(this._selection_event_id);
+			delete this._selection_event_id;
+		}
+		var selection = window.getSelection(); 
+		if(event.keyCode == 13) {
+			u.e.kill(event);
+			if(!event.ctrlKey && !event.metaKey) {
+				if(u.hc(this.tag, this.field.list_allowed.join("|"))) {
+					var new_li = this.field.addListItem(this.tag);
+					var next_li = u.ns(this.li);
+					if(next_li) {
+						this.tag.insertBefore(new_li, next_li);
+					}
+					else {
+						this.tag.appendChild(new_li);
+					}
+					new_li._input.focus();
+				}
+				else {
+					var new_tag = this.field.addTextTag(this.field.text_allowed[0]);
+					var next_tag = u.ns(this.tag);
+					if(next_tag) {
+						this.tag.parentNode.insertBefore(new_tag, next_tag);
+					}
+					else {
+						this.tag.parentNode.appendChild(new_tag);
+					}
+					new_tag._input.focus();
+				}
+			}
+			else {
+				if(selection && selection.isCollapsed) {
+					var br = document.createElement("br");
+					range = selection.getRangeAt(0);
+					range.insertNode(br);
+					range.collapse(false);
+					var selection = window.getSelection();
+					selection.removeAllRanges();
+					selection.addRange(range);
+				}
+			}
+		}
+		else if(event.keyCode == 8) {
+			if(this.is_deletable) {
+				u.e.kill(event);
+				var all_tags = u.qsa("div.tag", this.field);
+				var prev = this.field.findPreviousInput(this);
+				if(u.hc(this.tag, this.field.list_allowed.join("|"))) {
+					var all_lis = u.qsa("div.li", this.tag);
+					if(prev || all_tags.length > 1) {
+						this.li._input.blur();
+						this.tag.removeChild(this.li);
+						if(!u.qsa("div.li", this.tag).length) {
+							this.tag.parentNode.removeChild(this.tag);
+						}
+					}
+				}
+				else {
+					if(prev || all_tags.length > 1) {
+						this.tag.parentNode.removeChild(this.tag);
+					}
+				}
+				this.field._editor.updateTargets();
+				this.field._editor.updateDraggables();
+				if(prev) {
+					prev.focus();
+				}
+				else {
+					if(u.hc(this.tag, this.field.list_allowed.join("|"))) {
+						var all_lis = u.qsa("div.li", this.tag);
+						all_lis[0]._input.focus();
+					}
+					else {
+						var all_tags = u.qsa("div.tag", this.field);
+						all_tags[0]._input.focus();
+					}
+				}
+			}
+			else if(!this.val() || !this.val().replace(/<br>/, "")) {
+				this.is_deletable = true;
+			}
+			else if(selection.anchorNode != this && selection.anchorNode.innerHTML == "") {
+				selection.anchorNode.parentNode.removeChild(selection.anchorNode);
+			}
+		}
+		else {
+			this.is_deletable = false;
+		}
+		this.field.hideSelectionOptions();
+		if(selection && !selection.isCollapsed) {
+			var node = selection.anchorNode;
+			while(node != this) {
+				if(node.nodeName == "HTML" || !node.parentNode) {
+					break;
+				}
+				node = node.parentNode;
+			}
+			if(node == this) {
+				this.field.showSelectionOptions(this, selection);
+			}
+		}
+		else {
+			this.field.hideSelectionOptions();
+		}
+		// 	
+		this.field.update();
+	}
+	field._focused_content = function(event) {
+		this.field.is_focused = true;
+		u.ac(this.tag, "focus");
+		u.ac(this.field, "focus");
+		u.as(this.field, "zIndex", this.field._form._focus_z_index);
+		u.f.positionHint(this.field);
+		if(this.field.backwards_tab) {
+			this.field.backwards_tab = false;
+			var range = document.createRange();
+			range.selectNodeContents(this);
+			range.collapse(false);
+			var selection = window.getSelection();
+			selection.removeAllRanges();
+			selection.addRange(range);
+		}
+	}
+	field._blurred_content = function() {
+		this.field.is_focused = false;
+		u.rc(this.tag, "focus");
+		u.rc(this.field, "focus");
+		u.as(this.field, "zIndex", this.field._base_z_index);
+		u.f.positionHint(this.field);
+	}
+	field._pasted_content = function(event) {
+		u.e.kill(event);
+		var i, node, text, range, new_tag, current_tag, selection, paste_parts, text_parts, text_nodes;
+		var paste_content = event.clipboardData.getData("text/plain");
+		if(paste_content !== "") {
+			selection = window.getSelection();
+			if(!selection.isCollapsed) {
+				selection.deleteFromDocument();
+			}
+			if(u.hc(this.tag, "ul|ol")) {
+				u.bug("must be handled – paste in list input");
+			}
+			if(u.hc(this.tag, "code")) {
+				paste_parts = [paste_content];
+			}
+			else {
+				paste_parts = paste_content.trim().split(/\n\r\n\r|\n\n|\r\r/g);
+			}
+			text_tags = [];
+			for(i = 0; i < paste_parts.length; i++) {
+				text_block = paste_parts[i].trim();
+				if(text_block) {
+					nodes = [];
+					text_parts = text_block.split(/\n\r|\n|\r/g);
+					for(j = 0; j < text_parts.length; j++) {
+						text = text_parts[j];
+						nodes.push(document.createTextNode(text));
+						if(j < text_parts.length - 1) {
+							nodes.push(document.createElement("br"));
+						}
+					}
+					text_tags.push(nodes);
+				}
+			}
+			current_tag = this.tag;
+			for(i = 0; i < text_tags.length; i++) {
+				nodes = text_tags[i];
+				for(j = 0; j < nodes.length; j++) {
+					node = nodes[j];
+					selection = window.getSelection();
+					range = selection.getRangeAt(0);
+					range.insertNode(node);
+					selection.addRange(range);
+					selection.collapseToEnd();
+				}
+				if(i < text_tags.length - 1) {
+					new_tag = this.field.addTextTag(this.field.text_allowed[0]);
+					u.ia(new_tag, current_tag);
+					current_tag = new_tag;
+					current_tag._input.focus();
+				}
+			}
+		}
+	}
+	field.findPreviousInput = function(iN) {
+		var prev = false;
+		if(u.hc(iN.tag, this.list_allowed.join("|"))) {
+			prev = u.ps(iN.li, {"exclude":".drag,.remove,.type"});
+		}
+		if(!prev) {
+			prev = u.ps(iN.tag);
+			if(prev && u.hc(prev, this.list_allowed.join("|"))) {
+				var items = u.qsa("div.li", prev);
+				prev = items[items.length-1];
+			}
+			else if(prev && u.hc(prev, "file")) {
+				if(!prev._variant) {
+					var prev_iN = this.findPreviousInput(prev._input);
+					if(prev_iN) {
+						prev = prev_iN.tag;
+					}
+					else {
+						prev = false;
+					}
+				}
+			}
+		}
+		if(!prev) {
+			prev = u.qs("div.tag", this);
+			if(u.hc(prev, this.list_allowed.join("|"))) {
+				prev = u.qs("div.li", prev);
+			}
+			else if(prev && u.hc(prev, "file")) {
+				if(!prev._variant) {
+					var prev_iN = this.findPreviousInput(prev._input);
+					if(prev_iN) {
+						prev = prev_iN.tag;
+					}
+					else {
+						prev = false;
+					}
+				}
+			}
+		}
+		return prev && prev._input != iN ? prev._input : false;
+	}
+	field.returnFocus = function(tag) {
+		if(u.hc(tag, this.text_allowed.join("|"))) {
+			tag._input.focus();
+		}
+		else if(u.hc(tag, "code")) {
+			tag._input.focus();
+		}
+		else if(u.hc(tag, this.list_allowed.join("|"))) {
+			var li = u.qs("div.li", tag);
+			li._input.focus();
+		}
+	}
+	field.hideSelectionOptions = function() {
+		if(this.selection_options && !this.selection_options.is_active) {
+			this.selection_options.parentNode.removeChild(this.selection_options);
+			this.selection_options = null;
+		}
+		this.update();
+	}
+	field.showSelectionOptions = function(node, selection) {
+		this.hideSelectionOptions();
+		this.hideDeleteOrEditOptions();
+		this.selection_options = u.ae(node.field._editor, "div", {"class":"selection_options"});
+		node.field._editor.insertBefore(this.selection_options, node.tag);
+		var ul = u.ae(this.selection_options, "ul", {"class":"options"});
+		this.selection_options._link = u.ae(ul, "li", {"class":"link", "html":"Link"});
+		this.selection_options._link.field = this;
+		this.selection_options._link.tag = node.tag;
+		this.selection_options._link.selection = selection;
+		u.ce(this.selection_options._link);
+		this.selection_options._link.inputStarted = function(event) {
+			u.e.kill(event);
+		}
+		this.selection_options._link.clicked = function(event) {
+			u.e.kill(event);
+			this.field.addAnchorTag(this.selection, this.tag);
+		}
+		this.selection_options._em = u.ae(ul, "li", {"class":"em", "html":"Italic"});
+		this.selection_options._em.field = this;
+		this.selection_options._em.tag = node.tag;
+		this.selection_options._em.selection = selection;
+		u.ce(this.selection_options._em);
+		this.selection_options._em.inputStarted = function(event) {
+			u.e.kill(event);
+		}
+		this.selection_options._em.clicked = function(event) {
+			u.e.kill(event);
+			this.field.addEmTag(this.selection, this.tag);
+		}
+		this.selection_options._strong = u.ae(ul, "li", {"class":"strong", "html":"Bold"});
+		this.selection_options._strong.field = this;
+		this.selection_options._strong.tag = node.tag;
+		this.selection_options._strong.selection = selection;
+		u.ce(this.selection_options._strong);
+		this.selection_options._strong.inputStarted = function(event) {
+			u.e.kill(event);
+		}
+		this.selection_options._strong.clicked = function(event) {
+			u.e.kill(event);
+			this.field.addStrongTag(this.selection, this.tag);
+		}
+		this.selection_options._sup = u.ae(ul, "li", {"class":"sup", "html":"Superscript"});
+		this.selection_options._sup.field = this;
+		this.selection_options._sup.tag = node.tag;
+		this.selection_options._sup.selection = selection;
+		u.ce(this.selection_options._sup);
+		this.selection_options._sup.inputStarted = function(event) {
+			u.e.kill(event);
+		}
+		this.selection_options._sup.clicked = function(event) {
+			u.e.kill(event);
+			this.field.addSupTag(this.selection, this.tag);
+		}
+		this.selection_options._span = u.ae(ul, "li", {"class":"span", "html":"CSS class"});
+		this.selection_options._span.field = this;
+		this.selection_options._span.tag = node.tag;
+		this.selection_options._span.selection = selection;
+		u.ce(this.selection_options._span);
+		this.selection_options._span.inputStarted = function(event) {
+			u.e.kill(event);
+		}
+		this.selection_options._span.clicked = function(event) {
+			u.e.kill(event);
+			this.field.addSpanTag(this.selection, this.tag);
+		}
+	}
+	field.hideDeleteOrEditOptions = function(node) {
+		var options = u.qsa(".delete_selection, .edit_selection");
+		var i, option;
+		for(i = 0; i < options.length; i++) {
+			option = options[i];
+			if(!node || option.node !== node) {
+				option.node.out();
+			}
+		}
+	}
+	field.deleteOrEditOption = function(node) {
+		node.over = function(event) {
+			this.field.hideDeleteOrEditOptions(this);
+			if(!this.bn_delete) {
+				this.bn_delete = u.ae(document.body, "span", {"class":"delete_selection", "html":"X"});
+				this.bn_delete.node = this;
+				this.bn_delete.over = function(event) {
+					u.t.resetTimer(this.node.t_out);
+				}
+				u.e.addEvent(this.bn_delete, "mouseover", this.bn_delete.over);
+				u.ce(this.bn_delete);
+				this.bn_delete.clicked = function() {
+					u.e.kill(event);
+					if(this.node.field.selection_options) {
+						this.node.field.selection_options.is_active = false;
+						this.node.field.hideSelectionOptions();
+					}
+					var fragment = document.createTextNode(this.node.innerHTML);
+					this.node.parentNode.replaceChild(fragment, this.node);
+					this.node.out();
+					this.node.field.update();
+				}
+				u.as(this.bn_delete, "top", (u.absY(this)-5)+"px");
+				u.as(this.bn_delete, "left", (u.absX(this)-5)+"px");
+			}
+			if(this.nodeName.toLowerCase() == "a" || this.nodeName.toLowerCase() == "span" && !this.bn_edit) {
+				this.bn_edit = u.ae(document.body, "span", {"class":"edit_selection", "html":"?"});
+				this.bn_edit.node = this;
+				this.bn_edit.over = function(event) {
+					u.t.resetTimer(this.node.t_out);
+				}
+				u.e.addEvent(this.bn_edit, "mouseover", this.bn_edit.over);
+				u.ce(this.bn_edit);
+				this.bn_edit.clicked = function() {
+					u.e.kill(event);
+					if(this.node.nodeName.toLowerCase() == "span") {
+						this.node.field.editSpanTag(this.node);
+					}
+					else if(this.node.nodeName.toLowerCase() == "a") {
+						this.node.field.editAnchorTag(this.node);
+					}
+				}
+				u.as(this.bn_edit, "top", (u.absY(this)-5)+"px");
+				u.as(this.bn_edit, "left", (u.absX(this)-23)+"px");
+			}
+		}
+		node.out = function(event) {
+			if(this.bn_delete) {
+				document.body.removeChild(this.bn_delete);
+				delete this.bn_delete;
+			}
+			if(this.bn_edit) {
+				document.body.removeChild(this.bn_edit);
+				delete this.bn_edit;
+			}
+		}
+		u.e.hover(node, {"delay":500});
+	}
+	field.activateInlineFormatting = function(input, tag) {
+		var i, node;
+		var inline_tags = u.qsa("a,strong,em,span", input);
+		for(i = 0; i < inline_tags.length; i++) {
+			node = inline_tags[i];
+			node.field = input.field;
+			node.tag = tag;
+			if(!u.text(node)) {
+				node.parentNode.removeChild(node);
+			}
+			else {
+				this.deleteOrEditOption(node);
+			}
+		}
+	}
+	field.addAnchorTag = function(selection, tag) {
+		var range, a, url, target;
+		var a = document.createElement("a");
+		a.field = this;
+		a.tag = tag;
+		range = selection.getRangeAt(0);
+		try {
+			range.surroundContents(a);
+			selection.removeAllRanges();
+			this.editAnchorTag(a);
+			this.deleteOrEditOption(a);
+		}
+		catch(exception) {
+			u.bug("exception", exception)
+			selection.removeAllRanges();
+			this.hideSelectionOptions();
+			alert("You cannot cross the boundaries of another selection. Yet.");
+		}
+	}
+	field.anchorOptions = function(a) {
+		var form = u.f.addForm(this.selection_options, {"class":"labelstyle:inject"});
+		var fieldset = u.f.addFieldset(form);
+		var input_url = u.f.addField(fieldset, {
+			"label":"url", 
+			"name":"url",
+			"required": true,
+			"value":a.href.replace(location.protocol + "//" + document.domain, ""), 
+			"pattern":"(http[s]?:\\/\\/|mailto:|tel:)[^$]+|\/[^$]*",
+			"error_message":"Must start with /, http:// or https://, mailto: or tel:"
+		});
+		var input_target = u.f.addField(fieldset, {
+			"type":"checkbox", 
+			"label":"Open in new window?", 
+			"checked":(a.target ? "checked" : false), 
+			"name":"target", 
+			"error_message":""
+		});
+		var bn_save = u.f.addAction(form, {
+			"value":"Save link", 
+			"class":"button"
+		});
+		u.f.init(form);
+		form.inputs["url"].focus();
+		form.a = a;
+		form.field = this;
+		form.submitted = function() {
+			if(this.inputs["url"].val()) {
+				this.a.href = this.inputs["url"].val();
+			}
+			else {
+				this.a.removeAttribute("href");
+			}
+			if(this.inputs["target"].val()) {
+				this.a.target = "_blank";
+			}
+			else {
+				this.a.removeAttribute("target");
+			}
+			this.field.selection_options.is_active = false;
+			this.field.hideSelectionOptions();
+		}
+	}
+	field.editAnchorTag = function(a) {
+		this.hideSelectionOptions();
+		this.hideDeleteOrEditOptions();
+		this.selection_options = u.ae(a.field._editor, "div", {"class":"selection_options"});
+		a.field._editor.insertBefore(this.selection_options, a.tag);
+		this.selection_options.is_active = false;
+		this.anchorOptions(a);
+	}
+	field.addStrongTag = function(selection, tag) {
+		var range, a, url, target;
+		var strong = document.createElement("strong");
+		strong.field = this;
+		strong.tag = tag;
+		range = selection.getRangeAt(0);
+		try {
+			range.surroundContents(strong);
+			selection.removeAllRanges();
+			this.deleteOrEditOption(strong);
+			this.hideSelectionOptions();
+		}
+		catch(exception) {
+			selection.removeAllRanges();
+			this.hideSelectionOptions();
+			alert("You cannot cross the boundaries of another selection. Yet.");
+		}
+	}
+	field.addEmTag = function(selection, tag) {
+		var range, a, url, target;
+		var em = document.createElement("em");
+		em.field = this;
+		em.tag = tag;
+		range = selection.getRangeAt(0);
+		try {
+			range.surroundContents(em);
+			selection.removeAllRanges();
+			this.deleteOrEditOption(em);
+			this.hideSelectionOptions();
+		}
+		catch(exception) {
+			selection.removeAllRanges();
+			this.hideSelectionOptions();
+			alert("You cannot cross the boundaries of another selection. Yet.");
+		}
+	}
+	field.addSupTag = function(selection, tag) {
+		var range, a, url, target;
+		var sup = document.createElement("sup");
+		sup.field = this;
+		sup.tag = tag;
+		range = selection.getRangeAt(0);
+		try {
+			range.surroundContents(sup);
+			selection.removeAllRanges();
+			this.deleteOrEditOption(sup);
+			this.hideSelectionOptions();
+		}
+		catch(exception) {
+			selection.removeAllRanges();
+			this.hideSelectionOptions();
+			alert("You cannot cross the boundaries of another selection. Yet.");
+		}
+	}
+	field.addSpanTag = function(selection, tag) {
+		var span = document.createElement("span");
+		span.field = this;
+		span.tag = tag;
+		var range = selection.getRangeAt(0);
+		try {
+			range.surroundContents(span);
+			selection.removeAllRanges();
+			this.editSpanTag(span);
+			this.deleteOrEditOption(span);
+		}
+		catch(exception) {
+			selection.removeAllRanges();
+			this.hideSelectionOptions();
+			alert("You cannot cross the boundaries of another selection. Yet.");
+		}
+	}
+	field.editSpanTag = function(span) {
+		this.hideSelectionOptions();
+		this.hideDeleteOrEditOptions();
+		this.selection_options = u.ae(span.field._editor, "div", {"class":"selection_options"});
+		span.field._editor.insertBefore(this.selection_options, span.tag);
+		this.spanOptions(span);
+	}
+	field.spanOptions = function(span) {
+		var form = u.f.addForm(this.selection_options, {"class":"labelstyle:inject"});
+		var fieldset = u.f.addFieldset(form);
+		var input_classname = u.f.addField(fieldset, {"label":"CSS class", "name":"classname", "value":span.className, "error_message":""});
+		var bn_save = u.f.addAction(form, {"value":"Save class", "class":"button"});
+		u.f.init(form);
+		form.span = span;
+		form.field = this;
+		form.submitted = function() {
+			if(this.inputs["classname"].val()) {
+				this.span.className = this.inputs["classname"].val();
+			}
+			else {
+				this.span.removeAttribute("class");
+			}
+			this.field.selection_options.is_active = false;
+			this.field.hideSelectionOptions();
+		}
+	}
+	field._viewer.innerHTML = field.input.value;
+	u.sortable(field._editor, {"draggables":"div.tag", "targets":"div.editor"});
+	var value, node, i, tag, j, lis, li;
+	var nodes = u.cn(field._viewer, {"exclude":"br"});
+	if(nodes.length) {
+		for(i = 0; i < field._viewer.childNodes.length; i++) {
+			node = field._viewer.childNodes[i];
+			if(node.nodeName == "#text") {
+				if(node.nodeValue.trim()) {
+					var fragments = node.nodeValue.trim().split(/\n\r\n\r|\n\n|\r\r/g);
+					if(fragments) {
+						for(index in fragments) {
+							value = fragments[index].replace(/\n\r|\n|\r/g, "<br>");
+							tag = field.addTextTag("p", fragments[index]);
+							field.activateInlineFormatting(tag._input, tag);
+						}
+					}
+					else {
+						value = node.nodeValue; 
+						tag = field.addTextTag("p", value);
+						field.activateInlineFormatting(tag._input, tag);
+					}
+				}
+			}
+			else if(field.text_allowed && node.nodeName.toLowerCase().match(field.text_allowed.join("|"))) {
+				value = node.innerHTML.trim().replace(/(<br>|<br \/>)$/, "").replace(/\n\r|\n|\r/g, "<br>"); 
+				tag = field.addTextTag(node.nodeName.toLowerCase(), value, node.className);
+				field.activateInlineFormatting(tag._input, tag);
+			}
+			else if(node.nodeName.toLowerCase() == "code") {
+				// 
+				tag = field.addCodeTag(node.nodeName.toLowerCase(), node.innerHTML, node.className);
+				field.activateInlineFormatting(tag._input, tag);
+			}
+			else if(field.list_allowed.length && node.nodeName.toLowerCase().match(field.list_allowed.join("|"))) {
+				var lis = u.qsa("li", node);
+				value = lis[0].innerHTML.trim().replace(/(<br>|<br \/>)$/, "").replace(/\n\r|\n|\r/g, "<br>");
+				tag = field.addListTag(node.nodeName.toLowerCase(), value, node.className);
+				var li = u.qs("div.li", tag);
+				field.activateInlineFormatting(li._input, li);
+				if(lis.length > 1) {
+					for(j = 1; j < lis.length; j++) {
+						li = lis[j];
+						value = li.innerHTML.trim().replace(/(<br>|<br \/>)$/, "").replace(/\n\r|\n|\r/g, "<br>");
+						li = field.addListItem(tag, value);
+						field.activateInlineFormatting(li._input, li);
+					}
+				}
+			}
+			else if(u.hc(node, "youtube|vimeo")) {
+				field.addExternalVideoTag(node.className.match(field.ext_video_allowed.join("|")[0]), node);
+			}
+			else if(u.hc(node, "file")) {
+				field.addFileTag(node);
+			}
+			else if(u.hc(node, "media")) {
+				field.addMediaTag(node);
+			}
+			else if(node.nodeName.toLowerCase().match(/dl|ul|ol/)) {
+				var children = u.cn(node);
+				for(j = 0; j < children.length; j++) {
+					child = children[j];
+					value = child.innerHTML.replace(/\n\r|\n|\r/g, "");
+					tag = field.addTextTag(field.text_allowed[0], value);
+					field.activateInlineFormatting(tag._input, tag);
+				}
+			}
+			else if(node.nodeName.toLowerCase().match(/h1|h2|h3|h4|h5|code/)) {
+				value = node.innerHTML.replace(/\n\r|\n|\r/g, "");
+				tag = field.addTextTag(field.text_allowed[0], value);
+				field.activateInlineFormatting(tag._input, tag);
+			}
+			else {
+				alert("HTML contains unautorized node:" + node.nodeName + "\nIt has been altered to conform with SEO and design.");
+			}
+		}
+	}
+	else {
+		value = field._viewer.innerHTML.replace(/\<br[\/]?\>/g, "\n");
+		tag = field.addTextTag(field.text_allowed[0], value);
+		field.activateInlineFormatting(tag._input, tag);
+	}
+	field._editor.updateTargets();
+	field._editor.updateDraggables();
+	field._editor.detectSortableLayout();
+	field.updateViewer();
+	field.updateContent();
+	field.addRawHTMLButton();
+}
+
+
 /*u-form-labelstyle-inject.js*/
 Util.Form.customLabelStyle["inject"] = function(iN) {
 	if(!iN.type || !iN.type.match(/file|radio|checkbox/)) {
@@ -3551,7 +5166,7 @@ Util.Form.customLabelStyle["inject"] = function(iN) {
 		u.e.addEvent(iN, "focus", u.f._changed_state);
 		u.e.addEvent(iN, "blur", u.f._changed_state);
 		u.e.addEvent(iN, "change", u.f._changed_state);
-		if(iN.type.match(/number|integer|password|datetime|date/)) {
+		if(iN.type.match(/number|integer|password/)) {
 			iN.pseudolabel = u.ae(iN.parentNode, "span", {"class":"pseudolabel", "html":iN.default_value});
 			iN.pseudolabel.iN = iN;
 			u.as(iN.pseudolabel, "top", iN.offsetTop+"px");
@@ -3574,7 +5189,7 @@ u.f.updateDefaultState = function(iN) {
 		if(iN.field.virtual_input) {
 			u.rc(iN.field.virtual_input, "default");
 		}
-		if(iN.val() === "") {
+		if(iN.val() === "" && !iN.type.match(/date|datetime/)) {
 			iN.val("");
 		}
 	}
@@ -3584,7 +5199,9 @@ u.f.updateDefaultState = function(iN) {
 			if(obj(iN.field.virtual_input)) {
 				u.ac(iN.field.virtual_input, "default");
 			}
-			iN.val(iN.default_value);
+			if(!iN.type.match(/date|datetime/)) {
+				iN.val(iN.default_value);
+			}
 		}
 	}
 }
@@ -4235,7 +5852,7 @@ u.overlay = function (_options) {
 			this.resized(event);
 		}
 	}
-	u.e.addWindowEvent(overlay, "resize", "_resized");
+	u.e.addWindowEvent(overlay, "resize", overlay._resized);
 	overlay.div_header = u.ae(overlay, "div", {class:"header"});
 	if(title) {
 		overlay.div_header.h2 = u.ae(overlay.div_header, "h2", {html: title});
@@ -4277,7 +5894,7 @@ u.overlay = function (_options) {
 	}
 	overlay._resized();
 	u.ass(overlay, {
-		"transition": "all .4s ease-in-out .1s",
+		"transition": "opacity .4s ease-in-out .1s",
 		"opacity": 1,
 	});
 	return overlay;
@@ -4351,7 +5968,7 @@ u._queueLoader = function() {
 				u._preloader_processes++;
 				u.rc(next, "waiting");
 				u.ac(next, "loading");
-				if(next._file.match(/png|jpg|gif|svg/)) {
+				if(next._file.match(/png|jpg|gif|svg|avif|webp/)) {
 					next.loaded = function(event) {
 						this.image = event.target;
 						this._image = this.image;
@@ -4809,6 +6426,536 @@ u.scrollTo = function(node, _options) {
 		node._scrollTo();
 	}
 }
+
+/*u-sortable.js*/
+u.sortable = function(scope, _options) {
+	scope._callback_picked = "picked";
+	scope._callback_moved = "moved";
+	scope._callback_dropped = "dropped";
+	scope._draggable_selector;
+	scope._target_selector;
+	scope._layout;
+	scope._allow_clickpick = false;
+	scope._allow_nesting = false;
+	scope._sorting_disabled = false;
+	scope._distance_to_pick = 2;
+	if(obj(_options)) {
+		var _argument;
+		for(_argument in _options) {
+			switch(_argument) {
+				case "picked"				: scope._callback_picked		= _options[_argument]; break;
+				case "moved"				: scope._callback_moved			= _options[_argument]; break;
+				case "dropped"				: scope._callback_dropped		= _options[_argument]; break;
+				case "draggables"			: scope._draggable_selector		= _options[_argument]; break;
+				case "targets"				: scope._target_selector		= _options[_argument]; break;
+				case "layout"				: scope._layout					= _options[_argument]; break;
+				case "allow_clickpick"		: scope._allow_clickpick		= _options[_argument]; break;
+				case "allow_nesting"		: scope._allow_nesting			= _options[_argument]; break;
+				case "sorting_disabled"		: scope._sorting_disabled		= _options[_argument]; break;
+				case "distance_to_pick"		: scope._distance_to_pick		= _options[_argument]; break;
+			}
+		}
+	}
+	if(!fun(scope.resetSortableEvents)) {
+		scope._sortableInputStart = function(event) {
+			if(!this.draggable_node.scope._sorting_disabled) {
+				this.draggable_node._start_event_x = u.eventX(event);
+				this.draggable_node._start_event_y = u.eventY(event);
+				this.draggable_node.current_xps = 0;
+				this.draggable_node.current_yps = 0;
+				this.draggable_node._move_timestamp = event.timeStamp;
+				this.draggable_node._move_last_x = 0;
+				this.draggable_node._move_last_y = 0;
+				u.e.addMoveEvent(this.draggable_node, this.draggable_node.scope._sortablePick);
+				u.e.addEndEvent(this.draggable_node, this.draggable_node.scope._cancelSortablePick);
+				if(event.type.match(/mouse/)) {
+		 			u.e.addOutEvent(this.draggable_node.drag, this.draggable_node.scope._sortableOut);
+				}
+				this.draggable_node.scope._org_css_user_select = document.body.style.userSelect;
+				u.ass(document.body, {
+					"user-select": "none"
+				});
+			}
+		}
+		scope._cancelSortablePick = function(event) {
+			if(!this.scope._allow_clickpick) {
+				this.scope.resetSortableEvents(this);
+				u.ass(document.body, {
+					"user-select": this.scope._org_css_user_select
+				});
+			}
+		}
+		scope._sortableOut = function(event) {
+			var edoi = this.draggable_node._event_drop_out_id = u.randomString();
+			document["_DroppedOutNode" + edoi] = this.draggable_node;
+			eval('document["_DroppedOutMove' + edoi + '"] = function(event) {document["_DroppedOutNode' + edoi + '"].scope._sortablePick.bind(document["_DroppedOutNode' + edoi + '"])(event);}');
+			u.e.addEvent(document, "mousemove", document["_DroppedOutMove" + edoi]);
+			eval('document["_DroppedOutOver' + edoi + '"] = function(event) {document["_DroppedOutNode' + edoi + '"].scope.resetSortableOutEvents(document["_DroppedOutNode' + edoi + '"]);}');
+			u.e.addEvent(this.draggable_node, "mouseover", document["_DroppedOutOver" + edoi]);
+			eval('document["_DroppedOutEnd' + edoi + '"] = function(event) {u.bug("### up save");document["_DroppedOutNode' + edoi + '"].scope._cancelSortablePick.bind(document["_DroppedOutNode' + edoi + '"])(event);}');
+			u.e.addEvent(document, "mouseup", document["_DroppedOutEnd" + edoi]);
+		}
+		scope._sortablePick = function(event) {
+			var event_x = u.eventX(event);
+			var event_y = u.eventY(event);
+			this.current_x = event_x - this._start_event_x;
+			this.current_y = event_y - this._start_event_y;
+			var init_distance_x = Math.abs(this.current_x);
+			var init_distance_y = Math.abs(this.current_y);
+			if((init_distance_x > this.scope._distance_to_pick || init_distance_y > this.scope._distance_to_pick)) {
+				this.scope.resetNestedSortableEvents(this);
+				u.e.kill(event);
+				this.scope._dragged_node = this;
+				this._mouse_ox = event_x - u.absX(this);
+				this._mouse_oy = event_y - u.absY(this);
+				this.current_xps = Math.round(((this.current_x - this._move_last_x) / (event.timeStamp - this._move_timestamp)) * 1000);
+				this.current_yps = Math.round(((this.current_y - this._move_last_y) / (event.timeStamp - this._move_timestamp)) * 1000);
+				this._move_timestamp = event.timeStamp;
+				this._move_last_x = this.current_x;
+				this._move_last_y = this.current_y;
+				this.scope._shadow_node = u.ae(this.parentNode, this.cloneNode(true));
+				this.parentNode.insertBefore(this.scope._shadow_node, this);
+				u.ac(this.scope._shadow_node, "shadow");
+				this.scope._recalculateRelativeShadowOffset();
+				var _start_width = u.gcs(this, "width");
+				var _z_index;
+				if(this._z_index != "auto") {
+					_z_index = this._z_index + 1;
+				}
+				else {
+					_z_index = 55;
+				}
+				u.ass(this.scope._shadow_node, {
+					width: _start_width,
+					position: "absolute",
+					left: ((event_x - this.scope._shadow_node._rel_ox) - this._mouse_ox) + "px",
+					top: ((event_y - this.scope._shadow_node.rel_oy) - this._mouse_oy) + "px",
+					"z-index": _z_index,
+				});
+				u.ac(this, "dragged");
+				this._event_move_id = u.e.addWindowMoveEvent(this, this.scope._sortableDrag);
+				this._event_end_id = u.e.addWindowEndEvent(this, this.scope._sortableDrop);
+				if(fun(this.scope[this.scope._callback_picked])) {
+					this.scope[this.scope._callback_picked](this);
+				}
+			}
+		}
+		scope._sortableDrag = function(event) {
+			var i, node;
+			var event_x = u.eventX(event);
+			var event_y = u.eventY(event);
+			var d_left = event_x - this._mouse_ox;
+			var d_top = event_y - this._mouse_oy;
+			this.current_x = event_x - this._start_event_x;
+			this.current_y = event_y - this._start_event_y;
+			this.current_xps = Math.round(((this.current_x - this._move_last_x) / (event.timeStamp - this._move_timestamp)) * 1000);
+			this.current_yps = Math.round(((this.current_y - this._move_last_y) / (event.timeStamp - this._move_timestamp)) * 1000);
+			this._move_timestamp = event.timeStamp;
+			this._move_last_x = this.current_x;
+			this._move_last_y = this.current_y;
+			// 	
+			// 		
+			// 		
+			// 
+			// 	
+			// 		
+			// 		
+			// 
+			this.scope._detectAndInject(event_x, event_y);
+			u.ass(this.scope._shadow_node, {
+				"position": "absolute",
+				"left": (d_left - this.scope._shadow_node._rel_ox)+"px",
+				"top": (d_top - this.scope._shadow_node._rel_oy)+"px",
+				"bottom": "auto"
+			});
+			if(fun(this.scope[this.scope._callback_moved])) {
+				this.scope[this.scope._callback_moved](this);
+			}
+		}
+		scope._sortableDrop = function(event) {
+			u.e.kill(event);
+			this.scope.resetSortableEvents(this);
+			this.scope._shadow_node.parentNode.removeChild(this.scope._shadow_node);
+			delete this.scope._shadow_node;
+			u.rc(this, "dragged");
+			this.scope._dragged_node = false;
+			this.current_xps = 0;
+			this.current_yps = 0;
+			this._move_timestamp = event.timeStamp;
+			this._move_last_x = 0;
+			this._move_last_y = 0;
+			this.scope.updateDraggables();
+			u.ass(document.body, {
+				"user-select": this.scope._org_css_user_select
+			});
+			if(fun(this.scope[this.scope._callback_dropped])) {
+				this.scope[this.scope._callback_dropped](this);
+			}
+		}
+		scope._recalculateRelativeShadowOffset = function() {
+			if(this._shadow_node) {
+				this._shadow_node._rel_ox = u.absX(this._shadow_node) - u.relX(this._shadow_node);
+				this._shadow_node._rel_oy = u.absY(this._shadow_node) - u.relY(this._shadow_node);
+			}
+		}
+		scope._detectAndInject = function(event_x, event_y) {
+			for(i = this.draggable_nodes.length-1; i >= 0; i--) {
+				node = this.draggable_nodes[i];
+				if(this.target_nodes.indexOf(node.parentNode) !== -1) {
+					if(node.parentNode._layout == "multiline") {
+						var o_left = u.absX(node);
+						var o_top = u.absY(node);
+						var o_width = node.offsetWidth;
+						var o_height = node.offsetHeight;
+					 	if(event_x > o_left && event_x < o_left + o_width && event_y > o_top && event_y < o_top + o_height) {
+							if(node !== this._dragged_node) {
+								if(event_x < o_left + o_width/2) {
+									node.parentNode.insertBefore(this._dragged_node, node);
+								}
+								else {
+									var next = u.ns(node, {exclude: ".target,.dragged"});
+									if(next) {
+										node.parentNode.insertBefore(this._dragged_node, next);
+									}
+									else {
+										node.parentNode.appendChild(this._dragged_node);
+									}
+								}
+								this._recalculateRelativeShadowOffset();
+								break;
+							}
+						}
+					}
+					else if(node.parentNode._layout == "horizontal") {
+						var o_left = u.absX(node);
+						var o_width = node.offsetWidth;
+					 	if(event_x > o_left && event_x < o_left + o_width) {
+							if(node !== this._dragged_node && !u.pn(node, {include:".dragged"})) {
+								if(event_x < o_left + o_width/2) {
+									node.parentNode.insertBefore(this._dragged_node, node);
+								}
+								else {
+									var next = u.ns(node, {exclude: ".target,.dragged"});
+									if(next) {
+										node.parentNode.insertBefore(this._dragged_node, next);
+									}
+									else {
+										node.parentNode.appendChild(this._dragged_node);
+									}
+								}
+							}
+							this._recalculateRelativeShadowOffset();
+							break;
+						}
+					}
+					else {
+						var o_top, o_height;
+						if(this._allow_nesting) {
+							o_top = u.absY(node) - node._extra_height_top;
+							o_height = node._top_node_height + node._extra_height_top + node._extra_height_bottom;
+						}
+						else {
+							o_top = u.absY(node);
+							o_height = node._top_node_height;
+						}
+					 	if(event_y >= o_top && event_y <= o_top + o_height) {
+							if(node !== this._dragged_node && !u.pn(node, {include:".dragged"})) {
+								if(this._allow_nesting) {
+									if(event_y < o_top + (o_height / 3) && (!node.sub_target || !node.sub_target.childNodes.length || this._dragged_node.current_yps < 0)) {
+										node.parentNode.insertBefore(this._dragged_node, node);
+									}
+									else if(event_y > o_top + ((o_height / 3) * 2)) {
+										var next = u.ns(node, {exclude:".target,.dragged"});
+										if(next) {
+											node.parentNode.insertBefore(this._dragged_node, next);
+										}
+										else {
+											node.parentNode.appendChild(this._dragged_node);
+										}
+									}
+									else {
+										if(!node.sub_target) {
+											node.sub_target = u.ae(node, "ul", {"class":this._target_selector.replace(/([a-z]*.?)/, "").replace(/\./g, " ")});
+											this.target_nodes.push(node.sub_target);
+										}
+										node.sub_target.insertBefore(this._dragged_node, node.sub_target.firstChild);
+									}
+								}
+								else {
+									if(event_y < o_top + o_height/2) {
+										node.parentNode.insertBefore(this._dragged_node, node);
+									}
+									else {
+										var next = u.ns(node);
+										if(next) {
+											node.parentNode.insertBefore(this._dragged_node, next);
+										}
+										else {
+											node.parentNode.appendChild(this._dragged_node);
+										}
+									}
+								}
+								this._recalculateRelativeShadowOffset();
+								break;
+							}
+							else {
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		scope.resetSortableEvents = function(node) {
+			u.e.removeMoveEvent(node, this._sortablePick);
+			u.e.removeEndEvent(node, this._cancelSortablePick);
+			u.e.removeOverEvent(node, this._sortableOver);
+			if(node._event_move_id) {
+				u.e.removeWindowMoveEvent(node._event_move_id);
+				delete node._event_move_id;
+			}
+			if(node._event_end_id) {
+				u.e.removeWindowEndEvent(node._event_end_id);
+				delete node._event_end_id;
+			}
+			u.e.removeOutEvent(node.drag, this._sortableOut);
+			this.resetSortableOutEvents(node);
+		}
+		scope.resetSortableOutEvents = function(node) {
+			if(node._event_drop_out_id) {
+				u.e.removeEvent(document, "mousemove", document["_DroppedOutMove" + node._event_drop_out_id]);
+				u.e.removeEvent(node, "mouseover", document["_DroppedOutOver" + node._event_drop_out_id]);
+				u.e.removeEvent(document, "mouseup", document["_DroppedOutEnd" + node._event_drop_out_id]);
+				delete document["_DroppedOutMove" + node._event_drop_out_id];
+				delete document["_DroppedOutOver" + node._event_drop_out_id];
+				delete document["_DroppedOutEnd" + node._event_drop_out_id];
+				delete document["_DroppedOutNode" + node._event_drop_out_id];
+				delete node._event_drop_out_id;
+			}
+		}
+		scope.resetNestedSortableEvents = function(node) {
+			while(node && node != this) {
+				if(node.drag) {
+					this.resetSortableEvents(node);
+				}
+				node = node.parentNode;
+			}
+		}
+		scope.getNodeOrder = function(_options) {
+			var class_var = "item_id";
+			if(obj(_options)) {
+				var _argument;
+				for(_argument in _options) {
+					switch(_argument) {
+						case "class_var"			: class_var 		= _options[_argument]; break;
+					}
+				}
+			}
+			this.updateDraggables();
+			var order = [];
+			var i, node, id;
+			for(i = 0; i < this.draggable_nodes.length; i++) {
+				node = this.draggable_nodes[i];
+				id = u.cv(node, class_var);
+				if(id) {
+					order.push(id);
+				}
+				else {
+					order.push(node);
+				}
+			}
+			return order;
+		}
+		scope.getNodeRelations = function(_options) {
+			var class_var = "item_id";
+			if(obj(_options)) {
+				var _argument;
+				for(_argument in _options) {
+					switch(_argument) {
+						case "class_var"			: class_var 		= _options[_argument]; break;
+					}
+				}
+			}
+			this.updateDraggables();
+			var structure = [];
+			var i, node, id, relation, position;
+			for(i = 0; i < this.draggable_nodes.length; i++) {
+				node = this.draggable_nodes[i];
+				id = u.cv(node, class_var);
+				relation = this.getNodeRelation(node);
+				position = this.getNodePositionInList(node);
+				if(id) {
+					structure.push({"id": id, "relation": relation, "position": position});
+				}
+				else {
+					structure.push({"node": node, "relation": relation, "position": position});
+				}
+			}
+			return structure;
+		}
+		scope.getNodePositionInList = function(node) {
+			var pos = 1;
+			var test_node = node;
+			while(u.ps(test_node)) {
+				test_node = u.ps(test_node);
+				pos++;
+			}
+			return pos;
+		}
+		scope.getNodeRelation = function(node) {
+			var relation = 0;
+			var relation_node = u.pn(node, {"include":(this._draggable_selector ? this._draggable_selector : "li")});
+			if(u.inNodeList(relation_node, this.draggable_nodes)) {
+				var id = u.cv(relation_node, "item_id");
+				if(id) {
+					relation = id;
+				}
+				else {
+					relation = relation_node;
+				}
+			}
+			return relation;
+		}
+		scope.detectSortableLayout = function() {
+			var i, target;
+			for(i = 0; i < this.target_nodes.length; i++) {
+				target = this.target_nodes[i];
+					if((target._n_top || target._n_bottom) && (u.cn(target, {include: this._draggable_selector}).length > 1 || target._n_display != "block")) {
+						target._layout = "horizontal";
+					}
+					else if(target._n_left || target._n_right) {
+						target._layout = "vertical";
+					}
+					else {
+						target._layout = "multiline";
+					}
+			}
+		}
+		scope.updateDraggables = function() {
+			var i, target, draggable_node;
+			if(this.draggable_nodes && this.draggable_nodes.length) {
+				for(i = 0; i < this.draggable_nodes.length; i++) {
+					draggable_node = this.draggable_nodes[i];
+					if(draggable_node && draggable_node.drag) {
+						this.resetSortableEvents(draggable_node);
+						u.e.removeStartEvent(draggable_node.drag, this._sortableInputStart);
+						u.e.removeOverEvent(draggable_node, this._sortableOver);
+						delete draggable_node.drag;
+						delete draggable_node.sub_target;
+						delete draggable_node.draggable_node;
+					}
+				}
+			}
+			delete scope.draggable_nodes;
+			if(this._draggable_selector) {
+				this.draggable_nodes = Array.prototype.slice.call(u.qsa(this._draggable_selector, this));
+			}
+			else {
+				if(this.nodeName.toLowerCase() === "ul") {
+					this.draggable_nodes = u.cn(this, {include:"li"});
+				}
+				else {
+					this.draggable_nodes = [];
+					for(i = 0; i < this.target_nodes.length; i++) {
+						target = this.target_nodes[i];
+						this.draggable_nodes = this.draggable_nodes.concat(u.cn(target, {include:"li"}));
+					}
+				}
+			}
+			for(i = 0; i < this.draggable_nodes.length; i++) {
+				draggable_node = this.draggable_nodes[i];
+				draggable_node.scope = this;
+				draggable_node.drag = u.qs(".drag", draggable_node);
+				if(!draggable_node.drag) {
+					draggable_node.drag = draggable_node;
+				}
+				draggable_node.drag.draggable_node = draggable_node;
+				draggable_node.draggable_node = draggable_node;
+				var _top = draggable_node.offsetTop;
+				var _height = draggable_node.offsetHeight;
+				var _left = draggable_node.offsetLeft;
+				var _width = draggable_node.offsetWidth;
+				var _display = u.gcs(draggable_node, "display");
+				draggable_node.parentNode._n_top = draggable_node.parentNode._n_top === undefined ? _top : (draggable_node.parentNode._n_top == _top ? draggable_node.parentNode._n_top : false);
+				draggable_node.parentNode._n_left = draggable_node.parentNode._n_left === undefined ? _left : (draggable_node.parentNode._n_left == _left ? draggable_node.parentNode._n_left : false);
+				draggable_node.parentNode._n_bottom = draggable_node.parentNode._n_bottom === undefined ? _top + _height : (draggable_node.parentNode._n_bottom == _top + _height ? draggable_node.parentNode._n_bottom : false);
+				draggable_node.parentNode._n_right = draggable_node.parentNode._n_right === undefined ? _left + _width : (draggable_node.parentNode._n_right == _left + _width ? draggable_node.parentNode._n_right : false);
+				draggable_node.parentNode._n_display = draggable_node.parentNode._n_display === undefined ? _display : (draggable_node.parentNode._n_display == _display ? draggable_node.parentNode._n_display : false);
+				draggable_node._z_index = u.gcs(draggable_node, "zIndex");
+				if(this._allow_nesting) {
+					draggable_node.sub_target = u.qs(this._target_selector, draggable_node);
+					if(draggable_node.sub_target) {
+						var _position = u.gcs(draggable_node, "position");
+						var node_height = _height - draggable_node.sub_target.offsetHeight;
+						if(_position !== "static") {
+							draggable_node._top_node_height = node_height - (node_height - draggable_node.sub_target.offsetTop);
+						}
+						else {
+							draggable_node._top_node_height = node_height - (node_height - (draggable_node.sub_target.offsetTop - _top));
+						}
+					}
+					else {
+						draggable_node._top_node_height = _height;
+					}
+					var _margin_top = parseInt(u.gcs(draggable_node, "margin-top"));
+					var _margin_bottom = parseInt(u.gcs(draggable_node, "margin-bottom"));
+					var _box_sizing = u.gcs(draggable_node, "box-sizing");
+					if(_box_sizing == "content-box") {
+						var _border_top_width = parseInt(u.gcs(draggable_node, "border-top-width"));
+						var _border_bottom_width = parseInt(u.gcs(draggable_node, "border-bottom-width"));
+						draggable_node._extra_height_top = _margin_top + _border_top_width;
+						draggable_node._extra_height_bottom = _margin_bottom + _border_bottom_width;
+					}
+					else {
+						draggable_node._extra_height_top = _start_margin_top;
+						draggable_node._extra_height_bottom = _start_margin_bottom;
+					}
+				}
+				else {
+					draggable_node._top_node_height = _height;
+				}
+				u.e.addStartEvent(draggable_node.drag, this._sortableInputStart);
+			}
+		}
+		scope.updateTargets = function() {
+			if(this._target_selector) {
+				this.target_nodes = Array.prototype.slice.call(u.qsa(this._target_selector, this));
+				if(u.elementMatches(this, this._target_selector)) {
+					this.target_nodes.unshift(this);
+				}
+			}
+			else {
+				if(this.nodeName.toLowerCase() === "ul") {
+					this.target_nodes = [this];
+				}
+				else {
+					var i, target, target_nodes, parent_ul;
+					this.target_nodes = [];
+					target_nodes = u.qsa("ul", this);
+					for(i = 0; i < target_nodes.length; i++) {
+						target = target_nodes[i];
+						if(this._allow_nesting) {
+							this.target_nodes.push(target);
+						}
+						else {
+							parent_ul = u.pn(target, {include:"ul"});
+							if(!parent_ul || !u.contains(this, parent_ul)) {
+								this.target_nodes.push(target);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	scope.updateTargets();
+	scope.updateDraggables();
+	scope.detectSortableLayout();
+	if(!scope.draggable_nodes.length || !scope.target_nodes.length) {
+		return;
+	}
+}
+
 
 /*u-string.js*/
 Util.cutString = function(string, length) {

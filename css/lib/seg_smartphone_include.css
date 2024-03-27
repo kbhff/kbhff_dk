@@ -1,0 +1,10 @@
+@import url("desktop/s-page.css");
+@import url("s-fonts.css");
+@import url("desktop/s-article.css");
+@import url("desktop/s-form.css");
+@import url("smartphone/s-header.css");
+@import url("smartphone/s-navigation.css");
+@import url("desktop/s-content.css");
+@import url("smartphone/s-content-overwrites.css");
+@import url("desktop/s-footer.css");
+@import url("smartphone/s-footer-overwrites.css");

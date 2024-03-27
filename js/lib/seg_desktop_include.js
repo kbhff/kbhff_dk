@@ -6,5 +6,5 @@ document.write('<script type="text/javascript" src="/js/lib/desktop/i-scene.js">
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-banner.js"></script>');
 
-document.write('<script type="text/javascript" src="/js/lib/desktop/u-basics.js"></script>');
+document.write('<script type="text/javascript" src="/js/lib/u-basics.js"></script>');
 

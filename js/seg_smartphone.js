@@ -1,11 +1,10 @@
 /*
-Manipulator v0.9.3-kbhff_dk Copyright 2008-2021 https://manipulator.parentnode.dk
-js-merged @ 2024-03-27 21:37:05
+asset-builder @ 2024-03-27 23:19:28
 */
 
-/*seg_desktop_include.js*/
+/*seg_smartphone_include.js*/
 
-/*u.js*/
+/*seg_smartphone.js*/
 if(!u || !Util) {
 	var u, Util = u = new function() {};
 	u.version = "0.9.3";
@@ -16,8 +15,6 @@ if(!u || !Util) {
 function fun(v) {return (typeof(v) === "function")}
 function obj(v) {return (typeof(v) === "object")}
 function str(v) {return (typeof(v) === "string")}
-
-/*u-debug.js*/
 u.bug_console_only = true;
 Util.debugURL = function(url) {
 	if(u.bug_force) {
@@ -51,8 +48,6 @@ Util.exception = function(name, _arguments, _exception) {
 	console.error(_exception);
 	u.bug("Invoked with arguments:");
 	console.log(_arguments);
-	// 
-	// 
 }
 Util.bug = function() {
 	if(u.debugURL()) {
@@ -148,9 +143,6 @@ Util.xInObject = function(object, _options) {
 		}
 	}
 }
-
-
-/*u-animation.js*/
 Util.Animation = u.a = new function() {
 	this.support3d = function() {
 		if(this._support3d === undefined) {
@@ -295,11 +287,6 @@ Util.Animation = u.a = new function() {
 		node._bg_color = color;
 		node.offsetHeight;
 	}
-	// 
-	// 	
-	// 
-	// 	
-	// 	
 	this._animationqueue = {};
 	this.requestAnimationFrame = function(node, callback, duration) {
 		if(!u.a.__animation_frame_start) {
@@ -361,9 +348,6 @@ Util.Animation = u.a = new function() {
 		}
 	}
 }
-
-
-/*u-cookie.js*/
 Util.saveCookie = function(name, value, _options) {
 	var expires = true;
 	var path = false;
@@ -527,9 +511,6 @@ Util.cookieReference = function(node, _options) {
 	}
 	return ref;
 }
-
-
-/*u-dom.js*/
 Util.querySelector = u.qs = function(query, scope) {
 	scope = scope ? scope : document;
 	return scope.querySelector(query);
@@ -958,9 +939,6 @@ Util.inNodeList = function(node, list) {
 	}
 	return false;
 }
-
-
-/*u-easings.js*/
 u.easings = new function() {
 	this["ease-in"] = function(progress) {
 		return Math.pow((progress), 3);
@@ -1067,8 +1045,6 @@ u.easings = new function() {
 			return c*(t/=d)*t*((s+1)*t - s) + b;
 	}
 }
-
-/*u-events.js*/
 Util.Events = u.e = new function() {
 	this.event_pref = typeof(document.ontouchmove) == "undefined" || (navigator.maxTouchPoints > 1 && navigator.userAgent.match(/Windows/i)) ? "mouse" : "touch";
 	if (navigator.userAgent.match(/Windows/i) && ((obj(document.ontouchmove) && obj(document.onmousemove)) || (fun(document.ontouchmove) && fun(document.onmousemove)))) {
@@ -1446,9 +1422,6 @@ Util.Events = u.e = new function() {
 		}
 	}
 }
-
-
-/*u-events-browser.js*/
 u.e.addDOMReadyEvent = function(action) {
 	if(document.readyState && document.addEventListener) {
 		if((document.readyState == "interactive" && !u.browser("ie")) || document.readyState == "complete" || document.readyState == "loaded") {
@@ -1603,9 +1576,6 @@ u.e.removeWindowEndEvent = function(id) {
 		delete window["_OnWindowEndEvent_"+id];
 	}
 }
-
-
-/*u-events-movements.js*/
 u.e.resetDragEvents = function(node) {
 	node._moves_pick = 0;
 	this.removeEvent(node, "mousemove", this._pick);
@@ -1728,14 +1698,6 @@ u.e._pick = function(event) {
 				this[this.callback_picked](event);
 			}
 			if(this.drag_dropout && event.type.match(/mouse/)) {
-				// 	
-				// 	
-				// 	
-				// 	
-				// 	
-				// 
-				// 
-				// 	
 				this._dropOutDrag = u.e._drag;
 				this._dropOutDrop = u.e._drop;
 				u.e.addOutEvent(this, u.e._dropOut);
@@ -2003,9 +1965,6 @@ u.e.swipe = function(node, boundaries, _options) {
 	node.e_swipe = true;
 	u.e.drag(node, boundaries, _options);
 }
-
-
-/*u-form.js*/
 Util.Form = u.f = new function() {
 	this.customInit = {};
 	this.customValidate = {};
@@ -2270,7 +2229,6 @@ Util.Form = u.f = new function() {
 				field.uploaded_files = u.qsa("li.uploaded", field.filelist);
 				this._update_filelist.bind(field.input)();
 				u.e.addEvent(field.input, "change", this._update_filelist);
-				// 
 				if(u.e.event_support != "touch") {
 					u.e.addEvent(field.input, "dragenter", this._focus);
 					u.e.addEvent(field.input, "dragleave", this._blur);
@@ -3300,9 +3258,6 @@ Util.Form = u.f = new function() {
 		}
 	}
 }
-
-
-/*u-form-builder.js*/
 u.f.customBuild = {};
 u.f.addForm = function(node, _options) {
 	var form_name = "js_form";
@@ -3565,9 +3520,6 @@ u.f.addAction = function(node, _options) {
 	var action = u.ae(p_li, "input", {"type":action_type, "class":action_class, "value":action_value, "name":action_name})
 	return action;
 }
-
-
-/*u-form-field-html.js*/
 Util.Form.customInit["html"] = function(field) {
 	field.type = "html";
 	field.input = u.qs("textarea", field);
@@ -4422,7 +4374,6 @@ u.f.textEditor = function(field) {
 				this.field.showSelectionOptions(this, selection);
 			}
 		}
-		// 	
 		this.field.update();
 	}
 	field.addListTag = function(type, value, className) {
@@ -4610,7 +4561,6 @@ u.f.textEditor = function(field) {
 		else {
 			this.field.hideSelectionOptions();
 		}
-		// 	
 		this.field.update();
 	}
 	field._focused_content = function(event) {
@@ -5098,7 +5048,6 @@ u.f.textEditor = function(field) {
 				field.activateInlineFormatting(tag._input, tag);
 			}
 			else if(node.nodeName.toLowerCase() == "code") {
-				// 
 				tag = field.addCodeTag(node.nodeName.toLowerCase(), node.innerHTML, node.className);
 				field.activateInlineFormatting(tag._input, tag);
 			}
@@ -5157,9 +5106,6 @@ u.f.textEditor = function(field) {
 	field.updateContent();
 	field.addRawHTMLButton();
 }
-
-
-/*u-form-labelstyle-inject.js*/
 Util.Form.customLabelStyle["inject"] = function(iN) {
 	if(!iN.type || !iN.type.match(/file|radio|checkbox/)) {
 		iN.default_value = u.text(iN.label);
@@ -5205,9 +5151,6 @@ u.f.updateDefaultState = function(iN) {
 		}
 	}
 }
-
-
-/*u-geometry.js*/
 Util.absoluteX = u.absX = function(node) {
 	if(node.offsetParent) {
 		return node.offsetLeft + u.absX(node.offsetParent);
@@ -5262,9 +5205,6 @@ Util.pageScrollX = u.scrollX = function() {
 Util.pageScrollY = u.scrollY = function() {
 	return window.pageYOffset;
 }
-
-
-/*u-googlemaps.js*/
 u.googlemaps = new function() {
 	this.api_loading = false;
 	this.api_loaded = false;
@@ -5445,9 +5385,6 @@ u.googlemaps = new function() {
 	this.center = function() {
 	}
 }
-
-
-/*u-history.js*/
 Util.History = u.h = new function() {
 	this.popstate = ("onpopstate" in window);
 	this.callbacks = [];
@@ -5597,9 +5534,6 @@ Util.History = u.h = new function() {
 		return !location.hash ? this.getCleanUrl(location.href) : this.getCleanHash(location.hash);
 	}
 }
-
-
-/*u-init.js*/
 Util.Modules = u.m = new Object();
 Util.init = function(scope) {
 	var i, node, nodes, module;
@@ -5615,9 +5549,6 @@ Util.init = function(scope) {
 		}
 	}
 }
-
-
-/*u-keyboard.js*/
 Util.Keyboard = u.k = new function() {
 	this.shortcuts = {};
 	this.onkeydownCatcher = function(event) {
@@ -5676,9 +5607,6 @@ Util.Keyboard = u.k = new function() {
 		}
 	}
 }
-
-
-/*u-math.js*/
 Util.random = function(min, max) {
 	return Math.round((Math.random() * (max - min)) + min);
 }
@@ -5692,8 +5620,6 @@ Util.round = function(number, decimals) {
 	var round_number = number*Math.pow(10, decimals);
 	return Math.round(round_number)/Math.pow(10, decimals);
 }
-
-/*u-navigation.js*/
 u.navigation = function(_options) {
 	var navigation_node = page;
 	var callback_navigate = "_navigate";
@@ -5775,9 +5701,6 @@ u.navigation = function(_options) {
 		u.h.callbacks.push({"node":navigation_node, "callback":callback_navigate});
 	}
 }
-
-
-/*u-object.js*/
 u.objectValues = function(obj) {
 	var key, values = [];
 	for(key in obj) {
@@ -5787,8 +5710,6 @@ u.objectValues = function(obj) {
 	}
 	return values;
 }
-
-/*u-overlay.js*/
 u.overlay = function (_options) {
 	var title = "Overlay";
 	var drag = true;
@@ -5899,9 +5820,6 @@ u.overlay = function (_options) {
 	});
 	return overlay;
 }
-
-
-/*u-preloader.js*/
 u.preloader = function(node, files, _options) {
 	var callback_preloader_loaded = "loaded";
 	var callback_preloader_loading = "loading";
@@ -5981,7 +5899,6 @@ u._queueLoader = function() {
 							if(fun(this._queue._node[this._queue._callback_loaded])) {
 								this._queue._node[this._queue._callback_loaded](this._queue.nodes);
 							}
-							// 
 						}
 						u._queueLoader();
 					}
@@ -6053,9 +5970,6 @@ u._imageLoadDebug = function(event) {
 	u.bug("event:" + event.type);
 	u.xInObject(event);
 }
-
-
-/*u-request.js*/
 Util.createRequestObject = function() {
 	return new XMLHttpRequest();
 }
@@ -6302,9 +6216,127 @@ Util.validateResponse = function(HTTPRequest){
 		}
 	}
 }
-
-
-/*u-sortable.js*/
+u.scrollTo = function(node, _options) {
+	node._callback_scroll_to = "scrolledTo";
+	node._callback_scroll_cancelled = "scrollToCancelled";
+	var offset_y = 0;
+	var offset_x = 0;
+	var scroll_to_x = 0;
+	var scroll_to_y = 0;
+	var to_node = false;
+	node._force_scroll_to = false;
+	if(obj(_options)) {
+		var _argument;
+		for(_argument in _options) {
+			switch(_argument) {
+				case "callback"             : node._callback_scroll_to            = _options[_argument]; break;
+				case "callback_cancelled"   : node._callback_scroll_cancelled     = _options[_argument]; break;
+				case "offset_y"             : offset_y                           = _options[_argument]; break;
+				case "offset_x"             : offset_x                           = _options[_argument]; break;
+				case "node"                 : to_node                            = _options[_argument]; break;
+				case "x"                    : scroll_to_x                        = _options[_argument]; break;
+				case "y"                    : scroll_to_y                        = _options[_argument]; break;
+				case "scrollIn"             : scrollIn                           = _options[_argument]; break;
+				case "force"                : node._force_scroll_to              = _options[_argument]; break;
+			}
+		}
+	}
+	if(to_node) {
+		node._to_x = u.absX(to_node);
+		node._to_y = u.absY(to_node);
+	}
+	else {
+		node._to_x = scroll_to_x;
+		node._to_y = scroll_to_y;
+	}
+	node._to_x = offset_x ? node._to_x - offset_x : node._to_x;
+	node._to_y = offset_y ? node._to_y - offset_y : node._to_y;
+	if (Util.support("scrollBehavior")) {
+		var test = node.scrollTo({top:node._to_y, left:node._to_x, behavior: 'smooth'});
+	}
+	else {
+		if(node._to_y > (node == window ? document.body.scrollHeight : node.scrollHeight)-u.browserH()) {
+			node._to_y = (node == window ? document.body.scrollHeight : node.scrollHeight)-u.browserH();
+		}
+		if(node._to_x > (node == window ? document.body.scrollWidth : node.scrollWidth)-u.browserW()) {
+			node._to_x = (node == window ? document.body.scrollWidth : node.scrollWidth)-u.browserW();
+		}
+		node._to_x = node._to_x < 0 ? 0 : node._to_x;
+		node._to_y = node._to_y < 0 ? 0 : node._to_y;
+		node._x_scroll_direction = node._to_x - u.scrollX();
+		node._y_scroll_direction = node._to_y - u.scrollY();
+		node._scroll_to_x = u.scrollX();
+		node._scroll_to_y = u.scrollY();
+		node._ignoreWheel = function(event) {
+			u.e.kill(event);
+		}
+		if(node._force_scroll_to) {
+			u.e.addEvent(node, "wheel", node._ignoreWheel);
+		}
+		node._scrollToHandler = function(event) {
+			u.t.resetTimer(this.t_scroll);
+			this.t_scroll = u.t.setTimer(this, this._scrollTo, 25);
+		}
+		node._cancelScrollTo = function() {
+			if(!this._force_scroll_to) {
+				u.t.resetTimer(this.t_scroll);
+				this._scrollTo = null;
+			}
+		}
+		node._scrollToFinished = function() {
+			u.t.resetTimer(this.t_scroll);
+			u.e.removeEvent(this, "wheel", this._ignoreWheel);
+			this._scrollTo = null;
+		}
+		node._ZoomScrollFix = function(s_x, s_y) {
+			if(Math.abs(this._scroll_to_y - s_y) <= 2 && Math.abs(this._scroll_to_x - s_x) <= 2) {
+				return true;
+			}
+			return false;
+		}
+		node._scrollTo = function(start) {
+			var s_x = u.scrollX();
+			var s_y = u.scrollY();
+			if((s_y == this._scroll_to_y && s_x == this._scroll_to_x) || this._force_scroll_to || this._ZoomScrollFix(s_x, s_y)) {
+				if(this._x_scroll_direction > 0 && this._to_x > s_x) {
+					this._scroll_to_x = Math.ceil(this._scroll_to_x + (this._to_x - this._scroll_to_x)/6);
+				}
+				else if(this._x_scroll_direction < 0 && this._to_x < s_x) {
+					this._scroll_to_x = Math.floor(this._scroll_to_x - (this._scroll_to_x - this._to_x)/6);
+				}
+				else {
+					this._scroll_to_x = this._to_x;
+				}
+				if(this._y_scroll_direction > 0 && this._to_y > s_y) {
+					this._scroll_to_y = Math.ceil(this._scroll_to_y + (this._to_y - this._scroll_to_y)/6);
+				}
+				else if(this._y_scroll_direction < 0 && this._to_y < s_y) {
+					this._scroll_to_y = Math.floor(this._scroll_to_y - (this._scroll_to_y - this._to_y)/6);
+				}
+				else {
+					this._scroll_to_y = this._to_y;
+				}
+				if(this._scroll_to_x == this._to_x && this._scroll_to_y == this._to_y) {
+					this._scrollToFinished();
+					this.scrollTo(this._to_x, this._to_y);
+					if(fun(this[this._callback_scroll_to])) {
+						this[this._callback_scroll_to]();
+					}
+					return;
+				}
+				this.scrollTo(this._scroll_to_x, this._scroll_to_y);
+				this._scrollToHandler();
+			}
+			else {
+				this._cancelScrollTo();
+				if(fun(this[this._callback_scroll_cancelled])) {
+					this[this._callback_scroll_cancelled]();
+				}
+			}	
+		}
+		node._scrollTo();
+	}
+}
 u.sortable = function(scope, _options) {
 	scope._callback_picked = "picked";
 	scope._callback_moved = "moved";
@@ -6430,14 +6462,6 @@ u.sortable = function(scope, _options) {
 			this._move_timestamp = event.timeStamp;
 			this._move_last_x = this.current_x;
 			this._move_last_y = this.current_y;
-			// 	
-			// 		
-			// 		
-			// 
-			// 	
-			// 		
-			// 		
-			// 
 			this.scope._detectAndInject(event_x, event_y);
 			u.ass(this.scope._shadow_node, {
 				"position": "absolute",
@@ -6832,132 +6856,6 @@ u.sortable = function(scope, _options) {
 		return;
 	}
 }
-
-
-/*u-scrollto.js*/
-u.scrollTo = function(node, _options) {
-	node._callback_scroll_to = "scrolledTo";
-	node._callback_scroll_cancelled = "scrollToCancelled";
-	var offset_y = 0;
-	var offset_x = 0;
-	var scroll_to_x = 0;
-	var scroll_to_y = 0;
-	var to_node = false;
-	node._force_scroll_to = false;
-	if(obj(_options)) {
-		var _argument;
-		for(_argument in _options) {
-			switch(_argument) {
-				case "callback"             : node._callback_scroll_to            = _options[_argument]; break;
-				case "callback_cancelled"   : node._callback_scroll_cancelled     = _options[_argument]; break;
-				case "offset_y"             : offset_y                           = _options[_argument]; break;
-				case "offset_x"             : offset_x                           = _options[_argument]; break;
-				case "node"                 : to_node                            = _options[_argument]; break;
-				case "x"                    : scroll_to_x                        = _options[_argument]; break;
-				case "y"                    : scroll_to_y                        = _options[_argument]; break;
-				case "scrollIn"             : scrollIn                           = _options[_argument]; break;
-				case "force"                : node._force_scroll_to              = _options[_argument]; break;
-			}
-		}
-	}
-	if(to_node) {
-		node._to_x = u.absX(to_node);
-		node._to_y = u.absY(to_node);
-	}
-	else {
-		node._to_x = scroll_to_x;
-		node._to_y = scroll_to_y;
-	}
-	node._to_x = offset_x ? node._to_x - offset_x : node._to_x;
-	node._to_y = offset_y ? node._to_y - offset_y : node._to_y;
-	if (Util.support("scrollBehavior")) {
-		var test = node.scrollTo({top:node._to_y, left:node._to_x, behavior: 'smooth'});
-	}
-	else {
-		if(node._to_y > (node == window ? document.body.scrollHeight : node.scrollHeight)-u.browserH()) {
-			node._to_y = (node == window ? document.body.scrollHeight : node.scrollHeight)-u.browserH();
-		}
-		if(node._to_x > (node == window ? document.body.scrollWidth : node.scrollWidth)-u.browserW()) {
-			node._to_x = (node == window ? document.body.scrollWidth : node.scrollWidth)-u.browserW();
-		}
-		node._to_x = node._to_x < 0 ? 0 : node._to_x;
-		node._to_y = node._to_y < 0 ? 0 : node._to_y;
-		node._x_scroll_direction = node._to_x - u.scrollX();
-		node._y_scroll_direction = node._to_y - u.scrollY();
-		node._scroll_to_x = u.scrollX();
-		node._scroll_to_y = u.scrollY();
-		node._ignoreWheel = function(event) {
-			u.e.kill(event);
-		}
-		if(node._force_scroll_to) {
-			u.e.addEvent(node, "wheel", node._ignoreWheel);
-		}
-		node._scrollToHandler = function(event) {
-			u.t.resetTimer(this.t_scroll);
-			this.t_scroll = u.t.setTimer(this, this._scrollTo, 25);
-		}
-		node._cancelScrollTo = function() {
-			if(!this._force_scroll_to) {
-				u.t.resetTimer(this.t_scroll);
-				this._scrollTo = null;
-			}
-		}
-		node._scrollToFinished = function() {
-			u.t.resetTimer(this.t_scroll);
-			u.e.removeEvent(this, "wheel", this._ignoreWheel);
-			this._scrollTo = null;
-		}
-		node._ZoomScrollFix = function(s_x, s_y) {
-			if(Math.abs(this._scroll_to_y - s_y) <= 2 && Math.abs(this._scroll_to_x - s_x) <= 2) {
-				return true;
-			}
-			return false;
-		}
-		node._scrollTo = function(start) {
-			var s_x = u.scrollX();
-			var s_y = u.scrollY();
-			if((s_y == this._scroll_to_y && s_x == this._scroll_to_x) || this._force_scroll_to || this._ZoomScrollFix(s_x, s_y)) {
-				if(this._x_scroll_direction > 0 && this._to_x > s_x) {
-					this._scroll_to_x = Math.ceil(this._scroll_to_x + (this._to_x - this._scroll_to_x)/6);
-				}
-				else if(this._x_scroll_direction < 0 && this._to_x < s_x) {
-					this._scroll_to_x = Math.floor(this._scroll_to_x - (this._scroll_to_x - this._to_x)/6);
-				}
-				else {
-					this._scroll_to_x = this._to_x;
-				}
-				if(this._y_scroll_direction > 0 && this._to_y > s_y) {
-					this._scroll_to_y = Math.ceil(this._scroll_to_y + (this._to_y - this._scroll_to_y)/6);
-				}
-				else if(this._y_scroll_direction < 0 && this._to_y < s_y) {
-					this._scroll_to_y = Math.floor(this._scroll_to_y - (this._scroll_to_y - this._to_y)/6);
-				}
-				else {
-					this._scroll_to_y = this._to_y;
-				}
-				if(this._scroll_to_x == this._to_x && this._scroll_to_y == this._to_y) {
-					this._scrollToFinished();
-					this.scrollTo(this._to_x, this._to_y);
-					if(fun(this[this._callback_scroll_to])) {
-						this[this._callback_scroll_to]();
-					}
-					return;
-				}
-				this.scrollTo(this._scroll_to_x, this._scroll_to_y);
-				this._scrollToHandler();
-			}
-			else {
-				this._cancelScrollTo();
-				if(fun(this[this._callback_scroll_cancelled])) {
-					this[this._callback_scroll_cancelled]();
-				}
-			}	
-		}
-		node._scrollTo();
-	}
-}
-
-/*u-string.js*/
 Util.cutString = function(string, length) {
 	var matches, match, i;
 	if(string.length <= length) {
@@ -7152,9 +7050,6 @@ Util.isStringHTML = function(string) {
 	}
 	return false;
 }
-
-
-/*u-svg.js*/
 Util.svg = function(svg_object) {
 	var svg, shape, svg_shape;
 	if(svg_object.name && u._svg_cache && u._svg_cache[svg_object.name]) {
@@ -7207,9 +7102,6 @@ Util.svgShape = function(svg, svg_object) {
 	}
 	return svg.appendChild(svg_shape);
 }
-
-
-/*u-system.js*/
 Util.browser = function(model, version) {
 	var current_version = false;
 	if(model.match(/\bedge\b/i)) {
@@ -7404,9 +7296,6 @@ Util.vendorPrefix = function() {
 	}
 	return Util.vendor_prefix;
 }
-
-
-/*u-template.js*/
 u.template = function(template, json, _options) {
 	var string = "";
 	var template_string = "";
@@ -7483,13 +7372,6 @@ u.template = function(template, json, _options) {
 			for(_item in json) {
 				if(json.hasOwnProperty(_item)) {
 					item_template = template_string;
-	// 					
-	// 
-	// 
-	// 
-	// 					
-	// 
-	// 
 					string += item_template.replace(/\{(.+?)\}/g, function(string) {
 						var key = string.toString().replace(/[\{\}]/g, "");
 						if(str(json[_item][key]) && json[_item][key]) {
@@ -7583,9 +7465,6 @@ u.template = function(template, json, _options) {
 		return string.replace(/\\(\\|"|')/g, "$1");
 	}
 }
-
-
-/*u-timer.js*/
 Util.Timer = u.t = new function() {
 	this._timers = new Array();
 	this.setTimer = function(node, action, timeout, param) {
@@ -7656,9 +7535,6 @@ Util.Timer = u.t = new function() {
 		}
 	}
 }
-
-
-/*u-url.js*/
 Util.getVar = function(param, url) {
 	var string = url ? url.split("#")[0] : location.search;
 	var regexp = new RegExp("(?:^|\b|&|\\?)"+param.replace(/[\[\]\(\)]{1}/g, "\\$&")+"\=([^\&\b]+)");
@@ -7670,4 +7546,240 @@ Util.getVar = function(param, url) {
 		return "";
 	}
 }
+
+
+/*i-page.js*/
+Util.Modules["page"] = new function() {
+	this.init = function(page) {
+		page.hN = u.qs("#header");
+		page.hN.service = u.qs("ul.servicenavigation", page.hN);
+		page.cN = u.qs("#content", page);
+		page.nN = u.qs("#navigation", page);
+		page.nN = u.ie(page.hN, page.nN);
+		page.nN.nav = u.qs("ul.navigation", page.nN)
+		page.fN = u.qs("#footer");
+		page.fN.service = u.qs("ul.servicenavigation", page.fN);
+		page.resized = function() {
+			this.browser_h = u.browserH();
+			this.browser_w = u.browserW();
+			this.available_height = this.browser_h - this.hN.offsetHeight - this.nN.offsetHeight - this.fN.offsetHeight;
+			if(this.bn_nav) {
+				if (this.bn_nav.is_open) {
+					u.ass(page.hN, {
+						"height":window.innerHeight + "px"
+					});
+					u.ass(page.nN, {
+						"height":(window.innerHeight - page.hN.service.offsetHeight) + "px"
+					});
+					u.e.setDragPosition(page.nN.nav, 0, 0);
+					u.e.setDragBoundaries(page.nN.nav, page.nN);
+				}
+			}
+			u.as(this.cN, "min-height", "auto");
+			if(this.available_height >= this.cN.offsetHeight) {
+				u.as(this.cN, "min-height", this.available_height+"px", false);
+			}
+			if(this.cN && this.cN.scene && typeof(this.cN.scene.resized) == "function") {
+				this.cN.scene.resized();
+			}
+		}
+		page.fixiOSScroll = function() {
+			u.ass(this.hN, {
+				"position":"absolute",
+			});
+			u.ass(this.hN, {
+				"position":"fixed",
+			});
+		}
+		page.scrolled = function() {
+			u.t.resetTimer(this.t_fix);
+			this.t_fix = u.t.setTimer(this, "fixiOSScroll", 200);
+			page.scrolled_y = u.scrollY();
+			if(this.cN && this.cN.scene && typeof(this.cN.scene.scrolled) == "function") {
+				this.cN.scene.scrolled();
+			}
+		}
+		page.orientationchanged = function() {
+			if(this.cN && this.cN.scene && typeof(this.cN.scene.orientationchanged) == "function") {
+				this.cN.scene.orientationchanged();
+			}
+		}
+		page.ready = function() {
+			if(!this.is_ready) {
+				this.is_ready = true;
+				this.cN.scene = u.qs(".scene", this);
+				u.e.addWindowEvent(this, "resize", this.resized);
+				u.e.addWindowEvent(this, "scroll", this.scrolled);
+				u.e.addWindowEvent(this, "orientationchange", this.orientationchanged);
+				this.initHeader();
+				this.initNavigation();
+				this.acceptCookies();
+				this.resized();
+			}
+		}
+		page.initHeader = function() {
+		}
+		page.initNavigation = function() {
+			this.nN.list = u.qs("ul.navigation", this.nN);
+			this.bn_nav = u.qs(".servicenavigation li.navigation", this.hN);
+			if(this.bn_nav) {
+				u.ae(this.bn_nav, "div");
+				u.ae(this.bn_nav, "div");
+				u.ae(this.bn_nav, "div");
+				u.ce(this.bn_nav);
+				this.bn_nav.clicked = function(event) {
+					if(this.is_open) {
+						this.is_open = false;
+						u.rc(this, "open");
+						// 
+							u.ass(page.nN, {
+								"display": "none"
+							});
+						// 
+						u.ass(page.nN, {
+							"overflow-y":"hidden"
+						});
+						u.ass(page.parentNode, {
+							"overflow-y":"scroll"
+						});
+					}
+					else {
+						this.is_open = true;
+						u.ac(this, "open");
+						// 
+						u.ass(page.nN, {
+							"height":(window.innerHeight - page.hN.service.offsetHeight) + "px"
+						});
+						u.ass(page.nN, {
+							"display": "block"
+						});
+						// 
+						u.ass(page.nN, {
+							"overflow-y":"scroll"
+						});
+						u.ass(page.parentNode, {
+							"overflow-y":"hidden"
+						});
+					}
+					u.e.setDragPosition(page.nN.nav, 0, 0);
+					u.e.setDragBoundaries(page.nN.nav, page.nN);
+				}
+				u.e.drag(this.nN.nav, this.nN, {"strict":false, "elastica":200, "vertical_lock":true, "overflow":"scroll"});
+			}
+			var i, node;
+			if(page.fN.service) {
+				nodes = u.qsa("li:not(.copyright)", page.fN.service);
+				for(i = 0; node = nodes[i]; i++) {
+					u.ae(page.nN.list, node, {"class":"footer"});
+				}
+				page.fN.removeChild(page.fN.service);
+			}
+			if(page.hN.service) {
+				nodes = u.qsa("li:not(.navigation)", page.hN.service);
+				for(i = 0; node = nodes[i]; i++) {
+					u.ae(page.nN.list, node, {"class":"header"});
+				}
+			}
+			var i, node, nodes;
+			nodes = u.qsa("#navigation li,a.logo", page.hN);
+			for(i = 0; node = nodes[i]; i++) {
+				u.ce(node, {"type":"link"});
+				// 
+			}
+			page.nN.nodes = u.qsa("li", page.nN.list);
+			if(page.hN.service) {
+				u.ass(page.hN.service, {
+					"opacity":1
+				});
+			}
+		}
+		page.acceptCookies = function() {
+			if(u.terms_version && !u.getCookie(u.terms_version)) {
+				var terms = u.ie(document.body, "div", {"class":"terms_notification"});
+				u.ae(terms, "h3", {"html":u.stringOr(u.txt["terms-headline"], "Flere grøntsager, <br />færre kager")});
+				u.ae(terms, "p", {"html":u.stringOr(u.txt["terms-paragraph"], "Vi beskytter dit privatliv og bruger kun funktionelle cookies.")});
+				var bn_accept = u.ae(terms, "a", {"class":"accept", "html":u.stringOr(u.txt["terms-accept"], "Accepter")});
+				bn_accept.terms = terms;
+				u.ce(bn_accept);
+				bn_accept.clicked = function() {
+					this.terms.parentNode.removeChild(this.terms);
+					u.saveCookie(u.terms_version, true, {"path":"/", "expires":false});
+				}
+				if(!location.href.match(u.terms_link)) {
+					var bn_details = u.ae(terms, "a", {"class":"details", "html":u.stringOr(u.txt["terms-details"], "Læs mere"), "href":u.terms_link});
+					u.ce(bn_details, {"type":"link"});
+				}
+				u.a.transition(terms, "all 0.5s ease-in");
+				u.ass(terms, {
+					"opacity": 1
+				});
+			}
+		}
+		page.ready();
+	}
+}
+u.e.addDOMReadyEvent(u.init);
+
+
+/*i-scene.js*/
+Util.Modules["scene"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+		}
+		scene.ready();
+	}
+}
+
+
+/*i-banner.js*/
+Util.Modules["banner"] = new function() {
+	this.init = function(div) {
+		var variant = u.cv(div, "variant");
+		var format = u.cv(div, "format");
+		if(variant == "random" || !variant) {
+			variant = u.random(1, 4);
+		}
+		var image = u.ae(div, "img", {class:"fit-width"});	
+		u.ae(div, "div", {class:"logo"});
+		image.loaded = function(queue) {
+			this.onload = function() {
+				if(page) {
+					page.resized();
+				}
+			}
+			this.src = queue[0].image.src;
+			if(page) {
+				page.resized();
+			}
+		}
+		u.preloader(image, ["/img/banners/smartphone/pi_" + variant + "." + format]);
+	}
+}
+
+
+/*u-basics.js*/
+u.f.fixFieldHTML = function(field) {
+	if(field.indicator && field.label) {
+		u.ae(field.label, field.indicator);
+	}
+}
+u.f.customHintPosition = {};
+u.f.customHintPosition["string"] = function() {}
+u.f.customHintPosition["email"] = function() {}
+u.f.customHintPosition["number"] = function() {}
+u.f.customHintPosition["integer"] = function() {}
+u.f.customHintPosition["password"] = function() {}
+u.f.customHintPosition["tel"] = function() {}
+u.f.customHintPosition["text"] = function() {}
+u.f.customHintPosition["select"] = function() {}
+u.f.customHintPosition["checkbox"] = function() {}
+u.f.customHintPosition["radiobuttons"] = function() {}
+u.f.customHintPosition["date"] = function() {}
+u.f.customHintPosition["datetime"] = function() {}
+u.f.customHintPosition["files"] = function() {}
+u.f.customHintPosition["html"] = function() {}
 
