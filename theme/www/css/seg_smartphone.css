@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2024-03-27 23:48:03
+asset-builder @ 2024-03-28 10:51:51
 */
 
 /*seg_smartphone_include.css*/
@@ -2187,20 +2187,17 @@ div.overlay .field.password {
     float: left;
 }
 #content .front div.news ul.items li.item .image {
-    background-repeat: no-repeat;
-}
-#content .front div.news ul.items li.item {
-    width: calc(100% - 24px);
-	height: auto;
-}
-#content .front div.news ul.items li.item h3 {margin-top: 0;}
-#content .front div.news ul.items li.item .image {
 	height: auto;
 	min-height: auto;
 	aspect-ratio: 16/9;
 	position: static;
 	background-size: 100% auto;
 }
+#content .front div.news ul.items li.item {
+    width: calc(100% - 24px);
+	height: auto;
+}
+#content .front div.news ul.items li.item h3 {margin-top: 0;}
 #content .scene.signupfees ul.actions input {
     width: 100%;
     white-space: normal;
