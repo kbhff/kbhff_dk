@@ -108,7 +108,15 @@ else {
 		<?= $UC->formStart("/butik/betal?login=true", array("class" => "login labelstyle:inject")) ?>
 			<?= $UC->input("login_forward", ["type" => "hidden", "value" => "/butik/betal"]); ?>
 			<fieldset>
-				<?= $UC->input("username", array("type" => "string", "label" => "Email or mobile number", "required" => true, "value" => $username, "pattern" => "[\w\.\-_]+@[\w\-\.]+\.\w{2,10}|([\+0-9\-\.\s\(\)]){5,18}", "hint_message" => "You can log in using either your email or mobile number.", "error_message" => "You entered an invalid email or mobile number.")); ?>
+				<?= $UC->input("username", array(
+					"type" => "string", 
+					"label" => "Brugernavn",
+					"required" => true, 
+					"value" => $username, 
+					"pattern" => "^(1|[0-9]{4,5}|[\+0-9\-\.\s\(\)]{5,18}|[\w\.\-_\+]+@[\w\-\.]+\.\w{2,10})$",
+					"hint_message" => "Brug dit medlemsnr., email eller telefonnummer som brugernavn",
+					"error_message" => "Det ligner ikke et gyldigt brugernavn",
+				)); ?>
 				<?= $UC->input("password", array("type" => "password", "label" => "Password", "required" => true, "hint_message" => "Type your password", "error_message" => "Your password should be between 8-20 characters.")); ?>
 			</fieldset>
 
