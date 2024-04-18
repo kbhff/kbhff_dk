@@ -125,7 +125,7 @@ else {
 			</ul>
 		<?= $UC->formEnd() ?>
 		<p class="forgot">Har du <a href="/login/glemt" target="_blank">glemt din adgangskode</a>?</p>
-		<p class="signup">Endnu ikke medlem? <a href="/bliv-medlem">Meld dig ind nu</a>.</p>
+		<p class="signup">Endnu ikke medlem? <a href="/bliv-medlem?clear_cookie=true">Meld dig ind nu</a>.</p>
 	</div>
 
 	<? elseif($unpaid_membership): 
