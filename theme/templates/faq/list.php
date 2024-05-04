@@ -22,7 +22,7 @@ $categories = $taglist["tags"];
 <? foreach($categories as $category): ?>
 	<h2><?= $category["value"] ?></h2>
 	<? 
-	$items = $IC->getItems(array("itemtype" => $itemtype, "tags" => "faq:".$category["value"], "order" => "position ASC", "extend" => true));
+	$items = $IC->getItems(array("itemtype" => $itemtype, "status" => 1, "tags" => "faq:".$category["value"], "order" => "position ASC", "extend" => true));
 
 	if($items): ?>
 	<ul class="items questions">
