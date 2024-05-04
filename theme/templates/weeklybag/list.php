@@ -4,6 +4,11 @@ global $IC;
 global $itemtype;
 $model = $IC->typeObject($itemtype);
 
+$page_item = $IC->getItem(array("tags" => "page:weekly-bag", "status" => 1, "extend" => array("user" => true, "tags" => true, "mediae" => true)));
+if($page_item) {
+	$this->sharingMetaData($page_item);
+}
+
 
 $sindex = isset($action[1]) ? $action[1] : false;
 $limit = 52;
@@ -37,7 +42,42 @@ $weeklybag_item = $WBC->getWeeklyBag();
 
 		<div class="c-two-thirds">
 
+		<? if($page_item):
+			$media = $IC->sliceMediae($page_item, "single_media"); ?>
+			<div class="article i:article id:<?= $page_item["item_id"] ?>" itemscope itemtype="http://schema.org/Article">
+
+				<? if($media): ?>
+				<div class="image item_id:<?= $page_item["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>"></div>
+				<? endif; ?>
+
+
+				<?= $HTML->articleTags($page_item, [
+					"context" => false
+				]) ?>
+
+
+				<h1 itemprop="headline"><?= $page_item["name"] ?></h1>
+
+				<? if($page_item["subheader"]): ?>
+				<h2 itemprop="alternativeHeadline"><?= $page_item["subheader"] ?></h2>
+				<? endif; ?>
+
+
+				<?= $HTML->articleInfo($page_item, "/bliv-medlem", [
+					"media" => $media,
+				]) ?>
+
+
+				<? if($page_item["html"]): ?>
+				<div class="articlebody" itemprop="articleBody">
+					<?= $page_item["html"] ?>
+				</div>
+				<? endif; ?>
+			</div>
+		<? else:?>
 			<h1>Ugens poser</h1>
+		<? endif; ?>
+
 
 		<? if($items && $items["range_items"]): ?>
 			<ul class="items articles">
