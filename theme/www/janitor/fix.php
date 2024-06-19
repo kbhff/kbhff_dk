@@ -4,7 +4,7 @@ if(isset($read_access) && $read_access) {
 	return;
 }
 
-exit();
+// exit();
 
 include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 
@@ -17,6 +17,13 @@ include_once("classes/shop/supersubscription.class.php");
 $subs_cl = new SuperSubscription();
 include_once("classes/shop/supershop.class.php");
 $shop_cl = new SuperShop();
+include_once("classes/users/superuser.class.php");
+$user_cl = new SuperUser();
+
+
+// session()->value("user_id", 8739);
+// session()->value("user_group_id", 2);
+
 
 
 function update_2023_05_05() {
@@ -86,8 +93,19 @@ function update_2023_05_23() {
 $shop_cl->cancelUnpaidRenewalOrdersFromLastYear();
 
 
-// session()->value("user_id", 8739);
-// session()->value("user_group_id", 2);
+
+// $user_cl->sendDeletionWarningToInactiveUsers();
+
+// $user_cl->deleteInactiveUsers();
+
+
+
+// $user_cl->sendCompleteSignupReminder();
+
+// $user_cl->deleteIncompleteSignups();
+
+	
+
 
 
 ?>
