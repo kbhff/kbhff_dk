@@ -63,12 +63,20 @@
 
 /* PRODUCTS */
 #content .scene.purchasing .c-wrapper.products {padding: 0 0 46px; border-bottom: 1px solid #999999;}
+#content .scene.purchasing .c-wrapper.products div.filter form {max-width: 200px;}
+#content .scene.purchasing .c-wrapper.products div.filter form div.field {padding-bottom: 5px;}
+#content .scene.purchasing .c-wrapper.products div.filter form div.field div.help {display: none;}
 #content .scene.purchasing .c-wrapper.products ul.list {padding: 0 12px; margin: 0; list-style: none;}
 #content .scene.purchasing .c-wrapper.products ul.list > li {padding: 0;
 	display: flex;
 	flex-flow: row nowrap;
 }
-
+#content .scene.purchasing .c-wrapper.products ul.list > li.listing {
+	display: none;
+}
+#content .scene.purchasing .c-wrapper.products ul.list > li.listing.show {
+	display: flex;
+}
 #content .scene.purchasing .c-wrapper.products ul.list > li > span {display: block; padding: 4px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 	flex: 1 1 100px;
 	align-self: center;
@@ -79,7 +87,8 @@
 	text-transform: uppercase;
 	font-family: 'voresfont', Arial, Helvetica, sans-serif;
 }
-#content .scene.purchasing .c-wrapper.products ul.list li.listing:nth-child(2n) {background: #DDDDDD;}
+/*#content .scene.purchasing .c-wrapper.products ul.list li.listing.show:nth-child(2n) {background: #DDDDDD;}*/
+#content .scene.purchasing .c-wrapper.products ul.list li.listing.odd {background: #DDDDDD;}
 
 
 #content .scene.purchasing .c-wrapper.products ul.list li.labels span.images,

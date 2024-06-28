@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2024-03-28 10:51:51
+asset-builder @ 2024-06-27 21:06:11
 */
 
 /*seg_smartphone_include.js*/
@@ -10833,10 +10833,38 @@ Util.Modules["purchasing"] = new function() {
 			form.updated = function() {
 				this.submit();
 			}
-			this.products = u.qsa("div.products li.listing", this);
+			this.div_products = u.qs("div.products", this);
+			var ul_list = u.qs("ul.list", this.div_products);
+			var div_filter = u. ae(this.div_products, "div", {"class": "filter"});
+			this.div_products.insertBefore(div_filter, ul_list);
+			this.form_product_filter = u.f.addForm(div_filter, {"class": "labelstyle:inject"});
+			this.form_product_filter.div = this;
+			var fieldset = u.f.addFieldset(this.form_product_filter);
+			u.f.addField(fieldset, {"type":"string", "name": "query", "label":"Filtrer produkter"});
+			u.f.init(this.form_product_filter);
+			this.form_product_filter.updated = function() {
+				var query = this.inputs["query"].val().toLowerCase();
+				var i, product, odd_even = 0;
+				for(i = 0; i < this.div.products.length; i++) {
+					product = this.div.products[i];
+					if(!query || product.search_string.match(query)) {
+						u.ac(product, "show");
+						odd_even++;
+					}
+					else {
+						u.rc(product, "show");
+					}
+					u.rc(product, "odd");
+					if(odd_even%2) {
+						u.ac(product, "odd");
+					}
+				}
+			}
+			this.products = u.qsa(" li.listing", this.div_products);
 			var i, product, image;
 			for(i = 0; i < this.products.length; i++) {
 				product = this.products[i];
+				product.search_string = u.qs(".name", product).innerHTML.toLowerCase();
 				image = u.qs("span.image", product);
 				image._id = u.cv(image, "item_id");
 				image._format = u.cv(image, "format");
@@ -10847,6 +10875,7 @@ Util.Modules["purchasing"] = new function() {
 					});
 				}
 			}
+			this.form_product_filter.updated();
 		}
 		scene.ready();
 	}

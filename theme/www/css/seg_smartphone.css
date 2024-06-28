@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2024-03-28 10:51:51
+asset-builder @ 2024-06-27 21:06:11
 */
 
 /*seg_smartphone_include.css*/
@@ -1934,10 +1934,19 @@ div.overlay .field.password {
 #content .scene.purchasing .c-wrapper.order-list table.orders th.total span {writing-mode: sideways-lr; padding: 0 0 5px;}
 #content .scene.purchasing .c-wrapper.order-list table.orders th.product {text-align: right; padding-right: 5px; border: none;}
 #content .scene.purchasing .c-wrapper.products {padding: 0 0 46px; border-bottom: 1px solid #999999;}
+#content .scene.purchasing .c-wrapper.products div.filter form {max-width: 200px;}
+#content .scene.purchasing .c-wrapper.products div.filter form div.field {padding-bottom: 5px;}
+#content .scene.purchasing .c-wrapper.products div.filter form div.field div.help {display: none;}
 #content .scene.purchasing .c-wrapper.products ul.list {padding: 0 12px; margin: 0; list-style: none;}
 #content .scene.purchasing .c-wrapper.products ul.list > li {padding: 0;
 	display: flex;
 	flex-flow: row nowrap;
+}
+#content .scene.purchasing .c-wrapper.products ul.list > li.listing {
+	display: none;
+}
+#content .scene.purchasing .c-wrapper.products ul.list > li.listing.show {
+	display: flex;
 }
 #content .scene.purchasing .c-wrapper.products ul.list > li > span {display: block; padding: 4px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 	flex: 1 1 100px;
@@ -1948,7 +1957,7 @@ div.overlay .field.password {
 	text-transform: uppercase;
 	font-family: 'voresfont', Arial, Helvetica, sans-serif;
 }
-#content .scene.purchasing .c-wrapper.products ul.list li.listing:nth-child(2n) {background: #DDDDDD;}
+#content .scene.purchasing .c-wrapper.products ul.list li.listing.odd {background: #DDDDDD;}
 #content .scene.purchasing .c-wrapper.products ul.list li.labels span.images,
 #content .scene.purchasing .c-wrapper.products ul.list li.listing span.image {
 	flex: 0 0 50px;
