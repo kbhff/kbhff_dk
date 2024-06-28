@@ -1335,183 +1335,7 @@ IT
 		
 	}
 
-	function sendPickupReminders($action) {
-
-		if(count($action) == 2) {
-
-			$user_id = $action[1];
-			$user = $this->getKbhffUser(["user_id" => $user_id]);
-
-
-			mailer()->send([
-				"recipients" => [$user["email"]],
-				"template" => "pickup_reminder",
-				"values" => [
-					"NICKNAME" => $user["nickname"],
-				]
-			]);
-		}
-		else {
-
-			include_once("classes/shop/pickupdate.class.php");
-			$PC = new Pickupdate;
-			
-
-			// get next scheduled pickupdate
-			$pickupdate = $PC->getPickupdate(["pickupdate" => date("Y-m-d", strtotime("next ".PICKUP_DAY))]);
-
-
-
-			$pickup_reminder_datetime = date("Y-m-d H", strtotime("next ".PICKUP_DAY) - PICKUP_REMINDER_TIME_DELTA_HOURS*60*60);
-			$current_datetime = date("Y-m-d H");
-
-			// debug(["pickupdate", $pickupdate, "pickup_reminder_datetime", $pickup_reminder_datetime, "current_datetime", $current_datetime, "comp", ($pickup_reminder_datetime == $current_datetime)]);
-
-			if($pickupdate && $pickup_reminder_datetime == $current_datetime) {
-
-				$SC = new Shop;
-
-				$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate["id"]);
-				// debug(["should send", $pickupdate_order_items]);
-				if($pickupdate_order_items) {
-					// debug(["should send"]);
-
-					$recipients = [];
-					$values = [];
-
-					foreach($pickupdate_order_items as $poi) {
-
-						$user = $this->getKbhffUser(["user_id" => $poi["user_id"]]);
-						// debug(["testing ", $user["email"]]);
-
-						// order_item user is not already among recipients 
-						// and has not opted out from pickup reminders
-						if(!in_array($user["email"], $recipients) && !$this->getUserLogAgreement("disable_pickup_reminder", ["user_id" => $poi["user_id"]])) {
-							// debug(["send to ", $user["email"]]);
-
-							// add to recipients
-							$recipients[] = $user["email"];
-							$values[$user["email"]] = [
-								"NICKNAME" => $user["nickname"],
-								"PICKUPDATE" => date("d.m.Y", strtotime($pickupdate["pickupdate"])),
-							];
-						}
-
-					}
-
-					if($recipients) {
-						// send reminder
-						$test = mailer()->sendBulk([
-							"recipients" => $recipients,
-							"template" => "pickup_reminder",
-							"values" => $values,
-						]);
-						debug(["mail result", $test]);
-					}
-				}
-
-				return true;
-			}
-
-			return false;
-		}
-
-	}
-
-	function sendOrderingReminders($action) {
-
-		if(count($action) == 2) {
-
-			$user_id = $action[1];
-			$user = $this->getKbhffUser(["user_id" => $user_id]);
-
-			if(isset($user["email"]) && $user["email"] && !$this->getUserLogAgreement("disable_ordering_reminder", ["user_id" => $user["id"]])) {
-
-				mailer()->send([
-					"recipients" => [$user["email"]],
-					"template" => "ordering_reminder",
-					"values" => [
-						"NICKNAME" => $user["nickname"],
-						"DEADLINE_DATE" => date("d.m.Y", strtotime(ORDERING_DEADLINE_TIME)),
-						"DEADLINE_TIME" => date("H:i", strtotime(ORDERING_DEADLINE_TIME))
-					]
-				]);
-
-			}
-
-		}
-		else {
-
-			include_once("classes/shop/pickupdate.class.php");
-			$PC = new Pickupdate;
-
-			$recipients = [];
-			$values = [];
-
-			// get next+1 scheduled pickupdate
-			$pickupdate = $PC->getPickupdate(["pickupdate" => date("Y-m-d", strtotime(PICKUP_DAY." next week"))]);
-
-			$ordering_reminder_datetime = date("Y-m-d H", strtotime(ORDERING_DEADLINE_TIME) - ORDERING_REMINDER_TIME_DELTA_HOURS*60*60);
-			$current_datetime = date("Y-m-d H");
-
-			// debug(["pickupdate", $pickupdate, "ordering_reminder_datetime", $ordering_reminder_datetime, "current_datetime", $current_datetime]);
-
-			if($pickupdate && $ordering_reminder_datetime == $current_datetime) {
-
-				$SC = new Shop;
-
-				$users = $this->getAllActiveUsers();
-
-				if($users) {
-
-					foreach($users as $user) {
-
-						$kbhff_user = $this->getKbhffUser(["user_id" => $user["id"]]);
-
-						// order_item user is not already among recipients 
-						// and has not opted out from pickup reminders
-						if(!in_array($kbhff_user["email"], $recipients) && !$this->getUserLogAgreement("disable_ordering_reminder", ["user_id" => $user["id"]])) {
-
-							// add to recipients
-							$recipients[] = $kbhff_user["email"];
-							$values[$kbhff_user["email"]] = [
-								"NICKNAME" => $kbhff_user["nickname"],
-								"DEADLINE_DATE" => date("d.m.Y", strtotime(ORDERING_DEADLINE_TIME)),
-								"DEADLINE_TIME" => date("H:i", strtotime(ORDERING_DEADLINE_TIME))
-							];
-
-							// send reminder
-							// mailer()->send([
-							// 	"recipients" => [$kbhff_user["email"]],
-							// 	"template" => "ordering_reminder",
-							// 	"values" => [
-							// 		"NICKNAME" => $kbhff_user["nickname"],
-							// 		"DEADLINE_DATE" => date("d.m.Y", strtotime(ORDERING_DEADLINE_TIME)),
-							// 		"DEADLINE_TIME" => date("H:i", strtotime(ORDERING_DEADLINE_TIME))
-							// 	]
-							// ]);
-						}
-					}
-
-					if($recipients) {
-						// send reminder
-						$test = mailer()->sendBulk([
-							"recipients" => $recipients,
-							"template" => "ordering_reminder",
-							"values" => $values,
-						]);
-					}
-
-				}
-				return true;
-			}
-
-			return false;
-		}
-
-	}
-
-		/**
+	/**
 	 * Update usernames from posted values. 
 	 * 
 	 * Expects $email and $username_id from $_POST.
@@ -1689,5 +1513,194 @@ IT
 		return false;
 
 	}
+
+
+
+	// CRON RELATED METHODS
+
+	/**
+	* Send reminder to pick up orders
+	*/
+	function sendPickupReminders($action) {
+
+		if(count($action) == 2) {
+
+			$user_id = $action[1];
+			$user = $this->getKbhffUser(["user_id" => $user_id]);
+
+
+			mailer()->send([
+				"recipients" => [$user["email"]],
+				"template" => "pickup_reminder",
+				"values" => [
+					"NICKNAME" => $user["nickname"],
+				]
+			]);
+		}
+		else {
+
+			include_once("classes/shop/pickupdate.class.php");
+			$PC = new Pickupdate;
+			
+
+			// get next scheduled pickupdate
+			$pickupdate = $PC->getPickupdate(["pickupdate" => date("Y-m-d", strtotime("next ".PICKUP_DAY))]);
+
+
+
+			$pickup_reminder_datetime = date("Y-m-d H", strtotime("next ".PICKUP_DAY) - PICKUP_REMINDER_TIME_DELTA_HOURS*60*60);
+			$current_datetime = date("Y-m-d H");
+
+			// debug(["pickupdate", $pickupdate, "pickup_reminder_datetime", $pickup_reminder_datetime, "current_datetime", $current_datetime, "comp", ($pickup_reminder_datetime == $current_datetime)]);
+
+			if($pickupdate && $pickup_reminder_datetime == $current_datetime) {
+
+				$SC = new Shop;
+
+				$pickupdate_order_items = $SC->getPickupdateOrderItems($pickupdate["id"]);
+				// debug(["should send", $pickupdate_order_items]);
+				if($pickupdate_order_items) {
+					// debug(["should send"]);
+
+					$recipients = [];
+					$values = [];
+
+					foreach($pickupdate_order_items as $poi) {
+
+						$user = $this->getKbhffUser(["user_id" => $poi["user_id"]]);
+						// debug(["testing ", $user["email"]]);
+
+						// order_item user is not already among recipients 
+						// and has not opted out from pickup reminders
+						if(!in_array($user["email"], $recipients) && !$this->getUserLogAgreement("disable_pickup_reminder", ["user_id" => $poi["user_id"]])) {
+							// debug(["send to ", $user["email"]]);
+
+							// add to recipients
+							$recipients[] = $user["email"];
+							$values[$user["email"]] = [
+								"NICKNAME" => $user["nickname"],
+								"PICKUPDATE" => date("d.m.Y", strtotime($pickupdate["pickupdate"])),
+							];
+						}
+
+					}
+
+					if($recipients) {
+						// send reminder
+						$test = mailer()->sendBulk([
+							"recipients" => $recipients,
+							"template" => "pickup_reminder",
+							"values" => $values,
+						]);
+						debug(["mail result", $test]);
+					}
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
+	}
+
+	/**
+	* Send reminder to order
+	*/
+	function sendOrderingReminders($action) {
+
+		if(count($action) == 2) {
+
+			$user_id = $action[1];
+			$user = $this->getKbhffUser(["user_id" => $user_id]);
+
+			if(isset($user["email"]) && $user["email"] && !$this->getUserLogAgreement("disable_ordering_reminder", ["user_id" => $user["id"]])) {
+
+				mailer()->send([
+					"recipients" => [$user["email"]],
+					"template" => "ordering_reminder",
+					"values" => [
+						"NICKNAME" => $user["nickname"],
+						"DEADLINE_DATE" => date("d.m.Y", strtotime(ORDERING_DEADLINE_TIME)),
+						"DEADLINE_TIME" => date("H:i", strtotime(ORDERING_DEADLINE_TIME))
+					]
+				]);
+
+			}
+
+		}
+		else {
+
+			include_once("classes/shop/pickupdate.class.php");
+			$PC = new Pickupdate;
+
+			$recipients = [];
+			$values = [];
+
+			// get next+1 scheduled pickupdate
+			$pickupdate = $PC->getPickupdate(["pickupdate" => date("Y-m-d", strtotime(PICKUP_DAY." next week"))]);
+
+			$ordering_reminder_datetime = date("Y-m-d H", strtotime(ORDERING_DEADLINE_TIME) - ORDERING_REMINDER_TIME_DELTA_HOURS*60*60);
+			$current_datetime = date("Y-m-d H");
+
+			// debug(["pickupdate", $pickupdate, "ordering_reminder_datetime", $ordering_reminder_datetime, "current_datetime", $current_datetime]);
+
+			if($pickupdate && $ordering_reminder_datetime == $current_datetime) {
+
+				$SC = new Shop;
+
+				$users = $this->getAllActiveUsers();
+
+				if($users) {
+
+					foreach($users as $user) {
+
+						$kbhff_user = $this->getKbhffUser(["user_id" => $user["id"]]);
+
+						// order_item user is not already among recipients 
+						// and has not opted out from pickup reminders
+						if(!in_array($kbhff_user["email"], $recipients) && !$this->getUserLogAgreement("disable_ordering_reminder", ["user_id" => $user["id"]])) {
+
+							// add to recipients
+							$recipients[] = $kbhff_user["email"];
+							$values[$kbhff_user["email"]] = [
+								"NICKNAME" => $kbhff_user["nickname"],
+								"DEADLINE_DATE" => date("d.m.Y", strtotime(ORDERING_DEADLINE_TIME)),
+								"DEADLINE_TIME" => date("H:i", strtotime(ORDERING_DEADLINE_TIME))
+							];
+
+							// send reminder
+							// mailer()->send([
+							// 	"recipients" => [$kbhff_user["email"]],
+							// 	"template" => "ordering_reminder",
+							// 	"values" => [
+							// 		"NICKNAME" => $kbhff_user["nickname"],
+							// 		"DEADLINE_DATE" => date("d.m.Y", strtotime(ORDERING_DEADLINE_TIME)),
+							// 		"DEADLINE_TIME" => date("H:i", strtotime(ORDERING_DEADLINE_TIME))
+							// 	]
+							// ]);
+						}
+					}
+
+					if($recipients) {
+						// send reminder
+						$test = mailer()->sendBulk([
+							"recipients" => $recipients,
+							"template" => "ordering_reminder",
+							"values" => $values,
+						]);
+					}
+
+				}
+				return true;
+			}
+
+			return false;
+		}
+
+	}
+
+
+
 }
 ?>
