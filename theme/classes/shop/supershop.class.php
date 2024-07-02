@@ -781,59 +781,56 @@ class SuperShop extends SuperShopCore {
 	function cancelUnpaidRenewalOrdersFromLastYear() {
 
 		$UC = new User();
-
-
 		$query = new Query();
+
 		// $sql = "SELECT o.id AS order_id, o.payment_status AS payment_status, oi.name AS order_item_name, o.user_id AS user_id FROM ".$UC->db." AS u, ".$this->db_orders." AS o, ".UT_ITEMS." AS i, ".$this->db_order_items." AS oi WHERE u.id = o.user_id AND u.status >= 0 AND o.payment_status = 0 AND o.id = oi.order_id AND i.id = oi.item_id AND (i.itemtype = 'membership' OR i.itemtype = 'signupfee') AND o.created_at < '".date("Y-m-d H:i:s", strtotime("- 1 day"))."' AND o.created_at > '".date("Y-m-d H:i:s", strtotime("- 1 year"))."'";
 
 		// All time
 		// $sql = "SELECT o.id AS order_id, o.payment_status AS payment_status, oi.name AS order_item_name, o.user_id AS user_id FROM ".$UC->db." AS u, ".$this->db_orders." AS o, ".UT_ITEMS." AS i, ".$this->db_order_items." AS oi WHERE u.id = o.user_id AND u.status >= 0 AND o.payment_status = 0 AND o.id = oi.order_id AND i.id = oi.item_id AND (i.itemtype = 'membership' OR i.itemtype = 'signupfee') AND o.created_at < '".date("Y-m-d H:i:s", strtotime("- 1 year"))."'";
 
-		$sql = "SELECT o.id AS order_id, o.payment_status AS payment_status, oi.name AS order_item_name, o.user_id AS user_id FROM ".$UC->db." AS u, ".$this->db_orders." AS o, ".UT_ITEMS." AS i, ".$this->db_order_items." AS oi WHERE u.id = o.user_id AND u.status >= 0 AND o.payment_status = 0 AND (o.status = 0 OR o.status = 1) AND o.id = oi.order_id AND i.id = oi.item_id AND (i.itemtype = 'membership' OR i.itemtype = 'signupfee') AND o.created_at < '".date("Y-m-d H:i:s", strtotime("may 1st") > time() ? strtotime("may 1st - 1 year - 1 day") : strtotime("may 1st - 1 day"))."'";
+		// $sql = "SELECT o.id AS order_id, o.payment_status AS payment_status, oi.name AS order_item_name, o.user_id AS user_id FROM ".$UC->db." AS u, ".$this->db_orders." AS o, ".UT_ITEMS." AS i, ".$this->db_order_items." AS oi WHERE u.id = o.user_id AND u.status >= 0 AND o.payment_status = 0 AND (o.status = 0 OR o.status = 1) AND o.id = oi.order_id AND i.id = oi.item_id AND (i.itemtype = 'membership' OR i.itemtype = 'signupfee') AND o.created_at < '".date("Y-m-d H:i:s", strtotime("may 1st") > time() ? strtotime("may 1st - 1 year - 1 day") : strtotime("may 1st - 1 day"))."'";
+		//
 
+
+		// Use RENEWAL CONSTANT for date
+		// debug([date("F jS", strtotime(date("Y")."-".RENEWAL_DATE))]);
+		$sql = "SELECT o.id AS order_id, o.payment_status AS payment_status, oi.name AS order_item_name, o.user_id AS user_id FROM ".$UC->db." AS u, ".$this->db_orders." AS o, ".UT_ITEMS." AS i, ".$this->db_order_items." AS oi WHERE u.id = o.user_id AND u.status >= 0 AND o.payment_status = 0 AND (o.status = 0 OR o.status = 1) AND o.id = oi.order_id AND i.id = oi.item_id AND (i.itemtype = 'membership' OR i.itemtype = 'signupfee') AND o.created_at < '".date("Y-m-d H:i:s", strtotime(date("F jS", strtotime(date("Y")."-".RENEWAL_DATE))) > time() ? strtotime(date("F jS", strtotime(date("Y")."-".RENEWAL_DATE))." - 1 year - 1 day") : strtotime(date("F jS", strtotime(date("Y")."-".RENEWAL_DATE))." - 1 day"))."'";
 		$query->sql($sql);
-
 		$result = $query->results();
 
+		print "cancelUnpaidRenewalOrdersFromLastYear\n$sql\nmatches:".count($result)."\n";
 
-		print "cancelUnpaidRenewalOrdersFromLastYear\n<br>$sql\n<br>matches:".count($result)."\n<br>";
-		debug([$result]);
+		if($result) {
+			foreach($result as $order) {
 
+				// debug(["order", $order]);
 
-		// Should be good, but disabled for cross referencing
-		// print "cancelUnpaidRenewalOrdersFromLastYear\n$sql\nmatches:".count($result)."\n";
+				// Make sure order is not active in user subscription
+				$sql = "SELECT * FROM ".$UC->db_subscriptions." AS us WHERE us.order_id = ".$order["order_id"];
+				// debug([$sql]);
+				$query->sql($sql);
+				$result = $query->results();
+				if(!$result) {
 
-		// if($result) {
-// 			foreach($result as $order) {
-//
-// 				// debug(["order", $order]);
-//
-// 				// Make sure order is not active in user subscription
-// 				$sql = "SELECT * FROM ".$UC->db_subscriptions." AS us WHERE us.order_id = ".$order["order_id"];
-// 				// debug([$sql]);
-// 				$query->sql($sql);
-// 				$result = $query->results();
-// 				if(!$result) {
-//
-// 					print "deleting:".$order["order_id"].",";
-//
-// 					logger()->addLog("Automated task: cancelUnpaidRenewalOrdersFromLastYear: cancelled order_id:".$order["order_id"]);
-//
-// 					$cancelled = $this->cancelOrder(["cancelOrder", $order["order_id"], $order["user_id"]]);
-// 					if($cancelled) {
-// 						print " confirmed\n";
-// 					}
-// 					else {
-// 						print " failed\n";
-// 					}
-//
-// 				}
-//
-// 				break;
-//
-// 			}
-//
-// 		}
+					print "deleting:".$order["order_id"].",";
+
+					logger()->addLog("Automated task: cancelUnpaidRenewalOrdersFromLastYear: cancelled order_id:".$order["order_id"]);
+
+					$cancelled = $this->cancelOrder(["cancelOrder", $order["order_id"], $order["user_id"]]);
+					if($cancelled) {
+						print " confirmed\n";
+					}
+					else {
+						print " failed\n";
+					}
+
+				}
+
+				break;
+
+			}
+
+		}
 
 	}
 

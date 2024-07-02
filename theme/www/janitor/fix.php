@@ -90,7 +90,7 @@ function update_2023_05_23() {
 // update_2023_05_23();
 
 
-$shop_cl->cancelUnpaidRenewalOrdersFromLastYear();
+// $shop_cl->cancelUnpaidRenewalOrdersFromLastYear();
 
 
 

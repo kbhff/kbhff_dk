@@ -6,6 +6,7 @@ $access_item["/sendTallyNotClosedReminders"] = true;
 $access_item["/cancelUnpaidOrders"] = true;
 $access_item["/sendCancellationWarnings"] = true;
 $access_item["/removeExceededDeadlineCartItems"] = true;
+$access_item["/cancelUnpaidRenewalOrdersFromLastYear"] = true;
 
 if(isset($read_access) && $read_access) {
 	return;
@@ -95,6 +96,17 @@ if(is_array($action) && count($action)) {
 
 		$output = new Output();
 		$output->screen($SC->removeExceededDeadlineCartItems($action));
+		exit();
+
+	}
+
+	else if(preg_match("/^cancelUnpaidRenewalOrdersFromLastYear$/", $action[0])) {
+
+		include_once("classes/shop/supershop.class.php");
+		$SC = new SuperShop();
+
+		$output = new Output();
+		$output->screen($SC->cancelUnpaidRenewalOrdersFromLastYear($action));
 		exit();
 
 	}
