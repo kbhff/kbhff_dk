@@ -826,8 +826,6 @@ class SuperShop extends SuperShopCore {
 
 				}
 
-				break;
-
 			}
 
 		}
