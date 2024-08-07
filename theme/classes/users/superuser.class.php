@@ -1784,9 +1784,7 @@ IT
 
 		}
 
-
-		debug([$recipients, $values]);
-		exit();
+		// debug([$recipients, $values]);
 
 
 		if($recipients) {
@@ -1812,8 +1810,8 @@ IT
 
 		$inactive_users = $this->getDeletableInactiveUsers();
 		print "Inactive users to be deleted: " . count($inactive_users)."<br>\n";
-		debug([$inactive_users]);
-		exit();
+		// debug([$inactive_users]);
+
 
 		foreach($inactive_users as $user_id) {
 
