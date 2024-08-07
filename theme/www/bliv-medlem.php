@@ -20,7 +20,7 @@ $page->pageTitle("Bliv medlem");
 // test if clearing cart cookie is necessary
 // (If user has cart_reference cookie from other user session and tries to signup new user
 // then session is redirected to login. On shop/checkout link to signup will add clear_cookie param to avoid endless loop)
-$clear_cookie = $_GET["clear_cookie"];
+$clear_cookie = isset($_GET["clear_cookie"]) ? $_GET["clear_cookie"] : false;
 if($clear_cookie) {
 	// Clear cart reference from session
 	session()->reset("cart_reference");
