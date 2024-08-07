@@ -6,7 +6,11 @@ $access_item["/sendTallyNotClosedReminders"] = true;
 $access_item["/cancelUnpaidOrders"] = true;
 $access_item["/sendCancellationWarnings"] = true;
 $access_item["/removeExceededDeadlineCartItems"] = true;
+
 $access_item["/cancelUnpaidRenewalOrdersFromLastYear"] = true;
+
+$access_item["/sendDeletionWarningToInactiveUsers"] = true;
+$access_item["/deleteInactiveUsers"] = true;
 
 if(isset($read_access) && $read_access) {
 	return;
@@ -110,7 +114,29 @@ if(is_array($action) && count($action)) {
 		exit();
 
 	}
-		
+
+	else if(preg_match("/^sendDeletionWarningToInactiveUsers$/", $action[0])) {
+
+		include_once("classes/users/superuser.class.php");
+		$UC = new SuperUser();
+
+		$output = new Output();
+		$output->screen($UC->sendDeletionWarningToInactiveUsers($action));
+		exit();
+
+	}
+
+	else if(preg_match("/^deleteInactiveUsers$/", $action[0])) {
+
+		include_once("classes/users/superuser.class.php");
+		$UC = new SuperUser();
+
+		$output = new Output();
+		$output->screen($UC->deleteInactiveUsers($action));
+		exit();
+
+	}
+
 
 }
 

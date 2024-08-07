@@ -1702,5 +1702,229 @@ IT
 
 
 
+	function getDeletableInactiveUsers() {
+
+		$query = new Query();
+		$IC = new Items();
+		$SC = new Shop();
+
+		include_once("classes/users/supermember.class.php");
+		$MC = new SuperMember();
+
+		$members = $MC->getMembers();
+		// debug(["all", $members]);
+
+		// $users = $this->getUsers();
+		$inactive_users = [];
+
+		foreach($members as $member) {
+			$user = $member["user"];
+			if($user["status"] >= 0 && $user["user_group_id"] !== "3" && $user["user_group_id"] !== "13" && strtotime($user["created_at"]) < strtotime("- 1 year")) {
+
+				// debug(["user member for more than one year", $user]);
+
+				$sql = "SELECT oi.name FROM ".$SC->db_orders." AS o, ".$SC->db_order_items." AS oi, ".UT_ITEMS." AS i WHERE o.user_id = ".$user["id"]." AND o.id = oi.order_id AND oi.item_id = i.id AND (i.itemtype = 'signupfee' OR i.itemtype = 'membership') AND (o.payment_status = 2 AND o.id IN (SELECT order_id FROM ".$SC->db_payments." WHERE order_id = o.id)) AND o.created_at >= '".(date("Y") - 2)."-05-01'";
+				// debug([$sql]);
+
+				$query->sql($sql);
+				$results = $query->results();
+				if(!count($results)) {
+					$inactive_users[] = $user["id"];
+
+					// debug(["should be notified about upcoming deletion: ".$user["id"].", ".$user["firstname"]." ".$user["lastname"].", signed up: ".$user["created_at"]]);
+
+				}
+
+			}
+
+		}
+
+		// Test, override user ID with Kaestel and Sarah values
+		// $inactive_users = [8946, 8450];
+		// $inactive_users = [8946];
+
+
+		// Sort by user_id to make it easier to get an overview in logs
+		sort($inactive_users);
+
+
+		return $inactive_users;
+	}
+
+
+	/**
+	* Send warning to inactive users (who did not pay kontingent the previous two years)
+	*/
+	function sendDeletionWarningToInactiveUsers() {
+
+		logger()->addLog("Automated task started: sendDeletionWarningToInactiveUsers");
+
+		$inactive_users = $this->getDeletableInactiveUsers();
+
+		// Output for cronjob log
+		print "Inactive users to be notified: " . count($inactive_users)."<br>\n";
+		$recipients = [];
+		$values = [];
+
+		foreach($inactive_users as $user_id) {
+
+
+			$kbhff_user = $this->getKbhffUser(["user_id" => $user_id]);
+
+			// debug([$kbhff_user]);
+
+			print "Notify user_id: ".$kbhff_user["id"]."<br/>\n";
+			logger()->addLog("Notify user_id: ".$kbhff_user["id"]);
+
+			$recipients[] = $kbhff_user["email"];
+			$values[$kbhff_user["email"]]["NICKNAME"] = $kbhff_user["nickname"];
+			$values[$kbhff_user["email"]]["DELETE_DATE"] = date("d/m/Y", strtotime("+ 1 week"));
+			$values[$kbhff_user["email"]]["PAY_DATE"] = date("d/m/Y", strtotime("+ 6 days"));
+
+
+		}
+
+
+		debug([$recipients, $values]);
+		exit();
+
+
+		if($recipients) {
+			// send reminder
+			$test = mailer()->sendBulk([
+				"recipients" => $recipients,
+				"template" => "delete_inactive_member_notice",
+				"values" => $values,
+			]);
+		}
+
+		logger()->addLog("Automated task started: sendDeletionWarningToInactiveUsers");
+
+	}
+
+	/**
+	* Delete inactive users (who did not pay kontingent the previous two years)
+	*/
+	function deleteInactiveUsers() {
+
+		logger()->addLog("Automated task started: deleteInactiveUsers");
+
+
+		$inactive_users = $this->getDeletableInactiveUsers();
+		print "Inactive users to be deleted: " . count($inactive_users)."<br>\n";
+		debug([$inactive_users]);
+		exit();
+
+		foreach($inactive_users as $user_id) {
+
+			print "Deleting: $user_id<br>\n";
+
+			$delete_result = false;
+			if($this->userCanBeDeleted($user_id)) {
+
+				$delete_result = $this->delete(["delete", $user_id]);
+				// debug([$delete_result]);
+				// $delete_result = true;
+
+			}
+
+
+			if($delete_result === true) {
+
+				print "Successfully deleted: $user_id<br>\n";
+
+			}
+			// Continue with cancellation as fallback
+			else {
+
+				$cancel_result = false;
+
+				print "User cannot be deleted – constraint error<br>\n";
+
+				// check for unpaid orders
+				include_once("classes/shop/supershop.class.php");
+				$SC = new SuperShop();
+				$unpaid_orders = $SC->getUnpaidOrders(["user_id" => $user_id]);
+
+				// debug(["up", $unpaid_orders]);
+
+				if($unpaid_orders) {
+					// cancel unpaid orders to process
+
+					foreach($unpaid_orders as $order) {
+
+						$cancelled_result = $SC->cancelOrder(["cancelOrder", $order["id"], $user_id]);
+						// debug([$$cancelled_result]);
+						// $cancelled_result = false;
+						if($cancelled_result) {
+							print "Cancelled order_id: ".$order["id"]."<br>\n";
+						}
+						else {
+							print "Order could not be cancelled, order_id: ".$order["id"]."<br>\n";
+						}
+
+					}
+
+				}
+
+
+				// Cancel user
+				$cancel_result = $this->cancel(["cancel", $user_id]);
+				// debug([$$cancel_result]);
+				$cancel_result = true;
+
+				if($cancel_result === true) {
+
+					print "Successfully cancelled: $user_id<br>\n";
+
+				}
+				// User could not be deleted – notify admin
+				else {
+
+					print "User could not be cancelled: $user_id<br>\n";
+
+					$test = mailer()->send([
+						// "recipients" => ["martin@parentnode.dk"],
+						"subject" => "Inactive user failed deletion",
+						"text" => "Inactive user: $user_id could not be deleted or cancelled by the automated cleanup script. Follow up manually.",
+					]);
+
+				}
+
+			}
+
+			// debug([message()->getMessages()]);
+
+			// Clear messages generated by cancellation or deletion
+			message()->resetMessages();
+
+		}
+
+		logger()->addLog("Automated task ended: deleteInactiveUsers");
+
+	}
+
+
+	/**
+	* Send reminder to users who started signup 2 weeks ago but didn't finish
+	*/
+	function sendCompleteSignupReminder() {
+
+		$query = new Query();
+		$sql = "SELECT * FROM ".$this->db." AS u LEFT JOIN ".SITE_DB.".user_members m ON u.id = m.user_id  WHERE u.status != -1 AND u.user_group_id NOT IN (1, 3, 13) AND m.subscription_id IS NULL AND m.modified_at IS NULL AND u.created_at < '".date("Y-m-d", strtotime("- 2 weeks"))."'";
+
+		debug([$sql]);
+		
+	}
+
+	/**
+	* Delete users who started signup 4 weeks ago but didn't finish
+	*/
+	function deleteIncompleteSignups() {
+		
+	}
+
+
+
 }
 ?>
