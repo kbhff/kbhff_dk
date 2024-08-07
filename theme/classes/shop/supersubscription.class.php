@@ -78,6 +78,11 @@ class SuperSubscription extends SuperSubscriptionCore {
 
 	}
 
+
+
+	// CRON RELATED METHODS
+
+
 	// #controller#/sendRenewalNotices[/#user_id#]
 	function sendRenewalNotices($action) {
 

@@ -798,7 +798,10 @@ class SuperShop extends SuperShopCore {
 		$query->sql($sql);
 		$result = $query->results();
 
+
+		// Output for cron log
 		print "cancelUnpaidRenewalOrdersFromLastYear\n$sql\nmatches:".count($result)."\n";
+
 
 		if($result) {
 			foreach($result as $order) {
