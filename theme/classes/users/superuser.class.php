@@ -1906,8 +1906,8 @@ IT
 		$sql = "SELECT u.id AS user_id FROM ".$this->db." AS u LEFT JOIN ".SITE_DB.".user_members m ON u.id = m.user_id  WHERE u.status != -1 AND u.user_group_id NOT IN (1, 3, 13) AND m.subscription_id IS NULL AND m.modified_at IS NULL AND DATE(u.created_at) = '".date("Y-m-d", strtotime("- 2 weeks"))."'";
 
 		// First run only – anything older than 14 days to clean up
-		$sql = "SELECT u.id AS user_id FROM ".$this->db." AS u LEFT JOIN ".SITE_DB.".user_members m ON u.id = m.user_id  WHERE u.status != -1 AND u.user_group_id NOT IN (1, 3, 13) AND m.subscription_id IS NULL AND m.modified_at IS NULL AND DATE(u.created_at) <= '".date("Y-m-d", strtotime("- 2 weeks"))."'";
-		debug([$sql]);
+		// $sql = "SELECT u.id AS user_id FROM ".$this->db." AS u LEFT JOIN ".SITE_DB.".user_members m ON u.id = m.user_id  WHERE u.status != -1 AND u.user_group_id NOT IN (1, 3, 13) AND m.subscription_id IS NULL AND m.modified_at IS NULL AND DATE(u.created_at) <= '".date("Y-m-d", strtotime("- 2 weeks"))."'";
+		// debug([$sql]);
 
 		if($query->sql($sql)) {
 
