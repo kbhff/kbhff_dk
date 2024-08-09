@@ -1907,12 +1907,12 @@ IT
 
 		// First run only – anything older than 14 days to clean up
 		$sql = "SELECT u.id AS user_id FROM ".$this->db." AS u LEFT JOIN ".SITE_DB.".user_members m ON u.id = m.user_id  WHERE u.status != -1 AND u.user_group_id NOT IN (1, 3, 13) AND m.subscription_id IS NULL AND m.modified_at IS NULL AND DATE(u.created_at) <= '".date("Y-m-d", strtotime("- 2 weeks"))."'";
-
 		debug([$sql]);
+
 		if($query->sql($sql)) {
 
 			$incomplete_users = $query->results("user_id");
-			debug([$incomplete_users]);
+			// debug([$incomplete_users]);
 
 			// Test users Kaestel and Sarah
 			// $incomplete_users = [8946, 8450];
@@ -1937,16 +1937,16 @@ IT
 
 			}
 
-			debug([$recipients, $values]);
+			// debug([$recipients, $values]);
 
 
 			if($recipients) {
 				// send reminder
-				// $test = mailer()->sendBulk([
-				// 	"recipients" => $recipients,
-				// 	"template" => "complete_signup_reminder",
-				// 	"values" => $values,
-				// ]);
+				$test = mailer()->sendBulk([
+					"recipients" => $recipients,
+					"template" => "complete_signup_reminder",
+					"values" => $values,
+				]);
 			}
 
 		}
@@ -1969,7 +1969,7 @@ IT
 		if($query->sql($sql)) {
 
 			$incomplete_users = $query->results("user_id");
-			debug([$incomplete_users]);
+			// debug([$incomplete_users]);
 
 			// Output for cronjob log
 			print "Incomplete users to be deleted: " . count($incomplete_users)."<br>\n";
@@ -1986,9 +1986,9 @@ IT
 
 				if($this->userCanBeDeleted($user_id)) {
 
-					// $delete_result = $this->delete(["delete", $user_id]);
+					$delete_result = $this->delete(["delete", $user_id]);
 					// debug([$delete_result]);
-					$delete_result = true;
+					// $delete_result = true;
 
 				}
 
@@ -2003,7 +2003,7 @@ IT
 					print "User could not be deleted: $user_id<br>\n";
 
 					$test = mailer()->send([
-						"recipients" => ["martin@parentnode.dk"],
+						// "recipients" => ["martin@parentnode.dk"],
 						"subject" => "Incompletely signed up user failed deletion",
 						"text" => "Incomplete user: $user_id could not be deleted or cancelled by the automated cleanup script. Follow up manually.",
 					]);
