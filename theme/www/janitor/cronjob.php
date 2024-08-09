@@ -157,7 +157,7 @@ if(is_array($action) && count($action)) {
 		$UC = new SuperUser();
 
 		$output = new Output();
-		$output->screen($UC->sendCompleteSignupReminder($action));
+		$output->screen($UC->deleteIncompleteSignups($action));
 		exit();
 
 	}
