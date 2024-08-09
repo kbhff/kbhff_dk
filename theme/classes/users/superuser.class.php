@@ -1669,16 +1669,6 @@ IT
 								"DEADLINE_TIME" => date("H:i", strtotime(ORDERING_DEADLINE_TIME))
 							];
 
-							// send reminder
-							// mailer()->send([
-							// 	"recipients" => [$kbhff_user["email"]],
-							// 	"template" => "ordering_reminder",
-							// 	"values" => [
-							// 		"NICKNAME" => $kbhff_user["nickname"],
-							// 		"DEADLINE_DATE" => date("d.m.Y", strtotime(ORDERING_DEADLINE_TIME)),
-							// 		"DEADLINE_TIME" => date("H:i", strtotime(ORDERING_DEADLINE_TIME))
-							// 	]
-							// ]);
 						}
 					}
 
