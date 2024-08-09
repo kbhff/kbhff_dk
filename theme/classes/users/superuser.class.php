@@ -1971,13 +1971,14 @@ IT
 			$incomplete_users = $query->results("user_id");
 			debug([$incomplete_users]);
 
+			// Output for cronjob log
+			print "Incomplete users to be deleted: " . count($incomplete_users)."<br>\n";
+
 
 			// Test users Kaestel and Sarah
 			// $incomplete_users = [8946, 8450];
 			$incomplete_users = [8946];
 
-			// Output for cronjob log
-			print "Incomplete users to be deleted: " . count($incomplete_users)."<br>\n";
 
 			foreach($incomplete_users as $user_id) {
 
