@@ -12,6 +12,9 @@ $access_item["/cancelUnpaidRenewalOrdersFromLastYear"] = true;
 $access_item["/sendDeletionWarningToInactiveUsers"] = true;
 $access_item["/deleteInactiveUsers"] = true;
 
+$access_item["/sendCompleteSignupReminder"] = true;
+$access_item["/deleteIncompleteSignups"] = true;
+
 if(isset($read_access) && $read_access) {
 	return;
 }
@@ -133,6 +136,28 @@ if(is_array($action) && count($action)) {
 
 		$output = new Output();
 		$output->screen($UC->deleteInactiveUsers($action));
+		exit();
+
+	}
+
+	else if(preg_match("/^sendCompleteSignupReminder$/", $action[0])) {
+
+		include_once("classes/users/superuser.class.php");
+		$UC = new SuperUser();
+
+		$output = new Output();
+		$output->screen($UC->sendCompleteSignupReminder($action));
+		exit();
+
+	}
+
+	else if(preg_match("/^deleteIncompleteSignups$/", $action[0])) {
+
+		include_once("classes/users/superuser.class.php");
+		$UC = new SuperUser();
+
+		$output = new Output();
+		$output->screen($UC->sendCompleteSignupReminder($action));
 		exit();
 
 	}

@@ -1763,8 +1763,8 @@ IT
 
 			// debug([$kbhff_user]);
 
-			print "Notify user_id: ".$kbhff_user["id"]."<br/>\n";
-			logger()->addLog("Notify user_id: ".$kbhff_user["id"]);
+			print "Notify inactive user_id: ".$kbhff_user["id"]."<br/>\n";
+			logger()->addLog("Notify inactive user_id: ".$kbhff_user["id"]);
 
 			$recipients[] = $kbhff_user["email"];
 			$values[$kbhff_user["email"]]["NICKNAME"] = $kbhff_user["nickname"];
@@ -1898,21 +1898,124 @@ IT
 	*/
 	function sendCompleteSignupReminder() {
 
+		logger()->addLog("Automated task ended: sendCompleteSignupReminder");
+
 		$query = new Query();
-		$sql = "SELECT * FROM ".$this->db." AS u LEFT JOIN ".SITE_DB.".user_members m ON u.id = m.user_id  WHERE u.status != -1 AND u.user_group_id NOT IN (1, 3, 13) AND m.subscription_id IS NULL AND m.modified_at IS NULL AND u.created_at < '".date("Y-m-d", strtotime("- 2 weeks"))."'";
+
+		// Onwards – only react to signups exactly 2 weeks old
+		$sql = "SELECT u.id AS user_id FROM ".$this->db." AS u LEFT JOIN ".SITE_DB.".user_members m ON u.id = m.user_id  WHERE u.status != -1 AND u.user_group_id NOT IN (1, 3, 13) AND m.subscription_id IS NULL AND m.modified_at IS NULL AND DATE(u.created_at) = '".date("Y-m-d", strtotime("- 2 weeks"))."'";
+
+		// First run only – anything older than 14 days to clean up
+		$sql = "SELECT u.id AS user_id FROM ".$this->db." AS u LEFT JOIN ".SITE_DB.".user_members m ON u.id = m.user_id  WHERE u.status != -1 AND u.user_group_id NOT IN (1, 3, 13) AND m.subscription_id IS NULL AND m.modified_at IS NULL AND DATE(u.created_at) <= '".date("Y-m-d", strtotime("- 2 weeks"))."'";
 
 		debug([$sql]);
-		
+		if($query->sql($sql)) {
+
+			$incomplete_users = $query->results("user_id");
+			debug([$incomplete_users]);
+
+			// Test users Kaestel and Sarah
+			// $incomplete_users = [8946, 8450];
+			// $incomplete_users = [8946];
+
+			// Output for cronjob log
+			print "Incomplete users to be notified: " . count($incomplete_users)."<br>\n";
+			$recipients = [];
+			$values = [];
+
+			foreach($incomplete_users as $user_id) {
+
+				$kbhff_user = $this->getKbhffUser(["user_id" => $user_id]);
+
+				// debug([$kbhff_user]);
+
+				print "Notify incomplete user_id: ".$kbhff_user["id"]."<br/>\n";
+				logger()->addLog("Notify incomplete user_id: ".$kbhff_user["id"]);
+
+				$recipients[] = $kbhff_user["email"];
+				$values[$kbhff_user["email"]]["NICKNAME"] = $kbhff_user["nickname"];
+
+			}
+
+			debug([$recipients, $values]);
+
+
+			if($recipients) {
+				// send reminder
+				// $test = mailer()->sendBulk([
+				// 	"recipients" => $recipients,
+				// 	"template" => "complete_signup_reminder",
+				// 	"values" => $values,
+				// ]);
+			}
+
+		}
+
+		logger()->addLog("Automated task ended: sendCompleteSignupReminder");
+
 	}
 
 	/**
 	* Delete users who started signup 4 weeks ago but didn't finish
 	*/
 	function deleteIncompleteSignups() {
-		
+
+
+		logger()->addLog("Automated task ended: deleteIncompleteSignups");
+
+		$query = new Query();
+		$sql = "SELECT u.id AS user_id FROM ".$this->db." AS u LEFT JOIN ".SITE_DB.".user_members m ON u.id = m.user_id  WHERE u.status != -1 AND u.user_group_id NOT IN (1, 3, 13) AND m.subscription_id IS NULL AND m.modified_at IS NULL AND u.created_at < '".date("Y-m-d", strtotime("- 4 weeks"))."'";
+		// debug([$sql]);
+		if($query->sql($sql)) {
+
+			$incomplete_users = $query->results("user_id");
+			debug([$incomplete_users]);
+
+
+			// Test users Kaestel and Sarah
+			// $incomplete_users = [8946, 8450];
+			$incomplete_users = [8946];
+
+			// Output for cronjob log
+			print "Incomplete users to be deleted: " . count($incomplete_users)."<br>\n";
+
+			foreach($incomplete_users as $user_id) {
+
+				$delete_result = false;
+
+				if($this->userCanBeDeleted($user_id)) {
+
+					// $delete_result = $this->delete(["delete", $user_id]);
+					// debug([$delete_result]);
+					$delete_result = true;
+
+				}
+
+
+				if($delete_result === true) {
+
+					print "Successfully deleted: $user_id<br>\n";
+
+				}
+				else {
+
+					print "User could not be deleted: $user_id<br>\n";
+
+					$test = mailer()->send([
+						"recipients" => ["martin@parentnode.dk"],
+						"subject" => "Incompletely signed up user failed deletion",
+						"text" => "Incomplete user: $user_id could not be deleted or cancelled by the automated cleanup script. Follow up manually.",
+					]);
+
+				}
+
+			}
+
+		}
+
+		logger()->addLog("Automated task ended: deleteIncompleteSignups");
+
 	}
-
-
 
 }
 ?>
