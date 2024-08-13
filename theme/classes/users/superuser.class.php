@@ -1780,6 +1780,7 @@ IT
 		if($recipients) {
 			// send reminder
 			$test = mailer()->sendBulk([
+				"from_email" => ADMIN_EMAIL,
 				"recipients" => $recipients,
 				"template" => "delete_inactive_member_notice",
 				"values" => $values,
@@ -1943,6 +1944,7 @@ IT
 			if($recipients) {
 				// send reminder
 				$test = mailer()->sendBulk([
+					"from_email" => ADMIN_EMAIL,
 					"recipients" => $recipients,
 					"template" => "complete_signup_reminder",
 					"values" => $values,
