@@ -1979,7 +1979,7 @@ IT
 
 			// Test users Kaestel and Sarah
 			// $incomplete_users = [8946, 8450];
-			$incomplete_users = [8946];
+			// $incomplete_users = [8946];
 
 
 			foreach($incomplete_users as $user_id) {
