@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2023-12-11 11:49:26
+asset-builder @ 2024-08-27 09:06:24
 */
 
 /*seg_smartphone_include.css*/
@@ -657,6 +657,9 @@ body.invoice #content div.scene .payment_info {position: absolute; bottom: 50px;
 #content .scene.userEdit > div.apitoken form {display: inline-block; vertical-align: top; padding-bottom: 15px;}
 #content .scene.userEdit > div.apitoken form.renew ul.actions {padding-right: 0;}
 #content .scene.userEdit > div.apitoken form.disable ul.actions {padding-left: 0;}
+#content .scene.userEdit > div.accesstoken {border-bottom: 1px solid #bbbbbb;}
+#content .scene.userEdit > div.accesstoken form {display: inline-block; vertical-align: top; padding-bottom: 15px;}
+#content .scene.userEdit > div.accesstoken form.delete ul.actions {padding-right: 0;}
 #content .scene.userEdit > div.addresses {border-bottom: 1px solid #bbbbbb;}
 #content .scene.userEdit > div.addresses ul.addresses {padding: 0 30px;}
 #content .scene.userEdit > div.addresses ul.addresses > li {display: inline-block; vertical-align: top; width: 250px; background: #fcfcfc; padding: 10px 10px 50px; border-radius: 10px; margin-right: 30px; margin-bottom: 20px; border-bottom: 1px solid #dedede; position: relative;}
