@@ -97,13 +97,13 @@ $weeklybag_item = $WBC->getWeeklyBag();
 			<div class="pagination">
 				<ul>
 					<? if($items["prev"]): ?>
-					<li class="previous"><a href="/ugens-pose/liste/<?= $items["prev"][0]["sindex"] ?>">Forrige side</a></li>
+					<li class="previous"><a href="/ugens-pose/liste/<?= $items["prev"]["sindex"] ?>">Forrige side</a></li>
 					<? else: ?>
-					<li class="previous"><a class="disabled">Forrige side</a></li>
+					<li class="previous"><a class="button disabled">Forrige side</a></li>
 					<? endif; ?>
 					<li>Side <?= $items["current_page"] ?> af <?= $items["page_count"] ?> sider</li>
 					<? if($items["next"]): ?>
-						<li class="next"><a href="/ugens-pose/liste/<?= $items["next"][0]["sindex"] ?>">Næste side</a></li>
+						<li class="next"><a href="/ugens-pose/liste/<?= $items["next"]["sindex"] ?>">Næste side</a></li>
 					<? else: ?>	
 					<li class="next"><a class="disabled">Næste side</a></li>
 					<? endif; ?>

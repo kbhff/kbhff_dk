@@ -79,7 +79,7 @@
 	text-transform: uppercase;
 	font-family: "voresfont";
 }
-
+#content .scene div.pagination ul li a.disabled {cursor: default !important; color: #aaaaaa !important; background-color: #eeeeee !important;}
 
 #content .scene ul.subnavigation {font-size: 0; margin: 48px 0 24px; padding: 0; list-style: none; /*display: inline-block; vertical-align: top; white-space: nowrap;*/}
 #content .scene ul.subnavigation li {display: inline-block; vertical-align: top; width: 33.3333%; box-sizing: border-box; line-height: 34px; padding: 0 6px 12px 6px;}

@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2024-08-27 09:06:04
+asset-builder @ 2024-09-11 11:21:46
 */
 
 /*seg_desktop_include.css*/
@@ -2072,6 +2072,7 @@ div.overlay .field.password {
 	text-transform: uppercase;
 	font-family: "voresfont";
 }
+#content .scene div.pagination ul li a.disabled {cursor: default !important; color: #aaaaaa !important; background-color: #eeeeee !important;}
 #content .scene ul.subnavigation {font-size: 0; margin: 48px 0 24px; padding: 0; list-style: none; }
 #content .scene ul.subnavigation li {display: inline-block; vertical-align: top; width: 33.3333%; box-sizing: border-box; line-height: 34px; padding: 0 6px 12px 6px;}
 #content .scene ul.subnavigation li a {font-size: 18px; display: block; padding: 12px 24px; line-height: 22px; background-color: #999999; color: #ffffff; border: none; cursor: pointer;
