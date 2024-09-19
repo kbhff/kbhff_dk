@@ -105,3 +105,65 @@
 	padding: 300px 100px;
 	background: transparent url(/favicon.png) no-repeat center 100px;
 }
+
+
+
+
+#content .cta.actions {
+	text-align: center;
+}
+#content .cta.actions a {
+	display: inline-block;
+	outline: 0;
+	cursor: pointer;
+	text-align: center;
+	border: 0;
+	padding: 8px;
+	min-width: 200px;
+	color: #ffffff;
+	background: #6EAA51;
+	border-radius: 4px;
+	font-weight: 500;
+	font-size: 20px;
+}
+
+
+#content div.c-box.newsletter {
+    background: #e2eedd;    
+	max-width: 400px;
+    margin: 36px auto;
+	border-radius: 5px;
+}
+
+
+
+
+/* Likely Skin CSS - Insert Here */
+#content div.c-box,
+#content div.c-primary-box {
+	margin-top: 24px;
+}
+/* 
+#content .banner > div.logo {
+	position: absolute;
+    top: 10%;
+    left: 12px;
+    background: transparent url(../assets/kbhff-skin/img/banners/desktop/header_logo_layover.png) no-repeat top left;
+    background-size: 100% auto;
+    width: 80%;
+    height: 50px;
+} */
+
+
+
+/* newsletter section in footer */
+#footer .newsletter ul.actions input.button {
+	background-color: #000;
+}
+#footer .newsletter div.field {
+	padding:0;
+}
+#footer .newsletter div.field input{
+	width:100%;
+	border-radius: 4px;
+}

@@ -110,8 +110,37 @@ $nested_navigation = recurseNodes($navigation["nodes"], "/");
 	</div>
 
 	<div id="footer">
+		<div class="row">
+			<div class="column">
+				<h3>KBHFF</h3>
+			</div>
+			<div class="column">
+				<h3>Genveje</h3>
+				<ul>
+					<li><a href="/faq">FAQ</a></li>
+					<li><a href="/ugens-pose">Ugens pose</a></li>
+					<li><a href="/butik">Grøntshoppen</a></li>
+					<li><a href="/afdelinger">Afdelinger</a></li>
+					<li><a href="/om">Om KBHFF</a></li>
+				</ul>
+			</div>
+			<div class="column newsletter">
+				<h3>Tilmeld Nyhedsbrev</h3>
+				<form action="//kbhff.us15.list-manage.com/subscribe/post?u=d2a926649ebcf316af87a05bb&amp;id=141ae6f59f" method="post" target="_blank">
+					<input type="hidden" name="b_d2a926649ebcf316af87a05bb_141ae6f59f" value="">
+					<div class="field email required">
+						<label for="input_email">E-mailadresse</label>
+						<input type="email" value="" name="EMAIL" id="input_email" />
+					</div>
+
+					<ul class="actions">
+						<li class="submit"><input type="submit" value="Tilmeld" name="subscribe" class="button" /></li>
+					</ul>
+				</form>
+			</div>
+		</div>
 		<ul class="servicenavigation">
-			<li class="copyright">Københavns Fødevarefællesskab, 2018</li>
+			<li class="copyright">Københavns Fødevarefællesskab, 2024</li>
 			<li class="businessterms"><a href="/handelsbetingelser">Handelsbetingelser</a></li>
 			<li class="personaldata"><a href="/persondata">Persondata</a></li>
 			<li class="contact"><a href="/kontakt">Kontakt</a></li>
