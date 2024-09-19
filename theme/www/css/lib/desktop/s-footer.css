@@ -30,6 +30,17 @@
 	width: 33.33%;
 }
 
+/* newsletter section in footer */
+#footer .newsletter ul.actions input.button {
+	background-color: #000;
+}
+#footer .newsletter div.field {
+	padding:0;
+}
+#footer .newsletter div.field input{
+	width:100%;
+	border-radius: 4px;
+}
 
 /* links in footer */
 #footer ul.servicenavigation li {

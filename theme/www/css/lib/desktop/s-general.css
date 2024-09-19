@@ -143,15 +143,3 @@
 #content div.c-primary-box {
 	margin-top: 24px;
 }
-
-/* newsletter section in footer */
-#footer .newsletter ul.actions input.button {
-	background-color: #000;
-}
-#footer .newsletter div.field {
-	padding:0;
-}
-#footer .newsletter div.field input{
-	width:100%;
-	border-radius: 4px;
-}
