@@ -142,6 +142,10 @@
 	width: 100%;
 	padding: 0;
 }
+#content .front div.news{
+	background-color: #e2eedd;
+	padding: 24px 0;
+}
 
 
 /* FRONT HERO */
@@ -163,11 +167,3 @@
 #content .front div.hero ul.items li.item h3 > a {color: #000000;}
 #content .front div.hero ul.items li.item:hover {cursor: pointer; }
 #content .front div.hero ul.items li.item:hover h3 > a {color: #6EAA51;}
-#content .front div.hero ul.items li.item .image {
-	width: 100%;
-	text-align: center;
-}
-#content .front div.hero ul.items li.item .image img {
-	width: 100%;
-	padding: 0;
-}

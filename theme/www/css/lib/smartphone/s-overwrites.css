@@ -173,11 +173,10 @@
 }
 
 /* FOOTER */
-/*#footer {
-    height: auto;
-    padding: 12px;
+#footer .row {
+	width:100%;
 }
-
-#footer ul.servicenavigation {
-    width: 100%;
-}*/
+#footer .column {
+	width:100%;
+	margin: 16px 0;
+}

@@ -143,18 +143,6 @@
 #content div.c-primary-box {
 	margin-top: 24px;
 }
-/* 
-#content .banner > div.logo {
-	position: absolute;
-    top: 10%;
-    left: 12px;
-    background: transparent url(../assets/kbhff-skin/img/banners/desktop/header_logo_layover.png) no-repeat top left;
-    background-size: 100% auto;
-    width: 80%;
-    height: 50px;
-} */
-
-
 
 /* newsletter section in footer */
 #footer .newsletter ul.actions input.button {
