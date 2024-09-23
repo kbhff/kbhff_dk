@@ -109,10 +109,10 @@
 
 
 
-#content .cta.actions {
+#content .actions.cta {
 	text-align: center;
 }
-#content .cta.actions a {
+#content .actions.cta a {
 	display: inline-block;
 	outline: 0;
 	cursor: pointer;
