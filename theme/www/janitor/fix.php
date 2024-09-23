@@ -100,7 +100,7 @@ function update_2023_05_23() {
 
 
 
-// $user_cl->sendCompleteSignupReminder();
+$user_cl->sendCompleteSignupReminder();
 
 // $user_cl->deleteIncompleteSignups();
 

@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2024-09-11 11:21:46
+asset-builder @ 2024-09-23 07:45:31
 */
 
 /*seg_smartphone_include.css*/
@@ -1143,12 +1143,15 @@ div.field.html .editor .selection_options ul.actions li {padding: 0;}
 #content .signup fieldset p.terms_summary {font-weight: 700;}
 
 /*s-front.css*/
+#content .front div.news  {
+	margin: 64px 0;
+}
 #content .front div.news ul.items {font-size: 0; padding: 0; margin: 0; list-style: none;}
 #content .front div.news ul.items li.item {
 	display: inline-block;
 	vertical-align: top;
 	position: relative;
-	width: calc(49.99% - 24px);
+	width: calc(33% - 24px);
 	height: 300px;
 	margin: 12px;
 	padding: 0;
@@ -1156,7 +1159,7 @@ div.field.html .editor .selection_options ul.actions li {padding: 0;}
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-#content .front div.news ul.items li.item h3 {margin-top: 150px;}
+#content .front div.news ul.items li.item h3 {margin-top: 150px; font-size: 16px; }
 #content .front div.news ul.items li.item h3,
 #content .front div.news ul.items li.item p {padding-left: 0; padding-right: 0;}
 #content .front div.news ul.items li.item h3 > a {color: #000000;}
@@ -1184,7 +1187,111 @@ div.field.html .editor .selection_options ul.actions li {padding: 0;}
 	padding-top: 0;
 }
 #content .front .c-box.weeklybag p.readmore {padding-bottom: 12px; text-align: right;}
+#content .front  .c-box.actions {
+	text-align: center;
+	background-color: unset;
+	padding: 36px;
+}
+#content .front  .c-box.actions a {
+	display: inline-block;
+	outline: 0;
+	cursor: pointer;
+	text-align: center;
+	border: 0;
+	padding: 16px 36px;
+	margin: 0 16px;
+	min-width: 200px;
+	color: #ffffff;
+	background: #6EAA51;
+	border-radius: 4px;
+	font-weight: 500;
+	font-size: 24px;
+}
+#content .front  .c-box.actions :hover {
+	background: #357914;
+}
+#content .front div.steps {
+    margin-bottom: 64px;
+}
+#content .front div.steps ul.items {font-size: 0; padding: 0; margin: 0; list-style: none;}
+#content .front div.steps ul.items li.item {
+	display: inline-block;
+	position: relative;
+	width: calc(25% - 24px);
+	margin: 12px;
+	box-sizing: border-box;
+	overflow: hidden;
+	text-overflow: ellipsis;
+    text-align: center;
+    padding: 16px 0;
+    border-radius: 16px;
+}
+#content .front div.steps ul.items li.item.one{
+    background-color: #e2eedd;
+}
+#content .front div.steps ul.items li.item.two{
+    background-color: #cae0bf;
+}
+#content .front div.steps ul.items li.item.three{
+    background-color: #b4d2a1;
+}
+#content .front div.steps ul.items li.item.four{
+    background-color: #9ec383;
+}
+#content .front div.steps ul.items li.item:hover {
+    background-color: #6EAA51;
+}
+#content .front div.steps ul.items li.item h3 {margin-top: 0px; font-size: 20px;}
+#content .front div.steps ul.items li.item h3,
+#content .front div.steps ul.items li.item p {padding: 0;}
+#content .front div.steps ul.items li.item p {font-size: 16px;}
+#content .front div.steps ul.items li.item h3 > a {color: #000000;}
+#content .front div.steps ul.items li.item:hover {cursor: pointer; }
+#content .front div.steps ul.items li.item:hover h3 > a {color: #6EAA51;}
+#content .front div.steps ul.items li.item .image {
+	width: 100%;
+	text-align: center;
+}
+#content .front div.news ul.items li.item .image img {
+	width: 100%;
+	padding: 0;
+}
+#content .front div.news{
+	background-color: #e2eedd;
+	padding: 24px 0;
+}
+#content .front div.hero ul.items {font-size: 0; padding: 0; margin: 0; list-style: none;}
+#content .front div.hero ul.items li.item {
+	display: inline-block;
+	position: relative;
+	width: calc(49% - 24px);
+	margin: 12px;
+	padding: 0;
+	box-sizing: border-box;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+#content .front div.hero ul.items li.item h3 {margin-top: 0px;}
+#content .front div.hero ul.items li.item h3,
+#content .front div.hero ul.items li.item p {padding-left: 0; padding-right: 0;}
+#content .front div.hero ul.items li.item h3 > a {color: #000000;}
+#content .front div.hero ul.items li.item:hover {cursor: pointer; }
+#content .front div.hero ul.items li.item:hover h3 > a {color: #6EAA51;}
 
+/*s-front-overwrites.css*/
+#content .front  .c-box.actions a {
+	margin: 12px;
+}
+#content .front .c-box.actions {
+    padding: 0;
+}
+#content .front div.steps ul.items li.item {
+	width: calc(50% - 24px);
+}
+#content .front div.hero img {
+    height: 300px;
+	padding: 0;
+}
 
 /*s-post.css*/
 #content .post {}
@@ -2099,6 +2206,50 @@ div.overlay .field.password {
 #content .scene.faq ul.questions li.question.open .articlebody {display: block;}
 
 
+/*s-footer.css*/
+#footer {
+	height: 100%;
+	background: #9c9a81;
+	color: #000;
+}
+#footer li{
+	line-height: 24px;
+}
+#footer .row {
+	width:936px;
+	margin: 0 auto;
+	padding: 16px 0;
+}
+#footer .row:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+#footer .row h3{
+	font-weight: bold;
+}
+#footer .row ul{
+    list-style: disc;
+    margin-inline-start: 16px;
+}
+#footer .column {
+	float: left;
+	width: 33.33%;
+}
+#footer .newsletter ul.actions input.button {
+	background-color: #000;
+}
+#footer .newsletter div.field {
+	padding:0;
+}
+#footer .newsletter div.field input{
+	width:100%;
+	border-radius: 4px;
+}
+#footer ul.servicenavigation li {
+	color: #000;
+}
+
 /*s-general.css*/
 #navigation ul.navigation h5:hover, 
 #navigation ul.navigation li:not(.selected) a:hover {
@@ -2159,6 +2310,34 @@ div.overlay .field.password {
 	padding: 300px 100px;
 	background: transparent url(../assets/favicon.png) no-repeat center 100px;
 }
+#content .cta.actions {
+	text-align: center;
+}
+#content .cta.actions a {
+	display: inline-block;
+	outline: 0;
+	cursor: pointer;
+	text-align: center;
+	border: 0;
+	padding: 8px;
+	min-width: 200px;
+	color: #ffffff;
+	background: #6EAA51;
+	border-radius: 4px;
+	font-weight: 500;
+	font-size: 20px;
+}
+#content div.c-box.newsletter {
+    background: #e2eedd;    
+	max-width: 400px;
+    margin: 36px auto;
+	border-radius: 5px;
+}
+#content div.c-box,
+#content div.c-primary-box {
+	margin-top: 24px;
+}
+
 
 /*s-overwrites.css*/
 #content .scene.login form {
@@ -2223,5 +2402,12 @@ div.overlay .field.password {
 }
 #content .scene.departments ul.departments>li {
     width: 50%;
+}
+#footer .row {
+	width:100%;
+}
+#footer .column {
+	width:100%;
+	margin: 16px 0;
 }
 
