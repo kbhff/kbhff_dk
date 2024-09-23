@@ -1,11 +1,15 @@
 /* LEFT PANEL (GRID) */
+#content .front div.news  {
+	margin: 64px 0;
+}
+
 #content .front div.news ul.items {font-size: 0; padding: 0; margin: 0; list-style: none;}
 
 #content .front div.news ul.items li.item {
 	display: inline-block;
 	vertical-align: top;
 	position: relative;
-	width: calc(49.99% - 24px);
+	width: calc(33% - 24px);
 	height: 300px;
 	margin: 12px;
 	padding: 0;
@@ -15,7 +19,7 @@
 }
 
 /* In case no div.image */
-#content .front div.news ul.items li.item h3 {margin-top: 150px;}
+#content .front div.news ul.items li.item h3 {margin-top: 150px; font-size: 16px; }
 
 #content .front div.news ul.items li.item h3,
 #content .front div.news ul.items li.item p {padding-left: 0; padding-right: 0;}
@@ -60,5 +64,106 @@
 }
 #content .front .c-box.weeklybag p.readmore {padding-bottom: 12px; text-align: right;}
 
+/* Actions links */
+
+#content .front  .c-box.actions {
+	text-align: center;
+	background-color: unset;
+	padding: 36px;
+}
+#content .front  .c-box.actions a {
+	display: inline-block;
+	outline: 0;
+	cursor: pointer;
+	text-align: center;
+	border: 0;
+	padding: 16px 36px;
+	margin: 0 16px;
+	min-width: 200px;
+	color: #ffffff;
+	background: #6EAA51;
+	border-radius: 4px;
+	font-weight: 500;
+	font-size: 24px;
+}
+#content .front  .c-box.actions :hover {
+	background: #357914;
+}
 
 
+/* FRONT 4 STEPS */
+
+#content .front div.steps {
+    margin-bottom: 64px;
+}
+#content .front div.steps ul.items {font-size: 0; padding: 0; margin: 0; list-style: none;}
+#content .front div.steps ul.items li.item {
+	display: inline-block;
+	position: relative;
+	width: calc(25% - 24px);
+	margin: 12px;
+	box-sizing: border-box;
+	overflow: hidden;
+	text-overflow: ellipsis;
+    text-align: center;
+    padding: 16px 0;
+    border-radius: 16px;
+}
+#content .front div.steps ul.items li.item.one{
+    background-color: #e2eedd;
+}
+#content .front div.steps ul.items li.item.two{
+    background-color: #cae0bf;
+}
+#content .front div.steps ul.items li.item.three{
+    background-color: #b4d2a1;
+}
+#content .front div.steps ul.items li.item.four{
+    background-color: #9ec383;
+}
+#content .front div.steps ul.items li.item:hover {
+    background-color: #6EAA51;
+}
+#content .front div.steps ul.items li.item h3 {margin-top: 0px; font-size: 20px;}
+#content .front div.steps ul.items li.item h3,
+#content .front div.steps ul.items li.item p {padding: 0;}
+#content .front div.steps ul.items li.item p {font-size: 16px;}
+#content .front div.steps ul.items li.item h3 > a {color: #000000;}
+#content .front div.steps ul.items li.item:hover {cursor: pointer; }
+#content .front div.steps ul.items li.item:hover h3 > a {color: #6EAA51;}
+#content .front div.steps ul.items li.item .image {
+	width: 100%;
+	text-align: center;
+}
+
+
+/* FRONT NEWS */
+#content .front div.news ul.items li.item .image img {
+	width: 100%;
+	padding: 0;
+}
+#content .front div.news{
+	background-color: #e2eedd;
+	padding: 24px 0;
+}
+
+
+/* FRONT HERO */
+
+#content .front div.hero ul.items {font-size: 0; padding: 0; margin: 0; list-style: none;}
+#content .front div.hero ul.items li.item {
+	display: inline-block;
+	position: relative;
+	width: calc(49% - 24px);
+	margin: 12px;
+	padding: 0;
+	box-sizing: border-box;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+#content .front div.hero ul.items li.item h3 {margin-top: 0px;}
+#content .front div.hero ul.items li.item h3,
+#content .front div.hero ul.items li.item p {padding-left: 0; padding-right: 0;}
+#content .front div.hero ul.items li.item h3 > a {color: #000000;}
+#content .front div.hero ul.items li.item:hover {cursor: pointer; }
+#content .front div.hero ul.items li.item:hover h3 > a {color: #6EAA51;}

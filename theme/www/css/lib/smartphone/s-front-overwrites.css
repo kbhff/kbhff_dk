@@ -1,0 +1,19 @@
+/* Shortcuts */
+#content .front  .c-box.actions a {
+	margin: 12px;
+}
+#content .front .c-box.actions {
+    padding: 0;
+}
+
+/* 4 steps */
+#content .front div.steps ul.items li.item {
+	width: calc(50% - 24px);
+}
+
+
+/* Hero section */
+#content .front div.hero img {
+    height: 300px;
+	padding: 0;
+}
