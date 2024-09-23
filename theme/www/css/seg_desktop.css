@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2024-09-23 07:45:31
+asset-builder @ 2024-09-23 10:16:06
 */
 
 /*seg_desktop_include.css*/
@@ -2226,10 +2226,10 @@ div.overlay .field.password {
 	padding: 300px 100px;
 	background: transparent url(../assets/favicon.png) no-repeat center 100px;
 }
-#content .cta.actions {
+#content .actions.cta {
 	text-align: center;
 }
-#content .cta.actions a {
+#content .actions.cta a {
 	display: inline-block;
 	outline: 0;
 	cursor: pointer;
