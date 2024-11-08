@@ -836,5 +836,3 @@ class SuperShop extends SuperShopCore {
 	}
 
 }
-
-?>

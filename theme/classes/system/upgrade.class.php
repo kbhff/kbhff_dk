@@ -80,5 +80,3 @@ class Upgrade extends UpgradeCore {
 	}
 
 }
-
-?>

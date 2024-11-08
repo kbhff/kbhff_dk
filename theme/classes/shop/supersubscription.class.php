@@ -171,5 +171,3 @@ class SuperSubscription extends SuperSubscriptionCore {
 		return false;
 	}
 }
-
-?>

@@ -1023,7 +1023,7 @@ IT",
 	}
 
 	function hasEmailAddress($_options = false) {
-		
+
 		$user = $this->getKbhffUser();
 		if($user && $user["email"]) {
 			return $user["email"];
@@ -1138,5 +1138,3 @@ IT",
 	}
 
 }
-
-?>

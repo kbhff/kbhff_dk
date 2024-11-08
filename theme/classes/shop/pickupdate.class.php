@@ -364,5 +364,3 @@ class Pickupdate extends Model {
 	}
 
 }
-
-?>

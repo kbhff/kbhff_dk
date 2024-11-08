@@ -395,5 +395,3 @@ class HTML extends HTMLCore {
 
 // create standalone instance to make HTML available without model
 $HTML = new HTML();
-
-?>

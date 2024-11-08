@@ -39,5 +39,3 @@ class Member extends MemberCore {
 		}
 	}
 }
-
-?>

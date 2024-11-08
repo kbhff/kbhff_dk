@@ -184,5 +184,3 @@ class Page extends PageCore {
 		}
 	}
 }
-
-?>
