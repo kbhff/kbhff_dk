@@ -343,7 +343,3 @@ $page->page(array(
 	"type" => "member"
 ));
 exit();
-
-
-?>
- 
