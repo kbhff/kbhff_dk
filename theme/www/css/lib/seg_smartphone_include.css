@@ -1,31 +1,40 @@
-@import url(../../assets/kbhff-skin/css/seg_smartphone.css);
+@import url("/css/lib/s-fonts.css");
+@import url("/css/lib/desktop/core/s-page.css");
+@import url("/css/lib/desktop/core/s-article.css");
+@import url("/css/lib/desktop/core/s-form.css");
+@import url("/css/lib/smartphone/core/s-header.css");
+@import url("/css/lib/smartphone/core/s-navigation.css");
+@import url("/css/lib/desktop/core/s-content.css");
+@import url("/css/lib/smartphone/core/s-content-overwrites.css");
+@import url("/css/lib/desktop/core/s-footer.css");
+@import url("/css/lib/smartphone/core/s-footer-overwrites.css");
 
 
-@import url(desktop/s-login.css);
-@import url(desktop/s-profile.css);
-@import url(desktop/s-signup.css);
-@import url(desktop/s-front.css);
-@import url(smartphone/s-front-overwrites.css);
-@import url(desktop/s-post.css);
-@import url(desktop/s-memberships.css);
-@import url(desktop/s-posts.css);
-@import url(desktop/s-shop.css);
-@import url(desktop/s-shop_shift.css);
-@import url(desktop/s-member_help.css);
-@import url(desktop/s-overlay.css);
-@import url(desktop/s-tally.css);
-@import url(desktop/s-accountant.css);
-@import url(desktop/s-purchasing.css);
-@import url(desktop/s-mass_mail.css);
+@import url("/css/lib/desktop/types/s-login.css");
+@import url("/css/lib/desktop/types/s-profile.css");
+@import url("/css/lib/desktop/types/s-signup.css");
+@import url("/css/lib/desktop/types/s-front.css");
+@import url("/css/lib/smartphone/types/s-front-overwrites.css");
+@import url("/css/lib/desktop/types/s-post.css");
+@import url("/css/lib/desktop/types/s-memberships.css");
+@import url("/css/lib/desktop/types/s-posts.css");
+@import url("/css/lib/desktop/types/s-shop.css");
+@import url("/css/lib/desktop/types/s-shop_shift.css");
+@import url("/css/lib/desktop/types/s-member_help.css");
+@import url("/css/lib/desktop/types/s-overlay.css");
+@import url("/css/lib/desktop/types/s-tally.css");
+@import url("/css/lib/desktop/types/s-accountant.css");
+@import url("/css/lib/desktop/types/s-purchasing.css");
+@import url("/css/lib/desktop/types/s-mass_mail.css");
 
-@import url(desktop/s-departments.css);
+@import url("/css/lib/desktop/types/s-departments.css");
 
-@import url(desktop/s-weeklybags.css);
-@import url(desktop/s-faq.css);
+@import url("/css/lib/desktop/types/s-weeklybags.css");
+@import url("/css/lib/desktop/types/s-faq.css");
 
-@import url(desktop/s-footer.css);
+@import url("/css/lib/desktop/types/s-footer.css");
 
-@import url(desktop/s-general.css);
+@import url("/css/lib/desktop/types/s-general.css");
 
-@import url(smartphone/s-overwrites.css);
+@import url("/css/lib/smartphone/types/s-overwrites.css");
 

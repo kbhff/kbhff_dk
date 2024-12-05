@@ -1,0 +1,14 @@
+/* FOOTER */
+
+#footer {padding: 0 12px;}
+#footer ul.servicenavigation {
+	width: unset;
+}
+
+#footer .row {
+	width:100%;
+}
+#footer .column {
+	width:100%;
+	margin: 16px 0;
+}

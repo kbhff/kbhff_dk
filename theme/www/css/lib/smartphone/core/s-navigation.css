@@ -1,0 +1,91 @@
+#navigation {position: absolute; z-index: 5; width: 100%; top: 0; display: none; overflow-x: hidden;
+	background: #ffffff;}
+#navigation ul {padding-top: 80px;}
+#navigation ul li {padding: 0px 12px 3px 12px; margin-bottom: 3px;font-size: 20px; color: #000000; display: block; text-align: center;
+}
+#navigation ul li.admin,
+#navigation ul li.user {border-top: 1px solid #888888; margin-top: 10px;}
+#navigation ul li.admin+li.user {border: none; margin: 0;}
+
+#navigation ul li:active {text-decoration: none;}
+
+
+
+
+/*
+
+#navigation {
+	position: relative;
+}
+
+#navigation ul.navigation,
+#navigation ul.navigation ul {
+	font-size: 0;
+}
+
+#navigation ul.navigation ul {
+	position: absolute;
+	z-index: 100;
+	opacity: 0;
+	display: none;
+	background-color: #fff;
+	left: -5px;
+	white-space: nowrap;
+
+}
+
+#navigation ul.navigation li {
+	display: inline-block;
+	margin-right: 3px;
+	position: relative;
+}
+*/
+#navigation ul.navigation li.path > h4,
+#navigation ul.navigation li.path > h5,
+#navigation ul.navigation li.path > a,
+#navigation ul.navigation li.selected > h4,
+#navigation ul.navigation li.selected > h5,
+#navigation ul.navigation li.selected > a {
+	background-color: #3e8e17;
+	border: 0px solid #3e8e17;
+	padding: 8px 12px;
+	color: #fff;
+}
+
+#navigation ul.navigation ul li {
+	display: block;
+	margin: 6px 5px;
+}
+
+#navigation ul.navigation h5,
+#navigation ul.navigation h4,
+#navigation ul.navigation a {
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	font-size: 14px;
+	line-height: 22px;
+	letter-spacing: 0.5px;
+
+	padding: 5px 12px;
+	display: block;
+	color: #ffffff;
+	background-color: #000000;
+}
+
+#navigation ul.navigation ul li h5,
+#navigation ul.navigation ul li h4,
+#navigation ul.navigation ul li a{
+	background-color: #666;
+
+}
+
+#navigation ul.navigation h5:hover,
+#navigation ul.navigation a:hover {
+	background-color: #3e8e17;
+}
+
+#navigation ul.navigation h5:hover {
+	cursor: pointer;
+}
+
+*/

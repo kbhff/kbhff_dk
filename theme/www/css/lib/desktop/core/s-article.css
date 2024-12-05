@@ -1,0 +1,30 @@
+/* ARTICLES */
+#content .scene .article .articlebody > p:first-child,
+#content .scene .article .articlebody > h3:first-child,
+#content .scene .article .articlebody > .c-wrapper:first-child {padding-top: 46px;}
+
+
+#content .scene .article h1 {}
+#content .scene .article > ul.info {width: 100%; margin: 0 auto; padding-top: 10px; padding-left: 12px; padding-right: 12px; box-sizing: border-box;}
+#content .scene .article > ul.info li {padding-left: 0}
+#content .scene > .article > .articlebody {/* width: 600px; margin: 0 auto; */} /* Only 600px width if article stands alone (no grid) */
+
+/* TAGS */
+#content .scene .article ul.tags {display: none;}
+
+
+/* INFO */
+#content .scene ul.info {display: none;}
+
+#content .scene ul.info {position: relative; z-index: 1; padding-right: 0; padding-bottom: 0; vertical-align: top; width: auto; font-size: 0; line-height: 1em;}
+#content .scene ul.info li {width: auto; font-size: 12px; line-height: 12px; display: inline-block; vertical-align: top;}
+#content .scene ul.info > li.author:before,
+#content .scene ul.info > li.place:before {content: "\00a0|\00a0"; display: inline-block; vertical-align: top; font-size: 12px; line-height: 10px; }
+#content .scene ul.info li.main_entity,
+#content .scene ul.info li.url,
+#content .scene ul.info li.publisher,
+#content .scene ul.info li.image_info,
+#content .scene ul.info li.modified_at,
+#content .scene ul.info li.latitude,
+#content .scene ul.info li.longitude {display: none;}
+#content .scene ul.info li + li {padding-top: 0;}

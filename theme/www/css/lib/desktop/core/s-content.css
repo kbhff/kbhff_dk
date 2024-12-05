@@ -1,0 +1,347 @@
+#content {
+	margin: 0 auto;
+	position: relative;
+	width: 960px;
+}
+
+
+#content p,
+#content ul,
+#content ol,
+#content pre,
+#content table,
+#content blockquote {
+	padding-bottom: 24px;
+}
+
+
+
+#content h1 {
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	font-size: 36px;
+	line-height: 42px;
+	padding-bottom: 2px;
+	padding-top: 13px;
+	box-sizing: border-box;
+	border-bottom: 2px solid #000;
+}
+
+#content h2 {
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	font-size: 28px;
+	line-height: 30px;
+	padding-bottom: 22px;
+	padding-top: 46px;
+}
+
+
+#content h3 {
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	font-size: 20px;
+	line-height: 24px;
+	padding-top: 12px;
+	padding-bottom: 12px;
+}
+
+#content h4 {
+	font-size: 14px;
+	line-height: 24px;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+}
+
+#content p {
+	line-height: 24px;
+}
+
+#content h1 + p,
+#content h1 + h3,
+#content h1 + .c-wrapper,
+#content h1 + div.messages {
+	padding-top: 46px;
+}
+
+#content h4 + ul,
+#content h4 + ol {
+	padding-top: 18px;
+}
+
+
+#content a {
+	text-decoration: none;
+	color: #3e8e17;
+	font-weight: bold;
+}
+
+
+#content a:hover {
+	color: black;
+}
+
+#content .system-warning {
+	color: #C22414;
+}
+
+#content blockquote {
+	font-style: italic;
+	margin: 0px;
+}
+
+#content img.fit-width {
+	width: 100%;
+}
+
+#content img {
+	display: block;
+	box-sizing: border-box;
+	padding-left: 12px;
+	padding-right: 12px;
+}
+
+#content ol {
+
+	list-style-type: decimal;
+	margin-left: 16px;
+}
+#content ul {
+	list-style: disc;
+	margin-left: 15px;
+}
+#content li {
+	line-height: 24px;
+	padding-left: 8px;
+}
+
+#content ul.richtext {
+	list-style: none;
+	margin-left: 0;
+}
+#content ul.richtext > li {
+	padding-left: 0;
+}
+
+#content li + li {
+	padding-top: 12px;
+}
+
+#content dl {
+	padding-bottom: 12px;
+}
+
+#content dt {
+	font-size: 14px;
+	line-height: 24px;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+}
+#content dl {
+	padding-bottom: 12px;
+}
+#content dd {
+	padding-bottom: 12px;
+}
+#content code {
+	display: block;
+	padding: 24px;
+	margin-bottom: 24px;
+	white-space: pre-wrap;
+	font-family: monospace;
+	background-color: #DDDDDD;
+}
+
+#content span.path {
+	font-family: monospace;
+	background-color: #DDDDDD;
+	padding: 0 6px;
+}
+
+
+
+/* Making sure content works with grid system */
+#content h1 {
+	margin-left: 12px;
+	margin-right: 12px;
+}
+#content h2,
+#content h3,
+#content h4,
+#content p,
+#content ol,
+#content ul,
+#content dl {
+	padding-left: 12px;
+	padding-right: 12px;
+}
+
+
+
+#content div.messages p.message {padding: 10px; margin-bottom: 10px; border: 2px solid #3E8E17; color: #3E8E17;}
+#content div.messages p.error {padding: 10px; margin-bottom: 10px; border: 2px solid #C22414; color: #C22414;}
+
+
+
+/**
+*	## GRID START ##
+*/
+
+
+
+#content div.c-wrapper {
+	display: block;
+	font-size: 0;
+	width: 100%;
+	min-height: 100px;
+	/* background: green; */
+}
+
+#content div.c-one-quarter,
+#content div.c-one-third,
+#content div.c-one-half,
+#content div.c-two-thirds,
+#content div.c-three-quarters {
+	display: inline-block;
+	vertical-align: top;
+	font-size: 0;
+	min-height: 200px;
+}
+
+#content div.c-three-quarters {
+	width: 75%;
+}
+
+#content div.c-two-thirds {
+	width: 66.6666%;
+	/* background: red; */
+}
+
+#content div.c-one-half {
+	width: 50%;
+	/* background: blue; */
+}
+
+#content div.c-one-third {
+	width: 33.3333%;
+	/* background: yellow; */
+}
+
+#content div.c-one-quarter {
+	width: 25%;
+	/* background: purple; */
+}
+
+#content div.c-box,
+#content div.c-primary-box {
+	box-sizing: border-box;
+	margin-left: 12px;
+	margin-right: 12px;
+	margin-bottom: 12px;
+}
+
+#content div.c-box {
+	background: #f2f2f2;
+	/* border-top: 0px solid #473213; */
+}
+#content div.c-box.obs {
+	border-top: 2px solid #3e8e17;
+}
+
+#content div.c-primary-box {
+	background: #3e8e17;
+}
+
+#content .c-box > h2,
+#content .c-primary-box > h2 {
+	padding-top: 22px;
+}
+
+#content div.c-box > p:first-child,
+#content div.c-primary-box > p:first-child {
+	padding-top: 12px;
+}
+
+
+
+#content div.c-primary-box h1,
+#content div.c-primary-box h2,
+#content div.c-primary-box h3,
+#content div.c-primary-box h4,
+#content div.c-primary-box p,
+#content div.c-primary-box ol,
+#content div.c-primary-box ul,
+#content div.c-primary-box dl,
+#content div.c-primary-box li {
+	color: white;
+}
+
+/* box */
+#content div.c-box.c-one-quarter,
+#content div.c-primary-box.c-one-quarter {
+	width: calc(25% - 24px);
+}
+
+#content div.c-box.c-one-third,
+#content div.c-primary-box.c-one-third {
+	width: calc(33.3333% - 24px);
+}
+
+#content div.c-box.c-one-half,
+#content div.c-primary-box.c-one-half {
+	width: calc(50% - 24px);
+}
+
+#content div.c-box.c-two-thirds,
+#content div.c-primary-box.c-two-thirds {
+	width: calc(66.6666% - 24px);
+}
+
+#content div.c-box.c-four-quarters,
+#content div.c-primary-box.c-four-quarters {
+	width: calc(75% - 24px);
+}
+
+/* Nesting */
+#content div.c-two-thirds > div.c-one-third {
+	width: 50%;
+}
+#content div.c-one-half > div.c-one-quarter {
+	width: 50%;
+}
+#content div.c-three-quarters > div.c-one-quarter {
+	width: 33.3333%;
+}
+#content div.c-three-quarters > div.c-one-half {
+	width: 66.6666%;
+}
+
+#content div.c-two-thirds > div.c-box.c-one-third,
+#content div.c-two-thirds > div.c-primary-box.c-one-third {
+	width: calc(50% - 24px);
+}
+#content div.c-one-half > div.c-box.c-one-quarter,
+#content div.c-one-half > div.c-primary-box.c-one-quarter {
+	width: calc(50% - 24px);
+}
+#content div.c-three-quarters > div.c-box.c-one-quarter,
+#content div.c-three-quarters > div.c-primary-box.c-one-quarter {
+	width: calc(33.3333% - 24px);
+}
+#content div.c-three-quarters > div.c-box.c-one-half,
+#content div.c-three-quarters > div.c-primary-box.c-one-half {
+	width: calc(66.6666% - 24px);
+}
+
+
+/**
+*	## GRID END ##
+*/
+
+/* MISC */
+#content .banner {position: relative;}
+#content .banner > img {padding-top: 5px;}
+#content .banner > div.logo {position: absolute; top: 5px; left: 25px; width: 318px; height: 206px;
+	background: transparent url(/img/banners/desktop/logo_layover.png) no-repeat top left;
+	background-size: 100% auto;
+}

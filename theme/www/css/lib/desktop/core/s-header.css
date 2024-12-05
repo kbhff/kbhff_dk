@@ -1,0 +1,44 @@
+#header {
+	position: relative;
+	width: 936px;
+	margin: 0 auto;
+	padding: 36px 0 18px;
+}
+#header .logo {
+	box-sizing: border-box;
+	height: 66px;
+	padding: 0 0 0 68px;
+	display: inline-block;
+	background: transparent url(/img/logos/logo-stempel_sort_stor.png) no-repeat center left;
+	background-size: 60px;
+	letter-spacing: 1px;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	font-size: 30px;
+	line-height: 32px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+#header span.highlight {display: block;}
+
+#header ul.servicenavigation {
+	position: absolute;
+	line-height: 6px;
+	top: 36px;
+	right: 0px;
+}
+
+#header ul.servicenavigation li {
+	display: inline-block;
+	padding-left: 16px;
+	line-height: 14px;
+}
+#header ul.servicenavigation li.navigation {
+	display: none;
+}
+#header ul.servicenavigation a {
+	color: #666;
+}
+#header ul.servicenavigation a:hover {
+	color: #3e8e17;
+	text-decoration: underline;
+}

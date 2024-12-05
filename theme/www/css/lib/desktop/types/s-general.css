@@ -63,7 +63,7 @@
 	width: 960px;
 	height: 206px;
 	background-color: transparent;
-	background-image: url(../../../img/banners/desktop/logo_layover.png), url(../../../img/effects/gx_left.png), url(../../../img/effects/gx_right.png), url(../../../img/effects/gx_top.png), url(../../../img/effects/gx_bottom.png);
+	background-image: url(/img/banners/desktop/logo_layover.png), url(/img/effects/gx_left.png), url(/img/effects/gx_right.png), url(/img/effects/gx_top.png), url(/img/effects/gx_bottom.png);
 	background-repeat: no-repeat, repeat-y, repeat-y, repeat-x, repeat-x;
 	background-position: 25px 5px, 12px top, right 12px top, left 5px, left bottom;
 	background-size: auto;
