@@ -1,5 +1,0 @@
-INSTRUCTIONS FOR SETTING UP THE KBHFF-SKIN
-
-
-In your terminal, navigate to the root folder of the project and run 'git config core.filemode false'.
-This will keep Git from committing changes in file permissions. 

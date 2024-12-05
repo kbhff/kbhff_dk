@@ -102,7 +102,7 @@ $post_items = $IC->getItems([
 		<div class="whatisit">
 			<h3 itemprop="headline">Hvad er det egentlig?</h3>
 			<video width="100%" controls>
-				<source src="../assets/kbhff-skin/videos/KBHFF_explainer.mp4">
+				<source src="/assets/videos/KBHFF_explainer.mp4">
 				Your browser does not support HTML video.
 			</video>
 			<ul class="actions cta">

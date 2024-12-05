@@ -1,6 +1,0 @@
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve" class="indicator required">
-	<line class="line" stroke="#C22414" stroke-width="3" x1="3" y1="3" x2="21" y2="21" />
-	<line class="line" stroke="#C22414" stroke-width="3" x1="0" y1="12" x2="24" y2="12" />
-	<line class="line" stroke="#C22414" stroke-width="3" x1="12" y1="1" x2="12" y2="24" />
-	<line class="line" stroke="#C22414" stroke-width="3" x1="21" y1="3" x2="3" y2="21" />
-</svg>
