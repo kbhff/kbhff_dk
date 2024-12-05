@@ -81,5 +81,3 @@ class TypePost extends Itemtype {
 	}
 
 }
-
-?>

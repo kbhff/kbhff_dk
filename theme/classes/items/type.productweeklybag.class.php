@@ -12,8 +12,8 @@
 * mail: bestyrelse@kbhff.dk
 *
 * think.dk
-* Æbeløgade 4
-* 2100 København Ø
+* Mindehøjvej 4
+* 4673 Rødvig Stevns
 * Denmark
 * mail: start@think.dk
 *
@@ -66,5 +66,3 @@ class TypeProductWeeklybag extends TypeProduct {
 	}
 
 }
-
-?>

@@ -1015,5 +1015,3 @@ class Tally extends Model {
 
 	}
 }
-
-?>

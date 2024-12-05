@@ -11,8 +11,8 @@
 * mail: bestyrelse@kbhff.dk
 *
 * think.dk
-* Æbeløgade 4
-* 2100 København Ø
+* Mindehøjvej 4
+* 4673 Rødvig Stevns
 * Denmark
 * mail: start@think.dk
 *
@@ -1023,7 +1023,7 @@ IT",
 	}
 
 	function hasEmailAddress($_options = false) {
-		
+
 		$user = $this->getKbhffUser();
 		if($user && $user["email"]) {
 			return $user["email"];
@@ -1138,5 +1138,3 @@ IT",
 	}
 
 }
-
-?>

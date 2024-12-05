@@ -1,4 +1,3 @@
-
 <?php
 
 /**
@@ -364,5 +363,3 @@ class Pickupdate extends Model {
 	}
 
 }
-
-?>

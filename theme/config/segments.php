@@ -24,5 +24,3 @@ $segments_config["www"] = array(
 	"seo"           => "seo"
 
 );
-
-?>

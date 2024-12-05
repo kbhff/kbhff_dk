@@ -264,5 +264,3 @@ class TypeMessage extends TypeMessageCore {
 		return false;
 	}
 }
-
-?>

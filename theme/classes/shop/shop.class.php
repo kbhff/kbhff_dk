@@ -1154,5 +1154,3 @@ class Shop extends ShopCore {
 
 
 }
-
-?>
