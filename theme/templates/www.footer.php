@@ -98,13 +98,17 @@ function recurseNodes($nodes, $_parent_path) {
 	return $_;
 }
 
-$nested_navigation = recurseNodes($navigation["nodes"], "/");
+if($navigation && isset($navigation["nodes"])) {
+	$nested_navigation = recurseNodes($navigation["nodes"], "/");
+}
+
+$footer_navigation = $this->navigation("footer");
 
 ?>
 	</div>
 
 	<div id="navigation" class="public">
-		<? if($navigation): ?>
+		<? if($navigation && $nested_navigation): ?>
 			<?= $nested_navigation ?> 
 	 	<? endif; ?>
 	</div>
@@ -114,23 +118,29 @@ $nested_navigation = recurseNodes($navigation["nodes"], "/");
 			<div class="column">
 				<h3>KBHFF</h3>
 			</div>
-			<div class="column">
+			<div class="column shortcuts">
+			<? if($footer_navigation): ?>
 				<h3>Genveje</h3>
 				<ul>
+					<? foreach($footer_navigation["nodes"] as $node): ?>
+					<?= $HTML->link($node["name"], $node["link"], ["wrapper" => "li.".$node["classname"]]) ?>
+					<? endforeach; ?>
 					<li><a href="/faq">FAQ</a></li>
 					<li><a href="/ugens-pose">Ugens pose</a></li>
 					<li><a href="/butik">Grøntshoppen</a></li>
 					<li><a href="/afdelinger">Afdelinger</a></li>
 					<li><a href="/om">Om KBHFF</a></li>
 				</ul>
+			<? endif ?>
 			</div>
-			<div class="column newsletter">
+			
+			<div class="column newsletter i:newsletter">
 				<h3>Tilmeld Nyhedsbrev</h3>
 				<form action="//kbhff.us15.list-manage.com/subscribe/post?u=d2a926649ebcf316af87a05bb&amp;id=141ae6f59f" method="post" target="_blank">
 					<input type="hidden" name="b_d2a926649ebcf316af87a05bb_141ae6f59f" value="">
 					<div class="field email required">
-						<label for="input_email">E-mailadresse</label>
-						<input type="email" value="" name="EMAIL" id="input_email" />
+						<label for="footer_input_email">E-mailadresse</label>
+						<input type="email" value="" name="EMAIL" id="footer_input_email" />
 					</div>
 
 					<ul class="actions">

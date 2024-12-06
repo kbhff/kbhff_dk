@@ -1,16 +1,17 @@
-/* Shortcuts */
-#content .front  .c-box.actions a {
-	margin: 12px;
-}
-#content .front .c-box.actions {
-    padding: 0;
-}
 
 /* 4 steps */
-#content .front div.steps ul.items li.item {
+#content .front div.steps {
+	margin: 0;
+}
+#content .front div.steps ul.steps li.step {
 	width: calc(50% - 24px);
 }
 
+#content .front div.news {
+	margin: 0;
+}
+#content .front div.news ul.items {
+	padding: 0;
 
 /* Hero section */
 #content .front div.hero img {

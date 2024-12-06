@@ -1,7 +1,78 @@
 #footer {
-	height: 48px;
 	background: #484848;
 }
+
+
+
+/* footer grid layout*/
+#footer {
+	height: 100%;
+	background: #000000;
+	color: #ffffff;
+}
+
+#footer .row {
+	width:936px;
+	margin: 0 auto;
+	padding: 24px 0;
+	overflow: hidden;
+}
+#footer .row:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+#footer .column {
+	float: left;
+	min-height: 10px;
+	width: 33.33%;
+}
+
+#footer .row h3 {
+	font-weight: bold;
+	padding-bottom: 12px;
+	color: #ffffff;
+}
+#footer .shortcuts ul {
+	list-style: disc;
+	margin-inline-start: 16px;
+}
+#footer .row li {
+	line-height: 24px;
+	color: #ffffff;
+}
+
+/* NEWSLETTER SECTION IN FOOTER */
+#footer .newsletter h3 {
+	padding-bottom: 24px;
+}
+#footer .newsletter form {
+	font-size: 0;
+}
+#footer .newsletter label {
+	color: #ffffff;
+}
+#footer .newsletter ul.actions {
+	display: inline-block;
+	vertical-align: top;
+	text-align: left;
+}
+#footer .newsletter ul.actions input.button {
+	margin: 14px 0 0;
+	padding-top: 5px; padding-bottom: 5px;
+}
+#footer .newsletter div.field {
+	display: inline-block;
+	vertical-align: top;
+	padding: 0;
+	width: calc(100% - 90px);
+}
+#footer .newsletter div.field input{
+}
+
+
+
 #footer ul.servicenavigation {
 	margin: 0 auto;
 	position: relative;

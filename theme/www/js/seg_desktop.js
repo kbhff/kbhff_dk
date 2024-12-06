@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2024-09-23 10:16:06
+asset-builder @ 2024-12-06 15:32:17
 */
 
 /*seg_desktop_include.js*/
@@ -7546,179 +7546,6 @@ Util.getVar = function(param, url) {
 		return "";
 	}
 }
-Util.Modules["page"] = new function() {
-	this.init = function(page) {
-		page.hN = u.qs("#header");
-		page.hN.ul_service = u.qs("ul.servicenavigation", page.hN);
-		page.cN = u.qs("#content", page);
-		page.nN = u.qs("#navigation", page);
-		page.nN = page.insertBefore(page.nN, page.cN);
-		page.fN = u.qs("#footer");
-		page.fN.ul_service = u.qs("ul.servicenavigation", page.fN);
-		page.resized = function() {
-			this.browser_h = u.browserH();
-			this.browser_w = u.browserW();
-			this.available_height = this.browser_h - this.hN.offsetHeight - this.nN.offsetHeight - this.fN.offsetHeight;
-			u.as(this.cN, "min-height", "auto");
-			if(this.available_height >= this.cN.offsetHeight) {
-				u.as(this.cN, "min-height", this.available_height+"px", false);
-			}
-			if(this.cN && this.cN.scene && typeof(this.cN.scene.resized) == "function") {
-				this.cN.scene.resized();
-			}
-		}
-		page.scrolled = function() {
-			page.scrolled_y = u.scrollY();
-			if(this.cN && this.cN.scene && typeof(this.cN.scene.scrolled) == "function") {
-				this.cN.scene.scrolled();
-			}
-		}
-		page.ready = function() {
-			if(!this.is_ready) {
-				this.is_ready = true;
-				this.cN.scene = u.qs(".scene", this);
-				u.e.addWindowEvent(this, "resize", this.resized);
-				u.e.addWindowEvent(this, "scroll", this.scrolled);
-				this.initHeader();
-				this.initNavigation();
-				this.acceptCookies();
-				this.resized();
-			}
-		}
-		page.initHeader = function() {
-		}
-		page.initNavigation = function() {
-			page.nN_nodes = u.qsa("li.indent0", page.nN);
-			var z_index_counter = 100;
-			for (var i = 0; i < page.nN_nodes.length; i++) {
-				var nav_node = page.nN_nodes[i];
-				nav_node.subnav = u.qs("ul", nav_node);
-				if (nav_node.subnav) {
-					u.e.hover(nav_node, {
-						"delay":"200"
-					});
-					nav_node.is_over = false;
-					nav_node.over = function(event) {
-						nav_node.is_over = true;
-						z_index_counter++;
-						u.ass(this.subnav, {
-							"display":"block",
-							"z-index": z_index_counter
-						});
-						u.a.transition(this.subnav, "all 0.3s ease-out")
-						u.ass(this.subnav, {
-							"opacity":"1"
-						});
-					}
-					nav_node.out = function(event) {
-						nav_node.is_over = false;
-						this.subnav.transitioned = function() {
-							if(!nav_node.is_over) {
-								u.ass(this, {
-									"display":"none"
-								});
-							}
-						};
-						u.a.transition(this.subnav, "all 0.15s ease-out");
-						u.ass(this.subnav, {
-							"opacity":"0"
-						});
-					}
-				}
-			}
-		}
-		page.acceptCookies = function() {
-			if(u.terms_version && !u.getCookie(u.terms_version)) {
-				var terms = u.ie(document.body, "div", {"class":"terms_notification"});
-				u.ae(terms, "h3", {"html":u.stringOr(u.txt["terms-headline"], "Flere grøntsager, <br />færre kager")});
-				u.ae(terms, "p", {"html":u.stringOr(u.txt["terms-paragraph"], "Vi beskytter dit privatliv og bruger kun funktionelle cookies.")});
-				var bn_accept = u.ae(terms, "a", {"class":"accept", "html":u.stringOr(u.txt["terms-accept"], "Accepter")});
-				bn_accept.terms = terms;
-				u.ce(bn_accept);
-				bn_accept.clicked = function() {
-					this.terms.parentNode.removeChild(this.terms);
-					u.saveCookie(u.terms_version, true, {"path":"/", "expires":false});
-				}
-				if(!location.href.match(u.terms_link)) {
-					var bn_details = u.ae(terms, "a", {"class":"details", "html":u.stringOr(u.txt["terms-details"], "Læs mere"), "href":u.terms_link});
-					u.ce(bn_details, {"type":"link"});
-				}
-				u.a.transition(terms, "all 0.5s ease-in");
-				u.ass(terms, {
-					"opacity": 1
-				});
-			}
-		}
-		page.ready();
-	}
-}
-u.e.addDOMReadyEvent(u.init);
-Util.Modules["scene"] = new function() {
-	this.init = function(scene) {
-		scene.resized = function() {
-		}
-		scene.scrolled = function() {
-		}
-		scene.ready = function() {
-		}
-		scene.ready();
-	}
-}
-Util.Modules["banner"] = new function() {
-	this.init = function(div) {
-		var variant = u.cv(div, "variant");
-		var format = u.cv(div, "format");
-		if(variant == "random" || !variant) {
-			variant = u.random(1, 4);
-		}
-		var image = u.ae(div, "img", {class:"fit-width"});	
-		u.ae(div, "div", {class:"logo"});
-		image.loaded = function(queue) {
-			this.onload = function() {
-				if(page) {
-					page.resized();
-				}
-			}
-			this.src = queue[0].image.src;
-			if(page) {
-				page.resized();
-			}
-		}
-		u.preloader(image, ["/img/banners/desktop/pi_" + variant + "." + format]);
-	}
-}
-u.f.fixFieldHTML = function(field) {
-	if(field.indicator && field.label) {
-		u.ae(field.label, field.indicator);
-	}
-}
-u.f.customHintPosition = {};
-u.f.customHintPosition["string"] = function() {}
-u.f.customHintPosition["email"] = function() {}
-u.f.customHintPosition["number"] = function() {}
-u.f.customHintPosition["integer"] = function() {}
-u.f.customHintPosition["password"] = function() {}
-u.f.customHintPosition["tel"] = function() {}
-u.f.customHintPosition["text"] = function() {}
-u.f.customHintPosition["select"] = function() {}
-u.f.customHintPosition["checkbox"] = function() {}
-u.f.customHintPosition["radiobuttons"] = function() {}
-u.f.customHintPosition["date"] = function() {}
-u.f.customHintPosition["datetime"] = function() {}
-u.f.customHintPosition["files"] = function() {}
-u.f.customHintPosition["html"] = function() {}
-
-
-/*u-settings.js*/
-u.ga_account = '';
-u.ga_domain = '';
-u.gapi_key = 'AIzaSyAnZTViVnr4jxGyNQCCMGO0hnJ8NjsKqjo';
-u.terms_version = "terms_v1";
-u.terms_link = "/persondata";
-u.txt["terms-headline"] = "Flere grøntsager, <br />færre kager";
-u.txt["terms-paragraph"] = "Vi beskytter dit privatliv og bruger kun funktionelle cookies.";
-u.txt["terms-accept"] = "Accepter";
-u.txt["terms-details"] = "Læs mere";
 
 
 /*beta-u-paymentcards.js*/
@@ -8015,6 +7842,302 @@ Util.Modules["oneButtonForm"] = new function() {
 	}
 }
 
+/*u-basics.js*/
+u.f.fixFieldHTML = function(field) {
+	if(field.indicator && field.label) {
+		u.ae(field.label, field.indicator);
+	}
+}
+u.f.customHintPosition = {};
+u.f.customHintPosition["string"] = function() {}
+u.f.customHintPosition["email"] = function() {}
+u.f.customHintPosition["number"] = function() {}
+u.f.customHintPosition["integer"] = function() {}
+u.f.customHintPosition["password"] = function() {}
+u.f.customHintPosition["tel"] = function() {}
+u.f.customHintPosition["text"] = function() {}
+u.f.customHintPosition["select"] = function() {}
+u.f.customHintPosition["checkbox"] = function() {}
+u.f.customHintPosition["radiobuttons"] = function() {}
+u.f.customHintPosition["date"] = function() {}
+u.f.customHintPosition["datetime"] = function() {}
+u.f.customHintPosition["files"] = function() {}
+u.f.customHintPosition["html"] = function() {}
+
+
+/*u-settings.js*/
+u.ga_account = '';
+u.ga_domain = '';
+u.gapi_key = 'AIzaSyAnZTViVnr4jxGyNQCCMGO0hnJ8NjsKqjo';
+u.terms_version = "terms_v1";
+u.terms_link = "/persondata";
+u.txt["terms-headline"] = "Flere grøntsager, <br />færre kager";
+u.txt["terms-paragraph"] = "Vi beskytter dit privatliv og bruger kun funktionelle cookies.";
+u.txt["terms-accept"] = "Accepter";
+u.txt["terms-details"] = "Læs mere";
+
+
+/*u-expandarrow.js*/
+u.addExpandArrow = function(node) {
+	if(node.collapsearrow) {
+		node.collapsearrow.parentNode.removeChild(node.collapsearrow);
+		node.collapsearrow = false;
+	}
+	node.expandarrow = u.svg({
+		"name":"expandarrow",
+		"node":node,
+		"class":"arrow",
+		"width":17,
+		"height":17,
+		"shapes":[
+			{
+				"type": "line",
+				"x1": 2,
+				"y1": 2,
+				"x2": 7,
+				"y2": 9
+			},
+			{
+				"type": "line",
+				"x1": 6,
+				"y1": 9,
+				"x2": 11,
+				"y2": 2
+			}
+		]
+	});
+}
+u.addCollapseArrow = function(node) {
+	if(node.expandarrow) {
+		node.expandarrow.parentNode.removeChild(node.expandarrow);
+		node.expandarrow = false;
+	}
+	node.collapsearrow = u.svg({
+		"name":"collapsearrow",
+		"node":node,
+		"class":"arrow",
+		"width":17,
+		"height":17,
+		"shapes":[
+			{
+				"type": "line",
+				"x1": 2,
+				"y1": 9,
+				"x2": 7,
+				"y2": 2
+			},
+			{
+				"type": "line",
+				"x1": 6,
+				"y1": 2,
+				"x2": 11,
+				"y2": 9
+			}
+		]
+	});
+}
+u.addPreviousArrow = function(node) {
+	node.arrow = u.svg({
+		"name":"prevearrow",
+		"node":node,
+		"class":"arrow",
+		"width":17,
+		"height":17,
+		"shapes":[
+			{
+				"type": "line",
+				"x1": 9,
+				"y1": 2,
+				"x2": 2,
+				"y2": 7
+			},
+			{
+				"type": "line",
+				"x1": 2,
+				"y1": 6,
+				"x2": 9,
+				"y2": 11
+			}
+		]
+	});
+}
+u.addNextArrow = function(node) {
+	node.arrow = u.svg({
+		"name":"nextearrow",
+		"node":node,
+		"class":"arrow",
+		"width":17,
+		"height":17,
+		"shapes":[
+			{
+				"type": "line",
+				"x1": 2,
+				"y1": 2,
+				"x2": 9,
+				"y2": 7
+			},
+			{
+				"type": "line",
+				"x1": 9,
+				"y1": 6,
+				"x2": 2,
+				"y2": 11
+			}
+		]
+	});
+}
+
+
+/*i-page.js*/
+Util.Modules["page"] = new function() {
+	this.init = function(page) {
+		page.hN = u.qs("#header");
+		page.hN.ul_service = u.qs("ul.servicenavigation", page.hN);
+		page.cN = u.qs("#content", page);
+		page.nN = u.qs("#navigation", page);
+		page.nN = page.insertBefore(page.nN, page.cN);
+		page.fN = u.qs("#footer");
+		page.fN.ul_service = u.qs("ul.servicenavigation", page.fN);
+		page.resized = function() {
+			this.browser_h = u.browserH();
+			this.browser_w = u.browserW();
+			this.available_height = this.browser_h - this.hN.offsetHeight - this.nN.offsetHeight - this.fN.offsetHeight;
+			u.as(this.cN, "min-height", "auto");
+			if(this.available_height >= this.cN.offsetHeight) {
+				u.as(this.cN, "min-height", this.available_height+"px", false);
+			}
+			if(this.cN && this.cN.scene && typeof(this.cN.scene.resized) == "function") {
+				this.cN.scene.resized();
+			}
+		}
+		page.scrolled = function() {
+			page.scrolled_y = u.scrollY();
+			if(this.cN && this.cN.scene && typeof(this.cN.scene.scrolled) == "function") {
+				this.cN.scene.scrolled();
+			}
+		}
+		page.ready = function() {
+			if(!this.is_ready) {
+				this.is_ready = true;
+				this.cN.scene = u.qs(".scene", this);
+				u.e.addWindowEvent(this, "resize", this.resized);
+				u.e.addWindowEvent(this, "scroll", this.scrolled);
+				this.initHeader();
+				this.initNavigation();
+				this.acceptCookies();
+				this.resized();
+			}
+		}
+		page.initHeader = function() {
+		}
+		page.initNavigation = function() {
+			page.nN_nodes = u.qsa("li.indent0", page.nN);
+			var z_index_counter = 100;
+			for (var i = 0; i < page.nN_nodes.length; i++) {
+				var nav_node = page.nN_nodes[i];
+				nav_node.subnav = u.qs("ul", nav_node);
+				if (nav_node.subnav) {
+					u.e.hover(nav_node, {
+						"delay":"200"
+					});
+					nav_node.is_over = false;
+					nav_node.over = function(event) {
+						nav_node.is_over = true;
+						z_index_counter++;
+						u.ass(this.subnav, {
+							"display":"block",
+							"z-index": z_index_counter
+						});
+						u.a.transition(this.subnav, "all 0.3s ease-out")
+						u.ass(this.subnav, {
+							"opacity":"1"
+						});
+					}
+					nav_node.out = function(event) {
+						nav_node.is_over = false;
+						this.subnav.transitioned = function() {
+							if(!nav_node.is_over) {
+								u.ass(this, {
+									"display":"none"
+								});
+							}
+						};
+						u.a.transition(this.subnav, "all 0.15s ease-out");
+						u.ass(this.subnav, {
+							"opacity":"0"
+						});
+					}
+				}
+			}
+		}
+		page.acceptCookies = function() {
+			if(u.terms_version && !u.getCookie(u.terms_version)) {
+				var terms = u.ie(document.body, "div", {"class":"terms_notification"});
+				u.ae(terms, "h3", {"html":u.stringOr(u.txt["terms-headline"], "Flere grøntsager, <br />færre kager")});
+				u.ae(terms, "p", {"html":u.stringOr(u.txt["terms-paragraph"], "Vi beskytter dit privatliv og bruger kun funktionelle cookies.")});
+				var bn_accept = u.ae(terms, "a", {"class":"accept", "html":u.stringOr(u.txt["terms-accept"], "Accepter")});
+				bn_accept.terms = terms;
+				u.ce(bn_accept);
+				bn_accept.clicked = function() {
+					this.terms.parentNode.removeChild(this.terms);
+					u.saveCookie(u.terms_version, true, {"path":"/", "expires":false});
+				}
+				if(!location.href.match(u.terms_link)) {
+					var bn_details = u.ae(terms, "a", {"class":"details", "html":u.stringOr(u.txt["terms-details"], "Læs mere"), "href":u.terms_link});
+					u.ce(bn_details, {"type":"link"});
+				}
+				u.a.transition(terms, "all 0.5s ease-in");
+				u.ass(terms, {
+					"opacity": 1
+				});
+			}
+		}
+		page.ready();
+	}
+}
+u.e.addDOMReadyEvent(u.init);
+
+
+/*i-scene.js*/
+Util.Modules["scene"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+		}
+		scene.ready();
+	}
+}
+
+
+/*i-banner.js*/
+Util.Modules["banner"] = new function() {
+	this.init = function(div) {
+		var variant = u.cv(div, "variant");
+		var format = u.cv(div, "format");
+		if(variant == "random" || !variant) {
+			variant = u.random(1, 4);
+		}
+		var image = u.ae(div, "img", {class:"fit-width"});	
+		u.ae(div, "div", {class:"logo"});
+		image.loaded = function(queue) {
+			this.onload = function() {
+				if(page) {
+					page.resized();
+				}
+			}
+			this.src = queue[0].image.src;
+			if(page) {
+				page.resized();
+			}
+		}
+		u.preloader(image, ["/img/banners/desktop/pi_" + variant + "." + format]);
+	}
+}
+
+
 /*m-article.js*/
 Util.Modules["article"] = new function() {
 	this.init = function(article) {
@@ -8129,6 +8252,97 @@ Util.Modules["articles"] = new function() {
 }
 
 
+/*m-comments.js*/
+Util.Modules["comments"] = new function() {
+	this.init = function(div) {
+		div.item_id = u.cv(div, "item_id");
+		div.list = u.qs("ul.comments", div);
+		div.comments = u.qsa("li.comment", div.list);
+		div.header = u.qs("h2", div);
+		div.header.div = div;
+		u.addExpandArrow(div.header);
+		u.ce(div.header);
+		div.header.clicked = function() {
+			if(u.hc(this.div, "open")) {
+				u.rc(this.div, "open");
+				u.addExpandArrow(this);
+				u.saveCookie("comments_open_state", 0, {"path":"/"});
+			}
+			else {
+				u.ac(this.div, "open");
+				u.addCollapseArrow(this);
+				u.saveCookie("comments_open_state", 1, {"path":"/"});
+			}
+		}
+		div.comments_open_state = u.getCookie("comments_open_state", {"path":"/"});
+		if(div.comments_open_state == 1) {
+			div.header.clicked();
+		}
+		div.initComment = function(node) {
+			node.div = this;
+		}
+		div.csrf_token = div.getAttribute("data-csrf-token");
+		div.add_comment_url = div.getAttribute("data-comment-add");
+		if(div.add_comment_url && div.csrf_token) {
+			div.actions = u.ae(div, "ul", {"class":"actions"});
+			div.bn_comment = u.ae(u.ae(div.actions, "li", {"class":"add"}), "a", {"html":u.txt["add_comment"], "class":"button primary comment"});
+			div.bn_comment.div = div;
+			u.ce(div.bn_comment);
+			div.bn_comment.clicked = function() {
+				var actions, bn_add, bn_cancel;
+				u.as(this.div.actions, "display", "none");
+				this.div.form = u.f.addForm(this.div, {"action":this.div.add_comment_url+"/"+this.div.item_id, "class":"add labelstyle:inject"});
+				this.div.form.div = div;
+				u.ae(this.div.form, "input", {"type":"hidden","name":"csrf-token", "value":this.div.csrf_token});
+				u.f.addField(this.div.form, {"type":"text", "name":"item_comment", "label":u.txt["comment"]});
+				actions = u.ae(this.div.form, "ul", {"class":"actions"});
+				bn_add = u.f.addAction(actions, {"value":u.txt["add_comment"], "class":"button primary update", "name":"add"});
+				bn_add.div = div;
+				bn_cancel = u.f.addAction(actions, {"value":u.txt["cancel"], "class":"button cancel", "type":"button", "name":"cancel"});
+				bn_cancel.div = div;
+				u.f.init(this.div.form);
+				this.div.form.submitted = function() {
+					this.response = function(response) {
+						if(response.cms_status == "success" && response.cms_object) {
+							if(!div.list) {
+								var p = u.qs("p", div);
+								if(p) {
+									p.parentNode.removeChild(p);
+								}
+								div.list = u.ie(div, "ul", {"class":"comments"});
+								div.insertBefore(div.list, div.actions);
+							}
+							var comment_li = u.ae(this.div.list, "li", {"class":"comment comment_id:"+response.cms_object["id"]});
+							var info = u.ae(comment_li, "ul", {"class":"info"});
+							u.ae(info, "li", {"class":"created_at", "html":response.cms_object["created_at"]});
+							u.ae(info, "li", {"class":"author", "html":response.cms_object["nickname"]});
+							u.ae(comment_li, "p", {"class":"comment", "html":response.cms_object["comment"]})
+							this.div.initComment(comment_li);
+							this.parentNode.removeChild(this);
+							u.as(this.div.actions, "display", "");
+						}
+					}
+					u.request(this, this.action, {"method":"post", "data":this.getData()});
+				}
+				u.ce(bn_cancel);
+				bn_cancel.clicked = function(event) {
+					u.e.kill(event);
+					this.div.form.parentNode.removeChild(this.div.form);
+					u.as(this.div.actions, "display", "");
+				}
+			}
+		}
+		else {
+			u.ae(div, "p", {"html": (u.txt["login_to_comment"] ? u.txt["login_to_comment"] : "Login or signup to comment")});
+		}
+		var i, node;
+		for(i = 0; node = div.comments[i]; i++) {
+			div.initComment(node);
+		}
+	}
+}
+
+
 /*m-front.js*/
 Util.Modules["front"] = new function() {
 	this.init = function(scene) {
@@ -8163,6 +8377,23 @@ Util.Modules["front"] = new function() {
 					u.ce(node, {type:"link", use: "h3 a"});
 				}
 			}
+		}
+		scene.ready();
+	}
+}
+
+
+/*m-login.js*/
+Util.Modules["login"] = new function() {
+	this.init = function(scene) {
+		scene.resized = function() {
+		}
+		scene.scrolled = function() {
+		}
+		scene.ready = function() {
+			var form_login = u.qs("form.login", this);
+			u.f.init(form_login);
+			form_login.inputs["username"].focus();
 		}
 		scene.ready();
 	}
@@ -8212,23 +8443,6 @@ Util.Modules["faq"] = new function() {
 					header.clicked();
 				}
 			}
-		}
-		scene.ready();
-	}
-}
-
-
-/*m-login.js*/
-Util.Modules["login"] = new function() {
-	this.init = function(scene) {
-		scene.resized = function() {
-		}
-		scene.scrolled = function() {
-		}
-		scene.ready = function() {
-			var form_login = u.qs("form.login", this);
-			u.f.init(form_login);
-			form_login.inputs["username"].focus();
 		}
 		scene.ready();
 	}
@@ -8732,97 +8946,6 @@ Util.Modules["signup"] = new function() {
 			page.resized();
 		}
 		scene.ready();
-	}
-}
-
-
-/*m-comments.js*/
-Util.Modules["comments"] = new function() {
-	this.init = function(div) {
-		div.item_id = u.cv(div, "item_id");
-		div.list = u.qs("ul.comments", div);
-		div.comments = u.qsa("li.comment", div.list);
-		div.header = u.qs("h2", div);
-		div.header.div = div;
-		u.addExpandArrow(div.header);
-		u.ce(div.header);
-		div.header.clicked = function() {
-			if(u.hc(this.div, "open")) {
-				u.rc(this.div, "open");
-				u.addExpandArrow(this);
-				u.saveCookie("comments_open_state", 0, {"path":"/"});
-			}
-			else {
-				u.ac(this.div, "open");
-				u.addCollapseArrow(this);
-				u.saveCookie("comments_open_state", 1, {"path":"/"});
-			}
-		}
-		div.comments_open_state = u.getCookie("comments_open_state", {"path":"/"});
-		if(div.comments_open_state == 1) {
-			div.header.clicked();
-		}
-		div.initComment = function(node) {
-			node.div = this;
-		}
-		div.csrf_token = div.getAttribute("data-csrf-token");
-		div.add_comment_url = div.getAttribute("data-comment-add");
-		if(div.add_comment_url && div.csrf_token) {
-			div.actions = u.ae(div, "ul", {"class":"actions"});
-			div.bn_comment = u.ae(u.ae(div.actions, "li", {"class":"add"}), "a", {"html":u.txt["add_comment"], "class":"button primary comment"});
-			div.bn_comment.div = div;
-			u.ce(div.bn_comment);
-			div.bn_comment.clicked = function() {
-				var actions, bn_add, bn_cancel;
-				u.as(this.div.actions, "display", "none");
-				this.div.form = u.f.addForm(this.div, {"action":this.div.add_comment_url+"/"+this.div.item_id, "class":"add labelstyle:inject"});
-				this.div.form.div = div;
-				u.ae(this.div.form, "input", {"type":"hidden","name":"csrf-token", "value":this.div.csrf_token});
-				u.f.addField(this.div.form, {"type":"text", "name":"item_comment", "label":u.txt["comment"]});
-				actions = u.ae(this.div.form, "ul", {"class":"actions"});
-				bn_add = u.f.addAction(actions, {"value":u.txt["add_comment"], "class":"button primary update", "name":"add"});
-				bn_add.div = div;
-				bn_cancel = u.f.addAction(actions, {"value":u.txt["cancel"], "class":"button cancel", "type":"button", "name":"cancel"});
-				bn_cancel.div = div;
-				u.f.init(this.div.form);
-				this.div.form.submitted = function() {
-					this.response = function(response) {
-						if(response.cms_status == "success" && response.cms_object) {
-							if(!div.list) {
-								var p = u.qs("p", div);
-								if(p) {
-									p.parentNode.removeChild(p);
-								}
-								div.list = u.ie(div, "ul", {"class":"comments"});
-								div.insertBefore(div.list, div.actions);
-							}
-							var comment_li = u.ae(this.div.list, "li", {"class":"comment comment_id:"+response.cms_object["id"]});
-							var info = u.ae(comment_li, "ul", {"class":"info"});
-							u.ae(info, "li", {"class":"created_at", "html":response.cms_object["created_at"]});
-							u.ae(info, "li", {"class":"author", "html":response.cms_object["nickname"]});
-							u.ae(comment_li, "p", {"class":"comment", "html":response.cms_object["comment"]})
-							this.div.initComment(comment_li);
-							this.parentNode.removeChild(this);
-							u.as(this.div.actions, "display", "");
-						}
-					}
-					u.request(this, this.action, {"method":"post", "data":this.getData()});
-				}
-				u.ce(bn_cancel);
-				bn_cancel.clicked = function(event) {
-					u.e.kill(event);
-					this.div.form.parentNode.removeChild(this.div.form);
-					u.as(this.div.actions, "display", "");
-				}
-			}
-		}
-		else {
-			u.ae(div, "p", {"html": (u.txt["login_to_comment"] ? u.txt["login_to_comment"] : "Login or signup to comment")});
-		}
-		var i, node;
-		for(i = 0; node = div.comments[i]; i++) {
-			div.initComment(node);
-		}
 	}
 }
 
@@ -10648,117 +10771,6 @@ Util.Modules["massmail"] = new function() {
 		}
 		scene.ready();
 	}
-}
-
-
-/*u-expandarrow.js*/
-u.addExpandArrow = function(node) {
-	if(node.collapsearrow) {
-		node.collapsearrow.parentNode.removeChild(node.collapsearrow);
-		node.collapsearrow = false;
-	}
-	node.expandarrow = u.svg({
-		"name":"expandarrow",
-		"node":node,
-		"class":"arrow",
-		"width":17,
-		"height":17,
-		"shapes":[
-			{
-				"type": "line",
-				"x1": 2,
-				"y1": 2,
-				"x2": 7,
-				"y2": 9
-			},
-			{
-				"type": "line",
-				"x1": 6,
-				"y1": 9,
-				"x2": 11,
-				"y2": 2
-			}
-		]
-	});
-}
-u.addCollapseArrow = function(node) {
-	if(node.expandarrow) {
-		node.expandarrow.parentNode.removeChild(node.expandarrow);
-		node.expandarrow = false;
-	}
-	node.collapsearrow = u.svg({
-		"name":"collapsearrow",
-		"node":node,
-		"class":"arrow",
-		"width":17,
-		"height":17,
-		"shapes":[
-			{
-				"type": "line",
-				"x1": 2,
-				"y1": 9,
-				"x2": 7,
-				"y2": 2
-			},
-			{
-				"type": "line",
-				"x1": 6,
-				"y1": 2,
-				"x2": 11,
-				"y2": 9
-			}
-		]
-	});
-}
-u.addPreviousArrow = function(node) {
-	node.arrow = u.svg({
-		"name":"prevearrow",
-		"node":node,
-		"class":"arrow",
-		"width":17,
-		"height":17,
-		"shapes":[
-			{
-				"type": "line",
-				"x1": 9,
-				"y1": 2,
-				"x2": 2,
-				"y2": 7
-			},
-			{
-				"type": "line",
-				"x1": 2,
-				"y1": 6,
-				"x2": 9,
-				"y2": 11
-			}
-		]
-	});
-}
-u.addNextArrow = function(node) {
-	node.arrow = u.svg({
-		"name":"nextearrow",
-		"node":node,
-		"class":"arrow",
-		"width":17,
-		"height":17,
-		"shapes":[
-			{
-				"type": "line",
-				"x1": 2,
-				"y1": 2,
-				"x2": 9,
-				"y2": 7
-			},
-			{
-				"type": "line",
-				"x1": 9,
-				"y1": 6,
-				"x2": 2,
-				"y2": 11
-			}
-		]
-	});
 }
 
 

@@ -1,10 +1,97 @@
-/* LEFT PANEL (GRID) */
-#content .front div.news  {
-	margin: 64px 0;
+#content .front h1 + .c-wrapper {
+	padding-top: 0px;
 }
 
-#content .front div.news ul.items {font-size: 0; padding: 0; margin: 0; list-style: none;}
 
+/* ACTIONS LINKS */
+#content .front ul.actions {
+	text-align: center;
+	padding: 60px 0 36px;
+}
+#content .front ul.actions li {
+	padding-left: 0;
+}
+#content .front ul.actions a {
+	padding: 16px 36px;
+	margin: 0 16px;
+	min-width: 200px;
+	font-weight: 500;
+	font-size: 24px;
+}
+
+
+/* FRONT 4 STEPS */
+#content .front div.steps {
+	margin-bottom: 64px;
+}
+#content .front div.steps ul.steps {font-size: 0; padding: 0; margin: 0; list-style: none;}
+#content .front div.steps ul.steps li.step {
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
+	width: calc(25% - 24px);
+	margin: 12px;
+	box-sizing: border-box;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-align: center;
+	padding: 16px 0;
+	cursor: pointer;
+}
+#content .front div.steps ul.steps li.step.one {
+	background-color: rgba(62, 142, 23, 0.2);
+}
+#content .front div.steps ul.steps li.step.two {
+	background-color: rgba(62, 142, 23, 0.35);
+}
+#content .front div.steps ul.steps li.step.three {
+	background-color: rgba(62, 142, 23, 0.5);
+}
+#content .front div.steps ul.steps li.step.four {
+	background-color: rgba(62, 142, 23, 0.65);
+}
+#content .front div.steps ul.steps li.step:hover {
+	background-color: #357914;
+}
+#content .front div.steps ul.steps li.step h3 {font-size: 20px; padding: 10px 0 0;}
+#content .front div.steps ul.steps li.step p {font-size: 16px; padding: 0;}
+#content .front div.steps ul.steps li.step h3 {}
+#content .front div.steps ul.steps li.step h3 a {color: #000000;}
+
+#content .front div.steps ul.steps li.step .image {
+	width: 100%;
+	text-align: center;
+}
+#content .front div.steps ul.steps li.step svg {
+	display: block;
+	stroke: #000000;
+	fill: #000000;
+	width: 64px;
+	height: 64px;
+	margin: 0 auto;
+	padding: 0;
+}
+
+#content .front div.steps ul.steps li.step:hover svg {stroke: #ffffff; fill: #ffffff;}
+
+#content .front div.steps ul.steps li.step:hover h3,
+#content .front div.steps ul.steps li.step:hover p {color: #ffffff;}
+
+
+
+/* VIDEO */
+#content .front div.whatisit video {padding: 0 12px; width: calc(100% - 24px); display: block;}
+#content .front div.whatisit ul.actions {padding-top: 24px;}
+
+
+/* FRONT NEWS */
+#content .front div.news {
+	margin: 48px 0 0;
+}
+#content .front div.news ul.items {
+	background-color: #e2eedd;
+	margin: 0 12px;
+}
 #content .front div.news ul.items li.item {
 	display: inline-block;
 	vertical-align: top;
@@ -18,7 +105,6 @@
 	text-overflow: ellipsis;
 }
 
-/* In case no div.image */
 #content .front div.news ul.items li.item h3 {margin-top: 150px; font-size: 16px; }
 
 #content .front div.news ul.items li.item h3,
@@ -38,132 +124,10 @@
 	
 	background-position: center center;
 
-	/* In canse no div.image */
 	position: absolute;
 	top: 0;
 	left: 0;
 }
+#content .front div.news ul.actions {padding-top: 24px;}
 
-#content .front div.news ul.items li.item .image img {
-	width: 100%;
-	/* height: 100%; */
-	padding: 0;
-}
-
-
-/* RIGHT PANEL */
-#content .front div.c-one-third {
-	padding-top: 12px;
-}
-
-
-
-/* FRONT C-BOXES */
-#content .front .c-box.weeklybag li {
-	padding-top: 0;
-}
-#content .front .c-box.weeklybag p.readmore {padding-bottom: 12px; text-align: right;}
-
-/* Actions links */
-
-#content .front  .c-box.actions {
-	text-align: center;
-	background-color: unset;
-	padding: 36px;
-}
-#content .front  .c-box.actions a {
-	display: inline-block;
-	outline: 0;
-	cursor: pointer;
-	text-align: center;
-	border: 0;
-	padding: 16px 36px;
-	margin: 0 16px;
-	min-width: 200px;
-	color: #ffffff;
-	background: #6EAA51;
-	border-radius: 4px;
-	font-weight: 500;
-	font-size: 24px;
-}
-#content .front  .c-box.actions :hover {
-	background: #357914;
-}
-
-
-/* FRONT 4 STEPS */
-
-#content .front div.steps {
-    margin-bottom: 64px;
-}
-#content .front div.steps ul.items {font-size: 0; padding: 0; margin: 0; list-style: none;}
-#content .front div.steps ul.items li.item {
-	display: inline-block;
-	position: relative;
-	width: calc(25% - 24px);
-	margin: 12px;
-	box-sizing: border-box;
-	overflow: hidden;
-	text-overflow: ellipsis;
-    text-align: center;
-    padding: 16px 0;
-    border-radius: 16px;
-}
-#content .front div.steps ul.items li.item.one{
-    background-color: #e2eedd;
-}
-#content .front div.steps ul.items li.item.two{
-    background-color: #cae0bf;
-}
-#content .front div.steps ul.items li.item.three{
-    background-color: #b4d2a1;
-}
-#content .front div.steps ul.items li.item.four{
-    background-color: #9ec383;
-}
-#content .front div.steps ul.items li.item:hover {
-    background-color: #6EAA51;
-}
-#content .front div.steps ul.items li.item h3 {margin-top: 0px; font-size: 20px;}
-#content .front div.steps ul.items li.item h3,
-#content .front div.steps ul.items li.item p {padding: 0;}
-#content .front div.steps ul.items li.item p {font-size: 16px;}
-#content .front div.steps ul.items li.item h3 > a {color: #000000;}
-#content .front div.steps ul.items li.item:hover {cursor: pointer; }
-#content .front div.steps ul.items li.item:hover h3 > a {color: #6EAA51;}
-#content .front div.steps ul.items li.item .image {
-	width: 100%;
-	text-align: center;
-}
-
-
-/* FRONT NEWS */
-#content .front div.news ul.items li.item .image img {
-	width: 100%;
-	padding: 0;
-}
-#content .front div.news{
-	background-color: #e2eedd;
-	padding: 24px 0;
-}
-
-
-/* FRONT HERO */
-
-#content .front div.hero ul.items {font-size: 0; padding: 0; margin: 0; list-style: none;}
-#content .front div.hero ul.items li.item {
-	display: inline-block;
-	position: relative;
-	width: calc(49% - 24px);
-	margin: 12px;
-	padding: 0;
-	box-sizing: border-box;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-#content .front div.hero ul.items li.item h3 {margin-top: 0px;}
-#content .front div.hero ul.items li.item h3,
-#content .front div.hero ul.items li.item p {padding-left: 0; padding-right: 0;}
-#content .front div.hero ul.items li.item h3 > a {color: #000000;}
-#content .front div.hero ul.items li.item:hover {cursor: pointer; }
-#content .front div.hero ul.items li.item:hover h3 > a {color: #6EAA51;}
+#content .front div.hero {margin-top: -120px; position: relative; z-index: -1;}
