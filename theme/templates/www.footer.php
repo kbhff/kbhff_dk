@@ -125,11 +125,6 @@ $footer_navigation = $this->navigation("footer");
 					<? foreach($footer_navigation["nodes"] as $node): ?>
 					<?= $HTML->link($node["name"], $node["link"], ["wrapper" => "li.".$node["classname"]]) ?>
 					<? endforeach; ?>
-					<li><a href="/faq">FAQ</a></li>
-					<li><a href="/ugens-pose">Ugens pose</a></li>
-					<li><a href="/butik">Grøntshoppen</a></li>
-					<li><a href="/afdelinger">Afdelinger</a></li>
-					<li><a href="/om">Om KBHFF</a></li>
 				</ul>
 			<? endif ?>
 			</div>
