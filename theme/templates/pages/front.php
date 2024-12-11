@@ -107,7 +107,7 @@ $post_items = $IC->getItems([
 			</ul>
 		</div>
 		<div class="whatisit">
-			<h2>Hvad er det egentlig?</h2>
+			<h2>Hvad er KBHFF egentlig?</h2>
 			<video controls>
 				<source src="/assets/videos/interview.mp4">
 				Your browser does not support HTML video.
