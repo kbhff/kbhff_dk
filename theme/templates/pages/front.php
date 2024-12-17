@@ -33,8 +33,8 @@ $post_items = $IC->getItems([
 			<li class="shift"><a href="https://wiki.kbhff.dk/tiki-index.php?page=Vagtplaner" class="button primary">Ta' en vagt</a></li>
 			<li class="order"><a href="/butik" class="button primary">Bestil en pose</a></li>
 		<? else: ?>
-			<li class="member"><a href="/bliv-medlem" class="button primary">Bliv medlem</a></li>
 			<li class="login"><a href="/login" class="button primary">Login</a></li>
+			<li class="member"><a href="/bliv-medlem" class="button primary">Bliv medlem</a></li>
 		<? endif; ?>
 		</ul>
 
