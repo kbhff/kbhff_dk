@@ -66,7 +66,7 @@ if($item && $item["status"] >= 0) {
 	$has_password = $model->hasPassword(["user_id" => $user_id]);
 
 	// get api token
-	$apitoken = $model->getApiToken($user_id);
+	$apitoken = $model->getToken($user_id);
 
 	// get addresses
 	$addresses = $model->getAddresses(array("user_id" => $user_id));
