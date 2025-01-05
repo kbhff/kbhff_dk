@@ -134,19 +134,6 @@
     float: left;
 }
 
-/* FRONT-PAGE NEWS */
-#content .front div.news ul.items li.item .image {
-	height: auto;
-	min-height: auto;
-	aspect-ratio: 16/9;
-	position: static;
-	background-size: 100% auto;
-}
-#content .front div.news ul.items li.item {
-    width: calc(100% - 24px);
-	height: auto;
-}
-#content .front div.news ul.items li.item h3 {margin-top: 0;}
 
 
 /* SIGNUP */

@@ -91,12 +91,13 @@
 #content .front div.news ul.items {
 	background-color: #e2eedd;
 	margin: 0 12px;
+	font-size: 0;
 }
 #content .front div.news ul.items li.item {
 	display: inline-block;
 	vertical-align: top;
 	position: relative;
-	width: calc(33% - 24px);
+	width: calc(33.333% - 24px);
 	height: 300px;
 	margin: 12px;
 	padding: 0;

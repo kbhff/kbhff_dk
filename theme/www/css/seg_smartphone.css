@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2024-12-06 15:32:17
+asset-builder @ 2025-01-05 22:22:21
 */
 
 /*seg_smartphone_include.css*/
@@ -1315,12 +1315,13 @@ div.field.html .editor .selection_options ul.actions li {padding: 0;}
 #content .front div.news ul.items {
 	background-color: #e2eedd;
 	margin: 0 12px;
+	font-size: 0;
 }
 #content .front div.news ul.items li.item {
 	display: inline-block;
 	vertical-align: top;
 	position: relative;
-	width: calc(33% - 24px);
+	width: calc(33.333% - 24px);
 	height: 300px;
 	margin: 12px;
 	padding: 0;
@@ -1360,6 +1361,19 @@ div.field.html .editor .selection_options ul.actions li {padding: 0;}
 }
 #content .front div.news ul.items {
 	padding: 0;
+}
+#content .front div.news ul.items li.item .image {
+	height: auto;
+	min-height: auto;
+	aspect-ratio: 1.5;
+	position: static;
+	background-size: 100% auto;
+}
+#content .front div.news ul.items li.item {
+    width: calc(100% - 24px);
+	height: auto;
+}
+#content .front div.news ul.items li.item h3 {margin-top: 0;}
 #content .front div.hero img {
     height: 300px;
 	padding: 0;
@@ -2380,18 +2394,6 @@ div.overlay .field.password {
     display: block;
     float: left;
 }
-#content .front div.news ul.items li.item .image {
-	height: auto;
-	min-height: auto;
-	aspect-ratio: 16/9;
-	position: static;
-	background-size: 100% auto;
-}
-#content .front div.news ul.items li.item {
-    width: calc(100% - 24px);
-	height: auto;
-}
-#content .front div.news ul.items li.item h3 {margin-top: 0;}
 #content .scene.signupfees ul.actions input {
     width: 100%;
     white-space: normal;

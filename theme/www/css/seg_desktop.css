@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2024-12-06 15:32:17
+asset-builder @ 2025-01-05 22:22:21
 */
 
 /*seg_desktop_include.css*/
@@ -1233,12 +1233,13 @@ div.field.html .editor .selection_options ul.actions li {padding: 0;}
 #content .front div.news ul.items {
 	background-color: #e2eedd;
 	margin: 0 12px;
+	font-size: 0;
 }
 #content .front div.news ul.items li.item {
 	display: inline-block;
 	vertical-align: top;
 	position: relative;
-	width: calc(33% - 24px);
+	width: calc(33.333% - 24px);
 	height: 300px;
 	margin: 12px;
 	padding: 0;
