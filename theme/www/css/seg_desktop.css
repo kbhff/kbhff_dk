@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2025-01-05 22:22:21
+asset-builder @ 2025-01-05 22:26:17
 */
 
 /*seg_desktop_include.css*/
@@ -1307,7 +1307,7 @@ div.field.html .editor .selection_options ul.actions li {padding: 0;}
 #content .scene div.categories ul.tags li {list-style-type: none; padding: 0;}
 #content .scene div.categories ul.tags {padding: 0 0 20px;}
 #content .scene div.categories ul.tags li.selected a {color: #000000;}
-#content .scene ul.items.articles ul.tags {z-index: 10; display: block; line-height: 12px; position: absolute; font-size: 0; top: 10px; left: 0; background: rgba(0, 0, 0, 0.8); padding: 0; margin: 0; list-style: none;}
+#content .scene ul.items.articles ul.tags {z-index: 5; display: block; line-height: 12px; position: absolute; font-size: 0; top: 10px; left: 0; background: rgba(0, 0, 0, 0.8); padding: 0; margin: 0; list-style: none;}
 #content .scene ul.items.articles ul.tags li {padding: 0;}
 #content .scene ul.items.articles ul.tags li {width: auto; font-size: 12px; line-height: 12px; display: inline-block;}
 #content .scene ul.items.articles ul.tags li::after {content: "\00a0|\00a0"; color: #ffffff;}
