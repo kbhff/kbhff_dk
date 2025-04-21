@@ -102,7 +102,7 @@ function update_new_renewal_date_2025_04_21() {
 	$query->sql($sql);
 
 }
-update_new_renewal_date_2025_04_21();
+// update_new_renewal_date_2025_04_21();
 
 
 
