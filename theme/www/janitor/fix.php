@@ -90,6 +90,22 @@ function update_2023_05_23() {
 // update_2023_05_23();
 
 
+function update_new_renewal_date_2025_04_21() {
+
+	global $query;
+	global $subs_cl;
+
+
+	// UPDATE EXPIRES_AT DATE TO 15/5/2023
+	$sql = "UPDATE ".$subs_cl->db_subscriptions." AS s SET s.expires_at = '2025-06-01 00:00:00' WHERE s.expires_at = '2025-05-01 00:00:00'";
+	debug([$sql]);
+	$query->sql($sql);
+
+}
+update_new_renewal_date_2025_04_21();
+
+
+
 
 // $u = $user_cl->getDeletableInactiveUsers();
 // debug([$u]);
@@ -100,7 +116,7 @@ function update_2023_05_23() {
 
 
 
-$user_cl->sendCompleteSignupReminder();
+// $user_cl->sendCompleteSignupReminder();
 
 // $user_cl->deleteIncompleteSignups();
 
