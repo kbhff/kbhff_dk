@@ -1713,8 +1713,8 @@ IT
 
 				// debug(["user member for more than one year", $user]);
 
-				$sql = "SELECT oi.name FROM ".$SC->db_orders." AS o, ".$SC->db_order_items." AS oi, ".UT_ITEMS." AS i WHERE o.user_id = ".$user["id"]." AND o.id = oi.order_id AND oi.item_id = i.id AND (i.itemtype = 'signupfee' OR i.itemtype = 'membership') AND (o.payment_status = 2 AND o.id IN (SELECT order_id FROM ".$SC->db_payments." WHERE order_id = o.id)) AND o.created_at >= '".(date("Y") - 2)."-05-01'";
-				// debug([$sql]);
+				$sql = "SELECT oi.name FROM ".$SC->db_orders." AS o, ".$SC->db_order_items." AS oi, ".UT_ITEMS." AS i WHERE o.user_id = ".$user["id"]." AND o.id = oi.order_id AND oi.item_id = i.id AND (i.itemtype = 'signupfee' OR i.itemtype = 'membership') AND (o.payment_status = 2 AND o.id IN (SELECT order_id FROM ".$SC->db_payments." WHERE order_id = o.id)) AND o.created_at >= '".(date("Y") - 2)."-".RENEWAL_DATE."'";
+				debug([$sql]);
 
 				$query->sql($sql);
 				$results = $query->results();

@@ -8,7 +8,7 @@ $UC = new User();
 $MC = new Member();
 
 $user_id = session()->value("user_id");
-
+message()->resetMessages();
 
 $order = false;
 $receipt_type = false;

@@ -378,8 +378,10 @@ class TypeMembership extends Itemtype {
 
 			// set expiry date to May 1st each year
 
+			$expiry_month = date("m", strtotime(date("Y")."-".RENEWAL_DATE));
+
 			// current month is May or later
-			if(date("m") >= 05) {
+			if(date("m") >= $expiry_month) {
 				$expiration_year = date("Y") + 1;
 			}
 			// current month is before May
@@ -387,8 +389,8 @@ class TypeMembership extends Itemtype {
 				$expiration_year = date("Y");
 
 			}
-			$expires_at = $expiration_year."-05-01 00:00:00";
-			
+			$expires_at = $expiration_year."-".RENEWAL_DATE." 00:00:00";
+
 			// overwrite the automatically generated expiry date with custom value
 			$query = new Query();
 			$sql = "UPDATE ".SITE_DB.".user_item_subscriptions SET expires_at = '$expires_at' WHERE id = ".$subscription["id"];
