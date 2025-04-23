@@ -1751,6 +1751,11 @@ IT
 
 		$inactive_users = $this->getDeletableInactiveUsers();
 
+
+		// Test users Kaestel and Sarah
+		// $inactive_users = [8946, 8450];
+		// $inactive_users = [8946];
+
 		// Output for cronjob log
 		print "Inactive users to be notified: " . count($inactive_users)."<br>\n";
 		$recipients = [];
@@ -1771,6 +1776,8 @@ IT
 			$values[$kbhff_user["email"]]["DELETE_DATE"] = date("d/m/Y", strtotime("+ 1 week"));
 			$values[$kbhff_user["email"]]["PAY_DATE"] = date("d/m/Y", strtotime("+ 6 days"));
 
+			$values[$kbhff_user["email"]]["FORNYELSESDATO"] = date("j.", strtotime(date("Y")."-".RENEWAL_DATE))." ".translate(date("F", strtotime(date("Y")."-".RENEWAL_DATE)));
+			$values[$kbhff_user["email"]]["RENEWALDATE"] = date("F", strtotime(date("Y")."-".RENEWAL_DATE)) . " " . date("jS", strtotime(date("Y")."-".RENEWAL_DATE));
 
 		}
 
@@ -1899,7 +1906,7 @@ IT
 	*/
 	function sendCompleteSignupReminder() {
 
-		logger()->addLog("Automated task ended: sendCompleteSignupReminder");
+		logger()->addLog("Automated task started: sendCompleteSignupReminder");
 
 		$query = new Query();
 
@@ -1935,6 +1942,9 @@ IT
 
 				$recipients[] = $kbhff_user["email"];
 				$values[$kbhff_user["email"]]["NICKNAME"] = $kbhff_user["nickname"];
+
+				$values[$kbhff_user["email"]]["FORNYELSESDATO"] = date("j.", strtotime(date("Y")."-".RENEWAL_DATE))." ".translate(date("F", strtotime(date("Y")."-".RENEWAL_DATE)));
+				$values[$kbhff_user["email"]]["RENEWALDATE"] = date("F", strtotime(date("Y")."-".RENEWAL_DATE)) . " " . date("jS", strtotime(date("Y")."-".RENEWAL_DATE));
 
 			}
 

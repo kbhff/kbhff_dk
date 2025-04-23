@@ -86,9 +86,7 @@ if($item) {
 				<?= $HTML->frontendOffer($signupfee_item, SITE_URL."/bliv-medlem") ?>
 				<h3>Årligt kontingent:</h3>
 				<?= $HTML->frontendOffer($item, SITE_URL."/bliv-medlem") ?>
-				<p>Indmeldelsesgebyret betales ved indmelding i KBHFF. Herefter betales kontingent hvert år ved medlemskabets fornyelse i maj måned.</p>
-			
-			
+				<p>Indmeldelsesgebyret betales ved indmelding i KBHFF. Herefter betales kontingent hvert år ved medlemskabets fornyelse <?= date("j.", strtotime(date("Y")."-".RENEWAL_DATE))." ".translate(date("F", strtotime(date("Y")."-".RENEWAL_DATE))) ?>.</p>
 		
 				<?= $model->formStart("/bliv-medlem/addToCart", array("class" => "signup labelstyle:inject")) ?>
 					<?= $model->input("quantity", array("value" => 1, "type" => "hidden")); ?>

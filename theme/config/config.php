@@ -39,7 +39,7 @@ define("SITE_MEMBERS", true);
 
 define("SITE_COLLECT_NOTIFICATIONS", 50);
 
-define("RENEWAL_DATE", "05-01");
+define("RENEWAL_DATE", "06-01");
 
 define("SITE_PAYMENT_REGISTER_INTENT", SITE_URL."/butik/betalingsgateway/{GATEWAY}/register-intent");
 define("SITE_PAYMENT_REGISTER_PAID_INTENT", SITE_URL."/butik/betalingsgateway/{GATEWAY}/register-paid-intent");
