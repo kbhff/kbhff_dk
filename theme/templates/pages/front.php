@@ -30,7 +30,7 @@ $post_items = $IC->getItems([
 
 		<ul class="actions">
 		<? if(session()->value("user_id") != 1): ?>
-			<li class="shift"><a href="https://wiki.kbhff.dk/tiki-index.php?page=Vagtplaner" class="button primary">Ta' en vagt</a></li>
+			<li class="shift"><a href="/medlem/tag-en-vagt" class="button primary">Ta' en vagt</a></li>
 			<li class="order"><a href="/butik" class="button primary">Bestil en pose</a></li>
 		<? else: ?>
 			<li class="login"><a href="/login" class="button primary">Login</a></li>

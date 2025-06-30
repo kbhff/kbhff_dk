@@ -1,5 +1,6 @@
 <?php
-$access_item = false;
+$access_item["/"] = false;
+$access_item["/tag-en-vagt"] = true;
 if(isset($read_access) && $read_access) {
 	return;
 }

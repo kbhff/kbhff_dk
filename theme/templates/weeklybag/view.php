@@ -4,7 +4,7 @@ global $action;
 $sindex = $action[0];
 
 
-$item = $IC->getItem(array("sindex" => $sindex, "extend" => true));
+$item = $IC->getItem(array("sindex" => $sindex, "itemtype" => "weeklybag", "extend" => true));
 if($item) {
 	$this->sharingMetaData($item);
 }

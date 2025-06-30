@@ -79,9 +79,13 @@ $english_subnavigation = $this->navigation("sub-english");
 			<div class="c-box actions">
 				<h3>Shortcuts</h3>
 				<ul class="actions">
-					<li><a href="https://wiki.kbhff.dk/tiki-index.php?page=Vagtplaner" class="shift">Take a shift</a></li>
-					<li><a href="/butik" class="order">Order a bag</a></li>
-					<li><a href="/bliv-medlem" class="member">Become a member</a></li>
+				<? if(session()->value("user_id") != 1): ?>
+					<li class="shift"><a href="/medlem/tag-en-vagt" class="button primary">Take a shift</a></li>
+					<li class="order"><a href="/butik" class="button primary">Order a bag</a></li>
+				<? else: ?>
+					<li class="login"><a href="/login" class="button primary">Login</a></li>
+					<li class="member"><a href="/bliv-medlem" class="button primary">Become a member</a></li>
+				<? endif; ?>
 				</ul>
 			</div>
 

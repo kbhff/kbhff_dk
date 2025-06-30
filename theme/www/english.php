@@ -16,15 +16,15 @@ $page->bodyClass("english");
 $page->pageTitle("English");
 
 
-// /english/#sindex#
-if(count($action) == 1) {
-
-	$page->page(array(
-		"templates" => "pages/view.php"
-	));
-	exit();
-
-}
+// // /english/#sindex#
+// if(count($action) == 1) {
+//
+// 	$page->page(array(
+// 		"templates" => "pages/view.php"
+// 	));
+// 	exit();
+//
+// }
 
 // /english
 $page->page(array(

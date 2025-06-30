@@ -79,9 +79,13 @@ $about_subnavigation = $this->navigation("sub-about");
 			<div class="c-box actions">
 				<h3>Genveje</h3>
 				<ul class="actions">
-					<li><a href="https://wiki.kbhff.dk/tiki-index.php?page=Vagtplaner" class="shift">Ta' en vagt</a></li>
-					<li><a href="/butik" class="order">Bestil en pose</a></li>
-					<li><a href="/bliv-medlem" class="member">Bliv medlem</a></li>
+				<? if(session()->value("user_id") != 1): ?>
+					<li class="shift"><a href="/medlem/tag-en-vagt" class="button primary">Ta' en vagt</a></li>
+					<li class="order"><a href="/butik" class="button primary">Bestil en pose</a></li>
+				<? else: ?>
+					<li class="login"><a href="/login" class="button primary">Login</a></li>
+					<li class="member"><a href="/bliv-medlem" class="button primary">Bliv medlem</a></li>
+				<? endif; ?>
 				</ul>
 			</div>
 

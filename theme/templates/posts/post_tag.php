@@ -6,7 +6,7 @@ global $itemtype;
 $sindex = $action[2];
 $selected_tag = urldecode($action[1]);
 
-$item = $IC->getItem(array("sindex" => $sindex, "status" => 1, "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true)));
+$item = $IC->getItem(array("sindex" => $sindex, "itemtype" => $itemtype, "status" => 1, "extend" => array("tags" => true, "user" => true, "mediae" => true, "comments" => true)));
 if($item) {
 	$this->sharingMetaData($item);
 
