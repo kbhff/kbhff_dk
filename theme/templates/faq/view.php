@@ -6,7 +6,7 @@ global $itemtype;
 $sindex = $action[0];
 
 
-$item = $IC->getItem(array("sindex" => $sindex, "extend" => true));
+$item = $IC->getItem(array("sindex" => $sindex, "itemtype" => $itemtype, "extend" => true));
 if($item) {
 	$this->sharingMetaData($item);
 }
