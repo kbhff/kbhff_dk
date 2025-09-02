@@ -563,7 +563,7 @@ class SuperShop extends SuperShopCore {
 		}
 		
 		// send notification email to admin
-		mailer()->send(array(
+		email()->send(array(
 			"recipients" => SHOP_ORDER_NOTIFIES,
 			"subject" => SITE_URL . " - New order ($order_no) created on behalf of: $user_id",
 			"message" => "Check out the new order: " . SITE_URL . "/janitor/admin/user/orders/" . $user_id,
@@ -571,7 +571,7 @@ class SuperShop extends SuperShopCore {
 			// "template" => "system"
 		));
 
-		mailer()->send(array(
+		email()->send(array(
 			"recipients" => $user["email"],
 			"reply_to" => SHOP_ORDER_NOTIFIES,
 			"values" => array(
@@ -651,7 +651,7 @@ class SuperShop extends SuperShopCore {
 	
 							$order_summary = implode("<br />", $order_summary);
 	
-							mailer()->send(array(
+							email()->send(array(
 								"values" => array(
 									"FROM" => ADMIN_EMAIL,
 									"NICKNAME" => $user["nickname"],
@@ -746,7 +746,7 @@ class SuperShop extends SuperShopCore {
 							if($this->cancelOrder(["cancelOrder", $order["id"], $order["user_id"]])
 							) {
 
-								mailer()->send(array(
+								email()->send(array(
 									"values" => array(
 										"FROM" => ADMIN_EMAIL,
 										"NICKNAME" => $user["nickname"],

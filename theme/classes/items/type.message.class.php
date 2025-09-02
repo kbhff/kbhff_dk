@@ -89,7 +89,7 @@ class TypeMessage extends TypeMessageCore {
 			}
 
 			// send final HTML
-			if(mailer()->send(["from_email" => $from_email, "recipients" => $recipients, "subject" => $name, "html" => $final_html])) {
+			if(email()->send(["from_email" => $from_email, "recipients" => $recipients, "subject" => $name, "html" => $final_html])) {
 				return true;
 			}
 		}
@@ -184,7 +184,7 @@ class TypeMessage extends TypeMessageCore {
 			if(count($recipients) < 1000) {
 
 				// send final HTML
-				$result = mailer()->sendBulk(["from_email" => $from_email, "recipients" => $recipients, "subject" => $name, "html" => $final_html]);
+				$result = email()->sendBulk(["from_email" => $from_email, "recipients" => $recipients, "subject" => $name, "html" => $final_html]);
 			}
 			else {
 
@@ -192,7 +192,7 @@ class TypeMessage extends TypeMessageCore {
 				foreach ($recipient_chunks as $recipient_chunk) {
 
 					// send final HTML
-					$result = mailer()->sendBulk(["from_email" => $from_email, "recipients" => $recipient_chunk, "subject" => $name, "html" => $final_html]);
+					$result = email()->sendBulk(["from_email" => $from_email, "recipients" => $recipient_chunk, "subject" => $name, "html" => $final_html]);
 
 				}
 			}

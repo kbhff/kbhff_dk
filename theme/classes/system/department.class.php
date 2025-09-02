@@ -443,7 +443,7 @@ class Department extends Model {
 					if($department_order_items) {
 	
 						// send notification email to admin
-						mailer()->send(array(
+						email()->send(array(
 							"recipients" => ADMIN_EMAIL,
 							"subject" => SITE_URL . " - ACTION NEEDED: Order items have been orphaned",
 							"message" => "The department ".$department['name']." has been deleted from the system. This has caused ".count($department_order_items)." order items to lose their time and place of pickup. \n\nHere are links to each of the affected order items:\n\n".implode("\n", $order_item_links). ". \n\nFollow the links to assign a new department/pickupdate to each order item.",
@@ -705,7 +705,7 @@ class Department extends Model {
 					}
 
 					// send notification email to admin
-					mailer()->send(array(
+					email()->send(array(
 						"recipients" => ADMIN_EMAIL,
 						"subject" => SITE_URL . " - ACTION NEEDED: Order items have been orphaned",
 						"message" => "The ".$department['name']." department has been closed on the pickupdate ".$pickupdate['pickupdate'].". This has caused ".count($department_pickupdate_order_items)." order items to lose their time and place of pickup. \n\nHere are links to each of the affected order items:\n\n".implode("\n", $order_item_links). ". \n\nFollow the links to assign a new department/pickupdate to each order item.",

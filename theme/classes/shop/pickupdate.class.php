@@ -321,7 +321,7 @@ class Pickupdate extends Model {
 				}
 
 				// send notification email to admin
-				mailer()->send(array(
+				email()->send(array(
 					"recipients" => ADMIN_EMAIL,
 					"subject" => SITE_URL . " - ACTION NEEDED: Order items have been orphaned",
 					"message" => "The pickupdate ".$pickupdate['pickupdate']." has been deleted from the system. This has caused ".count($pickupdate_order_items)." order items to lose their time and place of pickup. \n\nHere are links to each of the affected order items:\n\n".implode("\n", $order_item_links). ". \n\nFollow the links to assign a new department/pickupdate to each order item.",

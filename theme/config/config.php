@@ -18,12 +18,12 @@ define("SITE_EMAIL", "info@kbhff.dk");
 
 define("DEFAULT_PAGE_DESCRIPTION", "");
 define("DEFAULT_PAGE_IMAGE", "/img/banners/desktop/pi_".rand(1,4).".jpg");
-
 define("DEFAULT_LANGUAGE_ISO", "DA");
 define("DEFAULT_COUNTRY_ISO", "DK");
 define("DEFAULT_CURRENCY_ISO", "DKK");
 
 define("SITE_LOGIN_URL", "/login");
+define("SITE_AUTO_LOGIN", false);
 
 define("SITE_SIGNUP", true);
 define("SITE_SIGNUP_URL", "/bliv-medlem");
@@ -37,7 +37,14 @@ define("SITE_SUBSCRIPTIONS", true);
 
 define("SITE_MEMBERS", true);
 
-define("SITE_COLLECT_NOTIFICATIONS", 50);
+define("SITE_LOGGING_DISABLED", false);
+define("SITE_ADMIN_NOTIFICATIONS", true);
+define("SITE_ADMIN_NOTIFICATION_THRESHOLD", 10);
+define("SITE_DOWNLOAD_NOTIFICATIONS", false);
+
+define("SITE_AUTOCONVERSION_THRESHOLD", 100);
+define("SITE_AUTOCONVERSION_COLLECT_NOTIFICATIONS", 50);
+define("SITE_AUTOCONVERSION_ERROR_NOTIFICATIONS", false);
 
 define("RENEWAL_DATE", "06-01");
 

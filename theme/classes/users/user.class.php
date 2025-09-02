@@ -161,7 +161,7 @@ class User extends UserCore {
 
 						// send notification email to admin
 						// TODO: consider disabling this once it has proved itself worthy
-						mailer()->send(array(
+						email()->send(array(
 							"subject" => "Password was created: " . $user_id,
 							"message" => "Check out the user: " . SITE_URL . "/janitor/admin/user/edit/" . $user_id
 						));
@@ -189,7 +189,7 @@ class User extends UserCore {
 
 						// send notification email to admin
 						// TODO: consider disabling this once it has proved itself worthy
-						mailer()->send(array(
+						email()->send(array(
 							"subject" => "Password was resat: " . $user_id,
 							"message" => "Check out the user: " . SITE_URL . "/janitor/admin/user/edit/" . $user_id
 						));
@@ -359,7 +359,7 @@ class User extends UserCore {
 				}
 			}
 	
-			mailer()->send([
+			email()->send([
 				"subject" => "Medlem har forladt afdeling ".$old_department["name"],
 				"message" => "
 Hej ".$old_department["name"]." butiksgruppe,
@@ -380,7 +380,7 @@ IT",
 
 		if($user && $user["department"] && $user["membership"]) {
 
-			mailer()->send([
+			email()->send([
 				"subject" => "Nyt medlem i afdeling ".$user["department"]["name"],
 				"message" => "
 Hej ".$user["department"]["name"]." butiksgruppe,
@@ -506,7 +506,7 @@ IT",
 		$user = $this->getUser();
 
 		// send verification email to user's new email
-		mailer()->send(array(
+		email()->send(array(
 			"values" => array(
 				"NICKNAME" => $user["nickname"], 
 				"EMAIL" => $new_email, 
@@ -519,7 +519,7 @@ IT",
 		));
 
 		// send verification email to user's old email
-		mailer()->send(array(
+		email()->send(array(
 			"values" => array(
 				"NICKNAME" => $user["nickname"], 
 				"NEW_EMAIL" => $new_email, 
@@ -601,7 +601,7 @@ IT",
 		$user = $this->getKbhffUser();
 		
 		// send verification email to user
-		mailer()->send(array(
+		email()->send(array(
 			"values" => array(
 				"NICKNAME" => $user["nickname"], 
 			), 
@@ -628,7 +628,7 @@ IT",
 		if ($cancel_result === true) {
 			message()->addMessage("Dine oplysninger blev slettet");
 
-			mailer()->send([
+			email()->send([
 				"template" => "confirmation_membership_cancellation",
 				"recipients" => [$user_email]
 			]);

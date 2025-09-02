@@ -128,7 +128,7 @@ class SuperUser extends SuperUserCore {
 				message()->resetMessages();
 				message()->addMessage("Brugeroplysningerne blev slettet");
 		
-				mailer()->send([
+				email()->send([
 					"template" => "confirmation_membership_cancellation",
 					"recipients" => [$user_email]
 				]);
@@ -232,7 +232,7 @@ class SuperUser extends SuperUserCore {
 
 		if($old_membership == "stoettemedlem" && $new_membership == "frivillig") {
 			// send notification to admin
-			mailer()->send([
+			email()->send([
 				"subject" => "Medlem i afdeling ".$user["department"]["name"]." har ændret medlemstype.",
 				"message" => "
 Hej ".$user["department"]["name"]." butiksgruppe,
@@ -252,7 +252,7 @@ IT",
 		}
 		else if($old_membership == "frivillig" && $new_membership == "stoettemedlem") {
 			// send notification to admin
-			mailer()->send([
+			email()->send([
 				"subject" => "Medlem i afdeling ".$user["department"]["name"]." har ændret medlemstype.",
 				"message" => "
 Hej ".$user["department"]["name"]." butiksgruppe,
@@ -478,7 +478,7 @@ IT
 			message()->addMessage("User group was updated");
 			
 			// send notification mail
-			mailer()->send(array(
+			email()->send(array(
 				"values" => array(
 					"FROM" => ADMIN_EMAIL,
 					"NICKNAME" => $member_user["nickname"],
@@ -842,7 +842,7 @@ IT
 						if($verification_code) {
 	
 							// send verification email to user
-							mailer()->send(array(
+							email()->send(array(
 								"values" => array(
 									"NICKNAME" => $nickname,
 									"EMAIL" => $email,
@@ -855,7 +855,7 @@ IT
 							));
 	
 							// send notification email to admin
-							mailer()->send(array(
+							email()->send(array(
 								"subject" => SITE_URL . " - New User: " . $email,
 								"message" => "Check out the new user: " . SITE_URL . "/janitor/admin/user/edit/" . $user_id,
 								"tracking" => false
@@ -865,13 +865,13 @@ IT
 						// verification code error
 						else {
 							// send error email notification
-							mailer()->send(array(
+							email()->send(array(
 								"recipients" => $email,
 								"template" => "signup_error"
 							));
 	
 							// send notification email to admin
-							mailer()->send(array(
+							email()->send(array(
 								"subject" => "New User created ERROR: " . $email,
 								"message" => "Check out the new user: " . SITE_URL . "/janitor/admin/user/edit/" . $user_id,
 								"tracking" => false
@@ -1434,7 +1434,7 @@ IT
 						if($query->sql($sql)) {
 
 							// send verification email to user's new email
-							mailer()->send(array(
+							email()->send(array(
 								"values" => array(
 									"NICKNAME" => $user["nickname"], 
 									"EMAIL" => $email, 
@@ -1447,7 +1447,7 @@ IT
 							));
 
 							// send verification email to user's old email
-							mailer()->send(array(
+							email()->send(array(
 								"values" => array(
 									"NICKNAME" => $user["nickname"], 
 									"NEW_EMAIL" => $email, 
@@ -1529,7 +1529,7 @@ IT
 			$user = $this->getKbhffUser(["user_id" => $user_id]);
 
 
-			mailer()->send([
+			email()->send([
 				"recipients" => [$user["email"]],
 				"template" => "pickup_reminder",
 				"values" => [
@@ -1587,7 +1587,7 @@ IT
 
 					if($recipients) {
 						// send reminder
-						$test = mailer()->sendBulk([
+						$test = email()->sendBulk([
 							"recipients" => $recipients,
 							"template" => "pickup_reminder",
 							"values" => $values,
@@ -1616,7 +1616,7 @@ IT
 
 			if(isset($user["email"]) && $user["email"] && !$this->getUserLogAgreement("disable_ordering_reminder", ["user_id" => $user["id"]])) {
 
-				mailer()->send([
+				email()->send([
 					"recipients" => [$user["email"]],
 					"template" => "ordering_reminder",
 					"values" => [
@@ -1674,7 +1674,7 @@ IT
 
 					if($recipients) {
 						// send reminder
-						$test = mailer()->sendBulk([
+						$test = email()->sendBulk([
 							"recipients" => $recipients,
 							"template" => "ordering_reminder",
 							"values" => $values,
@@ -1786,7 +1786,7 @@ IT
 
 		if($recipients) {
 			// send reminder
-			$test = mailer()->sendBulk([
+			$test = email()->sendBulk([
 				"from_email" => ADMIN_EMAIL,
 				"recipients" => $recipients,
 				"template" => "delete_inactive_member_notice",
@@ -1879,7 +1879,7 @@ IT
 
 					print "User could not be cancelled: $user_id<br>\n";
 
-					$test = mailer()->send([
+					$test = email()->send([
 						// "recipients" => ["martin@parentnode.dk"],
 						"subject" => "Inactive user failed deletion",
 						"text" => "Inactive user: $user_id could not be deleted or cancelled by the automated cleanup script. Follow up manually.",
@@ -1953,7 +1953,7 @@ IT
 
 			if($recipients) {
 				// send reminder
-				$test = mailer()->sendBulk([
+				$test = email()->sendBulk([
 					"from_email" => ADMIN_EMAIL,
 					"recipients" => $recipients,
 					"template" => "complete_signup_reminder",
@@ -2014,7 +2014,7 @@ IT
 
 					print "User could not be deleted: $user_id<br>\n";
 
-					$test = mailer()->send([
+					$test = email()->send([
 						// "recipients" => ["martin@parentnode.dk"],
 						"subject" => "Incompletely signed up user failed deletion",
 						"text" => "Incomplete user: $user_id could not be deleted or cancelled by the automated cleanup script. Follow up manually.",

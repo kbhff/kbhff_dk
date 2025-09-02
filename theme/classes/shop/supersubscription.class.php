@@ -128,7 +128,7 @@ class SuperSubscription extends SuperSubscriptionCore {
 
 					if($this->allowRenewal($subscription)) {
 
-						mailer()->send(array(
+						email()->send(array(
 							"values" => array(
 								"FROM" => ADMIN_EMAIL,
 								"NICKNAME" => $user["nickname"],
@@ -144,7 +144,7 @@ class SuperSubscription extends SuperSubscriptionCore {
 					}
 					else {
 
-						mailer()->send(array(
+						email()->send(array(
 							"values" => array(
 								"FROM" => ADMIN_EMAIL,
 								"NICKNAME" => $user["nickname"],

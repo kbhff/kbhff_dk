@@ -801,7 +801,7 @@ if($action) {
 			$SC = new SuperShop();
 
 
-			$checkout_session = payments()->retrieveCheckoutSession($session_id);
+			$checkout_session = payment()->retrieveCheckoutSession($session_id);
 			if($checkout_session) {
 
 				$result = [];
@@ -822,7 +822,7 @@ if($action) {
 						if(isset($checkout_session["setup_intent"]) && $checkout_session["setup_intent"]) {
 
 
-							$setup_intent = payments()->retrieveSetupIntent($checkout_session["setup_intent"]);
+							$setup_intent = payment()->retrieveSetupIntent($checkout_session["setup_intent"]);
 							// debug([$setup_intent]);
 
 							if($setup_intent && isset($setup_intent["payment_method"]) && $setup_intent["payment_method"]) {
@@ -835,7 +835,7 @@ if($action) {
 
 									$result["return_url"] = SITE_URL."/medlemshjaelp/betaling/stripe/register-paid-intent";
 									// $result["return_url"] = str_replace("{GATEWAY}", $gateway, SITE_PAYMENT_REGISTER_PAID_INTENT);
-									$intent_result = payments()->requestPaymentIntentForOrder(
+									$intent_result = payment()->requestPaymentIntentForOrder(
 										$result["order"], 
 										$setup_intent["payment_method"], 
 										$result["return_url"]
@@ -950,7 +950,7 @@ if($action) {
 		// 		if($payment_method_result["status"] === "success") {
 		//
 		// 			$return_url = SITE_URL."/medlemshjaelp/betaling/stripe/register-paid-intent";
-		// 			$result = payments()->requestPaymentIntentForOrder(
+		// 			$result = payment()->requestPaymentIntentForOrder(
 		// 				$payment_method_result["order"],
 		// 				$payment_method_result["card"]["id"],
 		// 				$return_url
@@ -1047,7 +1047,7 @@ if($action) {
 
 			$payment_intent_id = getVar("payment_intent");
 
-			$id_result = payments()->identifyPaymentIntent($payment_intent_id);
+			$id_result = payment()->identifyPaymentIntent($payment_intent_id);
 			if($id_result && $id_result["status"] === "success") {
 
 				// Single order
@@ -1057,13 +1057,13 @@ if($action) {
 					if($order) {
 
 						// Register intent for order (and subscription)
-						$intent_registration_result = payments()->updatePaymentIntent($payment_intent_id, $order);
+						$intent_registration_result = payment()->updatePaymentIntent($payment_intent_id, $order);
 						if($intent_registration_result["status"] === "success") {
 
 							// Register payment for order (if paid)
 							if($id_result["payment_status"] === "succeeded") {
 
-								$payment_registration_result = payments()->registerPayment($order, $id_result["payment_intent"]);
+								$payment_registration_result = payment()->registerPayment($order, $id_result["payment_intent"]);
 
 								// Clear messages
 								message()->resetMessages();

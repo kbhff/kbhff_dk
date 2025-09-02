@@ -994,7 +994,7 @@ class Tally extends Model {
 			foreach ($tallies as $tally) {
 				
 				// send notification email to admin
-				mailer()->send(array(
+				email()->send(array(
 					// "recipients" => "martin@think.dk",
 					"recipients" => "it@kbhff.dk",
 					"subject" => SITE_URL . " - ACTION NEEDED: The tally ".$tally["name"]." has not been closed.",
