@@ -175,10 +175,17 @@ if($department) {
 		</div>
 	</div>
 	<? else: ?>
+
 	<div class="c-wrapper">
 		<h2>Fejl</h2>
 		<p>Der blev ikke fundet nogen afhentningsdage.</p>
+		<? if(security()->validatePath($HTML->path."/indkoeb")): ?>
+		<ul class="actions">
+			<?= $HTML->link("Opret afhentningsdage", "/indkoeb", ["wrapper" => "li.pickupdates", "class" => "button primary"]) ?>
+		</ul>
+		<? endif; ?>
 	</div>
+
 	<? endif; ?>
 
 <? else: ?>

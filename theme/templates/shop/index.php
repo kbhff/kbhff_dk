@@ -95,6 +95,9 @@ if($user_id != 1) {
 	}
 
 
+	// Get product tags
+	$product_tags = $IC->getTags(["context" => "productgroup"]);
+
 
 }
 
@@ -194,6 +197,24 @@ else {
 
 	<div class="c-wrapper">
 
+		<div class="filter c-box">
+			<ul class="tags">
+				<li class="tag all">Alle</li>
+				<? foreach($product_tags as $tag): ?>
+				<li class="tag" data-context="<?= $tag["context"] ?>" data-value="<?= $tag["value"] ?>"><?= $tag["value"] ?></li>
+				<? endforeach; ?>
+			</ul>
+			<form class="search">
+				<div class="field string">
+					<label for="product_search">Søg</label>
+					<input type="text" name="product_search" id="product_search" />
+				</div>
+				<ul class="actions">
+					<li class="search"><input type="submit" value="Søg" /></li>
+				</ul>
+			</form>
+		</div>
+
 		<div class="c-two-thirds">
 			
 			<? // products exist ?>
@@ -287,6 +308,17 @@ else {
 
 									<h3><span class="name"><?= $product["name"] ?></span> <span class="price"><?= formatPrice($price, ["conditional_decimals" => true]) ?></span></h3>
 									<p><?= $product["description"] ?></p>
+
+									<? if($product["tags"]): ?>
+									<ul class="tags">
+										<? foreach($product["tags"] as $tag):
+											if($tag["context"] == "productgroup"): ?>
+										<li class="tag" data-context="<?= $tag["context"] ?>" data-value="<?= $tag["value"] ?>"><?= $tag["value"] ?></li>
+											<?	endif; 
+										endforeach; ?>
+									</ul>
+									<? endif; ?>
+
 								</div>
 
 									<? // product is available in user's department on at least one of the pickupdates ?>

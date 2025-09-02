@@ -75,8 +75,7 @@ if($action) {
 
 		// successful creation
 		if($item) {
-			header("Location: /indkoeb");
-			
+			header("Location: /indkoeb/rediger-produkt/".$item["id"]);
 		}
 		else {
 			// standard template
@@ -92,24 +91,39 @@ if($action) {
 
 	}
 
-	else if(count($action) == 2 && $action[0] == "updateProduct" && security()->validateCsrfToken()) {
+	else if(count($action) == 2 && $action[0] == "updateProductBasics" && security()->validateCsrfToken()) {
+
+		$item_id = $action[1];
+		$supermodel->updateProductBasics($action);
+		header("Location: /indkoeb/rediger-produkt/$item_id");
+		exit();
+
+	}
+
+	else if(count($action) == 2 && $action[0] == "updateProductAvailability" && security()->validateCsrfToken()) {
 		
 		$item_id = $action[1];
-		$item = $IC->getItem(array("id" => $item_id, "extend" => ["mediae" => true, "prices" => true]));
-		
-		$model = $IC->typeObject($item["itemtype"]);
+		$supermodel->updateProductAvailability($action);
 
-		$item = $supermodel->updateProduct($action);
+		header("Location: /indkoeb/rediger-produkt/$item_id");
+		exit();
 
-		// successful update
-		if($item) {
-			header("Location: /indkoeb");
-			
-		}
-		else {
-			header("Location: /indkoeb/rediger-produkt/$item_id");
-		}
+	}
 
+	else if(count($action) == 2 && $action[0] == "updateProductPrices" && security()->validateCsrfToken()) {
+
+		$item_id = $action[1];
+		$supermodel->updateProductPrices($action);
+		header("Location: /indkoeb/rediger-produkt/$item_id");
+		exit();
+
+	}
+
+	else if(count($action) == 2 && $action[0] == "updateProductTags" && security()->validateCsrfToken()) {
+
+		$item_id = $action[1];
+		$supermodel->updateProductTags($action);
+		header("Location: /indkoeb/rediger-produkt/$item_id");
 		exit();
 
 	}
@@ -118,24 +132,42 @@ if($action) {
 		
 		$item_id = $action[1];
 		$item = $IC->getItem(array("id" => $item_id));
-		
 		$model = $IC->typeObject($item["itemtype"]);
-
 
 		$result = $model->status(["status", $item_id, "0"]);
 
 		// successful update
+		message()->resetMessages();
 		if($result) {
-			message()->resetMessages();
 			message()->addMessage("Produktet blev arkiveret");
-
-			header("Location: /indkoeb");
-			
 		}
 		else {
-			header("Location: /indkoeb/rediger-produkt/$item_id");
+			message()->addMessage("Produktet kunne ikke arkiveres");
 		}
 
+		header("Location: /indkoeb/rediger-produkt/$item_id");
+		exit();
+
+	}
+
+	else if(count($action) == 2 && $action[0] == "enableProduct" && security()->validateCsrfToken()) {
+		
+		$item_id = $action[1];
+		$item = $IC->getItem(array("id" => $item_id));
+		$model = $IC->typeObject($item["itemtype"]);
+
+		$result = $model->status(["status", $item_id, "1"]);
+
+		// successful update
+		message()->resetMessages();
+		if($result) {
+			message()->addMessage("Produktet er genaktiveret");
+		}
+		else {
+			message()->addMessage("Produktet kunne ikke genaktiveres");
+		}
+
+		header("Location: /indkoeb/rediger-produkt/$item_id");
 		exit();
 
 	}

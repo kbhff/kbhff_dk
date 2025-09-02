@@ -3,6 +3,7 @@
 #content div.shop_shift ul.subnavigation li {width: 25%;}
 
 #content div.shop_shift ul.actions {text-align: left;}
+#content div.shop_shift ul.actions li {padding-left: 0;}
 
 #content div.shop_shift .tally ul.actions {text-align: right;}
 
@@ -54,3 +55,6 @@
 #content .scene.shop_shift div.orders ul.list li.listing span.button ul.actions {margin: 0; padding: 0; list-style: none;}
 #content .scene.shop_shift div.orders ul.list li.listing span.button ul.actions li {text-align: right; padding: 0;}
 #content .scene.shop_shift div.orders ul.list li.listing span.button ul.actions li a {padding: 4px 14px;}
+
+
+#content .scene.purchasing .c-wrapper.choose-pickupdate ul.actions li {padding-right: 0;}

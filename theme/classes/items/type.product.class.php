@@ -78,22 +78,22 @@ class TypeProduct extends Itemtype {
 			"error_message" => "Invalid end availability date."
 		));
 		
-		// Price 1
-		$this->addToModel("price_1", [
-			"type" => "number",
-			"label" => "Price 1 (Frivillig member)",
+		// Price
+		$this->addToModel("price", [
+			"type" => "array",
+			"label" => "Prices",
 			"hint_message" => "Enter price as a number.",
 			"error_message" => "Invalid price."
 		]);
 
-		// Price 2
-		$this->addToModel("price_2", [
-			"type" => "number",
-			"label" => "Price 2 (Støttemedlem)",
-			"hint_message" => "Enter price as a number.",
-			"error_message" => "Invalid price."
+		// Tag
+		$this->addToModel("tag", [
+			"type" => "array",
+			"label" => "Tags",
+			"hint_message" => "Select tag.",
+			"error_message" => "Invalid tag."
 		]);
-		
+
 		// Product type
 		$this->addToModel("product_type", array(
 			"type" => "select",
@@ -130,22 +130,22 @@ class TypeProduct extends Itemtype {
 	function addNewProduct($action) {
 
 		$IC = new Items();
-		global $page;
+		// global $page;
 
 		$this->getPostedEntities();
 
 		// Validating generic product entities - the remaining entities will be validated on save()
 		// if(count($action) == 1 && $this->validateList(["product_type", "price_1", "price_2"])) {
-		if(count($action) == 1 && $this->validateList(["product_type", "price_1", "price_2", "single_media"])) {
+		if(count($action) == 1 && $this->validateList(["product_type", "name"])) {
 
 			$product_type = $this->getProperty("product_type", "value");
-			$price_1 = $this->getProperty("price_1", "value");
-			$price_2 = $this->getProperty("price_2", "value");
+			unset($_POST["product_type"]);
+			// $price_1 = $this->getProperty("price_1", "value");
+			// $price_2 = $this->getProperty("price_2", "value");
 			
 			// remove generic entities from $_POST to prepare for saving specific product type
-			unset($_POST["product_type"]);
-			unset($_POST["price_1"]);
-			unset($_POST["price_2"]);
+			// unset($_POST["price_1"]);
+			// unset($_POST["price_2"]);
 			
 			$model = $IC->typeObject($product_type);
 
@@ -153,58 +153,115 @@ class TypeProduct extends Itemtype {
 
 			if($item) {
 	
-				$vatrates = $page->vatrates();
-				$vatrate_key = arrayKeyValue($vatrates, "name", "25%");
-				$vatrate_id = $vatrate_key ? $vatrates[$vatrate_key]["id"] : false;
-				$price_types = $page->price_types();
-				
-				// add price for Frivillig
-				$frivillig_price_type = $price_types[arrayKeyValue($price_types, "name", "frivillig")];
-				$_POST["item_price"] = $price_1;
-				$_POST["item_price_currency"] = "DKK";
-				$_POST["item_price_vatrate"] = $vatrate_id;
-				$_POST["item_price_type"] = $frivillig_price_type ? $frivillig_price_type["id"] : false;
-				$frivillig_price = $model->addPrice(["addPrice", $item["id"]]);
-				unset($_POST);
-				
-				// add price for Støttemedlem
-				$stoettemedlem_price_type = $price_types[arrayKeyValue($price_types, "name", "stoettemedlem")];
-				$_POST["item_price"] = $price_2;
-				$_POST["item_price_currency"] = "DKK";
-				$_POST["item_price_vatrate"] = $vatrate_id;
-				$_POST["item_price_type"] = $stoettemedlem_price_type ? $stoettemedlem_price_type["id"] : false;
-				$stoettemedlem_price = $model->addPrice(["addPrice", $item["id"]]);
-				unset($_POST);
-				
-				
-				if($frivillig_price && $stoettemedlem_price) {
+				// $vatrates = $page->vatrates();
+				// $vatrate_key = arrayKeyValue($vatrates, "name", "25%");
+				// $vatrate_id = $vatrate_key ? $vatrates[$vatrate_key]["id"] : false;
+				// $price_types = $page->priceTypes();
+				//
+				// // add price for Frivillig
+				// $frivillig_price_type = $price_types[arrayKeyValue($price_types, "name", "frivillig")];
+				// $_POST["item_price"] = $price_1;
+				// $_POST["item_price_currency"] = "DKK";
+				// $_POST["item_price_vatrate"] = $vatrate_id;
+				// $_POST["item_price_type"] = $frivillig_price_type ? $frivillig_price_type["id"] : false;
+				// $frivillig_price = $model->addPrice(["addPrice", $item["id"]]);
+				// unset($_POST);
+				//
+				// // add price for Støttemedlem
+				// $stoettemedlem_price_type = $price_types[arrayKeyValue($price_types, "name", "stoettemedlem")];
+				// $_POST["item_price"] = $price_2;
+				// $_POST["item_price_currency"] = "DKK";
+				// $_POST["item_price_vatrate"] = $vatrate_id;
+				// $_POST["item_price_type"] = $stoettemedlem_price_type ? $stoettemedlem_price_type["id"] : false;
+				// $stoettemedlem_price = $model->addPrice(["addPrice", $item["id"]]);
+				// unset($_POST);
+				//
+				//
+				// if($frivillig_price && $stoettemedlem_price) {
 					
 					// enable item
-					$model->status(["status", $item["id"], 1]);
-					
-					message()->resetMessages();
-					message()->addMessage("Produktet blev oprettet.");
-					return $item;
-				}
-				else {
-					
-					message()->resetMessages();
-					message()->addMessage("Produktet blev oprettet, men der opstod et problem med at oprette priser", array("type" => "error"));
-				}
+				$model->status(["status", $item["id"], 1]);
+				
+				message()->resetMessages();
+				message()->addMessage("Produktet blev oprettet.");
+				return $item;
+				// }
+				// else {
+				//
+				// 	message()->resetMessages();
+				// 	message()->addMessage("Produktet blev oprettet, men der opstod et problem med at oprette priser", array("type" => "error"));
+				// }
 			}
 			// something went wrong
-			else {
+			// else {
+			//
+			// }
+		}
 
+		// message()->resetMessages();
+		message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
+		return false;
+
+	}
+
+	function updateProductBasics($action) {
+
+		$this->getPostedEntities();
+
+		// Validating generic product entities - the remaining entities will be validated on save()
+		if(count($action) == 2 && $this->validateList(["name", "description"])) {
+
+			$IC = new Items();
+			$item_id = $action[1];
+			$item = $IC->getItem(array("id" => $item_id));
+			$model = $IC->typeObject($item["itemtype"]);
+
+			$item = $model->update($action);
+
+			if($item) {
+	
 				message()->resetMessages();
-				message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
+				message()->addMessage("Produktnavn og beskrivelse er opdateret.");
+				return $item;
+
 			}
+
 		}
 
 		return false;
 
 	}
 
-	function updateProduct($action) {
+	function updateProductAvailability($action) {
+
+
+		$this->getPostedEntities();
+
+		// Validating generic product entities - the remaining entities will be validated on save()
+		if(count($action) == 2 && $this->validateList(["start_availability_date", "end_availability_date"])) {
+
+			$IC = new Items();
+			$item_id = $action[1];
+			$item = $IC->getItem(array("id" => $item_id));
+			$model = $IC->typeObject($item["itemtype"]);
+
+			$item = $model->update($action);
+
+			if($item) {
+	
+				message()->resetMessages();
+				message()->addMessage("Produkt tilgængelighed er opdateret.");
+				return $item;
+
+			}
+
+		}
+
+		return false;
+
+	}
+
+	function updateProductPrices($action) {
 
 		$IC = new Items();
 		global $page;
@@ -213,134 +270,153 @@ class TypeProduct extends Itemtype {
 		$this->getPostedEntities();
 
 		// Validating generic product entities - the remaining entities will be validated on save()
-		if(count($action) == 2 && $this->validateList(["price_1", "price_2"])) {
+		if(count($action) == 2 && $this->validateList(["price"])) {
 
-			$new_price_1 = $this->getProperty("price_1", "value");
-			$new_price_2 = $this->getProperty("price_2", "value");
-			
-			// remove generic entities from $_POST to prepare for saving specific product type
-			unset($_POST["price_1"]);
-			unset($_POST["price_2"]);
-			
-			$item = $model->update($action);
+			$item_id = $action[1];
+			$prices = $this->getProperty("price", "value");
+
+			$item = $IC->getItem(["id" => $item_id, "extend" => ["prices" => true]]);
+			// debug(["item", $item]);
 
 			if($item) {
-	
-				$old_price_1_key = $item["prices"] ? arrayKeyValue($item["prices"], "type", "frivillig") : false;
-				$old_price_2_key = $item["prices"] ? arrayKeyValue($item["prices"], "type", "stoettemedlem") : false;
-
-				$old_price_1 = $old_price_1_key !== false ? $item["prices"][$old_price_1_key] : false;
-				$old_price_2 = $old_price_2_key !== false ? $item["prices"][$old_price_2_key] : false;
 
 				$vatrates = $page->vatrates();
 				$vatrate_key = arrayKeyValue($vatrates, "name", "25%");
 				$vatrate_id = $vatrate_key ? $vatrates[$vatrate_key]["id"] : false;
-				$price_types = $page->price_types();
-		
-				if($old_price_1 !== false && $new_price_1 !== false) {
 
-					if($old_price_1["price"] !== $new_price_1) {
-	
-						// delete price_1
-						$model->deletePrice(["deletePrice", $item["id"], $old_price_1["id"]]);
-	
-						// add new price_1
-						$_POST["item_price"] = $new_price_1;
+
+				foreach($prices as $price_type_id => $new_price) {
+
+					$current_price_id = $item["prices"] ? arrayKeyValue($item["prices"], "type_id", $price_type_id) : false;
+					$current_price = $current_price_id !== false ? $item["prices"][$current_price_id]["price"] : false;
+					// debug(["current_price", $current_price, "new price", $new_price]);
+
+					// Price has changed
+					if($current_price != $new_price) {
+
+						// Delete old price if it exists
+						if($current_price_id !== false) {
+							// debug(["delete price", $current_price_id]);
+							$this->deletePrice(["deletePrice", $item_id, $item["prices"][$current_price_id]["id"]]);
+						}
+
+						// add new price
+						unset($_POST);
+						$_POST["item_price"] = $new_price;
 						$_POST["item_price_currency"] = "DKK";
 						$_POST["item_price_vatrate"] = $vatrate_id;
-						$_POST["item_price_type"] = $old_price_1["type_id"];
-						$frivillig_price = $model->addPrice(["addPrice", $item["id"]]);
+						$_POST["item_price_type"] = $price_type_id;
+						$this->addPrice(["addPrice", $item_id]);
 						unset($_POST);
+
 					}
-					else {
-						$frivillig_price = $old_price_1["price"];
-					}
+
 				}
-				else if($old_price_1 !== false) {
-					// delete price_1
-					$model->deletePrice(["deletePrice", $item["id"], $old_price_1["id"]]);
-					$frivillig_price = false;
-				}
-				else if($new_price_1 !== false) {
-	
-					// add price for Frivillig
-					$frivillig_price_type = $price_types[arrayKeyValue($price_types, "name", "frivillig")];
-					$_POST["item_price"] = $new_price_1;
-					$_POST["item_price_currency"] = "DKK";
-					$_POST["item_price_vatrate"] = $vatrate_id;
-					$_POST["item_price_type"] = $frivillig_price_type ? $frivillig_price_type["id"] : false;
-					$frivillig_price = $model->addPrice(["addPrice", $item["id"]]);
-					}
-	
-				else {
-					$frivillig_price = false;
-				}
-	
-				
-	
-				if($old_price_2 !== false && $new_price_2 !== false) {
-	
-					if($old_price_2["price"] !== $new_price_2) {
-	
-						// delete price_2
-						$model->deletePrice(["deletePrice", $item["id"], $old_price_2["id"]]);
-	
-						// add new price_2
-						$_POST["item_price"] = $new_price_2;
-						$_POST["item_price_currency"] = "DKK";
-						$_POST["item_price_vatrate"] = $vatrate_id;
-						$_POST["item_price_type"] = $old_price_2["type_id"];
-						$stoettemedlem_price = $model->addPrice(["addPrice", $item["id"]]);
-						unset($_POST);
-					}
-					else {
-						$stoettemedlem_price = $old_price_2["price"];
-					}
-				}
-				else if($old_price_2 !== false) {
-					// delete price_2
-					$model->deletePrice(["deletePrice", $item["id"], $old_price_2["id"]]);
-					$stoettemedlem_price = false;
-				}
-				else if($new_price_2 !== false) {
-	
-					// add price for Støttemedlem
-					$stoettemedlem_price_type = $price_types[arrayKeyValue($price_types, "name", "stoettemedlem")];
-					$_POST["item_price"] = $new_price_2;
-					$_POST["item_price_currency"] = "DKK";
-					$_POST["item_price_vatrate"] = $vatrate_id;
-					$_POST["item_price_type"] = $stoettemedlem_price_type ? $stoettemedlem_price_type["id"] : false;
-					$stoettemedlem_price = $model->addPrice(["addPrice", $item["id"]]);
-					}
-	
-				else {
-					$stoettemedlem_price = false;
-				}
-	
-				
-				if($frivillig_price !== false && $stoettemedlem_price !== false) {
-					
-					message()->resetMessages();
-					message()->addMessage("Produktet blev opdateret.");
-					return $item;
-				}
-				else {
-					
-					message()->resetMessages();
-					message()->addMessage("Produktet blev opdateret, men der opstod et problem med at opdatere priser", array("type" => "error"));
-				}
+
+				message()->resetMessages();
+				message()->addMessage("Priserne er opdateret.");
+				return $item;
+
 			}
-			// something went wrong
 			else {
 
 				message()->resetMessages();
 				message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
+				return false;
+
 			}
 		}
 
+		message()->resetMessages();
+		message()->addMessage("Der skal angives priser for alle medlemstyper for at gennemføre opdateringen.", array("type" => "error"));
 		return false;
 
 	}
+
+	function getMembershipPriceTypes($product = false) {
+		global $page;
+
+		$IC = new Items();
+
+		// Get price types for memberships
+		$all_price_types = $page->priceTypes();
+
+		$membership_price_types = [];
+
+		foreach($all_price_types as $price_type) {
+			if($price_type["item_id"]) {
+				$related_item = $IC->getItem(["id" => $price_type["item_id"]]);
+				if($related_item["itemtype"] === "membership") {
+
+					if($product) {
+						$product_price_key = $product["prices"] !== false ? arrayKeyValue($product["prices"], "type", $price_type["name"]) : false;
+						$price_type["price"] = $product["prices"] !== false ? $product["prices"][$product_price_key] : false;
+						$membership_price_types[] = $price_type;
+					}
+
+				}
+			}
+		}
+
+		return $membership_price_types;
+
+	}
+
+	function updateProductTags($action) {
+
+		$IC = new Items();
+		global $page;
+		global $model;
+
+		$this->getPostedEntities();
+
+		// Validating generic product entities - the remaining entities will be validated on save()
+		if(count($action) == 2 && $this->validateList(["tag"])) {
+
+			$item_id = $action[1];
+			$tags = $this->getProperty("tag", "value");
+
+			$item = $IC->getItem(["id" => $item_id, "extend" => ["tags" => true]]);
+			// debug(["item", $item]);
+
+			if($item) {
+
+				foreach($tags as $tag_id => $selected) {
+
+					$current_tag_id = $item["tags"] ? arrayKeyValue($item["tags"], "id", $tag_id) : false;
+
+					// Price has changed
+					if($selected && $current_tag_id === false) {
+
+						// Add tag
+						unset($_POST);
+						$_POST["tags"] = $tag_id;
+						$this->addTag(["addTag", $item_id]);
+						unset($_POST);
+
+					}
+					if(!$selected && $current_tag_id !== false) {
+
+						// Delete tag
+						$this->deleteTag(["deleteTag", $item_id, $tag_id]);
+
+					}
+
+				}
+
+				message()->resetMessages();
+				message()->addMessage("Tags er opdateret.");
+				return $item;
+
+			}
+		}
+
+		message()->resetMessages();
+		message()->addMessage("Noget gik galt. Prøv igen.", array("type" => "error"));
+		return false;
+
+	}
+
 
 	function updated($item_id) {
 
@@ -366,14 +442,14 @@ class TypeProduct extends Itemtype {
 				$order_item_pickupdate = $order_item_department_pickupdate ? $PC->getPickupdate(["id" => $order_item_department_pickupdate["pickupdate_id"]]) : false;
 
 				if($item["end_availability_date"]) {
-						
+
 					if($order_item_pickupdate && ($order_item_pickupdate["pickupdate"] < $item["start_availability_date"] || $order_item_pickupdate["pickupdate"] > $item["end_availability_date"])) {
 
 						$order_item_links[] = SITE_URL."/janitor/order-item/edit/".$order_item["id"];
 					}
 				}
 				else {
-					
+
 					if($order_item_pickupdate && $order_item_pickupdate["pickupdate"] < $item["start_availability_date"]) {
 
 						$order_item_links[] = SITE_URL."/janitor/order-item/edit/".$order_item["id"];
@@ -385,7 +461,7 @@ class TypeProduct extends Itemtype {
 			if($order_item_links) {
 
 				// send notification email to admin
-				mailer()->send(array(
+				email()->send(array(
 					"recipients" => ADMIN_EMAIL,
 					"subject" => SITE_URL . " - ACTION NEEDED: A product's availability window was changed, affecting undelivered orders.",
 					"message" => "The availability window for the product '".$item['name']."' has been changed in the system. As a consequence there are now ".count($order_item_links)." undelivered order items that fall outside the product's availability period. \n\nHere are links to each of the affected order items:\n\n".implode("\n", $order_item_links). " \n\nFollow the links to resolve the issue manually.",
@@ -432,7 +508,7 @@ class TypeProduct extends Itemtype {
 			}
 
 			// send notification email to admin
-			mailer()->send(array(
+			email()->send(array(
 				"recipients" => ADMIN_EMAIL,
 				"subject" => SITE_URL . " - ACTION NEEDED: A product was disabled but has not yet been delivered.",
 				"message" => "The product '".$item['name']."' has been disabled in the system. But the product is the content of ".count($order_items)." order items, which have not yet been delivered. \n\nHere are links to each of the affected order items:\n\n".implode("\n", $order_item_links). " \n\nFollow the links to resolve the issue manually.",

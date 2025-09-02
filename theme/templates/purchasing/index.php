@@ -22,13 +22,17 @@ else {
 }
 
 $departments = $DC->getDepartments();
-$products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 1, "order" => "created_at", "extend" => ["mediae" => true]]);
+
+$products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 1, "order" => "created_at", "extend" => ["mediae" => true, "tags" => true]]);
 $legacy_products = $IC->getItems(["where" => "itemtype = 'legacyproduct'", "order" => "created_at", "extend" => ["mediae" => true]]);
-$products_legacy_products = array_merge($products, $legacy_products);
+$all_order_products = array_merge($products, $legacy_products);
+
+
+// debug([$products]);
 
 if($pickupdate) {
 
-	foreach ($products_legacy_products as $key => $product) {
+	foreach ($all_order_products as $key => $product) {
 
 		$pickupdate_product_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["item_id" => $product["id"]]);
 		$pickupdate_product_order_item_count = 0;
@@ -39,16 +43,16 @@ if($pickupdate) {
 		}
 		// no orders for legacyproduct -> remove from array
 		else if($product["itemtype"] == "legacyproduct") {
-			unset($products_legacy_products[$key]);
+			unset($all_order_products[$key]);
 			continue;
 		}
 
-		$products_legacy_products[$key]["total_order_item_count"] = $pickupdate_product_order_item_count;
+		$all_order_products[$key]["total_order_item_count"] = $pickupdate_product_order_item_count;
 
 	}
 
-	foreach ($departments as $department_key => $department) {
-		foreach ($products_legacy_products as $product_key => $product) {
+	foreach($departments as $department_key => $department) {
+		foreach($all_order_products as $product_key => $product) {
 			
 			$department_pickupdate_product_order_items = $SC->getPickupdateOrderItems($pickupdate["id"], ["department_id" => $department["id"], "item_id" => $product["id"]]);
 			$department_pickupdate_product_order_item_count = 0;
@@ -63,7 +67,32 @@ if($pickupdate) {
 
 	}
 
+	// debug([$all_order_products]);
+
 }
+
+// Sort combined product array (products and legacy products)
+usort($all_order_products, function ($a, $b) {
+	return ucfirst($a["name"]) <=> ucfirst($b["name"]);
+});
+
+// Sort products
+usort($products, function ($a, $b) {
+	return ucfirst($a["name"]) <=> ucfirst($b["name"]);
+});
+
+
+$disabled_products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 0, "order" => "created_at", "extend" => ["mediae" => true, "tags" => true]]);
+// Sort disabled products
+usort($disabled_products, function ($a, $b) {
+	return ucfirst($a["name"]) <=> ucfirst($b["name"]);
+});
+
+$all_products = array_merge($products, $disabled_products);
+
+
+// Get product tags
+$product_tags = $IC->getTags(["context" => "productgroup"]);
 
 ?>
 
@@ -75,18 +104,33 @@ if($pickupdate) {
 
 	<?= $HTML->serverMessages(); ?>
 
-	<? if($pickupdate): ?>
-	
-	<div class="c-wrapper order-list">
-		<h2>Ordrer til udlevering</h2>
+	<div class="c-wrapper choose-pickupdate i:collapseHeader">
+		<h2>Vælg afhentningsdag</h2>
+	<? if($upcoming_pickupdates): ?>
 		<?= $HTML->formStart("selectPickupdate", ["class" => "labelstyle:inject form choose_date"]); ?>
 			<?= $HTML->input("pickupdate_id", ["label" => "Udleveringsdag", "type" => "select", "value" => $pickupdate ? $pickupdate["id"] : false, "options" => $HTML->toOptions($upcoming_pickupdates, "id", "pickupdate")]); ?>
 			<ul class="actions">
 				<?= $HTML->submit("Vælg", ["wrapper" => "li.select", "class" => "primary"]); ?>
 			</ul>
 		<?= $HTML->formEnd(); ?>
+	<? else: ?>
+		<p>Der er ingen afhentningsdage.</p>
+		<ul class="actions">
+			<li class="add"><a href="/indkoeb/ny-afhentningsdag" class="button primary">Tilføj ny afhentningsdag</a></li>
+		</ul>
+	<? endif; ?>
+	</div>
 
+	<? if($pickupdate): ?>
+	<div class="c-wrapper order-list i:collapseHeader">
+		<h2>Ordrer til udlevering <?= $pickupdate["pickupdate"] ?></h2>
 
+		<div class="c-box">
+			<ul class="actions">
+				<li class="hide-no-orders">Vis kun bestilte produkter</li>
+				<li class="show-no-orders">Vis alle</li>
+			</ul>
+		</div>
 		<table class="orders">
 			<tr class="col-labels">
 				<th class="departments" title="Afdelinger" scope="col">&nbsp;</th>
@@ -96,10 +140,14 @@ if($pickupdate) {
 				<th class="total" scope="row"><span>Total</span></th>
 			</tr>
 
-			<? foreach($products_legacy_products as $product): ?>
-			<tr class="product-quantities">
+			<?
+			$any_orders = false;
+			foreach($all_order_products as $product):
+				 if($product["total_order_item_count"] !== 0) {
+				 	$any_orders = true;
+				 } ?>
+			<tr class="product-quantities<?= $product["total_order_item_count"] === 0 ? " no-orders" : "" ?>">
 				<th class="product" scope="col" title="<?= $product["name"] ?>"><?= $product["name"] ?></th>
-
 				<? foreach($departments as $department): ?>
 				<td class="quantity"><?= $department["product_quantities"][$product["id"]] ?></td>
 				<? endforeach; ?>
@@ -107,21 +155,41 @@ if($pickupdate) {
 			</tr>
 			<? endforeach; ?>
 		</table>
+		<? if(!$any_orders): ?>
+		<p class="no-orders">Der er endnu ingen ordrer til udlevering <?= $pickupdate["pickupdate"] ?>.</p>
+		<? endif; ?>
 
 	</div>
 	<? endif; ?>
 
-
-	<div class="c-wrapper products">
-		<h2>Produkter</h2>
-		<p>Hej indkøber! Dette afsnit bruges til at oprette og vedligeholde de posetyper som tilbydes til KBHFFs medlemmer.</p>
-		<p>Poserne kan enten oprettes som faste ugentlige valg, eller som specielle tilbud i specifikke perioder. Ved at trykke ‘tilføj nyt produkt’ til højre åbnes en ny menu, hvori disse funktioner kan vælges. Du kan også redigere eller fjerne poser, ved at trykke på de relevante knapper ud for det pågældende produkt.</p>
-
+	<div class="c-wrapper products i:collapseHeader">
+		<h2>Produkter
+			<span class="infohint i:infohint">
+				<span class="p">Hej indkøber! Dette afsnit bruges til at oprette og vedligeholde de posetyper og læssalgsvarer som tilbydes til KBHFFs medlemmer.</span>
+				<span class="p">Produkterne kan enten oprettes som faste ugentlige valg, eller som specielle tilbud i specifikke perioder. Ved at trykke ‘tilføj nyt produkt’ til højre åbnes en ny menu, hvori disse funktioner kan vælges. Du kan også redigere eller fjerne poser, ved at trykke på de relevante knapper ud for det pågældende produkt.</span>
+			</span>
+		</h2>
 		<ul class="actions">
 			<li class="add"><a href="/indkoeb/nyt-produkt" class="button primary">Tilføj nyt produkt</a></li>
 		</ul>
-
-	<? if($products): ?>
+	<? if($all_products): ?>
+		<div class="filter c-box">
+			<ul class="tags">
+				<li class="tag all">Alle</li>
+				<? foreach($product_tags as $tag): ?>
+				<li class="tag" data-context="<?= $tag["context"] ?>" data-value="<?= $tag["value"] ?>"><?= $tag["value"] ?></li>
+				<? endforeach; ?>
+			</ul>
+			<form class="search">
+				<div class="field string">
+					<label for="product_search">Søg</label>
+					<input type="text" name="product_search" id="product_search" />
+				</div>
+				<ul class="actions">
+					<li class="search"><input type="submit" value="Søg" /></li>
+				</ul>
+			</form>
+		</div>
 		<ul class="list">
 			<li class="labels">
 				<span class="images"></span>
@@ -131,7 +199,7 @@ if($pickupdate) {
 				<span class="available">Tilgængelig nu?</span>
 				<span class="buttons"></span>
 			</li>
-		<? foreach($products as $product): 
+		<? foreach($all_products as $product): 
 
 			if( 
 				$product["start_availability_date"] 
@@ -170,19 +238,34 @@ if($pickupdate) {
 			$product_prices = $IC->getPrices(["item_id" => $product["id"]]);
 
 			$media = $IC->sliceMediae($product, "single_media");
-			
-			
 		?>
-			<li class="listing">
+			<li class="listing<?= $product["status"] ? "" : " archived" ?>">
 			<? if($media): ?>
 				<span class="image item_id:<?= $media["item_id"] ?> format:<?= $media["format"] ?> variant:<?= $media["variant"] ?>"></span>
 			<? else: ?>
 				<span class="image"></span>
 			<? endif; ?>
-				<span class="name"><?= $product["name"] ?></span>
+				<span class="name">
+					<?= $product["name"] ?>
+					<? if($product["tags"]): ?>
+					<ul class="tags">
+						<? foreach($product["tags"] as $tag):
+							if($tag["context"] == "productgroup"): ?>
+						<li class="tag" data-context="<?= $tag["context"] ?>" data-value="<?= $tag["value"] ?>"><?= $tag["value"] ?></li>
+							<?	endif; 
+						endforeach; ?>
+					</ul>
+					<? endif; ?>
+				</span>
+
+			<? if($product["status"]): ?>
 				<span class="availability"><?= $product_availability ?></span>
-			<? if($product_prices): ?>
+			<? else: ?>
+				<span class="availability">Arkiveret</span>
+			<? endif; ?>
+
 				<span class='prices'>
+					<? if($product_prices && $product["status"]): ?>
 					<ul class="prices">
 						<? foreach($product_prices as $price): 
 						
@@ -200,11 +283,19 @@ if($pickupdate) {
 						<li class="price"><?= $price["price"]." kr. (".$price_type.")" ?></li>
 						<? endforeach; ?>
 					</ul>
+
 					<? else: ?>
 					<?= "-" ?>
 					<? endif; ?>
 				</span>
-				<span class="available"><?= $product_available ? "Ja" : "Nej" ?></span>
+				<span class="available">
+					<? if($product_prices && $product["status"]): ?>
+					<?= $product_available ? "Ja" : "Nej" ?>
+					<? else: ?>
+					<?= "-" ?>
+					<? endif; ?>
+				</span>
+
 				<span class="button">
 					<ul class="actions">
 						<li class="edit"><a href="/indkoeb/rediger-produkt/<?= $product["id"] ?>" class="button">Rediger</a></li>
@@ -219,16 +310,13 @@ if($pickupdate) {
 	</div>
 
 
-	<div class="c-wrapper pickupdates">
-		<h2>Afhentningsdage og lokale åbningsdage</h2>
-		<p>
-			Dette afsnit bruges til at oprette og vedligeholde afhentningsdage (de dage produkter kan afhentes i afdelingerne), samt hvilke afdelinger 
-			har åbent på disse dage.
-		</p>
-		<p>
-			Når du opretter en ny afhentningsdag, kan du kun vælge blandt onsdage, hvor der ikke allerede er oprettet en afhentningsdag. Alle
-			afdelinger er som standard åbne på hver afhentningsdag, så du skal klikke af hvis en afdeling f.eks. holder ferielukket.
-		</p>
+	<div class="c-wrapper pickupdates i:collapseHeader">
+		<h2>Afhentningsdage og lokale åbningsdage
+			<span class="infohint i:infohint">
+				<span class="p">Dette afsnit bruges til at oprette og vedligeholde afhentningsdage (de dage produkter kan afhentes i afdelingerne), samt hvilke afdelinger har åbent på disse dage.</span>
+				<span class="p">Når du opretter en ny afhentningsdag, kan du kun vælge blandt onsdage, hvor der ikke allerede er oprettet en afhentningsdag. Alle afdelinger er som standard åbne på hver afhentningsdag, så du skal klikke af hvis en afdeling f.eks. holder ferielukket.</span>
+			</span>
+		</h2>
 		<ul class="actions">
 			<li class="add"><a href="/indkoeb/ny-afhentningsdag" class="button primary">Tilføj ny afhentningsdag</a></li>
 		</ul>

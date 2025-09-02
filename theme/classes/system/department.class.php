@@ -499,7 +499,11 @@ class Department extends Model {
 
 			foreach ($results as $product_id) {
 				
-				$product = $IC->getItem(["id" => $product_id, "extend" => ["all" => true]]);
+				$product = $IC->getItem(["id" => $product_id, "extend" => [
+					"prices" => true, 
+					"tags" => true,
+					"mediae" => true
+				]]);
 				if($product["status"] == 1) {
 					$products[] = $product;
 				}

@@ -31,8 +31,66 @@
 #content .scene.shop div.login p.signup {text-align: center;}
 
 
+
+#content .scene.shop div.filter {font-size: 0; margin-bottom: 0; margin-top: 0; z-index: 10;}
+#content .scene.shop div.filter.fixed {position: relative; top: 0;}
+
+#content .scene.shop div.filter ul.tags {
+	display: inline-block;
+	vertical-align: top;
+	list-style: none;
+	font-size: 0;
+	padding: 12px;
+	margin: 0;
+	width: calc(100% - 174px);
+	line-height: 1em;
+}
+#content .scene.shop div.filter ul.tags li {
+	display: inline-block;
+	margin-right: 12px;
+	padding: 8px 12px;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	background-color: #999999;
+	color: #ffffff;
+	font-size: 14px;
+	line-height: 1em;
+	cursor: pointer;
+}
+#content .scene.shop div.filter ul.tags li.selected {
+	background-color: #000000;
+}
+
+#content .scene.shop div.filter form {width: 150px;
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
+}
+#content .scene.shop div.filter form div.field {padding: 12px;}
+#content .scene.shop div.filter form div.field label {display: none;}
+#content .scene.shop div.filter form div.field div.help {display: none;}
+#content .scene.shop div.filter form div.field input {height: 26px;}
+#content .scene.shop div.filter form div.field.error input,
+#content .scene.shop div.filter form div.field.focus input {height: 30px;}
+#content .scene.shop div.filter form ul.actions {
+	z-index: 100;
+	position: absolute;
+	right: 20px;
+	top: 19px;
+	padding: 0;
+}
+#content .scene.shop div.filter form ul.actions input {
+	border: none;
+	text-indent: -9999px;
+	width: 16px;
+	height: 18px;
+	background: transparent url(/img/gx_search.svg) no-repeat center center;
+	background-size: auto 17px;
+}
+
 #content .scene.shop ul.products {margin: 0; list-style: none; padding-left: 0; padding-right: 0;}
 #content .scene.shop ul.products li.product {padding: 0; margin-bottom: 12px}
+#content .scene.shop ul.products li.product.hidden {display: none;}
 
 #content .scene.shop ul.products li.product div.product div.image {width: 160px; height: 160px; margin: 12px; float: left;
 	background-repeat: no-repeat;
@@ -44,6 +102,8 @@
 #content .scene.shop ul.products li.product div.product h3 span.price {float: right;}
 
 #content .scene.shop ul.products li.product div.product p {padding-left: 184px;}
+
+#content .scene.shop ul.products li.product div.product ul.tags {display: none;}
 
 #content .scene.shop ul.products li.product h4.pickupdates {clear: both;}
 #content .scene.shop ul.products li.product div.pickupdates {position: relative; margin: 0px; padding: 12px 0; overflow: hidden;}

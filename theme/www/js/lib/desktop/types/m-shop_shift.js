@@ -15,13 +15,15 @@ Util.Modules["shop_shift"] = new function() {
 			// u.bug("scene.ready:", this);
 
 			var form = u.qs("form.choose_date");
-			u.f.init(form);
-			form.updated = function() {
-				this.submit();
+			if(form) {
+				u.f.init(form);
+				form.updated = function() {
+					this.submit();
+				}
 			}
 
 			var confirm_delivery_listings = u.qsa(".orders.items .listing");
-			
+
 			var i, listing;
 			for(i = 0; i < confirm_delivery_listings.length; i++) {
 

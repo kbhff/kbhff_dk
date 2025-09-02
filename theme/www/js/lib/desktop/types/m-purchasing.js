@@ -12,56 +12,49 @@ Util.Modules["purchasing"] = new function() {
 		scene.ready = function() {
 			// u.bug("scene.ready", this);
 
-			var form = u.qs("form.choose_date");
-			u.f.init(form);
-			form.updated = function() {
-				this.submit();
-			}
 
-			this.div_products = u.qs("div.products", this);
-			var ul_list = u.qs("ul.list", this.div_products);
-			var div_filter = u. ae(this.div_products, "div", {"class": "filter"});
-			this.div_products.insertBefore(div_filter, ul_list);
-			
-			this.form_product_filter = u.f.addForm(div_filter, {"class": "labelstyle:inject"});
-			this.form_product_filter.div = this;
+			// Choose date
 
-			var fieldset = u.f.addFieldset(this.form_product_filter);
-			u.f.addField(fieldset, {"type":"string", "name": "query", "label":"Filtrer produkter"});
-
-			u.f.init(this.form_product_filter);
-			this.form_product_filter.updated = function() {
-				var query = this.inputs["query"].val().toLowerCase();
-
-				var i, product, odd_even = 0;
-				for(i = 0; i < this.div.products.length; i++) {
-					product = this.div.products[i];
-					if(!query || product.search_string.match(query)) {
-						u.ac(product, "show");
-						odd_even++;
-						// u.ass(product, {
-						// 	"display": "flex"
-						// });
-					}
-					else {
-						u.rc(product, "show");
-						// u.ass(product, {
-						// 	"display": "none"
-						// });
-					}
-					u.rc(product, "odd");
-					if(odd_even%2) {
-						u.ac(product, "odd");
-					}
+			var form_choose_date = u.qs("form.choose_date");
+			if(form_choose_date) {
+				u.f.init(form_choose_date);
+				form_choose_date.updated = function() {
+					this.submit();
 				}
 			}
 
 
-			this.products = u.qsa(" li.listing", this.div_products);
-			var i, product, image;
-			for(i = 0; i < this.products.length; i++) {
 
-				product = this.products[i];
+			// Orders
+
+			this.div_order_list = u.qs("div.order-list", this);
+			// Orders filter
+			this.bn_hide = u.qs("ul.actions li.hide-no-orders", this.div_order_list);
+			this.bn_hide.scene = this
+			this.bn_show = u.qs("ul.actions li.show-no-orders", this.div_order_list);
+			this.bn_show.scene = this
+
+			u.ce(this.bn_hide);
+			this.bn_hide.clicked = function() {
+				u.rc(this.scene.div_order_list, "show-all")
+			}
+			u.ce(this.bn_show);
+			this.bn_show.clicked = function() {
+				u.ac(this.scene.div_order_list, "show-all")
+			}
+
+
+
+			// Products
+			this.div_products = u.qs("div.products", this);
+
+
+
+			this.div_products.products = u.qsa("li.listing", this.div_products);
+			var i, product, image;
+			for(i = 0; i < this.div_products.products.length; i++) {
+
+				product = this.div_products.products[i];
 				product.search_string = u.qs(".name", product).innerHTML.toLowerCase();
 				image = u.qs("span.image", product);
 
@@ -80,8 +73,7 @@ Util.Modules["purchasing"] = new function() {
 
 			}
 
-			// Update filter
-			this.form_product_filter.updated();
+			u.productFilters(this.div_products);
 
 		}
 		
@@ -104,62 +96,89 @@ Util.Modules["add_edit_product"] = new function() {
 
 		scene.ready = function() {
 //			// u.bug("scene.ready", this);
-			var form = u.qs("form");
-			u.f.init(form, this);
 
-			form.scene = this;
 
-			next_wednesday = " - ";
+			// Basics
 
-			this.first_pickupdate_span = u.qs(".first_pickupdate span", this);
-			form.inputs["start_availability_date"].changed = function(iN) {
-				
-				var first_pickupdate = "-";
+			var form_basics = u.qs("form.basics");
+			u.f.init(form_basics, this);
 
-				if(iN.value) {
-					var next_wednesday_date = this.form.scene.getNextDayOfTheWeek("Wednesday", false, new Date(iN.value));
-					first_pickupdate = next_wednesday_date.toLocaleDateString('da-DA', {year:"numeric", month:"2-digit", day:"2-digit"});
+
+
+			// Availability
+
+			var form_availability = u.qs("form.availability");
+			if(form_availability) {
+				u.f.init(form_availability, this);
+				form_availability.scene = this;
+
+
+				next_wednesday = " - ";
+
+				form_availability.first_pickupdate_span = u.qs(".first_pickupdate span", form_availability);
+				form_availability.inputs["start_availability_date"].changed = function(iN) {
+
+					var first_pickupdate = "-";
+					if(iN.value) {
+						var next_wednesday_date = this.form.scene.getNextDayOfTheWeek("Wednesday", false, new Date(iN.value));
+						first_pickupdate = next_wednesday_date.toLocaleDateString('da-DA', {year:"numeric", month:"2-digit", day:"2-digit"});
+					}
+
+					this.form.first_pickupdate_span.innerHTML = first_pickupdate;
 				}
-				
 
-				this.form.scene.first_pickupdate_span.innerHTML = first_pickupdate;
+				form_availability.last_pickupdate_span = u.qs(".last_pickupdate span", form_availability);
+				form_availability.inputs["end_availability_date"].changed = function(iN) {
+
+					var last_pickupdate = "-";
+					if(iN.value) {
+						var previous_wednesday_date = this.form.scene.getPreviousDayOfTheWeek("Wednesday", false, new Date(iN.value));
+						last_pickupdate = previous_wednesday_date.toLocaleDateString('da-DA', {year:"numeric", month:"2-digit", day:"2-digit"});
+					}
+
+					this.form.last_pickupdate_span.innerHTML = last_pickupdate;
+				}
 			}
 
-			this.last_pickupdate_span = u.qs(".last_pickupdate span", this);
-			form.inputs["end_availability_date"].changed = function(iN) {
-				
-				var last_pickupdate = "-";
-				
-				if(iN.value) {
-					var previous_wednesday_date = this.form.scene.getPreviousDayOfTheWeek("Wednesday", false, new Date(iN.value));
-					last_pickupdate = previous_wednesday_date.toLocaleDateString('da-DA', {year:"numeric", month:"2-digit", day:"2-digit"});
-				}
-				
-				this.form.scene.last_pickupdate_span.innerHTML = last_pickupdate;
+
+			// Prices
+
+			var form_prices = u.qs("form.prices");
+			if(form_prices) {
+				u.f.init(form_prices, this);
 			}
-		
+
+
+
+			// Tags
+
+			var form_tags = u.qs("form.tags");
+			if(form_tags) {
+				u.f.init(form_tags, this);
+			}
+
+
 		}
 
 		scene.getNextDayOfTheWeek = function(dayName, excludeToday = true, refDate = new Date()) {
-			var dayOfWeek = ["sun","mon","tue","wed","thu","fri","sat"]
-							  .indexOf(dayName.slice(0,3).toLowerCase());
+			var dayOfWeek = ["sun","mon","tue","wed","thu","fri","sat"].indexOf(dayName.slice(0,3).toLowerCase());
 			if (dayOfWeek < 0) return;
 			refDate.setHours(0,0,0,0);
-			refDate.setDate(refDate.getDate() + (!!excludeToday ? 1 : 0) + 
-							(dayOfWeek + 7 - refDate.getDay() - (!!excludeToday ? 1 : 0)) % 7);
+			refDate.setDate(refDate.getDate() + (!!excludeToday ? 1 : 0) + (dayOfWeek + 7 - refDate.getDay() - (!!excludeToday ? 1 : 0)) % 7);
 			return refDate;
 		}
 
 		scene.getPreviousDayOfTheWeek = function(dayName, excludeToday = true, refDate = new Date()) {
-			var dayOfWeek = ["sun","mon","tue","wed","thu","fri","sat"]
-							  .indexOf(dayName.slice(0,3).toLowerCase());
+			var dayOfWeek = ["sun","mon","tue","wed","thu","fri","sat"].indexOf(dayName.slice(0,3).toLowerCase());
 			if (dayOfWeek < 0) return;
 			refDate.setHours(0,0,0,0);
-			refDate.setDate(refDate.getDate() + (!!excludeToday ? 1 : 0) +
-							(dayOfWeek - 7 - refDate.getDay() - (!!excludeToday ? 1 : 0)) % 7);
+			refDate.setDate(refDate.getDate() + (!!excludeToday ? 1 : 0) + (dayOfWeek - 7 - refDate.getDay() - (!!excludeToday ? 1 : 0)) % 7);
 			return refDate;
 		}
-		
+
+
+
+
 		// scene is ready
 		scene.ready();
 	}

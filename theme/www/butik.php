@@ -808,7 +808,7 @@ if($action) {
 
 					// redirect to leave POST state
 					message()->addMessage("We could not get Payment gateway session from ".ucfirst($result["payment_gateway"])." – please try again.", ["type" => "error"]);
-					header("Location: /shop/checkout");
+					header("Location: /butik/betal");
 					exit();
 
 				}

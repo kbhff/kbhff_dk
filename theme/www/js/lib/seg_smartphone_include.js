@@ -6,6 +6,7 @@ document.write('<script type="text/javascript" src="/js/manipulator/src/beta-u-f
 document.write('<script type="text/javascript" src="/js/lib/u-basics.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/u-settings.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/u-expandarrow.js"></script>');
+document.write('<script type="text/javascript" src="/js/lib/desktop/core/m-collapse_header.js"></script>');
 
 
 document.write('<script type="text/javascript" src="/js/lib/smartphone/core/i-page.js"></script>');
@@ -56,3 +57,5 @@ document.write('<script type="text/javascript" src="/js/lib/desktop/types/m-mass
 
 
 document.write('<script type="text/javascript" src="/js/lib/desktop/types/m-purchasing.js"></script>');
+
+document.write('<script type="text/javascript" src="/js/lib/desktop/types/m-infohint.js"></script>');

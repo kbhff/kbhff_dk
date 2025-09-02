@@ -12,6 +12,7 @@ u.addExpandArrow = function(node) {
 		"class":"arrow",
 		"width":17,
 		"height":17,
+		"viewBox": "0 0 17 17",
 		"shapes":[
 			{
 				"type": "line",
@@ -42,6 +43,7 @@ u.addCollapseArrow = function(node) {
 		"name":"collapsearrow",
 		"node":node,
 		"class":"arrow",
+		"viewBox": "0 0 17 17",
 		"width":17,
 		"height":17,
 		"shapes":[

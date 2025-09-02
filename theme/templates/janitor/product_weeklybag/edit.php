@@ -31,6 +31,8 @@ $item = $IC->getItem(array("id" => $item_id, "extend" => ["dependencies" => true
 		<?= $model->formEnd() ?>
 	</div>
 
+	<?= $JML->editTags($item, ["context" => "productgroup"]) ?>
+
 	<?= $JML->editPrices($item); ?>
 
 </div>

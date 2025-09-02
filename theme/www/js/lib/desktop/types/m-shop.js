@@ -5,29 +5,29 @@ Util.Modules["shop"] = new function() {
 		scene.resized = function() {
 			// u.bug("scene.resized:", this, u.absY(this.sidebar));
 
+			if(this.filter) {
+				this.filter.start_y = u.absY(this.filter);
+				this.filter_offset = this.filter.offsetHeight;
+			}
+			else {
+				this.filter_offset = 0;
+			}
+
 			if(this.sidebar) {
+				this.sidebar.start_y = u.absY(this.sidebar) - this.filter_offset;
+			}
 
-				// u.ass(this.sidebar, {
-				// 	top: 0
-				// });
-
-				this.sidebar.start_y = u.absY(this.sidebar);
-
+			if(this.sidebar || this.filter) {
 				this.scrolled();
 			}
 
 		}
 
 		scene.scrolled = function() {
-			// u.bug("scrolled:", this, this.sidebar.start_y, page.offsetHeight, page.scrolled_y, this.sidebar.offsetHeight);
 
 			if(this.sidebar) {
+				// u.bug("scrolled:", this, this.sidebar.start_y, page.offsetHeight, page.scrolled_y, this.sidebar.offsetHeight);
 
-				// if((page.offsetHeight - 52) - page.scrolled_y < this.sidebar.start_y) {
-				// 	u.bug("yay")
-				// 	// do nothing
-				// }
-				// else
 				if(this.sidebar.start_y < page.scrolled_y && this.sidebar.offsetHeight < page.browser_h) {
 					// u.bug("fix", "translate3d(0, "+(page.scrolled_y - this.sidebar.start_y)+"px)")
 					if(!this.sidebar.is_fixed) {
@@ -36,7 +36,6 @@ Util.Modules["shop"] = new function() {
 					}
 					u.ass(this.sidebar, {
 						transform: "translate3d(0, "+(page.scrolled_y - this.sidebar.start_y)+"px, 0)",
-						// top: page.scrolled_y - this.sidebar.start_y + "px"
 					});
 				}
 				else if(this.sidebar.is_fixed) {
@@ -44,7 +43,28 @@ Util.Modules["shop"] = new function() {
 					u.rc(this.sidebar, "fixed");
 					u.ass(this.sidebar, {
 						transform: "none",
-						// top: 0
+					});
+				}
+
+			}
+
+			if(this.filter) {
+
+				if(this.filter.start_y < page.scrolled_y) {
+					// u.bug("fix", "translate3d(0, "+(page.scrolled_y - this.filter.start_y)+"px)")
+					if(!this.filter.is_fixed) {
+						this.filter.is_fixed = true;
+						u.ac(this.filter, "fixed");
+					}
+					u.ass(this.filter, {
+						transform: "translate3d(0, "+(page.scrolled_y - this.filter.start_y)+"px, 0)",
+					});
+				}
+				else if(this.filter.is_fixed) {
+					this.filter.is_fixed = false;
+					u.rc(this.filter, "fixed");
+					u.ass(this.filter, {
+						transform: "none",
 					});
 				}
 
@@ -61,12 +81,13 @@ Util.Modules["shop"] = new function() {
 				form_login.inputs["username"].focus();
 			}
 
-			var products = u.qsa("li.product", this);
-			if(products) {
-				var i, j, pickupdate, product, image;
-				for(i = 0; i < products.length; i++) {
 
-					product = products[i];
+			this.products = u.qsa("li.product", this);
+			if(this.products) {
+				var i, j, pickupdate, product, image;
+				for(i = 0; i < this.products.length; i++) {
+
+					product = this.products[i];
 
 					// Images
 					var images = u.qsa("div.image,div.media", product);
@@ -202,11 +223,28 @@ Util.Modules["shop"] = new function() {
 
 				}
 
+
+				// Enable filter
+				u.productFilters(this);
+
 			}
 
+			// Prepare filter to stick
+			this.filter = u.qs("div.filter", this);
+			if(this.filter) {
+				this.filter.start_y = u.absY(this.filter);
+				this.filter_offset = this.filter.offsetHeight;
+			}
+			else {
+				this.filter_offset = 0;
+			}
+
+			u.bug("this.filter_offset", this.filter_offset);
+
+			// Prepare sidebar to stick
 			this.sidebar = u.qs("div.sidebar", this);
 			if(this.sidebar) {
-				this.sidebar.start_y = u.absY(this.sidebar);
+				this.sidebar.start_y = u.absY(this.sidebar) - this.filter_offset;
 			}
 		}
 
