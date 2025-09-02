@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2025-01-05 22:26:17
+asset-builder @ 2025-09-02 21:24:01
 */
 
 /*seg_desktop_include.css*/
@@ -722,6 +722,10 @@ div.field.html .editor .selection_options ul.actions li {padding: 0;}
 #content div.c-primary-box li {
 	color: white;
 }
+#content div.c-box.c-wrapper,
+#content div.c-primary-box.c-wrapper {
+	width: calc(100% - 24px);
+}
 #content div.c-box.c-one-quarter,
 #content div.c-primary-box.c-one-quarter {
 	width: calc(25% - 24px);
@@ -769,6 +773,69 @@ div.field.html .editor .selection_options ul.actions li {padding: 0;}
 #content div.c-three-quarters > div.c-box.c-one-half,
 #content div.c-three-quarters > div.c-primary-box.c-one-half {
 	width: calc(66.6666% - 24px);
+}
+#content .scene div.togglable,
+#content .scene li.togglable {overflow: hidden; min-height: auto;}
+#content .scene div.togglable div.togglable_content,
+#content .scene li.togglable div.togglable_content {display: none;}
+#content .scene div.togglable.open,
+#content .scene li.togglable.open {overflow: visible;}
+#content .scene div.togglable.open div.togglable_content,
+#content .scene li.togglable.open div.togglable_content {display: block;}
+#content .scene div.togglable > h2,
+#content .scene div.togglable > h3,
+#content .scene div.togglable > h4,
+#content .scene li.togglable > h2,
+#content .scene li.togglable > h3,
+#content .scene li.togglable > h4 {position: relative; cursor: ns-resize; padding-top: 22px;}
+#content .scene div.togglable > h2 svg,
+#content .scene div.togglable > h3 svg,
+#content .scene div.togglable > h4 svg,
+#content .scene li.togglable > h2 svg,
+#content .scene li.togglable > h3 svg,
+#content .scene li.togglable > h4 svg {position: absolute; top: 28px; right: 12px; stroke: #000000; stroke-width: 1.5px; width: 30px; height: 30px;}
+#content .scene .infohintparent {
+	position: relative;
+}
+#content .scene .open .infohintparent span.q:hover + span.infohint {
+	display: block;
+}
+#content .scene .infohintparent .q {
+	display: inline-block;
+	position: relative;
+	top: -6px;
+	padding: 2px 3px;
+	width: 9px;
+	text-align: center;
+	font-size: 12px;
+	text-transform: none;
+	font-weight: bold;
+	line-height: 1em;
+	border: 1px solid #000000;
+	border-radius: 11px;
+}
+#content .scene .togglable .infohintparent span.q {
+	display: none;
+}
+#content .scene .togglable.open .infohintparent span.q {
+	display: inline-block;
+}
+#content .scene span.infohint {
+	display: none;
+	position: absolute;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(255, 255, 255, 0.9);
+	padding: 5px 12px;
+	box-sizing: border-box;
+}
+#content .scene span.infohint span.p {
+	display: block;
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+	line-height: 1.2em;
+	text-transform: none;
 }
 #content .banner {position: relative;}
 #content .banner > img {padding-top: 5px;}
@@ -1370,8 +1437,62 @@ div.field.html .editor .selection_options ul.actions li {padding: 0;}
 #content .scene.shop div.login ul.actions,
 #content .scene.shop div.login p.forgot,
 #content .scene.shop div.login p.signup {text-align: center;}
+#content .scene.shop div.filter {font-size: 0; margin-bottom: 0; margin-top: 0; z-index: 10;}
+#content .scene.shop div.filter.fixed {position: relative; top: 0;}
+#content .scene.shop div.filter ul.tags {
+	display: inline-block;
+	vertical-align: top;
+	list-style: none;
+	font-size: 0;
+	padding: 12px;
+	margin: 0;
+	width: calc(100% - 174px);
+	line-height: 1em;
+}
+#content .scene.shop div.filter ul.tags li {
+	display: inline-block;
+	margin-right: 12px;
+	padding: 8px 12px;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	background-color: #999999;
+	color: #ffffff;
+	font-size: 14px;
+	line-height: 1em;
+	cursor: pointer;
+}
+#content .scene.shop div.filter ul.tags li.selected {
+	background-color: #000000;
+}
+#content .scene.shop div.filter form {width: 150px;
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
+}
+#content .scene.shop div.filter form div.field {padding: 12px;}
+#content .scene.shop div.filter form div.field label {display: none;}
+#content .scene.shop div.filter form div.field div.help {display: none;}
+#content .scene.shop div.filter form div.field input {height: 26px;}
+#content .scene.shop div.filter form div.field.error input,
+#content .scene.shop div.filter form div.field.focus input {height: 30px;}
+#content .scene.shop div.filter form ul.actions {
+	z-index: 100;
+	position: absolute;
+	right: 20px;
+	top: 19px;
+	padding: 0;
+}
+#content .scene.shop div.filter form ul.actions input {
+	border: none;
+	text-indent: -9999px;
+	width: 16px;
+	height: 18px;
+	background: transparent url(../img/gx_search.svg) no-repeat center center;
+	background-size: auto 17px;
+}
 #content .scene.shop ul.products {margin: 0; list-style: none; padding-left: 0; padding-right: 0;}
 #content .scene.shop ul.products li.product {padding: 0; margin-bottom: 12px}
+#content .scene.shop ul.products li.product.hidden {display: none;}
 #content .scene.shop ul.products li.product div.product div.image {width: 160px; height: 160px; margin: 12px; float: left;
 	background-repeat: no-repeat;
 	background-position: top left;
@@ -1381,6 +1502,7 @@ div.field.html .editor .selection_options ul.actions li {padding: 0;}
 #content .scene.shop ul.products li.product div.product h3 {padding-left: 184px;}
 #content .scene.shop ul.products li.product div.product h3 span.price {float: right;}
 #content .scene.shop ul.products li.product div.product p {padding-left: 184px;}
+#content .scene.shop ul.products li.product div.product ul.tags {display: none;}
 #content .scene.shop ul.products li.product h4.pickupdates {clear: both;}
 #content .scene.shop ul.products li.product div.pickupdates {position: relative; margin: 0px; padding: 12px 0; overflow: hidden;}
 #content .scene.shop ul.products li.product div.pickupdates.scroll {margin: 0 12px; padding: 12px 15px;}
@@ -1544,6 +1666,7 @@ div.field.html .editor .selection_options ul.actions li {padding: 0;}
 #content div.shop_shift ul.subnavigation li {text-align: center;}
 #content div.shop_shift ul.subnavigation li {width: 25%;}
 #content div.shop_shift ul.actions {text-align: left;}
+#content div.shop_shift ul.actions li {padding-left: 0;}
 #content div.shop_shift .tally ul.actions {text-align: right;}
 #content div.shop_shift .info form {font-size: 0; padding-bottom: 0;}
 #content div.shop_shift .info form div.field {display: inline-block; vertical-align: top; width: calc(100% - 109px);}
@@ -1584,6 +1707,7 @@ div.field.html .editor .selection_options ul.actions li {padding: 0;}
 #content .scene.shop_shift div.orders ul.list li.listing span.button ul.actions {margin: 0; padding: 0; list-style: none;}
 #content .scene.shop_shift div.orders ul.list li.listing span.button ul.actions li {text-align: right; padding: 0;}
 #content .scene.shop_shift div.orders ul.list li.listing span.button ul.actions li a {padding: 4px 14px;}
+#content .scene.purchasing .c-wrapper.choose-pickupdate ul.actions li {padding-right: 0;}
 
 
 /*s-member_help.css*/
@@ -1964,13 +2088,19 @@ div.overlay .field.password {
 #content .scene.accountant .calculated {padding-bottom: 46px; border-bottom: 1px;}
 
 /*s-purchasing.css*/
+#content .scene.purchasing .c-wrapper.choose-pickupdate {border-bottom: 1px solid #999999;}
+#content .scene.purchasing .c-wrapper.choose-pickupdate form {font-size: 0;}
+#content .scene.purchasing .c-wrapper.choose-pickupdate div.field {display: inline-block; width: calc(100% - 100px);}
+#content .scene.purchasing .c-wrapper.choose-pickupdate ul.actions {display: inline-block; padding-left: 0;}
+#content .scene.purchasing .c-wrapper.choose-pickupdate ul.actions li {padding-left: 0;}
 #content .scene.purchasing .order-list form {font-size: 0; padding: 12px 0; width: 66%;}
-#content .scene.purchasing .order-list form div.field {display: inline-block; vertical-align: top; width: calc(100% - 109px);}
+#content .scene.purchasing .order-list form div.field {display: inline-block; vertical-align: top; width: calc(100% - 200px);}
 #content .scene.purchasing .order-list form ul.actions {display: inline-block; font-size: 0; vertical-align: top; width: 65px; padding: 0 0 0 10px; margin-top: 14px; margin-right: 12px;}
 #content .scene.purchasing .order-list form ul.actions li {padding: 0; font-size: 0;}
 #content .scene.purchasing .order-list form ul.actions input {padding-top: 5px; padding-bottom: 5px;}
-#content .scene.purchasing .c-wrapper.order-list {padding: 0 0 46px; border-bottom: 1px solid #999999;}
-#content .scene.purchasing .c-wrapper.order-list ul.list {padding: 0 12px; margin: 0; list-style: none;}
+#content .scene.purchasing .c-wrapper.order-list {
+	border-bottom: 1px solid #999999;}
+#content .scene.purchasing .c-wrapper.order-list ul.list {padding: 0 12px 40px; margin: 0; list-style: none;}
 #content .scene.purchasing .c-wrapper.order-list ul.list > li {padding: 0;
 	display: flex;
 	flex-flow: row nowrap;
@@ -1999,6 +2129,7 @@ div.overlay .field.password {
 	table-layout: fixed;
 	width: 100%;
 	border-collapse: collapse;
+	margin-bottom: 40px;
 }
 #content .scene.purchasing .c-wrapper.order-list table.orders tr {border-bottom: 1px solid #000000; padding: 3px 0;}
 #content .scene.purchasing .c-wrapper.order-list table.orders tr:last-child {border: none;}
@@ -2014,20 +2145,97 @@ div.overlay .field.password {
 #content .scene.purchasing .c-wrapper.order-list table.orders th.department span,
 #content .scene.purchasing .c-wrapper.order-list table.orders th.total span {writing-mode: sideways-lr; padding: 0 0 5px;}
 #content .scene.purchasing .c-wrapper.order-list table.orders th.product {text-align: right; padding-right: 5px; border: none;}
-#content .scene.purchasing .c-wrapper.products {padding: 0 0 46px; border-bottom: 1px solid #999999;}
-#content .scene.purchasing .c-wrapper.products div.filter form {max-width: 200px;}
-#content .scene.purchasing .c-wrapper.products div.filter form div.field {padding-bottom: 5px;}
+#content .scene.purchasing .c-wrapper.order-list ul.actions {
+	padding: 12px;
+}
+#content .scene.purchasing .c-wrapper.order-list ul.actions li {cursor: pointer;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	background-color: #999999;
+	color: #ffffff;
+	font-size: 14px;
+	line-height: 1em;
+	padding: 8px 12px;
+	margin-left: 12px;
+}
+#content .scene.purchasing .c-wrapper.order-list ul.actions li.hide-no-orders {
+	background-color: #000000;
+}
+#content .scene.purchasing .c-wrapper.order-list.show-all ul.actions li.hide-no-orders {background-color: #999999;}
+#content .scene.purchasing .c-wrapper.order-list.show-all ul.actions li.show-no-orders {background-color: #000000;}
+#content .scene.purchasing .c-wrapper.order-list table.orders tr.no-orders {display: none;}
+#content .scene.purchasing .c-wrapper.order-list.show-all table.orders tr.no-orders {display: table-row;}
+#content .scene.purchasing .c-wrapper.order-list.show-all p.no-orders {display: none;}
+#content .scene.purchasing .c-wrapper.order-list p.no-orders {padding-bottom: 40px;}
+#content .scene.purchasing .c-wrapper.products {
+	border-bottom: 1px solid #999999;
+}
+#content .scene.purchasing .c-wrapper.products div.filter {font-size: 0;}
+#content .scene.purchasing .c-wrapper.products div.filter ul.tags {
+	display: inline-block;
+	vertical-align: top;
+	list-style: none;
+	font-size: 0;
+	padding: 12px;
+	margin: 0;
+	width: calc(100% - 174px);
+	line-height: 1em;
+}
+#content .scene.purchasing .c-wrapper.products div.filter ul.tags li {
+	display: inline-block;
+	margin-right: 12px;
+	padding: 8px 12px;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	background-color: #999999;
+	color: #ffffff;
+	font-size: 14px;
+	line-height: 1em;
+	cursor: pointer;
+}
+#content .scene.purchasing .c-wrapper.products div.filter ul.tags li.selected {
+	background-color: #000000;
+}
+#content .scene.purchasing .c-wrapper.products div.filter form {width: 150px;
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
+}
+#content .scene.purchasing .c-wrapper.products div.filter form div.field {padding: 12px;}
+#content .scene.purchasing .c-wrapper.products div.filter form div.field label {display: none;}
 #content .scene.purchasing .c-wrapper.products div.filter form div.field div.help {display: none;}
-#content .scene.purchasing .c-wrapper.products ul.list {padding: 0 12px; margin: 0; list-style: none;}
+#content .scene.purchasing .c-wrapper.products div.filter form div.field input {height: 26px;}
+#content .scene.purchasing .c-wrapper.products div.filter form ul.actions {
+	z-index: 100;
+	position: absolute;
+	right: 20px;
+	top: 19px;
+	padding: 0;
+}
+#content .scene.purchasing .c-wrapper.products div.filter form ul.actions input {
+	border: none;
+	text-indent: -9999px;
+	width: 16px;
+	height: 18px;
+	background: transparent url(../img/gx_search.svg) no-repeat center center;
+	background-size: auto 17px;
+}
+#content .scene.purchasing .c-wrapper.products ul.list {padding: 0 12px 40px; margin: 0; list-style: none;}
 #content .scene.purchasing .c-wrapper.products ul.list > li {padding: 0;
 	display: flex;
 	flex-flow: row nowrap;
 }
-#content .scene.purchasing .c-wrapper.products ul.list > li.listing {
+#content .scene.purchasing .c-wrapper.products ul.list > li.listing.hidden {
 	display: none;
 }
-#content .scene.purchasing .c-wrapper.products ul.list > li.listing.show {
-	display: flex;
+#content .scene.purchasing .c-wrapper.products ul.list > li.listing.archived {
+	color: #bbbbbb;
+}
+#content .scene.purchasing .c-wrapper.products ul.list > li.listing.archived ul.actions li a {
+	background-color: #dedede;
+}
+#content .scene.purchasing .c-wrapper.products ul.list > li.listing.archived ul.actions li a:hover {
+	background-color: #666666;
 }
 #content .scene.purchasing .c-wrapper.products ul.list > li > span {display: block; padding: 4px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 	flex: 1 1 100px;
@@ -2048,6 +2256,29 @@ div.overlay .field.password {
 	background-repeat: no-repeat;
 	background-size: 50px auto;
 	background-color: transparent;
+}
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.name ul.tags {
+	display: block;
+	list-style: none;
+	font-size: 0;
+	padding: 0;
+	margin: 0;
+	width: calc(100% - 174px);
+	line-height: 1em;
+}
+#content .scene.purchasing .c-wrapper.products ul.list li.listing span.name ul.tags li {
+	display: inline-block;
+	margin-right: 8px;
+	padding: 5px 9px;
+	font-family: 'voresfont', Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	background-color: #dedede;
+	color: #000000;
+	font-size: 10px;
+	line-height: 1em;
+}
+#content .scene.purchasing .c-wrapper.products ul.list li.listing.odd span.name ul.tags li {
+	background: #ffffff;
 }
 #content .scene.purchasing .c-wrapper.products ul.list li.labels span.price,
 #content .scene.purchasing .c-wrapper.products ul.list li.listing span.prices {
@@ -2114,6 +2345,32 @@ div.overlay .field.password {
 #content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.button ul.actions {margin: 0; padding: 0; list-style: none;}
 #content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.button ul.actions li {text-align: right; padding: 0;}
 #content .scene.purchasing .c-wrapper.pickupdates ul.list li.listing span.button ul.actions li a {padding: 4px 14px;}
+#content .scene.add_edit_product h1 + ul.actions {padding-top: 24px; text-align: left;}
+#content .scene.add_edit_product h1 + ul.actions li {padding-left: 0; padding-bottom: 0;}
+#content .scene.add_edit_product h1 + ul.actions li.deactivate {float: right;}
+#content .scene.add_edit_product div.c-wrapper > form {
+	font-size: 0;
+}
+#content .scene.add_edit_product div.c-wrapper .c-one-half {min-height: auto;}
+#content .scene.add_edit_product div.c-wrapper.basics {
+	padding-top: 22px;
+	border-top: 1px solid #999999;
+}
+#content .scene.add_edit_product div.c-wrapper.availability {
+	padding-top: 22px;
+	border-top: 1px solid #999999;
+}
+#content .scene.add_edit_product div.c-wrapper .c-one-half.prices {
+	padding-top: 22px;
+	border-top: 1px solid #999999;
+}
+#content .scene.add_edit_product div.c-wrapper .c-one-half.tags {
+	padding-top: 22px;
+	border-top: 1px solid #999999;
+}
+#content .scene.add_edit_product div.c-wrapper .c-one-half.tags div.field.checkbox {
+	padding-bottom: 8px;
+}
 #content .scene.add_product .first_pickupdate {margin-top: -8px;}
 #content .scene.add_product .last_pickupdate {margin-top: -8px;}
 

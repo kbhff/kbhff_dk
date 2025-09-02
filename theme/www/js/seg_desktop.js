@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2025-01-05 22:26:17
+asset-builder @ 2025-09-02 21:24:01
 */
 
 /*seg_desktop_include.js*/
@@ -7863,7 +7863,79 @@ u.f.customHintPosition["date"] = function() {}
 u.f.customHintPosition["datetime"] = function() {}
 u.f.customHintPosition["files"] = function() {}
 u.f.customHintPosition["html"] = function() {}
-
+u.productFilters = function(div) {
+	u.bug("productFilters", div);
+	div.div_filter = u.qs("div.filter", div);
+	div.div_filter.div = div;
+	div.filterItems = function() {
+		var i, node, zebra_index = 0;
+		var query = this.div_filter.input.val().toLowerCase();
+		u.bug(this.current_filter, query+","+this.selected_tag.tag_value);
+		if(this.current_filter !== query+","+this.selected_tag.tag_value) {
+			this.current_filter = query + "," + this.selected_tag.tag_value;
+			for(i = 0; i < this.products.length; i++) {
+				node = this.products[i];
+				u.rc(node, "odd");
+				if((!query || node.text.match(query)) && (!this.selected_tag.tag_value || node.tags.indexOf(this.selected_tag.tag_value) !== -1)) {
+					node._hidden = false;
+					u.rc(node, "hidden", false);
+					if(zebra_index % 2) {
+						u.ac(node, "odd");
+					}
+					zebra_index++;
+				}
+				else {
+					node._hidden = true;
+					u.ac(node, "hidden", false);
+				}
+			}
+		}
+		u.rc(this, "filtering");
+	}
+	div.div_filter.form = u.qs("form", div.div_filter);
+	var i, node, j, text_node, tag_node;
+	for(i = 0; i < div.products.length; i++) {
+		node = div.products[i];
+		node.text = "";
+		node.tags = [];
+		var text_nodes = u.qsa("span.name", node);
+		for(j = 0; j < text_nodes.length; j++) {
+			text_node = text_nodes[j];
+			node.text += u.text(text_node).toLowerCase().trim().replace(/[\n\t]+/g, " ")+" ";
+		}
+		var tag_nodes = u.qsa("li.tag", node);
+		for(j = 0; j < tag_nodes.length; j++) {
+			tag_node = tag_nodes[j];
+			node.tags.push(tag_node.getAttribute("data-value"));
+		}
+	}
+	div.tag_options = u.qsa("ul.tags li.tag", div.div_filter);
+	for(i = 0; i < div.tag_options.length; i++) {
+		tag_node = div.tag_options[i];
+		u.bug("tag", tag_node, tag_node.getAttribute("data-value"));
+		tag_node.div = div;
+		tag_node.tag_value = tag_node.getAttribute("data-value");
+		u.ce(tag_node);
+		tag_node.clicked = function() {
+			if(this.div.selected_tag) {
+				u.rc(this.div.selected_tag, "selected");
+			}
+			this.div.selected_tag = this;
+			u.ac(this, "selected");
+			this.div.filterItems();
+		}
+	}
+	u.f.init(div.div_filter.form);
+	div.div_filter.input = div.div_filter.form.inputs["product_search"];
+	div.div_filter.input.div = div;
+	div.div_filter.input.updated = function() {
+		u.t.resetTimer(this.t_filter);
+		this.t_filter = u.t.setTimer(this.div, "filterItems", 400);
+		u.ac(this.div, "filtering");
+	}
+	var all_tag_node = u.qs("ul.tags li.tag.all", div.div_filter);
+	all_tag_node.clicked();
+}
 
 /*u-settings.js*/
 u.ga_account = '';
@@ -7889,6 +7961,7 @@ u.addExpandArrow = function(node) {
 		"class":"arrow",
 		"width":17,
 		"height":17,
+		"viewBox": "0 0 17 17",
 		"shapes":[
 			{
 				"type": "line",
@@ -7916,6 +7989,7 @@ u.addCollapseArrow = function(node) {
 		"name":"collapsearrow",
 		"node":node,
 		"class":"arrow",
+		"viewBox": "0 0 17 17",
 		"width":17,
 		"height":17,
 		"shapes":[
@@ -7985,6 +8059,58 @@ u.addNextArrow = function(node) {
 			}
 		]
 	});
+}
+
+
+/*m-collapse_header.js*/
+Util.Modules["collapseHeader"] = new function() {
+	this.init = function(div) {
+		u.ac(div, "togglable");
+		div._toggle_header = u.qs("h2,h3,h4", div);
+		if(div._toggle_header) {
+			u.wc(div, "div", {"class":"togglable_content"});
+			u.ie(div, div._toggle_header);
+			div._toggle_header.div = div;
+			u.e.click(div._toggle_header);
+			div._toggle_header.clicked = function() {
+				if(this.div._toggle_is_closed) {
+					u.ac(this.div, "open");
+					u.ass(this.div, {
+						height: "auto"
+					});
+					this.div._toggle_is_closed = false;
+					u.saveNodeCookie(this.div, "open", 1, {"ignore_classvars":true, "ignore_classnames":"open"});
+					u.addCollapseArrow(this);
+					if(typeof(this.div.headerExpanded) == "function") {
+						this.div.headerExpanded();
+					}
+				}
+				else {
+					u.rc(this.div, "open");
+					u.ass(this.div, {
+						height: this.offsetHeight+"px"
+					});
+					this.div._toggle_is_closed = true;
+					u.saveNodeCookie(this.div, "open", 0, {"ignore_classvars":true, "ignore_classnames":"open"});
+					u.addExpandArrow(this);
+					if(typeof(this.div.headerCollapsed) == "function") {
+						this.div.headerCollapsed();
+					}
+				}
+			}
+			var state = u.getNodeCookie(div, "open", {"ignore_classvars":true, "ignore_classnames":"open"});
+			if(state === 0 || (state === false && !u.hc(div, "open"))) {
+				div._toggle_header.clicked();
+			}
+			else {
+				u.addCollapseArrow(div._toggle_header);
+				u.ac(div, "open");
+				if(typeof(div.headerExpanded) == "function") {
+					div.headerExpanded();
+				}
+			}
+		}
+	}
 }
 
 
@@ -8655,14 +8781,22 @@ Util.Modules["signupfees"] = new function() {
 Util.Modules["shop"] = new function() {
 	this.init = function(scene) {
 		scene.resized = function() {
+			if(this.filter) {
+				this.filter.start_y = u.absY(this.filter);
+				this.filter_offset = this.filter.offsetHeight;
+			}
+			else {
+				this.filter_offset = 0;
+			}
 			if(this.sidebar) {
-				this.sidebar.start_y = u.absY(this.sidebar);
+				this.sidebar.start_y = u.absY(this.sidebar) - this.filter_offset;
+			}
+			if(this.sidebar || this.filter) {
 				this.scrolled();
 			}
 		}
 		scene.scrolled = function() {
 			if(this.sidebar) {
-				// 	
 				if(this.sidebar.start_y < page.scrolled_y && this.sidebar.offsetHeight < page.browser_h) {
 					if(!this.sidebar.is_fixed) {
 						this.sidebar.is_fixed = true;
@@ -8680,6 +8814,24 @@ Util.Modules["shop"] = new function() {
 					});
 				}
 			}
+			if(this.filter) {
+				if(this.filter.start_y < page.scrolled_y) {
+					if(!this.filter.is_fixed) {
+						this.filter.is_fixed = true;
+						u.ac(this.filter, "fixed");
+					}
+					u.ass(this.filter, {
+						transform: "translate3d(0, "+(page.scrolled_y - this.filter.start_y)+"px, 0)",
+					});
+				}
+				else if(this.filter.is_fixed) {
+					this.filter.is_fixed = false;
+					u.rc(this.filter, "fixed");
+					u.ass(this.filter, {
+						transform: "none",
+					});
+				}
+			}
 		}
 		scene.ready = function() {
 			var form_login = u.qs("form.login", this);
@@ -8687,11 +8839,11 @@ Util.Modules["shop"] = new function() {
 				u.f.init(form_login);
 				form_login.inputs["username"].focus();
 			}
-			var products = u.qsa("li.product", this);
-			if(products) {
+			this.products = u.qsa("li.product", this);
+			if(this.products) {
 				var i, j, pickupdate, product, image;
-				for(i = 0; i < products.length; i++) {
-					product = products[i];
+				for(i = 0; i < this.products.length; i++) {
+					product = this.products[i];
 					var images = u.qsa("div.image,div.media", product);
 					for(j = 0; j < images.length; j++) {
 						image = images[j];
@@ -8787,10 +8939,20 @@ Util.Modules["shop"] = new function() {
 						}
 					}
 				}
+				u.productFilters(this);
 			}
+			this.filter = u.qs("div.filter", this);
+			if(this.filter) {
+				this.filter.start_y = u.absY(this.filter);
+				this.filter_offset = this.filter.offsetHeight;
+			}
+			else {
+				this.filter_offset = 0;
+			}
+			u.bug("this.filter_offset", this.filter_offset);
 			this.sidebar = u.qs("div.sidebar", this);
 			if(this.sidebar) {
-				this.sidebar.start_y = u.absY(this.sidebar);
+				this.sidebar.start_y = u.absY(this.sidebar) - this.filter_offset;
 			}
 		}
 		scene.ready();
@@ -10693,9 +10855,11 @@ Util.Modules["shop_shift"] = new function() {
 		}
 		scene.ready = function() {
 			var form = u.qs("form.choose_date");
-			u.f.init(form);
-			form.updated = function() {
-				this.submit();
+			if(form) {
+				u.f.init(form);
+				form.updated = function() {
+					this.submit();
+				}
 			}
 			var confirm_delivery_listings = u.qsa(".orders.items .listing");
 			var i, listing;
@@ -10782,42 +10946,31 @@ Util.Modules["purchasing"] = new function() {
 		scene.scrolled = function() {
 		}
 		scene.ready = function() {
-			var form = u.qs("form.choose_date");
-			u.f.init(form);
-			form.updated = function() {
-				this.submit();
-			}
-			this.div_products = u.qs("div.products", this);
-			var ul_list = u.qs("ul.list", this.div_products);
-			var div_filter = u. ae(this.div_products, "div", {"class": "filter"});
-			this.div_products.insertBefore(div_filter, ul_list);
-			this.form_product_filter = u.f.addForm(div_filter, {"class": "labelstyle:inject"});
-			this.form_product_filter.div = this;
-			var fieldset = u.f.addFieldset(this.form_product_filter);
-			u.f.addField(fieldset, {"type":"string", "name": "query", "label":"Filtrer produkter"});
-			u.f.init(this.form_product_filter);
-			this.form_product_filter.updated = function() {
-				var query = this.inputs["query"].val().toLowerCase();
-				var i, product, odd_even = 0;
-				for(i = 0; i < this.div.products.length; i++) {
-					product = this.div.products[i];
-					if(!query || product.search_string.match(query)) {
-						u.ac(product, "show");
-						odd_even++;
-					}
-					else {
-						u.rc(product, "show");
-					}
-					u.rc(product, "odd");
-					if(odd_even%2) {
-						u.ac(product, "odd");
-					}
+			var form_choose_date = u.qs("form.choose_date");
+			if(form_choose_date) {
+				u.f.init(form_choose_date);
+				form_choose_date.updated = function() {
+					this.submit();
 				}
 			}
-			this.products = u.qsa(" li.listing", this.div_products);
+			this.div_order_list = u.qs("div.order-list", this);
+			this.bn_hide = u.qs("ul.actions li.hide-no-orders", this.div_order_list);
+			this.bn_hide.scene = this
+			this.bn_show = u.qs("ul.actions li.show-no-orders", this.div_order_list);
+			this.bn_show.scene = this
+			u.ce(this.bn_hide);
+			this.bn_hide.clicked = function() {
+				u.rc(this.scene.div_order_list, "show-all")
+			}
+			u.ce(this.bn_show);
+			this.bn_show.clicked = function() {
+				u.ac(this.scene.div_order_list, "show-all")
+			}
+			this.div_products = u.qs("div.products", this);
+			this.div_products.products = u.qsa("li.listing", this.div_products);
 			var i, product, image;
-			for(i = 0; i < this.products.length; i++) {
-				product = this.products[i];
+			for(i = 0; i < this.div_products.products.length; i++) {
+				product = this.div_products.products[i];
 				product.search_string = u.qs(".name", product).innerHTML.toLowerCase();
 				image = u.qs("span.image", product);
 				image._id = u.cv(image, "item_id");
@@ -10829,7 +10982,7 @@ Util.Modules["purchasing"] = new function() {
 					});
 				}
 			}
-			this.form_product_filter.updated();
+			u.productFilters(this.div_products);
 		}
 		scene.ready();
 	}
@@ -10841,48 +10994,66 @@ Util.Modules["add_edit_product"] = new function() {
 		scene.scrolled = function() {
 		}
 		scene.ready = function() {
-			var form = u.qs("form");
-			u.f.init(form, this);
-			form.scene = this;
-			next_wednesday = " - ";
-			this.first_pickupdate_span = u.qs(".first_pickupdate span", this);
-			form.inputs["start_availability_date"].changed = function(iN) {
-				var first_pickupdate = "-";
-				if(iN.value) {
-					var next_wednesday_date = this.form.scene.getNextDayOfTheWeek("Wednesday", false, new Date(iN.value));
-					first_pickupdate = next_wednesday_date.toLocaleDateString('da-DA', {year:"numeric", month:"2-digit", day:"2-digit"});
+			var form_basics = u.qs("form.basics");
+			u.f.init(form_basics, this);
+			var form_availability = u.qs("form.availability");
+			if(form_availability) {
+				u.f.init(form_availability, this);
+				form_availability.scene = this;
+				next_wednesday = " - ";
+				form_availability.first_pickupdate_span = u.qs(".first_pickupdate span", form_availability);
+				form_availability.inputs["start_availability_date"].changed = function(iN) {
+					var first_pickupdate = "-";
+					if(iN.value) {
+						var next_wednesday_date = this.form.scene.getNextDayOfTheWeek("Wednesday", false, new Date(iN.value));
+						first_pickupdate = next_wednesday_date.toLocaleDateString('da-DA', {year:"numeric", month:"2-digit", day:"2-digit"});
+					}
+					this.form.first_pickupdate_span.innerHTML = first_pickupdate;
 				}
-				this.form.scene.first_pickupdate_span.innerHTML = first_pickupdate;
+				form_availability.last_pickupdate_span = u.qs(".last_pickupdate span", form_availability);
+				form_availability.inputs["end_availability_date"].changed = function(iN) {
+					var last_pickupdate = "-";
+					if(iN.value) {
+						var previous_wednesday_date = this.form.scene.getPreviousDayOfTheWeek("Wednesday", false, new Date(iN.value));
+						last_pickupdate = previous_wednesday_date.toLocaleDateString('da-DA', {year:"numeric", month:"2-digit", day:"2-digit"});
+					}
+					this.form.last_pickupdate_span.innerHTML = last_pickupdate;
+				}
 			}
-			this.last_pickupdate_span = u.qs(".last_pickupdate span", this);
-			form.inputs["end_availability_date"].changed = function(iN) {
-				var last_pickupdate = "-";
-				if(iN.value) {
-					var previous_wednesday_date = this.form.scene.getPreviousDayOfTheWeek("Wednesday", false, new Date(iN.value));
-					last_pickupdate = previous_wednesday_date.toLocaleDateString('da-DA', {year:"numeric", month:"2-digit", day:"2-digit"});
-				}
-				this.form.scene.last_pickupdate_span.innerHTML = last_pickupdate;
+			var form_prices = u.qs("form.prices");
+			if(form_prices) {
+				u.f.init(form_prices, this);
+			}
+			var form_tags = u.qs("form.tags");
+			if(form_tags) {
+				u.f.init(form_tags, this);
 			}
 		}
 		scene.getNextDayOfTheWeek = function(dayName, excludeToday = true, refDate = new Date()) {
-			var dayOfWeek = ["sun","mon","tue","wed","thu","fri","sat"]
-							  .indexOf(dayName.slice(0,3).toLowerCase());
+			var dayOfWeek = ["sun","mon","tue","wed","thu","fri","sat"].indexOf(dayName.slice(0,3).toLowerCase());
 			if (dayOfWeek < 0) return;
 			refDate.setHours(0,0,0,0);
-			refDate.setDate(refDate.getDate() + (!!excludeToday ? 1 : 0) + 
-							(dayOfWeek + 7 - refDate.getDay() - (!!excludeToday ? 1 : 0)) % 7);
+			refDate.setDate(refDate.getDate() + (!!excludeToday ? 1 : 0) + (dayOfWeek + 7 - refDate.getDay() - (!!excludeToday ? 1 : 0)) % 7);
 			return refDate;
 		}
 		scene.getPreviousDayOfTheWeek = function(dayName, excludeToday = true, refDate = new Date()) {
-			var dayOfWeek = ["sun","mon","tue","wed","thu","fri","sat"]
-							  .indexOf(dayName.slice(0,3).toLowerCase());
+			var dayOfWeek = ["sun","mon","tue","wed","thu","fri","sat"].indexOf(dayName.slice(0,3).toLowerCase());
 			if (dayOfWeek < 0) return;
 			refDate.setHours(0,0,0,0);
-			refDate.setDate(refDate.getDate() + (!!excludeToday ? 1 : 0) +
-							(dayOfWeek - 7 - refDate.getDay() - (!!excludeToday ? 1 : 0)) % 7);
+			refDate.setDate(refDate.getDate() + (!!excludeToday ? 1 : 0) + (dayOfWeek - 7 - refDate.getDay() - (!!excludeToday ? 1 : 0)) % 7);
 			return refDate;
 		}
 		scene.ready();
+	}
+}
+
+
+/*m-infohint.js*/
+Util.Modules["infohint"] = new function() {
+	this.init = function(span) {
+		u.ac(span.parentNode, "infohintparent");
+		span.q = u.ae(span.parentNode, "span", {"class":"q", "html":"i"});
+		span.parentNode.insertBefore(span.q, span);
 	}
 }
 
