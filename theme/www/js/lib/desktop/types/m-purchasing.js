@@ -28,52 +28,57 @@ Util.Modules["purchasing"] = new function() {
 			// Orders
 
 			this.div_order_list = u.qs("div.order-list", this);
-			// Orders filter
-			this.bn_hide = u.qs("ul.actions li.hide-no-orders", this.div_order_list);
-			this.bn_hide.scene = this
-			this.bn_show = u.qs("ul.actions li.show-no-orders", this.div_order_list);
-			this.bn_show.scene = this
+			if(this.div_order_list) {
 
-			u.ce(this.bn_hide);
-			this.bn_hide.clicked = function() {
-				u.rc(this.scene.div_order_list, "show-all")
-			}
-			u.ce(this.bn_show);
-			this.bn_show.clicked = function() {
-				u.ac(this.scene.div_order_list, "show-all")
+				// Orders filter
+				this.bn_hide = u.qs("ul.actions li.hide-no-orders", this.div_order_list);
+				this.bn_hide.scene = this
+				this.bn_show = u.qs("ul.actions li.show-no-orders", this.div_order_list);
+				this.bn_show.scene = this
+
+				u.ce(this.bn_hide);
+				this.bn_hide.clicked = function() {
+					u.rc(this.scene.div_order_list, "show-all")
+				}
+				u.ce(this.bn_show);
+				this.bn_show.clicked = function() {
+					u.ac(this.scene.div_order_list, "show-all")
+				}
+
 			}
 
 
 
 			// Products
 			this.div_products = u.qs("div.products", this);
+			if(this.div_products) {
 
+				this.div_products.products = u.qsa("li.listing", this.div_products);
+				var i, product, image;
+				for(i = 0; i < this.div_products.products.length; i++) {
 
+					product = this.div_products.products[i];
+					product.search_string = u.qs(".name", product).innerHTML.toLowerCase();
+					image = u.qs("span.image", product);
 
-			this.div_products.products = u.qsa("li.listing", this.div_products);
-			var i, product, image;
-			for(i = 0; i < this.div_products.products.length; i++) {
+					image._id = u.cv(image, "item_id");
+					image._format = u.cv(image, "format");
+					image._variant = u.cv(image, "variant");
 
-				product = this.div_products.products[i];
-				product.search_string = u.qs(".name", product).innerHTML.toLowerCase();
-				image = u.qs("span.image", product);
+					if(image._id && image._format && image._variant) {
 
-				image._id = u.cv(image, "item_id");
-				image._format = u.cv(image, "format");
-				image._variant = u.cv(image, "variant");
+						// add image
+						u.ass(image, {
+							backgroundImage: "url(/images/" + image._id + "/" + (image._variant ? image._variant+"/" : "") + "50x50." + image._format+")"
+						});
 
-				if(image._id && image._format && image._variant) {
-
-					// add image
-					u.ass(image, {
-						backgroundImage: "url(/images/" + image._id + "/" + (image._variant ? image._variant+"/" : "") + "50x50." + image._format+")"
-					});
+					}
 
 				}
 
-			}
+				u.productFilters(this.div_products);
 
-			u.productFilters(this.div_products);
+			}
 
 		}
 		

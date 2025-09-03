@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2025-09-02 21:24:01
+asset-builder @ 2025-09-03 11:11:42
 */
 
 /*seg_smartphone_include.js*/
@@ -11017,35 +11017,39 @@ Util.Modules["purchasing"] = new function() {
 				}
 			}
 			this.div_order_list = u.qs("div.order-list", this);
-			this.bn_hide = u.qs("ul.actions li.hide-no-orders", this.div_order_list);
-			this.bn_hide.scene = this
-			this.bn_show = u.qs("ul.actions li.show-no-orders", this.div_order_list);
-			this.bn_show.scene = this
-			u.ce(this.bn_hide);
-			this.bn_hide.clicked = function() {
-				u.rc(this.scene.div_order_list, "show-all")
-			}
-			u.ce(this.bn_show);
-			this.bn_show.clicked = function() {
-				u.ac(this.scene.div_order_list, "show-all")
-			}
-			this.div_products = u.qs("div.products", this);
-			this.div_products.products = u.qsa("li.listing", this.div_products);
-			var i, product, image;
-			for(i = 0; i < this.div_products.products.length; i++) {
-				product = this.div_products.products[i];
-				product.search_string = u.qs(".name", product).innerHTML.toLowerCase();
-				image = u.qs("span.image", product);
-				image._id = u.cv(image, "item_id");
-				image._format = u.cv(image, "format");
-				image._variant = u.cv(image, "variant");
-				if(image._id && image._format && image._variant) {
-					u.ass(image, {
-						backgroundImage: "url(/images/" + image._id + "/" + (image._variant ? image._variant+"/" : "") + "50x50." + image._format+")"
-					});
+			if(this.div_order_list) {
+				this.bn_hide = u.qs("ul.actions li.hide-no-orders", this.div_order_list);
+				this.bn_hide.scene = this
+				this.bn_show = u.qs("ul.actions li.show-no-orders", this.div_order_list);
+				this.bn_show.scene = this
+				u.ce(this.bn_hide);
+				this.bn_hide.clicked = function() {
+					u.rc(this.scene.div_order_list, "show-all")
+				}
+				u.ce(this.bn_show);
+				this.bn_show.clicked = function() {
+					u.ac(this.scene.div_order_list, "show-all")
 				}
 			}
-			u.productFilters(this.div_products);
+			this.div_products = u.qs("div.products", this);
+			if(this.div_products) {
+				this.div_products.products = u.qsa("li.listing", this.div_products);
+				var i, product, image;
+				for(i = 0; i < this.div_products.products.length; i++) {
+					product = this.div_products.products[i];
+					product.search_string = u.qs(".name", product).innerHTML.toLowerCase();
+					image = u.qs("span.image", product);
+					image._id = u.cv(image, "item_id");
+					image._format = u.cv(image, "format");
+					image._variant = u.cv(image, "variant");
+					if(image._id && image._format && image._variant) {
+						u.ass(image, {
+							backgroundImage: "url(/images/" + image._id + "/" + (image._variant ? image._variant+"/" : "") + "50x50." + image._format+")"
+						});
+					}
+				}
+				u.productFilters(this.div_products);
+			}
 		}
 		scene.ready();
 	}
