@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2024-12-17 11:24:22
+asset-builder @ 2025-09-03 11:08:23
 */
 
 /*seg_desktop_include.js*/
@@ -12339,6 +12339,14 @@ Util.Modules["cancellationProfile"] = new function() {
 	}
 }
 
+
+/*m-tags.js*/
+Util.Modules["tagList"] = new function() {
+	this.init = function(div) {
+		page.isHTML = true;
+		page.notify(page);
+	}
+}
 
 /*m-taglist_tags.js*/
 Util.Modules["taglist_tags"] = new function() {

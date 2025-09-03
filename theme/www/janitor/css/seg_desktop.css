@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2024-12-17 11:24:22
+asset-builder @ 2025-09-03 11:08:23
 */
 
 /*seg_desktop_include.css*/
@@ -181,7 +181,7 @@ dt {color: #7d848c; display: inline-block; vertical-align: top; font-size: 12px;
 form {}
 fieldset {border: none; display: block;}
 div.field {padding: 0 28px 10px; position: relative; font-size: 0; z-index: 1;}
-div.field label {display: none; padding-left: 2px;}
+div.field label {display: block; font-size: 9px; font-weight: bold; text-transform: uppercase; padding-left: 2px;}
 div.field input,
 div.field select,
 div.field textarea {box-shadow: inset 0 1px 2px #dedede; background: #ffffff; border: 1px solid #dcdcdc; display: inline-block; vertical-align: top; border-radius: 3px; margin: 2px; outline: none; position: relative; z-index: 1;}
@@ -208,12 +208,12 @@ div.field.boolean {padding-bottom: 15px;}
 div.field.checkbox input,
 div.field.boolean input {display: inline-block; vertical-align: top; width: auto; height: auto; padding: 0; margin: 1px 10px 0 3px; border: 0;}
 div.field.checkbox label,
-div.field.boolean label {width: auto; display: inline-block; vertical-align: top; font-size: 1.077rem; line-height: 1em;}
+div.field.boolean label {width: auto; display: inline-block; vertical-align: top; text-transform: none; font-weight: normal; font-size: 1.077rem; line-height: 1em;}
 div.field.radiobuttons {padding-bottom: 15px;}
 div.field.radiobuttons > label {display: block; font-size: 1.077rem; line-height: 1em; padding: 0 0 0 3px;}
 div.field.radiobuttons div.item {padding: 8px 0 0;}
 div.field.radiobuttons div.item input {width: auto; height: auto; padding: 0; margin: 1px 10px 0 3px; border: 0;}
-div.field.radiobuttons div.item label {font-size: 1.077rem; line-height: 1em; display: inline-block; vertical-align: top; text-align: left; width: auto;}
+div.field.radiobuttons div.item label {font-size: 1.077rem; line-height: 1em; text-transform: none; font-weight: normal; display: inline-block; vertical-align: top; text-align: left; width: auto;}
 div.field input[type="integer"],
 div.field input[type="number"] {
 	-moz-appearance: textfield;
@@ -291,13 +291,14 @@ div.field.dropdown div.virtual div.options ul.options li {
 div.field.dropdown div.virtual div.options ul.options li.hover {
 	background-color: #dedede;
 }
+div.field.output p {padding: 5px 6px; width: 366px !important; border-radius: 3px; margin: 3px; background: #ffffff;}
 div.field input.default,
 div.field select.default,
 div.field textarea.default,
 div.field .pseudolabel,
 div.field div.virtual .input.default,
 div.field div.virtual div.options ul.options li.default {color: #aaaaaa;}
-div.field .indicator {position: absolute; top: 4px; left: 415px; width: 25px; height: 25px;
+div.field .indicator {position: absolute; top: 16px; left: 415px; width: 25px; height: 25px;
 	background-color: transparent;
 	background-repeat: no-repeat;
 	background-position: left center;
@@ -433,8 +434,8 @@ div.field.html div.html_editor_hint .close {font-size: 1rem; line-height: 1em; c
 div.field.html > textarea {display: none;}
 div.field.html.focus > textarea {margin: 2px; border: 1px solid #dcdcdc;}
 div.field.html > textarea.show {display: block; height: 200px; width: 470px;}
-div.field.html > label {display: block;  width: 477px; font-size: 12px;}
-div.field.html > label span {font-size: 10px; float: right; padding: 1px 0 0; cursor: pointer;}
+div.field.html > label {width: 477px;}
+div.field.html > label span {float: right; padding: 1px 0 0; cursor: pointer;}
 div.field.html > .indicator {top: 37px; left: 515px;}
 div.field.html .viewer {display: none;}
 div.field.html .editor { width: 482px; position: relative; z-index: 3;}
@@ -580,7 +581,7 @@ div.field.html .editor .selection_options .field.error {position: relative; }
 #content div.tagoptions fieldset .field {padding-right: 12px;}
 #content div.tagoptions fieldset .field input[type=text] {width: 262px;}
 #content div.tagoptions ul.actions {display: inline-block; vertical-align: top; padding: 0;}
-#content div.tagoptions ul.actions li {padding-left: 0;}
+#content div.tagoptions ul.actions li {padding-left: 0; padding-top: 13px;}
 #content div.tagoptions ul.actions li input {margin-top: 4px;}
 #content .edittags ul.tags li {cursor: pointer;}
 #content .edittags ul.tags li:hover,
@@ -593,7 +594,7 @@ div.field.html .editor .selection_options .field.error {position: relative; }
 #content div.tagoptions ul.tags li:hover span {color: #ffffff;}
 #content div.all_items div.tagoptions {padding-top: 8px;}
 #content div.all_items ul.items > li div.tagoptions ul.actions {position: static; right: auto; top: auto;}
-#content div.all_items ul.items > li div.tagoptions ul.actions li {padding-top: 1px;}
+#content div.all_items ul.items > li div.tagoptions ul.actions li {padding-top: 13px;}
 #content div.sortable div.tagoptions .field {padding-left: 48px;}
 #content .scene.tagList ul.items > li.unused {background: orange;}
 #content .scene.tagList ul.items > li h3 span {font-size: 12px;}
@@ -965,6 +966,7 @@ body.invoice #content div.scene .payment_info {position: absolute; bottom: 50px;
 #content div.filter.filtering {background: red;}
 #content div.filter form {position: absolute; right: 30px; top: 9px;}
 #content div.filter .field {padding: 0 0 6px;}
+#content div.filter .field label {display: none;}
 #content div.filter .field input {width: 100px; height: 16px; font-size: 12px;}
 #content div.all_items.sortable ul.items > li.item div.drag {width: 30px; height: 30px; position: absolute; top: 0px; left: 15px; 
 	background: transparent url(../assets/janitor/admin/img/bg_icons2.png) no-repeat 10px -440px; cursor: move;
