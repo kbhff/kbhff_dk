@@ -48,6 +48,7 @@ $this->pageTitle("Rediger produkt");
 			<div class="c-one-half">
 
 				<h3>Produktnavn og beskrivelse</h3>
+
 				<fieldset class="details">
 					<?= $model->input("name", [
 						"label" => "Produktnavn", 
@@ -67,21 +68,24 @@ $this->pageTitle("Rediger produkt");
 			<div class="c-one-half">
 
 				<h3>Produktbillede</h3>
+
 				<fieldset class="media">
 					<?= $model->input("single_media", ["label" => "Produktbillede", "hint_message" => "Tryk her for at vælge et billede, eller træk et billede ind på det grå felt. Størrelse mindst 960x960 px. Tilladte formater: PNG og JPG.", "error_message" => "Billedet lever ikke op til kravene.", "value" => $file_input_value]); ?>
 				</fieldset>
 
 			</div>
 			<ul class="actions">
-				<?= $model->submit("Opdater", ["wrapper" => "li.save", "class" => "primary"]); ?>
+				<?= $model->submit("Opdater navn og beskrivelse", ["wrapper" => "li.save", "class" => "primary"]); ?>
 			</ul>
 		<?= $model->formEnd(); ?>
 	</div>
 
 
 	<div class="c-wrapper c-box availability">
-		<h3>Tilgængelighed fra producent</h3>
 		<?= $model->formStart("updateProductAvailability/".$product["id"], ["class" => "labelstyle:inject availability", "enctype" => "multipart/form-data"]); ?>
+
+			<h3>Tilgængelighed fra producent</h3>
+
 			<div class="c-one-half">
 
 				<fieldset class="availability_start">
@@ -109,7 +113,7 @@ $this->pageTitle("Rediger produkt");
 
 			</div>
 			<ul class="actions">
-				<?= $model->submit("Opdater", ["wrapper" => "li.save", "class" => "primary"]); ?>
+				<?= $model->submit("Opdater tilgængelighed", ["wrapper" => "li.save", "class" => "primary"]); ?>
 			</ul>
 		<?= $model->formEnd(); ?>
 	</div>
@@ -120,6 +124,7 @@ $this->pageTitle("Rediger produkt");
 			<?= $model->formStart("updateProductPrices/".$product["id"], ["class" => "labelstyle:inject prices", "enctype" => "multipart/form-data"]); ?>
 
 				<h3>Priser</h3>
+
 				<fieldset class="prices">
 					<? foreach($membership_price_types as $price_type): ?>
 					<?= $model->input("price[".$price_type["id"]."]", [
@@ -134,7 +139,7 @@ $this->pageTitle("Rediger produkt");
 				</fieldset>
 
 				<ul class="actions">
-					<?= $model->submit("Opdater", ["wrapper" => "li.save", "class" => "primary"]); ?>
+					<?= $model->submit("Opdater priser", ["wrapper" => "li.save", "class" => "primary"]); ?>
 				</ul>
 
 			<?= $model->formEnd(); ?>
@@ -144,6 +149,7 @@ $this->pageTitle("Rediger produkt");
 			<?= $model->formStart("updateProductTags/".$product["id"], ["class" => "labelstyle:inject tags", "enctype" => "multipart/form-data"]); ?>
 
 				<h3>Tags</h3>
+
 				<fieldset class="tags">
 					<? foreach($available_tags as $tag): ?>
 					<?= $model->input("tag[".$tag["id"]."]", [
@@ -157,7 +163,7 @@ $this->pageTitle("Rediger produkt");
 				</fieldset>
 
 				<ul class="actions">
-					<?= $model->submit("Opdater", ["wrapper" => "li.save", "class" => "primary"]); ?>
+					<?= $model->submit("Opdater tags", ["wrapper" => "li.save", "class" => "primary"]); ?>
 				</ul>
 
 			<?= $model->formEnd(); ?>

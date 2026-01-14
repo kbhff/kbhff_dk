@@ -97,6 +97,13 @@ if($user_id != 1) {
 
 	// Get product tags
 	$product_tags = $IC->getTags(["context" => "productgroup"]);
+	// debug([$product_tags]);
+
+	
+	// Sort products
+	usort($products, function ($a, $b) {
+		return ucfirst($a["name"]) <=> ucfirst($b["name"]);
+	});
 
 
 }
@@ -200,9 +207,15 @@ else {
 		<div class="filter c-box">
 			<ul class="tags">
 				<li class="tag all">Alle</li>
-				<? foreach($product_tags as $tag): ?>
+				<? 
+				if($product_tags):
+					foreach($product_tags as $tag):
+				?>
 				<li class="tag" data-context="<?= $tag["context"] ?>" data-value="<?= $tag["value"] ?>"><?= $tag["value"] ?></li>
-				<? endforeach; ?>
+				<? 
+					endforeach;
+				endif
+				?>
 			</ul>
 			<form class="search">
 				<div class="field string">

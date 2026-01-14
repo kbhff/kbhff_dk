@@ -24,8 +24,48 @@ else {
 $departments = $DC->getDepartments();
 
 $products = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 1, "order" => "created_at", "extend" => ["mediae" => true, "tags" => true]]);
-$legacy_products = $IC->getItems(["where" => "itemtype = 'legacyproduct'", "order" => "created_at", "extend" => ["mediae" => true]]);
-$all_order_products = array_merge($products, $legacy_products);
+// $legacy_products = $IC->getItems(["where" => "itemtype = 'legacyproduct'", "order" => "created_at", "extend" => ["mediae" => true]]);
+
+
+// Get product tags
+$product_tags = $IC->getTags(["context" => "productgroup"]);
+
+
+// All order products must be sorted by group tag and then alphabetically within each group
+$all_order_products = [];
+foreach($product_tags as $tag) {
+
+	$products_with_tag = $IC->getItems(["where" => "itemtype REGEXP '^product'", "tags" => $tag["context"].":".$tag["value"], "status" => 1, "extend" => ["mediae" => true, "tags" => true]]);
+	// debug(["products_with_tag", $tag, $products_with_tag]);
+
+	// Sort product array before adding to all_order_products
+	usort($products_with_tag, function ($a, $b) {
+		return ucfirst($a["name"]) <=> ucfirst($b["name"]);
+	});
+
+	// Add to all order products
+	$all_order_products = array_merge($all_order_products, $products_with_tag);
+
+}
+
+// Finally add products without tag
+$products_without_tags = [];
+$all_products_to_filter = $IC->getItems(["where" => "itemtype REGEXP '^product'", "status" => 1, "extend" => ["mediae" => true, "tags" => true]]);
+foreach($all_products_to_filter as $product) {
+	if(!$product["tags"]) {
+		$products_without_tags[] = $product;
+	}
+}
+
+// Sort products_without_tags array before adding to all_order_products
+usort($products_without_tags, function ($a, $b) {
+	return ucfirst($a["name"]) <=> ucfirst($b["name"]);
+});
+
+// Add to all order products
+$all_order_products = array_merge($all_order_products, $products_without_tags);
+
+
 
 
 // debug([$products]);
@@ -41,11 +81,12 @@ if($pickupdate) {
 				$pickupdate_product_order_item_count += $order_item["quantity"];
 			}
 		}
-		// no orders for legacyproduct -> remove from array
-		else if($product["itemtype"] == "legacyproduct") {
-			unset($all_order_products[$key]);
-			continue;
-		}
+		// There are no legacyproducts anymore
+		// // no orders for legacyproduct -> remove from array
+		// else if($product["itemtype"] == "legacyproduct") {
+		// 	unset($all_order_products[$key]);
+		// 	continue;
+		// }
 
 		$all_order_products[$key]["total_order_item_count"] = $pickupdate_product_order_item_count;
 
@@ -71,10 +112,6 @@ if($pickupdate) {
 
 }
 
-// Sort combined product array (products and legacy products)
-usort($all_order_products, function ($a, $b) {
-	return ucfirst($a["name"]) <=> ucfirst($b["name"]);
-});
 
 // Sort products
 usort($products, function ($a, $b) {
@@ -90,9 +127,6 @@ usort($disabled_products, function ($a, $b) {
 
 $all_products = array_merge($products, $disabled_products);
 
-
-// Get product tags
-$product_tags = $IC->getTags(["context" => "productgroup"]);
 
 ?>
 

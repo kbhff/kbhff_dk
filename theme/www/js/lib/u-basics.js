@@ -22,7 +22,7 @@ u.f.customHintPosition["html"] = function() {}
 
 
 u.productFilters = function(div) {
-	u.bug("productFilters", div);
+	// u.bug("productFilters", div);
 
 	// expects div to have products s
 
@@ -35,7 +35,7 @@ u.productFilters = function(div) {
 
 		var i, node, zebra_index = 0;
 		var query = this.div_filter.input.val().toLowerCase();
-		u.bug(this.current_filter, query+","+this.selected_tag.tag_value);
+		// u.bug(this.current_filter, query+","+this.selected_tag.tag_value);
 		if(this.current_filter !== query+","+this.selected_tag.tag_value) {
 
 			this.current_filter = query + "," + this.selected_tag.tag_value;
@@ -105,7 +105,7 @@ u.productFilters = function(div) {
 	
 	for(i = 0; i < div.tag_options.length; i++) {
 		tag_node = div.tag_options[i];
-		u.bug("tag", tag_node, tag_node.getAttribute("data-value"));
+		// u.bug("tag", tag_node, tag_node.getAttribute("data-value"));
 
 		tag_node.div = div;
 		tag_node.tag_value = tag_node.getAttribute("data-value");

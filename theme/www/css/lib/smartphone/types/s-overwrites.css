@@ -100,6 +100,12 @@
 #content .scene.shop div.sidebar.fixed {
     transform: none !important;
 }
+#content .scene.shop div.filter {
+    z-index: 1;
+}
+#content .scene.shop div.filter.fixed {
+    transform: none !important;
+}
 
 #content .scene.shop div.cart div.total {
     width: 45%;

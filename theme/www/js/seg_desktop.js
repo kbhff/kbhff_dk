@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2025-09-03 11:11:42
+asset-builder @ 2026-01-14 16:59:44
 */
 
 /*seg_desktop_include.js*/
@@ -7548,6 +7548,134 @@ Util.getVar = function(param, url) {
 }
 
 
+/*beta-u-notifier.js*/
+u.notifier = function(node) {
+	var notifications = u.qs("div.notifications", node);
+	if(!notifications) {
+		node.notifications = u.ae(node, "div", {"id":"notifications"});
+	}
+	node.notifications.hide_delay = 4500;
+	node.notifications.hide = function(node) {
+		u.a.transition(this, "all 0.5s ease-in-out");
+		u.a.translate(this, 0, -this.offsetHeight);
+	}
+	node.notify = function(response, _options) {
+		var class_name = "message";
+		if(obj(_options)) {
+			var argument;
+			for(argument in _options) {
+				switch(argument) {
+					case "class"	: class_name	= _options[argument]; break;
+				}
+			}
+		}
+		var output = [];
+		if(obj(response) && response.isJSON) {
+			var message = response.cms_message;
+			var cms_status = typeof(response.cms_status) != "undefined" ? response.cms_status : "";
+			if(obj(message)) {
+				for(type in message) {
+					if(str(message[type])) {
+						output.push(u.ae(this.notifications, "div", {"class":class_name+" "+cms_status+" "+type, "html":message[type]}));
+					}
+					else if(obj(message[type]) && message[type].length) {
+						var node, i;
+						for(i = 0; i < message[type].length; i++) {
+							_message = message[type][i];
+							output.push(u.ae(this.notifications, "div", {"class":class_name+" "+cms_status+" "+type, "html":_message}));
+						}
+					}
+				}
+			}
+			else if(str(message)) {
+				output.push(u.ae(this.notifications, "div", {"class":class_name+" "+cms_status, "html":message}));
+			}
+			if(fun(this.notifications.show)) {
+				this.notifications.show();
+			}
+		}
+		else if(obj(response) && response.isHTML) {
+			var login = u.qs(".scene.login form", response);
+			var messages = u.qsa(".scene div.messages p", response);
+			if(login && !u.qs("#login_overlay")) {
+				// 
+				// 
+				this.autosave_disabled = true;
+				if(page.t_autosave) {
+					u.t.resetTimer(page.t_autosave);
+				}
+				var overlay = u.ae(document.body, "div", {"id":"login_overlay"});
+				overlay.node = this;
+				u.ae(overlay, login);
+				u.as(document.body, "overflow", "hidden");
+				var relogin = u.ie(login, "h1", {"class":"relogin", "html":(u.txt["relogin"] ? u.txt["relogin"] : "Your session expired")});
+				login.overlay = overlay;
+				u.ae(login, "input", {"type":"hidden", "name":"ajaxlogin", "value":"true"})
+				u.f.init(login);
+				login.inputs["username"].focus();
+				login.submitted = function() {
+					this.response = function(response) {
+						if(response.isJSON && response.cms_status == "success") {
+							var csrf_token = response.cms_object["csrf-token"];
+							var data_vars = u.qsa("[data-csrf-token]", page);
+							var input_vars = u.qsa("[name=csrf-token]", page);
+							var dom_vars = u.qsa("*", page);
+							var i, node;
+							for(i = 0; i < data_vars.length; i++) {
+								node = data_vars[i];
+								node.setAttribute("data-csrf-token", csrf_token);
+							}
+							for(i = 0; i < input_vars.length; i++) {
+								node = input_vars[i];
+								node.value = csrf_token;
+							}
+							for(i = 0; i < dom_vars.length; i++) {
+								node = dom_vars[i];
+								if(node.csrf_token) {
+									node.csrf_token = csrf_token;
+								}
+							}
+							this.overlay.parentNode.removeChild(this.overlay);
+							var multiple_overlays = u.qsa("#login_overlay");
+							if(multiple_overlays) {
+								for(i = 0; i < multiple_overlays.length; i++) {
+									overlay = multiple_overlays[i];
+									overlay.parentNode.removeChild(overlay);
+								}
+							}
+							u.as(document.body, "overflow", "auto");
+							this.overlay.node.autosave_disabled = false;
+							if(this.overlay.node._autosave_node && this.overlay.node._autosave_interval) {
+								u.t.setTimer(this.overlay.node._autosave_node, "autosave", this.overlay.node._autosave_interval);
+							}
+						}
+						else {
+							this.inputs["username"].focus();
+							this.inputs["password"].val("");
+							var error_message = u.qs(".errormessage", response);
+							if(error_message) {
+								this.overlay.node.notify({"isJSON":true, "cms_status":"error", "cms_message":error_message.innerHTML});
+							}
+							else {
+								this.overlay.node.notify({"isJSON":true, "cms_status":"error", "cms_message":"An error occured"});
+							}
+						}
+					}
+					u.request(this, this.action, {"method":this.method, "data":this.getData()});
+				}
+			}
+			else if(messages) {
+				for(i = 0; i < messages.length; i++) {
+					message = messages[i];
+					output.push(u.ae(this.notifications, "div", {"class":message.className, "html":message.innerHTML}));
+				}
+			}
+		}
+		this.t_notifier = u.t.setTimer(this.notifications, this.notifications.hide, this.notifications.hide_delay, output);
+	}
+}
+
+
 /*beta-u-paymentcards.js*/
 u.paymentCards = new function() {
 	this.payment_cards = [
@@ -7864,13 +7992,11 @@ u.f.customHintPosition["datetime"] = function() {}
 u.f.customHintPosition["files"] = function() {}
 u.f.customHintPosition["html"] = function() {}
 u.productFilters = function(div) {
-	u.bug("productFilters", div);
 	div.div_filter = u.qs("div.filter", div);
 	div.div_filter.div = div;
 	div.filterItems = function() {
 		var i, node, zebra_index = 0;
 		var query = this.div_filter.input.val().toLowerCase();
-		u.bug(this.current_filter, query+","+this.selected_tag.tag_value);
 		if(this.current_filter !== query+","+this.selected_tag.tag_value) {
 			this.current_filter = query + "," + this.selected_tag.tag_value;
 			for(i = 0; i < this.products.length; i++) {
@@ -7912,7 +8038,6 @@ u.productFilters = function(div) {
 	div.tag_options = u.qsa("ul.tags li.tag", div.div_filter);
 	for(i = 0; i < div.tag_options.length; i++) {
 		tag_node = div.tag_options[i];
-		u.bug("tag", tag_node, tag_node.getAttribute("data-value"));
 		tag_node.div = div;
 		tag_node.tag_value = tag_node.getAttribute("data-value");
 		u.ce(tag_node);
@@ -8150,6 +8275,7 @@ Util.Modules["page"] = new function() {
 				u.e.addWindowEvent(this, "scroll", this.scrolled);
 				this.initHeader();
 				this.initNavigation();
+				u.notifier(page);
 				this.acceptCookies();
 				this.resized();
 			}
@@ -8949,7 +9075,6 @@ Util.Modules["shop"] = new function() {
 			else {
 				this.filter_offset = 0;
 			}
-			u.bug("this.filter_offset", this.filter_offset);
 			this.sidebar = u.qs("div.sidebar", this);
 			if(this.sidebar) {
 				this.sidebar.start_y = u.absY(this.sidebar) - this.filter_offset;
@@ -11000,6 +11125,45 @@ Util.Modules["add_edit_product"] = new function() {
 		scene.ready = function() {
 			var form_basics = u.qs("form.basics");
 			u.f.init(form_basics, this);
+			form_basics.submitted = function() {
+				u.t.resetTimer(this.t_autosave);
+				this.response = function(response) {
+					page.notify(response);
+				} 
+				u.request(this, this.action, {"method":"POST", "params":this.getData()});
+			}
+			form_basics.updated = function() {
+				this.change_state = true;
+				u.t.resetTimer(this.t_autosave);
+				if(!this.autosave_disabled) {
+					this.t_autosave = u.t.setTimer(this, "autosave", this._autosave_interval);
+				}
+			}
+			form_basics.autosave = function() {
+				if(!form_basics.autosave_disabled && this.change_state) {
+					for(name in this.inputs) {
+						if(this.inputs[name].field) {
+							if(!this.inputs[name].used) {
+								if(u.hc(this.inputs[name].field, "required") && !this.inputs[name].val()) {
+									return false;
+								}
+							}
+							else {
+								u.f.validate(this.inputs[name]);
+							}
+						}
+					}
+					if(!u.qs(".field.error", this)) {
+						this.change_state = false;
+						this.submitted();
+					}
+				}
+				else {
+				}
+			}
+			form_basics.change_state = false;
+			form_basics._autosave_interval = 3000;
+			form_basics.t_autosave = u.t.setTimer(form_basics, "autosave", form_basics._autosave_interval);
 			var form_availability = u.qs("form.availability");
 			if(form_availability) {
 				u.f.init(form_availability, this);
@@ -11023,14 +11187,32 @@ Util.Modules["add_edit_product"] = new function() {
 					}
 					this.form.last_pickupdate_span.innerHTML = last_pickupdate;
 				}
+				form_availability.submitted = function() {
+					this.response = function(response) {
+						page.notify(response);
+					} 
+					u.request(this, this.action, {"method":"POST", "params":this.getData()});
+				}
 			}
 			var form_prices = u.qs("form.prices");
 			if(form_prices) {
 				u.f.init(form_prices, this);
+				form_prices.submitted = function() {
+					this.response = function(response) {
+						page.notify(response);
+					} 
+					u.request(this, this.action, {"method":"POST", "params":this.getData()});
+				}
 			}
 			var form_tags = u.qs("form.tags");
 			if(form_tags) {
 				u.f.init(form_tags, this);
+				form_tags.submitted = function() {
+					this.response = function(response) {
+						page.notify(response);
+					} 
+					u.request(this, this.action, {"method":"POST", "params":this.getData()});
+				}
 			}
 		}
 		scene.getNextDayOfTheWeek = function(dayName, excludeToday = true, refDate = new Date()) {

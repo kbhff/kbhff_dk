@@ -94,8 +94,13 @@ if($action) {
 	else if(count($action) == 2 && $action[0] == "updateProductBasics" && security()->validateCsrfToken()) {
 
 		$item_id = $action[1];
-		$supermodel->updateProductBasics($action);
-		header("Location: /indkoeb/rediger-produkt/$item_id");
+
+		$output = new Output();
+		$output->screen($supermodel->updateProductBasics($action));
+
+		// $supermodel->updateProductBasics($action);
+		// header("Location: /indkoeb/rediger-produkt/$item_id");
+
 		exit();
 
 	}
@@ -103,9 +108,13 @@ if($action) {
 	else if(count($action) == 2 && $action[0] == "updateProductAvailability" && security()->validateCsrfToken()) {
 		
 		$item_id = $action[1];
-		$supermodel->updateProductAvailability($action);
 
-		header("Location: /indkoeb/rediger-produkt/$item_id");
+		$output = new Output();
+		$output->screen($supermodel->updateProductAvailability($action));
+
+		// $supermodel->updateProductAvailability($action);
+		// header("Location: /indkoeb/rediger-produkt/$item_id");
+
 		exit();
 
 	}
@@ -122,8 +131,13 @@ if($action) {
 	else if(count($action) == 2 && $action[0] == "updateProductTags" && security()->validateCsrfToken()) {
 
 		$item_id = $action[1];
-		$supermodel->updateProductTags($action);
-		header("Location: /indkoeb/rediger-produkt/$item_id");
+
+		$output = new Output();
+		$output->screen($supermodel->updateProductTags($action));
+
+		// $supermodel->updateProductTags($action);
+		// header("Location: /indkoeb/rediger-produkt/$item_id");
+
 		exit();
 
 	}

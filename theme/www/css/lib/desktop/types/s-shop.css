@@ -40,7 +40,7 @@
 	vertical-align: top;
 	list-style: none;
 	font-size: 0;
-	padding: 12px;
+	padding: 12px 12px 6px;
 	margin: 0;
 	width: calc(100% - 174px);
 	line-height: 1em;
@@ -48,6 +48,7 @@
 #content .scene.shop div.filter ul.tags li {
 	display: inline-block;
 	margin-right: 12px;
+	margin-bottom: 6px;
 	padding: 8px 12px;
 	font-family: 'voresfont', Arial, Helvetica, sans-serif;
 	text-transform: uppercase;

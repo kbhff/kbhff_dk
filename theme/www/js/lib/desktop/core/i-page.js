@@ -76,6 +76,9 @@ Util.Modules["page"] = new function() {
 				// Initialize navigation
 				this.initNavigation();
 
+				// Enable glabal page notifications
+				u.notifier(page);
+
 				// accept cookies?
 				this.acceptCookies();
 

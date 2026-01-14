@@ -1,0 +1,11 @@
+#notifications {z-index: 1001; position: fixed; left: 50%; margin-left: -160px; top: 0; 
+	border-left: 2px solid #000000; 
+	border-right: 2px solid #000000; 
+	border-bottom: 2px solid #000000; 
+	background-color: #ffffff; width: 320px;
+	font-weight: bold;
+}
+#notifications div {padding: 10px 65px 10px 15px;}
+
+#notifications .message {background-color: #3E8E17; color: #ffffff;}
+#notifications .error {background-color: #C22414; color: #ffffff;}

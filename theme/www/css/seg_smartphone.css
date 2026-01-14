@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2025-09-03 11:11:42
+asset-builder @ 2026-01-14 16:59:44
 */
 
 /*seg_smartphone_include.css*/
@@ -1556,7 +1556,7 @@ div.field.html .editor .selection_options ul.actions li {padding: 0;}
 	vertical-align: top;
 	list-style: none;
 	font-size: 0;
-	padding: 12px;
+	padding: 12px 12px 6px;
 	margin: 0;
 	width: calc(100% - 174px);
 	line-height: 1em;
@@ -1564,6 +1564,7 @@ div.field.html .editor .selection_options ul.actions li {padding: 0;}
 #content .scene.shop div.filter ul.tags li {
 	display: inline-block;
 	margin-right: 12px;
+	margin-bottom: 6px;
 	padding: 8px 12px;
 	font-family: 'voresfont', Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
@@ -2288,7 +2289,7 @@ div.overlay .field.password {
 	vertical-align: top;
 	list-style: none;
 	font-size: 0;
-	padding: 12px;
+	padding: 12px 12px 6px;
 	margin: 0;
 	width: calc(100% - 174px);
 	line-height: 1em;
@@ -2296,6 +2297,7 @@ div.overlay .field.password {
 #content .scene.purchasing .c-wrapper.products div.filter ul.tags li {
 	display: inline-block;
 	margin-right: 12px;
+	margin-bottom: 6px;
 	padding: 8px 12px;
 	font-family: 'voresfont', Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
@@ -2549,6 +2551,19 @@ div.overlay .field.password {
 #content .scene.faq ul.questions li.question.open .articlebody {display: block;}
 
 
+/*s-notifications.css*/
+#notifications {z-index: 1001; position: fixed; left: 50%; margin-left: -160px; top: 0; 
+	border-left: 2px solid #000000; 
+	border-right: 2px solid #000000; 
+	border-bottom: 2px solid #000000; 
+	background-color: #ffffff; width: 320px;
+	font-weight: bold;
+}
+#notifications div {padding: 10px 65px 10px 15px;}
+#notifications .message {background-color: #3E8E17; color: #ffffff;}
+#notifications .error {background-color: #C22414; color: #ffffff;}
+
+
 /*s-general.css*/
 #navigation ul.navigation h5:hover, 
 #navigation ul.navigation li:not(.selected) a:hover {
@@ -2623,6 +2638,12 @@ div.overlay .field.password {
     width: auto;
 }
 #content .scene.shop div.sidebar.fixed {
+    transform: none !important;
+}
+#content .scene.shop div.filter {
+    z-index: 1;
+}
+#content .scene.shop div.filter.fixed {
     transform: none !important;
 }
 #content .scene.shop div.cart div.total {

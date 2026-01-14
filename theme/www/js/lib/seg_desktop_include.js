@@ -1,5 +1,6 @@
 document.write('<script type="text/javascript" src="/js/manipulator/merged/seg_desktop.js"></script>');
 
+document.write('<script type="text/javascript" src="/js/manipulator/src/beta-u-notifier.js"></script>');
 document.write('<script type="text/javascript" src="/js/manipulator/src/beta-u-paymentcards.js"></script>');
 document.write('<script type="text/javascript" src="/js/manipulator/src/beta-u-form-onebuttonform.js"></script>');
 

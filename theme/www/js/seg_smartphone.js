@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2025-09-03 11:11:42
+asset-builder @ 2026-01-14 16:59:44
 */
 
 /*seg_smartphone_include.js*/
@@ -7864,13 +7864,11 @@ u.f.customHintPosition["datetime"] = function() {}
 u.f.customHintPosition["files"] = function() {}
 u.f.customHintPosition["html"] = function() {}
 u.productFilters = function(div) {
-	u.bug("productFilters", div);
 	div.div_filter = u.qs("div.filter", div);
 	div.div_filter.div = div;
 	div.filterItems = function() {
 		var i, node, zebra_index = 0;
 		var query = this.div_filter.input.val().toLowerCase();
-		u.bug(this.current_filter, query+","+this.selected_tag.tag_value);
 		if(this.current_filter !== query+","+this.selected_tag.tag_value) {
 			this.current_filter = query + "," + this.selected_tag.tag_value;
 			for(i = 0; i < this.products.length; i++) {
@@ -7912,7 +7910,6 @@ u.productFilters = function(div) {
 	div.tag_options = u.qsa("ul.tags li.tag", div.div_filter);
 	for(i = 0; i < div.tag_options.length; i++) {
 		tag_node = div.tag_options[i];
-		u.bug("tag", tag_node, tag_node.getAttribute("data-value"));
 		tag_node.div = div;
 		tag_node.tag_value = tag_node.getAttribute("data-value");
 		u.ce(tag_node);
@@ -9012,7 +9009,6 @@ Util.Modules["shop"] = new function() {
 			else {
 				this.filter_offset = 0;
 			}
-			u.bug("this.filter_offset", this.filter_offset);
 			this.sidebar = u.qs("div.sidebar", this);
 			if(this.sidebar) {
 				this.sidebar.start_y = u.absY(this.sidebar) - this.filter_offset;
@@ -11063,6 +11059,45 @@ Util.Modules["add_edit_product"] = new function() {
 		scene.ready = function() {
 			var form_basics = u.qs("form.basics");
 			u.f.init(form_basics, this);
+			form_basics.submitted = function() {
+				u.t.resetTimer(this.t_autosave);
+				this.response = function(response) {
+					page.notify(response);
+				} 
+				u.request(this, this.action, {"method":"POST", "params":this.getData()});
+			}
+			form_basics.updated = function() {
+				this.change_state = true;
+				u.t.resetTimer(this.t_autosave);
+				if(!this.autosave_disabled) {
+					this.t_autosave = u.t.setTimer(this, "autosave", this._autosave_interval);
+				}
+			}
+			form_basics.autosave = function() {
+				if(!form_basics.autosave_disabled && this.change_state) {
+					for(name in this.inputs) {
+						if(this.inputs[name].field) {
+							if(!this.inputs[name].used) {
+								if(u.hc(this.inputs[name].field, "required") && !this.inputs[name].val()) {
+									return false;
+								}
+							}
+							else {
+								u.f.validate(this.inputs[name]);
+							}
+						}
+					}
+					if(!u.qs(".field.error", this)) {
+						this.change_state = false;
+						this.submitted();
+					}
+				}
+				else {
+				}
+			}
+			form_basics.change_state = false;
+			form_basics._autosave_interval = 3000;
+			form_basics.t_autosave = u.t.setTimer(form_basics, "autosave", form_basics._autosave_interval);
 			var form_availability = u.qs("form.availability");
 			if(form_availability) {
 				u.f.init(form_availability, this);
@@ -11086,14 +11121,32 @@ Util.Modules["add_edit_product"] = new function() {
 					}
 					this.form.last_pickupdate_span.innerHTML = last_pickupdate;
 				}
+				form_availability.submitted = function() {
+					this.response = function(response) {
+						page.notify(response);
+					} 
+					u.request(this, this.action, {"method":"POST", "params":this.getData()});
+				}
 			}
 			var form_prices = u.qs("form.prices");
 			if(form_prices) {
 				u.f.init(form_prices, this);
+				form_prices.submitted = function() {
+					this.response = function(response) {
+						page.notify(response);
+					} 
+					u.request(this, this.action, {"method":"POST", "params":this.getData()});
+				}
 			}
 			var form_tags = u.qs("form.tags");
 			if(form_tags) {
 				u.f.init(form_tags, this);
+				form_tags.submitted = function() {
+					this.response = function(response) {
+						page.notify(response);
+					} 
+					u.request(this, this.action, {"method":"POST", "params":this.getData()});
+				}
 			}
 		}
 		scene.getNextDayOfTheWeek = function(dayName, excludeToday = true, refDate = new Date()) {

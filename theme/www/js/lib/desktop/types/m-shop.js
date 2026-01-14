@@ -239,7 +239,7 @@ Util.Modules["shop"] = new function() {
 				this.filter_offset = 0;
 			}
 
-			u.bug("this.filter_offset", this.filter_offset);
+			// u.bug("this.filter_offset", this.filter_offset);
 
 			// Prepare sidebar to stick
 			this.sidebar = u.qs("div.sidebar", this);
