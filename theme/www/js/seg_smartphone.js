@@ -1,5 +1,5 @@
 /*
-asset-builder @ 2026-01-14 16:59:44
+asset-builder @ 2026-01-29 16:25:53
 */
 
 /*seg_smartphone_include.js*/
@@ -11057,47 +11057,53 @@ Util.Modules["add_edit_product"] = new function() {
 		scene.scrolled = function() {
 		}
 		scene.ready = function() {
+			var form_add = u.qs("form.add");
+			if(form_add) {
+				u.f.init(form_add, this);
+			}
 			var form_basics = u.qs("form.basics");
-			u.f.init(form_basics, this);
-			form_basics.submitted = function() {
-				u.t.resetTimer(this.t_autosave);
-				this.response = function(response) {
-					page.notify(response);
-				} 
-				u.request(this, this.action, {"method":"POST", "params":this.getData()});
-			}
-			form_basics.updated = function() {
-				this.change_state = true;
-				u.t.resetTimer(this.t_autosave);
-				if(!this.autosave_disabled) {
-					this.t_autosave = u.t.setTimer(this, "autosave", this._autosave_interval);
+			if(form_basics) {
+				u.f.init(form_basics, this);
+				form_basics.submitted = function() {
+					u.t.resetTimer(this.t_autosave);
+					this.response = function(response) {
+						page.notify(response);
+					} 
+					u.request(this, this.action, {"method":"POST", "params":this.getData()});
 				}
-			}
-			form_basics.autosave = function() {
-				if(!form_basics.autosave_disabled && this.change_state) {
-					for(name in this.inputs) {
-						if(this.inputs[name].field) {
-							if(!this.inputs[name].used) {
-								if(u.hc(this.inputs[name].field, "required") && !this.inputs[name].val()) {
-									return false;
+				form_basics.updated = function() {
+					this.change_state = true;
+					u.t.resetTimer(this.t_autosave);
+					if(!this.autosave_disabled) {
+						this.t_autosave = u.t.setTimer(this, "autosave", this._autosave_interval);
+					}
+				}
+				form_basics.autosave = function() {
+					if(!form_basics.autosave_disabled && this.change_state) {
+						for(name in this.inputs) {
+							if(this.inputs[name].field) {
+								if(!this.inputs[name].used) {
+									if(u.hc(this.inputs[name].field, "required") && !this.inputs[name].val()) {
+										return false;
+									}
+								}
+								else {
+									u.f.validate(this.inputs[name]);
 								}
 							}
-							else {
-								u.f.validate(this.inputs[name]);
-							}
+						}
+						if(!u.qs(".field.error", this)) {
+							this.change_state = false;
+							this.submitted();
 						}
 					}
-					if(!u.qs(".field.error", this)) {
-						this.change_state = false;
-						this.submitted();
+					else {
 					}
 				}
-				else {
-				}
+				form_basics.change_state = false;
+				form_basics._autosave_interval = 3000;
+				form_basics.t_autosave = u.t.setTimer(form_basics, "autosave", form_basics._autosave_interval);
 			}
-			form_basics.change_state = false;
-			form_basics._autosave_interval = 3000;
-			form_basics.t_autosave = u.t.setTimer(form_basics, "autosave", form_basics._autosave_interval);
 			var form_availability = u.qs("form.availability");
 			if(form_availability) {
 				u.f.init(form_availability, this);

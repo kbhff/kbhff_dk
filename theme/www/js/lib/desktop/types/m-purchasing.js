@@ -102,94 +102,106 @@ Util.Modules["add_edit_product"] = new function() {
 		scene.ready = function() {
 //			// u.bug("scene.ready", this);
 
+			// add
+
+			var form_add = u.qs("form.add");
+			if(form_add) {
+				u.f.init(form_add, this);
+			}
 
 
 			// Basics
 
 			var form_basics = u.qs("form.basics");
-			u.f.init(form_basics, this);
+			if(form_basics) {
 
-			form_basics.submitted = function() {
+				u.f.init(form_basics, this);
 
-				u.t.resetTimer(this.t_autosave);
+				form_basics.submitted = function() {
 
-				this.response = function(response) {
-					page.notify(response);
-				} 
-	
-				u.request(this, this.action, {"method":"POST", "params":this.getData()});
-	
-			}
+					u.t.resetTimer(this.t_autosave);
 
-			form_basics.updated = function() {
-	//			u.bug("form has been updated")
-
-				this.change_state = true;
-				u.t.resetTimer(this.t_autosave);
-
-				if(!this.autosave_disabled) {
-
-	//				u.bug("start autosave loop after update")
-					this.t_autosave = u.t.setTimer(this, "autosave", this._autosave_interval);
-
+					this.response = function(response) {
+						page.notify(response);
+					} 
+		
+					u.request(this, this.action, {"method":"POST", "params":this.getData()});
+		
 				}
-			}
 
-			// enable autosaving for testing
-			form_basics.autosave = function() {
-	//			u.bug("autosaving:" + this.change_state)
+				form_basics.updated = function() {
+		//			u.bug("form has been updated")
 
-				// is autosave on?
-				if(!form_basics.autosave_disabled && this.change_state) {
+					this.change_state = true;
+					u.t.resetTimer(this.t_autosave);
 
-	//				u.bug("autosave execute")
+					if(!this.autosave_disabled) {
+
+		//				u.bug("start autosave loop after update")
+						this.t_autosave = u.t.setTimer(this, "autosave", this._autosave_interval);
+
+					}
+				}
+
+				// enable autosaving for testing
+				form_basics.autosave = function() {
+		//			u.bug("autosaving:" + this.change_state)
+
+					// is autosave on?
+					if(!form_basics.autosave_disabled && this.change_state) {
+
+		//				u.bug("autosave execute")
 
 
-					for(name in this.inputs) {
-						if(this.inputs[name].field) {
+						for(name in this.inputs) {
+							if(this.inputs[name].field) {
 
-							// field has not been used yet
-							if(!this.inputs[name].used) {
+								// field has not been used yet
+								if(!this.inputs[name].used) {
 
-								// check for required and value
-								if(u.hc(this.inputs[name].field, "required") && !this.inputs[name].val()) {
+									// check for required and value
+									if(u.hc(this.inputs[name].field, "required") && !this.inputs[name].val()) {
 
-									// cannot save due to missing values - keep trying
-	//								page.t_autosave = u.t.setTimer(this, "autosave", page._autosave_interval);
-									return false;
+										// cannot save due to missing values - keep trying
+		//								page.t_autosave = u.t.setTimer(this, "autosave", page._autosave_interval);
+										return false;
+									}
+
 								}
-
-							}
-							// do actual validation
-							else {
-								u.f.validate(this.inputs[name]);
+								// do actual validation
+								else {
+									u.f.validate(this.inputs[name]);
+								}
 							}
 						}
+
+						// if no error is found after validation
+						if(!u.qs(".field.error", this)) {
+							this.change_state = false;
+							this.submitted();
+						}
+						// keep auto save going
+						// else {
+						// 	page.t_autosave = u.t.setTimer(this, "autosave", page._autosave_interval);
+						// }
+
 					}
 
-					// if no error is found after validation
-					if(!u.qs(".field.error", this)) {
-						this.change_state = false;
-						this.submitted();
+					// autosave is turned off
+					else {
+
+						
 					}
-					// keep auto save going
-					// else {
-					// 	page.t_autosave = u.t.setTimer(this, "autosave", page._autosave_interval);
-					// }
 
 				}
 
-				// autosave is turned off
-				else {
-
-					
-				}
+				form_basics.change_state = false;
+				form_basics._autosave_interval = 3000;
+				form_basics.t_autosave = u.t.setTimer(form_basics, "autosave", form_basics._autosave_interval);
 
 			}
 
-			form_basics.change_state = false;
-			form_basics._autosave_interval = 3000;
-			form_basics.t_autosave = u.t.setTimer(form_basics, "autosave", form_basics._autosave_interval);
+
 
 			// Availability
 

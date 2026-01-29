@@ -18,7 +18,7 @@ $this->pageTitle("Tilføj nyt produkt");
 	<div class="c-wrapper">
 		<div class="c-one-half">
 
-			<?= $model->formStart("addNewProduct", ["class" => "labelstyle:inject basics", "enctype" => "multipart/form-data"]); ?>
+			<?= $model->formStart("addNewProduct", ["class" => "labelstyle:inject add", "enctype" => "multipart/form-data"]); ?>
 
 				<fieldset class="details">
 					<?= $model->input("product_type", [
