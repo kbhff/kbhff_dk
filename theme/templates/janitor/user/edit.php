@@ -26,10 +26,9 @@ if($item && $item["status"] >= 0) {
 	$user_groups_options = $model->toOptions($user_groups, "id", "user_group");
 
 
-
-
+	
 	// get languages for select
-	$language_options = $model->toOptions($this->languages(), "id", "name");
+	$language_options = $model->toOptions($this->languages(), "id", "name", ["add" => ["" => "Choose preferred language"]]);
 
 	// get existing usernames
 	$username_mobile = $model->getUsernames(array("user_id" => $user_id, "type" => "mobile"));
@@ -37,7 +36,7 @@ if($item && $item["status"] >= 0) {
 		$mobile = $username_mobile["username"]; 
 	}
 	else {
-		$mobile = "Not available";
+		$mobile = false;
 	}
 
 
@@ -65,12 +64,22 @@ if($item && $item["status"] >= 0) {
 	// get password state
 	$has_password = $model->hasPassword(["user_id" => $user_id]);
 
-	// get api token
-	$apitoken = $model->getToken($user_id);
+	// payment methods
+	$user_payment_methods = $model->getPaymentMethods(["user_id" => $user_id, "extend" => true]);
+
+	
+	$api_token_access = false;
+	if(security()->validatePath("/janitor/admin/user/apitoken")) {
+		$api_token_access = true;
+		// get api token
+		$api_token = $model->getApiToken($user_id);
+	}
+
 
 	// get addresses
 	$addresses = $model->getAddresses(array("user_id" => $user_id));
 
+	$can_be_deleted = $model->userCanBeDeleted($user_id);
 
 	$unpaid_orders = false;
 	if(defined("SITE_SHOP") && SITE_SHOP) {
@@ -92,28 +101,32 @@ if($item && $item["status"] >= 0) {
 
 	<ul class="actions i:defaultEditActions">
 		<?= $HTML->link("All users", "/janitor/admin/user/list/".$item["user_group_id"], array("class" => "button", "wrapper" => "li.list")) ?>
-<? 
-	// do not allow to delete Anonymous user
+	
+	<? // do not allow to delete or cancel Anonymous user
 	if($user_id != 1): ?>
+
+		<?
+		// Provide delete option if possible (to avoid unnecessary anonymized users)
+		if($can_be_deleted): ?>
 		<?= $HTML->oneButtonForm("Delete account", "/janitor/admin/user/delete/".$user_id, array(
 			"wrapper" => "li.delete",
 			"success-location" => "/janitor/admin/user/list/".$item["user_group_id"]
 		)) ?>
-<? 	endif; ?>
-<?
-	// do not allow to cancel user with unpaid orders
-	if($unpaid_orders): ?>
+
+		<? // do not allow to cancel user with unpaid orders
+		elseif($unpaid_orders): ?>
 		<?= $HTML->link("Unpaid orders", "/janitor/admin/user/orders/".$user_id, array("class" => "button", "wrapper" => "li.unpaid")) ?>
-<? 
-	// or Anonymous user
-	elseif($user_id != 1): ?>
+		<li class="notice">User has unpaid orders and cannot be cancelled.</li>
+
+		<? // Cancel user
+		else: ?>
 		<?= $HTML->oneButtonForm("Cancel account", "/janitor/admin/user/cancel/".$user_id, array(
 			"wrapper" => "li.cancel",
 			"confirm-value" => "This will anonymise the account. Permanently! Irreversibly!",
 			"success-location" => "/janitor/admin/user/list/".$item["user_group_id"]
 		)) ?>
-			
-<? 	endif; ?>
+		<? endif; ?>
+	<? endif; ?>
 	</ul>
 
 <? 
@@ -128,12 +141,7 @@ if($item && $item["status"] >= 0) {
 	</div>
 <? 	endif; ?>
 
-<? if($current_user_user_group["user_group"] == "Super User" && $item_user_group["user_group"] == "Developer"): ?>
-<div class="item">
-	<p>You do not have permission to edit this user.</p>
-</div>
-<? else: ?>
-	
+
 	<?= $JML->userTabs($user_id, "profile") ?>
 
 
@@ -185,7 +193,7 @@ if($item && $item["status"] >= 0) {
 							"wrapper" => "li.send_verification_link.invite",
 							"class" => "send_verification_link invite",
 							"inputs" => [
-								"template" => "verify_invite_email"
+								"template" => "verify_new_email"
 							]
 						)) ?>
 					<? else: ?>
@@ -249,21 +257,97 @@ if($item && $item["status"] >= 0) {
 <? 	endif; ?>
 
 
+	<? if(defined("SITE_SHOP") && SITE_SHOP && $user_id != 1): ?>
+	<div class="payment_methods i:paymentMethods i:collapseHeader">
+		<h2>Payment methods</h2>
+
+		<? if($user_payment_methods):
+			$method_exists = false; ?>
+		<ul class="payment_methods">
+
+			<? foreach($user_payment_methods as $user_payment_method): ?>
+
+				<? if(isset($user_payment_method["cards"]) && $user_payment_method["cards"]):
+				$method_exists = true;
+				?>
+
+					<? foreach($user_payment_method["cards"] as $card): ?>
+				<li class="payment_method user_payment_method<?= $user_payment_method["classname"] ? " ".$user_payment_method["classname"] : "" ?><?= $card["default"] ? " default" : "" ?>">
+					<h3><?= $user_payment_method["name"] ?> – card ending in <?= $card["last4"] ?><?= $card["default"] ? ' <span class="default">(default)</span>' : '' ?></h3>
+					<p><?= $user_payment_method["description"] ?></p>
+					<ul class="actions">
+						<?= $HTML->oneButtonForm(
+						"Delete", 
+						"deletePaymentMethod/card",
+						array(
+							"inputs" => array(
+								"user_id" => $user_id,
+								"user_payment_method_id" => $user_payment_method["id"], 
+								"gateway_payment_method_id" => $card["id"]
+							),
+							"confirm-value" => "Yes, I'm serious",
+							"class" => "",
+							"name" => "delete",
+							"wrapper" => "li.delete.".$user_payment_method["classname"],
+						)) ?>
+					</ul>
+				</li>
+					<? endforeach; ?>
+
+				<? elseif(!$user_payment_method["gateway"]):
+					$method_exists = true;
+				?>
+				<li class="payment_method user_payment_method<?= $user_payment_method["classname"] ? " ".$user_payment_method["classname"] : "" ?><?= $user_payment_method["default_method"] ? " default" : "" ?>">
+					<h3><?= $user_payment_method["name"] ?></h3>
+					<p><?= $user_payment_method["description"] ?><?= $user_payment_method["default_method"] ? ' <span class="default">(default)</span>' : '' ?></p>
+					<ul class="actions">
+						<?= $HTML->oneButtonForm(
+						"Delete", 
+						"deletePaymentMethod",
+						array(
+							"inputs" => array(
+								"user_id" => $user_id,
+								"user_payment_method_id" => $user_payment_method["id"], 
+							),
+							"confirm-value" => false,
+							"static" => true,
+							"class" => "",
+							"name" => "continue",
+							"wrapper" => "li.delete.".$user_payment_method["classname"],
+						)) ?>
+					</ul>
+				</li>
+				<? endif; ?>
+
+			<? endforeach; ?>
+
+		</ul>
+
+		<? endif; ?>
+
+		<? if(!isset($method_exists) || !$method_exists): ?>
+		<p>No payment methods.</p>
+		<? endif; ?>
+
+	</div>
+	<? endif; ?>
+
 <? 
-	// do not allow to create api token for Anonymous user
-	if($user_id != 1): ?>
+	// do not allow to create api token for Anonymous user AND only show panel if user has priviledge
+	if($user_id != 1 && $api_token_access): ?>
 	<div class="apitoken i:apitoken i:collapseHeader">
 		<h2>API Token</h2>
-		<p class="token"><?= stringOr($apitoken, "N/A") ?></p>
+		<p>The API token can be used for programatic logins.</p>
+		<p class="token"><?= stringOr($api_token, "N/A") ?></p>
 
-		<?= $model->formStart("renewToken/".$user_id, array("class" => "renew")) ?>
+		<?= $model->formStart("renewApiToken/".$user_id, array("class" => "renew")) ?>
 			<ul class="actions">
-				<?= $model->submit(($apitoken ? "Renew API token" : "Create API token"), array("class" => "primary", "name" => "renew", "wrapper" => "li.renew")) ?>
+				<?= $model->submit(($api_token ? "Renew API token" : "Create API token"), array("class" => "primary", "name" => "renew", "wrapper" => "li.renew")) ?>
 			</ul>
 		<?= $model->formEnd() ?>
-		<?= $model->formStart("disableToken/".$user_id, array("class" => "disable")) ?>
+		<?= $model->formStart("disableApiToken/".$user_id, array("class" => "disable")) ?>
 			<ul class="actions">
-				<?= $model->submit("Disable token", array("class" => "secondary".($apitoken ? "" : " disabled"), "name" => "disable", "wrapper" => "li.renew")) ?>
+				<?= $model->submit("Disable API token", array("class" => "secondary".($api_token ? "" : " disabled"), "name" => "disable", "wrapper" => "li.renew")) ?>
 			</ul>
 		<?= $model->formEnd() ?>
 	</div>
@@ -306,7 +390,6 @@ if($item && $item["status"] >= 0) {
 		</ul>
 	</div>
 <? 	endif; ?>
-<? endif; ?>
 
 
 
