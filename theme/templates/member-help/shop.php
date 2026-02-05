@@ -94,6 +94,12 @@ if($clerk_user_id != 1) {
 	$product_tags = $IC->getTags(["context" => "productgroup"]);
 
 
+	// Sort products
+	usort($products, function ($a, $b) {
+		return ucfirst($a["name"]) <=> ucfirst($b["name"]);
+	});
+
+
 }
 
 // Clerk not logged in yet
