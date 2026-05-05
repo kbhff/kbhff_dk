@@ -40,7 +40,9 @@ $unpaid_orders = $SC->getUnpaidOrders();
 				<p>
 					På denne side kan du se og rette oplysninger om dig og dit medlemskab.
 					Du kan også se og rette dine eksisterende bestillinger og lave en ny bestilling (åbner GrøntShoppen).
-					På sigt er det desuden meningen at du her skal kunne booke frivillig-vagter og se nyheder og beskeder fra din lokalafdeling.
+				</p>
+				<p>
+					Dit årlige kontingent opkræves hvert år i juni måned, du kan læse mere om dette og resten af vores <a href="/handelsbetingelser">handelsbetingelser her</a>. 
 				</p>
 
 				<? if($unpaid_orders && count($unpaid_orders) > 1): ?>
