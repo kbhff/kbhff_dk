@@ -34,7 +34,7 @@ $user = $UC->getUser();
 			</fieldset>
 
 			<ul class="actions">
-				<?= $UC->link("Annuller", "/shop/checkout/", array("class" => "button", "wrapper" => "li.cancel")) ?>
+				<?= $UC->link("Annuller", "/butik/betal", array("class" => "button", "wrapper" => "li.cancel")) ?>
 				<?= $UC->submit("Gem", array("class" => "primary key:s", "wrapper" => "li.save")) ?>
 			</ul>
 		<?= $UC->formEnd() ?>

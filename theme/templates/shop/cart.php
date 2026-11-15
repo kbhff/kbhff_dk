@@ -244,6 +244,7 @@ if($cart && $cart["items"]) {
 
 		<div class="checkout">
 			<ul class="actions">
+				<?= $HTML->link("Tilbage til butikken", "/butik", array("class" => "button", "wrapper" => "li.shop")) ?>
 				<?= $HTML->oneButtonForm("Gå til betaling", "/butik/betal", array(
 					"confirm-value" => false,
 					"wait-value" => "Vent venligst",
