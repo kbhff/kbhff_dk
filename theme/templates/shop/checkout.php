@@ -301,6 +301,10 @@ else {
 			</h3>
 		</div>
 
+		<ul class="actions" style="text-align: left; padding-top: 12px;">
+			<?= $HTML->link("Tilbage til kurven", "/butik/kurv", array("class" => "button", "wrapper" => "li.cart")) ?>
+		</ul>
+
 		<? else: ?>
 		<p>Du har ingenting i kurven endnu. <br />Tag et kig på vores <a href="/bliv-medlem">medlemskaber</a>.</p>
 		<? endif; ?>
